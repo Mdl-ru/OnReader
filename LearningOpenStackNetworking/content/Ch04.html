@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Построение инфраструктуры виртуальной коммутации</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningOpenStackNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="up" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Установка Neutron"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Создание сетевой среды с применением Neutron"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//openstack-ops_preface.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Построение инфраструктуры виртуальной коммутации';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Построение инфраструктуры виртуальной коммутации</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch04.html#providing_L2">Предоставление экземплярам связности второго уровня</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#vlan_itfs">Интерфейсы виртуальной сети</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#bridging">Соединение мостами</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#config_bridge_itfs">Настройка интерфейсов мостов</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#networks_types">Типы сетей Neutron</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#choosing_plugin">Выбор подключаемых программ сетевой среды</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#LinuxBridge">LinuxBridge</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch04.html#connect_LinuxBridge">Внутренние соединения среды при использовании LinuxBridge</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch04.html#Open_vSwitch">Open vSwitch</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch04.html#connect_Open_vSwitch">Внутренние соединения среды при использовании Open vSwitch</a></span></dt>
+          <dt><span class="section"><a href="Ch04.html#program_flow_rules">Программирование правил потока</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#config_L2_plugin">Настройка подключаемых программ сетевой среды второго уровня</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#config_LinuxBridge">Настройка подключаемой программы LinuxBridge</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch04.html#config_Nova">Настройка Nova на использование LinuxBridge</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch04.html#config_DHCP_agent">Настройка DHCP агента на использование LinuxBridge</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#config_LinuxBridge_options">Настройка опций подключаемой программы LinuxBridge</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch04.html#tenant_network_type">Тип сети владельца</a></span></dt>
+          <dt><span class="section"><a href="Ch04.html#physical_itf_mappings">Отображение физических интерфейсов</a></span></dt>
+          <dt><span class="section"><a href="Ch04.html#VLAN_ranges">Сетевые диапазоны виртуальных сетей</a></span></dt>
+          <dt><span class="section"><a href="Ch04.html#firewall_driver">Драйвер межсетевого экрана</a></span></dt>
+          <dt><span class="section"><a href="Ch04.html#restarting_services">Перезапуск служб</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch04.html#config_Open_vSwitch">Настройка подключаемой программы Open vSwitch</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch04.html#config_Neutron_touse_Open_vSwitch">Настройка Neutron на использование Open vSwitch</a></span></dt>
+          <dt><span class="section"><a href="Ch04.html#config_Nova_touse_Open_vSwitch">Настройка Nova на использование Open vSwitch</a></span></dt>
+          <dt><span class="section"><a href="Ch04.html#config_DHCP_touse_Open_vSwitch">Настройка агента DHCP на использование Open vSwitch</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#config_Open_vSwitch_options">Настройка опций подключаемой программы Open vSwitch</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="providing_L2"> </a>Предоставление экземплярам связности второго уровня</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="vlan_itfs"> </a>Интерфейсы виртуальной сети</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="bridging"> </a>Соединение мостами</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_bridge_itfs"> </a>Настройка интерфейсов мостов</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="networks_types"> </a>Типы сетей Neutron</h2>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="choosing_plugin"> </a>Выбор подключаемых программ сетевой среды</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="LinuxBridge"> </a>LinuxBridge</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="connect_LinuxBridge"> </a>Внутренние соединения среды при использовании LinuxBridge</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Open_vSwitch"> </a>Open vSwitch</h3>
+    </div></div></div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="connect_Open_vSwitch"> </a>Внутренние соединения среды при использовании Open vSwitch</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="program_flow_rules"> </a>Программирование правил потока</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+   </div>
+	 
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_L2_plugin"> </a>Настройка подключаемых программ сетевой среды второго уровня</h2>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_LinuxBridge"> </a>Настройка подключаемой программы LinuxBridge</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_Nova"> </a>Настройка Nova на использование LinuxBridge</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+	</div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_DHCP_agent"> </a>Настройка DHCP агента на использование LinuxBridge</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_LinuxBridge_options"> </a>Настройка опций подключаемой программы LinuxBridge</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="tenant_network_type"> </a>Тип сети владельца</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="physical_itf_mappings"> </a>Отображение физических интерфейсов</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="VLAN_ranges"> </a>Сетевые диапазоны виртуальных сетей</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="firewall_driver"> </a>Драйвер межсетевого экрана</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="restarting_services"> </a>Перезапуск служб</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_Open_vSwitch"> </a>Настройка подключаемой программы Open vSwitch</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_Neutron_touse_Open_vSwitch"> </a>Настройка Neutron на использование Open vSwitch</h4>
+     </div></div></div>
+     <p></p>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_Nova_touse_Open_vSwitch"> </a>Настройка Nova на использование Open vSwitch</h4>
+     </div></div></div>
+     <p></p>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_DHCP_touse_Open_vSwitch"> </a>Настройка агента DHCP на использование Open vSwitch</h4>
+     </div></div></div>
+     <p></p>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_Open_vSwitch_options"> </a>Настройка опций подключаемой программы Open vSwitch</h4>
+     </div></div></div>
+     <p></p>
+    </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h2>
+   </div></div></div>
+   <p></p>
+  </div>
+
+
+ </div>
+
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

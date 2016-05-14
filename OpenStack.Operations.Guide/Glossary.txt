@@ -1,0 +1,786 @@
+Glossary
+
+Use this glossary to get definitions of OpenStack-related words and phrases.
+ To add to this glossary, fork the <code>openstack/openstack-manuals</code> repository on github.com and update the source files through the OpenStack contribution process.
+account
+ The swift context of an account, or a user account from an identity service such as Active Directory, <code>/etc/passwd</code>, OpenLDAP, keystone, and so on.
+account auditor
+ Checks for missing replicas, incorrect, and corrupted objects in a specified swift account by running queries against the back-end SQLite database.
+account database
+ An SQLite database that contains swift accounts and related metadata and is accessed by the accounts server.
+ Alternately, the keystone back-end which contains accounts.
+account reaper
+ A swift worker that scans for and deletes account databases that are marked for deletion on an account server.
+account server
+ Lists containers in swift and stores container information in the account database.
+account service
+ Component of swift that provides account services such as list, create, modify, and audit.
+ Do not confuse with keystone, OpenLDAP, or similar user account services.
+Active Directory
+ Authentication and Identity Service by Microsoft, based on LDAP.
+ Supported in OpenStack.
+address pool
+ A group of fixed and/or floating IP addresses that are assigned to a nova project and can be used by or assigned to the VM instances in a project.
+admin API
+ A subset of API calls that are accessible to authorized administrators and are generally not accessible to end users or the public internet, can exist as a separate service (keystone) or can be a subset of another API (nova).
+Amazon Kernel Image (AKI)
+ Both a VM container format and a VM disk format.
+ Supported by glance.
+Amazon Machine Image (AMI)
+ Both a VM container format and a VM disk format.
+ Supported by glance.
+Amazon Ramdisk Image (ARI)
+ Both a VM container format and a VM disk format.
+ Supported by glance.
+Apache
+ The most common web server software currently used on the Internet, known as HTTPd.
+Apache License 2.0
+ All OpenStack core projects are provided under the terms of the Apache License 2.0 license.
+API endpoint
+ The daemon, worker, or service that a client communicates with to access an API.
+ In OpenStack, API endpoints can provide services such as authentication, adding images, booting virtual machines, and attaching volumes.
+API extension
+ A feature of nova and quantum that allows custom modules to extend the core APIs.
+API extension plug-in
+ Alternative term for a quantum plug-in or quantum API extension.
+API server
+ Any node running a daemon or worker that provides an API endpoint.
+API version
+ In OpenStack, a the API version for a project is part of the URL.
+ For example, <code>example.com/nova/v1/foobar</code>.
+Application Programming Interface (API)
+ A collection of specifications used to access a service, application, or program.
+ Includes service calls, required parameters for each call, and the expected return values.
+arptables
+ Used along with iptables, ebtables, and ip6tables in nova to provide firewall services.
+Asynchronous JavaScript and XML (AJAX)
+ A group of interrelated web development techniques used on the client-side to create asynchronous web applications.
+ Used extensively in horizon.
+attachment (network)
+ Association of an interface ID to a logical port.
+ Plugs an interface into a port.
+auditor
+ A worker process that verifies the integrity of swift objects, containers, and accounts.
+ Auditors is the collective term for the swift account auditor, container auditor, and object auditor.
+Austin
+ Project name for the initial release of OpenStack.
+authentication
+ The process that confirms that the user, process, or client is really who they say they are through private key, secret token, password, fingerprint, or similar method.
+ Abbreviated as AuthN.
+authentication token
+ A string of text provided to the client after authentication.
+ Must be provided by the user or process in subsequent requests to the API endpoint.
+authorization
+ The act of verifying that a user, process, or client is authorized to perform an action, such as delete a swift object, list a swift container, start a nova VM, reset a password, and so on. Abbreviate as AuthZ.
+availability zone
+ A segregated area of a cloud deployment.
+back-end catalog
+ The storage method used by the keystone catalog service to store and retrieve information about API endpoints that are available to the client. Examples include a SQL database, LDAP database, or KVS back-end.
+back-end store
+ The persistent data store used that glance uses to retrieve and store VM images.
+ Options include swift, local file system, S3, and HTTP.
+bare
+ A glance container format that indicates that no container exists for the VM image.
+Bexar
+ A grouped release of projects related to OpenStack that came out in February of 2011.
+ It included Compute (nova) and Object Storage (swift) only.
+block device
+ A device that moves data in the form of blocks.
+ These device nodes interface the devices, such as hard disks, CD-ROM drives, flash drives, and other addressable regions of memory.
+block migration
+ A method of VM live migration used by KVM to evacuate instances from one host to another with very little downtime during a user-initiated switch-over.
+ Does not require shared storage. Supported by nova.
+bootable disk image
+ A type of VM image that exists as a single, bootable file.
+builder file
+ Contains configuration information for a swift ring, and is used to re-configure the ring or to recreate it from scratch after a serious failure.
+cache pruner
+ An executable program that is used to keep a glance VM image cache at or below its configured maximum size.
+Cactus
+ An OpenStack grouped release of projects that came out in the spring of 2011.
+ It included Compute (nova), Object Storage (swift), and the Image service (glance).
+capability
+ Defines resources for a cell, including CPU, storage, and networking.
+ Can apply to the specific services within a cell or a whole cell.
+capacity cache
+ A table within the nova back-end database that contains the current workload, amount of free RAM, number of VMs running on each host. Used to determine on which VM a host starts.
+capacity updater
+ A notification driver that monitors VM instances and updates the capacity cache as needed.
+catalog
+ Contains a list of available API endpoints to a user after they authenticate to keystone.
+catalog service
+ A keystone service that provides a list of available API endpoints to a user after they authenticate to keystone.
+ceilometer
+ An incubated project that provides metering and billing facilities for OpenStack.
+cell
+ Provides logical partitioning of nova resources in a child and parent relationship.
+ Requests are passed from parent cells to child cells if the parent cannot provide the requested resource.
+cell forwarding
+ A nova option that allows parent cells to pass resource requests to child cells if the parent cannot provide the requested resource.
+cell manager
+ The nova component that contains a list of the current capabilities of each host within the cell and routes requests as appropriate.
+Ceph
+ Massively scalable distributed storage system that consists of an object store, block store, and POSIX-compatible distributed file system.
+ Compatible with OpenStack.
+CephFS
+ The POSIX-compliant file system provided by Ceph.
+certificate authority
+ A simple certificate authority provided by nova for cloudpipe VPNs and VM image decryption.
+chance scheduler
+ A scheduling method used by nova that randomly chooses an available host from the pool.
+changes-since
+ A nova API parameter that allows you to download changes to the requested item since your last request, instead of downloading a new, fresh set of data and comparing it against the old data.
+Chef
+ A configuration management tool that supports OpenStack.
+child cell
+ If a requested resource such as CPU time, disk storage, or memory is not available in the parent cell, the request is forwarded to its associated child cells. If the child cell can fulfill the request, it does.
+ Otherwise, it attempts to pass the request to any of its children.
+cinder
+ The OpenStack Block Storage service that maintains the block devices that can be attached to virtual machine instances.
+cloud architect
+ A person who plans, designs, and oversees the creation of clouds.
+cloud controller node
+ A node that runs network, volume, API, scheduler and image services.
+ Each service may be broken out into separate nodes for scalability or availability.
+cloud-init
+ A package commonly installed in VM images that performs initialization of an instance after boot using information that it retrieves from the metadata service such as the SSH public key and user data.
+cloudpipe
+ A service in nova used to create VPNs on a per-project basis.
+cloudpipe image
+ A pre-made VM image that serves as a cloudpipe server.
+ Essentially, OpenVPN running on Linux.
+command filter
+ Lists allowed commands within the nova rootwrap facility.
+community project
+ A project that is not officially endorsed by the OpenStack Foundation.
+ If the project is successful enough, it might be elevated to an incubated project and then to a core project, or it might be merged with the main code trunk.
+Compute API
+ The nova-api daemon that provides access to the nova services.
+ Can also communicate with some outside APIs such as the Amazons EC2 API.
+Compute API extension
+ Alternative term for a nova API extension.
+compute controller
+ The nova component that chooses suitable hosts on which to start VM instances.
+compute node
+ A node that runs the nova-compute daemon and the virtual machine instances.
+compute service
+ Alternative term for the nova component that manages VMs.
+concatenated object
+ A segmented large object within swift that is put back together again and then sent to the client.
+consistency window
+ The amount of time it takes for a new swift object to become accessible to all clients.
+console log
+ Contains the output from a Linux VM console in nova.
+container
+ Used to organize and store objects within swift, similar to the concept as a Linux directory but cannot be nested.
+ Alternative term for a glance container format.
+container auditor
+ Checks for missing replicas or incorrect objects in the specified swift containers through queries to the SQLite back-end database.
+container database
+ A SQLite database that contains swift containers and related metadata and is accessed by the container server
+container format
+ The &quot;envelope&quot; used by glance to store a VM image and its associated metadata, such as machine state, OS disk size, and so on.
+container server
+ Component of swift that manages containers.
+container service
+ The swift component that provides container services, such as create, delete, list, and so on.
+controller node
+ Alternative term for a cloud controller node.
+core API
+ Depending on context, the core API is either the OpenStack API or the main API of a specific core project, such as nova, quantum, glance, and so on.
+core project
+ An official OpenStack project.
+ Currently consists of Compute (nova), Object Storage (swift), Image Service (glance), Identity (keystone), Dashboard (horizon), Networking (quantum), and Volume (cinder).
+credentials
+ Data that is only known to or accessible by a user that is used to verify the user is who they say they are and presented to the server during authentication.
+ Examples include a password, secret key, digital certificate, fingerprint, and so on.
+Crowbar
+ An open source community project by Dell that aims to provide all necessary services to quickly deploy clouds.
+current workload
+ An element of the nova capacity cache that is calculated based on the number of build, snapshot, migrate, and resize operations currently in progress on a given host. 
+customization module
+ A user-created Python module that is loaded by horizon to change the look and feel of the dashboard.
+dashboard
+ The web-based management interface for OpenStack.
+ An alternative name for horizon.
+database replicator
+ The component of swift that copies changes in the account, container, and object databases to other nodes.
+default panel
+ The panel that is displayed when a user accesses the horizon dashboard.
+default tenant
+ New users are assigned to this keystone tenant if no tenant is specified when a user is created.
+default token
+ A keystone token that is not associated with a specific tenant and is exchanged for a scoped token.
+delayed delete
+ An option within glance so that rather than immediately delete an image, it is deleted after a pre-defined number of seconds.
+delivery mode
+ Setting for the nova RabbitMQ message delivery mode, can be set to either transient or persistent.
+device
+ In the context of swift this refers to the underlying storage device.
+device ID
+ Maps swift partitions to physical storage devices.
+device weight
+ Used to distribute the partitions among swift devices.
+ The distribution is usually proportional to the storage capacity of the device.
+DevStack
+ Community project that uses shell scripts to quickly deploy complete OpenStack development environments.
+Diablo
+ A grouped release of projects related to OpenStack that came out in the fall of 2011, the fourth release of OpenStack.
+ It included Compute (nova 2011.3), Object Storage (swift 1.4.3), and the Image service (glance).
+disk format
+ The underlying format that a disk image for a VM is stored as within the glance back-end store. For example, AMI, ISO, QCOW2, VMDK, and so on.
+dispersion
+ In swift, tools to test and ensure dispersion of objects and containers to ensure fault tolerance.
+Django
+ A web framework used extensively in horizon.
+dnsmasq
+ Daemon that provides DNS, DHCP, BOOTP, and TFTP services, used by the nova VLAN manager and FlatDHCP manager.
+DNS record
+A record that specifies information about
+a particular domain and belongs to the
+domain.
+Dynamic Host Configuration Protocol (DHCP)
+ A method to automatically configure networking for a host at boot time.
+ Provided by both quantum and nova.
+ebtables
+ Used in nova along with arptables, iptables, and ip6tables to create firewalls and to ensure isolation of network communications.
+EC2
+ The Amazon Elastic Compute Cloud, a public cloud run by Amazon that provides similar functionality to nova.
+EC2 access key
+ Used along with an EC2 secret key to access the nova EC2 API.
+EC2 API
+ OpenStack supports accessing the Amazon EC2 API through nova.
+EC2 Compatibility API
+ A nova component that allows OpenStack to communicate with Amazon EC2
+EC2 secret key
+ Used along with an EC2 access key when communicating with the nova EC2 API, is used to digitally sign each request.
+Elastic Block Storage (EBS)
+ The Amazon commercial block storage product, similar to cinder.
+endpoint
+ See API endpoint.
+endpoint registry
+ Alternative term for a keystone catalog.
+endpoint template
+ A list of URL and port number endpoints that indicate where a service, such as object storage, compute, identity, and so on, can be accessed.
+entity
+ Any piece of hardware or software that wants to connect to the network services provided by quantum, the Network Connectivity service. An entity can make use of quantum by implementing a VIF.
+ephemeral storage
+ A storage volume attached to a virtual machine instance that does not persist after the instance is terminated.
+Essex
+ A grouped release of projects related to OpenStack that came out in April 2012, the fifth release of OpenStack.
+ It included Compute (nova 2012.1), Object Storage (swift 1.4.8), Image (glance), Identity (keystone), and Dashboard (horizon).
+ESX
+ An OpenStack-supported hypervisor, owned by VMware.
+ESXi
+ An OpenStack-supported hypervisor, owned by VMware.
+ETag
+ MD5 hash of an object within swift, used to ensure data integrity.
+euca2ools
+ A collection of command line tools for administering VMs, most are compatible with OpenStack.
+evacuate
+ The process of migrating one or all virtual machine (VM) instances from one host to another, compatible with both shared storage live migration and block migration.
+extension
+ Alternative term for a nova API extension or plug-in. In the context of keystone this is a call that is specific to the implementation, such as adding support for OpenID.
+extra specs
+ Additional requirements that a user can specify when requesting a new instance, examples include a minimum amount of network bandwidth or a GPU.
+FakeLDAP
+ An easy method to create a local LDAP directory for testing keystone and nova.
+ Requires Redis.
+fill-first scheduler
+ The nova scheduling method that attempts to fill a host with VMs rather than starting new VMs on a variety of hosts.
+filter
+ The step of the nova scheduling process where hosts that cannot run the VMs are eliminated and are not chosen.
+firewall
+ Used to restrict communications between hosts and/or nodes, implemented in nova using iptables, arptables, ip6tables and etables.
+Fixed IP address
+ An IP address that is associated with the same instance each time that instance boots, generally not accessible to end users or the public internet, used for management of the instance.
+FlatDHCP Manager
+ A nova networking manager that provides a single Layer 2 domain for all subnets in the OpenStack cloud.
+ Provides a single DHCP server for each instance of novanetwork to assign and manage IP addresses for all instances.
+Flat Manager
+ The nova component that gives IP addresses to authorized nodes and assumes DHCP, DNS, and routing configuration and services are provided by something else.
+flat mode injection
+ A nova networking method where the OS network configuration information is injected into the VM (VM) image before the instance starts.
+flat network
+ A nova network configuration where all of the instances have IP addresses on the same subnet.
+ Flat networks do not use VLANs.
+flavor
+ Describes the parameters of the various virtual machine images that are available to users, includes parameters such as CPU, storage, and memory.
+ Also known as instance type.
+flavor ID
+ UUID for each nova or glance VM flavor or instance type.
+Floating IP address
+ An IP address that a nova project can associate with a VM so the instance has the same public IP address each time that it boots.
+ You create a pool of floating IP addresses and assign them to instances as they are launched to maintain a consistent IP address for maintaining DNS assignment.
+Folsom
+ A grouped release of projects related to OpenStack that came out in the fall of 2012, the sixth release of OpenStack.
+ It includes Compute (nova), Object Storage (swift), Identity (keystone), Networking (quantum), Image service (glance) and Volumes or Block Storage (cinder).
+FormPost
+ swift middleware that allows users to upload (post) an image through a form on a web page.
+glance
+ A core project that provides the OpenStack Image Service.
+glance API server
+ Processes client requests for VMs, updates glance metadata on the registry server, and communicates with the store adapter
+FakeLDAP
+ to upload VM images from the back-end store.
+global endpoint template
+ The keystone endpoint template that contains services available to all tenants.
+GlusterFS
+ An open-source, distributed, shared file
+system,
+Grizzly
+ Project name for the seventh release of OpenStack.
+guest OS
+ An operating system instance running under the control of a hypervisor. 
+handover
+ An object state in swift where a new replica of the object is automatically created due to a drive failure.
+hard reboot
+ A type of reboot where a physical or virtual power button is pressed as opposed to a graceful, proper shutdown of the operating system.
+Heat
+ An integrated project that aims to orchestrate multiple cloud applications for OpenStack.
+horizon
+ The project that provides the OpenStack Dashboard.
+host
+ A physical computer, also known as a node.
+ Contrast with: instance.
+host aggregate
+ A method to further subdivide availability zones into a collection of hosts.
+Hyper-V
+ One of the hypervisors supported by OpenStack, developed by Microsoft.
+hypervisor
+ Software that arbitrates and controls VM access to the actual underlying hardware.
+hypervisor pool
+ A collection of hypervisors grouped together through host aggregates.
+ID number
+ Unique numeric ID associated with each user in keystone, conceptually similar to a Linux or LDAP UID.
+Identity API
+ Alternative term for the Identity Service API.
+Identity back-end
+ The source used by keystone to retrieve user information an OpenLDAP server for example.
+Identity Service
+ Provides authentication services, also known as keystone.
+Identity Service API
+ The API used to access the OpenStack Identity Service provided through keystone.
+image
+A collection of files for a specific operating system (OS) that you use to create or rebuild a server.
+ You can also create custom images, or snapshots, from servers that you have launched.
+Image API
+ The glance API endpoint for management of VM images.
+image cache
+ Used by glance to allow images on the local host to be used rather than redownloading them from the image server each time one is requested.
+image ID
+ Combination of URI and UUID used to access glance VM images through the image API.
+image membership
+ A list of tenants that can access a given VM image within glance.
+image owner
+ The keystone tenant who owns a glance virtual machine image.
+image registry
+ A list of VM images that are available through glance.
+Image Service API
+ Alternative name for the glance image API.
+image status
+ The current status of a VM image in glance, not to be confused with the status of a running instance.
+image store
+ The back-end store used by glance to store VM images, options include swift, local file system, S3, or HTTP.
+image UUID
+ The UUID used by glance to uniquely identify each VM image.
+incubated project
+ A community project may be elevated to this status and is then promoted to a core project.
+ingress filtering
+ The process of filtering incoming network traffic.
+ Supported by nova.
+injection
+ The process of putting a file into a virtual machine image before the instance is started.
+instance
+ A running VM, or a VM in a known state such as suspended that can be used like a hardware server.
+instance ID
+ Unique ID that is specific to each running nova VM instance.
+instance state
+ The current state of a nova VM image.
+instance type
+ Alternative term for flavor.
+instance type ID
+ Alternative term for a flavor ID.
+instance UUID
+ Unique ID assigned to each nova VM instance.
+interface ID
+ Unique ID for a quantum VIF or vNIC in the form of a UUID.
+ip6tables
+ Used along with arptables, ebtables, and iptables to create firewalls in nova.
+iptables
+ Used along with arptables, ebtables, and ip6tables to create firewalls in nova.
+JavaScript Object Notation (JSON)
+ One of the supported response formats for the OpenStack API.
+Jenkins
+ Tool used for OpenStack development to run jobs automatically.
+kernel-based VM (KVM)
+ An OpenStack-supported hypervisor
+keystone
+ The project that provides OpenStack Identity services.
+Kickstart
+ A tool to automate system configuration and installation on Red Hat, Fedora, and CentOS based Linux distributions.
+large object
+ An object within swift that is larger than 5 GBs.
+Launchpad
+ The collaboration site for OpenStack.
+Layer-2 network
+ Term used for OSI network architecture for the data link layer.
+libvirt
+ Virtualization API library used by OpenStack to interact with many of its supported hypervisors, including KVM, QEMU and LXC.
+Linux bridge
+ Software used to allow multiple VMs to share a single physical NIC within nova.
+Linux bridge quantum plug-in
+ Plugin that allows a Linux bridge to understand a quantum port, interface attachment, and other abstractions.
+Linux containers (LXC)
+ An OpenStack-supported hypervisor.
+live migration
+ The ability within nova to move running virtual machine instances from one host to another with only a small service interruption during switch-over.
+management API
+ Alternative term for an admin API.
+management network
+ A network segment used for administration, not accessible to the public internet.
+manifest
+ Used to track segments of a large object within swift.
+manifest object
+ A special swift object that contains the manifest for a large object.
+membership
+ The association between a glance VM image and a tenant, allows images to be shared with specified tenant(s).
+membership list 
+ Contains a list of tenants that can access a given VM image within glance.
+memory overcommit
+ The ability to start new VM instances based on the actual memory usage of a host, as opposed to basing the decision on the amount of RAM each running instance thinks it has available.
+ Also known as RAM overcommit.
+message broker
+ The software package used to provide AMQP messaging capabilities within nova, default is RabbitMQ.
+message bus
+ The main virtual communication line used by all AMQP messages for intercloud communications within nova.
+message queue
+ Passes requests from clients to the appropriate workers and returns the output to the client once the job is complete.
+migration
+ The process of moving a VM instance from one host to another.
+multinic
+ Facility in nova that allows each virtual machine instance to have more than one VIF connected to it.
+network ID
+ Unique ID assigned to each network segment within quantum.
+network manager
+ The nova component that manages various network components, such as firewall rules, IP address allocation, and so on.
+network node
+ Any nova node that runs the network worker daemon.
+network segment
+ Represents a virtual, isolated OSI layer 2 subnet in quantum.
+network UUID
+ Unique ID for a quantum network segment.
+network worker
+ The nova-network worker daemon, provides services such as giving an IP address to a booting nova instance.
+non-persistent volume
+ Alternative term for an ephemeral volume.
+nova
+ The OpenStack project that provides compute services.
+nova API
+ Alternative term for the nova Compute API.
+nova-network
+ A nova component that manages IP address allocation, firewalls, and other network-related tasks.
+object
+ A BLOB of data held by swift, can be in any format.
+Object API
+ Alternative term for the swift object API.
+object auditor
+ Opens all objects for an object server and verifies the MD5 hash, size, and metadata for each object.
+object expiration
+ A configurable option within swift to automatically delete objects after a specified amount of time has passed or a certain date is reached.
+object hash
+ Uniquely ID for a swift object.
+object path hash
+ Used by swift to determine the location of an object in the ring. Maps objects to partitions.
+object replicator
+ Component of swift that copies and object to remote partitions for fault tolerance.
+object server
+ Component of swift that is responsible for managing objects.
+Object Service API
+ Alternative term for the swift object API.
+object storage
+ Provides eventually consistent and redundant storage and retrieval of fixed digital content.
+object versioning
+ Allows a user to set a flag on a swift container so all objects within the container are versioned.
+operator
+ The person responsible for planning and maintaining an OpenStack installation.
+parent cell
+ If a requested resource, such as CPU time, disk storage, or memory, is not available in the parent cell, the request is forwarded to associated child cells.
+partition
+ A unit of storage within swift used to store objects, exists on top of devices, replicated for fault tolerance.
+partition index
+ Contains the locations of all swift partitions within the ring.
+partition shift value
+ Used by swift to determine which partition data should reside on.
+pause
+ A VM state where no changes occur (no changes in memory, network communications stop, etc), the VM is frozen but not shut down.
+persistent volume
+ Disk volumes that persist beyond the lifetime of individual virtual machine instances.
+ Contrast with: ephemeral storage
+plugin
+ Software component providing the actual implementation for quantum APIs, or for Compute APIs, depending on the context.
+policy service
+ Component of keystone that provides a rule management interface and a rule based authorization engine.
+port
+ A virtual network port within quantum, VIFs / vNICs are connected to a port.
+port UUID
+ Unique ID for a quantum port.
+preseed
+ A tool to automate system configuration and installation on Debian based Linux distributions.
+private image
+ A glance VM image that is only available to specified tenants.
+project
+ A logical grouping of users within nova, used to define quotas and access to VM images.
+project ID
+ User defined alpha-numeric string in nova, the name of a project.
+project VPN
+ Alternative term for a cloudpipe.
+proxy node
+ A node that provides the swift proxy service.
+proxy server
+ Users of swift interact with the service through the proxy server which in-turn looks up the location of the requested data within the ring and returns the results to the user.
+public API
+ An API endpoint used for both service to service communication and end user interactions.
+public image
+ A glance VM image that is available to all tenants.
+public IP address
+ An IP address that is accessible to endusers.
+public network
+ The Network Controller provides virtual networks to enable compute servers to interact with each other and with the public network.
+ All machines must have a public and private network interface.
+ The public network interface is controlled by the public_interface option.
+Puppet
+ A configuration management tool that supports OpenStack.
+Python
+ Programming language used extensively in OpenStack.
+quantum
+ A core OpenStack project that provides a network connectivity abstraction layer to OpenStack Compute.
+quantum API
+ API used to access quantum, provides and extensible architecture to allow custom plugin creation.
+quantum manager
+ Allows nova and quantum integration thus allowing quantum to perform network management for nova VMs.
+quantum plugin
+ Interface within quantum that allows organizations to create custom plugins for advanced features such as QoS, ACLs, or IDS.
+quarantine
+ If swift finds objects, containers, or accounts that are corrupt they are placed in this state, are not replicated, cannot be read by clients, and a correct copy is rereplicated.
+Quick EMUlator (QEMU)
+ One of the hypervisors supported by OpenStack, generally used for development purposes.
+quota
+ In nova, the ability to set resource limits on a per-project basis.
+RAM filter
+ The nova setting that allows or disallows RAM overcommitment.
+RAM overcommit
+ The ability to start new VM instances based on the actual memory usage of a host, as opposed to basing the decision on the amount of RAM each running instance thinks it has available.
+ Also known as memory overcommit.
+rate limit
+ Configurable option within swift to limit database writes on a per-account and/or per-container basis.
+rebalance
+ The process of distributing swift partitions across all drives in the ring, used during initial ring creation and after ring reconfiguration.
+Recon
+ A component of swift used to collect metrics.
+record ID
+ A number within a database that is incremented each time a change is made.
+ Used by swift when replicating.
+registry server
+ A glance service that provides VM image metadata information to clients.
+replica
+ Provides data redundancy and fault tolerance by creating copies of swift objects, accounts, and containers so they are not lost when the underlying storage fails.
+replica count
+ The number of replicas of the data in a swift ring.
+replication
+ The process of copying data to a separate physical device for fault tolerance and performance.
+replicator
+ The swift back-end process that creates and manages object replicas.
+request ID 
+ Unique ID assigned to each request sent to nova.
+ring
+ An entity that maps swift data to partitions.
+ A separate ring exists for each service, such as account, object, and container.
+ring builder
+ Builds and manages rings within swift, assigns partitions to devices, and pushes the configuration to other storage nodes.
+role ID
+ Alpha-numeric ID assigned to each keystone role.
+rootwrap
+ A feature of nova that allows the unprivileged &quot;nova&quot; user to run a specified list of commands as the Linux root user.
+RPC driver
+ Modular system that allows the nova underlying message queue software to be changed.
+ For example, from RabbitMQ to ZeroMQ or Qpid.
+S3
+ Object storage service by Amazon, similar in function to swift, can act as a back-end store for glance VM images.
+scheduler manager
+ A nova component that determines where VM instances should start.
+ Uses modular design to support a variety of scheduler types.
+scoped token
+ A keystone API access token that is associated with a specific tenant.
+secret key
+ String of text only known by the user, used along with an access key to make requests to the nova API.
+security group
+ A set of network traffic filtering rules that are applied to a nova instance.
+segmented object
+ A swift large object that has been broken up into pieces, the re-assembled object is called a concatenated object.
+server image
+ Alternative term for a VM image.
+server UUID
+ Unique ID assigned to each nova VM instance.
+service catalog
+ Alternative term for the keystone catalog.
+service ID
+ Unique ID assigned to each service that is available in the keystone catalog.
+service registration
+ A keystone feature that allows services such as nova to automatically register with the catalog.
+service tenant
+ Special keystone tenant that contains all services that are listed in the catalog.
+service token
+ An administrator defined token used by nova to communicate securely with keystone.
+session back-end
+ The method of storage used by horizon to track client sessions such as local memory, cookies, a database, or memcached.
+session persistence
+ A feature of the load balancing service.
+ It attempts to force subsequent connections to a service to be redirected to the same node as long as it is online.
+session storage
+ A horizon component that stores and tracks client session information.
+ Implemented through the Django sessions framework.
+shared storage
+ Block storage that is simultaneously accessible by multiple clients.
+ For example, NFS.
+SmokeStack
+ Runs automated tests against the core OpenStack API, written in Rails.
+snapshot
+ A point-in-time copy of an OpenStack storage volume or image.
+ Use storage volume snapshots to back up volumes.
+ Use image snapshots to back up data, or as &quot;gold&quot; images for additional servers.
+spread-first scheduler
+ The nova VM scheduling algorithm that attempts to start new VM on the host with the least amount of load.
+SQLAlchemy
+ An open source SQL toolkit for Python, used in OpenStack.
+SQLite
+ A lightweight SQL database, used as the default persistent storage method in many OpenStack services.
+StackTach
+ Community project that captures nova AMQP communications, useful for debugging.
+static IP address
+ Alternative term for a fixed IP address.
+StaticWeb
+ WSGI middleware component of swift
+ that serves container data as a static web page.
+storage back-end
+ The method that a service uses for persistent storage such as iSCSI, NFS, or local disk.
+storage node
+ A swift node that provides container services, account services, and object services, controls the account databases, container databases, and object storage.
+storage manager
+ Component of XenAPI that provides a pluggable interface to support a wide variety of persistent storage back-ends.
+storage manager back-end
+ A persistent storage method supported by XenAPI such as iSCSI or NFS.
+storage services
+ Collective name for the swift object services, container services, and account services.
+swift
+ An OpenStack core project that provides object storage services.
+swift All in One (SAIO)
+ Creates a full swift development environment within a single VM.
+swift middleware
+ Collective term for components within swift that allows for additional functionality.
+swift proxy server
+ Acts as the gatekeeper to swift and is responsible for authenticating the user.
+swift storage node
+ A node that runs swift account, container, and object services.
+sync point
+ Point in time since the last container and accounts database sync among nodes within swift.
+TempAuth
+ An authentication facility within swift that allows swift itself to perform authentication and authorization, frequently used in testing and development.
+Tempest
+ Automated software test suite designed to run against the trunk of the OpenStack core project.
+TempURL
+ A swift middleware component that allows a user to create URLs for temporary object access.
+tenant
+A group of users, used to isolate access to nova resources.
+ An alternative term for a nova project.
+tenant endpoint
+ A keystone API endpoint that is associated with one or more tenants.
+tenant ID
+ Unique ID assigned to each tenant within keystone, the nova project IDs map to the keystone tenant IDs.
+token
+ An alpha-numeric string of text used to access OpenStack APIs and resources.
+tombstone
+ Used to mark swift objects that have been deleted, ensures the object is not updated on another node after it has been deleted.
+transaction ID
+ Unique ID assigned to each swift request, used for debugging and tracing.
+unscoped token
+ Alternative term for a keystone default token.
+updater
+ Collective term for a group of swift components that process queued and failed updates for containers and objects.
+user
+ In keystone each user is associated with one or more tenants, and in nova they can be associated with roles, projects, or both.
+user data
+ A blob of data that can be specified by the user when launching an instance.
+ This data can be accessed by the instance through the metadata service or config drive.
+ Commonly used for passing a shell script that is executed by the instance on boot.
+VIF UUID
+ Unique ID assigned to each quantum VIF.
+Virtual Central Processing Unit (vCPU)
+ Allows physical CPUs to be sub-divided and those divisions are then used by instances.
+ Also known as virtual cores.
+Virtual Machine (VM)
+ An operating system instance that runs on top of a hypervisor.
+ Multiple VMs can run at the same time on the same physical host.
+virtual network
+ An L2 network segment within quantum.
+Virtual Network InterFace (VIF)
+ An interface that is plugged into a port in a quantum network.
+ Typically a virtual network interface belonging to a VM.
+virtual port
+ Attachment point where a virtual interface connects to a virtual network.
+virtual private network (VPN)
+ Provided by nova in the form of cloudpipes, specialized instances that are used to create VPNs on a per-project basis.
+virtual server
+ Alternative term for a VM or guest.
+virtual switch (vSwitch)
+ Software that runs on a host or node and provides the features and functions of a hardware based network switch.
+virtual VLAN
+ Alternative term for a virtual network.
+VLAN manager
+ A nova networking manager that divides subnet and tenants into different VLANs allowing for Layer 2 segregation.
+ Provides a DHCP server for each VLAN to assign IP addresses for instances.
+VLAN network
+ The Network Controller provides virtual networks to enable compute servers to interact with each other and with the public network.
+ All machines must have a public and private network interface.
+ A VLAN network is a private network interface, which is controlled by the vlan_interface option with VLAN managers.
+VM image
+ Alternative term for an image.
+VNC proxy
+ A nova component that provides users access to the consoles of their VM instances through VNC or VMRC.
+volume
+ Disk-based data storage generally represented as an iSCSI target with a file system that supports extended attributes, can be persistent or ephemeral.
+ Commonly usedas a synonym for block device.
+Volume API
+ An API on a separate endpoint for attaching, detaching, and creating block storage for compute VMs.
+volume controller
+ A nova component that oversees and coordinates storage volume actions.
+volume driver
+ Alternative term for a volume plugin.
+volume ID
+ Unique ID applied to each storage volume under the nova control.
+volume manager
+ A nova component that creates, attaches, and detaches persistent storage volumes.
+volume node
+ A nova node that runs the cinder-volume daemon.
+volume plugin
+ A plugin for the nova volume manager.
+ Provides support for a new and specialized types of back-end storage.
+Volume Service API
+ Alternative term for the Block Storage API.
+volume worker
+ The nova component that interacts with back-end storage to manage the creation and deletion of volumes and the creation of compute volumes, provided by the nova-volume daemon.
+ Virtual Network InterFace (VIF)
+weight
+ Used by swift storage devices to determine which storage devices are suitable for the job.
+ Devices are weighted by size.
+weighted cost
+ The sum of each cost used when deciding where to start a new VM instance in nova.
+weighing
+ A nova process that determines the suitability of the VM instances for a job for a particular host.
+ For example, not enough RAM on the host, too many CPUs on the host, and so on.
+worker
+ A daemon that carries out tasks.
+ For example, the nova-volume worker attaches storage to an VM instance.
+ Workers listen to a queue and take action when new messages arrive.
+Zuul
+ Tool used in OpenStack development to ensure correctly ordered testing of changes in parallel.

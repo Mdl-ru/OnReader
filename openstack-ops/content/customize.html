@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Глава 15. Индивидуальная настройка - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="operations.html" title="Эксплуатация"/>
+<link rel="prev" href="backup_and_recovery.html" title="Глава 14. Резервное копирование и восстановление"/>
+<link rel="next" href="upstream_openstack.html" title="Глава 16. Обратная связь OpenStack"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:09+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//customize.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 15. Индивидуальная настройка';
+PrevRef = 'backup_and_recovery.html';
+UpRef = 'operations.html';
+NextRef = 'upstream_openstack.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="chapter"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="customize"> </a>Глава 15. Индивидуальная настройка</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="customize.html#devstack">Создание среды разработки OpenStack</a></span></dt><dt><span class="section">
+ <a href="customize.html#swift_middleware_example">Настройка ПО промежуточного уровня хранилища объектов (Swift)</a></span></dt><dt><span class="section">
+ <a href="customize.html#nova_scheduler_example">Настройка планировщика вычислительной среды OpenStack (nova)</a></span></dt><dt><span class="section">
+ <a href="customize.html#ops_dashboard">Настройка инструментальной панели(Horizon)</a></span></dt><dt><span class="section">
+ <a href="customize.html#customize_conclusion">Выводы</a></span></dt></dl>
+</div>
+<p>OpenStack не может выполнять все что вам нужно делать нетривиальным
+способом. Чтобы добавить новую функцию, вы можете следовать разными путями.
+<a id="d9e6326" class="indexterm"/></p>
+<p>Первый способ- вы можете напрямую изменить код OpenStack. Ознакомьтесь:
+<a class="link" href="https://wiki.openstack.org/wiki/How_To_Contribute" target="_top">
+как внести свой вклад</a>, следуйте <a class="link" href="https://wiki.openstack.org/wiki/GerritWorkflow" target="_top">
+рабочим потоком пересмотра кода</a>, сделайте необходимые изменения и 
+внесите их в назад вверх по течению проекта OpenStack. Этот путь рекомендуется, 
+если необходимое вам свойство требует глубокой интеграции с уже существующим проектом.
+Сообщество всегда открыто для вклада и приветствует новую функциональность, которая 
+следует руководством развития новых свойств. Этот путь все еще требует от вас 
+использования DevStack для тестирования дополняемых вами функций, 
+так что это глава ознакомит вас со средой DevStack.
+<a id="d9e6332" class="indexterm"/></p>
+<p>Следуя вторым подходом, вы можете написать новые функции и подключить их при помощи 
+изменения в файле конфигурации. Если проект, в котором ваша функциональная особенность 
+для своего размещения будет нуждаться в использовании инфраструктуры 
+Python Paste, вы можете создать программное обеспечение промежуточного уровня для него 
+и подключить его при помощи настройки. Также могут существовать особые способы 
+настройки проекта, например, создание нового драйвера планировщика для 
+вычислительной среды или пользовательские вкладки для приборной панели.</p>
+<p>В этой главе основное внимание уделено второму способу настройки OpenStack путем
+демонстрации двух примеров для написания новых функциональных особенностей. Первый пример показывает 
+как внести изменения в программное обеспечение промежуточного уровня хранилища объектов (swift) 
+добавив новую функцию, а второй пример предоставляет новую функцию планировщика для вычислительной среды
+OpenStack Compute (nova). Для подобной настройки OpenStack вам вы понадобится среда разработки.
+Лучший способ быстро получить среду и приступить к работе- это запустить DevStack в вашем облаке.</p>
+  
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="devstack"> </a>Создание среды разработки OpenStack</h2>
+</div></div></div>
+<p>Для создания среды разработки вы можете воспользоваться DevStack. DevStack
+по- существу является набором скриптов оболочки и файлами настройки, которые
+создают для вас среду разработки OpenStack. Вы используете их для создания 
+подобной среды для разработки нового свойства.
+<a id="d9e6340" class="indexterm"/>
+<a id="d9e6343" class="indexterm"/>
+<a id="d9e6345" class="indexterm"/></p>
+<p>Всю документацию вы можете найти на веб-сайте
+<a class="link" href="http://devstack.org/" target="_top">DevStack</a>.</p>
+<div class="procedure"><a id="d9e6350"> </a>
+ <p class="title"><strong>Чтобы запустить DevStack для стабильной ветви Havana 
+в экземпляре вашего облака OpenStack:</strong></p><ol class="procedure" type="1"><li class="step">
+ <p>Загрузите экземпляр из инструментальной панели или при помощи интерфейса
+ командной строки (CLI) со следующими параметрами:</p>
+ <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+  <p>Имя: devstack-havana</p></li><li class="listitem">
+  <p>Образ: Ubuntu 12.04 LTS</p></li><li class="listitem">
+  <p>Объем оперативной памяти: 4ГБ</p></li><li class="listitem">
+  <p>Дисковый размер: минимум 5ГБ</p></li></ul>
+ </div>
+ <p>Если вы используете клиент <code class="code">nova</code>, 
+ установите <code class="code">--flavor 3</code> для команды <code class="code">nova boot</code> 
+ для получения отвечающих требованиям объема оперативной памяти 
+ и дискового пространства.</p></li><li class="step">
+ <p>Войдите в систему и установите DevStack. Приведем пример команд,
+ которые вы можете использовать для установки DevStack на виртуальную машину:</p><ol type="a" class="substeps"><li class="step">
+ <p>Зарегистрируйтесь в экземпляре:</p>
+ <pre class="screen">$ ssh <em class="replaceable"><code>username</code></em>@<em class="replaceable"><code>my.instance.ip.address</code></em></pre></li><li class="step">
+ <p>Обновите операционную систему виртуальной машины:</p>
+ <pre class="screen"># apt-get -y update</pre></li><li class="step">
+ <p>Установите git:</p>
+ <pre class="screen"># apt-get -y install git</pre></li><li class="step">
+ <p>Склонируйте стабильную ветвь havana из репозитория 
+ <code class="literal">devstack</code>:</p>
+ <pre class="screen">$ git clone https://github.com/openstack-dev/devstack.git -b
+stable/havana devstack/</pre></li><li class="step">
+ <p>Переместитесь в свой репозиторий <code class="literal">devstack</code>:</p>
+ <pre class="screen">$ cd devstack</pre></li></ol></li><li class="step">
+ <p>(Не обязательно) Ксли вы зарегистрировались в системе как 
+ пользователь root, вы должны создать пользователя &quot;stack&quot;; 
+ в противном случае вы можете испытывать проблемы с разрешениями. 
+ Если вы зарегистрировались как пользователь, отличный от root, вы
+ можете пропустить эти шаги:</p><ol type="a" class="substeps"><li class="step">
+ <p>Выполните сценарий DevStack для создания пользователя stack:</p>
+ <pre class="screen"># tools/create-stack-user.sh</pre></li><li class="step">
+ <p>Предоставьте пользователю stack права владельца на каталог 
+ <code class="literal">devstack</code>:</p>
+ <pre class="screen"># chown -R stack:stack /root/devstack</pre></li><li class="step">
+ <p>Установите некоторые разрешения, которыми вы позже сможете
+ воспользоваться для просмотра экрана DevStack:</p>
+ <pre class="screen"># chmod o+rwx /dev/pts/0</pre></li><li class="step">
+ <p>Переключитесь на пользователя stack:</p>
+ <pre class="screen">$ su stack</pre></li></ol></li><li class="step">
+ <p>Отредактируйте файл настройки <code class="filename">localrc</code>,
+ который управляет размещением DevStack. Скопируйте пример файла 
+ <code class="filename">localrc</code> в конце данного раздела 
+ (<a class="xref" href="customize.html#localrc" title="Пример 15.1. localrc">Пример 15.1, “localrc”</a>):</p>
+ <pre class="screen">$ vim localrc</pre></li><li class="step">
+ <p>Выполните сценарий stack, который установит OpenStack:</p>
+ <pre class="screen">$ ./stack.sh</pre></li><li class="step">
+ <p>Когда сценарий stack завершится, вы можете открыть окно стартовавшего
+ сеанса для просмотра всех запущенных служб OpenStack:</p>
+ <pre class="screen">$ screen -r stack</pre></li><li class="step">
+ <p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+ с последующим 0 для перехода к первому окну <code class="literal">screen</code>.</p></li></ol>
+</div>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+  <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   <p>Сценарию <code class="code">stack.sh</code> для запуска потребуется некоторое время.
+   Возможно вы воспользуетесь этим удобным случаем чтобы 
+   <a class="link" href="https://www.openstack.org/join/" target="_top">
+   присоединится к Фонду OpenStack</a>.</p></li><li class="listitem">
+  <p><code class="literal">Screen</code> является удобной программой для просмотра за раз
+  многих взаимосвязанных служб. Для получения дополнительной информации обратитесь к 
+  <a class="link" href="http://aperiodic.net/screen/quick_reference" target="_top">
+  Быстрому руководству GNU screen</a>.</p></li></ul></div></td></tr></table>
+ </div>
+ <p>Тепер, когда вы получили среду разработки OpenStack, вы может свободно
+ заняться хакерством без беспокойства о том, что вы можете что-то 
+ разрушить в вашем развернутом продукте.
+ <a class="xref" href="customize.html#localrc" title="Пример 15.1. localrc">
+ Пример 15.1, “localrc”</a> предоставляет работающее окружение для выполнения
+ служб OpenStack идентификации, вычислительной среды, блочного хранения, образов, 
+ инструментальной панели и хранилища объектов со стабильной ветвью havana в
+ качестве исходной точки.</p>
+<div class="example">
+<a id="localrc"> </a>
+<p class="title"><strong>Пример 15.1. localrc</strong></p>
+<div class="example-contents">
+<pre class="programlisting brush: bash; "># Credentials
+ADMIN_PASSWORD=devstack
+MYSQL_PASSWORD=devstack
+RABBIT_PASSWORD=devstack
+SERVICE_PASSWORD=devstack
+SERVICE_TOKEN=devstack
+
+# OpenStack Identity Service branch
+KEYSTONE_BRANCH=stable/havana
+
+# OpenStack Compute branch
+NOVA_BRANCH=stable/havana
+
+# OpenStack Block Storage branch
+CINDER_BRANCH=stable/havana
+
+# OpenStack Image Service branch
+GLANCE_BRANCH=stable/havana
+
+# OpenStack Dashboard branch
+HORIZON_BRANCH=stable/havana
+
+# OpenStack Object Storage branch
+SWIFT_BRANCH=stable/havana
+
+enable_service swift
+
+# Object Storage Settings
+SWIFT_HASH=66a3d6b56c1f479c8b4e70ab5c2000f5
+SWIFT_REPLICAS=1
+
+# Block Storage Setting
+VOLUME_BACKING_FILE_SIZE=20480M
+
+# Output
+LOGFILE=/opt/stack/logs/stack.sh.log
+VERBOSE=True
+LOG_COLOR=False
+SCREEN_LOGDIR=/opt/stack/logs</pre>
+</div></div><br class="example-break"/></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="swift_middleware_example"> </a>Настройка ПО промежуточного уровня хранилища объектов (Swift)</h2>
+</div></div></div>
+<p>Хранилище объектов OpenStack, известное как swift при чтении кодов, основано на инфраструктуре 
+Python  <a class="link" href="http://pythonpaste.org/" target="_top">Paste</a>. 
+Лучшим введениев в ее архитектуру является
+<a class="link" href="http://pythonpaste.org/do-it-yourself-framework.html" target="_top">A Do-It-Yourself Framework</a> 
+(Создайте собственную инфраструктуру).
+Поскольку проект swift использует эту инфраструктуру, вы можете добавлять новые 
+функции в проект путем размещения пользовательского кода в конвейере проекта 
+без каких- либо изменений в код ядра.
+<a id="d9e6444" class="indexterm"/>
+<a id="d9e6446" class="indexterm"/>
+<a id="d9e6448" class="indexterm"/>
+<a id="d9e6451" class="indexterm"/>
+<a id="d9e6454" class="indexterm"/>
+<a id="d9e6457" class="indexterm"/></p>
+<p>Представьте себе ситуацию, при которой у вас есть общественный доступ к одной из ваших 
+контейнеров, однако в действительности вы хотите ограничить доступ к этому 
+набору IP-адресов на основе белого списка. В данном примере мы создадим часть 
+программного обеспечения промежуточного уровня для swift, которая позволяет получить доступ к контейнеру только 
+из набора IP-адресов, которые определены элементами метаданных контейнера. Только те 
+IP-адреса, которые вы явно занесли в белый список при помощи метаданных контейнера, 
+смогут получить доступ к контейнеру.</p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Данный пример приводится исключительно в демонстрационных целях.
+ Он не может использоваться для решения белого списка IP контейнера
+ без дальнейшей проработки и интенсивного тестирования безопасности.
+ <a id="d9e6463" class="indexterm"/></p></td></tr></table>
+</div>
+<p>Когда вы присоединитесь к экрану сеанса, который запустил 
+<code class="code">stack.sh</code> при помощи <code class="code">screen -r stack</code>, 
+вы увидите по экрану для каждой работающей службы, которых может быть немного или определенное
+количество: в зависимости от того как много служб настроен выполнять ваш DevStack.</p>
+<p>Звездочка * обозначает какое окно экрана вы наблюдаете. 
+Данный пример демонстрирует, что мы просмативаем окно экрана key (для keystone):</p>
+<pre class="screen">0$ shell  1$ key*  2$ horizon  3$ s-proxy  4$ s-object  5$ s-container  6$ s-account</pre>
+<p>Цели для окон экрана следующие:</p>
+<div class="variablelist"><dl><dt><span class="term"><code class="code">shell</code></span></dt><dd>
+<p>Оболочка, в которой вы можете выполнять некую работу</p></dd><dt><span class="term"><code class="code">key*</code></span></dt><dd>
+<p>Служба keystone</p></dd><dt><span class="term"><code class="code">horizon</code></span></dt><dd>
+<p>Веб-приложение инструментальной панели horizon</p></dd><dt><span class="term"><code class="code">s-{name}</code></span></dt><dd>
+<p>Службы swift</p></dd></dl>
+</div>
+<div class="procedure">
+<a id="d9e6493"> </a>
+<p class="title"><strong>Чтобы создать программное обеспечение промежуточного уровня и 
+подключить его при помощи настройки Paste:</strong></p>
+<p>Все коды для OpenStack размещаются в <code class="code">/opt/stack</code>. 
+Перейдите в каталог swift в <code class="code">оболочке</code> экрана 
+и отредактируйте ваш модуль ПО промежуточного уровя.</p><ol class="procedure" type="1"><li class="step">
+ <p>Перейдите в каталог, в котором установлено хранилище объектов:</p>
+ <pre class="screen">$ cd /opt/stack/swift</pre></li><li class="step">
+ <p>Создайте файл кода Python <code class="literal">ip_whitelist.py</code> :</p>
+ <pre class="screen">$ vim swift/common/middleware/ip_whitelist.py</pre></li><li class="step">
+ <p>Скопируйте код из <a class="xref" href="customize.html#ip_whitelist" title="Пример 15.2. ip_whitelist.py">
+ Примера 15.2, “ip_whitelist.py”</a> в ваш <code class="filename">ip_whitelist.py</code>. 
+ Следующий код является образцом промежуточного программного обеспечения, 
+ которое ограничивает доступ к контейнеру на основе IP адресов,
+ как это объяснялось в начале данного раздела. Промежуточное ПО передает запросы
+ другому приложению. Данный пример использует библиотеку swift &quot;swob&quot; 
+ для обертывания запросов и ответов Web Server Gateway Interface (WSGI)
+ к объектам для взаимодействия со swift. По окончанию сохраните и закройте файл.</p>
+ <div class="example">
+ <a id="ip_whitelist"> </a>
+ <p class="title"><strong>Пример 15.2. ip_whitelist.py</strong></p>
+ <div class="example-contents">
+ <pre class="programlisting brush: python; "># vim: tabstop=4 shiftwidth=4 softtabstop=4
+# Copyright (c) 2014 OpenStack Foundation
+# All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+import socket
+
+from swift.common.utils import get_logger
+from swift.proxy.controllers.base import get_container_info
+from swift.common.swob import Request, Response
+
+class IPWhitelistMiddleware(object):
+    """
+    IP Whitelist Middleware
+
+    Middleware that allows access to a container from only a set of IP
+    addresses as determined by the container's metadata items that start
+    with the prefix 'allow'. E.G. allow-dev=192.168.0.20
+    """
+
+    def __init__(self, app, conf, logger=None):
+        self.app = app
+
+        if logger:
+            self.logger = logger
+        else:
+            self.logger = get_logger(conf, log_route='ip_whitelist')
+
+        self.deny_message = conf.get('deny_message', "IP Denied")
+        self.local_ip = socket.gethostbyname(socket.gethostname())
+
+    def __call__(self, env, start_response):
+        """
+        WSGI entry point.
+        Wraps env in swob.Request object and passes it down.
+
+        :param env: WSGI environment dictionary
+        :param start_response: WSGI callable
+        """
+        req = Request(env)
+
+        try:
+            version, account, container, obj = req.split_path(1, 4, True)
+        except ValueError:
+            return self.app(env, start_response)
+
+        container_info = get_container_info(
+            req.environ, self.app, swift_source='IPWhitelistMiddleware')
+
+        remote_ip = env['REMOTE_ADDR']
+        self.logger.debug("Remote IP: %(remote_ip)s",
+                          {'remote_ip': remote_ip})
+
+        meta = container_info['meta']
+        allow = {k:v for k,v in meta.iteritems() if k.startswith('allow')}
+        allow_ips = set(allow.values())
+        allow_ips.add(self.local_ip)
+        self.logger.debug("Allow IPs: %(allow_ips)s",
+                          {'allow_ips': allow_ips})
+
+        if remote_ip in allow_ips:
+            return self.app(env, start_response)
+        else:
+            self.logger.debug(
+                "IP %(remote_ip)s denied access to Account=%(account)s "
+                "Container=%(container)s. Not in %(allow_ips)s", locals())
+            return Response(
+                status=403,
+                body=self.deny_message,
+                request=req)(env, start_response)
+
+
+def filter_factory(global_conf, **local_conf):
+    """
+    paste.deploy app factory for creating WSGI proxy apps.
+    """
+    conf = global_conf.copy()
+    conf.update(local_conf)
+
+    def ip_whitelist(app):
+        return IPWhitelistMiddleware(app, conf)
+    return ip_whitelist</pre>
+ </div>
+</div><br class="example-break"/>
+<p>В<code class="code">env</code> и <code class="code">conf</code> существует много 
+полезной информации которую вы можете использовать для принятия решения о том что делать с 
+запросом. Для поиска того какие еще свойства доступны, вы можете вставить следующий
+оператор в метод <code class="code">__init__</code>:</p>
+<pre class="programlisting brush: python; ">self.logger.debug("conf = %(conf)s", locals())</pre>
+<p>и следующий оператор протоколирования в метод <code class="code">__call__</code>:</p>
+<pre class="programlisting brush: python; ">self.logger.debug("env = %(env)s", locals())</pre></li><li class="step">
+<p>Чтобы вставить это промежуточное по в конвейер swift Paste, вы
+редактируете один файл настройки, <code class="filename">/etc/swift/proxy-server.conf</code>:</p>
+<pre class="screen">$ vim /etc/swift/proxy-server.conf</pre></li><li class="step">
+<p>Найдите раздел <code class="code">[filter:ratelimit]</code> в
+<code class="filename">/etc/swift/proxy-server.conf</code>, и скопируйте 
+следующий сегмент настройки после него:</p>
+<pre class="programlisting brush: bash; ">[filter:ip_whitelist]
+paste.filter_factory = swift.common.middleware.ip_whitelist:filter_factory
+# You can override the default log routing for this filter here:
+# set log_name = ratelimit
+# set log_facility = LOG_LOCAL0
+# set log_level = INFO
+# set log_headers = False
+# set log_address = /dev/log
+deny_message = You shall not pass!</pre></li><li class="step">
+<p>Найдите раздел <code class="code">[pipeline:main]</code> в
+<code class="filename">/etc/swift/proxy-server.conf</code>, и
+добавьте вперечень после ratelimit <code class="code">ip_whitelist</code> подобный
+приведенному ниже. Когда завершите редактирование, сохраните и закройте файл:</p>
+<pre class="programlisting brush: bash; ">[pipeline:main]
+pipeline = catch_errors healthcheck proxy-logging cache bulk slo ratelimit ip_whitelist ...</pre></li><li class="step">
+<p>Перезапустите службу <code class="literal">swift proxy</code> позволив swift
+использовать ваше промежуточное ПО. Начните с переключения на экран 
+<code class="literal">swift-proxy</code>:</p><ol type="a" class="substeps"><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим <span class="keycap"><strong>3</strong></span>.</p></li><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>C</strong></span> 
+для прекращения службы.</p></li><li class="step">
+<p>Нажмитена клавишу стрелки Вверх для отображения последней команды.</p></li><li class="step">
+<p>Нажмите Enter для еевыполнения.</p></li></ol></li><li class="step">
+<p>Проверьте свое промежуточное ПО с CLI <code class="code">swift</code>. 
+Начните с переключения на экран оболочки завершите переключением назад на
+экран <code class="code">swift-proxy</code> для проверки выдачи протокола:</p><ol type="a" class="substeps"><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим 0.</p></li><li class="step">
+<p>Убедитесь, что вы находитесь в каталоге <code class="literal">devstack</code>:</p>
+<pre class="screen">$ cd /root/devstack</pre></li><li class="step">
+<p>Чтобы установить переменные окружения для CLI, получите openrc:</p>
+<pre class="screen">$ source openrc</pre></li><li class="step">
+<p>Создайте контейнер с названием <code class="literal">middleware-test</code>:</p>
+<pre class="screen">$ swift post middleware-test</pre></li><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим <span class="keycap"><strong>3</strong></span> 
+для проверки выдачи протокола.</p></li></ol></li><li class="step">
+<p>Среди предложений журнала вы можете увидеть строки:</p>
+<pre class="screen">proxy-server Remote IP: my.instance.ip.address (txn: ...)
+proxy-server Allow IPs: set(['my.instance.ip.address']) (txn: ...)</pre>
+<p>Эти два предложения выполнены нашим промежуточным ПО и показывают, что 
+запрос был отослан из нашего экземпляра DevStack и был разрешен.</p></li><li class="step">
+<a id="test_middleware_step"> </a>
+<p>Проверьте наше промежуточное ПО извне DevStack на удаленной машине,
+которая имеет доступ к вашему экземпляру DevStack:</p><ol type="a" class="substeps"><li class="step">
+<p>Установите клиентов <code class="code">keystone</code> и <code class="code">swift</code>
+на вашу локальную машину:</p>
+<pre class="screen"># pip install python-keystoneclient python-swiftclient</pre></li><li class="step">
+<p>Попробуйте отобразить список объектов в контейнере <code class="literal">middleware-test</code>:</p>
+<pre class="screen">$ swift --os-auth-url=http://my.instance.ip.address:5000/v2.0/ \
+--os-region-name=RegionOne --os-username=demo:demo \
+--os-password=devstack list middleware-test
+Container GET failed: http://my.instance.ip.address:8080/v1/AUTH_.../
+    middleware-test?format=json 403 Forbidden   You shall not pass!</pre></li></ol></li><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим <span class="keycap"><strong>3</strong></span>для проверки выдачи протокола.
+Взгляните снова на предложения swift в журнале,
+вы увидите строки:</p>
+<pre class="screen">proxy-server Authorizing from an overriding middleware (i.e: tempurl) (txn: ...)
+proxy-server ... IPWhitelistMiddleware
+proxy-server Remote IP: my.local.ip.address (txn: ...)
+proxy-server Allow IPs: set(['my.instance.ip.address']) (txn: ...)
+proxy-server IP my.local.ip.address denied access to Account=AUTH_... \
+   Container=None. Not in set(['my.instance.ip.address']) (txn: ...)</pre>
+<p>Здест вы можете увидеть, что запрос был запрещен, поскольку
+IP удаленного узла не был установлен в список разрешенных.</p></li><li class="step">
+<p>Вернитесь в ваш экземпляр DevStack на экран оболочки, 
+дабавьте немного метаданных в ваш контейнер для разрешения запросов 
+с удаленной машины:</p><ol type="a" class="substeps"><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим <span class="keycap"><strong>0</strong></span>.</p></li><li class="step">
+<p>Добавьте метаданные в контейнер для разрешения данного IP:</p>
+<pre class="screen">$ swift post --meta allow-dev:my.local.ip.address middleware-test</pre></li><li class="step">
+<p>Теперь попробуйте снова повторить команды начиная с шага 10 и далее.
+В контейнере нет объектов, следовательно нечего отображать; 
+однако также отсутствуют сообщения об ошибках.</p></li></ol></li></ol>
+</div>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Функциональное тестирование подобное приведенному не замещает
+надлежащего тестирования блоков и интеграции, однако служит началом для вас.
+ <a id="d9e6622" class="indexterm"/>
+ <a id="d9e6625" class="indexterm"/></p></td></tr></table>
+</div>
+<p>Вы можете следовать подобному шаблону в других проектах, которые используют
+инфраструктуру Python Paste. Просто создайте модуль промежуточного ПО
+и подключите его при помощи настройки. Промежуточное программное обеспечение 
+работает в последовательности как часть конвейера проекта по необходимости может вызывать
+другие службы. Не затрагивается никакой код ядра проекта. Найдите значение
+<code class="code">pipeline</code> в файлах настройки проекта 
+<code class="code">conf</code> или <code class="code">ini</code> в
+<code class="code">/etc/&lt;project&gt;</code> для выявления проектов, 
+использующих.</p>
+<p>Когда ваше промежуточное программное обеспечение готово, мы советуем вам
+сделать его код открытым и и оповестить о нем сообщество через список электронной
+почтовой рассылки OpenStack. Возможно кому-то еще требуется подобная 
+функциональность. Люди смогут воспользоваться вашим кодом и снабдить вас обратной связью,
+а также, возможно, сделать пожертвования. Если для вашего кода окажется достаточно
+поддержки, вы сможете предложить добавить его в официальное программное обеспечение 
+промежуточного уровня swift 
+<a class="link" href="https://github.com/openstack/swift/tree/master/swift/common/middleware" target="_top">middleware</a>.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="nova_scheduler_example"> </a>Настройка планировщика вычислительной среды OpenStack (nova)</h2>
+</div></div></div>
+<p>Многие проекты OpenStack допускабт настройку под индивидуальные требования пользователя 
+особенных свойств с использованием архитектуры драйверов. Вы можете написать драйвер, 
+который соответствует определенному интерфейсу и подключить его с использованием 
+настроек. Например, вы легко можете подключить новый планировщик к 
+вычислительной среде. Существующие планировщики для вычислительной среды функционально полны 
+и хорошо документированы на странице 
+<a class="link" href="http://docs.openstack.org/trunk/config-reference/content/section_compute-scheduler.html" target="_top">
+Scheduling</a>. Однако, в зависимости от случаев использования вашими пользователями,
+существующие планировщики могут не отвечать вашим требованиям.
+Возможно, вам потребуется создать новый планировщик.
+<a id="d9e6638" class="indexterm"/>
+<a id="d9e6641" class="indexterm"/>
+<a id="d9e6644" class="indexterm"/></p>
+<p>Для создания планировщика вы должны наследовать из класса
+<code class="code">nova.scheduler.driver.Scheduler</code>. 
+Из пяти методов, которые вы можете переписывать, вы <span class="emphasis"><em>должны</em></span> 
+переписать два метода, помеченных ниже звездочкой (*):</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p><code class="code">update_service_capabilities</code></p></li><li class="listitem">
+ <p><code class="code">hosts_up</code></p></li><li class="listitem">
+ <p><code class="code">group_hosts</code></p></li><li class="listitem">
+ <p>* <code class="code">schedule_run_instance</code></p></li><li class="listitem">
+ <p>* <code class="code">select_destinations</code></p></li></ul>
+</div>
+<p>Для демонстрации настройки OpenStack под индивидуального пользователя, мы создадим пример
+планировщика вычислительных ресурсов, который случайным образом размещает экземпляры 
+в подмножестве хостов в зависимости от IP адреса инициации запроса и префикса имени хоста.
+Данный пример может оказаться полезным для случая, когда у вас есть группа пользователей 
+подсети и вы хотите чтобы все их экземпляры запускались в пределах некоторого
+подмножества ваших хостов.</p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Данный пример приводится исключеительно для иллюстрации. Он не должен
+ использоваться в планировщике для вычислительной среды без дальнейшей доработки и
+ <span class="keep-together">тестирования</span>.
+ <a id="d9e6670" class="indexterm"/></p></td></tr></table>
+</div>
+<p>Когда вы присоединяетесь к сеансу, который запустил <code class="code">stack.sh</code>
+при помощи <code class="code">screen -r stack</code>, вас встречает множество окон
+экрана:</p>
+<pre class="screen">0$ shell*  1$ key  2$ horizon  ...  9$ n-api  ...  14$ n-sch ...</pre>
+<div class="variablelist"><dl><dt><span class="term"><code class="code">shell</code></span></dt><dd>
+ <p>Оболочка, в которой вы можете выполнять некоторую работу</p></dd><dt><span class="term"><code class="code">key</code></span></dt><dd>
+ <p>Служба keystone</p></dd><dt><span class="term"><code class="code">horizon</code></span></dt><dd>
+ <p>Веб- приложение инструментальной панели horizon</p></dd><dt><span class="term"><code class="code">n-{name}</code></span></dt><dd>
+ <p>Службы nova</p></dd><dt><span class="term"><code class="code">n-sch</code></span></dt><dd>
+ <p>Служба планировщика nova</p></dd></dl>
+</div>
+
+<div class="procedure">
+<a id="d9e6703"> </a>
+
+<p class="title"><strong>Чтобы создать планировщик и вставить его в 
+конфигурацию:</strong></p><ol class="procedure" type="1"><li class="step">
+<p>Код для OpenStack расположен в <code class="code">/opt/stack</code>, 
+следовательно, перейдите в каталог <code class="literal">nova</code> 
+и отредактируйте ваш модуль планировщика. 
+Перейдитев каталог, в котором установлен <code class="literal">nova</code>:</p>
+<pre class="screen">$ cd /opt/stack/nova</pre></li><li class="step">
+<p>Создайте исходный файл кода Python <code class="filename">ip_scheduler.py</code>:</p>
+<pre class="screen">$ vim nova/scheduler/ip_scheduler.py</pre></li><li class="step">
+<p>Код в <a class="xref" href="customize.html#ip_scheduler" title="Пример.3. ip_scheduler.py">
+Примере 15.3, “ip_scheduler.py”</a> является драйвером, который будет управлять серверами для
+размещения на основе IP адресов, как это объяснялось в начале раздела. Скопируйте код в 
+<code class="filename">ip_scheduler.py</code>. По окончанию сохраните и закройте файл.</p>
+<div class="example">
+<a id="ip_scheduler"> </a>
+
+<p class="title"><strong>Пример 15.3. ip_scheduler.py</strong></p>
+<div class="example-contents">
+<pre class="programlisting brush: python; "># vim: tabstop=4 shiftwidth=4 softtabstop=4
+# Copyright (c) 2014 OpenStack Foundation
+# All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+"""
+IP Scheduler implementation
+"""
+
+import random
+
+from oslo.config import cfg
+
+from nova.compute import rpcapi as compute_rpcapi
+from nova import exception
+from nova.openstack.common import log as logging
+from nova.openstack.common.gettextutils import _
+from nova.scheduler import driver
+
+CONF = cfg.CONF
+CONF.import_opt('compute_topic', 'nova.compute.rpcapi')
+LOG = logging.getLogger(__name__)
+
+class IPScheduler(driver.Scheduler):
+    """
+    Implements Scheduler as a random node selector based on
+    IP address and hostname prefix.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(IPScheduler, self).__init__(*args, **kwargs)
+        self.compute_rpcapi = compute_rpcapi.ComputeAPI()
+
+    def _filter_hosts(self, request_spec, hosts, filter_properties,
+        hostname_prefix):
+        """Filter a list of hosts based on hostname prefix."""
+
+        hosts = [host for host in hosts if host.startswith(hostname_prefix)]
+        return hosts
+
+    def _schedule(self, context, topic, request_spec, filter_properties):
+        """Picks a host that is up at random."""
+
+        elevated = context.elevated()
+        hosts = self.hosts_up(elevated, topic)
+        if not hosts:
+            msg = _("Is the appropriate service running?")
+            raise exception.NoValidHost(reason=msg)
+
+        remote_ip = context.remote_address
+
+        if remote_ip.startswith('10.1'):
+            hostname_prefix = 'doc'
+        elif remote_ip.startswith('10.2'):
+            hostname_prefix = 'ops'
+        else:
+            hostname_prefix = 'dev'
+
+        hosts = self._filter_hosts(request_spec, hosts, filter_properties,
+            hostname_prefix)
+        if not hosts:
+            msg = _("Could not find another compute")
+            raise exception.NoValidHost(reason=msg)
+
+        host = random.choice(hosts)
+        LOG.debug("Request from %(remote_ip)s scheduled to %(host)s" % locals())
+
+        return host
+
+    def select_destinations(self, context, request_spec, filter_properties):
+        """Selects random destinations."""
+        num_instances = request_spec['num_instances']
+        # NOTE(timello): Returns a list of dicts with 'host', 'nodename' and
+        # 'limits' as keys for compatibility with filter_scheduler.
+        dests = []
+        for i in range(num_instances):
+            host = self._schedule(context, CONF.compute_topic,
+                    request_spec, filter_properties)
+            host_state = dict(host=host, nodename=None, limits=None)
+            dests.append(host_state)
+
+        if len(dests) &lt; num_instances:
+            raise exception.NoValidHost(reason='')
+        return dests
+
+    def schedule_run_instance(self, context, request_spec,
+                              admin_password, injected_files,
+                              requested_networks, is_first_time,
+                              filter_properties, legacy_bdm_in_spec):
+        """Create and run an instance or instances."""
+        instance_uuids = request_spec.get('instance_uuids')
+        for num, instance_uuid in enumerate(instance_uuids):
+            request_spec['instance_properties']['launch_index'] = num
+            try:
+                host = self._schedule(context, CONF.compute_topic,
+                                      request_spec, filter_properties)
+                updated_instance = driver.instance_update_db(context,
+                        instance_uuid)
+                self.compute_rpcapi.run_instance(context,
+                        instance=updated_instance, host=host,
+                        requested_networks=requested_networks,
+                        injected_files=injected_files,
+                        admin_password=admin_password,
+                        is_first_time=is_first_time,
+                        request_spec=request_spec,
+                        filter_properties=filter_properties,
+                        legacy_bdm_in_spec=legacy_bdm_in_spec)
+            except Exception as ex:
+                # NOTE(vish): we don't reraise the exception here to make sure
+                #             that all instances in the request get set to
+                #             error properly
+                driver.handle_schedule_error(context, ex, instance_uuid,
+                                             request_spec)</pre>
+ </div>
+</div><br class="example-break"/>
+<p>Существует много полезной информации в <code class="code">context</code>,
+<code class="code">request_spec</code> и <code class="code">filter_properties</code>, 
+которую вы можете использовать для принятия решения о том где запланировать экземпляр.
+Для ознакомления с дополнительной информацией о доступных свойствах вы можете вставить
+следующие операторы протоколирования в метод <code class="code">schedule_run_instance</code> 
+приведенного выше планировщика:</p>
+<pre class="programlisting brush: python; ">LOG.debug("context = %(context)s" % {'context': context.__dict__})
+LOG.debug("request_spec = %(request_spec)s" % locals())
+LOG.debug("filter_properties = %(filter_properties)s" % locals())</pre></li><li class="step">
+<p>Для вставки этого планировщика в nova, отредактируйте один файл настройки,
+а именно, <code class="filename">/etc/nova/nova.conf</code>:</p>
+<pre class="screen">$ vim /etc/nova/nova.conf</pre></li><li class="step">
+<p>Найдите настройку <code class="code">scheduler_driver</code> и змените ее примерно так:</p>
+<pre class="programlisting brush: bash; ">scheduler_driver=nova.scheduler.ip_scheduler.IPScheduler</pre></li><li class="step">
+<p>Перезапустите службу планировщика nova, чтобы позволить nova использовать ваш планировщик. 
+Начните с переключения на экран <code class="code">n-sch</code>:</p><ol type="a" class="substeps"><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим <span class="keycap"><strong>9</strong></span>.</p></li><li class="step">
+<p>Нажимайте <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим <span class="keycap"><strong>N</strong></span> 
+пока не достигните экрана <code class="code">n-sch</code>.</p></li><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>C</strong></span> 
+для прекращения службы.</p></li><li class="step">
+<p>Нажмите клавишу со стрелкой Вверх для вызова последней команды.</p></li><li class="step">
+<p>Yf;vbnt Enter для ее запуска.</p></li></ol></li><li class="step">
+<p>Проверьте свой новый планировщик с применением nova CLI. Начните со переключения 
+на экран <code class="code">shell</code> и завершите переключением на экран
+<code class="code">n-sch</code> для проверки выдачи протоколов:</p><ol type="a" class="substeps"><li class="step">
+<p>Нажмите <span class="keycap"><strong>Ctrl</strong></span>+<span class="keycap"><strong>A</strong></span> 
+с последующим <span class="keycap"><strong>0</strong></span>.</p></li><li class="step">
+<p>Убедитесь что вы находитесь в каталоге <code class="filename">devstack</code>:</p>
+<pre class="screen">$ cd /root/devstack</pre></li><li class="step">
+<p>Чтобы получить переменные окружения для CLI, установите источник <code class="filename">openrc</code>:</p>
+<pre class="screen">$ source openrc</pre></li><li class="step">
+<p>Поместите ID образа для единственного установленного образа в переменную окружения:</p>
+<pre class="screen">$ IMAGE_ID=`nova image-list | egrep cirros | egrep -v "kernel|ramdisk" | awk '{print $2}'`</pre></li><li class="step">
+<p>Загрузите пробный сервер:</p>
+<pre class="screen">$ nova boot --flavor 1 --image $IMAGE_ID scheduler-test</pre></li></ol></li><li class="step">
+<p>Переключитесь назад на экран <code class="code">n-sch</code>. 
+Среди предложений журнала вы увидите строку:</p>
+<pre class="screen">2014-01-23 19:57:47.262 DEBUG nova.scheduler.ip_scheduler \
+[req-... demo demo] Request from 162.242.221.84 \
+scheduled to devstack-havana \
+_schedule /opt/stack/nova/nova/scheduler/ip_scheduler.py:76</pre></li></ol>
+</div>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Функциональное тестирование подобно приведенному не подменяет соответствующее 
+ тестирование блоков и интеграции, однако служит отправной точкой.</p></td></tr></table>
+</div>
+<p>Аналогичным образом можно следовать в других проектах, которые используют
+архитектуру драйвера. Просто создайте модуль и класс, которые соответствуют 
+интерфейсу драйвера и вставьте его при помощи настройки. Ваш код работает при использовании 
+данной функциональной особенности и, по необходимости, может вызывать другие службы.
+Никакой код ядра проекта не затрагивается. Осуществите поиск значения &quot;driver&quot;
+в файлах настройки <code class="filename">.conf</code>
+проекта в <code class="code">/etc/&lt;project&gt;</code> для выявления проектов, которые используют
+архитектуру драйвера.</p>
+<p>Когда ваш планировщик завершен, мы рекомендуем вам открытьего код и дать
+знать о нем сообществу через список рассылки электронной почты OpenStack. 
+Возможно кому-то еще требуется подобная функциональность. Люди смогут 
+воспользоваться вашим кодом и снабдить вас обратной связью, а также, 
+возможно, сделать пожертвования. Если для вашего кода окажется достаточно
+поддержки, возможно, вы сможете предложить его добавление в официальное программное обеспечение 
+промежуточного уровня вычислительной среды  
+<a class="link" href="https://github.com/openstack/nova/tree/master/nova/scheduler" target="_top">schedulers</a>.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops_dashboard"> </a>Настройка инструментальной панели(Horizon)</h2>
+</div></div></div>
+<p>Инструментальная панель основана на инфраструктуре веб-приложения Python 
+<a class="link" href="https://www.djangoproject.com/" target="_top">Django</a> 
+Лучшееруководствопо индивидуальной настройке ужебыло написано и его можно найти по ссылке 
+<a class="link" href="http://docs.openstack.org/developer/horizon/topics/tutorial.html" target="_top">
+Building on Horizon</a> (Построение Horizon).
+<a id="d9e6803" class="indexterm"/>
+<a id="d9e6805" class="indexterm"/>
+<a id="d9e6807" class="indexterm"/>
+<a id="d9e6809" class="indexterm"/>
+<a id="d9e6812" class="indexterm"/></p></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="customize_conclusion"> </a>Выводы</h2>
+</div></div></div>
+<p>При эксплуатации облака OpenStack, вы можете обнаружить, что ваши пользователи 
+могут оказаться довольно требовательными. Если OpenStack не выполняет что-то,
+в чем нуждаются ваши пользователи, по вашему усмотрению, можно выполнить эти требования.
+Данная глава предоставляет вам некоторые параметры для индивидуальной настройки и
+снабжает вас инструментарием, необходимым вам для начала.</p>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

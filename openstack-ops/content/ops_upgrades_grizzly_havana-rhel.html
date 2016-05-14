@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Как выполнить модернизацию с Grizzly на Havana—Red Hat Enterprise Linux и производные ОС - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="ch_ops_upgrades.html" title="Глава 18. Модернизации"/>
+<link rel="prev" href="ops_upgrades_grizzly_havana-ubuntu.html" title="Как выполнить модернизацию с Grizzly на Havana—Ubuntu"/>
+<link rel="next" href="upgrades_havana-icehouse-ubuntu.html" title="Как выполнить модернизацию с Havana на Icehouse—Ubuntu"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:12+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//ops_upgrades_grizzly_havana-rhel.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Как выполнить модернизацию с Grizzly на Havana—Red Hat Enterprise Linux и производные ОС';
+PrevRef = 'ops_upgrades_grizzly_havana-ubuntu.html';
+UpRef = 'ch_ops_upgrades.html';
+NextRef = 'upgrades_havana-icehouse-ubuntu.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops_upgrades_grizzly_havana-rhel"> </a>
+ Как выполнить модернизацию с Grizzly на Havana—Red Hat Enterprise Linux и производные ОС</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_impact_users-rhel">Воздействие на пользователей</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_considerations-rhel">Анализ модернизации</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_backup-rhel">Выполнение резервного копирования</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_manage_repos-rhel">Управление репозиториями</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_update_configuration-rhel">Обновление файлов настройки</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_packages_controller-rhel">Пакеты модернизации на узле контроллера</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_database_restart-rhel">
+ Останов служб, обновление схем базы данных и перезапуск служб на контроллере узла</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_packages_compute-rhel">
+ Пакеты модернизации и перезапуск служб на вычислительном узле</a></span></dt><dt><span class="section">
+ <a href="ops_upgrades_grizzly_havana-rhel.html#upgrade_packages_storage-rhel">
+ Пакеты модернизации и перезапуск служб на узле блочного хранилища</a></span></dt></dl>
+</div>
+<p>В данном разделе мы предполагаем, что вы начинаете с архитектурой, представленной в 
+<a class="link" href="http://docs.openstack.org/havana/install-guide/install/yum/content/" target="_top"><em class="citetitle">
+Руководстве по установке OpenStack</em></a> 
+и выполняете модернизацию для той же архитектуры Havana. Все узлы должны выполнять 
+Red Hat Enterprise Linux 6.4 или совместимые производные ОС. Более новые редакции
+с незначительными изменениями также должны работать.
+В данном разделе в первую очередь обсуждаются службы ядра OpenStack, такие, 
+как служба идентификации (keystone), служба образов (glance), вычислительные ресурсы (nova), 
+включающие сетевую среду, блочные хранилища (cinder), а также инструментальную панель. 
+<a id="UPredhat" class="indexterm"/></p>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_impact_users-rhel"> </a>Воздействие на пользователей</h3>
+</div></div></div>
+<p>Процесс модернизации прерывает управление вашей средой, 
+в том числе через инструментальную панель. Если вы правильно подготовитесь 
+к данной модернизации, экземпляры владельцев нормально продолжат свою работу.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_considerations-rhel"> </a>Анализ модернизации</h3>
+</div></div></div>
+<p>Перед выполнением модернизации всегда просматривайте 
+<a class="link" href="https://wiki.openstack.org/wiki/ReleaseNotes/Havana" target="_top">замечания к редакции</a> 
+для ознакомления с новой доступной функциональностью, которую, возможно, вы допустите, 
+при этом устаревшие свойства вы должны отключить.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_backup-rhel"> </a>Выполнение резервного копирования</h3>
+</div></div></div>
+<p>Вначале сохраните файлы настройки на всех узлах:</p>
+<pre class="screen"># for i in keystone glance nova cinder openstack-dashboard; \
+  do mkdir $i-grizzly; \
+  done
+# for i in keystone glance nova cinder openstack-dashboard; \
+  do cp -r /etc/$i/* $i-grizzly/; \
+  done</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Вы можете изменить данный пример сценария на каждом узле для обработки различных служб.</p></td></tr></table>
+</div>
+<p>Далее выполните резервное копирование всех баз данных на контроллере:</p>
+<pre class="screen"># mysqldump -u root -p --opt --add-drop-database \
+  --all-databases &gt; grizzly-db-backup.sql</pre>
+</div>
+
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_manage_repos-rhel"> </a>Управление репозиториями</h3>
+</div></div></div>
+<p>Удалите репозиторий для пакетов Grizzly на всех узлах и добавьте репозиторий для пакетов Havana:</p>
+<pre class="screen"># yum erase rdo-release-grizzly
+# yum install http://repos.fedorapeople.org/repos/openstack/openstack-havana/ \
+  rdo-release-havana-7.noarch.rpm</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Проверьте, что все автоматические обновления запрещены.</p></td></tr></table>
+</div>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Попробуйте найти более новые версии  
+ <a class="link" href="https://repos.fedorapeople.org/repos/openstack/openstack-havana/" target="_top">
+ репозитория Havana</a>.</p></td></tr></table>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_update_configuration-rhel"> </a>Обновление файлов настройки</h3>
+</div></div></div>
+<p>Модернизируйте настройку glance на узле контроллера для совместимости с <span class="keep-together">Havana</span>.</p>
+<p>Добавьте или измените следующие ключи в файлах
+<code class="filename">/etc/glance/glance-api.conf</code> и
+<code class="filename">/etc/glance/glance-registry.conf</code>:</p>
+<pre class="screen"># openstack-config --set /etc/glance/glance-api.conf keystone_authtoken \
+  auth_uri http://controller:5000
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken \
+  auth_host controller
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken \
+  admin_tenant_name service
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken \
+  admin_user glance
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken \
+  admin_password GLANCE_PASS
+# openstack-config --set /etc/glance/glance-api.conf paste_deploy \
+  flavor keystone</pre>
+<pre class="screen"># openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken \
+  auth_uri http://controller:5000
+# openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken \
+  auth_host controller
+# openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken \
+  admin_tenant_name service
+# openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken \
+  admin_user glance
+# openstack-config --set /etc/glance/glance-registry.conf keystone_authtoken \
+  admin_password GLANCE_PASS
+# openstack-config --set /etc/glance/glance-registry.conf paste_deploy \
+  flavor keystone</pre>
+<p>Если они присутствуют в текущее время, удалите следующие ключи из раздела 
+[filter:authtoken] в файлах 
+<code class="filename">/etc/glance/glance-api-paste.ini</code> и
+<code class="filename">/etc/glance/glance-registry-paste.ini</code>:</p>
+<pre class="programlisting brush: bash; ">[filter:authtoken]
+flavor = keystone</pre>
+<p>Измените настройку nova на всех узлах для совместимости с Havana.</p>
+<p>Добавьте раздел <code class="literal">[database]</code> и 
+связанный с ним ключ в раздел файла <code class="filename">/etc/nova/nova.conf</code>:</p>
+<pre class="screen"># openstack-config --set /etc/nova/nova.conf database \
+  connection mysql://nova:NOVA_DBPASS@controller/nova</pre>
+<p>Удалите вышедшие из употребления настройки базы данных из файла <code class="filename">/etc/nova/nova.conf</code>:</p>
+<pre class="screen"># openstack-config --del /etc/nova/nova.conf DEFAULT sql_connection</pre>
+<p>Добавьте или измените следующие ключи в файле <code class="filename">/etc/nova/nova.conf</code>:</p>
+<pre class="screen"># openstack-config --set /etc/nova/nova.conf keystone_authtoken \
+  auth_uri http://controller:5000/v2.0
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken \
+  auth_host controller
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken \
+  admin_tenant_name service
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken \
+  admin_user nova
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken \
+  admin_password NOVA_PASS</pre>
+<p>Следующим образом увеличьте время владения DHCP (измеряемое в секундах) на всех вычислительных узлах в файле 
+<code class="filename">/etc/nova/nova.conf</code> для разрешения всем активным экземплярам 
+продолжать владеть своими IP адресами в процессе модернизации:</p>
+<pre class="screen"># openstack-config --set /etc/nova/nova.conf DEFAULT \
+  dhcp_lease_time 86400</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Установка этих значений слишком большими может вызвать в более динамичной 
+ среде выход за пределы доступных IP адресов. Используйте 
+ значения, соответствующие вашей среде.</p></td></tr></table>
+</div>
+<p>Вы должны перезапустить dnsmasq и компоненты сети 
+для обновления значения нового времени владения:</p>
+<pre class="screen"># pkill -9 dnsmasq
+# service openstack-nova-network restart</pre>
+<p>Измените настройки Cinder в контроллере и узлах хранения для совместимости с Havana.</p>
+<p>Добавьте раздел <code class="literal">[database]</code> и связанный с ним ключ 
+в файл <code class="filename">/etc/cinder/cinder.conf</code>:</p>
+<pre class="screen"># openstack-config --set /etc/cinder/cinder.conf database \
+  connection mysql://cinder:CINDER_DBPASS@controller/cinder</pre>
+<p>Удалите вышедшие из употребления настройки базы данных из файла 
+<code class="filename">/etc/cinder/cinder.conf</code>:</p>
+<pre class="screen"># openstack-config --del /etc/cinder/cinder.conf DEFAULT sql_connection</pre>
+<p>Добавьте или измените следующий ключ в файле 
+<code class="filename">/etc/cinder/cinder.conf</code>:</p>
+<pre class="screen"># openstack-config --set /etc/cinder/cinder.conf keystone_authtoken \
+  auth_uri http://controller:5000</pre>
+<p>Измените настройку инструментальной панели на узле контроллера для совместимости с Havana.</p>
+<p>Процедура установки и настройки файла инструментальной панели 
+претерпела существенные изменения при переходе с Grizzly на Havana. 
+В частности, если вы работаете под Django 1.5 или более поздними версиями, вы должны 
+убедиться, что <code class="filename">/etc/openstack-dashboard/local_settings</code> 
+содержат правильно настроенные ключи <code class="option">ALLOWED_HOSTS</code>, 
+которые имеют в своем составе список имен хостов, 
+распознаваемый инструментальной панелью.</p>
+<p>Если пользователи осуществляют доступ к вашей инструментальной панели с использованием 
+<span class="emphasis"><em>http://dashboard.example.com</em></span>, определите 
+<code class="option">ALLOWED_HOSTS</code> следующим образом:</p>
+<pre class="programlisting brush: bash; ">ALLOWED_HOSTS=['dashboard.example.com']</pre>
+<p>Если пользователи осуществляют доступ к вашей инструментальной панели в локальной системе, определите 
+<code class="option">ALLOWED_HOSTS</code> следующим образом:</p>
+<pre class="programlisting brush: bash; ">ALLOWED_HOSTS=['localhost']</pre>
+<p>Если пользователи осуществляют доступ к вашей инструментальной панели при помощи IP адреса 
+в добавление к имени хоста, определите 
+<code class="option">ALLOWED_HOSTS</code> следующим образом:</p>
+<pre class="programlisting brush: bash; ">ALLOWED_HOSTS=['dashboard.example.com', '192.168.122.200']</pre>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_packages_controller-rhel"> </a>Пакеты модернизации на узле контроллера</h3>
+</div></div></div>
+<p>Модернизируйте пакеты на узле контроллера для Havana следующим образом:</p>
+<pre class="screen"># yum upgrade</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Некоторые службы могут завершиться с ошибкой в процессе модернизации пакета. 
+ Если такая ошибка может вызвать проблемы с вашей средой, 
+ рассмотрите возможность останова всех служб до их обновления до редакции Havana.</p></td></tr></table>
+</div>
+<p>Установите пакет OpenStack SELinux на узел контроллера:</p>
+<pre class="screen"># yum install openstack-selinux</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Данный администратор пакетов добавляет в конец новых версий существующих файлов
+ префикс <code class="filename">.rpmnew</code>. 
+ Вы должны проанализировать принятые соглашения, связанные 
+ с более новыми файлами настройки и объединить их с существующими файлами 
+ настройки после завершения процесса модернизации.</p></td></tr></table>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_database_restart-rhel"> </a>
+ Останов служб, обновление схем базы данных и перезапуск служб на контроллере узла</h3>
+</div></div></div>
+<p>Остановите все службы, выполните, если это необходимо, команду синхронизации 
+базы данных для обновления схемы базы данных и перезапустите все службы для принятия новых настроек. 
+Перечислим некоторые службы, требующие дополнительные команды:</p>
+<div class="variablelist"><dl><dt><span class="term">Идентификация OpenStack</span></dt><dd>
+<pre class="screen"># service openstack-keystone stop
+# keystone-manage token_flush
+# keystone-manage db_sync
+# service openstack-keystone start</pre></dd><dt>
+<span class="term">Служба образов OpenStack</span></dt><dd>
+<pre class="screen"># service openstack-glance-api stop
+# service openstack-glance-registry stop
+# glance-manage db_sync
+# service openstack-glance-api start
+# service openstack-glance-registry start</pre></dd><dt>
+<span class="term"> Вычислительная среда OpenStack</span></dt><dd>
+<pre class="screen"># service openstack-nova-api stop
+# service openstack-nova-scheduler stop
+# service openstack-nova-conductor stop
+# service openstack-nova-cert stop
+# service openstack-nova-consoleauth stop
+# service openstack-nova-novncproxy stop
+# nova-manage db sync
+# service openstack-nova-api start
+# service openstack-nova-scheduler start
+# service openstack-nova-conductor start
+# service openstack-nova-cert start
+# service openstack-nova-consoleauth start
+# service openstack-nova-novncproxy start</pre></dd><dt>
+<span class="term">Блочное хранилище OpenStack</span></dt><dd>
+<pre class="screen"># service openstack-cinder-api stop
+# service openstack-cinder-scheduler stop
+# cinder-manage db sync
+# service openstack-cinder-api start
+# service openstack-cinder-scheduler start</pre></dd></dl>
+</div>
+<p>Модернизация узла контроллера завершена. Теперь вы можете приступить к модернизации вычислительных узлов.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_packages_compute-rhel"> </a>
+ Пакеты модернизации и перезапуск служб на вычислительном узле</h3>
+</div></div></div>
+<p>Модернизируйте пакеты на вычислительных узлах для редакции Havana:</p>
+<pre class="screen"># yum upgrade</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+  <p>Проверьте, что вы удалили репозиторий для пакетов Grizzly и добавили репозиторий для пакетов Havana.</p></td></tr></table>
+</div>
+<p>Установите пакет OpenStack SELinux на вычислительный узел:</p>
+<pre class="screen"># yum install openstack-selinux</pre>
+<p>
+Перезапустите вычислительные службы:</p>
+<pre class="screen"># service openstack-nova-compute restart
+# service openstack-nova-network restart
+# service openstack-nova-metadata-api restart</pre>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_packages_storage-rhel"> </a>
+ Пакеты модернизации и перезапуск служб на узле блочного хранилища</h3>
+</div></div></div>
+<p>Модернизируйте узлы хранения для редакции Havana:</p>
+<pre class="screen"># yum upgrade</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Убедитесь, что вы удалили репозиторий для пакетов Grizzly 
+ и добавили репозиторий для пакетов Havana.
+ <a id="d9e7604" class="indexterm"/></p></td></tr></table>
+</div>
+<p>Установите пакет OpenStack SELinux на узлы хранения:</p>
+<pre class="screen"># yum install openstack-selinux</pre>
+<p>Перезапустите службы блочного хранилища:</p>
+<pre class="screen"># service openstack-cinder-volume restart</pre>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

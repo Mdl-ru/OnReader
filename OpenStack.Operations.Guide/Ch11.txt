@@ -1,0 +1,957 @@
+Maintenance, Failures, and Debugging
+Downtime, whether planned or unscheduled, is a certainty when running a cloud.
+ This chapter aims to provide useful information for dealing proactively, or reactively with these occurrences.
+Техническое обслуживание, Неудачи, и отладка
+Простои, являются ли планируемые или внеплановой, является определенность при запуске облако.
+  Цель этой главы дать полезную информацию для работы активно или реактивно с этих происшествий.
+
+Cloud Controller and Storage Proxy Failures and Maintenance
+The cloud controller and storage proxy are very similar to each other when it comes to expected and unexpected downtime.
+ One of each server type typically runs in the cloud, which makes them very noticeable when they are not running.
+Облако контроллера и хранения прокси Неудачи и техническое обслуживание
+Контроллер облако и хранение прокси очень похожи друг на друга, когда дело доходит до ожидаемых и неожиданных простоев.
+  Один из каждого типа сервера, как правило, работает в облаке, что делает их очень заметно, когда они не работают.
+
+For the cloud controller, the good news is if your cloud is using the FlatDHCP multihost HA network mode, existing instances and volumes continue to operate while the cloud controller is offline.
+ However for the storage proxy, no storage traffic is possible until it is back up and running.
+Для контроллера облака, хорошей новостью является то, если ваш облако с помощью сетевой режим FlatDHCP multihost HA, существующие экземпляры и объемы продолжают работать в то время как контроллер облака офлайн.
+  Однако для прокси хранения, никакого движения сохранение невозможно, пока он не вернулся и работает.
+
+Planned Maintenance
+One way to plan for cloud controller or storage proxy maintenance is to simply do it off-hours, such as at 1 or 2 A.M.. 
+ This strategy impacts fewer users.
+ If your cloud controller or storage proxy is too important to have unavailable at any point in time, you must look into High Availability options.
+Плановое обслуживание
+Один из способов планировать контроллера облака или обслуживания хранения прокси, чтобы просто сделать это в нерабочее время, например, на 1 или 2 утра.
+ Стратегии воздействия Это меньше пользователей.
+  Если ваш контроллер облака или хранение прокси слишком важна, чтобы иметь недоступен в любой момент времени, вы должны смотреть в высоких вариантов доступности.
+
+Rebooting a cloud controller or Storage Proxy
+All in all, just issue the &quot;reboot&quot; command.
+ The operating system cleanly shuts services down and then automatically reboots.
+ If you want to be very thorough, run your backup jobs just before you reboot.
+Перезагрузка контроллера облака или хранения Proxy
+В целом, только оформить & нетканого материала перезагрузку & Quot; Команда.
+  Операционная система чисто закрывает услуги вниз, а затем автоматически перезагружается.
+  Если вы хотите быть очень тщательным, управлять вашими заданий резервного копирования только до перезагрузки.
+
+After a Cloud Controller or Storage Proxy Reboots
+After a cloud controller reboots, ensure that all required services were successfully started:
+После Controller Cloud или хранения прокси перезагружается
+Через облако контроллера перезагрузки убедитесь, что все необходимые службы были успешно начал:
+<br /><code>
+# ps aux | grep nova-# grep AMQP /var/log/nova/nova-*.log<br />
+# ps aux | grep glance-# ps aux | grep keystone<br />
+# ps aux | grep cinder<br />
+</code>
+
+Also check that all services are functioning:
+<br /><code>
+# source openrc<br />
+# glance index<br />
+# nova list<br />
+# keystone tenant-list<br />
+</code>
+
+For the storage proxy, ensure that the Object Storage service has resumed:
+Для прокси хранения, убедитесь, что служба Объект хранения возобновила:
+<br /><code>
+# ps aux | grep swift<br />
+</code>
+
+Also check that it is functioning:
+<br /><code>
+# swift stat<br />
+</code>
+
+Total Cloud Controller Failure
+Unfortunately, this is a rough situation.
+ The cloud controller is a integral part of your cloud.
+ If you have only one controller, many services are missing.
+Отказ Всего Cloud Controller
+К сожалению, это грубый ситуации.
+  Контроллер облако неотъемлемой частью вашего облака.
+  Если у вас есть только один контроллер, многие услуги отсутствуют.
+
+To avoid this situation, create a highly available cloud controller cluster.
+ This is outside the scope of this document, but you can read more in the draft <span class="red-heading">OpenStack High Availability Guide</span> (<a href="http://docs.openstack.org/trunk/openstack-ha/content/chintro.html">http://docs.openstack.org/trunk/openstack-ha/content/chintro.html</a>).
+Чтобы избежать этой ситуации, создать высокой доступности облако контроллера кластера.
+  Это выходит за рамки этого документа, но вы можете прочитать больше в проекте <SPAN класса = "красно-заголовка"> OpenStack Высокая Руководство Наличие </ SPAN> (< href="http://docs.openstack.org/trunk/openstack-ha/content/chintro.html">http://docs.openstack.org/trunk/openstack-ha/content/chintro.html</a>).
+
+The next best way is to use a configuration management tool such as Puppet to automatically build a cloud controller.
+ This should not take more than 15 minutes if you have a spare server available.
+ After the controller rebuilds, restore any backups taken (see the <strong>Backup and Recovery</strong> chapter).
+Следующий лучший способ заключается в использовании инструмент управления конфигурацией, например, кукол для автоматического создания контроллера облака.
+  Это не должно занять более 15 минут, если у вас имеется запасной сервер.
+  После контроллер восстанавливает, восстановить любые резервные копии, сделанные (см <сильный> Резервное копирование и восстановление </ STRONG> главу).
+
+Also, in practice, sometimes the nova-compute services on the compute nodes do not reconnect cleanly to rabbitmq hosted on the controller when it comes back up after along reboot and a restart on the nova services on the compute nodes is required.
+Кроме того, на практике, иногда Нова-вычислительные услуги на вычислительных узлах не подключите чисто для RabbitMQ размещенную на контроллере, когда он возвращается после вместе перезагрузки и перезагрузки на услуги НОВА вычислительных узлов требуется.
+
+Compute Node Failures and Maintenance
+Sometimes a compute node either crashes unexpectedly or requires a reboot for maintenance reasons.
+Вычислительный узел неудач и обслуживание
+Иногда вычислительный узел либо сбой или неожиданно требует перезагрузки для выполнения технического обслуживания.
+
+Planned Maintenance
+If you need to reboot a compute node due to planned maintenance (such as a software or hardware upgrade), first ensure that all hosted instances have been moved off of the node.
+ If your cloud is utilizing shared storage, use the <code>nova live-migration</code> command.
+ First, get a list of instances that need to be moved:
+Плановое обслуживание
+Если вам нужно перезагрузить вычислительного узла в связи с планового технического обслуживания (например, программного обеспечения или обновления аппаратной части), сначала убедитесь, что все размещаемые случаи были перемещены от узла.
+  Если облако использования общего хранилища, используйте <код> нова проживанию миграции </ кода> команду.
+  Во-первых, получить список экземпляров, которые должны быть перемещены:
+<br /><code>
+# nova list --host c01.example.com --all-tenants<br />
+</code>
+
+Next, migrate them one by one:
+<br /><code>
+# nova live-migration &lt;uuid&gt; c02.example.com<br />
+</code>
+
+If you are not using shared storage, you can use the <code>--block-migrateoption</code>:
+Если вы не используете общее хранилище, вы можете использовать <код> - блок-migrateoption </ код>:
+<br /><code>
+# nova live-migration --block-migrate &lt;uuid&gt; c02.example.com<br />
+</code>
+
+After you have migrated all instances, ensure the nova-computeservice has stopped:
+После переноса всех экземпляров, обеспечить Нова-computeservice остановился:
+<br /><code>
+# stop nova-compute<br />
+</code>
+
+If you use a configuration management system, such as Puppet, that ensures the <code>nova-compute</code> service is always running, you can temporarily move the init files:
+Если вы используете систему управления конфигурацией, например, кукол, которая обеспечивает <код>, Нова-вычислительную </ код> служба всегда работает, вы можете временно переместить инициализации файлов:
+<br /><code>
+# mkdir /root/tmp<br />
+# mv /etc/init/nova-compute.conf /root/tmp<br />
+# mv /etc/init.d/nova-compute /root/tmp<br />
+</code>
+
+Next, shut your compute node down, perform your maintenance, and turn the node back on.
+ You can re-enable the  nova-computeservice by undoing the previous commands:
+Далее, закрой свой вычислительный узел вниз, выполнять работы по обслуживанию, и поверните узел обратно.
+  Вы можете снова включить Nova-computeservice открутив предыдущие команды:
+<br /><code>
+# mv /root/tmp/nova-compute.conf /etc/init<br />
+# mv /root/tmp/nova-compute /etc/init.d/<br />
+</code>
+
+Then start the nova-computeservice:
+Затем запустите Nova-computeservice:
+<br /><code>
+# start nova-compute<br />
+</code>
+
+You can now optionally migrate the instances back to their original compute node.
+Теперь вы можете опционально перенастроить экземпляры обратно в их первоначальное вычислительном узле.
+
+After a Compute Node Reboots
+When you reboot a compute node, first verify that it booted successfully.
+Через вычислительный узел перезагружается
+После перезагрузки вычислительного узла, убедиться, что он загрузился успешно.
+
+ This includes ensuring the nova-computeservice is running:
+  Это включает в себя обеспечение Нова-computeservice работает:
+<br /><code>
+# ps aux | grep nova-compute
+# status nova-compute<br />
+</code>
+
+Also ensure that it has successfully connected to the AMQP server:
+Также убедитесь, что она успешно подключен к AMQP сервере:
+<br /><code>
+# grep AMQP /var/log/nova/nova-compute<br />
+2013-02-26 09:51:31 12427 INFO nova.openstack.common.rpc.common [-] Connected  to AMQP server on 199.116.232.36:5672<br />
+</code>
+
+After the compute node is successfully running, you must deal with the instances that are hosted on that compute node as none of them is running. 
+Depending on your SLA with your users or customers, you might have to start each instance and ensure they start correctly.
+После вычислительный узел работает успешно, вы должны иметь дело с экземплярами, размещенных на этой вычислительного узла, поскольку ни один из них не работает.
+ В зависимости от вашего SLA с ваших пользователей или клиентов, вы, возможно, придется начинать каждый экземпляр и убедиться, что они начинают правильно.
+
+Instances
+You can create a list of instances that are hosted on the compute node by performing the following command:
+Экземпляры
+Вы можете создать список экземпляров, размещенных на вычислительном узле, выполняя следующую команду:
+<br /><code>
+# nova list --host c01.example.com --all-tenants<br />
+</code>
+
+After you have the list, you can use the nova command to start each instance:
+После у вас есть список, вы можете использовать команду нова, чтобы начать каждый экземпляр:
+<br /><code>
+# nova reboot &lt;uuid&gt;<br />
+</code>
+
+Any time an instance shuts down unexpectedly, it might have problems on boot.
+ For example, the instance might require an  fsck  on the root partition.
+ If this happens, the user can use the Dashboard VNC console to fix this.
+Каждый раз, когда экземпляр неожиданно выключается, он может иметь проблемы при загрузке.
+  Например, экземпляр может потребовать FSCK на корневом разделе.
+  Если это произойдет, пользователь может использовать консоль приборной панели VNC, чтобы исправить это.
+
+If an instance does not boot, meaning  virsh listnever shows the instance as even attempting to boot, do the following on the compute node:
+Если экземпляр не загружается, то есть virsh listnever показывает экземпляр как даже пытается загрузиться, выполните следующие действия на вычислительном узле:
+<br /><code>
+# tail -f /var/log/nova/nova-compute.log<br />
+</code>
+
+Try executing the  nova rebootcommand again. 
+ You should see an error message about why the instance was not able to boot
+Попробуйте еще раз выполнив rebootcommand нова.
+ Вы должны увидеть сообщение об ошибке о том, почему экземпляр был не в состоянии загрузиться
+
+In most cases, the error is due to something in libvirt’s XML file (<code>/etc/libvirt/qemu/instance-xxxxxxxx.xml</code>) that no longer exists.
+ You can enforce recreation of the XML file as well as rebooting the instance by running:
+В большинстве случаев, погрешность обусловлена ??то в XML файле Libvirt в (<код> /etc/libvirt/qemu/instance-xxxxxxxx.xml </ CODE>), что больше не существует.
+  Вы можете применять воссоздание XML файла, а также перезагрузки экземпляр, запустив:
+<br /><code>
+# nova reboot --hard &lt;uuid&gt;<br />
+</code>
+
+Inspecting and Recovering Data from Failed Instances
+In some scenarios, instances are running but are inaccessible through SSH and do not respond to any command.
+ VNC console could be displaying a boot failure or kernel panic error messages.
+ This could be an indication of a file system corruption on the VM itself.
+ If you need to recover files or inspect the content of the instance, qemunbd can be used to mount the disk.
+Проверка и восстановление данных после сбоя экземпляров
+В некоторых сценариях, экземпляры программного обеспечения, но недоступны через SSH и не реагировать на любые команды.
+  VNC консоль можно отображать ошибку при загрузке, или ядра сообщения об ошибках паника.
+  Это может быть признаком коррупции файловой системы на самой виртуальной машины.
+  Если вам нужно восстановить файлы или проверять содержимое экземпляра, qemunbd может использоваться для монтирования диска.
+
+If you access or view the user’s content and data, get their approval first!
+Если доступ или просматривать контент и данные пользователя, получить их одобрение первым!
+
+To access the instance’s disk (<code>/var/lib/nova/instances/instance-xxxxxx/disk</code>), the following steps must be followed:
+1. Suspend the instance using the virsh command
+2. Connect the qemu-nbd device to the disk
+3. Mount the qemu-nbd device
+4. Unmount the device after inspecting
+5. Disconnect the qemu-nbd device
+6. Resume the instance
+Для доступа к диску экземпляра (<код> / вар / Библиотека / Нова / случаи / экземпляр-хххххх / диск </ код>), необходимо соблюдать следующие шаги:
+1 Приостановить экземпляр с помощью команды virsh
+2 Подключите QEMU-NBD устройство на диск
+3 Установите QEMU-NBD устройство
+4 Отключите устройство после осмотра
+5 Отключите QEMU-NBD устройство
+6 Резюме экземпляр
+
+If you do not follow the steps from 4-6, OpenStack Compute cannot manage the instance any longer.
+ It fails to respond to any command issued by OpenStack Compute and it is marked as shutdown.
+Если вы не выполните шаги 4-6, OpenStack Compute не может управлять экземпляр больше.
+  Это не отвечает на любой команды, выданной OpenStack Compute и он помечается как остановки.
+
+Once you mount the disk file, you should be able access it and treat it as normal directories with files and a directory structure.
+ However, we do not recommend that you edit or touch any files because this could change the acls and make the instance unbootable if it is not already.
+После того как вы установите файл на диске, вы должны быть в состоянии к нему доступ и рассматривать его как обычные каталоги с файлами и структуры каталогов.
+  Тем не менее, мы не рекомендуем вам редактировать или прикоснуться любые файлы, потому что это может изменить добавлений и сделать экземпляр загружается, если он еще не.
+
+1. Suspend the instance using the virsh command - taking note of the internal ID.
+1 Приостановить экземпляр с помощью команды virsh - принимая во внимание внутренним идентификатором.
+<br /><code>
+root@compute-node:~# virsh list<br />
+Id Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;State<br />
+----------------------------------<br />
+1 &nbsp;instance-00000981 running<br />
+2 &nbsp;instance-000009f5 running <br />
+30 instance-0000274a running<br />
+<br />
+root@compute-node:~# virsh suspend 30<br />
+Domain 30 suspended<br />
+</code>
+
+2. Connect the qemu-nbd device to the disk
+<br /><code>
+root@compute-node:/var/lib/nova/instances/instance-0000274a# ls -lh<br />
+total 33M<br />
+-rw-rw---- 1 libvirt-qemu kvm 6.3K Oct 15 11:31 console.log<br />
+-rw-r--r-- 1 libvirt-qemu kvm 33M Oct 15 22:06 disk<br />
+-rw-r--r-- 1 libvirt-qemu kvm 384K Oct 15 22:06 disk.local<br />
+-rw-rw-r-- 1 nova nova 1.7K Oct 15 11:30 libvirt.xml<br />
+root@compute-node:/var/lib/nova/instances/instance-0000274a# qemu-nbd -c /dev/nbd0 `pwd`/disk<br />
+</code>
+ 
+3. Mount the qemu-nbd device.
+The qemu-nbd device tries to export the instance disk’s different partitions as separate devices.
+ For example if vda as the disk and vda1 as the root partition, <code>qemu-nbd</code> exports the device as <code>/dev/nbd0</code> and <code>/dev/nbd0p1</code> respectively.
+3 Установите QEMU-NBD устройство.
+QEMU-NBD устройство пытается экспортировать различные разделы экземпляра диска в виде отдельных устройств.
+  Например, если VDA как диск и vda1 в качестве корневого раздела, <код> QEMU-NBD </ код> экспортирует устройство как <код> / Dev / nbd0 </ код> и <код> / Dev / nbd0p1 </ кода > соответственно.
+<br /><code>
+#mount the root partition of the device<br />
+root@compute-node:/var/lib/nova/instances/instance-0000274a# mount /dev/nbd0p1 /mnt/<br />
+# List the directories of mnt, and the vm's folder is display<br />
+# You can inspect the folders and access the /var/log/ files<br />
+</code>
+
+To examine the secondary or ephemeral disk, use an alternate mount point if you want both primary and secondary drives mounted at the same time.
+Чтобы исследовать среднее или эфемерное диск, использовать альтернативный точку монтирования, если вы хотите как первичные и вторичные диски установлены в то же время.
+<br /><code>
+# umount /mnt<br />
+# qemu-nbd -c /dev/nbd1 `pwd`/disk.local<br />
+# mount /dev/nbd1 /mnt/<br />
+<br />
+root@compute-node:/var/lib/nova/instances/instance-0000274a# ls -lh /mnt/<br />
+total 76K<br />
+lrwxrwxrwx. 1 root root 7 Oct 15 00:44 bin -&gt; usr/bin<br />
+dr-xr-xr-x. 4 root root 4.0K Oct 15 01:07 boot<br />
+drwxr-xr-x. 2 root root 4.0K Oct 15 00:42 dev<br />
+drwxr-xr-x. 70 root root 4.0K Oct 15 11:31 etc<br />
+drwxr-xr-x. 3 root root 4.0K Oct 15 01:07 home<br />
+lrwxrwxrwx. 1 root root 7 Oct 15 00:44 lib -&gt; usr/lib<br />
+lrwxrwxrwx. 1 root root 9 Oct 15 00:44 lib64 -&gt; usr/lib64<br />
+drwx------. 2 root root 16K Oct 15 00:42 lost+found<br />
+drwxr-xr-x. 2 root root 4.0K Feb 3 2012 media<br />
+drwxr-xr-x. 2 root root 4.0K Feb 3 2012 mnt<br />
+drwxr-xr-x. 2 root root 4.0K Feb 3 2012 opt<br />
+drwxr-xr-x. 2 root root 4.0K Oct 15 00:42 proc<br />
+dr-xr-x---. 3 root root 4.0K Oct 15 21:56 root<br />
+drwxr-xr-x. 14 root root 4.0K Oct 15 01:07 run<br />
+lrwxrwxrwx. 1 root root 8 Oct 15 00:44 sbin -&gt; usr/sbin<br />
+drwxr-xr-x. 2 root root 4.0K Feb 3 2012 srv<br />
+drwxr-xr-x. 2 root root 4.0K Oct 15 00:42 sys<br />
+drwxrwxrwt. 9 root root 4.0K Oct 15 16:29 tmp<br />
+drwxr-xr-x. 13 root root 4.0K Oct 15 00:44 usr<br />
+drwxr-xr-x. 17 root root 4.0K Oct 15 00:44 var<br />
+</code>
+
+4. Once you have completed the inspection, umount the mount point and release the qemu-nbd device
+4 После того, как вы завершили осмотр, размонтировать точку монтирования и отпустите QEMU-NBD устройство
+<br /><code>
+root@compute-node:/var/lib/nova/instances/instance-0000274a# umount /mnt<br />
+root@compute-node:/var/lib/nova/instances/instance-0000274a# qemu-nbd -d <br />
+/dev/nbd0/dev/nbd0 disconnected<br />
+</code>
+
+5. Resume the instance using virsh
+5 Резюме экземпляр из virsh
+<br /><code>
+root@compute-node:/var/lib/nova/instances/instance-0000274a# virsh list<br />
+Id Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;State<br />
+----------------------------------<br />
+1 &nbsp;instance-00000981 running<br />
+2 &nbsp;instance-000009f5 running<br />
+30 instance-0000274a paused<br />
+root@compute-node:/var/lib/nova/instances/instance-0000274a# virsh resume 30<br />
+Domain 30 resumed<br />
+</code>
+
+Volumes
+If the affected instances also had attached volumes, first generate a list of instance and volume UUIDs:
+Объемы
+Если пострадавшие случаи также имели прикрепленные объемы, сначала создать список экземпляров и объем UUID,:
+<br /><code>
+mysql&gt; select nova.instances.uuid as instance_uuid, cinder.volumes.id as volume_uuid, cinder.volumes.status, <br />
+cinder.volumes.attach_status, cinder.volumes.mountpoint, cinder.volumes.display_name from cinder.volumes<br />
+inner join nova.instances on cinder.volumes.instance_uuid=nova.instances.uuid 
+where nova.instances.host = 'c01.example.com';<br />
+</code>
+You should see a result like the following:
+
+MySQL & GT; выберите nova.instances.uuid как instance_uuid, cinder.volumes.id как volume_uuid, cinder.volumes.status, <br />
+cinder.volumes.attach_status, cinder.volumes.mountpoint, cinder.volumes.display_name от cinder.volumes <br />
+внутреннее соединение nova.instances на cinder.volumes.instance_uuid = nova.instances.uuid
+где nova.instances.host = 'c01.example.com'; <br />
+</ код>
+Вы должны увидеть результат, как следующее:
+<br /><code>
++--------------+------------+-------+--------------+-----------+--------------+<br />
+|instance_uuid |volume_uuid |status |attach_status |mountpoint | display_name |<br />
++--------------+------------+-------+--------------+-----------+--------------+<br />
+|9b969a05 &nbsp; &nbsp; &nbsp;|1f0fbf36 &nbsp; &nbsp;|in-use |attached &nbsp; &nbsp; &nbsp;|/dev/vdc &nbsp; | test &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++--------------+------------+-------+--------------+-----------+--------------+<br />
+1 row in set (0.00 sec)<br /></code>
+
+Next, manually detach and reattach the volumes:
+Далее, вручную отключении и подключении объемы:
+<br /><code>
+# nova volume-detach &lt;instance_uuid&gt; &lt;volume_uuid&gt;<br />
+# nova volume-attach &lt;instance_uuid&gt; &lt;volume_uuid&gt; /dev/vdX<br />
+</code>
+
+Where <code>X</code> is the proper mount point.
+ Make sure that the instance has successfully booted and is at a login screen before doing the above.
+Где <код> X </ код> является надлежащее точка монтирования.
+  Убедитесь, что экземпляр успешно загрузился и находится на экране входа, прежде чем делать выше.
+
+Total Compute Node Failure
+If a compute node fails and won’t be fixed for a few hours or ever, you can relaunch all instances that are hosted on the failed node if you use shared storage for <code>/var/lib/nova/instances</code>.
+Всего Compute Node Отказ
+Если вычислительный узел не удается, и не будет исправлена ??в течение нескольких часов или когда-либо, вы можете возобновить все экземпляры, размещенных на отказавшего узла, если вы использовать общее хранилище для <код> / вар / Библиотека / Нова / случаях </ кода >.
+
+To do this, generate a list of instance UUIDs that are hosted on the failed node by running the following query on the nova database:
+Для этого, создать список экземпляров уникальных идентификаторов, размещенных на отказавшего узла, выполнив следующий запрос в базе данных нова:
+<br /><code>
+mysql&gt; select uuid from instances where host = 'c01.example.com' and deleted = 0;<br />
+</code>
+
+Next, tell Nova that all instances that used to be hosted on c01.example.com are now hosted on c02.example.com:
+Далее, скажите Nova, что все экземпляры, которые раньше быть размещен на c01.example.com теперь размещается на c02.example.com:
+<br /><code>
+mysql&gt; update instances set host = 'c02.example.com' where host = 'c01.example.com' and deleted = 0;<br />
+</code>
+
+After that, use the nova command to reboot all instances that were on c01.example.com while regenerating their XML files at the same time:
+После этого, используйте команду нова перезагрузить все экземпляры, которые были на c01.example.com, генерируя их XML файлы в то же время:
+<br /><code>
+# nova reboot --hard &lt;uuid&gt;<br />
+</code>
+
+Finally, re-attach volumes using the same method described in <strong>Volumes</strong>.
+Наконец, вновь присоединить объемы, используя тот же метод, описанный в <сильных> Объемы </ STRONG>.
+
+/var/lib/nova/instances
+It’s worth mentioning this directory in the context of failed compute nodes.
+ This directory contains the libvirt KVM file-based disk images for the instances that are hosted on that compute node.
+ If you are not running your cloud in a shared storage environment, this directory is unique across all compute nodes.
+Стоит отметить, этот каталог в контексте неудачных вычислительных узлов.
+  Этот каталог содержит Libvirt образы дисков KVM на основе файлов для случаев, размещенных на этой вычислительном узле.
+  Если вы не работаете свой ??облако в общей среде хранения, этот каталог является уникальным для всех вычислительных узлов.
+
+<code>/var/lib/nova/instances</code> contains two types of directories.
+<код> / вар / Библиотека / Нова / случаи </ код> содержит два типа каталогов.
+
+The first is the <code>_base</code> directory.
+ This contains all of the cached base images from glance for each unique image that has been launched on that compute node.
+ Files ending in <code>_20</code> (or a different number) are the ephemeral base images.
+Первым из них является <код> _base </ код> Каталог.
+  Это содержит все кэше базовых образов из взгляда для каждого уникального образа, который был запущен на этой вычислительном узле.
+  Файлы с расширением <код> _20 </ код> (или на другой номер) являются эфемерными базовые изображения.
+
+The other directories are titled <code>instance-xxxxxxxx</code>.
+ These directories correspond to instances running on that compute node.
+ The files inside are related to one of the files in the <code>_base</code> directory.
+ They’re essentially differential-based files containing only the changes made from the original <code>_base</code> directory.
+Другие каталоги под названием <код> экземпляра-XXXXXXXX </ код>.
+ Эти каталоги соответствуют экземплярам, работающих на этом вычислительном узле.
+ Файлы внутри связаны с одного из файлов в <код> _base </ код> каталогов.
+ Они существенно дифференциал на основе файлов, содержащих только изменения, внесенные с оригинального <код> _base </ код> каталогов.
+
+All files and directories in <code>/var/lib/nova/instances</code> are uniquely named.
+ The files in _base are uniquely titled for the glance image that they are based on and the directory names <code>instance-xxxxxxxx</code> are uniquely titled for that particular instance.
+ For example, if you copy all data from <code>/var/lib/nova/instances</code> on one compute node to another, you do not overwrite any files or cause any damage to images that have the same unique name, because they are essentially the same file.
+Все файлы и каталоги в <код> / вар / Библиотека / нова / случаи </ код> имеют уникальные имена.
+  Файлы в _base однозначно названием для взгляда изображения, что они основаны на и имена каталогов <код> экземпляр-XXXXXXXX </ код> однозначно названием для этого конкретного экземпляра.
+  Например, если вы копируете все данные <код> / VAR / Библиотека / Nova / экземпляров </ код> на одном вычислительном узле к другому, вы не перезаписывать файлы или причинить ущерб к изображениям, которые имеют тот же уникальное имя, потому, что они, по существу, тот же самый файл.
+
+Although this method is not documented or supported, you can use it when your compute node is permanently offline but you have instances locally stored on it.
+Хотя этот метод не задокументированы или поддерживается, вы можете использовать его, когда ваш вычислительный узел постоянно форума, но у вас есть экземпляры локально хранящиеся на нем.
+
+Storage Node Failures and Maintenance
+Due to the Object Storage’s high redundancy, dealing with object storage node issues is a lot easier than dealing with compute node issues.
+Узел хранения Неудачи и техническое обслуживание
+В связи с высокой избыточностью объекта хранения, нанося вопросами узел хранения объекта намного проще, чем иметь дело с вопросами вычислительный узел.
+
+Rebooting a Storage Node
+If a storage node requires a reboot, simply reboot it.
+ Requests for data hosted on that node are redirected to other copies while the server is rebooting.
+Перезагрузка узел хранения
+Если узел хранения требует перезагрузки, просто перезагрузить его.
+  Просьбы о данных, размещенных на этом узле будут перенаправлены на другие копии, а процесс загрузки сервера.
+
+Shutting Down a Storage Node
+If you need to shut down a storage node for an extended period of time (1+ days), consider removing the node from the storage ring.
+ For example:
+Завершение работы узла хранения
+Если вам нужно выключить узел хранения в течение длительного периода времени (1 + дней), рассмотреть возможность отмены узел из накопителя.
+  Например:
+<br /><code>
+# swift-ring-builder account.builder remove &lt;ip address of storage node&gt;<br />
+# swift-ring-builder container.builder remove &lt;ip address of storage node&gt;<br />
+# swift-ring-builder object.builder remove &lt;ip address of storage node&gt;<br />
+# swift-ring-builder account.builder rebalance<br />
+# swift-ring-builder container.builder rebalance<br />
+# swift-ring-builder object.builder rebalance <br />
+</code>
+
+Next, redistribute the ring files to the other nodes:
+Далее, перераспределить кольцевые файлы на другие узлы:
+<br /><code>
+# for i in s01.example.com s02.example.com s03.example.com<br />
+&gt; do<br />
+&gt; scp *.ring.gz $i:/etc/swift<br />
+&gt; done <br />
+</code>
+
+These actions effectively take the storage node out of the storage cluster.
+Эти действия эффективно принять узел хранения из кластера хранения.
+
+When the node is able to rejoin the cluster, just add it back to the ring.
+ The exact syntax to add a node to your Swift cluster using swift-ring-builder heavily depends on the original options used when you originally created your cluster.
+ Please refer back to those commands.
+Когда узел способен присоединиться к кластеру, просто добавьте его обратно на ринг.
+  Точный синтаксис для добавления узла в ваш Swift кластера с использованием SWIFT-кольцевой builderheavily зависит от исходных параметров, используемых при изначально создан кластер.
+  Пожалуйста, обратитесь к тем командам.
+
+Replacing a Swift Disk
+If a hard drive fails in a Object Storage node, replacing it is relatively easy.
+ This assumes that your Object Storage environment is configured correctly where the data that is stored on the failed drive is also replicated to other drives in the Object Storage environment.
+Замена Swift Disk
+Если жесткий диск выйдет из строя в узле объекта хранения, заменив это относительно легко.
+  Это предполагает, что ваш объект Условия хранения настроен правильно, где данные, которые хранятся на отказавшего диска также воспроизведены с другими приводами в окружающей среде Object Storage.
+
+This example assumes that <code>/dev/sdbhas</code> failed.
+В этом примере предполагается, что <код> / Dev / sdbhas </ код> не удалось.
+
+First, unmount the disk:
+Во-первых, виртуальный диск:
+<br /><code>
+# umount /dev/sdb<br />
+</code>
+
+Next, physically remove the disk from the server and replace it with a working disk.
+Ensure that the operating system has recognized the new disk:
+Далее, физически удалить диск с сервера и заменить его на рабочем диске.
+Убедитесь, что операционная система признала новый диск:
+<br /><code>
+# dmesg | tail<br />
+</code>
+
+You should see a message about <code>/dev/sdb</code>.
+Because it is recommended to not use partitions on a swift disk, simply format the disk as a whole:
+Вы должны увидеть сообщение о <код> / Dev / SDB </ код>.
+Потому рекомендуется не использовать разделы на быстрой диске, просто отформатировать диск в целом:
+<br /><code>
+# mkfs.xfs /dev/sdb<br />
+</code>
+
+Finally, mount the disk:
+<br /><code>
+# mount -a<br />
+</code>
+
+Swift should notice the new disk and that no data exists.
+ It then begins replicating the data to the disk from the other existing replicas.
+Swift должен заметить, что новый диск и, что никакие данные не существует.
+  Затем он начинает репликации данных на диск от других существующих реплик.
+
+Handling a Complete Failure
+A common way of dealing with the recovery from a full system failure, such as a power outage of a data center is to assign each service a priority, and restore in order.
+Обращение полный провал
+Обычный способ справиться с восстановлением от полного отказа системы, такие как отключения электроэнергии в центре обработки данных является назначение каждой службы приоритетом, и восстановить в порядке.
+
+1 Internal network connectivity
+2 Backing storage services
+3 Public network connectivity for user Virtual Machines
+4 Nova-compute, nova-network, cinder hosts
+5 User virtual machines
+10 Message Queue and Database services
+15 Keystone services
+20 cinder-scheduler
+21 Image Catalogue and Delivery services
+22 nova-scheduler services
+98 Cinder-api
+99 Nova-api services
+100 Dashboard node
+1 Внутреннее подключение к сети
+2 услуги хранения Резервное
+3 Общественный подключения к сети для пользователей виртуальных машин
+4 Нова-вычислительный, Нова-сеть, шлаковые хозяева
+Виртуальные машины 5 пользователей
+10 Message Queue и баз данных услуги
+15 Keystone услуги
+20 шлакобетона планировщик
+21 Image Каталог и услуги Доставка
+22-нова-планировщик услуги
+98 Пепельный-апи
+99 Nova-API услуги
+100 Dashboard узел
+
+Use this example priority list to ensure that user affected services are restored as soon as possible, but not before a stable environment is in place.
+ Of course, despite being listed as a single line item, each step requires significant work. For example, just after starting the database, you should check its integrity or, after starting the Nova services, you should verify that the hypervisor matches the database and fix any mismatches.
+Используйте этот пример списка приоритетов для обеспечения того, затронуты пользовательские услуги будут восстановлены как можно скорее, но не раньше, чем стабильная среда находится в месте.
+  Конечно, несмотря на то, указан в качестве одной строки, каждый шаг требует значительной работы. Например, сразу после запуска базы данных, вы должны проверить его целостность или, после запуска служб Нова, вы должны убедиться, что гипервизор матчей базы данных и исправить любые несоответствия.
+
+Configuration Management
+Maintaining an OpenStack cloud requires that you manage multiple physical servers, and this number might grow over time.
+ Because managing nodes manually is errorprone, we strongly recommend that you use a configuration management tool.
+ These tools automate the process of ensuring that all of your nodes are configured properly and encourage you to maintain your configuration information (such as packages and configuration options) in a version controlled repository.
+Управление конфигурацией
+Поддержание OpenStack облако требует, чтобы вам управлять несколькими физическими серверами, и это число может расти с течением времени.
+ Поскольку управление узлы вручную является errorprone, мы настоятельно рекомендуем вам использовать инструмент управления конфигурацией.
+  Эти инструменты автоматизировать процесс обеспечения того, чтобы все узлы настроены правильно и призываем вас, чтобы поддерживать информацию о конфигурации (например, пакетов и опций конфигурации) в версии контролируется хранилище.
+
+Several configuration management tools are available, and this guide does not recommend a specific one.
+ The two most popular ones in the OpenStack community are <span class="red-heading">Puppet</span> (<a href="https://puppetlabs.com/">https://puppetlabs.com/</a>) with available <span class="red-heading">OpenStack Puppet modules</span> (<a href="http://github.com/puppetlabs/puppetlabs-openstack">http://github.com/puppetlabs/puppetlabs-openstack</a>) and <span class="red-heading">Chef</span> (<a href="http://opscode.com/chef">http://opscode.com/chef</a>) with available <span class="red-heading">OpenStack Chef recipes</span> (<a href="https://github.com/opscode/openstack-chefrepo">https://github.com/opscode/openstack-chefrepo</a>).
+ Other newer configuration tools include <span class="red-heading">Juju</span> (<a href="https://juju.ubuntu.com/">https://juju.ubuntu.com/</a>) <span class="red-heading">Ansible</span> (<a href="http://ansible.cc">http://ansible.cc</a>) and <span class="red-heading">Salt</span> (<a href="http://saltstack.com">http://saltstack.com</a>), and more mature configuration management tools include <span class="red-heading">CFEngine</span> (<a href="http://cfengine.com">http://cfengine.com</a>) and <span class="red-heading">Bcfg2</span> (<a href="http://bcfg2.org">http://bcfg2.org</a>).
+Некоторые инструменты управления конфигурацией доступны, и это руководство не рекомендует нужное.
+  Два наиболее популярных в OpenStack сообщества <промежуток класс = "красно-рубрика"> Кукольный </ SPAN> (<a href="https://puppetlabs.com/"> https://puppetlabs.com/ </>) с имеющейся <SPAN класса = "красно-заголовком"> модули OpenStack Кукольные </ SPAN> (< href="http://github.com/puppetlabs/puppetlabs-openstack">http://github.com/puppetlabs/puppetlabs-openstack</a>) и <промежуток класс = "красно-рубрика"> Шеф-повар </ SPAN> (<a href="http://opscode.com/chef"> http://opscode.com/chef </a>) с доступны <класса продолжительность = "красно-заголовком"> OpenStack Chef рецепты </ SPAN> (< href="https://github.com/opscode/openstack-chefrepo">https://github.com/opscode/openstack-chefrepo</a>).
+  Другие новые инструменты конфигурации включают <SPAN класса = "красных заголовок"> Амулет </ SPAN> (<a href="https://juju.ubuntu.com/"> https://juju.ubuntu.com/</>) <промежуток класс = "красно-рубрика"> анзибль </ SPAN> (<a href="http://ansible.cc"> http://ansible.cc </a>) и <класс диапазон = "красно-заголовков"> Соль </ SPAN> (<a href="http://saltstack.com"> http://saltstack.com </a>), и более зрелым управления конфигурацией инструменты включают <класс диапазон = "красно-рубрика"> Cfengine </ SPAN> (<a href="http://cfengine.com"> http://cfengine.com </a>) и <промежуток класс = "красно-рубрика"> bcfg2 </ SPAN> (<a href="http://bcfg2.org"> http://bcfg2.org </a>).
+
+Working with Hardware
+Similar to your initial deployment, you should ensure all hardware is appropriately burned in before adding it to production.
+ Run software that uses the hardware to its limits - maxing out RAM, CPU, disk and network.
+ Many options are available, and normally double as benchmark software so you also get a good idea of the performance of your system.
+Работа с Hardware
+Подобно начального развертывания, вы должны убедиться, все оборудование надлежащим образом сожгли в перед добавлением его в производство.
+  Запустите программное обеспечение, которое использует аппаратное обеспечение, чтобы ее пределами - максить RAM, CPU, диск и сеть.
+  Многие опции доступны, и, как правило два раза, как программное обеспечение базового, так что вы также получите хорошее представление о производительности вашей системы.
+
+Adding a Compute Node
+If you find that you have reached or are reaching the capacity limit of your computing resources, you should plan to add additional compute nodes.
+ Adding more nodes is quite easy.
+ The process for adding nodes is the same as when the initial compute nodes were deployed to your cloud: use an automated deployment system to bootstrap the bare-metal server with the operating system and then have a configuration management system install and configure the OpenStack Compute service.
+ Once the Compute service has been installed and configured in the same way as the other compute nodes, it automatically attaches itself to the cloud.
+ The cloud controller notices the new node(s) and begin scheduling instances to launch there.
+Добавление Compute Node
+Если вы обнаружите, что вы достигли или приближаются к пределу пропускной способности ваших вычислительных ресурсов, вы должны планировать, чтобы добавить дополнительные вычислительные узлы.
+  Добавление дополнительных узлов довольно легко.
+  Процесс добавления узлов такая же, как тогда, когда первые вычислительные узлы были размещены в вашем облаке: использовать автоматизированную систему развертывания загружаться голое железо сервер с операционной системой, а затем иметь систему управления конфигурацией установить и настроить службу OpenStack Compute .
+  Как только служба Вычислить был установлен и настроен так же, как и другие вычислительные узлы, он автоматически привязывается к облаку.
+  Контроллер облака замечает новый узел (ы) и начинают экземплярами планирования для запуска там.
+
+If your OpenStack Block Storage nodes are separate from your compute nodes, the same procedure still applies as the same queuing and polling system is used in both services.
+Если узлы OpenStack Блок хранения отделены от ваших вычислительных узлов, та же самая процедура все еще применяется, как же очереди и опроса система используется в обеих служб.
+
+We recommend that you use the same hardware for new compute and block storage nodes.
+ At the very least, ensure that the CPUs are similar in the compute nodes to not break live migration.
+Мы рекомендуем вам использовать то же оборудование для новых вычислительных и блок хранения узлов.
+  По крайней мере, убедитесь, что процессоры схожи в вычислительных узлах чтобы не нарушить живой миграции.
+
+Adding an Object Storage Node
+Adding a new object storage node is different than adding compute or block storage nodes.
+ You still want to initially configure the server by using your automated deployment and configuration management systems.
+ After that is done, you need to add the local disks of the object storage node into the object storage ring.
+ The exact command to do this is the same command that was used to add the initial disks to the ring.
+ Simply re-run this command on the object storage proxy server for all disks on the new object storage node.
+ Once this has been done, rebalance the ring and copy the resulting ring files to the other storage nodes.
+Добавление объекта хранения Node
+Добавление нового узла хранения объект отличается от добавления вычислительных или блок хранения узлов.
+  Вы все еще хотите изначально настроить сервер, используя ваши автоматизированные системы развертывания и управления конфигурацией.
+  После этого не будет сделано, вам нужно добавить локальных дисков на узле хранения объекта в накопителе объект.
+  Как именно это сделать это та же команда, что была использована, чтобы добавить начальные диски на ринг.
+  Просто повторно запустить эту команду на хранения объектов прокси-сервер для всех дисках нового узла хранения объектов.
+  Как только это было сделано, сбалансировать кольцо и скопировать полученное кольцо файлы на другие узлы хранения.
+
+
+If your new object storage node has a different number of disks than the original nodes have, the command to add the new node is different than the original commands.
+ These parameters vary from environment to environment.
+Если ваш новый узел хранения объект имеет разное количество дисков, чем оригинальные узлы, команда, чтобы добавить новый узел отличается оригинальным команд.
+  Эти параметры варьируются от среды к среде.
+
+Replacing Components
+Failures of hardware are common in large scale deployments such as an infrastructure cloud.
+ Consider your processes and balance time saving against availability.
+ For example, an Object Storage cluster can easily live with dead disks in it for some period of time if it has sufficient capacity.
+ Or, if your compute installation is not full you could consider live migrating instances off a host with a RAM failure until you have time to deal with the problem.
+Замена компонентов
+Неудачи аппаратных распространены в крупномасштабном внедрении таких как облака инфраструктуры.
+  Рассмотрим ваши процессы и сбалансировать экономию времени против наличии.
+  Например, кластер Объект хранения могут легко жить с мертвыми дисков в нем в течение некоторого периода времени, если он имеет достаточный потенциал.
+  Или, если установка вычислить не полный вы могли бы рассмотреть живой миграции экземпляров от хозяина с отказом RAM пока у вас есть время, чтобы разобраться с проблемой.
+
+Databases
+Almost all OpenStack components have an underlying database to store persistent information.
+ Usually this database is MySQL.
+ Normal MySQL administration is applicable to these databases.
+ OpenStack does not configure the databases out of the ordinary.
+ Basic administration includes performance tweaking, high availability, backup, recovery, and repairing.
+ For more information, see a standard MySQL administration guide.
+Базы данных
+Почти все компоненты OpenStack есть основная база данных для хранения постоянной информации.
+  Обычно эта база данных MySQL.
+  Нормальная администрация MySQL применим к этим базам данных.
+  OpenStack не настроить базы данных из ряда вон выходящее.
+  Основные введение включает Улучшения производительности, высокой доступности, резервного копирования, восстановления и ремонту.
+ Для получения дополнительной информации см стандартный MySQL Руководство администратора.
+
+You can perform a couple tricks with the database to either more quickly retrieve information or fix a data inconsistency error.
+ For example, an instance was terminated but the status was not updated in the database.
+ These tricks are discussed throughout this book.
+Вы можете выполнить пару трюков с базой данных либо намного быстрее получать информацию или исправить ошибки несоответствия данных.
+  Например, экземпляр был прекращен, но статус не был обновлен в базе данных.
+  Эти трюки обсуждаются в этой книге.
+
+Database Connectivity
+Review the components configuration file to see how each OpenStack component accesses its corresponding database.
+ Look for either <code>sql_connectionor</code> simply connection:
+взаимодействия с базами данных
+Просмотрите файл конфигурации компонентов, чтобы увидеть, как каждый компонент OpenStack получает доступ к соответствующей базе данных.
+  Ищите либо <код> sql_connectionor </ код> просто подключение:<br /><code>
+# grep -hE &quot;connection ?=&quot; /etc/nova/nova.conf /etc/glance/glance-*.conf <br />
+/etc/cinder/cinder.conf /etc/keystone/keystone.conf<br />
+ sql_connection = mysql://nova:nova@cloud.alberta.sandbox.cybera.ca/nova<br />
+ sql_connection = mysql://glance:password@cloud.example.com/glance <br />
+ sql_connection = mysql://glance:password@cloud.example.com/glance <br />
+sql_connection=mysql://cinder:password@cloud.example.com/cinder <br />
+ connection = mysql://keystone_admin:password@cloud.example.com/keystone<br />
+</code>
+The connection strings take this format:
+Строки подключения принять этот формат:
+<br /><code>
+mysql:// &lt;username&gt; : &lt;password&gt; @ &lt;hostname&gt; / &lt;database name&gt;<br />
+</code>
+
+Performance and Optimizing
+As your cloud grows, MySQL is utilized more and more. If you suspect that MySQL
+might be becoming a bottleneck, you should start researching MySQL optimization.
+The MySQL manual has an entire section dedicated to this topic Optimization Overview(http://dev.mysql.com/doc/refman/5.5/en/optimize-overview.html).
+Производительность и оптимизация
+Как ваш облако растет, MySQL используется все больше и больше. Если вы подозреваете, что MySQL
+может быть становится узким местом, вы должны начать изучение оптимизации MySQL.
+Руководство MySQL имеет целый раздел, посвященный этой теме Оптимизация Over?
+просмотр (http://dev.mysql.com/doc/refman/5.5/en/optimize-overview.html).
+
+HDWMY
+Here’s a quick list of various to-do items each hour, day, week, month, and year.
+Please note these tasks are neither required nor definitive, but helpful ideas:
+HDWMY
+Вот краткий список различных задачями каждый час, день, неделю, месяц и год.
+Пожалуйста, обратите внимание эти задачи не требуется и не окончательные, но полезные идеи:
+
+Hourly
+• Check your monitoring system for alerts and act on them.
+• Check your ticket queue for new tickets.
+Почасовой
+• Проверьте систему мониторинга для предупреждения и действовать на них.
+• Проверьте очередь билетов для новых билетов.
+
+Daily
+• Check for instances in a failed or weird state and investigate why.
+• Check for security patches and apply them as needed.
+Ежедневно
+• Проверьте случаях в неудачной или странного государства и выяснить, почему.
+• Проверьте патчей и применить их в случае необходимости.
+
+Weekly
+• Check cloud usage:
+— User quotas
+— Disk space
+— Image usage
+— Large instances
+— Network usage (bandwidth and IP usage)
+• Verify your alert mechanisms are still working.
+Еженедельный
+• Проверьте использование облачных:
+- Квоты пользователя
+- Дисковое пространство
+- Использование изображения
+- Большие экземпляры
+- Использование сети (пропускной способности и объему IP)
+• Убедитесь, ваше предупреждение механизмы все еще работают.
+
+Monthly
+• Check usage and trends over the past month.
+• Check for user accounts that should be removed.
+• Check for operator accounts that should be removed.
+Месячный
+• Проверьте и тенденции использования в течение последнего месяца.
+• Проверьте для учетных записей, которые должны быть удалены.
+• Проверьте оператора учетных записей, которые должны быть удалены.
+
+Quarterly
+• Review usage and trends over the past quarter.
+• Prepare any quarterly reports on usage and statistics.
+• Review and plan any necessary cloud additions.
+• Review and plan any major OpenStack upgrades.
+Ежеквартальный
+• использование Обзор и тенденции за прошедший квартал.
+• Подготовьте любые квартальные отчеты об использовании и статистики.
+• Обзор и планировать необходимые облачных дополнения.
+• Обзор и планировать большие обновления OpenStack.
+
+Semi-Annually
+• Upgrade OpenStack.
+• Clean up after OpenStack upgrade (any unused or new services to be aware of?)
+За полгода
+• Обновление OpenStack.
+• Очистка после OpenStack обновления (неиспользованные или новые услуги, чтобы быть в курсе?)
+
+Determining which Component Is Broken
+OpenStack’s collection of different components interact with each other strongly.
+ For example, uploading an image requires interaction from <code>nova-api</code>, </code>glance-api</code>, <code>glance-registry</code>, <code>Keystone</code>, and potentially <code>swift-proxy</code>.
+ As a result, it is sometimes difficult to determine exactly where problems lie.
+ Assisting in this is the purpose of this section.
+Определение, какой компонент Разбитое
+Сбор OpenStack в различных компонентов взаимодействуют друг с другом сильно.
+  Например, загрузки изображения требуется взаимодействие с <код> Нова-API </ код>, </ код> Взгляд-апи </ код>, <код> Взгляд-реестра </ код>, <код> Keystone </ кода >, и, возможно, <код> быстроногих прокси </ код>.
+  В результате, иногда бывает трудно точно определить, где проблемы лежат.
+  Помощь в этом и заключается цель данного раздела.
+
+Tailing Logs
+The first place to look is the log file related to the command you are trying to run.
+ For example, if nova <code>list</code> is failing, try tailing a Nova log file and running the command again:
+Terminal 1:
+Tailing Журналы
+Первое место, чтобы посмотреть это файл журнала, связанные с командой, которую вы пытаетесь запустить.
+  Например, если нова <код> список </ код> не удается, попробуйте хвостохранилища файл журнала Nova и снова запустив команду:
+Терминал 1:
+<br /><code>
+# tail -f /var/log/nova/nova-api.log<br />
+</code>
+
+Terminal 2:
+<br /><code>
+# nova list<br />
+</code>
+
+Look for any errors or traces in the log file.
+ For more information, see the chapter on Logging and Monitoring.
+Ищите любые ошибки или следов в лог-файле.
+ Для получения дополнительной информации, смотрите в разделе Ведение журналов и мониторинга.
+
+If the error indicates that the problem is with another component, switch to tailing that component’s log file.
+ For example, if nova cannot access glance, look at the glance-api log:
+Terminal 1:
+Если ошибка означает, что проблема связана с другим компонентом, переключиться на хвостохранилище файл журнала, который компонента.
+  Например, если нова не может получить доступ взгляд, обратить внимание на журнал взгляд-API:
+Терминал 1:
+<br /><code>
+# tail -f /var/log/glance/api.log<br />
+</code>
+
+Terminal 2:
+<br /><code>
+# nova list<br />
+</code>
+
+Wash, rinse, repeat until you find the core cause of the problem.
+Wash, смыть, повторить, пока не найдете основную причину проблемы.
+
+Running Daemons on the CLI
+Unfortunately, sometimes the error is not apparent from the log files.
+ In this case, switch tactics and use a different command, maybe run the service directly on the command line.
+ For example, if the <code>glance-api</code> service refuses to start and stay running, try launching the daemon from the command line:
+Запуск демонов на CLI
+К сожалению, иногда ошибка не является очевидной из лог-файлов.
+  В этом случае переключите тактику и использовать другую команду, может быть, запустить службу непосредственно в командной строке.
+  Например, если <код> Взгляд-апи </ код> служба отказывается начать и остаться работает, попробуйте запустить демон из командной строки:
+<br /><code>
+# sudo -u glance -H glance-api<br />
+</code>
+
+This might print the error and cause of the problem.
+Это может напечатать ошибку и причину проблемы.
+
+The  <code>-H</code> flag is required when running the daemons with sudo because some daemons will write files relative to the user’s home directory, and this write may fail if <code>-H</code> is left off.
+<Код> -H </ код> флаг требуется при работе демоны с Судом, потому что некоторые демоны напишет файлов относительно домашней директории пользователя, и эта статья может потерпеть неудачу, если <код> -H </ код> осталось от .
+
+Example of Complexity
+One morning, a compute node failed to run any instances.
+ The log files were a bit vague, claiming that a certain instance was unable to be started.
+ This ended up being a red herring because the instance was simply the first instance in alphabetical order, so it was the first instance that nova-compute would touch.
+Пример Сложность
+Однажды утром, вычислительный узел удалось запустить все экземпляры.
+  Файлы журналов были немного расплывчаты, утверждая, что определенный экземпляр не смог быть запущен.
+  Это закончило тем, отвлекающий маневр, так как экземпляр был просто первый случай в алфавитном порядке, так что это был первый экземпляр, что нова-вычислительный бы прикоснуться.
+
+Further troubleshooting showed that libvirt was not running at all.
+ This made more sense.
+ If libvirt wasn’t running, then no instance could be virtualized through KVM.
+ Upon trying to start libvirt, it would silently die immediately.
+ The libvirt logs did not explain why.
+Далее устранение неисправностей показал, что Libvirt не работает на всех.
+  Это имело больше смысла.
+  Если Libvirt не бежал, то экземпляр не может виртуализировать через KVM.
+  После попытки начать Libvirt, он молча умирают сразу.
+  Журналы Libvirt не объяснил, почему.
+
+Next, the  <code>libvirtd</code> daemon was run on the command line.
+ Finally a helpful error message: it could not connect to d-bus.
+ As ridiculous as it sounds, libvirt, and thus nova-compute, relies on d-bus and somehow d-bus crashed.
+ Simply starting d-bus set the entire chain back on track and soon everything was back up and running.
+Далее, демон <code>libvirtd</code> был запущен в командной строке.
+ Наконец, полезное  сообщение об ошибке: он не может подключиться к d-bus.
+ Как смешно это звучит, Libvirt, и, таким образом, nova-compute, полагается на d-bus и так или иначе г-аварии автобуса.
+ Просто начиная d-bus установить всю цепочку в нужное русло, и вскоре все вернулось и работает.
+
+Upgrades
+With the exception of Object Storage, an upgrade from one version of OpenStack to another is a great deal of work.
+Обновления
+За исключением объектов хранения, обновления с одной версии OpenStack к другому является большой объем работы.
+
+The upgrade process generally follows these steps:
+1. Read the release notes and documentation.
+2. Find incompatibilities between different versions.
+3. Plan an upgrade schedule and complete it in order on a test cluster.
+4. Run the upgrade.
+Процесс обновления обычно выполняет следующие действия:
+1 Прочтите примечания к релизу и документацию.
+2 Найти несовместимости между различными версиями.
+3 Планирование расписания обновления и завершить ее в порядке на испытательном кластера.
+4 Запустите обновление.
+
+You can perform an upgrade while user instances run.
+ However, this strategy can be dangerous.
+ Don’t forget appropriate notice to your users, and backups.
+Вы можете выполнить обновление в то время как случаи пользователей работать.
+  Тем не менее, эта стратегия может быть опасным.
+  Не забывайте соответствующее уведомление для пользователей, и резервных копий.
+
+The general order that seems to be most successful is:
+1. Upgrade the OpenStack Identity service (keystone).
+2. Upgrade the OpenStack Image service (glance).
+3. Upgrade all OpenStack Compute (nova) services.
+4. Upgrade all OpenStack Block Storage (cinder) services.
+Общий порядок, что, кажется, наиболее успешным является:
+1 Обновление сервиса OpenStack тождество (искажений).
+2 Обновление службу изображения OpenStack (взглядом).
+3 Обновите все OpenStack Compute (Nova) услуг.
+4 Обновите все OpenStack Блок хранения (огарки) услуг.
+
+For each of these steps, complete the following sub-steps:
+1. Stop services.
+2. Create a backup of configuration files and databases.
+3. Upgrade the packages using your distribution’s package manager.
+4. Update the configuration files according to the release notes.
+5. Apply the database upgrades.
+6. Restart the services.
+7. Verify that everything is running.
+Для каждого из этих шагов, выполните следующие подэтапы:
+1. Stop услуги.
+2 Создайте резервные копии конфигурационных файлов и баз данных.
+3 Обновление пакетов с помощью менеджера пакетов вашего дистрибутива.
+4 Обновление конфигурационных файлов в соответствии с примечаниях к выпуску.
+5 Примените обновления базы данных.
+6 Перезапустите службы.
+7 Убедитесь, что все работает.
+
+Probably the most important step of all is the pre-upgrade testing.
+ Especially if you are upgrading immediately after release of a new version, undiscovered bugs might hinder your progress.
+ Some deployers prefer to wait until the first point release is announced.
+ However, if you have a significant deployment, you might follow the development and testing of the release, thereby ensuring that bugs for your use cases are fixed. 
+Вероятно, наиболее важным шагом из всех является тестирование перед обновлением.
+  Особенно, если вы обновляете сразу после выпуска новой версии, неоткрытые ошибки может помешать прогрессу.
+  Некоторые за развертывание предпочитают подождать, пока первый выпуск точка не будет объявлен.
+  Тем не менее, если у вас есть значительное развертывание, вы можете следить за разработку и тестирование релиза, тем самым гарантируя, что ошибки для случаев использования фиксированы.
+
+To complete an upgrade of OpenStack Compute while keeping instances running, you should be able to use live migration to move machines around while performing updates, and then move them back afterward as this is a property of the hypervisor.
+ However, it is critical to ensure that database changes are successful otherwise an inconsistent cluster state could arise.
+Чтобы завершить модернизацию OpenStack Compute, сохраняя при этом случаи работает, вы должны быть в состоянии использовать живую миграцию двигаться машины вокруг в то время как, выполняющих обновлений, а затем вернуть их обратно после, так как это является собственностью гипервизора.
+  Тем не менее, очень важно, чтобы убедиться, что изменения в базе данных являются успешными в противном случае несовместимы состояние кластера может возникнуть.
+
+Performing some ‘cleaning’ of the cluster prior to starting the upgrade is also a good idea, to ensure the state is consistent.
+ For example some have reported issues with instances that were not fully removed from the system after their deletion.
+ Running a command equivalent to:
+$ virsh list --all
+ to find deleted instances that are still registered in the hypervisor and removing them prior to running the upgrade can avoid issues.
+Выполнение некоторые "уборка" кластера до начала обновления также хорошая идея, чтобы обеспечить государство является последовательным.
+  Например некоторые сообщили проблемы с экземплярами, которые не были полностью удалены из системы после их удаления.
+  Запуск командной эквивалентную:
+$ Virsh список --all
+  найти удаленные экземпляры, которые до сих пор, зарегистрированных в гипервизора и удаление их до запуска обновления могут избежать проблем.
+
+Uninstalling
+While we’d always recommend using your automated deployment system to re-install systems from scratch, sometimes you do need to remove OpenStack from a system the hard way.
+ Here’s how:
+• Remove all packages
+• Remove remaining files
+• Remove databases
+Удаление
+В то время как мы всегда рекомендовали бы с помощью автоматизированной системы развертывания для систем с нуля переустановить, иногда вы должны удалить OpenStack из системы на своей шкуре.
+  Вот как:
+• Удалить все пакеты
+• Снимите оставшиеся файлы
+• Удалить базы данных
+
+These steps depend on your underlying distribution, but in general you should be looking for ‘purge’ commands in your package manager, like  aptitude purge ~c $package.
+ Following this, you can look for orphaned files in the directories referenced throughout this guide.
+ For uninstalling the database properly, refer to the manual appropriate for the product in use.
+Эти действия зависят от вашего исходного распределения, но в целом вы должны искать «чистки» команд в менеджере пакетов, как способность продувки ~ C $ упаковке.
+  После этого, вы можете посмотреть на потерянных файлов в каталогах, упомянутых в данном руководстве.
+  Для удаления базы данных должным образом, обратитесь к руководству подходит для устройства в использовании.

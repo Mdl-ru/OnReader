@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Двойная VLAN - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="app_crypt.html" title="Дополнение B. Байки из зашиф^H^H^H^H облака"/>
+<link rel="prev" href="app_crypt.html" title="Дополнение B. Байки из зашиф^H^H^H^H облака"/>
+<link rel="next" href="issue.html" title="&#34;Проблема&#34;"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:19+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//double_vlan.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Двойная VLAN';
+PrevRef = 'app_crypt.html';
+UpRef = 'app_crypt.html';
+NextRef = 'issue.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="double_vlan"> </a>Двойная VLAN</h2>
+</div></div></div>
+<p>Я находился у заказчика в Келоуна, Британская Колумбия, Канада, устанавливая новое облако OpenStack. 
+Развертывание было полностью автоматизировано: Cobbler выполнял установку OS на голое железо,
+осуществлял его начальную загрузку, а после этого принимался за дело Puppet. 
+Я выполнял сценарий развертывания так много раз на практике, что считал само собой разумеющимся, что 
+все успешно работало.</p>
+<p>В мой последний день пребывания в Келоуне я был в конференц-связи из своего отеля.
+В фоновом режиме я дурачился в новом облаке. Я запустил экземпляр и зарегистрировался.
+Все выглядело великолепно. От скуки я запустил <span class="command"><strong>ps aux</strong></span> и
+внезапно все экземпляры заблокировались.</p>
+<p>Полагая,что это разовая проблема, я завершил экземпляр и запустил новый.
+Затем моя конференц-связь завершилась и я уехал в центр обработки данных.</p>
+<p>В центре я довел ряд задач и вспомнил про блокировку. Я вошел в новый экземпляр и 
+снова запустил <span class="command"><strong>ps aux</strong></span>. Он работал. Уф. 
+Я решил выполнить его еще раз. Он был заблокирован. Какого черта?</p>
+<p>После данной воспроизведения несколько раз, я пришел к неутешительному убеждению,
+что в этом облаке действительно присутствует проблема. Даже хуже, мое пребывание 
+в Келоуне закончилось, и я должен вернуться назад в Калгари.</p>
+<p>Даже не понятно, где начинать поиск неисправности, похожей на эту.
+Экземпляр просто случайным образом блокируется при выполнении команды.
+Это какой-то образ? Не-а: это происходит с любыми образами. 
+Это какой-то вычислительный узел? Не-а: это происходит со всеми узлами. 
+Это блокируется какой-то экземпляр? Нет! Новые соединения SSH работают
+просто отлично!</p>
+<p>Мы обратились за помощью. Инженер по сетевому обеспечению предположил, 
+что это была проблема MTU. Великолепно! MTU! Какая- то зацепка!
+Что такое MTU и почему он может вызвать проблему?</p>
+<p>MTU это максимальный размер передаваемого блока данных (maximum transmission unit). 
+Он задает максимальное количество байт, которое интерфейс принимает для всех пакетов.
+Если два интерфейса имеют два различных MTU, байты могут отсекаться и могут происходить 
+странные вещи — такие, как случайные зависания сессий.</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Не все пакеты имеют размер 1500. Выполнение команды <span class="command"><strong>ls</strong></span>
+ через SSH может создать только один пакет с размером, меньшим 1500 байт. 
+ Однако, выполнение команды с большим выводом результатов, например 
+ <span class="command"><strong>ps aux</strong></span> требует несколько пакетов
+ по 1500 байт.</p></td></tr></table>
+</div>
+<p>Итак, откуда приходит проблема MTU? Почему мы не сталкивались с ней 
+во всех остальных установках? Что нового в нашей ситуации? Ну, новый
+центр обработки данных, новая восходящая линия связи, новый коммутатор, новая модель 
+коммутатора, новые серверы, первый случай использования этой модели сервера… 
+так, почти все было в новинку. Мы повсюду игрались с повышением нашего MTU,
+в разных областях: в наших коммутаторах, в сетевых адаптерах вычислительных узлов, 
+в виртуальных сетевых платах экземпляров, мы даже выполнили увеличение MTU 
+центра обработки данных для восходящего интерфейса. Некоторые изменения работали, 
+некоторые нет. Этот путь поиска неполадок не кажется верной, хотя… Мы не должны 
+вносить изменения MTU в эти области..</p>
+<p>В качестве крайнего средства, наш сетевой администратор (Альваро) и я сели 
+с четырьмя терминальными окнами, карандашом и листом бумаги. В первом окне мы запустили ping. 
+Во втором окне мы запустили <span class="command"><strong>tcpdump</strong></span> 
+в контроллере облака. В третьем, <span class="command"><strong>tcpdump</strong></span> 
+на вычислительном узле. А четвертое имело <span class="command"><strong>tcpdump</strong></span> 
+в экземпляре. В качестве подоплеки, данное облако имело установку с большим числом узлов, без
+множества хостов.</p>
+<p>Один контроллер облака работал в качестве шлюза для всех вычислительных узлов.
+Для настройки сети мы применяли VlanManager. Это означает, что контроллер облака и 
+все вычислительные узлы имели различные VLAN для каждого проекта OpenStack. 
+Мы применяли параметр -s в <span class="command"><strong>ping</strong></span> 
+для изменения размера пакета. Мы наблюдали, что иногда пакеты полностью возвращались,
+иногда они только уходили и никогда не возвращались назад, а иногда пакеты останавливались 
+в случайной точке. Мы изменили <span class="command"><strong>tcpdump</strong></span>,
+чтобы начать отображать шестнадцатеричный дамп пакетов. Мы выполняли ping между 
+всеми комбинациями извне, с контроллера, с вычислительного узла и с экземпляра.</p>
+<p>Наконец, Альваро заметил кое-что. Когда пакет извне достигает контроллера облака, 
+он не должен быть настроен на работу с VLAN. Мы проверили, что это так. Когда отклик 
+ping отправлялся из экземпляра, он должен быть в VLAN. Верно. Когда он возвращается 
+в контроллер облака и на своем пути назад в общедоступный интернет он больше не должен 
+иметь VLAN. Неверно. Ой-ой. Это выглядело так, будто не удаляется VLAN часть пакета.</p>
+<p>Это не имело никакого смысла.</p>
+<p>Пока мы гоняли эту мысль в наших головах туда-сюда, я случайным образом набирал команды 
+на вычислительном узле:
+        </p>
+<pre class="screen">$ ip a
+
+10: vlan100@vlan20: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master br100 state UP
+</pre>
+<p> </p>
+<p>&quot;Эй, Альваро, аты можешь запустить VLAN поверх VLAN?&quot;</p>
+<p>&quot;Если сделать это, то это добавит дополнительные 4 байта к пакету&quot;</p>
+<p>Тогда это все имело смысл…</p>
+<pre class="screen">$ grep vlan_interface /etc/nova/nova.conf
+vlan_interface=vlan20</pre>
+<p> </p>
+<p>В <code class="filename">nova.conf</code>, <code class="code">vlan_interface</code> 
+предписывает, что интерфейс OpenStack должен присоединять все VLAN. 
+Правильная установка должна выглядеть так:</p>
+<pre class="programlisting">vlan_interface=bond0</pre>
+<p>.</p>
+<p>Поскольку это должен быть объединенный сетевой адаптер сервера.</p>
+<p>vlan20 является VLAN, которую центр обработки данных предоставляет нам для 
+восходящего доступа к общедоступному интернету. Это правильная VLAN и она также 
+подключена к bond0.</p>
+<p>По ошибке я настроил OpenStack подключать все VLAN владельцев на vlan20,
+вместо bond0, тем самым, упаковывая одну VLAN поверх другой, что добавляет 
+дополнительные 4 байт к каждому пакету и дает в результате 1504 байта,
+которые должны быть отосланы,создавая проблемы по прибытию на интерфейс, который 
+принимает только 1500!</p>
+<p>Как только данный параметр был исправлен, все заработало.</p>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#"><head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 3. Проектирование контроллера облака и управления облаком - 	Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="architecture.html" title="Архитектура"/>
+<link rel="prev" href="section_arch_provision.html" title="Глава 2. Инициализация и развертывание"/>
+<link rel="next" href="compute_nodes.html" title="Глава 4. Вычислительные узлы"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:42:59+00:00"/><script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//cloud_controller_design.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]--><link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+	<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+	<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+	<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+	<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+	<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+	<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+	<script type="text/javascript" src="search/index-1.js"><!----></script>
+	<script type="text/javascript" src="search/index-2.js"><!----></script>
+	<script type="text/javascript" src="search/index-3.js"><!----></script>
+	<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 3. Проектирование контроллера облака и управления облаком';
+PrevRef = 'section_arch_provision.html';
+UpRef = 'architecture.html';
+NextRef = 'compute_nodes.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="chapter">
+ <div xmlns="" class="titlepage">
+  <div>
+   <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="cloud_controller_design"> </a>Глава 3. Проектирование контроллера облака и <span class="keep-together">управления облаком</span></h2>
+   </div>
+  </div>
+ </div>
+ <div class="toc"><dl><dt><span class="section">
+  <a href="cloud_controller_design.html#hardware_consid">Анализ аппаратных средств</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#separate_services">Разделение служб</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#database">Базы данных</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#message_queue">Очередь сообщений</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#conductor">Службы проводника</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#api">Интерфейс прикладного программирования (API)</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#extensions">Расширения</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#scheduling">Планировщик</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#images">Образы</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#dashboard">Инструментальная панель</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#authentication">Аутентификация и авторизация</a></span></dt><dt><span class="section">
+  <a href="cloud_controller_design.html#network_consid">Анализ сети</a></span></dt></dl>
+ </div>
+ 
+ <p>OpenStack разработан для массивной горизонтальной масштабируемости, которая 
+ делает возможной широкое распределение всех служб. Тем не менее, для упрощения 
+ данного руководства мы решили обсудить службы более централизованной природы с использованием 
+ концепции единого <span class="emphasis"><em>контроллера облака</em></span>.
+ Контроллер облака является просто упрощением понятия. В настоящем
+ мире вы проектируете архитектуру для своего облачного контроллера, который 
+ обеспечивает высокую доступность таким образом, что если один из узлов
+ выходит из строя, другой может выполнить необходимые задания. В реальности
+ задачи контроллера облака распределены по большому числу узлов.
+ <a id="d9e1329" class="indexterm"/>
+ <a id="d9e1332" class="indexterm"/></p>
+ 
+ <p>Контроллер облака обеспечивает централизованную систему управления для 
+ развертывания OpenStack с многими узлами. Обычно контроллер облака управляет 
+ аутентификацией и отсылкой сообщений всем системам с использованием очереди сообщений.</p>
+ 
+ <p>Для многих реализаций контроллер облака является отдельным узлом.
+ Однако, для обеспечения высокой доступности, вы должны принять во внимание 
+ несколько соображений, о которых мы расскажем в данной главе.</p>
+ 
+ <p>Контроллер облака управляет следующими службами в облаке:
+ <a id="d9e1338" class="indexterm"/></p>
+ 
+ <div class="variablelist"><dl><dt><span class="term">Базы данных</span></dt><dd>
+  <p>Отслеживают текущую информацию о пользователяхи экземплярах, например,
+  в базах данных один экземпляр базы данных управляет одной службой.</p></dd><dt>
+  <span class="term">Службы очередей сообщений</span></dt><dd>
+  <p>Все AMQP—Advanced Message Queue Protocol—messages (очереди протоколов запросов расширенных сообщений) 
+  для служб принимаются и отсылаются соотвествующими агентами очереди.
+  <a id="d9e1350" class="indexterm"/></p></dd><dt>
+  <span class="term">Службы проводника</span></dt><dd>
+  <p>Запросы от прокси к базам данных</p></dd><dt>
+  <span class="term">Аутентификация и авторизация для управления идентификацией</span></dt><dd>
+  <p>Указывают какие пользователи какие действия могут выполнять на
+  определенном ресурсе облака; однако, управление квотами распространяется на службы.
+  <a id="d9e1360" class="indexterm"/></p></dd><dt>
+  <span class="term">Службы управления образами</span></dt><dd>
+  <p>Хранят и обслуживают образы со связанными с ними метаданными для запуска
+  в облаке</p></dd><dt>
+  <span class="term">Службы планирования</span></dt><dd>
+  <p>Указывают, какие ресурсы использовать в первую очередь; например, распределят
+  где запускать экземпляры на основе правил</p></dd><dt>
+  <span class="term">Пользовательские инструментальные панели</span></dt><dd>
+  <p>Обеспечивают внешние интерфейсы для пользователей на основе веб- интерфейса 
+  для потребления услуг обака.</p></dd><dt>
+  <span class="term">Терминалы API</span></dt><dd>
+  <p>Предоставляют доступ на основе REST API для каждой службы, причем каталог
+  терминалов API управляется службой идентификации</p></dd></dl>
+ </div>
+ <p>В нашем примере контроллер облака имеет коллекцию компонентов 
+ <code class="code">nova-*</code>, которая представляет глобальное состояние облака;
+ общается со службами, такими как аутентификация, обработка информации об облаке 
+ в базе данных, с помощью очередей устанавливает связь со всеми вычислительными узлами и 
+ работающими устройствами (<a class="gloss" href="#" def="&lt;strong&gt;worker: &lt;/strong&gt; &lt;p&gt;
+ Демон, который прослушивает очередь и выполняет задачи в соответствии с запросами.
+ Например,  &lt;code class='systemitem'&gt;cinder-volume &lt;/code&gt;
+   worker  управляет созданием томов и удалением массивов хранения. &lt;/p&gt;">
+  worker</a>) систем хранения, а также обеспечивает API. Каждая работающая на 
+  выделенном контроллере облака служба может быть разбита на отдельные узлы для 
+  масштабируемости или доступности.
+  <a id="d9e1381" class="indexterm"/>
+  <a id="d9e1384" class="indexterm"/></p>
+  
+  <p>В качестве другого примера вы можете использовать пары серверов для общего
+  контроллера облака - один активный, один резервный - для избыточности узлов,
+  обеспечивающих заданный набор услуг, такой как:</p>
+  <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   <p>Внешний веб-интерфейс для API запросов, планировщик для выбора какой 
+   вычислительный узел будет загружать экземпляр, служб идентификации и инструментальной
+   панели</p></li><li class="listitem">
+   <p>Сервер баз данных и очереди сообщений (например, MySQL, RabbitMQ)</p></li><li class="listitem">
+   <p>Службаобразов для управления ими</p></li></ul>
+  </div>
+  <p>Теперь, когда вам открылись мириады проектов для управления вашим облаком,
+  получитедополнительную информацию, которая поможет с дальнейшими вашими 
+  решениями по проекту.</p>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	 <a id="hardware_consid"> </a>Анализ аппаратных средств</h2>
+	</div>
+   </div>
+  </div>
+  <p>Аппаратные средства контроллера облака могут быть теми же, что и у вычислительных узлов, 
+  хотя, возможно, в дальнейшем вы пожелаете определять спецификацию на основе размера и типа облака, 
+  с которым вы работаете.
+  <a id="d9e1398" class="indexterm"/>
+  <a id="d9e1401" class="indexterm"/></p>
+  <p>Кроме того, можно использовать виртуальные машины для всех или некоторых 
+  из услуг, которыми управляет контроллер облака, например очередями сообщений. 
+  В этом руководстве мы предполагаем, что все службы работают непосредственно в 
+  контроллере облака.</p>
+
+  <p><a class="xref" href="cloud_controller_design.html#controller-hardware-sizing" title="Таблица 3.1. Анализ размеров оборудования контроллера облака">
+   Таблица 3.1. “Анализ размеров оборудования контроллера облака”</a>
+   содержит общий анализ для рассмотрения подбора оборудования при проектировании 
+   контроллера облака.
+  <a id="d9e1407" class="indexterm"/>
+  <a id="d9e1410" class="indexterm"/>
+  <a id="d9e1412" class="indexterm"/></p>
+  <table rules="all" id="controller-hardware-sizing">
+   <caption>Таблица 3.1. Анализ размеров оборудования контроллера облака</caption>
+   <col width="25%"/><col width="75%"/><thead><tr>
+          <th>Анализ</th>
+          <th>Результат</th>
+        </tr></thead><tbody><tr>
+          <td>
+	<p>Как много экземпляров будет работать одновременно?</p></td>
+          <td>
+	<p>Соответствующий размер вашего сервера базы данных, а также, 
+	если отчет сообщит о необходимости одновременного наличия многих экземпляров, 
+	масштабирование за пределы контроллера облака и планирование вычислительной 
+	мощности для запуска нового экземпляра.</p></td>
+        </tr><tr>
+          <td>
+	<p>Сколько вычислительных узлов работает одновременно?</p></td>
+          <td>
+	<p>Убедитесь, что ваши очереди сообщений успешно обрабатывают запросы и имеют соответствующий размер.</p></td>
+        </tr><tr>
+          <td>
+	<p>Как много пользователей будут иметь API доступ?</p></td>
+          <td>
+	<p>Если много пользователей будет делать большое количество запросов, убедитесь, что нагружаемые ЦПУ контроллера облака 
+	смогут их обработать</p></td>
+        </tr><tr>
+          <td>
+	<p>Как много пользователей будет иметь доступ к 
+          <a class="gloss" href="#" def="&lt;strong&gt;dashboard: &lt;/strong&gt; &lt;p&gt; Интерфейс на основе веб- управлени/я для OpenStack. Альтернативное название для horizon. &lt;/p&gt;">
+		  инструментальной панели</a> вместо прямого REST API доступа?</p></td>
+          <td>
+	<p>Инструментальная панель выполняет много запросов, даже больше, чем API доступ, 
+	следовательно, добавьте еще больше ЦПУ, если ваша инструментальная панель выступает 
+	в роли главного инструмента для ваших пользователей.</p></td>
+        </tr><tr>
+          <td><p>Сколько <code class="code">nova-api</code> служб вы предполагаете 
+		  использовать в своем облаке?</p></td>
+          <td>
+	<p>Вы должны подогнать контроллер по размеру ядер под службы.</p></td>
+        </tr><tr>
+          <td>
+	<p>Как продолжительно работает одна служба?</p></td>
+          <td>
+	<p>Запуск и останов служб запрашивается на вычислительном узле, 
+	однако, поскольку существуют потребности узлов контроллера из-за 
+	потребностей всех API запросов и планировщика.</p></td>
+        </tr><tr>
+          <td>
+	<p>Выполняется ли вовне верификация вашей системы аутентификации?</p></td>
+          <td>
+	<p>Внешние системы, например, такие как LDAP или 
+	<a class="gloss" href="#" def="&lt;strong&gt;Active Directory: &lt;/strong&gt; &lt;p&gt;
+	Служба аутентификации и идентификации Microsoft, основанная на LDAP. 
+	Поддерживается в OpenStack. &lt;/p&gt;">Active Directory</a> 
+	требует сетевой связности между контроллером облака и системой аутентификации.
+	Также убедитесь, что контроллер облака имеет достаточную мощность ЦПУ
+	для выполнения запросов.</p></td>
+        </tr></tbody></table>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="separate_services"> </a>Разделение служб</h2>
+	  </div>
+	 </div>
+	</div>
+	<p>Хотя наш пример содержит все центральные службы в одном месте, 
+	возможно, хорошей идеей будет разнесение служб на различные физические сервера. 
+	<a class="xref" href="cloud_controller_design.html#sep-services-table" title="Таблица 3.2. Сценарии реализации">
+	Таблица 3.2, Сценарии реализации”</a> is
+    список наблюдавшихся нами сценариев и их обоснование.
+	<a id="d9e1465" class="indexterm"/>
+	<a id="d9e1468" class="indexterm"/>
+	<a id="d9e1471" class="indexterm"/>
+	<a id="d9e1473" class="indexterm"/></p>
+	
+	<table rules="all" id="sep-services-table">
+	 <caption>Таблица 3.2. Сценарии реализации</caption>
+	 <col width="25%"/>
+	 <col width="75%"/><thead><tr>
+          <th>Сценарий</th>
+          <th>Обоснование</th>
+        </tr></thead><tbody><tr>
+          <td>
+	<p>Запуск серверов <code class="code">glance-*</code> на сервере
+          <code class="code">swift-proxy</code>.</p></td>
+          <td>
+	<p>Подобная реализация получает достаточную дополнительную поддержку ввода/вывода прокси- сервера 
+	хранилища объектов (Object Storage proxy), к тому же часть Glance, отвечающая за доставку образов 
+	получает преимущества от физического размещения на аппаратных средствах хранилища объектов 
+	(Object Storage) и, следовательно, наличия хороших коммуникаций с ним.</p></td>
+        </tr><tr>
+          <td>
+	<p>Запуск центрального выделенного сервера базы данных.</p></td>
+          <td>
+	<p>Такая реализация имеет центральный выделенный сервер, обеспечивающий 
+	базами данных все службы. Это упрощает операции по изоляции 
+	обновлений сервера баз данных, а также позволяет упростить создание вторичных серверов баз 
+	данных для отказоустойчивости.</p></td>
+        </tr><tr>
+          <td>
+	<p>Запуск одной VM на службу.</p></td>
+      <td>
+	<p>Подобное развертывание выполняет центральные службы на наборе серверов 
+	с запущенным KVM. Выделенная виртуальная машина создавалась для каждой службы 
+	(<code class="literal">nova-scheduler</code>, rabbitmq база данных и т.д.). 
+	Это помогает развертыванию при масштабировании, поскольку делает возможной настройку ресурсов 
+	для каждой виртуальной машины на основе полученной ими нагрузки 
+	(нечто не очень понятное в процессе установки).</p></td>
+        </tr><tr>
+          <td>
+	<p>Использование внешнего балансировщика нагрузки.</p></td>
+      <td>
+	<p>Подобная реализация использует дорогостоящее оборудование для балансировщика нагрузки 
+	в своей организации. В ней работает много серверов <code class="code">nova-api</code> и 
+	<code class="code">swift-proxy</code> на различных физических серверах и 
+	используется балансировщик нагрузки для переключения между ними.</p></td>
+        </tr></tbody></table>
+	
+	<p>Один из выборов который всегда возникает, использовать виртуализацию или нет. Некоторые 
+	службы, такие как серверы <code class="code">nova-compute</code>, 
+	<code class="code">swift-proxy</code> и <code class="code">swift-object</code>, 
+	не подлежат виртуализации. Однако, серверы управления часто могут быть 
+	успешно виртуализованы -падение производительности часто может быть компенсировано 
+	простым запуском большего числа служб.</p></div>
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="database"> </a>Базы данных</h2>
+	 </div>
+	</div>
+    </div>
+	
+	<p>Вычислительные узлы OpenStack Compute используют SQL базы данных для 
+	хранения информации и извлечения динамической информации. MySQL является популярным 
+	выбором базы данных всообществе OpenStack.
+	<a id="d9e1517" class="indexterm"/>
+	<a id="d9e1520" class="indexterm"/></p>
+	
+	<p>Утрата базыданных ведет к ошибкам. Как результат, мы рекомендуем вам использовать кластер 
+	баз данных в некоем виде для придания отказоустойчивости. Настройка и сопровождение
+	кластера базы данных выходит за пределы  OpenStack и определяются программным
+	обеспечением самойбазы данных, которую вы выбрали для использования в своей 
+	облачной среде. MySQL/Galera является популярным выбором для баз данных
+	на основе MySQL.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	 <a id="message_queue"> </a>Очередь сообщений</h2></div></div></div>
+	 
+	 <p>Большинство служб OpenStack Compute общаются друг с другом с использованием
+	 <span class="emphasis"><em>очередей сообщений</em></span>.
+	 <a id="d9e1528" class="indexterm"/>
+	 <a id="d9e1531" class="indexterm"/>
+	 Например, вычислительные службы взаимодействуют с службами хранения
+	 и сетевыми службами через очереди сообщений для выполнения блокировки.
+	 Кроме того, вы можете включить уведомления для любой службы.
+	 RabbitMQ, Qpid и 0mq, все они являются популярным выбором для службы 
+	 очереди сообщений. Обычно при отказе очереди сообщений или возникновении ее 
+	 недоступности кластер медленно деградирует и полностью останавливается в состоянии 
+	 &quot;доступен только для чтения&quot; с зависшей информацией в точке, в которой 
+	 было отправлено последнее сообщение. Соответственно, мы рекомендуем, чтобы вы 
+	 создавали кластерную очередь сообщений. Помните, что кластерные очереди сообщений
+	 могут стать болезненной точкой для многих реализаций. Вто время как RabbitMQ имеет
+	 встроенную кластерную поддержку, появлялись сообщения о проблемах при работе 
+	 с большими масштабами. В то время как доступны другие решения для очередей, такие как
+	 0mq и Qpid, 0mq не предлагает отслеживание очереди. Qpid является системой 
+	 <span class="keep-together">сообщений</span> по выбору для Red Hat и его производных. 
+	 Qpid не имеет встроенной поддержки кластеризации и требует дополнительной службы, 
+	 такой как Pacemaker или Corsync. Для своей очереди сообщений вы должны определиться
+	 с тем, какой уровень потери данных будет еще допустим для вас и стоит ли вам
+	 использовать поддержку проекта OpenStack повторного выполнения множества хостов MQ
+     в случае отказа, например, с использованием возможности вычислительной службы делать 
+	 это.
+	 <a id="d9e1535" class="indexterm"/>
+	 <a id="d9e1537" class="indexterm"/>
+	 <a id="d9e1539" class="indexterm"/>
+	 <a id="d9e1541" class="indexterm"/></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="conductor"> </a>Службы проводника</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <p>В предыдущей версии OpenStack все службы <code class="literal">nova-compute</code> 
+   требовали прямой доступ к базе данных, размещенной в контроллере облака.
+   Это создавало проблемы по двум причинам: безопасности и производительности.
+   Что касается безопасности, если вычислительный узел был скомпроментирован,
+   злоумышленник по определению имеет доступ к базе данных. Относительно производительности,
+   обращения <code class="literal">nova-compute</code> к базе данных являются однопоточными
+   и блокируемыми. Это создает узкое место для производительности, поскольку запросы к базе
+   данных выполняются последовательно, а не параллельно.
+   <a id="d9e1548" class="indexterm"/>
+   <a id="d9e1550" class="indexterm"/></p>
+   
+   <p>Служба проводника (<em>прим. пер. или дирижера: conductor</em>) разрешает
+   обе эти проблемы выступая в качестве прокси для службы <code class="literal">nova-compute</code>. 
+   Теперь вместо того, чтобы <code class="literal">nova-compute</code> напрямую
+   обращалась к базе данных, она взаимодействует со службой <code class="literal">nova-conductor</code>, 
+   а <code class="literal">nova-conductor</code> осуществляет доступ к базе данных в
+   интересах <code class="literal">nova-compute</code>. Поскольку
+   <code class="literal">nova-compute</code> больше не осуществляет прямой доступ к 
+   базе данных, проблема безопасности решена. Дополнительно <code class="literal">nova-conductor</code> 
+   является неблокирующей службой, следовательно, запросы от всех вычислительных узлов 
+   выолняются параллельно.</p>
+
+   <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	<img alt="[Note]" src="../common/images/admon/note.png"/></td><th align="left">
+	Замечание</th></tr><tr><td align="left" valign="top">
+    <p>Если вы все еще используете <code class="literal">nova-network</code> и сетевые
+	службы с множеством хостов в своей облачной среде, <code class="literal">nova-compute</code>
+	все еще требует прямого доступа кбазе данных.
+	<a id="d9e1565" class="indexterm"/></p></td></tr></table>
+   </div>
+   
+   <p>Служба <code class="literal">nova-conductor</code> горизонтально масштабируется.
+   Чтобы сделать <code class="literal">nova-conductor</code> высокодоступной и отказоустойчивой,
+   просто запустите дополнительные экземпляры процесса <code class="code">nova-conductor</code> 
+   либо на томже сервере, или на нескольких серверах.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="api"> </a>Интерфейс прикладного программирования (API)</h2>
+	 </div>
+	</div>
+    </div>
+	
+	<p>Весь открытый доступ, будь то прямой доступ, доступ с использованием командной строки или 
+	через инструментальную панель на основе веб- интерфейса использует службу API. Справочные материалы 
+	по API вы найдете по адресу 
+	<a class="link" href="http://api.openstack.org/" target="_top">http://api.openstack.org/</a>.
+	<a id="d9e1575" class="indexterm"/>
+	<a id="d9e1578" class="indexterm"/></p>
+	
+	<p>Вы можете выбрать между Amazon EC2 совместимым API или прямым OpenStack API. 
+	Одна из проблем, которая может возникнуть при работе сразу с двумя API, 
+	заключается в несовместимости при обращении к образам и экземплярам.</p>
+	
+	<p>Например, EC2 API обращается к экземпляру с использованием шестнадцатиричного ID, 
+	в то время как OpenStack API использует имена и числа. Аналогично, 
+	EC2 API, как правило, полагается на псевдонимы DNS для соединения с виртуальными машинами, 
+	в отличие от OpenStack, который обычно перечисляет IP адреса. 
+	<a id="d9e1583" class="indexterm"/>
+	<a id="d9e1586" class="indexterm"/></p>
+	
+	<p>Если OpenStack не установлен надлежащим образом, элементарно получить 
+	ситуацию, при которой пользователи не смогут связаться со своими экземплярами просто 
+	из-за неправильных псевдонимов DNS. Несмотря на это, EC2- совместимость может помочь 
+	пользователям мигрировать на ваше облако.</p>
+	
+	<p>Как и в случае с базой данных, и с очередями сообщений, наличие более одного 
+	<a class="gloss" href="#" def="&lt;strong&gt; API server: &lt;/strong&gt; &lt;p&gt;
+	Любой узел с запущенным демоном или исполнителем, которые обеспечивают конечную точку API. &lt;/p&gt;">
+	API сервера</a> может оказаться полезным. Для достижения высокой доступности служб 
+	<code class="code">nova-api</code> могут быть использованы традиционные методы 
+	балансировки нагрузки HTTP.
+	<a id="d9e1593" class="indexterm"/></p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="extensions"> </a>Расширения</h2>
+	  </div>
+	 </div>
+	</div>
+	
+	<p><a class="link" href="http://docs.openstack.org/api/api-specs.html" title="Спецификация API" target="_top">
+    Спецификация API</a> определяет основные операции, совместимости и типы носителей OpenStack API. 
+	Клиент всегда может зависеть от доступности этого ядра API и разработчиков реализации 
+	всегда требуется поддерживать его в <span class="keep-together">полном объеме</span>. 
+	Требование строгого соответствия ядра API дает возможность клиентам полагаться на минимальный 
+	уровень функциональности при взаимодействии с различными реализациями одного и того же API.
+	<a id="d9e1601" class="indexterm"/>
+	<a id="d9e1604" class="indexterm"/></p>
+	
+	<p>OpenStack Compute API является расширяемым.
+	Расширение добавляет возможности к API поверх уже определенных в ядре.
+	Внедрение новых функций, типов MIME, действий, состояний, заголовков, параметров и ресурсов 
+	могут быть выполнены с помощью расширений в ядре API.
+	Это позволяет введение новых функций в API, не требуя изменения версии и позволяет введения
+	ниши функциональности конкретного производителя.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="scheduling"> </a>Scheduling</h2>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>Службы планирования ответственны за определение тех вычислительных 
+	узлов или узлов хранения, где дложны быть созданы соответствующие 
+	виртуальная машина  или том блочного хранения. Службы планирования
+	получают запросы на создание для таких ресурсов из очереди сообщений 
+	и затем запускают процесс определения соответствующего узла, в котором
+	должен быть размещен данный ресурс. Это процесс выполняется с применением
+	ряда настраиваемых пользователем фильтров на доступном наборе узлов.
+	<a id="d9e1611" class="indexterm"/>
+	<a id="d9e1614" class="indexterm"/></p>
+	
+	<p>В настоящее время существуют два типа планировщиков:
+    <code class="literal">nova-scheduler</code> для виртуальных машин и
+    <code class="literal">cinder-scheduler</code> для томов блочных хранилищ. 
+	Оба планировщика способны масштабироваться горизонтально, следовательно,
+	для целей высокой доступности или при очень высокой частоте запросов планирования
+	установки, вы должны рассматривать работу множества экземпляров каждого
+	планировщика. Все планировщики прослушивают совместно используемую очередь
+	сообщений, следовательно никакой специализированный балансировщик
+	нагрузки не требуется.</p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="images"> </a>Образы</h2>
+	 </div>
+	</div>
+    </div>
+	
+	<p>Служба образов OpenStack состоит из двух частей - <code class="code">glance-api</code> 
+	и <code class="code">glance-registry</code>. Первая отвечает за доставку образов; 
+	вычислительные узлы используют их для загрузки образов с серверов баз данных. 
+	Последняя поддерживает информацию метаданных, связанную с образами виртуальных машин и 
+	необходимыми серверами хранения.
+	<a id="d9e1625" class="indexterm"/>
+	<a id="d9e1628" class="indexterm"/>
+	<a id="d9e1631" class="indexterm"/>
+	<a id="d9e1634" class="indexterm"/>
+	<a id="d9e1637" class="indexterm"/></p>
+	
+	<p>Часть <code class="code">glance-api</code> является уровнем абстракции, допускающим 
+	выбор сервера образов (back-end). В настоящее время, он поддерживает:</p>
+	
+	<div class="variablelist"><dl><dt>
+	 <span class="term">Хранилище объектов OpenStack</span></dt><dd>
+	 <p>Позволяет вам хранить образы в качестве объектов.</p></dd><dt>
+	 <span class="term">Файловая система</span></dt><dd>
+	 <p> Использует любые существующие файловые системы для хранения образов в виде файлов.</p></dd><dt>
+	 <span class="term">S3</span></dt><dd>
+	 <p>Позволяет вам осуществлять выборку образов из Amazon S3.</p></dd><dt>
+	 <span class="term">HTTP</span></dt><dd>
+	 <p>Позволяет вам осуществлять выборку образов с веб- сервера. 
+	 При использовании данного режима вы не можете записывать образы.</p></dd></dl>
+    </div>
+	
+	<p>Если у вас есть служба хранения объектов OpenStack (OpenStack Object Storage), мы рекомендуем 
+	использовать ее как масштабируемое пространство для хранения ваших образов. Вы также можете использовать 
+	файловую систему с достаточной производительностью или Amazon S3 - если вы не нуждаетесь в 
+	возможности загрузки новых образов с помощью OpenStack.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="dashboard"> </a>Инструментальная панель</h2>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>Инструментальная панель OpenStack (horizon) обеспечивает пользовательский
+	интерфейс на веб- основе к различным компонентам OpenStack.
+	Интсрументальная панель содержит область конечных пользователей для 
+	управления пользователями своей виртуальной инфраструктурой и область
+    администратора для управления средой OpenStack оператором облака в целом.
+	<a id="d9e1663" class="indexterm"/>
+	<a id="d9e1665" class="indexterm"/></p>
+	
+	<p>Инструментальная панель реализована в виде веб приложения Python запущенного на 
+	<a class="gloss" href="#" def="&lt;strong&gt;Apache: &lt;/strong&gt; &lt;p&gt;
+	Фонд программного обеспечения Apache поддерживает сообщество Apache программных проектов
+	с открытым кодом. Эти проекты обеспечивают общедоступные программные продукты. &lt;/p&gt;">
+	Apache</a> <code class="code">httpd</code>.
+	Таким образом, вы можете рассматривать его аналогичным любому другому веб- приложению, 
+	при условии, что ему доступны API серверы (включая его административные конечные приложения) 
+	с использованием через <span class="keep-together">сеть</span>.
+	<a id="d9e1672" class="indexterm"/></p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="authentication"> </a>Аутентификация и авторизация</h2>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>Понятия, поддерживающие аутентификацию и авторизацию OpenStack 
+	происходят из хорошо изученных и широко используемых систем аналогичной 
+	природы. Пользователи имеют полномочия, которые они могут использовать для аутентификации и они могут 
+	быть членами одной или более групп (называемыми проектами или владельцами, что взаимозаменяемо).
+	<a id="d9e1677" class="indexterm"/>
+	<a id="d9e1679" class="indexterm"/>
+	<a id="d9e1681" class="indexterm"/>
+	<a id="d9e1683" class="indexterm"/></p>
+	
+	<p>Например, администратор облака мог бы перечислить список всех доступных 
+	экземпляров в данном облаке, в то время как пользователь может видеть только те, 
+	которые входят в его текущую группу. Могут использоваться связанные с данным проектом 
+	квотируемые ресурсы, такие как число ядер, которое может использоваться, 
+	дисковое пространство и так далее.</p>
+	
+	<p>Служба идентификации OpenStack (Keystone) является пунктом, который обеспечивает 
+	решения об аутентификации и предоставляет информацию об атрибутах пользователя, которые 
+	затем используются другими службами OpenStack для выполнения авторизации. Политики устанавливаются 
+	в файле <code class="filename">policy.json</code>. Для <span class="keep-together">информации</span> 
+	об их настройке, см. <a class="xref" href="projects_users.html" title="Глава 9. Управление проектами и пользователями">
+	Главу 9, <em>Управление проектами и пользователями</em></a>.
+	<a id="d9e1691" class="indexterm"/>
+	<a id="d9e1694" class="indexterm"/></p>
+	
+	<p>Служба идентификации поддерживает различные плагины для решений аутентификации 
+	и храненилищ информации. Примеры таких плагинов включают в себя:</p>
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+    <p>Хранимые в памяти значения ключей (упрощенная внутренняя структура хранения)</p></li><li class="listitem">
+	<p>база данных SQL  (такая как MySQL или PostgreSQL)</p></li><li class="listitem">
+	<p>PAM (Подключаемый модуль аутентификации)</p></li><li class="listitem">
+	<p>LDAP (такой как OpenLDAP или Microsoft's Active Directory)</p></li></ul>
+   </div>
+   <p>Многие реализации используют базу данных SQL, однако LDAP также является 
+   популярным выбором для решений, которые должны быть интегрированы с 
+   существующей инфраструктурой.</p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="network_consid"> </a>Анализ сети</h2>
+	  </div>
+	 </div>
+	</div>
+	<p>Поскольку контроллер облака поддерживает очень много различных служб, он 
+	должен быть в состоянии обрабатывать бьющий по нему объем трафика. Например, если 
+	вы решите принимать на контроллере облака службу образов OpenStack (OpenStack Imaging), 
+	контроллер облака должен обеспечивать передачу этих образов с приемлемой скоростью.
+	<a id="d9e1711" class="indexterm"/>
+	<a id="d9e1714" class="indexterm"/>
+	<a id="d9e1717" class="indexterm"/></p>
+	
+	<p>В качестве другого примера, если вы решите использовать сеть с одиночным хостом, 
+	в которой контроллер облака является сетевым шлюзом для всех экземпляров, 
+	контроллер облака должен поддерживать общий объем трафика, происходящего между 
+	вашим облаком и общедоступным интернетом.</p>
+	
+	<p>Мы рекомендуем вам использовать быстрые NIC, например, 10 Gb. Вы также можете 
+	выбрать использование двух сетевых карт 10 Gb и объединить их вместе. Хотя вы не можете 
+	получить всю объединенную скорость 20 Gb, различные потоки используют различные 
+	сетевые адаптеры. Например, если контроллер облака передает два образа, каждый образ 
+	использует отличную сетевую карту и получает полную пропускную способность 10 Gb.</p>
+	
+	<p>{<em>Прим. пер.: изменено используемое в оригинале сокращение GB на правильное по контексту Gb (Гигабит).
+	<br />Также рекомендуем обратить внимание на возможность использования Infiniband 56Gb/100Gb из-за их
+	существенно большей пропускной способности, большей гибкости и мультипротокольной поддержки,
+	возможности разделения канала между службами и т.п. К тому же, он может оказаться экономически более
+	оправдан.
+	<br />На  наш взгляд представляет большой интерес совместная разработка Intel и Fujitsu
+	<a href="http://www.mdl.ru/Fujitsu/20141119-mdl.htm">PRIMERGY RSA 0.5</a>,
+	позволяющая строить решения дезинтегрированных серверов на базе интерфейса 
+	PCI Express v.3 с использованием технологии Intel® Silicon Photonics.
+	Данная разработка позволяет создавать единое мощное ядро вычислительной системы
+	с динамически подгружаемыми по запросу приложения аппаратных ресурсов из
+	имеющихся в наличии пулов аппаратных средств (ускорителей вычислений,
+	систем хранения, средств сетевой маршрутизации и т.п.).
+	<br />Фактически, концепция подгружаемых по запросу программных
+	ресурсов OpenStack находит свое продолжение уже на аппаратном уровне
+	при беспрецедентных пропускных способностях (до 128Gbps) и временах 
+	латентности, сопоставимых с задержками во внутренних шинах обычного
+	сервера.
+	<br />Подробности и более современные предложения вы можете получить у 
+	<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail">нас <img src="/i/9563499.gif" border="0" alt="e-mail" width="69"height="9"/></a> 
+	по запросу.</em>}</p>
+	<a id="d9e1722" class="indexterm"/></p>
+   </div>
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

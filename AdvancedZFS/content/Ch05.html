@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 5. Тома ZFS - Мастерство FreeBSD: ZFS для профессионалов</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="AdvancedZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="prev" href="Ch04.html" title="Глава 4. Репликация"/>
+<link rel="next" href="Ch06.html" title="Глава 6. Профессиональное оборудование"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "advanced-zfs";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 5. Тома ZFS';
+PrevRef = 'Ch04.html';
+UpRef = 'index.html';
+NextRef = 'Ch06.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 5. Тома ZFS</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch05.html">5. Тома ZFS</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch05.html#01">Создание, удаление и манипулирование томами ZFS</a></span></dt>
+     <dt><span class="chapter"><a href="Ch05.html#02">Разрежённые тома</a></span></dt>
+     <dt><span class="chapter"><a href="Ch05.html#03">Режим тома</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch05.html#0301">volmode в командной строке</a></span></dt>
+       <dt><span class="chapter"><a href="Ch05.html#0302">volmode по умолчанию</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch05.html#04">Доступ zvols</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+   <p>Том ZFS, или <span class="emphasis"><em>zvol</em></span>, является фрагментом пространства, поддерживаемого 
+   пулом ZFS и используемого в качестве блочного устройства. Обычно zvol применяется в качестве файловой 
+   системы с поддержкой файлов и экспортируется на некоторые прочие устройства при помощи iSCSI. Zvol не 
+   имеет обычных файлов набора данных, а также каталогов и полномочий, вместо этого он полагается на того, 
+   кто использует этот том в том, что он обеспечит файловую систему. Zvol обычно применяются в качестве таргетов 
+   iSCSI для других сетевых устройств, предоставляя вам доступ к хранилищу на основе ZFS в операционных 
+   системах с менее гибкими файловыми системами. Вы также можете применять zvol в качестве хранилищ виртуальных 
+   машин, предоставляя любой гостевой операционной системе доступ к общей функциональности ZFS даже если 
+   операционная система этого клиента не может применять ZFS. Дополнительно, вы можете реплицировать zvol 
+   по всей своей сетевой среде.</p>
+   <p>Мы уже касались zvol в нашей первой книге (см., например, разделы <a class="link" 
+   href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch04.html#CreatingVolumes" target="_top">Создание 
+   томов</a>, <a class="link" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch04.html#TweakingZFS_Volumes" 
+   target="_top">Тонкая настройка томов ZFS</a>). Данная глава осветит некоторые общие подводные камни zvol.
+   Однако, давайте начнём с основ zvol.</p>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>Создание, удаление и манипулирование томами ZFS</h3>
+   </div></div></div>
+   <p>Флаг <span class="term"><code>-V</code></span> сообщает <span class="term"><code>zfs create</code></span> 
+   что вы создаёте том ZFS. Определите желаемый размер и полный путь к этому тому. Здесь мы создаём zvol с размером 
+   2ТБ в пуле <span class="term"><code><em>vm</em></code></span>. Так как этот том будет экспортироваться для 
+   веб сервера, мы назовём его <span class="term"><code><em>www1</em></code></span>.</p>
+	   <pre class="screen"><code>
+# zfs create -V 2T vm/www1
+ 	   </code></pre>
+   <p>Zvol обязаны быть потомками набора данных. В данном примере zvol является потомком корневого 
+   набора данных пула. Вы не можете создавать zvol как потомка zvol. Наш том отображается в списке наборов 
+   данных.</p>
+	   <pre class="screen"><code>
+# zfs list -r vm
+NAME     USED  AVAIL  REFER  MOUNTPOINT
+vm      2.06T   563G  31.8K  /vm
+vm/db1  2.06T  2.61T  15.9K  -
+ 	   </code></pre>
+   <p>Zvol немедленно утверждает о своих правах на всё назначенное иму пространство. Мы создали том 2ТБ, 
+   поэтому он использует 2ТБ пространства плюс некоторое дополнительное пространство для метаданных.</p>
+   <p>Совершенно новый том не использует ещё так много пространства - он пока не записал кучу наполнителей 
+   данных в этот пул или что-то вроде этого. Он только заявил свои права на пространство через 
+   refreservation.</p>
+   <p>Удалим том при помощи <span class="term"><code>zfs destroy</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs destroy vm/www1
+ 	   </code></pre>
+   <p>Для zvol вы можете применять большинство остальных команд ZFS, например такие, как переименование и 
+   перемещение. Zvol имеют уникальные свойства, такие как 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span> и
+   <span class="term"><strong class="userinput"><code>volblocksize</code></strong></span>, хотя вы не 
+   можете устанавливать <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span>
+   или <span class="term"><strong class="userinput"><code>atime</code></strong></span> на каком бы то ни было
+   zvol.</p>
+   <p>Осуществляйте доступ к zvol через его узел устройства. Большинство zvol имеют улы устройств в 
+   <span class="term"><code><em>/dev/zvol</em></code></span>, в каталоге с именем после из пула. Узел 
+   устройства для zvol нашего примера, <span class="term"><code><em>vm/db1</em></code></span>, должен быть
+   <span class="term"><code><em>/dev/zvol/vm/db1</em></code></span>. Zvol может иметь другие узлы устройств, 
+   в зависимости от его режима.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>Разрежённые тома</h3>
+   </div></div></div>
+   <p>ZFS позволяет вам создавать том ZFS с размером большим, чем пространство доступное для его 
+   совместного расположения, тем самым выходя за пределы доступных ресурсов (overcommit). Резервирование 
+   некоторого пространства, тем не менее недостаточного, называется динамическим выделением 
+   (<span class="term"><code><em>thin provisioning</em></code></span>). Динамическое выделение является 
+   довольно рискованным в более ранних файловых системах, так как вы легко можете предоставить больше 
+   пространства, чем содержит файловая система. Вы можете легко расширить пул ZFS добавив больше 
+   жёстких дисков, поэтому в данном случае риск не так велик. Свойство 
+   <span class="term"><strong class="userinput"><code>refreservation</code></strong></span> управляет 
+   тем, какой объём тома зарезервирован под это. В нашем примере мы создаём zvol 
+   <span class="term"><code><em>db5</em></code></span> 2ТБ, однако предписываем ZFS зарезервировать 
+   для него только 100МБ.</p>
+	   <pre class="screen"><code>
+# zfs create -V 2T -o refreservation=100M db/db5
+ 	   </code></pre>
+   <p>Те из нас у кого имеется пара пустых полок SAS и они уже имеют планы добавления большего числа 
+   жёстких дисков, могут даже применять разрежённые тома (<span class="term"><code><em>parse 
+   volume</em></code></span>). Разрежённые тома используют только объём пространства, используемый 
+   данным томом. Для создания разрежённого тома воспользуйтесь флагом <span class="term"><code>-s</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs create -V 2T -s db/db5
+ 	   </code></pre>
+   <p>Вы можете применть меньшие резервирования если вы экспортируете тома iSCSI на другие хосты, а файловые 
+   системы клиентов менее гибкие чем ZFS. Растущая файловая система NTFS или UFS при расширении лежащего в 
+   основе диска могут вызывать долговременные проблемы. Применение разрежённого тома означает, что вы 
+   можете сообщить хосту Windows что iSCSI устройство имеет особенный большой размер, даже если лежащий в 
+   его основе пул не имеет так много места. Zvol предоставляет его потребителям объём пространства, 
+   используемый	его файлами на этом устройстве плюс некие метаданные файловой системы.</p>
+   <p>Это делает возможным создание действительно впечатляющие тома, если вы подготовлены к их поддержке. 
+   Здесь мы создадим разрежённый том с размером два экзабайта. Не имеет значения, что лежащий в основе 
+   пул имеет только 500ГБ.</p>
+	   <pre class="screen"><code>
+# zfs create -V 2E -s db/db5
+ 	   </code></pre>
+   <p>Воспользуйтесь <span class="term"><code> gpart show /dev/zvol/db/db5</code></span> и вы увидите, 
+   что данное дисковое устройство в действительности является двух экзабайтовым. Если вам в действительности 
+   необходимы два экзабайта пространства на одном томе iSCSI, мы, вероятно, можете себе позволить 
+   подсобного рабочего для распаковки и монтажа жёстких дисков достаточно быстро, чтобы поспевать за 
+   потребностями.</p>
+   <p>Чрезмерное выделение (overcommitting) становится и вправду некрасивым, когда вы выходите за пределы 
+   пространтсва. Ваши клиенты iSCSI могут окончательно потерять свой хладнокровие когда они получают 
+   сообщение что их тома выходят за пределы допустимого пространства даже когда экземпляры операционной 
+   системы настаивают на том, что они заполнены всего лишь на 10 процентов. Многие стеки iSCSI справляются 
+   с такими проблемами изящно. А другие... не очень.</p>
+   <p>Если у вас отсутствует достаточный объем физических аппаратных средств для добавления ёмкости хранения, 
+   позвольте томам ZFS занимать объём пространства, эквивалентный их размеру. Не допускайте 
+   чрезмерного выделения пространства.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>Режим тома</h3>
+   </div></div></div>
+   <p>Перед тем как вы приступите к созданию тома для своего приложения, рассмотрите его предназначение 
+   применения и то, какие хосты собираются его использовать. Установки FreeBSD по умолчанию для ZFS предполагают, 
+   что система, размещающая zvol полностью управляет им. Однако, если вы используете zvol как хранилище 
+   для виртуальной машины, гостевая операционная система ожидает иметь полное управление над ним. Это 
+   существенно, так как уровень GEOM FreeBSD автонастраивает хранилище. Уже настроенное хостом хранилище 
+   может вызвать проблемы у гостей с виртуальными средами.</p>
+   <p>Управляйте тем, какая система настраивает том применяя свойство 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span>.</p>
+   <p>Значение <span class="term"><strong class="userinput"><code>volmode</code></strong></span> по умолчанию,
+   <span class="term"><code><em>geom</em></code></span>, означает, что ваша система, в которой данный том 
+   и существует, управляет им. Если мы создаём zvol на хосте A, хост A настраивает том и управляет этим 
+   томом применяя GEOM. В добавление к узлу устройства для этого тома ZFS, он получает узлы устройств в 
+   <span class="term"><code><em>/dev/label</em></code></span> и тому подобное. Применяйте
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span> 
+   <span class="term"><code><em>geom</em></code></span> когда вы используете zvol локально.</p>
+   <p><span class="term"><strong class="userinput"><code>volmode</code></strong></span>
+   <span class="term"><code><em>dev</em></code></span> означает, что этот zvol доступен исключительно через 
+   единственный узел устройства <span class="term"><code><em>/dev/zvol</em></code></span>. GEOM не пытается 
+   автонастраивать (autoconfigure) этот том. Вы можете назначить утому узлу метку, однако FreeBSD даже не 
+   будет пытаться смотреть на неё. Применяйте <span class="term"><code><em>dev</em></code></span> 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span> для хранилищ виртуальных 
+   машин, например, хостов <span class="term"><code>bhyve(8) </code></span>.</p>
+   <p><span class="term"><strong class="userinput"><code>volmode</code></strong></span>
+   <span class="term"><code><em>none</em></code></span> означает, что этот zvol пока не имеет узла устройства.
+   Вы можете клонировать этот том, делать его снимок или реплицировать его. Этот режим полезен только для 
+   резервных копий.</p>
+   <p>Вы не можете менять режим работающего тома - хотя вы можете изменить значение свойства 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span>, причём действующий 
+   режим не изменится. Чтобы изменение <span class="term"><strong class="userinput"><code>volmode</code></strong></span>
+   вступило в силу, экспортируйте и повторно импортируйте этот том. (Вы можете также переименовать том, который 
+   фактически экспортирует этот том и импортировать его под другим именем.)</p>
+   <p>Создайте тома с нужным вам режимом определив режим в командной строке или установив глобальные значения 
+   по умолчанию.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">volmode в командной строке </span></h4>
+   </div></div></div>
+   <p>Как и для любого другого свойства, примените флаг <span class="term"><code>-o</code></span> чтобы установить 
+   значение свойства <span class="term"><strong class="userinput"><code>volmode</code></strong></span> при 
+   создании zvol.</p>
+	   <pre class="screen"><code>
+# zfs create -V 10G -o volmode=dev vm/swap0
+ 	   </code></pre>
+   <p>Данный новый zvol доступен только через узел устройства <span class="term"><code><em>/dev/zvol/vm/swap0</em></code></span>.</p>
+   
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">volmode по умолчанию </span></h4>
+   </div></div></div>
+   <p>Если большая часть обычных потребностей применения <span class="term"><strong class="userinput"><code>volmode</code></strong></span>
+   отличается от <span class="term"><code><em>geom</em></code></span>, имеет смысл изменить значение по умолчанию 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span>.
+   <span class="term"><code>sysctl vfs.zfs.vol.mode</code></span> управляет значением по умолчанию 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span> для новых zvol.</p>
+   <p>Значение по умолчанию <span class="emphasis"><em>1</em></span> предписывает ZFS применять для
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span> значение
+   <span class="term"><code><em>geom</em></code></span>. Установка значения <span class="emphasis"><em>2</em></span>
+   обозначает применение <span class="term"><code><em>dev</em></code></span> для 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span>, в то время как
+   <span class="emphasis"><em>3</em></span> подразумевает значение 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span> установленным в 
+   <span class="term"><code><em>none</em></code></span>. Измените значение по умолчанию с помощью 
+   <span class="term"><code>sysctl(8)</code></span> или сделайте это изменение действующим постоянно при 
+   следующей перезагрузке изменив запись в <span class="term"><code><em>/etc/sysctl.conf</em></code></span>. 
+   Ниже мы приводим запись <span class="term"><code><em>/etc/sysctl.conf</em></code></span>, позволяющую 
+   виртуальным серверам создавть zvol с <span class="term"><strong class="userinput"><code>volmode</code></strong></span>
+   установленным в <span class="term"><code><em>dev</em></code></span>.</p>
+	   <pre class="screen"><code>
+vfs.zfs.vol.mode=2
+ 	   </code></pre>
+   <p>Не существует потребности в явном виде определять <span class="term"><code><em>geom</em></code></span>
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span>.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04"> </a>Доступ zvols</h3>
+   </div></div></div>
+   <p>Вы не можете <span class="term"><code>zfs mount</code></span> zvol как вы это могли бы сделать с 
+   набором данных файловой системы. Весь смысл в том, что zvol это блочное устройство. Для того, чтобы получить 
+   доступ к нему, необходимо получить доступ к узлу устройства или к его поставщику GEOM. Наиболее 
+   распространённым, скорее всего, является узел устройства.</p>
+   <p>Zvol получает узел устройства в <span class="term"><code><em>/dev/zvol</em></code></span>, в подкаталоге 
+   с именем после имени пула. Узел устройства для нашего zvol в примере, <span class="term"><code><em>vm/db1</em></code></span>, 
+   должно быть <span class="term"><code><em>/dev/zvol/vm/db1</em></code></span>.</p>
+   <p>Мы могли бы назначить этот zvol в качестве хранилища для виртуальной машины <span class="term"><code>bhyve</code></span>, 
+   в этом случае мы, скорее всего, позволили бы этой виртуальной машине выполнять разбиение такого диска.</p>
+   <p>Для прочих вариантов применения мы можем пожедать выполнять разбиение диска локально. Здесь мы создаём схему 
+   разбиения GPT на нашем zvol и делаем его одним большим разделом, устанавливая метку GEOM 
+   <span class="term"><code><em>db1</em></code></span>. Мы также назначаем ему метку GEOM.</p>
+	   <pre class="screen"><code>
+# gpart create -s gpt /dev/zvol/vm/db1
+zvol/vm/db1 created
+# gpart add -t freebsd-ufs -l db1 /dev/zvol/vm/db1
+zvol/vm/db1p1 added
+# glabel create db1 /dev/zvol/vm/db1
+ 	   </code></pre>
+   <p>Поскольку этот zvol был создан со значением <span class="term"><strong class="userinput"><code>volmode</code></strong></span>
+   по умодчанию, <span class="term"><code><em>geom</em></code></span>, он также теперь доступен через узел 
+   устройства <span class="term"><code><em>/dev/label/db1</em></code></span>.</p>
+   <p>Когда раздел существует, вы можете создать в нём файловую систему.</p>
+	   <pre class="screen"><code>
+# newfs -j /dev/zvol/vm/db1
+/dev/zvol/vm/db1: 2097152.0MB (4294967296 sectors) block
+size 32768, fragment size 4096
+ using 3350 cylinder groups of 626.09MB, 20035 blks,
+80256 inodes.
+ with soft updates
+…
+ 	   </code></pre>
+   <p>Подождите - почему мы бы возможно захотели использовать UFS на zvol?</p>
+   <p>Возможно, наш клиент iSCSI или гостевая ВМ не имеют достаточно ресурсов выполнять эффективно ZFS. 
+   Предоставляя нашему клиенту том на основе ZFS в пределах файловой системы, которую он может поддерживать, 
+   клиент получает дополнительные защиты ZFS даже хотя этот клиент не может применять ZFS напрямую. Тем не менее, 
+   я делаю доступным журналирование soft update UFS при помощи <span class="term"><code>-j</code></span>, 
+   поскольку целостность данных ZFS и журналирование файловой системы UFS защищают совершенно разные вещи. 
+   Целостность ZFS проверяет гарантированность того что записи безопасны, однако журналирование файловой 
+   системы подтверждает что все записи были завершены. (Лукас применял локальное USB флеш- устройство в качестве 
+   кэша <span class="term"><code>gjournal(8)</code></span> или <span class="term"><code>gcache(8)</code></span>)
+   для устройства iSCSI. Это работает. Однако, если вы окажетесь в ситуации, когда это имеет смысл, 
+   разрешите это положение).</p>
+   <p>Теперь этот zvol имеет файловую систему, вы можете смонтировать его.</p>
+	   <pre class="screen"><code>
+# mount /dev/gpt/db1 /media/
+ 	   </code></pre>
+   <p>И voilà! У меня есть файловая система UFS основывающаяся на ZFS, готовая к применению.</p>
+   <p>Наиболее распространённое применение для zvol состоит в работе основой для виртуальных машин. 
+   Серьёзное количество виртуальныйх машин требует серьёзного оборудования. Давайте бросим на него 
+   взгляд в следующей главе.</p>
+  </div>
+   
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,985 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 3. Создание контейнеров - Изучение Proxmox VE</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningProxmoxVE"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучение Proxmox VE"/>
+<link rel="up" href="index.html" title="Изучение Proxmox VE"/>
+<link rel="prev" href="Ch02.html" title="Глава 2. Установка Proxmox VE"/>
+<link rel="next" href="Ch04.html" title="Глава 4. Создание виртуальных машин"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-proxmox-ve";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningProxmoxVE/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 3. Создание контейнеров';
+PrevRef = 'Ch02.html';
+UpRef = 'index.html';
+NextRef = 'Ch04.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 3. Создание контейнеров</h1>
+  </div></div></div>
+  
+  <div class="partintro"><div xmlns=""/>
+  <p><span class="emphasis"><em>&quot;Контейнеры в пределах отдельной операционной системы намного эффективнее и, благодаря такой эффективности, они
+  ложатся в фундамент будущего облачной индустрии инфраструктуры вместо архитектуры ВМ... Эффективность требует будущего контейнеров, работающих 
+  на оборудовании голого железа. Виртуальные машины отжили своё десятилетие.&quot;</em></span></p>
+  <p style="text-align:right;"><span class="emphasis"><em>– Linux Journal, June 7, 2013</em></span></p>
+  <p>(<a class="link" href="http://www.linuxjournal.com/content/containers%E2%80%94not-virtual-machines%E2%80%94are-future-cloud" 
+  target="_top">http://www.linuxjournal.com/content/containers%E2%80%94not-virtual-machines%E2%80%94are-future-cloud</a>)</p>
+
+  <p><span class="emphasis"><em>&quot;Всё в Google работает в контейнерах... мы запускаем порядка 2 миллиардов контейнеров в неделю.&quot;</em></span></p>
+  <p style="text-align:right;"><span class="emphasis"><em>– Joe Beda, a senior staff software engineer for Google Cloud Platform in a talk at Gluecon 2014</em></span></p>
+  <p>(<a class="link" href="http://www.linuxjournal.com/content/containers%E2%80%94not-virtual-machines%E2%80%94are-future-cloud" 
+  target="_top">http://www.enterprisetech.com/2014/05/28/google-runs-software-containers/</a>)</p>
+
+  <p><span class="emphasis"><em>&quot;Всякий раз, когда вы находитесь в центре обработки или вкругу облачного ИТ, вы теперь слышите о контейнерах вообще
+  и о Docker в частности без остановки на протяжении всего года. После выпуска Docker 1.0 в июне жужжание переросло в рокот.&quot;</em></span></p>
+  <p style="text-align:right;"><span class="emphasis"><em>– ZDNET, August 4, 2014</em></span></p>
+  <p>(<a class="link" href="http://www.linuxjournal.com/content/containers%E2%80%94not-virtual-machines%E2%80%94are-future-cloud" 
+  target="_top">http://www.enterprisetech.com/2014/05/28/google-runs-software-containers/</a>)</p>
+
+  <p>В <a class="link" href="Ch02.html" target="_top">Главе 2. Установка Proxmox VE мы вместе с вами прошлись по процессу установки Proxmox VE.</a></span></p>
+  <p>В данной главе мы сосредоточимся на создании контейнеров из шаблонов ОС или шаблонов виртуальных устройств. Своими умозаключениями данная глава 
+  адресуется к тому, как получать шаблоны и выделять из них LXC контейнеры при помощи Proxmox VE. Одновременно с этим мы изучим следующие вопросы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Преимущества и примеры использования контейнеров</p>
+	 </li><li class="listitem">
+	 <p>Регистрацию в веб- управляемом интерфейсе Proxmox VE</p>
+	 </li><li class="listitem">
+	 <p>Исследование шаблонов ОС и виртуальных устройств, доступных непосредственно через интерфейс управления</p>
+	 </li><li class="listitem">
+	 <p>Создание контейнеров как при помощи интерфейса на веб- основе,так и через командную строку</p>
+	 </li><li class="listitem">
+	 <p>Запуск нового контейнера из интерфейса управления</p>
+	 </li><li class="listitem">
+	 <p>Изменение состояния контейнера непосредственно из консоли PVE или через веб-интерфейс администрирования</p>
+	 </li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch03.html">3. Создание контейнеров</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#0301">Осознание преимуществ контейнера</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030101">Proxmox VE и шанс для LXC</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0302">Шаблоны контейнера</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0303">Скачивание шаблонов</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030301">Регистрация в веб- интерфейсе Proxmox VE</a></span></dt>
+     <dt><span class="section"><a href="Ch03.html#030302">Просмотр доступных шаблонов контейнеров</a></span></dt>
+     <dt><span class="section"><a href="Ch03.html#030303">Скачивание контейнера</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0304">От шаблона к контейнеру</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0305">Запуск и останов контейнеров</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030501">Изменение состояний контейнера при помощи командной строки</a></span></dt>
+     <dt><span class="section"><a href="Ch03.html#030502">Доступ к контейнеру</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch03.html#0306">Заключение</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>Осознание преимуществ контейнера</h3>
+   </div></div></div>
+   <p><a class="link" href="Ch01.html" target="_top">Глава 1. Основы Proxmox VE</a> описала контейнеры GNU Linux в общем и в особенности потрудилась 
+   над их отличиями от виртуальных машин. В данной главе рассматриваются некоторые преимуществва контейнеров и она представляет некий сценарий для 
+   идеального развёртывания.</p>
+   <p>В то время, как администратор может запускать на физическом хосте 10- 100 виртуальных машин, она/ он может выполнять на том же самом хосте 
+   100- 1000 контейнеров без значительного компромисса в производительности 
+   (<a class="link" href="http://computerpcdeal.com/servers-dell-poweredge/news_2014-06-17-05-30-07-224.html" 
+   target="_top">http://computerpcdeal.com/servers-dell-poweredge/news_2014-06-17-05-30-07-224.html</a>)</p>
+   <p>Изначально о контейнерах можно думать о контейнерах как об очень лёгких виртуальных машина, но с гораздо меньшими накладными расходами и 
+   добавленной стоимостью упрощённого развёртывания.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Proxmox VE и шанс для LXC </span></h4>
+   </div></div></div>
+   <p>Контейнеры являются наследием джайлов (jail) FreeBSD и воспользовались неким возрождение, который становится всё более ценным 
+   критерием культуры в среде компьютерных профессионалов, особенно в связи с появление Docker в июне 2014.</p>
+   <p>Важно иметь в виду, что Docker изначально полагался на LXC, или контейнеры Linux, ту же технологию, на которую полагается 
+   Proxmox VE для своей контейнеризации начиная с выпуска 4,0.</p>
+   <p>Предыдущие выпуски, фактически, полагались на OpenVZ, другую контейнерную технологию с открытым исходным кодом. OpenVZ имеет 
+   репутацию стабильного и надёжного; до самого последнего времени, в разительном контрасте, LXC описывался как представитель юного 
+   апстарта, хотя и очень многообещающего, однако всё ещё незрелого.</p>
+   <p>Мы наблюдаем быстрое увеличение в течении, полученное LXC, которое иллюстрирует следующий снимок анализа тенденций Google
+   <a class="link" href="https://www.google.com/trends/explore#q=%2Fm%2F0crds9p%2C%20OpenVZ&cmpt=q&tz=Etc%2FGMT%2B5" 
+   target="_top">https://www.google.com/trends/explore#q=%2Fm%2F0crds9p%2C%20OpenVZ&cmpt=q&tz=Etc%2FGMT%2B5</a>. В качестве термина поиска OpenVZ 
+   имел очень бурный рост в 2006 и его популярность поддерживалась примерно до 2009 года, прежде чем она начала снижаться.</p>
+   <div class="figure"><a id="Fig0301"> </a>
+    <p class="title"><strong>Рисунок 3.1. Интерес во времени к LXC и OpenVZ по данным Google Trends</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0301.jpg" width="986" height="617"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>В то же время LXC медленно рос в популярности до 2014 - того самого года, когда Docker создал большую шумиху вокруг контейнеров - 
+   когда LXC превзошёл по популярности OpenVZ.</p>
+   <p>Волнуясь и беспокоясь о провокационном характере подобного ренессанса, Proxmox VE развернулся к LXC для своему уровню 
+   контейнеризации в конце 2015года; он был на переднем крае, он стабилизировался и он получил поддержку от таких корпораций как IBM и 
+   Canonical.</p>
+   <p>Термины, которые часто взаимозаменяемы с контейнеризацией в данном контексте включают в себя виртуализацию ОС 
+   (<span class="term"><strong class="userinput">OS virtualization</strong></span>) и виртуальные частные серверы
+   (<span class="term"><strong class="userinput">virtual private servers</strong></span>).</p>
+   <p>Для ознакомления с графическим отображением истории контейнеров - начиная с Unix 7 с отслеживанием событий до 2014 года, посетите
+   <a class="link" href="http://pivotal.io/platform/infographic/moments-in-container-history" 
+   target="_top">http://pivotal.io/platform/infographic/moments-in-container-history</a>.</p>
+   <p>Обратите внимание, что Proxmox VE 4.1 поставляется с инструментарием, с помощью которого контейнеры OpenVZ могут быть перенесены в LXC. Для 
+   дополнительной информации посетите wiki PVE <a class="link" href="https://pve.proxmox.com/wiki/Convert_OpenVZ_to_LXC" 
+   target="_top">https://pve.proxmox.com/wiki/Convert_OpenVZ_to_LXC</a> {<span class="emphasis"><em>Прим. пер.: см. наш <a class="link" 
+   href="http://onreader.mdl.ru/ProxmoxCookbook/content/Convert_OpenVZ_to_LXC.html" target="_top">перевод</a></em></span>}.</p>
+   <p>Во многом как и ВМ, контейнеры являются изолированной сущностью; они могут независимо перезагружаться, допускают изолированный доступ 
+   root и имеют уникальный набор пользователей и групп.</p>
+   <p>Такое сходство изолирования также означает, потенциально, независимые адреса IP, памяти, процессов, библиотек и файлов настройки.</p>
+   <p>Набор свойств LXC отличает их от решений с полной виртуализацией:</p>
+    <div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Затраты ресурсов ЦПУ на виртуализацию посредством уровня контейнеризации LXC будут значительно ниже чем при полной виртуализации.</p>
+	 </li><li class="listitem">
+	 <p>Авторизованный пользователь контейнера может изменять любой файл настройки и устанавливать дополнительное программное обеспечение 
+	 внутри контейнера без влияния на прочие контейнеры и хост Proxmox VE</p>
+	 </li><li class="listitem">
+	 <p>Хотя контейнеры и полностью изолированы друг от друга, они совместно используют динамические библиотеки на своём хосте, что 
+	 существенно сохраняет оперативную память</p>
+	 </li><li class="listitem">
+	 <p>Большинство контейнеров полностью загружаются за секунды, в то время как виртуальные машины могут грузиться минуты при тех же самых 
+	 ресурсах</p>
+	 </li><li class="listitem">
+	 <p>Поскольку контейнеры выполняются на самом ядре ОС нашей хост- системы, контейнеры работают с близкими к нулю накладными расходами</p>
+	 </li><li class="listitem">
+	 <p>Сетевой обмен любого контейнера изолирован от всех прочих контейнеров; перехват обмена между контейнерами невозможен</p>
+	 </li><li class="listitem">
+	 <p>Межсетевое экранирование может применяться внутри контейнера, поскольку можно выполнять обработку маршрутизации</p>
+	 </li>
+    </ul>
+    </div>
+   <p>С практической точки зрения, подобная функциональность предлагает, например, возможность масштабирования контейнеров без какого бы 
+   то ни было их перезапуска, а также предоставляет улучшение эффективность и лучшую производительность служб в сравнении с обычно обсуждающимися 
+   виртуальными машинами.</p>
+   <p>Безусловно, стоит отметить, что осторожные учёные мужи сейчас предполагают, что выдающееся преимущество в производительности контейнеров 
+   и уменьшение запрашиваемых ресурсов это несущественное преимущество, в частности, потому что всё более мощные аппаратные средства становятся 
+   доступными по более низкой цене. Важным аргументом здесь является то, что полная виртуализация всё ещё имеет место и что преимущество 
+   контейнеров является призрачными до тех пор, пока обсуждается перспектива недостаточности аппаратных ресурсов. {<span class="emphasis"><em>Прим. 
+   пер.: отсылаем к подобной аргументации у <a class="link" href="http://onreader.mdl.ru/VirtualizationComplete/content/index.html#000303" 
+   target="_top">уважаемых авторов</a> за дополнительными доводами.</em></span>}</p>
+   <p>В этом присутствует доля истины, но это не опровергает утверждение, что во многих случаях контейнеры могут быть менее дорогостоящей 
+   альтернативой виртуальным машинам без ущерба для качества обслуживания.</p>
+   <p>Примем во внимание, что перечисленные ранее преимущества могут непосредственно привести к более длительному времени жизни хоста, помимо 
+   гибкости, заключающейся в том, что контейнеры могут быть быстро перенесены на другой физический узел для облегчения технического 
+   обслуживания аппаратных средств; для определённых типов угроз улучшается безопасность; и, наконец, LXC пользуется процветающим сообществом 
+   разработчиков и пользователей, великолепным ресурсом для поддержки, который доступен как с премиальной подпиской Proxmox VE, так и без неё.</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+			<p class="title"><strong>TurnKey GNU/Linux Core</strong></p>
+    		<p><a class="link" href="Ch07.html" target="_top">Глава 7. Обеспечение безопасности Proxmox VE</a> сосредоточится в частности 
+			на безопасности виртуальных машин.</p>
+			<p>Хотя мы, безусловно, в плену революции контейнеров, всё же существуют нерешённые вопросы безопасности контейнеров, и мы обязаны 
+			быть усердными в разборе вопросов. Документация LXC <a class="link" href="https://linuxcontainers.org/lxc/security/" 
+			target="_top">https://linuxcontainers.org/lxc/security/</a> даёт некоторое представление. Дополнительная информация доступна и 
+			институте SANS по ссылке <a class="link" href="https://www.sans.org/reading-room/whitepapers/linux/securing-linux-containers-36142" 
+			target="_top">https://www.sans.org/reading-room/whitepapers/linux/securing-linux-containers-36142</a>, и наконец, IBM предагает 
+			некоторые чёткие указания на странице <a class="link" href="http://www.ibm.com/developerworks/library/l-lxc-security/" 
+			target="_top">http://www.ibm.com/developerworks/library/l-lxc-security/</a>.</p>
+			<p>Тем не менее, в области полной виртуализации существует целый ряд документов, которые работают над созданием протокола для 
+			виртуальных машин вне зависимости от производителя. Это предоставляет нам информацию для отклика и при помощи которой мы развиваем 
+			диалог.</p>
+			<p>К сожалению, эта революция всё ещё слишком молода и пока нет подобных стандартов для виртуализации на уровне ОС кажущихся 
+			легко доступными.</p>
+			</td></tr></table>
+		  </div>
+   <p>Такие сильные различия наборов функциональности должны провоцировать нас представить репрезентативный вариант немедленного применения 
+   контейнеров LXC; представьте себе среднее учебное заведение в целом, а затем рассмотрите его различные курсы вычислительных наук. 
+   Потенциал для объединения аппаратных ресурсов для двух связанных сценариев огромен.</p>
+   <p>Например, студенты вычислительной математики и информатики, а также по технологиям связи в отдельности могут иметь свои собственные
+   персональные виртуальные серверы на которых они экспериментируют и выполняют практику под руководством или самостоятельно. Каждый имеет свой 
+   собственный персональный виртуальный сервер, на котором он экспериментирует, находит вдохновение, выполняет оценки и реализует своё 
+   инновационное видение.</p>
+   <p>Более того, одно и то же физическое оборудование может размещать контейнер, причём каждый для важных приложений:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Система управления обучением (<span class="term"><strong class="userinput">LMS, learning management system</strong></span>), наподобие 
+	 <span class="emphasis"><em>Moodle</em></span></p>
+	 </li><li class="listitem">
+	 <p>Социальная сетевая среда в контейнере предоставляемая веб- приложением, подобным <span class="emphasis"><em>Moodle</em></span> 
+	 (<a class="link" href="https://elgg.org/about.php" target="_top">https://elgg.org/about.php</a>)</p>
+	 </li><li class="listitem">
+	 <p>Система микроблогов, например, <span class="emphasis"><em>GNU Social</em></span> (<a class="link" href="https://elgg.org/about.php" 
+	 target="_top">http://gnu.io/social/</a>)</p>
+	 </li><li class="listitem">
+	 <p>Сервер каталога, например, <span class="emphasis"><em>openLDAP</em></span>, для предоставления службы единичной подписи по всей 
+	 платформе.</p>
+	 </li><li class="listitem">
+	 <p>Система портфолио через <span class="emphasis"><em>Mahara</em></span> (<a class="link" href="https://elgg.org/about.php" 
+	 target="_top">https://mahara.org/</a>)</p>
+	 </li><li class="listitem">
+	 <p>Решение для веб- фильтрации и межсетевого экрана для защиты не только наших студентов, но также всей целостности данных, а также 
+	 конфиденциальности заинтересованных сторон, а также для доступности служб.</p>
+	 </li><li class="listitem">
+	 <p>Контроллер домена может быть снабжён дополнительной гибкостью и функциональностью (<a class="link" href="https://elgg.org/about.php" 
+	 target="_top">https://www.turnkeylinux.org/domain-controller</a>).</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Существует препятствие для контейнеров; они не являются решением всех проблем. Например, LXC, технология контейнера в уровне контейнеров 
+   PVE, работает только с гостями GNU/Linux.</p>
+   <p>Хосты Proxmox VE в дальнейшем ограничивают то, какие дистрибутивы Linux поддерживаются для контейнеров. На настоящий момент это 
+   поддерживаемые дистрибутивы и их выпуски:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Debain (6, 7, 8)</p>
+	 </li><li class="listitem">
+	 <p>CentOS 6</p>
+	 </li><li class="listitem">
+	 <p>Ubuntu (12.04, 14.04, 15.04)</p>
+	 </li><li class="listitem">
+	 <p>Archlinux</p>
+	 </li>
+    </ul>
+    </div>
+   <p>С абсолютной уверенностью подтверждается, что 4.1 является очень недавно выпущенным PVE и совершенно ясно, что Proxmox VE с каждым месяцем 
+   будет поддерживать больше дистрибутивов.</p>
+   <p>Следующий раздел фиксируется на самых первых шагах, необходимых нам для предоставления размещающихся в PVE служб в контейнерах - 
+   получение шаблонов контейнеров.</p>
+   <p>Мы завершим данный раздел напоминанием о том, что Proxmox VE является платформой виртуализации корпоративного класса, которая поддерживает как 
+   контейнеры, так и полную виртуализацию - именно потому, что каждый из них имеет определённую роль в вашей инфраструктуре.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>Шаблоны контейнера</h3>
+   </div></div></div>
+   <p>Шаблон является отправной точкой для контейнера LXC (в Proxmox VE принято сокращение &quot;CT&quot;). Существуют два сорта шаблонов:
+   <span class="term"><strong class="userinput">шаболны ОС</strong></span> и <span class="term"><strong class="userinput">шаблоны 
+   устройств</strong></span> (appliance templates).</p>
+   <p>Шаблоны операционной системы предоставляют минимальный набор пакетов из дистрибутива GNU/ Linux а также системных библиотек и сценариев 
+   для запуска и работы в контейнере. Они разработаны для полного извлечения преимуществ от работающего на вашем хосте ядра GNU/ Linux.</p>
+   <p>Дополнительное программное обеспечение, такое как компилятор или СУБД обычно не включаются в шаблон ОС помимо основных инструментов, 
+   наподобие интерпретатора bash и утилит.</p>
+   <p>В противовес шаблонам ОС, виртуальные устройства строятся поверх JeOS (Just enough Operating System, {<span class="emphasis"><em>Прим. 
+   пер.: см., например, <a class="link" href="http://help.ubuntu.ru/wiki/руководство_по_ubuntu_server/виртуализация/jeos_and_vmbuilder" 
+   target="_top">JeOS и vmbuilder</a> в Ubuntu</em></span>}) для предоставления очень специфичной службы надёжно, безопасно и при абсолютной 
+   приверженности эффективности.</p>
+   <p>Виртуальные устройства могут предоставлять общую функциональность, например стек <a class="link" 
+   href="https://ru.wikipedia.org/wiki/LAMP" target="_top">LAMP</a>; или конкретное приложение, например, GitLab (<a class="link" 
+   href="https://about.gitlab.com/" target="_top">https://about.gitlab.com/</a>); а CMS, наподобие WordPress или Drupal; или система 
+   наблюдения за сетевой средой на веб- основе, такая как Observium (<a class="link" href="http://www.observium.org/" 
+   target="_top">http://www.observium.org/</a>.</p>
+   <p>Самым убедительным аргументом виртуальных устройств является то, что они просто работают при минимальной конфигурации и требуют 
+   минимальных действий самого пользователя.</p>
+   <p>И шаблоны ОС виртуальные устройства доступны через интерфейс управления Proxmox VE. На данный момент все доступные устройства 
+   (appliance) предоставляются <span class="term"><strong class="userinput">TurnKeyGNU/Linux</strong></span>; который предоставляет более 
+   190 устройств от веб- приложений до SDK (software development kits), а также административные шаблоны для мониторинга сетевой активности, 
+   предоставления LDAP или контроллера домена и многое другое.</p>
+   <div class="figure"><a id="Fig0302"> </a>
+    <p class="title"><strong>Рисунок 3.2. Вебсайт библиотеки устройств TurnKey GNU/Linux</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0302.jpg" width="991" height="654"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Каждое из этих устройств строится из одной и той же версии Debian, называемой Turnkey GNU/Linux Core (Debian 8) с функциональностью, 
+   по крайней мере: shellinabox, сервер OpenSSH и настроенный под пользователя Webmin.</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+			<p class="title"><strong>TurnKey GNU/Linux Core</strong></p>
+    		<p>Для получения дополнительной информации по ядру TurnKey GNU/Linux посетите <a class="link" 
+			href="http://www.turnkeylinux.org/core" target="_top">http://www.turnkeylinux.org/core</a>.</p></td></tr></table>
+		  </div>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0303"> </a>Скачивание шаблонов</h3>
+   </div></div></div>
+   <p>Шаблоны доступны напрямую через интерфейс управления Proxmox VE, который предлагает как шаблоны ОС, так и шаблоны устройств.</p>
+   <p>В данном разделе мы зарегистрируемся в интерфейсе управления на основе веб, переместимся в хранилище в просмотре сервера, а затем 
+   просмотрим весь список доступных шаблонов.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+      <p>Для продвижения по плану, ваш Proxmox VE должен иметь доступ в интернет.</p></td></tr></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Регистрация в веб- интерфейсе Proxmox VE </span></h4>
+   </div></div></div>
+   <p>Чтобы начать, зарегистрируйтесь в Proxmox VE с рабочей станции в той же самой локальной сети; укажите браузеру порт 8006 и IP адрес вашего 
+   экземпляра Proxmox VE с применением SSL/TLS. Настроенная в этой главе машина имеет адрес <span class="term"><code>192.168.1.80</code></span>; 
+   для доступа к этой машине, например, следует просто перейти к <span class="term"><code>https://192.168.1.80:8006</code></span> в браузере 
+   (с разрешённым JavaScript).</p>
+   <p>Поскольку PVE имеет самостоятельно подписанный сертификат, браузер выдаст предупреждение не может быть подтверждено. Например, Firefox
+   предоставит окно подобное следующему:</p>
+   <div class="figure"><a id="Fig0303"> </a>
+    <p class="title"><strong>Рисунок 3.3. Диалог ненадёжного соединения (в Firefox)</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0303.jpg" width="1037" height="629"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Пользователи Firefox могут выполнить следующее:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Для продвижения вперёд в Firefox, выберите <span class="term"><strong class="userinput">Advanced</strong></span> и кликните 
+	  появившуюся кнопку <span class="term"><strong class="userinput">Add Exception…</strong></span>.</p>
+	 </li><li class="listitem">
+      <p>В своём всплывшем диалоге <span class="term"><strong class="userinput">Add Security Exception</strong></span>, кликните на
+	  <span class="term"><strong class="userinput">Confirm Security Exception</strong></span>, отметив при этом что вы можете выбрать 
+	  сохранить это исключение на постоянной основе выбрав флажок <span class="term"><strong class="userinput">Permanently store 
+	  this exception</strong></span> (это окно захвачено в следующем снимке):</p>
+      <div class="figure"><a id="Fig0304"> </a>
+       <p class="title"><strong>Рисунок 3.4. Диалог добавления исключения (в Firefox)</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0304.jpg" width="717" height="773"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+	 </ol>
+   </div>
+   <p>Если вы применяете Google Chrome для доступа к интерфейсу администрирования, вы должны увидеть страницу, похожую на следующий снимок 
+   экрана:</p>
+   <div class="figure"><a id="Fig0305"> </a>
+    <p class="title"><strong>Рисунок 3.5. Диалог добавления исключения (в Firefox)</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0305.jpg" width="974" height="487"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Чтобы игнорировать этот (при некотором беспокойстве) сигнал тревоги:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Открутите вниз страницы.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput">Advanced</strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput">Proceed to 192.168.1.80</strong></span>.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Два соображения, которые следует сделать по поводу этой ссылки: она помечается как &quot;unsafe&quot; в качестве напоминания что она может 
+   иметь риск безопасности и этапов для пользователей chrome.</p>
+   <p>Какой бы браузер ни применялся, убедитесь, что заменили <span class="term"><code>https://192.168.1.80:8006</code></span> собственным 
+   IP адресом для вашего хоста Proxmox VE.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+      <p>Для объяснения данных предупреждений браузера, ознакомьтесь с самоподписываемыми ресурсами в отношении TLS/SSL:
+	  <a class="link" href="http://en.wikipedia.org/wiki/Self-signed_certificate" target="_top">http://en.wikipedia.org/wiki/Self-signed_certificate</a>,
+	  <a class="link" href="http://en.wikipedia.org/wiki/HTTPS" target="_top">http://en.wikipedia.org/wiki/HTTPS</a> 
+	  {<span class="emphasis"><em>Прим. пер.: <a class="link" href="https://ru.wikipedia.org/wiki/HTTPS" 
+	  target="_top">https://ru.wikipedia.org/wiki/HTTPS</a>, там же о самоподписанных сертификатах на рус.яз. существенно: 
+	   &quot;Без проверки сертификата каким-то другим способом (например, звонок владельцу и проверка контрольной суммы сертификата) такое использование 
+	   HTTPS подвержено атаке <a class="link" href="https://ru.wikipedia.org/wiki/Атака_посредника" target="_top">человек-посередине</a>&quot;</em></span>},
+	  <a class="link" href="http://security.stackexchange.com/questions/8110/what-are-the-risks-of-self-signing-a-certificate-for-ssl" 
+	  target="_top">http://security.stackexchange.com/questions/8110/what-are-the-risks-of-self-signing-a-certificate-for-ssl</a>.</p></td></tr></table>
+     </div>
+   <p>Когда страница полностью загружена, выполните регистрацию с именем пользователя <span class="term"><code>root</code></span> и паролем, который вы
+   определили в <a class="link" href="Ch02.html" target="_top">Главе 2. Установка Proxmox VE</a>.</p>
+   <p>Выберите область (<span class="term"><strong class="userinput">Realm</strong></span>) с названием <span class="term"><strong class="userinput">Linux 
+   PAM Standard Authentication</strong></span>. Последнее поле определит язык интерфейса. Сделайте свой выбор кликнув для продолжения на 
+   <span class="term"><strong class="userinput">Login</strong></span>.</p>
+   <div class="figure"><a id="Fig0306"> </a>
+    <p class="title"><strong>Рисунок 3.6. Диалог регистрации для веб-управляемого интерфейса Proxmox VE</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0306.jpg" width="829" height="370"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>После успешной регистрации вы получите свой первый просмотр графического интерфейса администрирования Proxmox VE.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр доступных шаблонов контейнеров </span></h4>
+   </div></div></div>
+   <p>В левой колонке, ближе к заголовку, выбранный обзор уже должен быть установлен на <span class="term"><strong 
+   class="userinput">Server View</strong>:</span></p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Расширьте дерево ресурсов непосредственно под <strong class="userinput">Server View</strong> (узел Центра обработки данных).
+	  В нижней части дерева ресурсов в левом фрейме будут присутствовать хранилища, которые являются локальными для вашего 
+	  физического хостаи помечены как <span class="term"><strong class="userinput">local</strong></span> с последующим именем вашего 
+	  хоста в скобках; в последующем снимке экрана именем хоста является <span class="term"><code>pve4</code></span>, а узел хранения 
+	  просто помечается локальным (<span class="term"><code>pve4</code></span>).</p>
+      <div class="figure"><a id="Fig0307"> </a>
+       <p class="title"><strong>Рисунок 3.7. Просмотр сервера и дерево ресурсов (раскрытое для обнаружения local(<span class="term"><code>pve4</code></span>))</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0307.jpg" width="457" height="341"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Выберите свой локальный узел хранения для вашего сервера; на следующем снимке, например, выберите <span class="term"><code>local</code></span>
+	   (<span class="term"><code>pve4</code></span>):</p>
+	 </li><li class="listitem">
+      <p>В правом кадре появятся закладки; <span class="term"><strong class="userinput"> Summary</strong></span>, 
+	  <span class="term"><strong class="userinput">Content</strong></span> и <span class="term"><strong class="userinput">Permissions</strong></span>.
+	  Выберите закладку <span class="term"><strong class="userinput">Content</strong></span> для обнаружения обеих кнопок 
+	  <span class="term"><strong class="userinput">Templates</strong></span> и <span class="term"><strong class="userinput">Upload</strong></span>.</p>
+      <div class="figure"><a id="Fig0308"> </a>
+       <p class="title"><strong>Рисунок 3.8. Локальное хранилище для узла PVE c именем pve4.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0308.jpg" width="937" height="196"/><br />
+        <span>Снимок для визуализации местоположения локальных (PVE4) хранилищ, а также кнопок Templates и Upload.</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+	 </ol>
+   </div>
+   <p>Для просмотра списка или загрузок шаблонов ОС  и виртуальных устройств (appliance) предоставляемых через ваш интерфейс PVE, 
+   следуйте этим шагам:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните на закладку <span class="term"><strong class="userinput">Templates</strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Прокрутите всплывающее окно браузера пока не найдёте шаблон, отвечающий вашим интересам.</p>
+      <div class="figure"><a id="Fig0309"> </a>
+       <p class="title"><strong>Рисунок 3.9.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0309.jpg" width="892" height="934"/><br />
+        <span>Быстрый взгляд на несколько шаблонов контейнера доступных через интерфейс Proxmox VE.</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+	 </ol>
+   </div>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+			<p class="title"><strong>urnkey GNU/Linux Appliance Library</strong></p>
+    		<p>Если вы решите что вам нужно знать что-то ещё об определённом устройстве (Appliance) Turnkey GNU/Linux, 
+			укажите своему браузеру <a class="link" href="Ch02.html" target="_top">Главе 2. Знакомство с графическим интерфейсом Proxmox</a>
+			Для получения дополнительной информации по ядру TurnKey GNU/Linux посетите <a class="link" 
+			href="http://www.turnkeylinux.org/all" target="_top">http://www.turnkeylinux.org/all</a>
+			и просмотрите на списки детализации описания и свойств для каждого устройства (appliance).</p></td></tr></table>
+		  </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Скачивание контейнера </span></h4>
+   </div></div></div>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+    		<p>В оставшейся части главы я буду работать с шаблонами Ubuntu 14.04-standard. Пока ещё рекомендуется чтобы вы следовали 
+			за мной, существует множество увлекательных шаблонов для начала.</p></td></tr></table>
+		  </div>
+   <div class="figure"><a id="Fig0310"> </a>
+    <p class="title"><strong>Рисунок 3.10. Подготовка к созданию контейнера Ubuntu 14.04.1</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0310.jpg" width="850" height="548"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>После выбора шаблона ОС или устройства.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните на сделанный вами выбор.</p>
+	 </li><li class="listitem">
+      <p>Кликните на кнопку <span class="term"><strong class="userinput">Download</strong></span>.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Шаблон будет сохранён в локальном хранилище PVE в <span class="term"><code>/usr/share/vz/cache/templates/</code></span></p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+    		<p>Если список доступных шаблонов выглядит незавершённым, он может быть обновлён из командной строки вашего хоста PVE.
+			Осуществите доступ к интерфейсу командной строки зарегистрировавшись локально на этом хосте, через SSH или с применением 
+			своей консоли noVNC доступной через веб- интерфейс.</p>
+			<p>После выполнения аутентификации, обновите свой список шаблонов просто введя в приглашении <span class="term"><code>pveam</code></span>.</p>
+			</td></tr></table>
+		  </div>
+   <p>Теперь, когда шаблон скачан, из него можно построить контейнер. В нашем следующем разделе мы настроим и создадим свой первый шаблон.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0304"> </a>От шаблона к контейнеру</h3>
+   </div></div></div>
+   <p>Вы уже могли заметить, что когда вы выделяете элемент в хранилище - ISO или шаблон, в верхней части правой стороны вашего кадра 
+   появляется параметр <span class="term"><strong class="userinput">Create CT</strong></span> (контейнер) или 
+   <span class="term"><strong class="userinput">Create VM</strong></span>. Для построения контейнера из шаблона Proxmox VE:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>По крайней мере, имейте под рукой следующую информацию:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="disc">
+	   <li class="listitem">
+	   <p>Пароль для вашего пользователя root</p>
+	   </li><li class="listitem">
+	   <p>Имя для своего хоста</p>
+	   </li><li class="listitem">
+	   <p>Свободный IP адрес для этого хоста</p>
+	   </li><li class="listitem">
+	   <p>Максимальный объём оперативной памяти</p>
+	   </li><li class="listitem">
+	   <p>Количество ЦПУ</p>
+	   </li><li class="listitem">
+	   <p>Понимание того, какой объём пространства хранения вам понадобится для (виртуального) жёсткого диска (в ГБ)</p>
+	   </li><li class="listitem">
+	   <p>IPv4 адрес вашего шлюза в интернет</p>
+	   </li><li class="listitem">
+	   <p>Соответствующая маска подсети для сетевой среды, в которой находится ваш хост</p>
+	   </li>
+      </ul>
+      </div>
+	 </li><li class="listitem">
+      <p>Если вы уверены в наличии у вас этой информации, выберите локальный шаблон, из которого вы хотите построить контейнер.</p>
+	 </li><li class="listitem">
+      <p>Кликните на кнопку <span class="term"><strong class="userinput">Create CT</strong></span> в правом верхнем углу (смотрите 
+	  экранный снимок ниже).</p>
+      <div class="figure"><a id="Fig0311"> </a>
+       <p class="title"><strong>Рисунок 3.11.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0311.jpg" width="693" height="94"/><br />
+        <span>В правом верхнем углу появляются Create CT и VM</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Нажатие на <span class="term"><strong class="userinput">Create CT</strong></span> запускает  диалог 
+	  <span class="term"><strong class="userinput">Create LXC Container</strong></span>, который предоставляет графический интерфейс для 
+	  настройки вашего контейнера.</p>
+	  <p>Первой закладкой будет <span class="term"><strong class="userinput">General</strong></span></p>
+      <div class="figure"><a id="Fig0312"> </a>
+       <p class="title"><strong>Рисунок 3.12.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0312.jpg" width="1038" height="674"/><br />
+        <span>Закладка General диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+      <p>Используйте этот диалог для определения имени хоста и подтверждения пароля пользователя root. Поле идентификатора ВМ заполняется 
+	  автоматически инкрементально в вашем веб- интерфейсе: первый созданный гость по умолчанию будет иметь 
+	  <span class="term"><strong class="userinput">VM ID</strong></span> со значением <span class="term"><code>100</code></span>,
+	  следующий <span class="term"><code>101</code></span> и так далее.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput">Next</strong></span> для выполнения закладки 
+	  <span class="term"><strong class="userinput">Template</strong></span>, отображённой здесь:.</p>
+      <div class="figure"><a id="Fig0313"> </a>
+       <p class="title"><strong>Рисунок 3.13.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0313.jpg" width="1038" height="671"/><br />
+        <span>Закладка Template диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Чтобы следовать тексту книги, в ниспадающем меню <span class="term"><strong class="userinput">Template</strong></span>
+	  выберите <span class="term"><strong class="userinput">Ubuntu-14.04-standard_14.04-1_amd64.tar.gz</strong></span>
+	  кликните <span class="term"><strong class="userinput">Template</strong></span> для продолжения с закладкой
+	  <span class="term"><strong class="userinput">Root Disk</strong></span>.</p>
+      <div class="figure"><a id="Fig0314"> </a>
+       <p class="title"><strong>Рисунок 3.14.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0314.jpg" width="1041" height="673"/><br />
+        <span>Закладка Root Disk диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+      <p>На данный момент <span class="term"><strong class="userinput">Storage</strong></span> определён как
+	  <span class="term"><strong class="userinput">local</strong></span> и альтернатив не доступно. Определите размер своего виртуального 
+	  диска, отвечающего вашим потребностям (однако потрудитесь избежать <span class="term"><strong class="userinput">Disk 
+	  Size</strong></span> менее 4ГБ).</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput">Next</strong></span> для определения предела
+	  <span class="term"><strong class="userinput">CPU</strong></span> и его элементов. Для целей данной книги давайте оставим эти значения
+	  назначаемыми по умолчанию.</p>
+      <div class="figure"><a id="Fig0315"> </a>
+       <p class="title"><strong>Рисунок 3.15.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0315.jpg" width="1038" height="674"/><br />
+        <span>Закладка CPU диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput">Next</strong></span> для настройки 
+	  <span class="term"><strong class="userinput">Memory</strong></span> для вашего контейнера.</p>
+      <div class="figure"><a id="Fig0316"> </a>
+       <p class="title"><strong>Рисунок 3.16.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0316.jpg" width="1037" height="670"/><br />
+        <span>Закладка Memory диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>И опять,нас удовлетворяют значение по умолчанию, поэтому мы переместимся с закладки 
+	  <span class="term"><strong class="userinput">Memory</strong></span> на закладку <span class="term"><strong 
+	  class="userinput">Network</strong></span>.</p>
+      <div class="figure"><a id="Fig0317"> </a>
+       <p class="title"><strong>Рисунок 3.17.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0317.jpg" width="1040" height="676"/><br />
+        <span>Закладка Network диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  <p>Закладка <span class="term"><strong class="userinput">Network</strong></span> предполагает некоторые начальные знания о сетевой 
+	  среде, к которой подключается ваш контейнер. Поскольку в данном случае хост PVE находится в <span class="term"><code>192.168.1.80</code></span>,
+	  первый контейнер будет иметь адрес <span class="term"><code>192.168.1.81</code></span>, статический адрес, который, как я уверен, не будет 
+	  вступать в конфликт с остальными устройствами. В верхнем правом углу мы выбрали Static вместо DHCP.</p>
+	  <p>Проверьте, что вы определили в поле <span class="term"><strong class="userinput">IPv4/CIDR</strong></span> область действия.
+	  В нашем случае маской подсети является значение 255.255.255.0, поэтому  IP адрес добавляется значением 
+	  <span class="term"><code>/24</code></span>. Если правильная маска подсети содержит больше адресов, например, 255.255.0.0,
+ 	  просто добавьте <span class="term"><code>/16</code></span> вместо предыдущего значения. для тех, кто не готов к вычислениям CIDR,
+	  существует калькулятор, доступный по адресу <a class="link" href="http://www.subnet-calculator.com/cidr.php" 
+	  target="_top">http://www.subnet-calculator.com/cidr.php</a>.</p>
+	  <p>Для наших целей <span class="term"><strong class="userinput">IPv6</strong></span> не рассматривается; выберите переключатель 
+	  <span class="term"><strong class="userinput">DHCP</strong></span> и затем проверьте левую колонку закладки 
+	  <span class="term"><strong class="userinput">Network</strong></span>.</p>
+	  <p><span class="term"><strong class="userinput">Name</strong></span> определяет как будет именоваться ваш виртуальный сетевой 
+	  интерфейс внутри контейнера; значение по умолчанию <span class="term"><strong class="userinput">eth0</strong></span>, именно то,
+	  что нужно нам.</p>
+	  <p>Поле <span class="term"><strong class="userinput">Bridge</strong></span> запрашивает к какому мосту на вашем хосте подключать 
+	  данный контейнер; значение по умолчанию установлено в <span class="term"><code>vmbr0</code></span>, причём это единственный выбор;
+	  используемая мной машина имеет только один NIC, и он определён в хосте как <span class="term"><code>vmbr0</code></span>.</p>
+	  <p>Когда будете готовы зафиксировать установки в своей закладке <span class="term"><strong class="userinput">Network</strong></span>, 
+	  кликните на <span class="term"><strong class="userinput">Next</strong></span> для указания своему контейнеру на сервер DNS.
+	  class="userinput">Network</strong></span>.</p>
+      <div class="figure"><a id="Fig0318"> </a>
+       <p class="title"><strong>Рисунок 3.18.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0318.jpg" width="1039" height="678"/><br />
+        <span>Закладка DNS диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  <p>И вновь, как и в случае с сетевой средой, установленное по умолчанию в поле <span class="term"><strong class="userinput">DNS 
+	  domain</strong></span>  значение <span class="term"><strong class="userinput">use host settings</strong></span> в точности отвечает  
+	  моим требованиям. Для повторного просмотра настроек и их фиксации кликните на <span class="term"><strong class="userinput">Next</strong></span>.</p>
+      <div class="figure"><a id="Fig0319"> </a>
+       <p class="title"><strong>Рисунок 3.19.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0319.jpg" width="1039" height="673"/><br />
+        <span>Закладка DNS диалога создания вашего контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  <p>Закладка <span class="term"><strong class="userinput">Confirm</strong></span> предлагает итоговые настройки, а также возможность повторно 
+	  принять некоторые решения по настройкам. Кликните <span class="term"><strong class="userinput">Back</strong></span> для изменений или 
+	  <span class="term"><strong class="userinput">Finish</strong></span> для начала задачи создания.</p>
+	  <p>После нажатия <span class="term"><strong class="userinput">Finish</strong></span>, диалог настройки закрывается и в браузере 
+	  открывается новое окно, которое предлагает возможность наблюдать за построением PVE контейнера LXC из шаблона на основе вашей настройки:</p>
+      <div class="figure"><a id="Fig0320"> </a>
+       <p class="title"><strong>Рисунок 3.20.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0320.jpg" width="1033" height="522"/><br />
+        <span>Вывод просмотрщика задачи после завершения создания контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  <p>Когда окно <span class="term"><strong class="userinput">Task viewer</strong></span> выведет <span class="term"><code>TASK OK</code></span>,
+	  контейнер готов к применению. Окно <span class="term"><strong class="userinput">Task viewer</strong></span> можно закрыть.</p>
+	 </li>
+   </ol>
+   </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Note0301"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Контейнер также может быть создан из шаблона при помощи командной строки хоста PVE с использованием команды создания 
+	   <span class="term"><code>pct</code></span>. Следующий сценарий bash иллюстрирует применение такой команды для создания контейнера 
+	   почти идентичному созданному ранее посредством подробно описанной процедуры веб- интерфейса:</p>
+	   <pre class="screen"><code>
+#!/bin/bash
+#### Set Variables ####
+$hostname=&quot;trusty-chapter3&quot;
+$vmid=&quot;100&quot;
+$template-path=&quot;/var/lib/vz/template/cache&quot;
+$storage=&quot;local&quot;
+$description=&quot;trusty container for Chapter 3&quot;
+$template=&quot; Ubuntu-14.04-standard_14.04-1_amd64.tar.gz&quot;
+$ip=&quot;192.168.1.81/24&quot;
+$nameserver=&quot;8.8.8.8&quot;
+$ram=&quot;1024&quot;
+$rootpw=&quot;changeme&quot;
+$rootfs=&quot;4&quot;
+$gateway=&quot;192.168.1.1&quot;
+$bridge=&quot;vmbr0&quot;
+$if=&quot;eth0&quot;
+#### Execute pct create using variable substitution ####
+pct create $vmid \
+  $template-path/$template \
+  -description $description \
+  -rootfs $rootfs \
+  -hostname $hostname \
+  -memory $ram \
+  -nameserver $nameserver \
+  -storage $storage \
+  -password $rootpw \
+  -net0 name=$if,ip=$ip,gw=$gateway,bridge=$bridge
+	   </code></pre>
+	   </td></tr></table>
+     </div>
+   <p>В большинстве случаев изменения настройки контейнера и добавление виртуальных устройств может быть простым образом выполнено 
+   при помощи веб- интерфейса. Для редактирования настройки или добавления устройств:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите необходимый контейнер в просмотре <span class="term"><strong class="userinput">Server</strong></span> в левом 
+	  кадре интерфейса.</p>
+	 </li><li class="listitem">
+      <p>В рамке с правой стороны взгляните на группу закладок под кнопкой <span class="term"><strong class="userinput">Start</strong></span>
+	  (отображённых на снимке экрана ниже).</p>
+	 </li><li class="listitem">
+      <p>Отметьте задачу, которую вы хотите выполнить по имени закладки.</p>
+	 </li><li class="listitem">
+      <p>Воспользуйтесь кнопками <span class="term"><strong class="userinput">Add</strong></span> и 
+	  <span class="term"><strong class="userinput">Edit</strong></span> для выполнения желаемых изменений.</p>
+	 </li>
+   </ol>
+   </div>
+      <div class="figure"><a id="Fig0321"> </a>
+       <p class="title"><strong>Рисунок 3.21.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0321.jpg" width="1037" height="274"/><br />
+        <span>Большинство изменений настройки может быть выполнено через веб- интерфейс PVE</span>
+       </div></div>
+      </div><br class="figure-break"/>
+   <p>Следующий раздел посвящён управлению состоянием любого заданного контейнера;  например, тому, как запускать и останавливать его.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0305"> </a>Запуск и останов контейнеров</h3>
+   </div></div></div>
+   <p>Для запуска контейнера выберите его в левой панели; его иконка должна быть чёрного и серого цветов, обозначая, что контейнер не 
+   выполняется.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>На следующем снимке экрана мой контейнер, идентифицируемый VM ID со значением <span class="term"><strong class="userinput">100</strong></span>
+	  и своим именем <span class="term"><strong class="userinput">trusty-chapter3</strong></span>:</p>
+      <div class="figure"><a id="Fig0322"> </a>
+       <p class="title"><strong>Рисунок 3.22.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0322.jpg" width="473" height="257"/><br />
+        <span>Иконка остановленного контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>В правом верхнем углу интерфейса запустите свой контейнер, кликнув на кнопку 
+	  <span class="term"><strong class="userinput">Start</strong></span>:</p>
+      <div class="figure"><a id="Fig0323"> </a>
+       <p class="title"><strong>Рисунок 3.23.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0323.jpg" width="956" height="118"/><br />
+        <span>Кнопка Start контейнера</span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+	 </ol>
+   </div>
+   <p>Когда процесс запуска контейнера выполнится, это будет обозначено в ревой рамке интерфейса изменением цвета иконки этого контейнера; 
+   она должна стать теперь зелёной, чёрной и серой вместо просто чёрно-серой; добавление зелёного к иконке является быстрым способом 
+   визуализации разницы между работающим и остановленным контейнерами.</p>
+      <div class="figure"><a id="Fig0324"> </a>
+       <p class="title"><strong>Рисунок 3.24.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0324.jpg" width="380" height="205"/><br />
+        <span>Иконка выполняющегося контейнера зелёно-чёрно-серая</span>
+       </div></div>
+      </div><br class="figure-break"/>
+   <p>В дереве ресурсов, в вашем левом кадре, выберите выполняющийся контейнер.</p>
+   <p>В правой стороне вашего экрана доступны различные кнопки:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Клик по <span class="term"><strong class="userinput">Shutdown</strong></span> вызовет вежливую остановку вашего контейнера.</p>
+	 </li><li class="listitem">
+	 <p>В противоположность таковой кнопка <span class="term"><strong class="userinput">Stop</strong></span> внезапно прервёт этот 
+	 контейнер.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Migrate</strong></span> позволяет нам перемещать даже работающий контейнер между 
+	 узлами кластера Proxmox VE без вызова каких- либо простоев или прочего вынужденного бездействия.</p>
+	 </li><li class="listitem">
+	 <p>Кнопка <span class="term"><strong class="userinput">Remove</strong></span> удаляет остановленный контейнер. Отметим, что не 
+	 существует опций восстановления если для этого контейнера не выполнено резервное копирование.</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Чтобы приостановить контейнер, выберите закладку <span class="term"><strong class="userinput">Backup</strong></span> в вашем 
+   веб- интерфейсе PVE. Кликните на <span class="term"><strong class="userinput">Backup now</strong></span> и, в появившемся блоке 
+   диалога, выберите <span class="term"><strong class="userinput">Suspend</strong></span> в ниспадающем меню
+   <span class="term"><strong class="userinput">Mode</strong></span>. Кликните на кнопку <span class="term"><strong 
+   class="userinput">Backup</strong></span> для приостановки контейнера и закройте диалог.</p>
+      <div class="figure"><a id="Fig0325"> </a>
+       <p class="title"><strong>Рисунок 3.25.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0325.jpg" width="537" height="235"/><br />
+        <span>Контейнер может быть приостановлен при помощи веб- интерфейса PVE</span>
+       </div></div>
+      </div><br class="figure-break"/>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Изменение состояний контейнера при помощи командной строки </span></h4>
+   </div></div></div>
+   <p>Состоянием контейнера можно также управлять из командной строки PVE (либо через сеанс SSH, либо из консоли noVNC, или зарегистрировавшись 
+   на физическом хосте).</p>
+   <p>Для запуска описанного в этой главе контейнера с назначенным ему VM ID 100, введите
+   <span class="term"><code>pct start 100</code></span>. Точно так же, этот же самый контейнер может быть снесён при помощи
+   <span class="term"><code>pct stop 100</code></span>.</p>
+   <p>Шаблоны могут резервироваться либо через командную строку PVE, либо из веб- интерфейса. Для получения дополнительных сведений о резервном 
+   копировании и восстановлении контейнеров посетите вики Proxmox: 
+   <a class="link" href="https://pve.proxmox.com/wiki/Linux_Container#Backup_container" 
+   target="_top">https://pve.proxmox.com/wiki/Linux_Container#Backup_container</a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030502"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Доступ к контейнеру </span></h4>
+   </div></div></div>
+   <p>Большинство шаблонов ОС доступных через ProxmoxVE, изначально настроены на доступ либо через вашу консоль 
+   noVNC, которая может быть запущена из веб- интерфейса управления, либо через интерфейс командной строки PVE.</p>
+   <p>Это не означает, что OpenSSH не установлен; на самом деле, я никогда не видел шаблона без установленного сервера OpenSSH. Шаблоны ОС 
+   просто не настроены при запуске так, чтобы пользователь root мог зарегистрироваться с паролем. (Однако к устройствам Linux TurnKey можно 
+   осуществлять доступ через SSH с учётной записью root применяя пароль.)</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+    		<p>Команда <span class="term"><code>pct enter</code></span> делает возможным влетание для доступа в контейнер из интерфейса 
+			командной строки хоста PVE. Для входа в разработанный в данной главе контейнер я могу получить доступ к хосту PVE через SSH, 
+			например, зарегистрировавшись в качестве пользователя root; затем я могу завершить <span class="term"><code>pct enter</code></span> 
+			необходимым VM ID своего контейнера, который в данном случае равен <span class="term"><code>100</code></span>. Просто наберите 
+			в приглашении <span class="term"><code>pct enter 100</code></span> и нажмите <span class="emphasis"><em>Enter</em></span> чтобы 
+			заскочить в оболочку внутри вашего контейнера.</p></td></tr></table>
+		  </div>
+   <p>Для доступа к выполняющемуся контейнеру через консоль <span class="term"><strong class="userinput">noVNC</strong></span> выберите в 
+   вашем веб- интерфейсе работающий шаблон, а затем выберите <span class="term"><strong class="userinput">Console</strong></span> справа 
+   вверху в своём браузере и в ниспадающем меню выберите <span class="term"><strong class="userinput">noVNC</strong></span>.</p>
+      <div class="figure"><a id="Fig0326"> </a>
+       <p class="title"><strong>Рисунок 3.26.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0326.jpg" width="610" height="156"/><br />
+        <span>Когда выбран выполняющийся контейнер, появляется кнопка Console в правом верхнем углу страницы</span>
+       </div></div>
+      </div><br class="figure-break"/>
+   <p>В качестве альтернативы выберите запущенный шаблон как уже описывалось ранее, однако вместо клика по ниспадающему меню 
+   <span class="term"><strong class="userinput">Console</strong></span> выберите закладку 
+   <span class="term"><strong class="userinput">Console</strong></span> для вашего контейнера.</p>
+   <p>Если вы получили доступ к терминалу через эту консоль, как отображено на следующем снимке экрана, вы располагаете полным набором 
+   для создания пользователей, установки пакетов, а также внесения прочих изменений в настройки чтобы придать этому контейнеру необходимую 
+   вам индивидуальность.</p>
+      <div class="figure"><a id="Fig0327"> </a>
+       <p class="title"><strong>Рисунок 3.27.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0327.jpg" width="991" height="574"/><br />
+        <span>Перенастройка данных о временной зоне контейнера Ubuntu в сеансе консоли noVNC</span>
+       </div></div>
+      </div><br class="figure-break"/>
+   <p>Если консоль запустилась, но отображает только чёрный экран и не реагирующий курсор, попробуйте нажать <span class="emphasis"><em>Enter</em></span> 
+   и найти приглашение для регистрации. Если это не сработает, учтите, что некоторые контейнеры должны быть перезапущены один раз чтобы 
+   запрашивать учётные данные; перезапустите ваш контейнер, а потом ещё один раз, запустите свою консоль noVNC. Если экран noVNC всё ещё 
+   тёмный, нажмите <span class="emphasis"><em>Enter</em></span> чтобы выудить приглашение от него.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Note0302"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для большинства контейнеров вы захотите настроить локализацию и зону времени.
+	   <span class="term"><code>dpkg-reconfigure locales</code></span> проведёт для вас краткий диалог для определения того какие локализации 
+	   доступны в контейнере Debian или Ubuntu. <span class="term"><code>dpkg-reconfigure tzdata</code></span> осуществит для вас 
+	   необходимые шаги для установки или перенастройки ваших данных о временной зоне для контейнера Debian или Ubuntu.</p></td></tr></table>
+     </div>
+  </div>
+      
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0306"> </a>Заключение</h3>
+   </div></div></div>
+   <p>Данная глава подробно рассмотрела процесс разработки контейнеров из шаблонов LXC. Мы исследовали перспективы контейнеров LXC в Proxmox VE
+   и выполнили набросок примера варианта использования который может быть обобщён на прочие обстоятельства и который демонстрирует как 
+   функциональность ваших контейнеров Proxmox VE может добавлять пользу, гибкость и расширяемость в организацию инфраструктуры ИТ.</p>
+   <p>После обсуждения того, как извлекать контейнер из шаблона, мы изучили способы манипулирования контейнерами как из командной строки, 
+   так и через веб- интерфейс.</p>
+   <p>В <a class="link" href="Ch04.html" target="_top">Главе 4. Создание виртуальных машин</a> мы установим преимущества виртуальных машин 
+   над контейнерами и изучим некоторые варианты применения. В окончании главы мы пройдёмся по созданию виртуальных машин Microsoft Windows и 
+   GNU/Linux из ISO.</p>
+   <p>При помощи того, что мы знаем о контейнерах, будет захватывающе изучать место для виртуальных машин в культуре, в которой 
+   очарование установилось на верности котейнеризации.</p>
+  </div>
+ 
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

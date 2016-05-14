@@ -1,0 +1,1838 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Подготовка хранилища к работе в Ceph - Изучаем Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningCeph"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем Ceph"/>
+<link rel="up" href="index.html" title="Изучаем Ceph"/>
+<link rel="prev" href="Ch05.html" title="Глава 5. Развертывание Ceph - дорога, которую вы обязаны знать"/>
+<link rel="next" href="Ch07.html" title="Глава 7. Эксплуатация и обслуживание Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningCeph/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Подготовка хранилища к работе в Ceph';
+PrevRef = 'Ch05.html';
+UpRef = 'index.html';
+NextRef = 'Ch07.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 6. Подготовка хранилища к работе в Ceph</h1>
+  </div></div></div>
+  <p>В данной главе мы рассмотрим следующие темы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Настройка блочного устройства Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройка файловой системы Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройка хранилища объектов Ceph с использованием шлюза RADOS (Безотказного автономного 
+	 распределенного хранилища объектов - Reliable Autonomic Distributed Object Store)</p>
+	 </li>
+	<li class="listitem">
+	 <p>Конфигурирование S3 и Swift с использованием шлюза Ceph RADOS</p>
+	 </li>
+   </ul>
+   </div>
+  <p>Подготовка хранилища к работе является первичной и наиболее важной задачей системного администратора хранилища.
+  Это процесс назначения пространства или емкости хранилища физическим или виртуальным серверам в виде блоков, файлов или 
+  объектов. Обычные вычислительные системы и серверы выпускаются с ограниченным локальным пространством хранения, 
+  которого не достаточно для ваших потребностей в хранении данных. Решения для хранения данных, подобные Ceph, 
+  обеспечивают практически неограниченные возможности хранения для таких серверов, что делает способными хранить 
+  все ваши данные и при этом пребывать в уверенности, что вам хватит места.</p>
+  
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch06.html#RADOS_block_device">Блочные устройства RADOS</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#setup_client">Настройка вашего первого клиента</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#mapping_RBD">Установление соответствия блочных устройств RADOS</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#resizing_RBD">Изменение размера RBD Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#snapshot_RBD">Изготовление моментальных снимков RBD Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#clone_RBD">Клонирование RBD Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#fiesystem">Файловая система Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#kernel_driver_mount">Монтирование CephFS с применением драйвера ядра</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#FUSE_mount">Монтирование CephFS в качестве FUSE</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#Object_storage">Хранение объектов с применением шлюза Ceph RADOS</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#setup_VM">Настройка виртуальной машины</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#install_gateway">Установка шлюза RADOS</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#config_gateway">Настройка шлюза RADOS</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#create_radosgw">Создание пользователя radosgw</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch06.html#Access">Доступ к хранилищу объектов Ceph</a></span></dt>
+	  <dd><dl>
+	    <dt><span class="section"><a href="Ch06.html#S3_API-compat">Совместимое с API S3 хранилище объектов</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#Swift_API-compat">Совместимое с API Swift хранилище объектов</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RADOS_block_device"> </a>Блочные устройства RADOS</h3>
+   </div></div></div>
+   <p>Помимо предоставления дополнительного пространства хранения существуют многочисленные преимущества наличия 
+   централизованной системы хранения.</p>
+   <p>Ceph может предоставить пространство для хранения единым образом, который включает блочное хранилище, файловую 
+   систему и хранилище объектов. В зависимости от вашего варианта использования, вы можете выбирать один или несколько 
+   вариантов решений хранения как показано на следующем рисунке. Теперь давайте обсудим эти типы хранения в деталях и 
+   реализуем их в нашем тестовом кластере.</p>
+   <div class="informalfigure"><div class="mediaobject">
+     <img src="figures/Fig0601.jpg"/></div><br />
+   </div>
+     <p>Блочное устройство RADOS(<span class="term"><strong class="userinput"><code>RBD, RADOS block device</code></strong></span> 
+	 /Безотказное автономное распределенное хранилище объектов - Reliable Autonomic Distributed Object Store/) — 
+	 ранее известное как блочное устройство Ceph — предоставляет клиентам Ceph постоянное хранилище на основе блоков, 
+	 которое они используют в качестве дополнительного диска. Клиент получает гибкость использования диска как ему нужно, 
+	 либо в виде исходного устройства, либо отформатировав его с файловой системой с последующим монтированием. Блочное 
+	 устройство RADOS использует библиотеку librbd и хранит блоки данных в последовательном виде разделенными на полосы на 
+	 множестве OSD в кластере Ceph. RDB поддерживается уровнем RADOS в Ceph, и, таким образом, каждое блочное устройство 
+	 распространяется на несколько узлов Ceph, обеспечивая высокую производительность и высокую надежность. BBD наполнено 
+	 широкими корпоративными возможностями, такими как динамическое выделение, динамичное изменение размера, моментальные снимки, 
+	 копирование при записи, а также кэшированием, помимо всего прочего. Протокол BBD полностью поддерживаются Linux в 
+	 виде драйвера основной ветви ядра; он также поддерживает различные платформы виртуализации, такие как KVM, Qemu и libvirt, 
+	 позволяя виртуальным машинам получать преимущества блочных устройств Ceph. Все эти особенности делают RBD идеальным кандидатом 
+	 для облачных платформ, таких как OpenStack и CloudStack. Теперь мы узнаем, как создать блочное устройство Ceph, а также  
+	 как использовать его:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Чтобы создать блочное устройство Ceph, зарегистрируйтесь на любом из узлов мониторов Ceph или на хосте администрирования,
+	  который имеет доступ к кластеру Ceph с правами администратора. Вы также можете создать RBD из любого узла клиента, 
+	  который настроен как клиент Ceph. По причинам безопасности вам не следует сохранять ключи администратора на множесетве 
+	  узлов, отличных от клиентов Ceph и хостов администратора.</p>
+     </li><li class="listitem">
+      <p>Следующая команда создаст блочное устройство RADOS с именем <span class="term"><code>ceph-client1-rbd1</code></span>
+	  и размером 10240 МБ:</p>
+	  <pre class="screen">
+# rbd create ceph-client1-rbd1 --size 10240</pre>
+     </li><li class="listitem">
+      <p>Для просмотра списка образов выполните следующую команду:</p>
+	  <pre class="screen">
+# rbd ls</pre>
+     </li><li class="listitem">
+      <p>Для контроля деталей образов RBD используйте следующую команду:</p>
+	  <pre class="screen">
+# rbd --image ceph-client1-rbd1 info</pre>
+      <p>Давайте взглянем на следующий снимок экрана, чтобы посмотреть на предыдущую команду в действии:</p>
+	  <pre class="screen">
+[root@ceph-node1 ~]# rbd —-image ceph-client1-rbd1 info
+rbd image 'ceph-client1-rbd1':
+        size 10240 MB in 2560 objects
+        order 22 (4096 kB objects)
+        block_name_prefi x: rb.0.1d63.2ae8944a
+        format: 1
+[root@ceph-node1 ~]#</pre>
+     </li><li class="listitem">
+      <p>По умолчанию образы RBD создаются в пуле <span class="term"><code>rbd</code></span>. Вы можете задать другой 
+	  пул  с помощью прааметра <span class="term"><code>-p</code></span> в команде <span class="term"><code>rbd</code></span>.
+	  Следующая команда приведет к тому же результату, что и предыдущая, однако мы вручную задали имя пула 
+	  используя параметр <span class="term"><code>-p</code></span> здесь. Аналогично вы можете создавать образы RBD 
+	  в другом пуле с помощью параметра <span class="term"><code>-p</code></span>:</p>
+	  <pre class="screen">
+# rbd --image ceph-client1-rbd1 info -p rbd</pre>
+     </li>
+     </ol>
+     </div>
+   
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="setup_client"> </a>Настройка вашего первого клиента</h4>
+     </div></div></div>
+     <p>Ceph является системой хранения; для сохранения ваших данных в кластере Ceph вам понадобится машина клиента.
+	 После того, как пространство хранения подготовлено к работе в кластере Ceph, клиент отображает или монтирует 
+	 блок или файловую систему и позволяет нам сохранять данные в кластере Ceph. Для того, чтобы сохранять данные 
+	 в хранилище объектов клиенты имеют HTTP доступ. Обычный кластер Ceph промышленного класса содержит две различные сети, 
+	 сеть переднего плана и сеть заднего плана, также называемые общедоступной сетью и сетью кластера, соответственно.</p>
+     <p>Сеть переднего плана является сетью клиентов, через которую Ceph предоставляет данные своим клиентам. Клиенты не имеют 
+	 доступ к сети заднего плана и Ceph в основном использует сеть заднего плана для репликаций и восстановления. Сейчас 
+	 мы выполним установку первой виртуальной машины клиента Ceph, которую мы будем использовать на протяжении всей книги.
+	 В процессе настройки мы создадим новую виртуальную машину клиента, как мы это делали в <a class="xref" href="Ch02.html"
+	 title="Глава 2. Моментальное развертывание Ceph"><em>Главе 2. Моментальное развертывание Ceph</em></a>:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте новую виртуальную машину VirtualBox для клиента Ceph:</p>
+	  <pre class="screen">
+# VboxManage createvm --name ceph-client1 --ostype RedHat_64 --register
+# VBoxManage modifyvm ceph-client1 --memory 1024 --nic1 nat --nic2 hostonly --hostonlyadapter2 vboxnet1
+# VBoxManage storagectl ceph-client1 --name "IDE Controller" --add ide --controller PIIX4 --hostiocache on --bootable on
+# VBoxManage storageattach ceph-client1 --storagectl "IDE Controller" --type dvddrive --port 0 --device 0 --medium /downloads/CentOS-6.4-x86_64-bin-DVD1.iso
+# VBoxManage storagectl ceph-client1 --name "SATA Controller" --add sata --controller IntelAHCI --hostiocache on --bootable on
+# VBoxManage createhd --filename OS-ceph-client1.vdi --size 10240
+# VBoxManage storageattach ceph-client1 --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium OS-cephclient1.vdi
+# VBoxManage startvm ceph-client1 --type gui</pre>
+     </li><li class="listitem">
+      <p>Когда виртуальная машина создана и запущена, установите операционную систему CentOS, придерживаясь слудующей документации 
+	  установки операционной системы <span class="term"><code>https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/index.html</code></span>.
+	  В процессе установке задайте хосту имя <span class="term"><code>ceph-client1</code></span>.</p>
+     </li><li class="listitem">
+      <p>После успешной установки операционной системы отредактируйте настройку сети машины как это устанавливается в 
+	  следующей последовательности шагов и перезапустите сетевые службы:</p>
+      <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	   <p>Измените файл <span class="term"><code>/etc/sysconfig/network-scripts/ifcfg-eth0</code></span> и добавьте в него следующее:</p>
+	   <pre class="screen"><code>
+		ONBOOT=yes
+		BOOTPROTO=dhcp</code></pre>
+	   </li>
+	   <li class="listitem">
+	   <p>Измените файл <span class="term"><code>/etc/sysconfig/network-scripts/ifcfg-eth1</code></span> и добавьте в него следующее:</p>
+	   <pre class="screen"><code>
+		ONBOOT=yes
+		BOOTPROTO=static
+		IPADDR=192.168.57.200
+		NETMASK=255.255.255.0</code></pre>
+	   </li>
+	   <li class="listitem">
+	   <p>Измените файл <span class="term"><code>/etc/hosts</code></span> и добавьте в него следующее:</p>
+	   <pre class="screen"><code>
+		192.168.57.101 ceph-node1
+		192.168.57.102 ceph-node2
+		192.168.57.103 ceph-node3
+		192.168.57.200 ceph-client1</code></pre>
+	   </li>
+       </ul>
+       </div>
+     </li>
+     </ol>
+     </div>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="mapping_RBD"> </a>Установление соответствия блочных устройств RADOS</h4>
+     </div></div></div>
+      <p>Ранее в этой главе мы создали образы RBD в кластере Ceph; для того, чтобы использовать этот образ блочного устройства,
+	  мы должны поставить его в соответствие машине клиента. Давайте посмотрим как работает операция установления соответствия.</p>
+      <p>Поддержка Ceph была добавлена в ядро Linux начиная с версии 2.6.32. Для машин клиентов, которым необходим естественный 
+	  доступ к блочным устройствам и файловым системам, рекомендуется использовать ядро Linux в редакции 2.6.34., или 
+	  более поздней.</p>
+      <p>Проверьте версию ядра Linux и поддержку RBD, воспользовавшись командой <span class="term"><code>modprobe</code></span>.
+	  Поскольку данный клиент работает с более старой версией ядра Linux, он не поддерживает Ceph естественным образом.</p>
+	  <pre class="screen">
+# uname –r
+# modprobe rbd</pre>
+      <p>Давайте посмотрим на следующий снимок экрана:</p>
+	  <pre class="screen">
+[root@ceph-client1 ~]# uname -r
+2.6.32-358.el6.x86_64
+[root@ceph-client1 ~]#
+[root@ceph-client1 ~]# modprobe rbd
+FATAL: Module rbd not found.
+[root@ceph-client1 ~]#</pre>
+      <p>Чтобы добавить поддержку Ceph мы должны модернизировать версию ядра Linux.</p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+       <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+       <p>Отметим, что данная модернизация ядра приводится здесь исключительно в демонстрационных целях для данной главы.     
+       В вашей промышленной среде вы должны планировать обновление ядра. Пожалуйста, принимайте взвешенное решение 
+       перед выполнением приводимых здесь шагов в вашем промышленном решении.</p></td></tr></table>
+      </div>
+	  <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Установите ELRepo rpm следующим образом:</p>
+	   <pre class="screen">
+# rpm -Uvh http://www.elrepo.org/elrepo-release-6-6.el6.elrepo.noarch.rpm</pre>
+      </li><li class="listitem">
+      <p>Установите новое ядро при помощи следующей команды:</p>
+	  <pre class="screen">
+# yum --enablerepo=elrepo-kernel install kernel-ml</pre>
+      </li><li class="listitem">
+       <p>Отредактируйте <span class="term"><code>/etc/grub.conf</code></span> 
+	   измените <span class="term"><code>default = 0</code></span> и затем аккуратно перезагрузите машину.</p>
+      </li>
+      </ol>
+      </div>
+      <p>После перезагрузки компьютера, проверьте версию ядра Linux и поддержку RBD, как мы это делали раньше:</p>
+	  <pre class="screen">
+[root@ceph-client1 ~]# uname -r
+3.15.0-1.el6.elrepo.x86_64
+[root@ceph-client1 ~]#
+[root@ceph-client1 ~]# modprobe rbd
+[rootOceph-client1 ~1#</pre>
+      <p>Чтобы предоставить клиентам права на доступ к кластеру Ceph, нам необходимо добавить им кольцо ключей и 
+	  файл настройки Ceph. Установление подлинности клиента и кластера Ceph основывается на кольце ключей.
+	  Пользователь с правами администратора Ceph имеет полный доступ к кластеру Ceph, следовательно, по причинам безопасности 
+	  вам не следует распространять кольца ключей администратора на другие хосты, если они не требуют этого.
+	  Лучшей практикой будет создание отдельных пользователей с ограниченными возможностями для доступа в кластер Ceph 
+	  с использованием их колец ключей для доступа к RBD. В последующих главах мы уделим больше внимания пользователям
+	  Ceph и кольцам ключей.</p>
+      <p>Установите исполняемые файлы на <span class="term"><code>ceph-node1</code></span> и поместите в нем 
+	  <span class="term"><code>ceph.conf</code></span> и <span class="term"><code>ceph.admin.keyring</code></span></p>
+	  <pre class="screen">
+# ceph-deploy install ceph-client1
+# ceph-deploy admin ceph-client1</pre>
+      <p>После того, как в узле <span class="term"><code>ceph-node1</code></span> размещены файл настройки и 
+	  кольцо ключей администратора, вы можете запросить в кластере Ceph образы RBD:</p>
+	  <pre class="screen">
+[root@ceph-client1 ceph]# pwd
+/etc/ceph
+[root@ceph-client1 ceph]# ls -l
+total 8
+-rw-r-—r—-. 1 root root 137 Jun 12 21:16 ceph. client.admin. keyring
+-rw-r-—r--. 1 root root 573 Jun 12 21:16 ceph.conf
+[root@ceph-clientl ceph]# rbd ls
+ceph-client1-rbd1
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]# rbd info —-image ceph-clien1-rbd1
+rbd image 'ceph-client1-rbd1':
+        size 10240 MB in 2560 objects
+        order 22 (4096 kB objects)
+        block_name_prefix: rb.0.1d63.2ae8944a
+        format: 1
+[root@ceph-client1 ceph]#</pre>
+      <p>Установите соответствие образу RBD <span class="term"><code>ceph-client1-rbd1</code></span> для машины
+	   <span class="term"><code>ceph-node1</code></span>. Поскольку RBD в настоящее время поддерживаются 
+	   естественным образом ядром Linux, вы можете с машины <span class="term"><code>ceph-node1</code></span>
+	   для установления соответствия RBD следующую команду:</p>
+	   <pre class="screen">
+# rbd map --image ceph-client1-rbd1</pre>
+      <p>В качестве альтернативы, вы можете воспользоваться командой для определения имени пула образа RBD 
+	  и можете получить тот же результат. В нашем случае именем пула будет <span class="term"><code>rbd</code></span>, 
+	  как объяснялось ранее в данной главе:</p>
+	  <pre class="screen">
+# rbd showmapped</pre>
+      <p>Следующий снимок экрана демонстрирует эту команду в действии:</p>
+	  <pre class="screen">
+[root@ceph-client1 ceph]# rbd map --image ceph-client1-rbd1
+[root@ceph-client1 ceph]# rbd showmapped
+id pool image	          snap device
+0 rbd ceph-client1-rbd1 -      /dev/rbdO
+[root@ceph-client1 ceph]#</pre>
+      <p>После установления соответствия блочное устройство RADOS операционной системе, мы должны создать на нем файловую систему, 
+	  чтобы сделать его пригодным к использованию. Теперь RBD может быть использовано как дополнительный диск или 
+	  блочное устройство:</p>
+	   <pre class="screen">
+# fdisk -l /dev/rbd0
+# mkfs.xfs /dev/rbd0
+# mkdir /mnt/ceph-vol1
+# mount /dev/rbd0 /mnt/ceph-vol1</pre>
+      <p>Взглянем на следующий снимок экрана:</p>
+	   <pre class="screen">
+[root@ceph-client1 ceph]# mkfs.xfs /dev/rbdO
+log stripe unit (4194304 bytes) is too large (maximum is 256KiB)
+log stripe unit adjusted to 32KiB
+meta-data=/dev/rbdO	         isize=256    agcount=17, agsize=162816 blks
+         =	                 sectsz=512   attr=2, projid32bit=0
+data     =	                 bsize=4096   blocks=2621440, imaxpct=25
+         =	                 sunit=1024   swidth=1024 blks
+naming	 =version 2	         bsize=4096   ascii-ci=0
+log	 =internal log	         bsize=4096   blocks=2560, version=2
+         =	                 sectsz=512   sunit=8 blks, lazy-count=l
+realtime =none	             extsz=4096   blocks=0, rtextents=0
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]# mkdir /mnt/ceph-vol1
+[root@ceph-client1 ceph]# mount /dev/rbd0 /mnt/ceph-vol1
+[root@ceph-client1 ceph]# df -h
+Filesystem	      Size  Used Avail Use% Mounted on
+/dev/mapper/vg_cephnode1-lv_root
+                      7.3G  2.4G  4.6G  35% /
+tmpfs	              499M   72K  499M	 1% /dev/shm
+/dev/sda1	      477M   52M  396M	12% /boot
+/dev/rbdO	       10G   33m   10G	 1% /mnt/ceph-voll
+[root@ceph-client1 ceph]#</pre>
+      <p>Поместим в Ceph RBD какие-нибудь данные:</p>
+	  <pre class="screen">
+# dd if=/dev/zero of=/mnt/ceph-vol1/file1 count=100 bs=1M</pre>
+	  <pre class="screen">
+[root@ceph-client1 ceph-vol1]# dd if=/dev/zero of=/mnt/ceph-vol1/file1 count=100 bs=lM
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB) copied, 0.286933 s, 365 MB/s
+[root@ceph-client1 ceph-vol1]#
+[root@ceph-client1 ceph-vol1]#
+[root@ceph-client1 ceph-vol1]#
+[root@ceph-client1 ceph-vol1]# ls -la
+total 102404
+drwxr-xr-x.	2	root	root	       18	Jun	14	21:13	.
+drwxr-xr-x.	3	root	root	     4096	Jun	12	21:28	..
+-rw-r-—r-—.	1	root	root	104857600	Jun	14	21:13	file1
+[root@ceph-client1 ceph-vol1]#</pre>
+	 </div>
+
+	 <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="resizing_RBD"> </a>Изменение размера RBD Ceph</h4>
+     </div></div></div>
+     <p>Ceph поддерживает динамично выделяемые блочные устройства, т.е. физическое пространство под хранение не выделяется пока 
+	 вы не не начнете реальное сохранение данных на блочное устройство. Блочное устройство RADOS в Ceph очень гибкое; вы 
+	 можете увеличивать или уменьшать размер RBD на лету со стороны хранилища Ceph. Однако, используемая в основе файловая система 
+	 должна поддерживать изменение размеров. Современные файловые системы, такие как XFS, Btrfs, EXT и ZFS поддерживают 
+	 изменение размеров файловой системы в некоторой степени. Чтобы получить дополнительную информацию об изменении размеров, 
+	 обратитесь к документации по соответствующей файловой системе.</p>
+     <p>Для увеличения или уменьшения размера образа RBD Ceph воспользуйтесь параметром <span class="term"><code>--size <New_Size_in_MB> </code></span>
+	 в команде <span class="term"><code>rbd resize</code></span>, которая установит новый размер для образа RBD. Начальный размер
+	 образа RBD <span class="term"><code>ceph-client1-rbd1</code></span> составлял 10ГБ; следующая команда увеличит
+	 его размер до 20ГБ:</p>
+	  <pre class="screen">
+# rbd resize rbd/ceph-client1-rbd1 --size 20480</pre>
+	  <pre class="screen">
+[root@ceph-node1 ~]# rbd resize -—image ceph-client1-rbd1 -—size 20480
+Resizing image: 100% complete...done.
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# rbd info -—image ceph-client1-rbd1
+rbd image 'ceph-client1-rbd1':
+        size 20480 MB in 5120 objects
+        order 22 (4096 kB objects)
+        block_name_prefix: rb.0.1d63.2ae8944a
+        format: 1
+[root@ceph-node1 ~]#</pre>
+      <p>Теперь, когда размер образа RBD Ceph был изменен, вы должны удостовериться, что новый размер был 
+ 	  воспринят ядром надлежащим образом, выполнив следующую команду:</p>
+	  <pre class="screen">
+# xfs_growfs -d /mnt/ceph-vol1</pre>
+	  <pre class="screen">
+[root@ceph-client1 /]# xfs_growfs -d /mnt/ceph-vol1
+meta-data=/dev/rbdO              isize=256    agcount=17, agsize=162816 blks
+         =                       sectsz=512   attr=2, projid32bit=0
+data     =                       bsize=4096   blocks=2621440, imaxpct=25
+         =                       sunit=1024   swidth=1024 blks
+naming   =version 2              bsize=4096   ascii-ci=0
+log      =internal               bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=8 blks, lazy-count=l
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 2621440 to 5242880
+[root@ceph-client1 /]#
+[root@ceph-client1 /]#
+[root@ceph-client1 /]# df -h
+Filesystem             Size  Used Avail Use% Mounted on
+/dev/mappe r/vg_cephnode1-lv_root
+                       7.3G  2.2G  4.8G 315% /
+tmpfs                  499M  112k  499m   1% /dev/shm
+/dev/sda1              477M   52M  396M  12% /boot
+/dev/rbd0               20G  134M   20G   1% /mnt/ceph-vol1
+[root@ceph-client1 /]#</pre>
+      <p>С клиентской машины увеличение файловой системы ведет к к использованию бОльшего размера пространства хранения.
+	  С точки зрения клиента способность изменения размеров является функцией файловой системы операционной системы;
+	  перед изменением размера раздела вам следует ознакомиться с документацией по файловой системе. Файловая система XFS 
+	  поддерживает изменение размеров в реальном времени.</p>
+    </div>
+	
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="snapshot_RBD"> </a>Изготовление моментальных снимков RBD Ceph</h4>
+     </div></div></div>
+     <p>Ceph расширяет полную поддержку моментальных снимков, которые являются временной точкой, копиями только для чтения 
+	 образа RBD (блочных устройств RADOS). Вы можете сохранять состояние образа RBD Ceph создавая снимки и восстанавливая их 
+	 для получения исходных данных.</p>
+     <p>Для проверки функциональности снимков Ceph RBD давайте создадим файл в RBD:</p>
+	  <pre class="screen">
+# echo &quot;Hello Ceph This is snapshot test&quot; &gt; /mnt/cephvol1/snaptest_file</pre>
+	  <pre class="screen">
+[root@ceph-client1 ceph-vol1]# echo &quot;Hello Ceph This is snapshot test&quot; > /mnt/ceph-vol1/snaptest_file
+[root@ceph-client1 ceph-vol1]# ls -l
+total 102404
+-rw-r—-r—-. 1 root root 104857600 Jun 14 21:13 filel
+-rw-r—-r—-. 1 root root        33 Jun 15 03:04 snaptest_file
+[root@ceph-client1 ceph-vol1]#</pre>
+     <p>Теперь в нашей файловой системе есть два файла. Давайте создадим моментальный снимок RBD Ceph воспользовавшись синтаксисом 
+	 <span class="term"><code>snap create &lt;pool-name&gt;/&lt;image-name&gt;@&lt;snap-name&gt;</code></span>
+	 следующим образом:</p> 
+	  <pre class="screen">
+# rbd snap create rbd/ceph-client1-rbd1@snap1</pre>
+     <p>Чтобы вывести список снимков образов используйте синтаксис 
+	 <span class="term"><code>rbd snap ls &lt;pool-name&gt;/&lt;image-name&gt;</code></span>
+	 следующим образом:</p>
+	  <pre class="screen">
+[root@ceph-c1ient1 /]# rbd snap create rbd/ceph-client1-rbd1@snap1
+[root@ceph-c1ient1 /]#
+[root@ceph-c1ient1 /]# rbd snap ls rbd/ceph-client1-rbd1
+SNAPID NAME      SIZE
+     2 snapl 20480 MB
+[root@ceph-c1ient1 /]#</pre>
+     <p>Чтобы проверить функциональность восстановления RBD Ceph давайте удалим в файловой системе файлы:</p>
+	  <pre class="screen">
+# cd /mnt/ceph-vol1
+# rm -f file1 snaptest_file</pre>
+	  <pre class="screen">
+[root@ceph-client1 ceph-vol1]# rm -f file1 snaptest_file
+[root@ceph-client1 ceph-vol1]# ls -l
+total 0
+[root@ceph-client1 ceph-vol1]#</pre>
+     <p>Теперь мы восстановим моментальный снимок RBD Ceph, чтобы получить файлы, которые мы удалили шаг назад.</p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+       <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+       <p>Операция отката перепишет текущую версию образа RBD и все данные версией из моментального снимка.
+	   Вы должны аккуратно пользоваться данной операцией.</p></td></tr></table>
+      </div>
+     <p>Синтаксис для такой операции выгляди так 
+	 <span class="term"><code>rbd snap rollback &gt;pool-name&gt;/&lt;image-name&gt;@&lt;snapname&gt;</code></span>.
+	 Ниже приводится команда:</p>
+	  <pre class="screen">
+# rbd snap rollback rbd/ceph-client1-rbd1@snap1</pre>
+     <p>После выполнения операции отката повторно смонтируйте файловую систему RBD Ceph, чтобы обновить 
+	 состояние файловой системы. Вы должны получить свои удаленные файлы назад.</p>
+	  <pre class="screen">
+# umount /mnt/ceph-vol1
+# mount /dev/rbd0 /mnt/ceph-vol1</pre>
+	  <pre class="screen">
+[root@ceph-client1 ceph-vol1]# rbd snap rollback rbd/ceph-client1-rbd1@snap1
+Rolling back to snapshot: 100% complete...done.
+[root@ceph-client1 ceph-vol1]#
+[root@ceph-client1 ceph-vol1]# ls -l
+total 0
+[root@ceph-client1 ceph-vol1]#
+[root@ceph-client1 ceph-vol1]# cd /
+[root@ceph-client1 /]#
+[root@ceph-client1 /]# umount /mnt/ceph-vol1
+[root@ceph-client1 /]#
+[root@ceph-client1 /]# mount /dev/rbdO /mnt/ceph-vol1
+[root@ceph-client1 /]# cd /mnt/ceph-voll/
+[root@ceph-client1 ceph-voll]# ls -l
+total 102404
+-rw-r-—r-—. 1 root root 104857600 Jun 14 21:13 file1
+-rw-r--r--. 1 root root        33 Jun 15 03:04 snaptest_file
+[root@ceph-client1 ceph-vol1]#</pre>
+     <p>Если вам больше не нужны снимки, вы можете удалить определенные снимки используя синтаксис
+	 <span class="term"><code>rbd snap rm &lt;pool-name&gt;/&lt;image-name&gt;@&lt;snap-name&gt;</code>.</p>
+	  <pre class="screen">
+# rbd snap rm rbd/ceph-client1-rbd1@snap1</pre>
+     <p>Если у вас есть множество снимков образов RBD и вы хотите удалить их все в одной команде, 
+	 вы можете воспользоваться подкомандой <span class="term"><code>purge</code>.</p>
+     <p>Ее синтаксис выглядит так <span class="term"><code>rbd snap purge &lt;pool-name&gt;/&lt;image-name&gt;</code></span>.
+	 Следующий пример удаляет все снимки одной командой:</p>
+	  <pre class="screen">
+# rbd snap purge rbd/ceph-client1-rbd1</pre>
+     <p>Синтаксис <span class="term"><code>rbd rm &lt;RBD_image_name&gt; -p &lt;Image_pool_name&gt;</code></span> 
+	 используется для удаления одного образа RBD, как показано ниже:</p>
+	  <pre class="screen">
+# rbd rm ceph-client1-rbd1 -p rbd</pre>
+    </div>
+	
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="clone_RBD"> </a>Клонирование RBD Ceph</h4>
+     </div></div></div>
+     <p>Кластер хранения Ceph способен создавать клоны копируемые-при-записи (<span class="term">COW, Copy-on-write</span>)
+	 из снимков RBD. Это также известно в Ceph как разделение на слои в фиксированные моменты времени (snapshot layering).
+	 Такое свойство разделения на уровни позволяет клиентам создавать множество клонов экземпляра RBD Ceph. Это свойство 
+	 очень полезно для облачных платформ и платформ виртуализации, таких как OpenStack, CloudStack и Qemu/KVM. Эти платформы
+	 обычно защищают образы RBD Ceph, содержащие образы OS/VM в виде моментальных снимков. Позже эти моментальные снимки 
+	 клонируются много раз чтобы раскрутить новые виртуальные машины/ экземпляры. Моментальные снимки являются доступными 
+	 только на чтение, однако клоны COW полностью доступны на запись, это свойство Ceph обеспечивает замечательную гибкость 
+	 и чрезвычайно полезно для облачных платформ. Следующий рисунок показывает взаимосвязь между блочным устройством RADOS, 
+	 моментальным снимком RBD и COW клоном снимка. В последующих главах этой книги мы обсудим более детально клоны COW для 
+	 порождения экземпляров OpenStack.</p>
+     <div class="informalfigure"><div class="mediaobject">
+       <img src="figures/Fig0615.jpg"/></div><br />
+     </div>
+     <p>Каждый клонированный образ (образ- потомок) сохраняет ссылки своего родительского образа для чтения данных образа.
+	 Следовательно, родительский снимок должен быть защищен перед тем, как он может быть использован для клонирования.
+	 Во время записи данных COW-клонируемых образов они сохраняют новые ссылки данных на себя. COW-клонируемые образы 
+	 настолько же хороши, насколько хороши RBD.</p>
+     <p>Они достаточно гибки, подобны RBD, т.е. они доступны на запись, обладают изменяемым размером, могут создавать 
+	 новые снимки и могут клонироваться дальше.</p>
+     <p>Тип образа RBD определяет поддерживаемые им свойства. Образы RBD в Ceph имеют два типа: format-1 и format-2. 
+	 Свойства снимков RBD доступны доступны и для образов RBD format-1, и для образов RBD format-2. Однако, свойства 
+	 разделения на уровни, т.е. возможность COW клонирования доступна только для образов RBD с format-2. Format-1
+	 является форматом по умолчанию образов RBD.</p>
+     <p>Для демонстрационных целей мы сначала создадим образ RBD format-2, создадим его снимок, защитим этот снимок и, 
+	 наконец, создадим его COW клоны:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте format-2 образ RBD:</p>
+	  <pre class="screen">
+# rbd create ceph-client1-rbd2 --size 10240 --image-format 2</pre>
+	  <pre class="screen">
+[root@ceph-node1 ~]# rbd create ceph-client1-rbd2 --size 10240 --image-format 2
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# rbd --image ceph-client1-rbd2 info
+rbd image 'ceph-clientl-rbd2':
+        size 10240 MB in 2560 objects
+        order 22 (4096 kB objects)
+        block_name_prefix: rbd_data.20bd2ae8944a
+        format: 2
+        features: layering
+[root@ceph-node1 ~]#</pre>
+     </li><li class="listitem">
+      <p>Создайте снимок образа RBD</p>
+	  <pre class="screen">
+# rbd snap create rbd/ceph-client1-rbd2@snapshot_for_clone</pre>
+     </li><li class="listitem">
+      <p>Чтобы создать COW клон защитите снимок. Это важный шаг; мы должны защитить снимок, поскольку если снимок будет 
+	  удален, все присоединенные COW клоны будут разрушены:</p>
+	  <pre class="screen">
+# rbd snap protect rbd/ceph-client1-rbd2@snapshot_for_clone</pre>
+     </li><li class="listitem">
+      <p>Клонируемому снимку требуются имена родительского пула, образа RBD и моментального снимка.
+	  Для потомка требуются имена пула и образа RBD.</p>
+      <p>Синтаксис этого таков <span class="term"><code>rbd clone &lt;pool-name&gt;/&lt;parent-image&gt;@&lt;snapname&gt; &lt;pool-name&gt;/&lt;child-image-name&gt;</code></span>
+	  Используемая команда следующая:</p>
+	  <pre class="screen">
+# rbd clone rbd/ceph-client1-rbd2@snapshot_for_clone rbd/cephclient1-rbd3</pre>
+     </li><li class="listitem">
+      <p>Создание клона является быстрым процессом. Когда он закончится, проверьте информацию нового образа. Вы увидите, что 
+	  высветятся информация о его родительских пуле, образе и снимке.</p>
+	  <pre class="screen">
+# rbd --pool rbd --image ceph-client1-rbd3 info</pre>
+	  <pre class="screen">
+[root@ceph-node1 ~]# rbd clone rbd/ceph-client1-rbd2@snapshot_for_clone rbd/ceph-client1-rbd3
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# rbd --pool rbd --image ceph-client1-rbd3 info
+rbd image 'ceph-client1-rbd3':
+        size 10240 MB in 2560 objects
+        order 22 (4096 kB objects)
+        block_name_prefix: rbd_data.20c32eb141f2
+        format: 2
+        features: layering
+        parent: rbd/ceph-client1-rbd2@snapshot_for_clone
+overlap: 10240 MB
+[root@ceph-node1 ~]#</pre>
+     </li>
+     </ol>
+     </div>
+     <p>На данный момент у вас есть образ RBD, который зависит от его родительского снимка образа. Чтобы сделать этот 
+	 клонированный образ RBD независимым от его родителя, нам нужно выровнять (flatten) образ, что включает в себя копирование данных из 
+	 родительского снимка в снимок потомка. Время, необходимое для выполнения процесса выравнивания, зависит от размера данных, 
+	 присутствующих в родительском моментальном снимке. Когда процесс выравнивания завершен, больше не существует зависимости между 
+	 клонированным образом RBD и породившим его снимком. Давайте выполним процесс выравнивания практически:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Для начала процесса выравнивания воспользуйтесь следующей командой:</p>
+	   <pre class="screen">
+# rbd flatten rbd/ceph-client1-rbd3</pre>
+       <p>После завершения процесса выравнивания, если вы проверите сведения об образе, вы убедитесь, что имя 
+	   родительского образа/снимка удалено, что делает клонированный образ независимым.</p>
+	   <pre class="screen">
+[root@ceph-node1 ~]# rbd flatten rbd/ceph-client1-rbd3
+Image f1atten: 100% complete...done.
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# rbd -—pool rbd -—image ceph-client1-rbd3 info
+rbd image 'ceph-client1-rbd3':
+        size 10240 MB in 2560 objects
+        order 22 (4096 kB objects)
+        block_name_prefix: rbd_data.20c32eb141f2
+        format: 2
+        features: layering
+[root@ceph-node1 ~]#</pre>
+     </li><li class="listitem">
+       <p>Также вы можете удалить снимок родительского образа, если он вам больше не нужен. Перед удалением 
+	   снимка вы сначала должны снять с него защиту с использованием следующей команды:</p>
+	   <pre class="screen">
+# rbd snap unprotect rbd/ceph-client1-rbd2@snapshot_for_clone</pre>
+     </li><li class="listitem">
+       <p>После того, как защита со снимка снята, вы можете удалить его, воспользовавшись следующей командой:</p>
+	   <pre class="screen">
+# rbd snap rm rbd/ceph-client1-rbd2@snapshot_for_clone</pre>
+     </li>
+     </ol>
+     </div>
+    </div>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="fiesystem"> </a>Файловая система Ceph</h3>
+   </div></div></div>
+   <p>Файловая система Ceph, также известна под названием CephFS; это POSIX- совместимая распределенная файловая система, 
+   которая использует Ceph RADOS для хранения данных. Для реализации файловой системы Ceph вам необходимо запустить кластер 
+   хранения Ceph и, по крайней мере, один сервер метаданных Ceph (<span class="term">MDS, Ceph Metadata Server</span>).
+   Для целей демонстрации мы воспользуемся тем же сервером метаданных, который мы развернули в <a class="xref" href="Ch03.html"
+   title="Глава 3. Архитектура и компоненты Ceph"><em>Главе 3. Архитектура и компоненты Ceph</em></a>. Мы можем использовать 
+   файловую систему Ceph двумя способами: путем монтирования CepFS с применением родного драйвера ядра и при помощи 
+   Ceph FUSE. Мы последовательно рассмотрим оба этих метода.</p>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="kernel_driver_mount"> </a>Монтирование CephFS с применением драйвера ядра</h4>
+     </div></div></div>
+     <p>Ядро Linux 2.6.34 и более поздние версии внутренне поддерживают Ceph. Чтобы использовать CephFS с поддержкой уровня ядра, 
+	 клиенты должны использовать ядро Linux 2.6.34 и выше. Следующие шаги помогут вам провести монтирование CephFS с драйвером 
+	 ядра:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Проверьте версию ядра Linux вашего клиента:</p>
+	   <pre class="screen">
+# uname -r</pre>
+     </li><li class="listitem">
+       <p>Создайте каталог точки монтирования:</p>
+	   <pre class="screen">
+# mkdir /mnt/kernel_cephfs</pre>
+     </li><li class="listitem">
+       <p>Запишите секретный ключ администратора:</p>
+	   <pre class="screen">
+# cat /etc/ceph/ceph.client.admin.keyring</pre>
+     </li><li class="listitem">
+       <p>Смонтируйте CephFS с применением внутреннего вызова монтирования Linux.
+	   Его синтаксис такой 
+	   <span class="term"><code>mount -t ceph &lt;Monitor_IP&gt;:&lt;Monitor_port&gt;:/ &lt;mount_point_name&gt; -o name=admin,secret=&lt;admin_secret_key&gt;</code></span></p>
+	   <pre class="screen">
+# mount -t ceph 192.168.57.101:6789:/ /mnt/kernel_cephfs -o name=admin,secret=AQAinItT8Ip9AhAAS93FrXLrrnVp8/sQhjvTIg==</pre>
+	   <pre class="screen">
+[root@ceph-client1 ceph]# cat ceph.client.admin.keyring
+[client.admin]
+        key = AQAinItT8Ip9AhAAs93FrXLrrnVp8/SQhjvTIg==
+        auid = 0
+        caps mds = “allow"
+        caps mon = "allow *"
+        caps osd = "allow *"
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]# mount -t ceph 192.168.57.101:6789:/ /mnt/kernel_cephfs o name=admin,secret=AQAinItT8Ip9AhAAs93FrXLrrnVp8/SQhjvTIg==
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]# df -h
+Filesystem            Size  Used Avail use% Mounted on /dev/mapper/vg_cephnode1-lv_root
+                      7.3G  2.2G  4.8G  31% /
+tmpfs                 499M  112k  499M   1% /dev/shm
+/dev/sdal             477M   52M  396M  12% /boot
+/dev/rbdO              20G  134M   20G   1% /mnt/ceph-vol1
+192.168.57.101:6789:/
+                       81G  424M   81G   1% /mnt/kernel_cephfs
+[root@ceph-client1 ceph]#</pre>
+     </li><li class="listitem">
+       <p>Чтобы выполнить монтирование CephFS более безопасно, избегайте видимости ключа безопасности администратора в истории bash.
+	   Сохраняйте кольцо ключей администратора в виде обычного текста в отдельном файле и используйте этот новый файл в качестве 
+	   параметра монтирования для ключа безопасности. Воспользуйтесь следующей командой:</p>
+	   <pre class="screen">
+# echo AQAinItT8Ip9AhAAS93FrXLrrnVp8/sQhjvTIg== &gt; /etc/ceph/adminkey
+# mount -t ceph 192.168.57.101:6789:/ /mnt/kernel_cephfs -o name=admin,secretfile=/etc/ceph/adminkey</pre>
+	   <pre class="screen">
+[root@ceph-client1 /]# umount /mnt/kernel_cephfs/
+[root@ceph-client1 /]#
+[root@ceph-client1 /]#
+[root@ceph-client1 /]# echo AQAinItT8Ip9AhAAs93FrXLrrnVp8/SQhjvTIg== > /etc/ceph/adminkey
+[root@ceph-client1 /]#
+[root@ceph-client1 /]# mount -t ceph 192.168.57.101:6789:/ /mnt/kernel_cephfs -o name=admin,secretfile=/etc/ceph/adminkey
+[root@ceph-client1 /]# df -h /mnt/kernel_cephfs
+Filesystem            Size Used Avail Use% Mounted on
+192.168.57.101:6789:/
+                       81G 424M   81G   1% /mnt/kernel_cephfs
+[root@ceph-client1 /]#</pre>
+     </li><li class="listitem">
+       <p>Чтобы смонтировать CephFS в вашу таблицу файловой системы добавьте следующие строки в файл <span class="term"><code>/etc/fstab</code></span> 
+	   клиента. Синтаксис для этого следующий 
+	   <span class="term"><code>&lt;Mon_ipaddress&gt;:&lt;monitor_port&gt;:/ &lt;mount_point&gt; 
+	   &lt;filesystemname&gt; [name=username,secret=secretkey|secretfile=/path/to/secretfile],[{mount.options}]</code></span>.
+	   Ниже приводится пример команды:</p>
+	   <pre class="screen">
+192.168.57.101:6789:/ /mnt/kernel_ceph ceph name=admin,secretfile=/etc/ceph/adminkey,noatime 0 2</pre>
+     </li><li class="listitem">
+       <p>Размонтируйте CephFS и смонтируйте повторно:</p>
+	   <pre class="screen">
+# umount /mnt/kernel_cephfs
+# mount /mnt/kernel_cephfs</pre>
+	   <pre class="screen">
+[root@ceph-client1 /]# cat /etc/fstab | grep -i cephfs
+# CephFS Entry
+192.168.57.101:6789:/ /mnt/kernel_cephfs ceph name=admin,secretfile=/etc/ceph/adminkey,noatime       0       2
+[root@ceph-client1 /]#
+[root@ceph-client1 /]# mount mnt/kernel_cephfs
+[root@ceph-client1 /]# df -h mnt/kernel_cephfs
+Filesystem            Size Used Avail Use% Mounted on
+192.168.57.101:6789:/
+                       81G 424M   81G   2% /mnt/kernel_cephfs
+[root@ceph-client1 /]#</pre>
+     </li>
+     </ol>
+     </div>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FUSE_mount"> </a>Монтирование CephFS в качестве FUSE</h4>
+     </div></div></div>
+     <p>Файловая система Ceph внутренне поддерживается ядром Linux начиная с версии 2.6.34 и выше. Если ваш хост 
+	 работает с ядром более ранних версий, вы можете воспользоваться клиентом файловой системы в пространстве пользователя 
+	 (<span class="term">FUSE, Filesystem in User Space</span>) для Ceph для монтирования фаловой системы Ceph:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Поскольку у нас уже существует добавленный ранее в этой главе репозиторий Ceph yum, давайте установим Ceph FUSE на 
+	  клиентской машине:</p>
+	   <pre class="screen">
+# yum install ceph-fuse</pre>
+     </li><li class="listitem">
+      <p>Убедитесь, что клиент уже имеет файлы настройки Ceph и кольца ключей перед выполнением монтирования. 
+	  Создайте каталог для монтирования:</p>
+	   <pre class="screen">
+# mkdir /mnt/cephfs</pre>
+     </li><li class="listitem">
+      <p>Смонтируйте CephFS с использованием клиента Ceph FUSE. Синтаксис для этого такой 
+	   <span class="term"><code> ceph-fuse -m &lt;Monitor_IP:Monitor_Port_Number&gt; &lt;mount_point_name&gt;</code>.
+	   Используйте следующую команду:</p>
+	   <pre class="screen">
+# ceph-fuse -m 192.168.57.101:6789 /mnt/cephfs</pre>
+	   <pre class="screen">
+[root@ceph-client1 ~]# ceph-fuse -m 192.168.57.101:6789 /mnt/cephfs
+ceph-fuse[2506]: starting ceph client
+ceph-fuse[2506]: starting fuse
+[root@ceph-client1 ~]#
+[root@ceph-client1 ~]# df -h /mnt/cephfs
+Filesystem            Size Used Avail Use% Mounted on
+ceph-fuse              81G 428M   81G   1% /mnt/cephfs
+[root@ceph-client1 ~]#</pre>
+     </li><li class="listitem">
+      <p>Чтобы смонтировать CephFS в таблицу вашей файловой системы так, чтобы CephFS автоматически монтировалась при запуске, 
+	   добавьте следующие строки в файл <span class="term"><code>/etc/fstab</code></span> клиента:</p>
+	   <pre class="screen">
+#Ceph ID #mountpoint #Type #Options
+id=admin /mnt/cephfs fuse.ceph defaults 0 0</pre>
+     </li><li class="listitem">
+      <p>Размонтируйте CephFS и смонтируйте повторно:</p>
+	   <pre class="screen">
+# umount /mnt/cephfs
+# mount /mnt/cephfs</pre>
+     </li>
+     </ol>
+     </div>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Object_storage"> </a>Хранение объектов с применением шлюза Ceph RADOS</h3>
+   </div></div></div>
+   <p>Хранилище объектов, как это следует из названия, управляет данными в виде объектов. Каждый объект хранит данные, метаданные 
+   и уникальный идентификатор. Хранилище объектов не может быть доступно непосредственно из операционной системы в виде локальной
+   или удаленной файловой системы. К нему можно осуществлять доступ через уровень приложений API. Ceph предоставляет интерфейс 
+   хранилища объектов, именуемый шлюзом RADOS {Безотказного автономного распределенного хранилища объектов - Reliable Autonomic 
+   Distributed Object Store}, который был построен поверх уровня Ceph RADOS. Шлюз RADOS предоставляет приложениям совместимые с 
+   RESTful S3- или Swift- интерфейсами API для хранения данных в форме объектов в кластере Ceph.</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0623.jpg"/></div><br />
+      </div>
+   <p>В промышленной среде, если вы имеете дело с огромным объемом работы по хранению объектов Ceph, вы должны настроить шлюз RADOS 
+   на выделенной машине или вы можете рассмотреть возможность использования любого из узлов мониторов в качестве шлюза RADOS.
+   Теперь выполним настройку основного шлюза RADOS для использования кластера хранения Ceph в качестве хранилища объектов.</p>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="setup_VM"> </a>Настройка виртуальной машины</h4>
+     </div></div></div>
+     <p>При обычной настройке на базе Ceph, шлюз RADOS настраивается на машине, отличной от MON и OSD. Однако, если вы 
+	 ограничены в аппаратных средствах, вы можете использовать машины MON для настройки RGW. В приводимом примере мы создадим 
+	 выделенную виртуальную машину для Ceph RGW:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создадим новую виртуальную машину VirtualBox для шлюза RADOS:</p>
+	  <pre class="screen">
+# VboxManage createvm --name ceph-rgw --ostype RedHat_64 --register
+# VBoxManage modifyvm ceph-rgw --memory 1024 --nic1 nat --nic2 hostonly --hostonlyadapter2 vboxnet1
+# VBoxManage storagectl ceph-rgw --name "IDE Controller" --add ide --controller PIIX4 --hostiocache on --bootable on
+# VBoxManage storageattach ceph-rgw --storagectl "IDE Controller" --type dvddrive --port 0 --device 0 --medium /downloads/CentOS-6.4-x86_64-bin-DVD1.iso
+# VBoxManage storagectl ceph-rgw --name "SATA Controller" --add sata --controller IntelAHCI --hostiocache on --bootable on
+# VBoxManage createhd --filename OS-ceph-rgw.vdi --size 10240
+# VBoxManage storageattach ceph-rgw --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium OS-cephrgw.vdi
+# VBoxManage startvm ceph-rgw --type gui</pre>
+     </li><li class="listitem">
+      <p>После того, как виртуальная машина создана и запущена, установите операционную систему CentOS следуя документации 
+	  по установке операционной системы доступной на <a class="xref" 
+	  href="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/index.html"
+	  title="Red Hat Enterprise Linux 6 Installation Guide">
+	  https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/index.html</a>.
+	  При установке присвойте имя хоста <span class="term"><code>ceph-client1</code></span></p>
+     </li><li class="listitem">
+      <p>Поскольку у вас есть успешно установленная операционная система, отредактируйте сетевые настройки машины и перезапустите 
+	  сетевые службы:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	    <p>Отредактируйте файл <span class="term"><code>/etc/sysconfig/network-scripts/ifcfg-eth0</code></span>, добавив в него:</p>
+	    <pre class="screen"><code>
+		ONBOOT=yes
+		BOOTPROTO=dhcp</code></pre>
+	   </li>
+	   <li class="listitem">
+	    <p>Отредактируйте файл <span class="term"><code>/etc/sysconfig/network-scripts/ifcfg-eth1</code></span>, добавив в него:</p>
+	    <pre class="screen"><code>
+		ONBOOT=yes
+		BOOTPROTO=static
+		IPADDR=192.168.57.110
+		NETMASK=255.255.255.0</code></pre>
+	   </li>
+	   <li class="listitem">
+	    <p>Отредактируйте файл <span class="term"><code>/etc/hosts</code></span>, добавив в него:</p>
+	    <pre class="screen"><code>
+		192.168.57.101 ceph-node1
+		192.168.57.102 ceph-node2
+		192.168.57.103 ceph-node3
+		192.168.57.200 ceph-client1
+		192.168.57.110 ceph-rgw</code></pre>
+	   </li>
+      </ul>
+      </div>
+     </li>
+     </ol>
+     </div>
+    </div>
+	
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="install_gateway"> </a>Установка шлюза RADOS</h4>
+     </div></div></div>
+     <p>В последнем разделе мы обсудили настройку виртуальной машины для RGW. В данном разделе мы изучим 
+	 установку и настройку RGW:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Для объектного хранилища Ceph необходимы Apache и FasCGI; также рекомендуется оптимизированные под 100 (continue) 
+	  версии Apache и FasCGI, предоставляемые сообществом Ceph</p>
+      <p>Выполните следующие команды на узле шлюза RADOS <span class="term"><code>ceph-rgw</code></span>, 
+	  если не предписано другое. Создайте файл репозитория ceph-apache <span class="term"><code>cephapache.repo</code></span> для 
+	  YUM в каталоге  <span class="term"><code>/etc/yum.repos.d</code></span>:</p>
+	    <pre class="screen">
+# vim /etc/yum.repos.d/ceph-apache.repo
+## replace {distro} with OS distribution type , ex centos6 , rhel6 etc. You can grab this code at publishers website.
+
+ [apache2-ceph-noarch]
+name=Apache noarch packages for Ceph
+baseurl=http://gitbuilder.ceph.com/apache2-rpm-{distro}-x86_64-basic/ref/master
+enabled=1
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+
+[apache2-ceph-source]
+name=Apache source packages for Ceph
+baseurl=http://gitbuilder.ceph.com/apache2-rpm-{distro}-x86_64-basic/ref/master
+enabled=0
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc</pre>
+	    <pre class="screen">
+[root@ceph-rgw ~]# cat /etc/yum.repos.d/ceph-apache.repo
+[apache2-ceph-noarch]
+name=Apache noarch packages for Ceph
+baseurl=http://gitbuilder.ceph.com/apache2-rpm-centos6-x86_64-basic/ref/master
+enabled=l
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+
+[apache2-ceph-source]
+name=Apache source packages for Ceph
+baseurl=http://gitbuilder.ceph.com/apache2-rpm-centos6-x86_64-basic/ref/master
+enabled=0
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+[root@ceph-rgw ~]#</pre>
+     </li><li class="listitem">
+      <p>В каталоге <span class="term"><code>/etc/yum.repos.d</code></span> создайте файл <span class="term"><code>ceph-fastcgi.repo</code></span>:</p>
+	    <pre class="screen">
+# vim /etc/yum.repos.d/ceph-fastcgi.repo
+## replace {distro}with OS distribution type , ex centos6 , rhel6 etc. You can grab this code at publishers website.
+
+[fastcgi-ceph-basearch]
+name=FastCGI basearch packages for Ceph
+baseurl=http://gitbuilder.ceph.com/mod_fastcgi-rpm-{distro}-x86_64-basic/ref/master
+enabled=1
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+
+[fastcgi-ceph-noarch]
+name=FastCGI noarch packages for Ceph
+baseurl=http://gitbuilder.ceph.com/mod_fastcgi-rpm-{distro}-x86_64-basic/ref/master
+enabled=1
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+
+[fastcgi-ceph-source]
+name=FastCGI source packages for Ceph
+baseurl=http://gitbuilder.ceph.com/mod_fastcgi-rpm-{distro}-x86_64-basic/ref/master
+enabled=0
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc</pre>
+	    <pre class="screen">
+[root@ceph-rgw ~]# cat /etc/yum.repos.d/ceph-fastcgi.repo
+[fastcgi-ceph-basearch]
+name=FastCGI basearch packages for Ceph
+baseurl=http://gitbuilder.ceph.com/mod_fastcgi-rpm-centos6-x86_64-basic/ref/master
+enabled=1
+priori ty=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+
+[fastcgi-ceph-noarch]
+name=FastCGI noarch packages for Ceph
+baseurl=http://gitbuilder.ceph.com/mod_fastcgi-rpm-centos6-x86_64-basic/ref/master
+enabled=1
+priority=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+
+[fastcgi-ceph-source]
+name=FastCGI source packages for Ceph
+baseurl=http://gitbuilder.ceph.com/mod_fastcgi-rpm-centos6-x86_64-basic/ref/master
+enabled=0
+priori ty=2
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/autobuild.asc
+[root@ceph-rgw ~]#</pre>
+     </li><li class="listitem">
+      <p>В каталоге <span class="term"><code>/etc/yum.repos.d</code></span> создайте файл <span class="term"><code>ceph.repo</code></span>:</p>
+	    <pre class="screen">
+# vim /etc/yum.repos.d/ceph.repo
+## You can grab this code at publishers website.
+
+[Ceph]
+name=Ceph packages for $basearch baseurl=http://ceph.com/rpm-firefly/el6/$basearch
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/release.asc
+
+[Ceph-noarch]
+name=Ceph noarch packages
+baseurl=http://ceph.com/rpm-firefly/el6/noarch
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/release.asc
+
+[ceph-source]
+name=Ceph source packages
+baseurl=http://ceph.com/rpm-firefly/el6/SRPMS
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=https://ceph.com/git/?p=ceph.git;a=blob_plain;f=keys/release.asc</pre>
+     </li><li class="listitem">
+      <p>Установите yum-plugin-priorities</p>
+	    <pre class="screen">
+# yum install yum-plugin-priorities</pre>
+     </li><li class="listitem">
+      <p>Установите пакеты apache (httpd), fastcgi (mod_fastcgi), ceph-radosgw и ceph:</p>
+	    <pre class="screen">
+# yum install httpd mod_fastcgi ceph-radosgw ceph</pre>
+     </li><li class="listitem">
+      <p>Для хоста <span class="term"><code>ceph-rgw</code></span> установите FQDN:</p>
+	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+        <p>Отредактируйте <span class="term"><code>/etc/hosts</code></span> и добавьте IP, FQDN и имя хоста в 
+		формате <span class="term"><code># &lt;rgw_ip_addr&gt; &lt;FQDN&gt; &lt;Hostname&gt; </code></span>:</p>
+	    <pre class="screen">
+192.168.57.110 ceph-rgw.objectstore.com ceph-rgw</pre>
+	   </li>
+	   <li class="listitem"> 
+        <p>Отредактируйте <span class="term"><code>/etc/sysconfig/network</code></span> и установите значение 
+		<span class="term"><code>HOSTNAME</code></span> равным <span class="term"><code>FQDN</code></span>:</p>
+	    <pre class="screen">
+HOSTNAME=ceph-rgw.objectstore.com</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Проверьте имя хоста и FQDN:</p>
+	    <pre class="screen">
+# hostname
+# hostname -f</pre>
+	    <pre class="screen">
+[root@ceph-rgw ~]# cat /etc/hosts | grep rgw
+192.168.57.110 ceph-rgw.objectstore.com
+[root@ceph-rgw -]#
+[root@ceph-rgw ~]# cat /etc/sysconfig/network | grep rgw
+HOSTNAME=ceph-rgw.objectstore.com
+[root@ceph-rgw -]#
+[root@ceph-rgw -]# hostname
+ceph-rgw.objectstore.com
+[root@ceph-rgw -]#
+[root@ceph-rgw -]# hostname -f
+ceph-rgw.objectstore.com
+[root@ceph-rgw ~]#</pre>
+	   </li>
+      </ul>
+      </div>
+     </li>
+     </ol>
+     </div>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_gateway"> </a>Настройка шлюза RADOS</h4>
+     </div></div></div>
+     <p></p>
+
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Настройте Apache, отредактировав <span class="term"><code>/etc/httpd/conf/httpd.conf</code></span>:</p>
+	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+        <p>Установите  <span class="term"><code>ServerName &lt;FQDN&gt;</code></span></p>
+	   </li>
+	   <li class="listitem">
+        <p>Убедитесь, что следующая строка присутствует и не заключена в комментарий:</p>
+	    <pre class="screen">
+LoadModule rewrite_module modules/mod_rewrite.so</pre>
+	    <pre class="screen">
+[root@ceph-rgw ~]# cat /etc/httpd/conf/httpd.conf | egrep &quot;rgw|rewrite&quot;
+LoadModule rewrite_module modules/mod_rewrite.so
+ServerName ceph-rgw.objectstore.com
+[root@ceph-rgw ~]#</pre>
+	   </li>
+      </ul>
+      </div>
+     </li><li class="listitem">
+      <p>Настройте FastCGI, отредактировав <span class="term"><code>/etc/httpd/conf.d/fastcgi.conf</code></span>:</p>
+	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+        <p>Убедитесь, что модули <span class="term"><code>FastCGI</code></span> доступны:</p>
+	    <pre class="screen">
+LoadModule fastcgi_module modules/mod_fastcgi.so</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Выключите <span class="term"><code>FastCgiWrapper</code></span></p>
+	    <pre class="screen">
+[root@ceph-rgw ~]# cat /etc/httpd/conf.d/fastcgi.conf | egrep -i &quot;FastCgiWrapper|fastcgi_module&quot;
+LoadModule fastcgi_module modules/mod_fastcgi.so
+FastCgiWrapper off
+[root@ceph-rgw ~]#</pre>
+      </ul>
+      </div>
+     </li><li class="listitem">
+      <p>Создайте сценарий шлюза объектов Ceph с приводимым ниже содержимым, измените владельца и разрешите допуск на выполнение. 
+	  Вы можете отметить изменения авторской версии файла <span class="term"><code>s3gw.fcgi</code></span> с примером 
+	  данного руководства:</p>
+	    <pre class="screen">
+# vim /var/www/html/s3gw.fcgi
+#!/bin/sh
+exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.gateway
+
+# chmod +x /var/www/html/s3gw.fcgi
+# chown apache:apache /var/www/html/s3gw.fcgi</pre>
+	    <pre class="screen">
+[root@ceph-rgw /]# cat /var/www/html/s3gw.fcgi
+#!/bin/sh
+exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.gateway
+[root@ceph-rgw /]#
+[root@ceph-rgw /]# chmod +x /var/www/html/s3gw.fcgi
+[root@ceph-rgw /]# chown apache:apache /var/www/html/s3gw.fcgi
+[root@ceph-rgw /]#</pre>
+     </li><li class="listitem">
+      <p>Создайте файл <span class="term"><code>rgw.conf</code></span> в каталоге <span class="term"><code>/etc/httpd/conf.d</code></span>
+	  с приводимым ниже содержимым. Замените <span class="term"><code>{fqdn}</code></span> на fqdn сервера 
+	  (<span class="term"><code>hostname -f</code></span>) и <span class="term"><code>{email.address}</code></span> на адрес e-mail 
+	  администратора. Вы можете отметить  изменения авторской версии файла <span class="term"><code>rgw.conf</code></span> с примером 
+	  данного руководства:</p>
+	    <pre class="screen">
+FastCgiExternalServer /var/www/html/s3gw.fcgi -socket /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock
+&lt;VirtualHost *:80&gt;
+	ServerName {fqdn}
+	&lt;!--Remove the comment. Add a server alias with *.{fqdn} for S3 subdomains--&gt;
+	&lt;!--ServerAlias *.{fqdn}--&gt;
+	ServerAdmin {email.address}
+	DocumentRoot /var/www/html
+	RewriteEngine On
+	RewriteRule ^/(.*) /s3gw.fcgi?%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+	&lt;IfModule mod_fastcgi.c&gt;
+		&lt;Directory /var/www/html&gt;
+			Options +ExecCGI
+			AllowOverride All
+			SetHandler fastcgi-script
+			Order allow,deny
+			Allow from all
+			AuthBasicAuthoritative Off
+		&lt;/Directory&gt;
+	&lt;/IfModule&gt;
+	AllowEncodedSlashes On
+	ErrorLog /var/log/httpd/error.log
+	CustomLog /var/log/httpd/access.log combined
+	ServerSignature Off
+&lt;/VirtualHost&gt;
+# vim /etc/httpd/conf.d/rgw.conf</pre>
+	    <pre class="screen">
+[root@ceph-rgw /]# cat /etc/httpd/conf.d/rgw.conf
+FastCgiExternalServer /var/www/html/s3gw.fcgi -socket /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock
+&lt;VirtualHost *:80&gt;
+        ServerName ceph-rgw.objectstore.com
+        ServerAlias *.ceph-rgw.objectstore.com
+        ServerAdmin test@ceph-rgw.objectstore.com
+        DocumentRoot /var/www/html
+        RewriteEngine On
+        RewriteRule ^/(.*) /s3gw.fcgi?%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+        &lt;IfModule mod_fastcgi.c>
+        &lt;Directory /var/www/html&gt;
+                        Options +ExecCGI
+                        AllowOverride All
+                        SetHandler fastcgi-script
+                        Order allow,deny
+                        Allow from all
+                        AuthBasicAuthoritative Off
+                &lt;/Directory&gt;
+        &lt;/IfModule&gt;
+        AllowEncodedSlashes On
+        ErrorLog /var/log/httpd/error.log
+        CustomLog /var/log/httpd/access.log combined
+        ServerSignature Off
+&lt;/VirtualHost&gt;
+[root@ceph-rgw /]#</pre>
+     </li><li class="listitem">
+      <p>Создайте пользователя шлюза RADOS и кольцо ключей для Ceph, зарегистрируйтесь на одном из узлов монитора Ceph и выполните 
+	  следующее:</p>
+	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+        <p>Создайте кольцо ключей:</p>
+	    <pre class="screen">
+	# ceph-authtool --create-keyring /etc/ceph/ceph.client.radosgw.keyring
+	# chmod +r /etc/ceph/ceph.client.radosgw.keyring</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Создайте пользователя шлюза и ключ для экземпляра шлюза RADOS; имя нашего экземпляра шлюза RADOS 
+		<span class="term"><code>gateway</code></span>:</p>
+	    <pre class="screen">
+	# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.gateway --gen-key</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Добавьте возможности для ключа:</p>
+	    <pre class="screen">
+	# ceph-authtool -n client.radosgw.gateway --cap osd 'allow rwx' --cap mon 'allow rw' /etc/ceph/ceph.client.radosgw.keyring</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Добавьте ключ в кластер Ceph:</p>
+	    <pre class="screen">
+	# ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.gateway -i /etc/ceph/ceph.client.radosgw.keyring</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Распространите ключ на узел шлюза Ceph RADOS:</p>
+	    <pre class="screen">
+	# scp /etc/ceph/ceph.client.radosgw.keyring ceph-rgw:/etc/ceph/ceph.client.radosgw.keyring</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Создайте пул для шлюза RADOS:</p>
+	    <pre class="screen">
+	# ceph osd pool create .rgw 128 128</pre>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph-authtool -—create-keyring/etc/ceph/ceph.client.radosgw.keyring
+creating /etc/ceph/ceph.client.radosgw.keyring
+[root@ceph-node1 ~]# chmod +r /etc/ceph/ceph.client.radosgw.keyring
+[root@ceph-node1 ~]# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.gateway --gen-key
+[root@ceph-node1 ~]# ceph-authtool -n client.radosgw.gateway --cap osd 'allow rwx' --cap mon 'allow rw' /etc/ceph/ceph.client.radosgw.keyring
+[root@ceph-node1 ~]# ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.gateway -i /etc/ceph/ceph.client.radosgw.keyring
+added key for client.radosgw.gateway
+[root@ceph-node1 ~]# scp /etc/ceph/ceph.client.radosgw.keyring ceph-rgw:/etc/ceph/ceph.client.radosgw.keyring
+ceph.client.radosgw.keyring                                                                                  100%  120     0.1KB/s   00:00
+[root@ceph-node1 ~]#</pre>
+	   </li>
+      </ul>
+      </div>
+     </li><li class="listitem">
+      <p>Создайте каталог данных шлюзаCeph RADOS:</p>
+	    <pre class="screen">
+	# mkdir -p /var/lib/ceph/radosgw/ceph-radosgw.gateway</pre>
+     </li><li class="listitem">
+      <p>Добавьте настройку шлюза в Ceph, добавьте следующие настройки в файл мониторов Ceph <span class="term"><code>ceph.conf</code></span> 
+	  и переместите этот файл <span class="term"><code>ceph.conf</code></span> на узел шлюза RADOS. Убедитесь, что имя хоста 
+	  является именем хоста шлюза RADOS и при этом оно не в виде FQDN:</p>
+	    <pre class="screen">
+	[client.radosgw.gateway]
+	host = ceph-rgw
+	keyring = /etc/ceph/ceph.client.radosgw.keyring
+	rgw socket path = /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock
+	log file = /var/log/ceph/client.radosgw.gateway.log
+	rgw dns name = ceph-rgw.objectstore.com ## This would be used
+	for S3 API
+	rgw print continue = false
+	# scp /etc/ceph/ceph.conf ceph-rgw:/etc/ceph/ceph.conf</pre>
+	    <pre class="screen">
+[root@ceph-node1 ceph]# tail -6 /etc/ceph/ceph.conf
+[client.radosgw.gateway]
+host = ceph-rgw.objectstore.com
+keyring = /etc/ceph/ceph.client.radosgw.keyring
+rgw socket path = /var/run/ceph/ceph.radosgw.gateway.fastegi.sock
+log file = /var/log/ceph/client.radosgw.gateway.log
+rgw print continue = false
+[root@ceph-node1 ceph]#
+[root@ceph-node1 ceph]# scp /etc/ceph/ceph.conf ceph-rgw:/etc/ceph/ceph.conf
+ceph.conf                                                                                                  100%  828     0.8KB/S   00:00
+[root@ceph-node1 ceph]#</pre>
+     </li><li class="listitem">
+      <p>Скорректируйте владельца и резрешения на узле шлюза RADOS для <span class="term"><code>/var/log/httpd</code></span>, 
+	  <span class="term"><code>/var/run/ceph</code></span> и <span class="term"><code>/var/log/ceph</code></span>.
+	  Установите <span class="term"><code>SELinux</code></span> в <span class="term"><code>Permissive</code></span>:</p>
+	    <pre class="screen">
+	# chown apache:apache /var/log/httpd
+	# chown apache:apache /var/run/ceph
+	# chown apache:apache /var/log/ceph
+	# setenforce 0</pre>
+     </li><li class="listitem">
+      <p>Запустите службы Apache и шлюза Ceph RADOS. Если будут выданы какие-то предупреждения, в этом месте их можно 
+	  игнорировать:</p>
+	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+        <p>Запустите службу Apache</p>
+	    <pre class="screen">
+	# service httpd start</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Запустите службу ceph-radosgw</p>
+	    <pre class="screen">
+	# service ceph-radosgw start</pre>
+	    <pre class="screen">
+[root@ceph-rgw ceph]# service httpd start
+Starting httpd:                                            [ OK ]
+[root@ceph-rgw ceph]# service ceph-radosgw start
+Starting radosgw instance(s)...
+bash: line 0: ulimit: open files: cannot modify limit: Operation not permitted
+2014-06-22 04:04:26.930208 7falb8d45820 -1 WARNING: libcurl doesn't support curl_multi_wait()
+2014-06-22 04:04:26.930369 7falb8d45820 -1 WARNING: cross zone / region transfer performance may be affected
+Starting client.radosgw.gateway...                       [ OK ]
+/usr/bin/radosgw is running.
+[root@ceph-rgw ceph]#</pre>
+	   </li>
+      </ul>
+      </div>
+     </li><li class="listitem">
+      <p>Проверьте настройки:</p>
+	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+        <p>Выполните запрос <span class="term"><code>HTTP GET</code></span> с FQDN radosgw с применением 
+		<span class="term"><code>curl</code></span>:</p>
+	    <pre class="screen">
+	# curl http://ceph-rgw.objectstore.com</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Вы должны получить ответ, аналогичный показанному в следующем фрагменте. Это покажет, что ваша конфигурация 
+		является правильной:</p>
+	    <pre class="screen">
+	&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+	&lt;ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"&gt;
+		&lt;Owner&gt;
+			&lt;ID&gt;anonymous&lt;/ID&gt;
+			&lt;DisplayName&gt;&lt;/DisplayName&gt;
+		&lt;/Owner&gt;&lt;Buckets>&lt;/Buckets&gt;
+	&lt;/ListAllMyBucketsResult&gt;</pre>
+      </ul>
+      </div>
+       </li><li class="listitem">
+	    <p>Проверку также можно сделать, выполнив запрос HTTP в браузере на узле radosgw.</p>
+        <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0634.jpg"/></div><br />
+        </div>
+	   </li>
+     </li>
+     </ol>
+     </div>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_radosgw"> </a>Создание пользователя radosgw</h4>
+     </div></div></div>
+     <p>Нам необходимо создать пользователей шлюза RADOS, чтобы использовать объектное хранилище Ceph. Эти учетные записи 
+	 пользователей будут определяться ключами доступа и безопасности, которые могут использовать клиенты для выполнения 
+	 операций с хранилищем объектов Ceph.</p>
+     <p>Сейчас давайте создадим пользователя шлюза RADOS и осуществим доступ к хранилищу объектов:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Убедимся, что машина шлюза RADOS (<span class="term"><code>ceph-rgw</code></span>) способна осуществлять доступ 
+	  к кластеру Ceph. Скопируем кольцо ключей Ceph на машину шлюза RADOS с узла монитора:</p>
+	    <pre class="screen">
+	# curl http://ceph-rgw.objectstore.com</pre>
+	   </li>
+	   <li class="listitem">
+        <p>Вы должны получить ответ, аналогичный показанному в следующем фрагменте. Это покажет, что ваша конфигурация 
+		является правильной:</p>
+	    <pre class="screen">
+# scp ceph.client.admin.keyring ceph-rgw:/etc/ceph</pre>
+	</li><li class="listitem">
+      <p>Выполним команды кластера Ceph с <span class="term"><code>ceph-rgw</code></span>, чтобы удостовериться, что 
+	  кластер доступен:</p>
+	    <pre class="screen">
+# ceph -s</pre>
+     </li><li class= "listitem">
+      <p>Создадим пользователя шлюза RADOS. Это также породит для данного пользователя <span class="term"><code>access_key</code></span> 
+	  и <span class="term"><code>secret_key</code></span>, которые необходимы для доступа к хранилищу объектов Ceph:</p>
+	    <pre class="screen">
+# radosgw-admin user create --uid=mona --display-name=&quot;Monika Singh&quot; --email=mona@example.com</pre>
+	    <pre class="screen">
+[root@ceph-rgw ~]# radosgw-admin user create —-uid=mona —-display-name=&quot;Monika Singh&quot; —-email=mona@example.com
+{ &quot;user_id&quot;: &quot;mona&quot;,
+  &quot;display_name&quot;: &quot;Monika Singh&quot;,
+  &quot;email&quot;: &quot;mona@example.com&quot;,
+  &quot;suspended&quot;: 0,
+  &quot;max_buckets&quot;: 1000,
+  &quot;auid&quot;: 0,
+  &quot;subusers&quot;: [],
+  &quot;keys&quot;: [
+        { &quot;user&quot;: &quot;mona&quot;,
+           &quot;access_key&quot;: &quot;PZM9Y0JSTNB5DCRDNBH0&quot;,
+           &quot;secret_key&quot;: &quot;8R8saOONCE+IR2vZ6DFDubXfT8vn9Cesow5uiFem&quot;}],
+  &quot;swift_keys&quot;: [],
+  &quot;caps&quot;: [],
+  &quot;op_mask&quot;: &quot;read, write, delete&quot;,
+  &quot;default_placement&quot;: &quot;&quot;,
+  &quot;piacement_tags&quot;: [],
+  &quot;bucket_quota&quot;: { &quot;enabled&quot;: false,
+      &quot;max_size_kb&quot;: -1,
+      &quot;max_objects&quot;: -1},
+  &quot;user_quota&quot;: { &quot;enabled&quot;: false,
+      &quot;max_size_kb&quot;: -1,
+      &quot;max_objects&quot;: -1},
+  &quot;temp_url_keys&quot;: []}
+[root@ceph-rgw ~]#</pre>
+     </li>
+     </ol>
+     </div>
+    </div>
+  </div>
+	
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Access"> </a>Доступ к хранилищу объектов Ceph</h3>
+   </div></div></div>
+   <p>Хранилище объектов Ceph поддерживает API, совместимые с S3 и Swift; чтобы воспользоваться возможностями хранения объектов Ceph, 
+   нам необходимо настроить интерфейсы S3 или Swift. Сейчас мы выполним основную настройку этих интерфейсов по одному. Для 
+   дополнительной настройки обратитесь к соответствующей документации.</p>
+  
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="S3_API-compat"> </a>Совместимое с API S3 хранилище объектов</h4>
+    </div></div></div>
+    <p>Для поддержки хранения с использованием веб- интерфейсов подобных REST, Amazon предлагает <span class="term">Simple Storage Service</span>
+	(<span class="term">S3</span>, простую службу хранения). Ceph расширяет свою совместимость с S3 через RESTful API. Клиентские 
+	приложения S3 могут получить доступ к хранилищу объектов Ceph на основе ключей доступа и безопасности. Давайте теперь посмотрим, 
+	как выполнить эту настройку. Выполните следующие команды для узла <span class="term"><code>ceph-rgw</code></span>, если не указано иное:</p>
+	<div class="orderedlist">
+    <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Пользователи radosgw должны иметь достаточные полномочия для выполнения запросов S3. Добавим необходимые полномочия 
+	 для ID пользователя radosgw (<span class="term"><code>mona</code></span>):</p>
+	    <pre class="screen">
+# radosgw-admin caps add --uid=mona --caps=&quot;users=*&quot;
+# radosgw-admin caps add --uid=mona --caps=&quot;buckets=*&quot;
+# radosgw-admin caps add --uid=mona --caps=&quot;metadata=*&quot;
+# radosgw-admin caps add --uid=mona --caps=&quot;zone=*&quot;</pre>
+	    <pre class="screen">
+[root@ceph-rgw ~]# radosgw-admin caps add --uid=mona —-caps=&quot;zone=*&quot;
+{ &quot;user_id&quot;: &quot;mona&quot;,
+  &quot;display_name&quot;: &quot;Monika Singh&quot;,
+  &quot;email&quot;: &quot;mona@example.com&quot;,
+  &quot;suspended&quot;: 0,
+  &quot;max_buckets&quot;: 1000,
+  &quot;auid&quot;: 0,
+  &quot;subusers&quot;: [],
+  &quot;keys&quot;: [
+         { &quot;user&quot;: &quot;mona&quot;,
+           &quot;access_key&quot;: &quot;PZM9Y0JSTNB5DCRDNBH0&quot;,
+           &quot;secret_key&quot;: &quot;8R8saOONCE+IR2vZ6DFDubXfT8vn9Cesow5uiFem&quot;}],
+  &quot;swift_keys&quot;: [],
+  &quot;caps&quot;: [
+         { &quot;type&quot;: &quot;buckets&quot;,
+           &quot;perm&quot;: &quot;*&quot;},
+         { &quot;type&quot;: &quot;metadata&quot;,
+           &quot;perm&quot;: &quot;*&quot;},
+         { &quot;type&quot;: &quot;users&quot;,
+           &quot;perm&quot;: &quot;*&quot;},
+         { &quot;type&quot;: &quot;zone&quot;,
+           &quot;perm&quot;: &quot;*&quot;}],
+  &quot;op_mask&quot;: &quot;read, write, delete&quot;,
+  &quot;default_placement&quot;: &quot;&quot;,
+  &quot;placement_tags&quot;: [],
+  &quot;bucket_quota&quot;: { &quot;enabled&quot;: false,
+      &quot;max_size_kb&quot;: -1,
+      &quot;max_objects&quot;: -1},
+  &quot;user_quota&quot;: { &quot;enabled&quot;: false,
+      &quot;max_size_kb&quot;: -1,
+      &quot;max_objects&quot;: -1},
+  &quot;temp_url_keys&quot;: []}
+[root@ceph-rgw ~]#</pre>
+    </li><li class="listitem">
+      <p>Для S3 также необходима служба DNS в месте, где она использует соглашения 
+	  <span class="term"><code>&lt;object_name&gt;.&lt;RGW_Fqdn&gt;</code></span> 
+	  об именах группы виртуального хоста. Например, если у вас есть группа с именем <span class="term"><code>jupiter</code></span>,
+	  она будет доступна через HTTP с применением URL <span class="term"><code>http://jupiter.ceph-rgw.objectstore.com</code></span>.</p>
+      <p>Для настройки DNS на узле <span class="term"><code>ceph-rgw</code></span> выполните следующие шаги. Если у вас уже 
+	  есть сервер DNS, вы можете использовать его с небольшими изменениями.</p>
+	  <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>На узле <span class="term"><code>ceph-rgw</code></span> установите пакеты bind:</p>
+	    <pre class="screen">
+# yum install bind* -y</pre>
+      </li><li class="listitem">
+       <p>Измените <span class="term"><code>/etc/named.conf</code></span>, адрес IP, а также диапазон и зону IP как это делается 
+	   в приводимом далее коде. Вы можете сравнить изменения между авторской версией файла <span class="term"><code>named.conf</code></span> 
+	   с кодом изнабора данного руководства:</p>
+	    <pre class="screen"><code>
+listen-on port 53 { 127.0.0.1;192.168.57.110; }; ###
+Add
+DNS IP ###
+
+allow-query { localhost;192.168.57.0/24; }; ###
+Add
+IP Range ###
+
+### Add new zone for domain objectstore.com before EOF
+###
+zone "objectstore.com" IN {
+type master;
+file "db.objectstore.com";
+allow-update { none; };
+};</code></pre>
+      </li><li class="listitem">
+       <p>Сохраните <span class="term"><code>/etc/named.conf</code></span> и выйдите из редактора.</p>
+      </li><li class="listitem">
+       <p>Создайте файл зоны <span class="term"><code>/var/named/db.objectstore.com</code></span> с приводимым ниже 
+	   содержанием. Вы можете сравнить авторскую версию файла <span class="term"><code>db.objectstore.com</code></span> с 
+	   приводимым в данном руководстве:</p>
+	    <pre class="screen"><code>
+@ 86400 IN SOA objectstore.com. root.objectstore.com. (
+	20091028 ; serial yyyy-mm-dd
+	10800 ; refresh every 15 min
+	3600 ; retry every hour
+	3600000 ; expire after 1 month +
+	86400 ); min ttl of 1 day
+@ 86400 IN NS objectstore.com.
+@ 86400 IN A 192.168.57.110
+* 86400 IN CNAME @</code></pre>
+      </li><li class="listitem">
+       <p>Запретите межсетевой экран или вы можете задать правила DNS в этом межсетевом экране:</p>
+	    <pre class="screen">
+# service iptables stop</pre>
+      </li><li class="listitem">
+       <p>Измените <span class="term"><code>/etc/resolve.conf</code></span> и добавьте следующее содержание:</p>
+	    <pre class="screen"><code>
+search objectstore.com
+nameserver 192.168.57.110</code></pre>
+      </li><li class="listitem">
+       <p>Запустите службу <span class="term"><code>named</code></span></p>
+	    <pre class="screen">
+# service named start</pre>
+      </li><li class="listitem">
+       <p>Проверьте файлы настройки DNS на наличие синтаксических ошибок:</p>
+	    <pre class="screen">
+# named-checkconf /etc/named.conf
+# named-checkzone objectstore.com /var/named/db.objectstore.com</pre>
+      </li><li class="listitem">
+	   <p>Проверьте сервер DNS:</p>
+	    <pre class="screen">
+# dig ceph-rgw.objectstore.com
+# nslookup ceph-rgw.objectstore.com</pre>
+      </li><li class="listitem">
+       <p>Выполните аналогичные настройки DNS для <span class="term"><code>ceph-client1</code></span>, который будет нашей 
+	   клиентской машиной для S3. Измените <span class="term"><code>/etc/resolve.conf</code></span> на
+	   <span class="term"><code>ceph-client1</code></span> и добавьте следующее содержание:</p>
+	    <pre class="screen"><code>
+search objectstore.com
+nameserver 192.168.57.110</code></pre>
+      </li><li class="listitem">
+       <p>Проверьте установки DNS на <span class="term"><code>ceph-client1</code></span>:</p>
+	    <pre class="screen">
+# dig ceph-rgw.objectstore.com
+# nslookup ceph-rgw.objectstore.com</pre>
+      </li><li class="listitem">
+       <p>Машина <span class="term"><code>ceph-client1</code></span> должна быть способна разрешать все подобласти (subdomain) для 
+	   <span class="term"><code>ceph-rgw.objectstore.com</code></span></p>
+	    <pre class="screen">
+[root@ceph-client1 ~]# ping mona.ceph-rgw.objectstore.com -c 1
+PING objectstore.com (192.168.57.110) 56(84) bytes of data.
+64 bytes from ceph-rgw.objectstore.com (192.168.57.110): icmp_seq=1 ttl=64 time=0.368 ms
+
+—-- objectstore.com ping statistics —--
+1 packets transmitted, 1 received, 0% packet loss, time 1ms
+rtt min/avg/max/mdev = 0.368/0.368/0.368/0.000 ms
+[root@ceph-client1 ~]#
+[root@ceph-client1 ~]# ping anything.ceph-rgw.objectstore.com -c 1
+PING objectstore.com (192.168.57.110) 56(84) bytes of data.
+64 bytes from ceph-rgw.objectstore.com (192.168.57.110): icmp_seq=1 ttl=64 time=1.12 ms
+
+—-- objectstore.com ping statistics —--
+1 packets transmitted, 1 received, 0% packet loss, time 2ms
+rtt min/avg/max/mdev = 1.129/1.129/1.129/0.000 ms
+[root@ceph-client1 ~]#</pre>
+      </ol>
+      </div>
+    </li><li class="listitem">
+      <p>Настройте клиента S3 (<span class="term"><code>s3cmd</code></span>) на <span class="term"><code>ceph-client1</code></span>:</p>
+	  <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Установите <span class="term"><code>s3cmd</code></span>:</p>
+	    <pre class="screen">
+# yum install s3cmd</pre>
+      </li><li class="listitem">
+       <p>Для настройки <span class="term"><code>s3cmd</code></span> необходимы <span class="term"><code>access_key</code></span> 
+	   и <span class="term"><code>secret_key</code></span> для пользователя; в нашем случае, ID пользователя будет 
+	   <span class="term"><code>mona</code></span>, который мы создали на первом шаге:</p>
+	    <pre class="screen">
+# s3cmd --configure</pre>
+	    <pre class="screen">
+[root@ceph-client1 ~]# s3cmd --configure
+
+Enter new values or accept defaults in brackets with Enter.
+Refer to user manual for detailed description of all options.
+
+Access key and secret key are your identifiers for Amazon S3
+Access Key: PZM9Y0JSTNB5DCRDNBH0
+Secret Key: 8R8saOONCE+IR2vZ6DFDubXfT8vn9Cesow5uiFem
+
+Encryption password is used to protect your files from reading
+by unauthorized persons while in transfer to S3
+Encryption password: packtpub
+Path to GPG program [/usr/bin/gpg]:
+
+when using secure HTTPS protocol all communication with Amazon S3
+servers is protected from 3rd party eavesdropping. This method is
+slower than plain HTTP and can't be used if you're behind a proxy
+Use »fTTPS protocol [No]:
+
+On some networks all internet access must go through a HTTP proxy.
+Try setting it here if you can't conect to S3 directly
+http Proxy server name:
+
+New settings:
+  Access Key: PZM9Y0JSTNB5DCRDNBH0
+  Secret Key: 8R8saOONCE+IR2vZ6DFDubXfT8vn9Cesow5uiFem
+  Encryption password: packtpub
+  Path to GPG program: /usr/bin/gpg
+  Use https protocol: raise
+  HTTP Proxy server name:
+  HTTP Proxy server port: 0
+
+Test access with supplied credentials? [Y/n] n
+
+Save settings? [y/N] y
+Configuration saved to '/root/.s3cfg'
+[root@ceph-client1 ~]#</pre>
+      </li><li class="listitem">
+       <p>Команда настройки <span class="term"><code>s3cmd</code></span> создаст файл <span class="term"><code>.s3cfg</code></span>
+	   в <span class="term"><code>/root</code></span>; измените это файл, как это показано на приводимом ниже фрагменте.
+	   Убедитесь, что эти строки не имеют замыкающих пробелов в конце:</p>
+	    <pre class="screen"><code>
+host_base = ceph-rgw.objectstore.com
+host_bucket = %(bucket)s.ceph-rgw.objectstore.com</code></pre>
+       <p>Вы можете сделать сравнение изменений данного руководства с авторской версией файла <span class="term"><code>.s3cfg</code></span>.</p>
+	    <pre class="screen">
+[root@ceph-client1 ~]# cat .s3cfg
+[default]
+access_key = PZM9Y0JSTNB5DCRDNBH0
+bucket_location = US
+cloudfront_host = cloudfront.amazonaws.com
+cloudfront_resource = /2010-07-15/distribution
+default_mime_type = binary/octet-stream
+delete_removed = False
+dry_run = False
+encoding = UTF-8
+encrypt = False
+follow_symlinks = False
+force = False
+get_continue = False
+gpg_cammand = /usr/bin/gpg
+gpg_decrypt = %(gpg_command)s -d -—verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
+gpg_encrypt = %(gpg_command)s -c —-verbose --no-use-agent --batch - yes — passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
+gpg_passphrase = packtpub
+guess_mime_type = True
+host_base = ceph-rgw.objectstore.com
+host_bucket = %(bucket)s.ceph-rgw.objectstore.com
+human_readable_sizes = False
+list_md5 = False
+log_target_prefix =
+preserve_attrs = True
+progress_meter = True
+proxy_host =
+proxy_port = 0
+recursive = False
+recv_chunk = 4096
+reduced_redundancy = False
+secret_key = 8R8saOONCE+IR2vZ6DFDubXfT8vn9Cesow5uiFem
+send_chunk = 4096
+simpledb_host = sdb.amazonaws.com
+skip_existing = False
+socket_timeout = 300
+urlencoding_mode = normal
+use_https = False
+verbosity = WARNING
+[root@ceph-client1 ~]#</pre>
+      </li><li class="listitem">
+       <p>Наконец, мы создадим группы (bucket) S3 и поместим в них объекты:</p>
+	    <pre class="screen">
+# s3cmd ls
+# s3cmd mb s3://first-bucket
+# s3cmd put /etc/hosts s3://first-bucket</pre>
+	    <pre class="screen">
+[root@ceph-client1 ~]# s3cmd ls
+[root@ceph-client1 ~]# s3cmd mb s3://first-bucket
+Bucket 's3://first-bucket/' created
+[root@ceph-client1 ~]# s3cmd ls
+2014-06-25 08:43 s3://first-bucket
+[root@ceph-client1 ~]#</pre>
+      </li>
+      </ol>
+      </div>
+    </li>
+    </ol>
+    </div>
+   </div>
+	
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Swift_API-compat"> </a>Совместимое с API Swift хранилище объектов</h4>
+     </div></div></div>
+     <p>Ceph поддерживает RESTful API, который совместим с базовой моделью Swift API доступа к данным. Чтобы использовать для хранилище 
+	 объектов Ceph с помощью Swift API, мы должны создать Swift вторичного пользователя (subuser) в шлюзе Ceph RADOS, который сделает 
+	 возможным доступ Swift API к хранилищу объектов Ceph:</p>
+	 <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь на  <span class="term"><code>ceph-rgw</code></span> и создайте вторичного пользователя (subuser) для доступа 
+	  к Swift. Вторичный пользователь будет иметь свой собственный ключ безопасности:</p>
+	    <pre class="screen">
+# radosgw-admin subuser create --uid=mona --subuser=mona:swift --access=full --secret=secretkey --key-type=swift</pre>
+	    <pre class="screen">
+[root@ceph-rgw ~]# radosgw-admin subuser create --uid=mona --subuser=mona:swift --access=full --secret=secretkey --key-type=swift
+{ &quot;user_id&quot;: &quot;mona&quot;,
+   &quot;display_name&quot;: &quot;Monika Singh&quot;,
+   &quot;email&quot;: &quot;mona@example.com&quot;,
+   &quot;suspended&quot;: 0,
+   &quot;max_buckets&quot;: 1000,
+   &quot;auid&quot;: 0,
+   &quot;subusers”: [
+         { &quot;id&quot;: &quot;mona:swift&quot;,
+           &quot;permissions&quot;: &quot;full-control&quot;}],
+   &quot;keys&quot;: [
+         { &quot;user&quot;: &quot;mona&quot;,
+           &quot;access_key&quot;: &quot;PZM9Y0JSTNB5DCRDNBH0&quot;,
+           &quot;secret_key&quot;: &quot;8R8saOONCE+IR2vZ6DFDubXfT8vn9Cesow5uiFem&quot;}],
+   &quot;swift_keys&quot;: [
+         { &quot;user&quot;: &quot;mona:swift&quot;,
+           &quot;secret_key&quot;: &quot;secretkey&quot;}].
+   &quot;caps&quot;: [
+         { &quot;type&quot;: &quot;buckets&quot;,
+           &quot;perm&quot;: &quot;*&quot;},
+         { &quot;type&quot;: &quot;metadata&quot;,
+           &quot;perm&quot;: &quot;*&quot;},
+         { &quot;type&quot;: &quot;users&quot;,
+           &quot;perm&quot;: &quot;*&quot;},
+         { &quot;type&quot;: &quot;zone&quot;.
+           &quot;perm&quot;: &quot;*&quot;}],
+   &quot;op_mask&quot;: &quot;read, write, delete&quot;,
+   &quot;default_placement&quot;: &quot;&quot;,
+   &quot;placement tags&quot;: [],
+   &quot;bucket_quota&quot;: { &quot;enabled&quot;: false,
+       &quot;max_size_kb&quot;: -1,
+       &quot;max_objects&quot;: -1},
+   &quot;user_quota&quot;: { &quot;enabled&quot;: false,
+       &quot;max_size_kb&quot;: -1,
+       &quot;max_objects&quot;: -1},
+   &quot;temp_url_keys&quot;: []}
+[root@ceph rqw ~]#</pre>
+     </li><li class="listitem">
+      <p>Установите клиент swift на узле <span class="term"><code>ceph-client1</code></span>:</p>
+	    <pre class="screen">
+# yum install python-setuptools
+# easy_install pip
+# pip install --upgrade setuptools
+# pip install python-swiftclient</pre>
+     </li><li class="listitem">
+      <p>Наконец, создайте список групп (bucket) спомощью клиента swift:</p>
+	    <pre class="screen">
+# swift -V 1.0 -A http://ceph-rgw.objectstore.com/auth -U mona:swift -K secretkey post example-bucket
+# swift -V 1.0 -A http://ceph-rgw.objectstore.com/auth -U mona:swift -K secretkey list</pre>
+     </li>
+     </ol>
+     </div>
+    </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h3>
+   </div></div></div>
+   <p>Предоставление ресурсов хранения данных является наиболее частой операцией администрирования систем хранения, которую 
+   приходится выполнять. По сравнению с традиционными системами хранения данных уровня предприятия, вам больше не нужно закупать 
+   и управлять множеством систем хранения для разных типов хранения. Ceph однозначно обеспечивает хранение объектов, блоков 
+   и файлов в одной унифицированной системе. В этой главе мы узнали как настроить и предоставить блочные устройства RADOS, 
+   файловые системы Ceph, а также хранилище объектов Ceph. Вот уже более чем два десятилетия существуют различные типы блочных устройств 
+   и файловых систем хранения; однако, хранилища объектов являются довольно новыми, набирающими обороты в настоящее время благодаря 
+   Amazon S3 и Swift. Ceph расширяет свою поддержку на API S3 и Swift. В этой главе мы также узнали раздельную настройку S3 и Swift, 
+   а затем и их использование. В следующей главе мы узнаем об управления службами Ceph и кластера Ceph.</p>
+  </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

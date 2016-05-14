@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Создание виртуальных машин - Изучение Proxmox VE</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningProxmoxVE"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучение Proxmox VE"/>
+<link rel="up" href="index.html" title="Изучение Proxmox VE"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Создание контейнеров"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Работа с виртуальными дисками"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-proxmox-ve";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningProxmoxVE/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Создание виртуальных машин';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Создание виртуальных машин</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+   <p>&quot;<span class="emphasis"><em>...Однако если понятие абстракции является настолько обыденным в ИТ, что тогда 
+   объясняет растущее увеличение виртуализации в последние годы? Эта тенденция ещё более бескомпромиссная в центрах обработки 
+   данных, где виртуализация глубоко укоренилась в стратегии развитя этих сред, начиная с середины 2000х. И страсть 
+   продолжает расти... Соответственно, эти объекты подверглись штурму со стороны виртуальных серверов, виртуальных сетевых 
+   сред, виртуальных хранилищ, виртуальных устройств и прочих &quot;V- технологий&quot;, которые обещают избавление от 
+   оков реальности.</em></span>&quot;</p>
+  <p style="text-align:right;">– Gustavo A. A. Santana, <span class="emphasis"><em>Data Center Virtualization Fundamentals</em></span></p>
+   <p>В <a class="link" href="Ch03.html" target="_top">Главе 3. Создание контейнеров</a> мы исследовали создание, настройку и управление 
+   контейнеров LXC с использованием Proxmox VE. В этой главе мы переместим наше внимание на создание и управление виртуальными машинами 
+   KVM-QEMU посредством Proxmox VE.</p>
+   <p>Когда мы противопоставляли виртуальные машины и контейнеры в <a class="link" href="Ch01.html" target="_top">Главе 1. Основы 
+   Proxmox VE</a>, мы воспользовались этой возможностью и погрузились глубже в определённые преимущества виртуальных машин, которые они всё 
+   ещё, кажется, имеют над контейнерами несмотря на явные признаки того, что мы находимся в плену революции контейнеров. Одновременно мы 
+   рассмотрим варианты применения, основанные на уже изученном материале.</p>
+   <p>Затем мы пройдём процесс извлечения виртуальных машин из образов ISO с применением Proxmox VE. PVE предназначен для платформы 
+   виртуализации серверов; в следствие этого мы осуществим создание и настройку двух ВМ: вначале выполним Microsoft Windows 2012r2, а 
+   затем исполним сервер Fedora Core 23.</p>
+   <p>Так как обе операционные системы имеют компоненты графического пользовательского интерфейса, мы будем использовать в своих интересах 
+   возможность исследовать дополнительное множество функциональности PVE, чем если бы могли получить в противном случае освещения 
+   подлинных потребностей.</p>
+   <p>В заключении <a class="link" href="Ch04.html" target="_top">Главы 4. Создание виртуальных машин</a>, мы обсудим следующие аспекты 
+   полной виртуализации при помощи Proxmox VE:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Выгрузку ISO в локальные хранилища Proxmox VE</p>
+	 </li><li class="listitem">
+	 <p>Создание и настройку виртуальных машин из веб- интерфейса PVE</p>
+	 </li><li class="listitem">
+	 <p>Взаимодействие с ВМ с использованием свойств консоли веб- интерфейса PVE</p>
+	 </li><li class="listitem">
+	 <p>Перенастройку виртуальной машины</p>
+	 </li><li class="listitem">
+	 <p>Управление состоянием виртуальной машины</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Для начала, однако, мы вернёмся на шаг назад и исследуем постоянно имеющуюся  роль аппаратной виртуализации, даже не смотря 
+   на энтузиазм для контейнеров, отдающийся эхом вокруг нас.</p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch04.html">4. Создание виртуальных машин</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch04.html#0401">Отличительные особенности виртуальных машин</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#040101">Сценарии для виртуализации систем</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0402">Создание виртуальной машины</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch04.html#040201">Носитель установки</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#04020101">Выгрузка файла ISO на локальное хранилище PVE</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch04.html#040202">Подготовка виртуальной машины</a></span></dt>
+       <dd><dl>
+       <dt><span class="section"><a href="Ch04.html#04020201">Предупреждая вкладки настройки</a></span></dt>
+        <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#0402020101">General</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#0402020102">OS</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#0402020103">CD/DVD</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#0402020104">Hard Disk</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#0402020105">CPU</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#0402020106">Memory</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#0402020107">Network</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#0402020108">Confirm</a></span></dt>
+        </dl></dd>
+       </dl></dd>
+      <dt><span class="section"><a href="Ch04.html#04020202">Управление состоянием виртуальной машины</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#04020203">Управление ВМ из командной строки PVE</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0403">Практика создания виртуальных машин</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch04.html#040301">Виртуализация Windows Server 2012r2 при помощи Proxmox VE</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040302">Настройка и создание вашей виртуальной машины</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040303">Запуск вашей ВМ и установка Windows Server</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040304">Создание ВМ для сервера Fedora</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040305">Создание виртуальной машины в командной строке</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0404">Заключение</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0401"> </a>Отличительные особенности виртуальных машин</h3>
+   </div></div></div>
+   <p>Хотя контейнеры явно получили впечатляющий импульс за столь короткий промежуток времени, виртуальные машины продолжают иметь 
+   существенные отличительные черты. Например:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Виртуальные машины могут выполнять любые операционные системы, разработанные для архитектуры вашего хоста; например, 
+	 Android-x86, FreeBSD, Ubuntu, Windows Server и даже настольные ОС могут выполняться как отдельные машины на хосте Proxmox VE, 
+	 при условии, что хост имеет достаточные ресурсы.</p>
+     <div class="figure"><a id="Fig0401"> </a>
+      <p class="title"><strong>Рисунок 4.1.</strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0401.jpg" width="995" height="777"/><br />
+       <span>Виртуальная машина Ubuntu 15.04 размещающаяся на Proxmox VE, доступ к которой осуществлён через параметр консоли SPICE 
+	   в веб- интерфейсе PVE</span>
+      </div></div>
+     </div><br class="figure-break"/>
+	 </li><li class="listitem">
+	 <p>Одна ВМ может размещать много контейнеров; когда мы ищем для творческих и опытных решениий центра обработки данных, мы хотели 
+	 бы постоянно оставаться в курсе того, что виртуальная ОС и система виртуализации имеют дополняющие взаимосвязи, а не конкурирующие или 
+	 противоречивые. До сих пор виртуальные машины предоставляют более тщательную изоляцию в сравнении с контейнерами.</p>
+	 </li><li class="listitem">
+	 <p>Виртуальные машины и контейнеры требуют различные отношения и подходы к вопросам безопасности. Впечатляюще зрелые стандарты 
+	 для систем виртуализации являются зрелыми и находятся в свободном доступе, в то время как информация по безопасности 
+	 виртуализации ОС и стандартизованные решения пока не созрели.</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><a id="Tip0101"> </a>
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Tip0101"> </a>
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+			<p>Более подробно вопросы безопасности в PVE мы будем решать в <a class="link" href="Ch07.html" target="_top">Главе 7. 
+			Обеспечение безопасности Proxmox VE</a>.</p></td></tr></table>
+		  </div>
+	 </li>
+    </ul>
+    </div>
+   <p>Отличительные черты систем виртуализации позволяют предположить, что в течение некоторого времени виртуальные машины являются более 
+   гибкими чем контейнеры; например, много операционных систем может сосуществовать одновременно на одном <span class="term"><strong 
+   class="userinput">гипервизоре</strong></span> подобном Proxmox VE. Контейнеры не могут получить подобного. На текущий момент это 
+   означает, что чистые контейнеры могут существовать только когда хосты на основе GNU-/Linux имеют контейнеры GNU-/Linux, а контейнеры на 
+   основе Microsoft могут работать только на хостах на основе ОС Microsoft. Таким образом, размещаемым Proxmox VE контейнерам требуется 
+   чтобы ОС хоста разделяла библиотеки и исполняемые файлы GNU/Linux.</p>
+   <p>При том значительном импульсе, который имеет продвижение контейнеров, данное ограничение контейнеров на операционные системы Unix- типа 
+   может измениться очень скоро с выпуском Windows Server 2016, который в настоящее время доступен для предварительного просмотра; 
+   Microsoft объявил о своих планах по включению Docker в свой продукт (<a class="link" 
+   href="http://zdnet.com/article/microsoft-to-add-virtualized-containers-non-server-mode-to-windows-server-2016/" 
+   target="_top">http://zdnet.com/article/microsoft-to-add-virtualized-containers-non-server-mode-to-windows-server-2016/</a>, в свободном 
+   доступе 1 июня 2015).</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Note0401"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Docker является решением контейнеризации с открытым исходным кодом при очень активной разработке и это порождает значительное 
+	   внимание. Краткое изучение наводит на мысль, что хост Windows выполняющий Docker может запускать контейнеры Linux. Этот контрапункт 
+	   быстро разрешается как только мы осуществили выполнение этого Docker-ом посредством поддержки только уровня виртуализации подобного 
+	   boot2docker (<a class="link" href="https://github.com/boot2docker/boot2docker" target="_top">https://github.com/boot2docker/boot2docker</a>).
+	   {<span class="emphasis"><em>Прим. пер.: см. также <a class="link" href="http://onreader.mdl.ru/UsingDocker/content/Ch02.html#02.2" 
+	   target="_top">Установка Docker на Mac OS или Windows</a></em></span>}
+	   </p></td></tr></table>
+     </div>
+   <p>Способная предъявлять претензии в отношении операционных систем гибкость системы виртуализации сказывается на стоимости:
+   <span class="emphasis"><em>виртуальным машинам требуется больше ресурсов и их накладные расходу выше чем у контейнеров.</em></span></p>
+   <p>В следующем разделе мы изучим сценарии, которые тем не менее делают систему виртуализации интригующей.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сценарии для виртуализации систем </span></h4>
+   </div></div></div>
+   <p>Из рассмотренных ранее отличительных особенностей возникают некоторые очень мощные варианты применения. Например:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Разработка и тестирование кросс-платформенного программного обеспечения</p>
+		 </li><li class="listitem">
+		 <p>Администрирование и управление системами на предприятиях, имеющих отношение ко множеству платформ </p>
+		 </li><li class="listitem">
+		 <p>Зависимость от унаследованных приложений, систем или данных</p>
+		 </li><li class="listitem">
+		 <p>Полигон для развёртывания новых систем или политик</p>
+		 </li><li class="listitem">
+		 <p>Лаборатории, обслуживающие ИТ и ИКТ студентов</p>
+		 </li><li class="listitem">
+		 <p>Производительность и стабильность на различных платформах</p>
+		 </li><li class="listitem">
+		 <p>{<span class="emphasis"><em>Прим. пер.: Удалённая работа с различными ERP/CRM и/или CAD/CAE и пр. системами, в том числе с целью 
+		 снижения совокупной стоимости владения как программного обеспечения так и совместно используемых аппаратных средств 
+		 (включая Grid/Cuda, рендеринг и им подобные технологии, см., например, <a class="link" href="http://www.mdl.ru/Solutions/Put.htm?Nme=NiceDCV" 
+		 target="_top">Nice DCV</a>).</em></span>}</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Перечисленные сценарии выводят на передний план изменения, вносимые каждым отличием, в особенности между двумя формами виртуализации, 
+   поощряемые и поддерживаемые Proxmox VE, а именно, виртуальными машинами и контейнерами.</p>
+   <p>Данная глава уверенно продвигается к информационному заключению: контейнеры и виртуальные машины (или виртуализация ОС и виртуализация 
+   системы) представляют собой два различных инструмента, которые совместно предоставляют центру обработки данных и его инженерам мощную 
+   гибкость и возможность действовать по своему усмотрению (ре)формировании центра обработки данных.</p>
+   <p>Давайте рассмотрим процесс создания ВМ в Proxmox VE.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0402"> </a>Создание виртуальной машины</h3>
+   </div></div></div>
+   <p>В данном разделе рассматривается обзор абстрактного процесса создания виртуальной машины, начиная с настройки вашей машины сквозь установку
+   операционной системы и, в конечном итоге, управление её состоянием.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Носитель установки </span></h4>
+   </div></div></div>
+   <p>В наилучшем сценарии требуемая для новой виртуальной машины операционная система доступна в виде скачиваемого файла ISO. Такой 
+   отдельный файл предназначен для идеального представления CD или DVD целиком. В случае некоторых дистрибутивов GNU/ Linux полная 
+   среда установки может разделяться на несколько DVD.</p>
+   <p>Обычно в этом случае доступен образ диска для установки через сеть (<span class="term"><code>netinst</code></span>) и он 
+   предоставляет достаточный объем операционной системы для управления системными устройствами, установщика с последующим скачиванием и 
+   установкой запрашиваемого программного обеспечения из репозиториев в интернете.</p>
+   <p>Когда ОС доступна в виде ISO мы можем просто скачать её на удалённую рабочую станцию и затем разгрузить её на локальное хранилище вашего 
+   хоста PVE с помощью веб- интерфейса PVE, а затем выполнить создание вашей ВМ.</p>
+
+   <a id="04020101"> </a>
+   <p class="title"><strong>Выгрузка файла ISO на локальное хранилище PVE</strong></p>
+   <p>Существует пять шагов для работы с образом ISO с удалённой рабочей станции.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Скачайте необходимый ISO из web на локальную рабочую станцию и убедитесь что образ не имеет повредлдений и не скомпрометирован 
+	  (подробнее об этом процессе см. <a class="link" href="http://www.online-tech-tips.com/cool-websites/what-is-checksum/" 
+	  target="_top">http://www.online-tech-tips.com/cool-websites/what-is-checksum/</a>).</p>
+	 </li><li class="listitem">
+      <p>Перейдите к веб- интерфейсу Proxmox VE перейдя к нему в браузере (направьте ваш браузер по адресу 
+	  <span class="term"><code>https://&lt;ip address&gt;:8006</code></span>, где <span class="term"><code>&lt;ipaddress&gt;</code></span> 
+	  является IP адресом PVE).</p>
+	 </li><li class="listitem">
+      <p>В левой панели окна вашего браузера необходимо выбрать <span class="term"><strong class="userinput">Server View</strong></span>.
+	  Под вашим ниспадающим меню должна быть доступна папка с именем <span class="term"><strong class="userinput">Datacenter</strong></span>.
+	  Раскройте её содержимое чтобы отобразить ваш хост PVE, помеченный именем. Раскройте и его чтобы увидеть локальное хранилище хоста. 
+	  В приводимом ниже экранном снимке, например, именем хоста PVE является  <span class="term"><code>pve4</code></span>, поэтому 
+	  локальное хранилище помечено как <span class="term"><strong class="userinput"><code>local (pve4)</code></strong></span>.</p>
+     <div class="figure"><a id="Fig0402"> </a>
+      <p class="title"><strong>Рисунок 4.2.</strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0402.jpg" width="504" height="291"/><br />
+       <span>Переместитесь к локальному хранилищу узла PVE</span>
+      </div></div>
+     </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>После выбора локального хранилища в правой панели должны появиться три закладки:
+	  <span class="term"><strong class="userinput">Summary</strong></span>, <span class="term"><strong class="userinput">Content</strong></span>
+	  и <span class="term"><strong class="userinput">Permissions</strong></span>. Выберите закладку
+	  <span class="term"><strong class="userinput">Content</strong></span> чтобы отобразить в правой панели ещё две кнопки,
+	  <span class="term"><strong class="userinput">Templates</strong></span> и <span class="term"><strong class="userinput">Uploads</strong></span>:</p>
+     <div class="figure"><a id="Fig0403"> </a>
+      <p class="title"><strong>Рисунок 4.3.</strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0403.jpg" width="871" height="510"/><br />
+       <span>Локальное хранилище</span>
+      </div></div>
+     </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Для продолжения кликните на кнопку <span class="term"><strong class="userinput">Uploads</strong></span>. В появившемся блоке диалога 
+	  выберите в ниспадающем меню с именем <span class="term"><strong class="userinput">Content</strong></span> выберите 
+	  <span class="term"><strong class="userinput">ISO image</strong></span>, затем кликните кнопку 
+	  <span class="term"><strong class="userinput">Select File…</strong></span> для просмотра файловой системы на предмет образа диска для 
+	  его выгрузки в ваш хост PVE.</p>
+     <div class="figure"><a id="Fig0404"> </a>
+      <p class="title"><strong>Рисунок 4.4.</strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0404.jpg" width="510" height="205"/><br />
+       <span>Диалог разгрузки</span>
+      </div></div>
+     </div><br class="figure-break"/>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Note0401"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>По умолчанию путь для выгрузки файлов ISO в локальное хранилище PVE через веб- интерфейс установлен в значение 
+	   <span class="term"><code>/var/lib/template/iso</code></span>. Имея это в виду, заметьте, что эти файлы также могут 
+	   быть пересланы в данное местоположение на ваш сервер Proxmox VE с рабочей станции с помощью <span class="term"><code>scp</code></span> 
+	   или <span class="term"><code>sftp</code></span> в случае, если <a class="link" href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch12.html" 
+	   target="_top">эти инструменты</a> установлены на вашей удалённой рабочей станции.</p></td></tr></table>
+     </div>
+	 </li>
+	 </ol>
+   </div>
+   <p>При установленном носителе доступном для PVE мы готовы к настройке и созданию ВМ при помощи веб- интерфейса Proxmox VE. Следующий 
+   раздел изучит этот процесс.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040202"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Подготовка виртуальной машины </span></h4>
+   </div></div></div>
+   <p>Мы начинаем наш процесс поиском имени нашего хоста и локального хранилища нашего экземпляра Proxmox VE в просмотре сервера веб- интерфейса 
+   своего PVE. Выберите свой хост и кликните кнопку <span class="term"><strong class="userinput">Create VM</strong></span> (в правом верхнем 
+   углу страницы) для запуска настройки новой виртуальной машины.</p>
+   <p>В вашем окне браузера появится диалог с заголовком <span class="term"><strong class="userinput">Create: Virtual Machine</strong></span>.
+   Он применяется для предоставления начального описания вашей новой виртуальной машины, включая не только спецификацию аппаратных средств, но 
+   также и тип ОС и имя PVE, которое будет применяться для ссылки на новую ВМ.</p>
+   <p>Закладки слева направо выглядят так:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>General</p>
+		 </li><li class="listitem">
+		 <p>OS</p>
+		 </li><li class="listitem">
+		 <p>CD/DVD</p>
+		 </li><li class="listitem">
+		 <p>Hard Disk</p>
+		 </li><li class="listitem">
+		 <p>CPU</p>
+		 </li><li class="listitem">
+		 <p>Memory</p>
+		 </li><li class="listitem">
+		 <p>Network</p>
+		 </li><li class="listitem">
+		 <p>Confirm</p>
+		 </li>
+		</ul>
+		</div>
+   <p>По окончанию заполнения вкладки перемещайтесь вперёд либо кликая по следующей закладке в вашей последовательности, либо нажимая на 
+   кнопку <span class="term"><strong class="userinput">Next</strong></span>.</p>
+
+   <a id="04020201"> </a>
+   <p class="title"><strong>Предупреждая вкладки настройки</strong></p>
+   <p>Ниже приводится краткий обзор того, что мы можем ожидать увидеть в каждой вкладке своего диалога
+   <span class="term"><strong class="userinput">Create: Virtual Machine</strong></span>.</p>
+
+   <a id="0402020101"> </a>
+   <p class="title"><strong>General</strong></p>
+   <p>Имя и VM ID виртуальной машины определяются именно во вкладке <span class="term"><strong class="userinput">General</strong></span>.
+   Заметим, что поле &quot;name&quot; не относится к имени хоста ВМ; оно определяется при настройке ОС. Точнее, это имя, которое 
+   Proxmox VE будет применять для ссылки на данную ВМ в своём веб- интерфейсе.</p>
+   <p>В промышленной среде рекомендуется чтобы вы придерживались намеренной и систематичной схемы своего именования, точно так же как 
+   вы бы поступали с именем хоста в центре обработки данных.</p>
+   <p>При определении VM ID также важно быть строго систематичным. Хотя Proxmox VE и предоставляет по умолчанию номер VM ID, такая 
+   нумерация является произвольной вместо установленной системы, являющейся результатом хорошо сформированной политики.</p>
+   <p>В большой промышленной среде предусмотрите назначение идентификаторов ВМ в выделенном диапазоне по отношению к задачам виртуальных 
+   серверов (например, идентификаторы ВМ 1000-2000 для ВМ, предоставляющих веб службы). Вы по достоинству оцените это по мере увеличения 
+   вашего центра обработки данных, при систематизации вами планов резервного копирования и создания плана для управления 
+   жизненным циклом виртуального сервера.</p>
+
+   <a id="0402020102"> </a>
+   <p class="title"><strong>OS</strong></p>
+   <p></p>
+
+   <a id="0402020103"> </a>
+   <p class="title"><strong>CD/DVD</strong></p>
+   <p></p>
+
+   <a id="0402020104"> </a>
+   <p class="title"><strong>Hard Disk</strong></p>
+   <p></p>
+
+   <a id="0402020105"> </a>
+   <p class="title"><strong>CPU</strong></p>
+   <p></p>
+
+   <a id="0402020106"> </a>
+   <p class="title"><strong>Memory</strong></p>
+   <p></p>
+
+   <a id="0402020107"> </a>
+   <p class="title"><strong>Network</strong></p>
+   <p></p>
+
+   <a id="0402020108"> </a>
+   <p class="title"><strong>Confirm</strong></p>
+   <p></p>
+
+   <a id="04020202"> </a>
+   <p class="title"><strong>Управление состоянием виртуальной машины</strong></p>
+   <p></p>
+
+   <a id="04020203"> </a>
+   <p class="title"><strong>Управление ВМ из командной строки PVE</strong></p>
+   <p></p>
+
+  </div>
+ 
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0403"> </a>Практика создания виртуальных машин</h3>
+   </div></div></div>
+   <p></p>
+
+
+   <a id="040301"> </a>
+   <p class="title"><strong>Виртуализация Windows Server 2012r2 при помощи Proxmox VE</strong></p>
+   <p></p>
+
+   <a id="040302"> </a>
+   <p class="title"><strong>Настройка и создание вашей виртуальной машины</strong></p>
+   <p></p>
+
+   <a id="040303"> </a>
+   <p class="title"><strong>Запуск вашей ВМ и установка Windows Server</strong></p>
+   <p></p>
+
+   <a id="040304"> </a>
+   <p class="title"><strong>Создание ВМ для сервера Fedora</strong></p>
+   <p></p>
+
+   <a id="040305"> </a>
+   <p class="title"><strong>Создание виртуальной машины в командной строке</strong></p>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0404"> </a>Заключение</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

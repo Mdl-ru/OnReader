@@ -1,0 +1,983 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Ограждение (Fencing)</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="Ограждение (Fencing)"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="up" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="prev" href="Convert_OpenVZ_to_LXC.html" title="Преобразование OpenVZ в LXC"/>
+<link rel="next" href="index.html" title="Книга рецептов Proxmox"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Ограждение (Fencing)';
+PrevRef = 'Convert_OpenVZ_to_LXC.html';
+UpRef = 'index.html';
+NextRef = 'index.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Ограждение (Fencing)</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>Перевод статьи <a class="link" href="https://pve.proxmox.com/wiki/Fencing" target="_top">Fencing</a></p>
+  <p>опубликованной 26 October 2015, at 20:45</p>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Fencing.html">Ограждение (Fencing)</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Fencing.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Fencing.html#Config">Настройка узлов на немедленную загрузку и непременную после цикла выключения- включения</a></span></dt>
+	<dt><span class="section"><a href="Fencing.html#Enabling">Разрешения ограждения на всех узлах</a></span></dt>
+	<dt><span class="section"><a href="Fencing.html#HowTo">Общее руководство по изменению <span class="term"><code>cluster.conf</code></span></a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Fencing.html#Fence_Devices">Перечень поддерживаемых устройств ограждения</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Fencing.html#APC_PDU">Устройство распределения питания коммутации стойки APC</a></span></dt>
+	      <dd><dl>
+            <dt><span class="section"><a href="Fencing.html#APC_User">Создание пользователя в веб- интерфейсе APC</a></span></dt>
+            <dt><span class="section"><a href="Fencing.html#APC_PDU_Example">Пример <span class="term"><code>/etc/pve/cluster.conf.new</code></span> с ограждением питания APC</a></span></dt>
+          </dl></dd>
+          <dt><span class="section"><a href="Fencing.html#iMudular_Server">Intel Modular Server HA</a></span></dt>
+          <dt><span class="section"><a href="Fencing.html#iDRAC">Применение iDRAC серверов Dell</a></span></dt>
+	      <dd><dl>
+            <dt><span class="section"><a href="Fencing.html#iDRAC_User">Создание пользователя в Dell iDRAC</a></span></dt>
+            <dt><span class="section"><a href="Fencing.html#iDRAC_Example">Пример <span class="term"><code>/etc/pve/cluster.conf.new</code></span> с iDRAC</a></span></dt>
+          </dl></dd>
+          <dt><span class="section"><a href="Fencing.html#Dell_Blades">Блейд- серверы Dell</a></span></dt>
+          <dt><span class="section"><a href="Fencing.html#IPMI">IPMI (типичный)</a></span></dt>
+	      <dd><dl>
+            <dt><span class="section"><a href="Fencing.html#IPMI_notes">Замечания по IPMI</a></span></dt>
+          </dl></dd>
+          <dt><span class="section"><a href="Fencing.html#APC_Master_Switch">Главный коммутатор APC</span></dt>
+          <dt><span class="section"><a href="Fencing.html#Managed_Switch">Ограждение с применением управляемых коммутаторов</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Fencing.html#MultipleMethods">Множественные методы для одного узла</a></span></dt>
+        <dt><span class="section"><a href="Fencing.html#DualPathAndPSU">Дублированный путь, избыточное электропитание</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Fencing.html#Testing">Тестирование ограждения</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Fencing.html#Testing_PDU">Тестирование устройства распределения питания коммутации стойки APC</a></span></dt>
+        <dt><span class="section"><a href="Fencing.html#Testing_iDRAC">Тестирование Dell iDRAC</a></span></dt>
+      </dl></dd>
+	</dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+   </div></div></div>
+   <p>Для обеспечения целостности данных виртуальная машина может работать только на одном узле или любой другой службе кластера в 
+   одно и то же время. Применение в конфигурации оборудования выключателей электропитания дает узлу возможность выполнять цикл выключения- включения 
+   питания другого узла до перезапуска служб высокой доступности этого узла во время процесса отказов. Это предотвращает от одновременного доступа 
+   двух узлов к одним и тем же данным и к их разрушению. Ограждающие (<span class="term"><strong class="userinput"><code>fence</code></strong></span>) 
+   устройства используются для обеспечения гарантии целостности данных 
+   при сбоях в любых условиях. {<span class="emphasis"><em>Прим. пер.: Альтернативное название технологии в мире SUSE: 
+   <span class="term"><strong class="userinput"><code>STONITH, Shoot The Other Node In The Head</code></strong></span>.</em></span>}</p>
+   <p>Для хорошего и легкого ознакомления концепциями устройств ограждения высокой доступности отсылаем вас к
+   <a class="link" href="http://www.clusterlabs.org/doc/crm_fencing.html" target="_top">http://www.clusterlabs.org/doc/crm_fencing.html</a>
+   или к <a class="link" href="http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5/html/Configuration_Example_-_Fence_Devices/index.html" 
+   target="_top">http://docs.redhat.com/docs/en-US/Red_Hat_Enterprise_Linux/5/html/Configuration_Example_-_Fence_Devices/index.html</a>, понятно,
+   останавливаясь на наиболее общих и вводных частях этих документов, поскольку сами документы описывают другое программное обеспечение высокой
+   доступности, не PVE.</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: Согласно первому документу (&quot;Fencing and Stonith&quot;, Dejan Muhamedagic) 
+   существует два вида ограждения: уровня ресурса и уровня узла.
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Применение ограждения кластера на <span class="term"><strong class="userinput"><code>уровне ресурса</code></strong></span> может 
+	 гарантировать, что узел не сможет получить доступ к одному или большему числу ресурсов. Одним из наиболее типичных примеров является SAN,
+	 в котором операция ограждения изменяет правила в коммутаторе SAN запрещая доступ с узла.</p>
+	 <p>Ограждение <span class="term"><strong class="userinput"><code>уровня ресурса</code></strong></span> может быть достигнуто обычными 
+	 средствами, зависящими от того, на каком ресурсе мы хотим выполнять защиту. Такой ресурс просто будет отвергнут на данном узле и 
+	 поэтому зависящие от него ресурсы также не будут работать на этом узле.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Ограждение <span class="term"><strong class="userinput"><code>уровня узла</code></strong></span> гарантирует, что узел не будет 
+	 вообще запускать никакие ресурсы. Это обычно делается очень простым, но брутальным способом: узел просто выключается с применением 
+	 коммутатора электропитания. Это может оказаться необходимым, поскольку узел вообще не сможет отзываться.</p>
+	 <p>Устройства ограждения могут быть классифицированы на пять категорий:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	    <p>Источники бесперебойного питания (UPS)</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Блоки распределения питания(PDU)</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Устройства управления питанием блейд- серверов</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Автоматизирующие (lights-out) устройства: IBM RSA, HP iLO, Dell DRAC и т.п. {Возможно, в какой-то степени, включая IPMI}</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Устройства тестирования, используемые исключительно на этапе отладки</p>
+	   </li>
+     </ul>
+     </div>
+	 </li>
+   </ul>
+   </div>
+   </em></span>}</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Config"> </a>Настройка узлов на немедленную загрузку и непременную после цикла выключения- включения</h3>
+   </div></div></div>
+   <p>Проверьте настройки вашего встроенного программного обеспечения (bios, firmware) и убедитесь, что оно работает. Просто выньте 
+   кабель питания и проверьте, что сервер загрузится после повторного подсоединения кабеля.</p>
+   <p>Если вы применяете интегрированные устройства огораживания, вы должны настроить ACPI  (Advanced Configuration and Power Interface) чтобы 
+   убедиться в немедленном и полном ограждении - здесь существуют различные параметры:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>убедитесь, что вы не установили демон acpid (удалите выполнив: <span class="term"><code>aptitude remove acpid</code></span>)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>запретите ACPI отключение питания программным способом во встроенном ПО</p>
+	 </li>
+	 <li class="listitem">
+	 <p>запретите через acpi=off в командной строке загрузки ядра</p>
+	 </li>
+    </ul>
+    </div>
+   <p>В любом случае вам нужно <span class="term"><strong class="userinput"><code>быть уверенным, что узел будет выключен 
+   немедленно при выполнении ограждения</code></strong></span>. Если вы будете иметь здесь задержки, ресурсы высокой доступности не 
+   могут быть перемещены.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Enabling"> </a>Разрешения ограждения на всех узлах</h3>
+   </div></div></div>
+   <p>Чтобы сделать процедуру ограждения активной, вам также придется присоединить каждый узел в домен ограждения. Выполните 
+   следующие действия на всех узлах вашего кластера.</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Разрешите ограждение в <span class="term"><code>/etc/default/redhat-cluster-pve</code></span> (просто уберите комментарий 
+	 в последней строчке, см. ниже):</p>
+	   <pre class="screen">
+#nano /etc/default/redhat-cluster-pve
+
+FENCE_JOIN=&quot;yes&quot;
+	   </pre>
+	 </li>
+	 <li class="listitem">
+	  <p>перезапустите службу <span class="term"><code>cman</code></span>:</p>
+	   <pre class="screen">
+#/etc/init.d/cman restart
+	   </pre>
+	 </li>
+	 <li class="listitem">
+	  <p>присоединитесь к домену с:</p>
+	   <pre class="screen">
+#fence_tool join
+	   </pre>
+	 </li>
+    </ul>
+    </div>
+	<p>Чтобы проверить состояние просто выполните (этот пример показывает все 3 уже присоединенные узла):</p>
+	   <pre class="screen">
+#fence_tool ls
+
+fence domain
+member count  3
+victim count  0
+victim now    0
+master nodeid 1
+wait state    none
+members       1 2 3
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Если кластер теряет синхронизацию после завершения присоединения и перезапускает службу <span class="term"><code>cman</code></span>, 
+	   вам также придется перезапустить на всех узлах службы <span class="term"><code>pve-cluster</code></span>:
+	   <pre class="screen">
+#service pve-cluster restart
+	   </pre>
+	   </p></td></tr></table>
+     </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="HowTo"> </a>Общее руководство по изменению <span class="term"><code>cluster.conf</code></span></h3>
+   </div></div></div>
+   <p>Вначале сделайте копию текущего <span class="term"><code>cluster.conf</code></span>, выполните необходимые изменения, увеличьте номер 
+   <span class="term"><code>config_version.conf</code></span>, проверьте синтаксис и, если все готово, активируйте новые настройки при помощи 
+   графического интерфейса. Вот эти шаги:</p>
+ 	   <pre class="screen">
+#cp /etc/pve/cluster.conf /etc/pve/cluster.conf.new
+ 
+#nano /etc/pve/cluster.conf.new
+	   </pre>
+   <p>Если вы изменяли данный файл с применением интерфейса командной строки, вы должны ВСЕГДА увеличивать номер &quot;config_version&quot;.
+   Это будет гарантировать, что все ваши узлы применят новые установки.</p>
+   <p>Вы должны валидировать ваши настройки следующей командой:</p>
+ 	   <pre class="screen">
+ccs_config_validate -v -f /etc/pve/cluster.conf.new
+	   </pre>
+   <p>Чтобы применить эту новую конфигурацию вам необходимо войти в веб- интерфейс (<span class="term"><strong 
+   class="userinput"><code>Datacenter | HA</code></strong></span>). Вы можете ознакомиться с выполненными изменениями и если синтаксис правильный, 
+   вы можете принять эти изменения через графический интерфейс для всех узлов. После выполнения этого все узлы получат информацию о новых настройках и применят 
+   их автоматически.</p>
+   <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Fence_Devices"> </a>Перечень поддерживаемых устройств ограждения</h4>
+     </div></div></div>
+     <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="APC_PDU"> </a>Устройство распределения питания коммутации стойки APC</h5>
+       </div></div></div>
+	   <p>Т.е. <span class="term"><strong class="userinput"><code>AP7921</code></strong></span>, вот пример использования в нашей тестовой лаборатории:</p>
+       <div class="section">
+         <div xmlns="" class="titlepage"><div><div>
+          <h6 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="APC_User"> </a>Создание пользователя в веб- интерфейсе APC</h6>
+         </div></div></div>
+	     <p>Я просто настроил нового пользователя через &quot;Outlet User Management&quot;</p>
+  	     <div class="itemizedlist">
+  	     <ul class="itemizedlist" type="disc">
+  	      <li class="listitem">
+  	       <p><span class="term"><code>user name: hpapc</code></span></p>
+  	      </li>
+  	      <li class="listitem">
+  	       <p><span class="term"><code>password: 12345678</code></span></p>
+  	      </li>
+  	     </ul>
+  	     </div>
+	     <p>Убедитесь, что вы сделали доступными &quot;Outlet User Management&quot; и SSH и, наиболее важная часть, убедитесь что вы подключили 
+		 физический сервер в правильному источнику питания.</p>
+        </div>
+       <div class="section">
+         <div xmlns="" class="titlepage"><div><div>
+          <h6 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="APC_PDU_Example"> </a>Пример <span class="term"><code>/etc/pve/cluster.conf.new</code></span> с ограждением питания APC</h6>
+         </div></div></div>
+	     <p>Вот пример применения блока распределения питания APC в качестве устройства ограждения (убедитесь, что вы разрешили SSH в вашем APC).
+		 Кроме того, для службы высокой доступности и тестирования отказов применяется простой &quot;TestIP&quot;.</p>
+	     <pre class="screen">
+#cp /etc/pve/cluster.conf /etc/pve/cluster.conf.new
+
+#nano /etc/pve/cluster.conf.new
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;cluster name=&quot;hpcluster765&quot; config_version=&quot;28&quot;&gt;
+ 
+  &lt;cman keyfile=&quot;/var/lib/pve-cluster/corosync.authkey&quot;&gt;
+  &lt;/cman&gt;
+ 
+  &lt;fencedevices&gt;
+    &lt;fencedevice agent=&quot;fence_apc&quot; ipaddr=&quot;192.168.2.30&quot; login=&quot;hpapc&quot; name=&quot;apc&quot; passwd=&quot;12345678&quot; power_wait=&quot;10&quot;/&gt;
+  &lt;/fencedevices&gt;
+ 
+  &lt;clusternodes&gt;
+ 
+  &lt;clusternode name=&quot;hp4&quot; votes=&quot;1&quot; nodeid=&quot;1&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;4&quot; secure=&quot;on&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;clusternode name=&quot;hp1&quot; votes=&quot;1&quot; nodeid=&quot;2&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;1&quot; secure=&quot;on&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;clusternode name=&quot;hp3&quot; votes=&quot;1&quot; nodeid=&quot;3&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;3&quot; secure=&quot;on&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;clusternode name=&quot;hp2&quot; votes=&quot;1&quot; nodeid=&quot;4&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;2&quot; secure=&quot;on&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;/clusternodes&gt;
+ 
+  &lt;rm&gt;
+    &lt;service autostart=&quot;1&quot; exclusive=&quot;0&quot; name=&quot;TestIP&quot; recovery=&quot;relocate&quot;&gt;
+      &lt;ip address=&quot;192.168.7.180&quot;/&gt;
+    &lt;/service&gt;
+  &lt;/rm&gt;
+ 
+&lt;/cluster&gt;
+	     </pre>
+         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	       <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	       <p>Если вы делаете изменения через интерфейс командной строки, вы должны ВСЕГДА увеличивать число &quot;config_version&quot;. 
+		   Это будет гарантировать, что все ваши узлы применят новые установки.</p>
+		   <p>Вы должны валидировать ваши настройки следующей командой:</p>
+		   <pre class="screen">
+#ccs_config_validate -v -f /etc/pve/cluster.conf.new
+	       </pre>
+		   <p>Чтобы применить эту новую конфигурацию вам необходимо войти в веб- интерфейс (<span class="term"><strong 
+		   class="userinput"><code>Datacenter | HA</code></strong></span>). Вы можете ознакомиться с выполненными изменениями и если синтаксис 
+		   правильный, вы можете принять эти изменения через графический интерфейс для всех узлов. После выполнения этого все узлы получат 
+		   информацию о новых настройках и применят их автоматически.</p>
+		   <p>Параметр <span class="term"><code>power_wait</code></span> описывает как долго ожидать между выполнением операций с питанием.
+		   Без него сервер будет выключен, а затем включен в очень быстрой последовательности. Установка данного параметра 
+		   даст гарантию, что сервер будет в выключенном состоянии определенный промежуток времени прежде чем будет включен вновь при 
+		   более гарантированном ограждении.</p></td></tr></table>
+         </div>
+        </div>
+      </div>
+     <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="iMudular_Server"> </a>Intel Modular Server HA</h5>
+       </div></div></div>
+	   <p><a class="link" href="https://pve.proxmox.com/wiki/Intel_Modular_Server_HA" 
+	   target="_top">https://pve.proxmox.com/wiki/Intel_Modular_Server_HA</a></p>
+      </div>
+     <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="iDRAC"> </a>Применение iDRAC серверов Dell</h5>
+       </div></div></div>
+	   <p>Плата <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span> может применяться в качестве устройства ограждения.</p>
+       <div class="section">
+         <div xmlns="" class="titlepage"><div><div>
+          <h6 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="iDRAC_User"> </a>Создание пользователя в Dell iDRAC</h6>
+         </div></div></div>
+		 <div class="itemizedlist">
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		   <p>Создайте учетную запись <span class="term"><code>fencing_user</code></span> в каждом 
+		   <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span> с полномочиями 'Operator'.</p>
+		  </li>
+		  <li class="listitem">
+		  <p>Хотя обычно сеть <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span> находится в частной, 
+		  безопасной сетевой среде, для каждой машины может быть введен уникальный пароль в приводимых ниже настройках.</p>
+		  <div class="itemizedlist">
+		  <ul class="itemizedlist" type="disc">
+			<li class="listitem">
+			 <p>Настройте вашего пользователя процесса ограждения в <span class="term"><strong class="userinput"><code>iDRAC 
+			 User Authentication</code></strong></span> и добавьте состояние <span class="emphasis"><em>Operator</em></span> для 
+			 <span class="term"><code>iDRAC</code></span>, <span class="term"><code>LAN</code></span> и 
+			 <span class="term"><code>Serial Port</code></span>.</p>
+			</li>
+			<li class="listitem">
+			 <p>Установите полномочия <span class="term"><code>IPMI User</code></span> для <span class="emphasis"><em>Operator</em></span> и убедитесь 
+			 в том, что	<span class="term"><code>Serial Over LAN</code></span> разрешен.
+			 </p>
+			</li>
+		  </ul>
+		  </div>
+		  </li>
+		  <li class="listitem">
+		   <p>Вашим хостам Proxmox необходим доступ в сеть через SSH к вашим платам 
+		   <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span>.</p>
+		  </li>
+		  <li class="listitem">
+		   <p>Ознакомьтесь с <a class="link" href="https://pve.proxmox.com/wiki/Fencing#Testing_Dell_iDRAC" 
+		   target="_top">Testing Dell iDRAC</a> для проверки вашего синтаксиса.</p>
+		  </li>
+		 </ul>
+         </div>
+       </div>
+       <div class="section">
+         <div xmlns="" class="titlepage"><div><div>
+          <h6 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="iDRAC_Example"> </a>Пример <span class="term"><code>/etc/pve/cluster.conf.new</code></span> с iDRAC</h6>
+         </div></div></div>
+	     <p>Вот настройки, проверенные с платами <span class="term"><code>DRAC V7</code></span></p>
+	     <p>Ознакомьтесь с <a class="link" href="#HowTo" target="_top">Общим руководством по изменению</a> для выполнения шагов редактирования/ 
+		 активации.</p>
+		   <pre class="screen">
+#nano /etc/pve/cluster.conf.new
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;cluster name=&quot;peR620&quot; config_version=&quot;28&quot;&gt;
+  &lt;cman keyfile=&quot;/var/lib/pve-cluster/corosync.authkey&quot;&gt;
+  &lt;/cman&gt;
+  &lt;fencedevices&gt;
+    &lt;fencedevice agent=&quot;fence_drac5&quot; cmd_prompt=&quot;admin1-&gt;&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;fencing_user&quot; name=&quot;node1-drac&quot; passwd=&quot;XXXX&quot; secure=&quot;1&quot;/&gt;
+    &lt;fencedevice agent=&quot;fence_drac5&quot; cmd_prompt=&quot;admin1-&gt;&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;fencing_user&quot; name=&quot;node2-drac&quot; passwd=&quot;XXXX&quot; secure=&quot;1&quot;/&gt;
+    &lt;fencedevice agent=&quot;fence_drac5&quot; cmd_prompt=&quot;admin1-&gt;&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;fencing_user&quot; name=&quot;node3-drac&quot; passwd=&quot;XXXX&quot; secure=&quot;1&quot;/&gt;
+  &lt;/fencedevices&gt;
+  &lt;clusternodes&gt;
+    &lt;clusternode name=&quot;node1&quot; nodeid=&quot;1&quot; votes=&quot;1&quot;&gt;
+      &lt;fence&gt;
+        &lt;method name=&quot;1&quot;&gt;
+          &lt;device name=&quot;node1-drac&quot;/&gt;
+        &lt;/method&gt;
+      &lt;/fence&gt;
+  &lt;/clusternode&gt;
+  &lt;clusternode name=&quot;node2&quot; nodeid=&quot;2&quot; votes=&quot;1&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;1&quot;&gt;
+        &lt;device name=&quot;node2-drac&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+  &lt;clusternode name=&quot;node3&quot; nodeid=&quot;3&quot; votes=&quot;1&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;1&quot;&gt;
+        &lt;device name=&quot;node3-drac&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+  &lt;/clusternodes&gt;
+&lt;/cluster&gt;
+	       </pre>
+		   <p>Для плат Dell <span class="term"><code>DRAC7</code></span> Cards вы в основном можете применять те же настройки, что и для 
+		   <span class="term"><code>DRAC7</code></span>, однако вы должны изменить команды <span class="term"><code>fencedevice</code></span> на:
+
+		   <pre class="screen">
+  &lt;fencedevices&gt;
+    &lt;fencedevice agent=&quot;fence_drac5&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;fencing_user&quot; name=&quot;node1-drac&quot; passwd=&quot;XXXX&quot; secure=&quot;1&quot;/&gt;
+    &lt;fencedevice agent=&quot;fence_drac5&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;fencing_user&quot; name=&quot;node2-drac&quot; passwd=&quot;XXXX&quot; secure=&quot;1&quot;/&gt;
+    &lt;fencedevice agent=&quot;fence_drac5&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;fencing_user&quot; name=&quot;node3-drac&quot; passwd=&quot;XXXX&quot; secure=&quot;1&quot;/&gt;
+  &lt;/fencedevices&gt;
+	       </pre>
+		</div>
+     </div>
+     <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Dell_Blades"> </a>Блейд- серверы Dell</h5>
+       </div></div></div>
+	   <p><span class="term"><strong class="userinput"><code>PowerEdge M1000e</code></strong></span> контроллер управления шасси 
+	   (<span class="term"><strong class="userinput"><code>CMC, Chassis Management Controller</code></strong></span>), выступает в качестве 
+	   одной из разновидностей переключателей питания управляемых через сетевую среду. Можно настроить один IP-адрес для CMC и подключиться к этому 
+	   IP для управления. Индивидуальные блейд- лезвия могут включаться или выключаться по мере необходимости.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>На момент написания данной статьи {26 октября 2015} существует ошибка, которая не позволяет CMC запитывать вновь лезвия после их 
+		 ограждения. Чтобы восстановиться после простоя вызванного процессом ограждения, включите лезвие вручную (или соединитесь с CMC и 
+		 выполните команду <span class="term"><code>racadm serveraction -m server-# powerup</code></span>). Возможно, доступный в режиме тестирования 
+		 новый код исправит такое поведение. См. <a class="link" href="https://bugzilla.redhat.com/show_bug.cgi?id=466788" 
+		 target="_top">Bug 466788</a>.</p></td></tr></table>
+       </div>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>В настоящее время не поддерживается применение индивидуальных <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span>
+		 на каждом лезвии Dell. Вместо этого применяйте <span class="term"><strong class="userinput"><code>Dell CMC</code></strong></span> 
+		 согласно описанию в данном разделе. Если есть существует такая необходимость, вы можете настроить IPMI в качестве вторичного метода 
+		 ограждения для индивидуальных лезвий Dell. Для подробностей по поддержке <span class="term"><strong class="userinput"><code>Dell 
+		 iDRAC</code></strong></span>, ознакомьтесь с <a class="link" href="https://bugzilla.redhat.com/show_bug.cgi?id=496748" 
+		 target="_top">Bug 496748</a>.</p></td></tr></table>
+       </div>
+	   <p>Чтобы настроить ваши узлы на ограждение <span class="term"><strong class="userinput"><code>DRAC CMC</code></strong></span>:</p>
+  	   <div class="itemizedlist">
+	   <ul class="itemizedlist" type="disc">
+		<li class="listitem">
+		 <p>Введите адрес DRAC CMC IP для <span class="term"><strong class="userinput"><code>CMC IP Address</code></strong></span>.</p>
+		</li>
+		<li class="listitem">
+		 <p>Введите особенное для лезвия <span class="term"><strong class="userinput"><code>Module Name</code></strong></span>, например,
+		 <span class="term"><strong class="userinput"><code>server-1</code></strong></span> для лезвия 1, и
+		 <span class="term"><strong class="userinput"><code>server-4</code></strong></span> для лезвия 4.</p>
+		 <p>Пример:</p>
+	     <pre class="screen">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;cluster name=&quot;hpcluster765&quot; config_version=&quot;28&quot;&gt;
+  &lt;cman keyfile=&quot;/var/lib/pve-cluster/corosync.authkey&quot;&gt;
+  &lt;/cman&gt;
+  &lt;fencedevices&gt;
+       &lt;fencedevice agent=&quot;fence_drac5&quot; module_name=&quot;server-1&quot; ipaddr=&quot;CMC IP Address (X.X.X.X)&quot; login=&quot;root&quot; secure=&quot;1&quot; name=&quot;drac-cmc-blade1&quot; passwd=&quot;drac_password&quot;/&gt;
+       &lt;fencedevice agent=&quot;fence_drac5&quot; module_name=&quot;server-2&quot; ipaddr=&quot;CMC IP Address (X.X.X.X)&quot; login=&quot;root&quot; secure=&quot;1&quot; name=&quot;drac-cmc-blade2&quot; passwd=&quot;drac_password&quot;/&gt;
+       &lt;fencedevice agent=&quot;fence_drac5&quot; module_name=&quot;server-2&quot; ipaddr=&quot;CMC IP Address (X.X.X.X)&quot; login=&quot;root&quot; secure=&quot;1&quot; name=&quot;drac-cmc-blade3&quot; passwd=&quot;drac_password&quot;/&gt;
+  &lt;/fencedevices&gt;
+  &lt;clusternodes&gt;
+    &lt;clusternode name=&quot;node1&quot; nodeid=&quot;1&quot; votes=&quot;1&quot;&gt;
+      &lt;fence&gt;
+        &lt;method name=&quot;1&quot;&gt;
+          &lt;device name=&quot;drac-cmc-blade1&quot;/&gt;
+        &lt;/method&gt;
+      &lt;/fence&gt;
+  &lt;/clusternode&gt;
+  &lt;clusternode name=&quot;node2&quot; nodeid=&quot;2&quot; votes=&quot;1&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;1&quot;&gt;
+        &lt;device name=&quot;drac-cmc-blade2&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+  &lt;clusternode name=&quot;node3&quot; nodeid=&quot;3&quot; votes=&quot;1&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;1&quot;&gt;
+        &lt;device name=&quot;drac-cmc-blade3&quot;/&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+  &lt;/clusternodes&gt;
+  &lt;rm&gt;
+    &lt;service autostart=&quot;1&quot; exclusive=&quot;0&quot; name=&quot;TestIP&quot; recovery=&quot;relocate&quot;&gt;
+      &lt;ip address=&quot;192.168.7.180&quot;/&gt;
+    &lt;/service&gt;
+  &lt;/rm&gt;
+&lt;/cluster&gt;
+	     </pre>
+		</li>
+       </ul>
+       </div>
+      </div>
+     <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="IPMI"> </a>IPMI (типичный)</h5>
+       </div></div></div>
+	   <p>Это типичный метод для IPMI.</p>
+	   <p>он необходим на всех узлах 2013-07-02. См. замечания в конце раздела.</p>
+	   <pre class="screen">
+aptitude install ipmitool
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;cluster name=&quot;clustername&quot; config_version=&quot;6&quot;&gt;
+    &lt;cman keyfile=&quot;/var/lib/pve-cluster/corosync.authkey&quot;&gt;
+    &lt;/cman&gt;
+    &lt;fencedevices&gt;
+        &lt;fencedevice agent=&quot;fence_ipmilan&quot; name=&quot;ipmi1&quot; lanplus=&quot;1&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;ipmiusername&quot; passwd=&quot;ipmipassword&quot; power_wait=&quot;5&quot;/&gt;
+        &lt;fencedevice agent=&quot;fence_ipmilan&quot; name=&quot;ipmi2&quot; lanplus=&quot;1&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;ipmiusername&quot; passwd=&quot;ipmipassword&quot; power_wait=&quot;5&quot;/&gt;
+        &lt;fencedevice agent=&quot;fence_ipmilan&quot; name=&quot;ipmi3&quot; lanplus=&quot;1&quot; ipaddr=&quot;X.X.X.X&quot; login=&quot;ipmiusername&quot; passwd=&quot;ipmipassword&quot; power_wait=&quot;5&quot;/&gt;
+    &lt;/fencedevices&gt;
+    &lt;clusternodes&gt;
+    &lt;clusternode name=&quot;host1&quot; votes=&quot;1&quot; nodeid=&quot;1&quot;&gt;
+        &lt;fence&gt;
+            &lt;method name=&quot;1&quot;&gt;
+                 &lt;device name=&quot;ipmi1&quot;/&gt;
+            &lt;/method&gt;
+        &lt;/fence&gt;
+    &lt;/clusternode&gt;
+    &lt;clusternode name=&quot;host2&quot; votes=&quot;1&quot; nodeid=&quot;2&quot;&gt;
+        &lt;fence&gt;
+            &lt;method name=&quot;1&quot;&gt;
+                 &lt;device name=&quot;ipmi2&quot;/&gt;
+            &lt;/method&gt;
+        &lt;/fence&gt;
+    &lt;/clusternode&gt;
+    &lt;clusternode name=&quot;host3&quot; votes=&quot;1&quot; nodeid=&quot;3&quot;&gt;
+        &lt;fence&gt;
+            &lt;method name=&quot;1&quot;&gt;
+                 &lt;device name=&quot;ipmi3&quot;/&gt;
+            &lt;/method&gt;
+        &lt;/fence&gt;
+    &lt;/clusternode&gt;
+&lt;/clusternodes&gt;
+&lt;rm&gt;
+    &lt;service autostart=&quot;1&quot; exclusive=&quot;0&quot; name=&quot;ha_test_ip&quot; recovery=&quot;relocate&quot;&gt;
+        &lt;ip address=&quot;192.168.7.180&quot;/&gt;
+    &lt;/service&gt;
+&lt;/rm&gt;
+&lt;/cluster&gt;
+	   </pre>
+       <div class="section">
+         <div xmlns="" class="titlepage"><div><div>
+          <h6 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="IPMI_notes"> </a>Замечания по IPMI</h6>
+         </div></div></div>
+	     <p>После установки IPMI in <span class="term"><code>cluster.conf</code></span> я выполнил тест и получил вот это:</p>
+	   <pre class="screen">
+fbc3  ~ # fence_node fbc240 -vv
+fence fbc240 dev 0.0 agent fence_ipmilan result: error from agent
+agent args: nodename=fbc240 agent=fence_ipmilan lanplus=1 ipaddr=10.1.10.173 login=**** passwd=****** power_wait=5 
+fence fbc240 failed
+	   </pre>
+	     <p>что было решено с:</p>
+	   <pre class="screen">
+aptitude install ipmitool
+	   </pre>
+	     <p>и затем:</p>
+	   <pre class="screen">
+fbc3  ~ # fence_node fbc240 -vv
+fence fbc240 dev 0.0 agent fence_ipmilan result: success
+agent args: nodename=fbc240 agent=fence_ipmilan lanplus=1 ipaddr=10.1.10.173 login=***** passwd=*** power_wait=5 
+fence fbc240 success
+	   </pre>
+	     <p>Приведенный выше тест выполнялся на системе <span class="term"><strong class="userinput"><code>SuperMicro</code></strong></span>.</p>
+        </div>
+      </div>
+     <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="APC_Master_Switch"> </a>Главный коммутатор APC</h5>
+       </div></div></div>
+	   <p>Некоторые <span class="term"><strong class="userinput"><code>APC PDU</code></strong></span> не поддерживают SSH и не работают с 
+	   <span class="term"><code>fence_apc</code></span>. Эти более старые устройства работают с SNMP, делая возможной работу агента
+	   <span class="term"><code>fence_apc_snmp</code></span>.</p>
+	   <pre class="screen">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;cluster name=&quot;hpcluster765&quot; config_version=&quot;28&quot;&gt;
+ 
+  &lt;cman keyfile=&quot;/var/lib/pve-cluster/corosync.authkey&quot;&gt;
+  &lt;/cman&gt;
+ 
+  &lt;fencedevices&gt;
+    &lt;fencedevice agent=&quot;fence_apc_snmp&quot; ipaddr=&quot;192.168.2.30&quot; name=&quot;apc&quot; community=&quot;12345678&quot; power_wait=&quot;10&quot;/&gt;
+ 
+  &lt;/fencedevices&gt;
+ 
+  &lt;clusternodes&gt;
+ 
+  &lt;clusternode name=&quot;hp4&quot; votes=&quot;1&quot; nodeid=&quot;1&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;4&quot; /&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;clusternode name=&quot;hp1&quot; votes=&quot;1&quot; nodeid=&quot;2&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;1&quot; /&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;clusternode name=&quot;hp3&quot; votes=&quot;1&quot; nodeid=&quot;3&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;3&quot; /&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;clusternode name=&quot;hp2&quot; votes=&quot;1&quot; nodeid=&quot;4&quot;&gt;
+    &lt;fence&gt;
+      &lt;method name=&quot;power&quot;&gt;
+        &lt;device name=&quot;apc&quot; port=&quot;2&quot; /&gt;
+      &lt;/method&gt;
+    &lt;/fence&gt;
+  &lt;/clusternode&gt;
+ 
+  &lt;/clusternodes&gt;
+ 
+  &lt;rm&gt;
+    &lt;service autostart=&quot;1&quot; exclusive=&quot;0&quot; name=&quot;TestIP&quot; recovery=&quot;relocate&quot;&gt;
+      &lt;ip address=&quot;192.168.7.180&quot;/&gt;
+    &lt;/service&gt;
+  &lt;/rm&gt;
+ 
+&lt;/cluster&gt;
+	   </pre>
+      </div>
+     <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Managed_Switch"> </a>Ограждение с применением управляемых коммутаторов</h5>
+       </div></div></div>
+	   <p><span class="term"><strong class="userinput"><code>Необходимые условия</code></strong></span>:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Управляемый коммутатор с поддержкой SNMP.</p>
+	 </li><li class="listitem">
+      <p>Доступ на запись в коммутатор с применением SNMP.</p>
+	 </li>
+	 </ol>
+   </div>
+	   <p>Идея этого метода заключается в изоляции всего узла или в изоляции узла от общего хранилища. Способ выполнения этого состоит в вызове 
+	   коммутатора с применением соответствующей команды для отключения одного или более порта(-ов) в коммутаторе с целью эффективного исключения 
+	   запуска на узле виртуальной машины или контейнера с совместно используемого хранилища, поскольку от узла не будет существовать 
+	    маршрута к общему хранилищу.</p>
+	   <p>Восстановление доступа к совместно используемому хранилищу потребует вмешательства оператора на коммутаторе или выполнение команды 
+	   огораживания с параметром для повторного открытия порта(-ов). Если узлы применяют связывание соединений, вам необходимо отключить 
+	   агрегирование мост в коммутаторе, а не отдельные порты, являющиеся участниками агрегации моста.</p>
+	   <p>Показанный здесь пример использует <span class="term"><strong class="userinput"><code>SNMPv2c</code></strong></span> без пароля, но 
+	   настройки <span class="term"><strong class="userinput"><code>ACL</code></strong></span> на коммутаторе настраивать группы ограждения только
+	   участникам, имеющим доступ к виртуальной локальной сети кластера. <span class="term"><code>Fence_agent</code></span> поддерживает 
+	   порядковый номер или имя для портов.</p>
+	   <p><span class="term"><strong class="userinput"><code>Просмотреть список известных интерфейсов коммутатора</code></strong></span>:
+	   <span class="term"><code>fence_ifmib -o list -c &lt;community&gt; -a &lt;IP&gt; -n switch</code></span></p>
+	   <p><span class="term"><strong class="userinput"><code>Запретить определенный интерфейс в коммутаторе</code></strong></span>:
+	   <span class="term"><code>fence_ifmib --action=off -c &lt;community&gt; -a &lt;IP&gt; -n &lt;index|name&gt;</code></span></p>
+	   <p><span class="term"><strong class="userinput"><code>Разрешить определенный интерфейс в коммутаторе</code></strong></span>:
+	   <span class="term"><code>fence_ifmib --action=on -c &lt;community&gt; -a &lt;IP&gt; -n &lt;index|name&gt;</code></span></p>
+	   <p>Пример:</p>
+	   <pre class="screen">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;cluster config_version=&quot;74&quot; name=&quot;proxmox&quot;&gt;
+ &lt;cman expected_votes=&quot;3&quot; keyfile=&quot;/var/lib/pve-cluster/corosync.authkey&quot;/&gt;
+ &lt;quorumd allow_kill=&quot;0&quot; interval=&quot;3&quot; label=&quot;proxmox1_qdisk&quot; tko=&quot;10&quot; votes=&quot;1&quot;&gt;
+   &lt;heuristic interval=&quot;3&quot; program=&quot;ping $GATEWAY -c1 -w1&quot; score=&quot;1&quot; tko=&quot;4&quot;/&gt;
+   &lt;heuristic interval=&quot;3&quot; program=&quot;ip addr | grep eth1 | grep -q UP&quot; score=&quot;2&quot; tko=&quot;3&quot;/&gt;
+ &lt;/quorumd&gt;
+ &lt;totem token=&quot;54000&quot;/&gt;
+ &lt;fencedevices&gt;
+   &lt;fencedevice agent=&quot;fence_ifmib&quot; community=&quot;fencing&quot; ipaddr=&quot;172.16.3.254&quot; name=&quot;hp1910&quot; snmp_version=&quot;2c&quot;/&gt;
+ &lt;/fencedevices&gt;
+ &lt;clusternodes&gt;
+   &lt;clusternode name=&quot;esx1&quot; nodeid=&quot;1&quot; votes=&quot;1&quot;&gt;
+     &lt;fence&gt;
+       &lt;method name=&quot;fence&quot;&gt;
+         &lt;device action=&quot;off&quot; name=&quot;hp1910&quot; port=&quot;Bridge-Aggregation2&quot;/&gt;
+       &lt;/method&gt;
+     &lt;/fence&gt;
+   &lt;/clusternode&gt;
+   &lt;clusternode name=&quot;esx2&quot; nodeid=&quot;2&quot; votes=&quot;1&quot;&gt;
+     &lt;fence&gt;
+       &lt;method name=&quot;fence&quot;&gt;
+         &lt;device action=&quot;off&quot; name=&quot;hp1910&quot; port=&quot;Bridge-Aggregation3&quot;/&gt;
+       &lt;/method&gt;
+     &lt;/fence&gt;
+   &lt;/clusternode&gt;
+ &lt;/clusternodes&gt;
+ &lt;rm&gt;
+   &lt;failoverdomains&gt;
+     &lt;failoverdomain name=&quot;webfailover&quot; ordered=&quot;0&quot; restricted=&quot;1&quot;&gt;
+       &lt;failoverdomainnode name=&quot;esx1&quot;/&gt;
+       &lt;failoverdomainnode name=&quot;esx2&quot;/&gt;
+     &lt;/failoverdomain&gt;
+   &lt;/failoverdomains&gt;
+   &lt;resources&gt;
+     &lt;ip address=&quot;172.16.3.7&quot; monitor_link=&quot;5&quot;/&gt;
+   &lt;/resources&gt;
+   &lt;service autostart=&quot;1&quot; domain=&quot;webfailover&quot; name=&quot;web&quot; recovery=&quot;relocate&quot;&gt;
+     &lt;ip ref=&quot;172.16.3.7&quot;/&gt;
+   &lt;/service&gt;
+   &lt;pvevm autostart=&quot;1&quot; vmid=&quot;109&quot;/&gt;
+ &lt;/rm&gt;
+&lt;/cluster&gt;
+	   </pre>
+      </div>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MultipleMethods"> </a>Множественные методы для одного узла</h4>
+     </div></div></div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>См. также <span class="term"><strong class="userinput"><code>man fenced</code></strong></span>.</p></td></tr></table>
+     </div>
+	 <p>В более сложных конфигурациях для узла могут быть определено несколько методов ограждения. Если не удается ограждение с помощью первого 
+	 метода, процесс ограждения будет пробовать следующий способ, и продолжит в цикле по методам, пока не достигнет успеха.</p>
+	   <pre class="screen">
+       &lt;clusternode name=&quot;node1&quot; nodeid=&quot;1&quot;&gt;
+               &lt;fence&gt;
+               &lt;method name=&quot;1&quot;&gt;
+               &lt;device name=&quot;myswitch&quot; foo=&quot;x&quot;/&gt;
+               &lt;/method&gt;
+               &lt;method name=&quot;2&quot;&gt;
+               &lt;device name=&quot;another&quot; bar=&quot;123&quot;/&gt;
+               &lt;/method&gt;
+               &lt;/fence&gt;
+       &lt;/clusternode&gt;
+ 
+       &lt;fencedevices&gt;
+               &lt;fencedevice name=&quot;myswitch&quot; agent=&quot;...&quot; something=&quot;...&quot;/&gt;
+               &lt;fencedevice name=&quot;another&quot; agent=&quot;...&quot;/&gt;
+       &lt;/fencedevices&gt;
+	   </pre>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DualPathAndPSU"> </a>Дублированный путь, избыточное электропитание</h4>
+     </div></div></div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>См. также <span class="term"><strong class="userinput"><code>man fenced</code></strong></span>.</p></td></tr></table>
+     </div>
+	 <p>Иногда ограждение узла требует отключения питания двух портов электропитания или двух путей ввода/вывода. Это делается путем указания двух или 
+	 более устройств в пределах одного метода. Огражденный узел будет запускать агент для устройства два раза, один раз для каждой строки устройства, 
+	 и оба должны быть успешными в ограждении, чтобы весь процесс считался успешным.</p>
+	   <pre class="screen">
+       &lt;clusternode name=&quot;node1&quot; nodeid=&quot;1&quot;&gt;
+               &lt;fence&gt;
+               &lt;method name=&quot;1&quot;&gt;
+               &lt;device name=&quot;sanswitch1&quot; port=&quot;11&quot;/&gt;
+               &lt;device name=&quot;sanswitch2&quot; port=&quot;11&quot;/&gt;
+               &lt;/method&gt;
+               &lt;/fence&gt;
+       &lt;/clusternode&gt;
+	   </pre>
+	 <p>При использовании коммутаторов электропитания для ограждения узлов с двумя источниками питания, агенты должны быть проинформированы о 
+	 необходимости отключения обоих портов питания до восстановления запитывания либого из портов. Поведение выключения- включения агента, 
+	 заданное по умолчанию, может привести к тому, что электропитание никогда не будет полностью отключаться от узла.</p>
+	   <pre class="screen">
+       &lt;clusternode name=&quot;node1&quot; nodeid=&quot;1&quot;&gt;
+               &lt;fence&gt;
+               &lt;method name=&quot;1&quot;&gt;
+               &lt;device name=&quot;nps1&quot; port=&quot;11&quot; action=&quot;off&quot;/&gt;
+               &lt;device name=&quot;nps2&quot; port=&quot;11&quot; action=&quot;off&quot;/&gt;
+               &lt;device name=&quot;nps1&quot; port=&quot;11&quot; action=&quot;on&quot;/&gt;
+               &lt;device name=&quot;nps2&quot; port=&quot;11&quot; action=&quot;on&quot;/&gt;
+               &lt;/method&gt;
+               &lt;/fence&gt;
+       &lt;/clusternode&gt;
+	   </pre>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Testing"> </a>Тестирование ограждения</h3>
+   </div></div></div>
+   <p>Перед применением устройства ограждения убедитесь, что оно работает надлежащим образом.</p>
+   <p>Отобразите внутреннее состояние ограждения:.</p>
+	   <pre class="screen">
+#fence_tool ls
+
+  fence domain
+  member count  3
+  victim count  0
+  victim now    0
+  master nodeid 3
+  wait state    none
+  members       2 3 4
+	   </pre>
+   <p>Проверьте ограждение с <span class="term"><code>fence_node</code></span>:</p>
+	   <pre class="screen">
+#fence_node NODENAME -vv
+	   </pre>
+   <p>Где <span class="term"><code>NODENAME</code></span> берется из строки определения узла:</p>
+	   <pre class="screen">
+&lt;clusternode name=&quot;NODENAME&quot; nodeid=&quot;1&quot; votes=&quot;1&quot;&gt;
+	   </pre>
+   <p>Вы должны получить здесь &quot;успех&quot; и ваша машина отключится.</p>
+   <p>Повторите команду и электропитание машины включится.</p>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Testing_PDU"> </a>Тестирование устройства распределения питания коммутации стойки APC</h4>
+     </div></div></div>
+	 <p>В моем примере <span class="term"><strong class="userinput"><code>AP7921</code></strong></span> 
+	 использует IP <span class="term"><code>192.168.2.30</code></span></p>
+	 <p>Опросите состояние источников питания:</p>
+	   <pre class="screen">
+#fence_apc -x -l hpapc -p 12345678 -a 192.168.2.30 -o status -n 1 -v
+	   </pre>
+	 <p>Перезагрузите сервер при помощи <span class="term"><code>fence_apc</code></span>:</p>
+	   <pre class="screen">
+#fence_apc -x -l hpapc -p 12345678 -a 192.168.2.30 -o reboot -n 1 -v
+	   </pre>
+	 <p>Проверьте ограждение с <span class="term"><code>fence_node</code></span>:</p>
+	   <pre class="screen">
+#fence_node NODENAME -vv
+	   </pre>
+	 <p>Здесь вы должны получить&quot;успех&quot;.</p>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Testing_iDRAC"> </a>Тестирование Dell iDRAC</h4>
+     </div></div></div>
+	 <p><span class="term"><strong class="userinput"><code>iDRAC[5,6,7]</code></strong></span> применяют 
+	 <span class="term"><code>fence_drac5</code></span>, как было уже отмечено выше в установках Dell.</p>
+	 <p>Проверьте в командной строке использование другого сервера:</p>
+	   <pre class="screen">
+#fence_drac5 --ip=&quot;10.1.1.2&quot; --username=&quot;prox-b-drac&quot; --password=&quot;****&quot; --ssh --verbose --debug-file=&quot;/tmp/foo&quot; --command-prompt=&quot;admin1-&gt;&quot; --action=&quot;off&quot;
+	   </pre>
+	 <p>Проверьте файл <span class="term"><code>/tmp/foo</code></span> на предмет регистрационных записей:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>У вас есть ssh доступ к <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span> с применением заданных 
+	 имени пользователя/ пароля?</p> 
+	 </li>
+	 <li class="listitem">
+	 <p>ssh разрешен в процессе управления <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span>? 
+	  (Overview &gt; iDRAC preferences &gt; iDRAC Settings &gt; Network &gt; Services &gt; ssh) </p>
+	   <pre class="screen">
+#nc -zv [ipOf_iDRAC] 22
+	   </pre>
+	 </li>
+	 <li class="listitem">
+	 <p>Вы попытались соединиться с портом управления <span class="term"><strong class="userinput"><code>iDRAC</code></strong></span> или 
+	 IP адресом Proxmox?</p>
+	 </li>
+    </ul>
+    </div>
+    </div>
+  </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+   <p>Более рафинированная реализация технологии ограждения может быть ассоциирована с термином <span class="term"><strong 
+   class="userinput"><code>STONITH</code></strong></span> (Shoot The Other Node In The Head, Сделайте оставшемуся 
+  узлу контрольный в голову), подробнее см. <a class="link" href="http://onreader.mdl.ru/ProLinuxHAClustering/content/Ch05.html" 
+  target="_top">Глава 5. Настройка существенных параметров кластера</a> в книге <a class="link" 
+  href="http://onreader.mdl.ru/ProLinuxHAClustering/content/index.html" target="_top">Построение кластеров высокой доступности Linux для профи.</a>.</p>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,1105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 9. Менеджер виртуального хранения Ceph - Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch08.html" title="Глава 8. Планирование промышленного применения и настройка производительности Ceph"/>
+<link rel="next" href="Ch10.html" title="Глава 10. Ещё о Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 9. Менеджер виртуального хранения Ceph';
+PrevRef = 'Ch08.html';
+UpRef = 'index.html';
+NextRef = 'Ch10.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 9. Менеджер виртуального хранения Ceph</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим следующие рецепты:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Понимание архитектуры VSM</p>
+	 </li><li class="listitem">
+	 <p>Сборка среды VSM</p>
+	 </li><li class="listitem">
+	 <p>Подготовка к VSM</p>
+	 </li><li class="listitem">
+	 <p>Установка VSM</p>
+	 </li><li class="listitem">
+	 <p>Создание кластера Ceph с применением VSM</p>
+	 </li><li class="listitem">
+	 <p>Исследование инструментальной панели VSM</p>
+	 </li><li class="listitem">
+	 <p>Обновление кластера Ceph с применением VSM</p>
+	 </li><li class="listitem">
+	 <p>Дорожная карта VSM</p>
+	 </li><li class="listitem">
+	 <p>Ресурсы VSM</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch09.html">9. Менеджер виртуального хранения Ceph</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch09.html#0901">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0902">Понимание архитектуры VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0903">Сборка среды VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0904">Подготовка к VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0905">Установка VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0906">Создание кластера Ceph с применением VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0907">Исследование инструментальной панели VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0908">Обновление кластера Ceph с применением VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0909">Дорожная карта VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0910">Ресурсы VSM</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0901"> </a>Введение</h3>
+   </div></div></div>
+   <p><span class="term"><strong class="userinput">Virtual Storage Manager</strong></span> (<span class="term"><strong 
+   class="userinput">VSM</strong></span>, Менеджер виртуального хранения) является программным обеспечением изначально инициированным и 
+   разработанным Intel для управления кластером Ceph; позже оно был переведено Intel в ПО с открытым исходным кодом по лицензии Apache 2.0. 
+   Ceph поставляется с инструментарием командной строки <span class="term"><code>ceph-deploy</code></span> для развёртывания кластера и он 
+   также предоставляет богатый CLI для управления кластером. VSM с другой стороны предоставляет веб- интерфейс чтобы упростить создание и 
+   управление кластером Ceph.Применяя VSM GUI кластера Ceph оператор может наблюдать за жизнеспособностью всего кластера, управлять 
+   аппаратными средствами кластера и ёмкостью хранения, а также подключать пулы хранения Ceph к Cinder OpenStack.</p>
+   <p>VSM разработан на Python с применением OpenStack Horizon в качестве основы для каркаса приложений. Он имеет знакомый внешний вид 
+   и интуитивное понимание OpenStack Horizon как для разработчиков программного обеспечения, так и для администраторов OpenStack. Некоторые 
+   основные функции VSM включают в себя:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Пользовательский интерфейс на веб- основе для лёгкого администрирования вашего кластера Ceph</p>
+	 </li><li class="listitem">
+	 <p>Он лучше организовывает и управляет устройства сервера и хранения</p>
+	 </li><li class="listitem">
+	 <p>Он служит развёртыванию кластера Ceph и его масштабированию добавляя узлы MON, OSD и MDS.</p>
+	 </li><li class="listitem">
+	 <p>Он помогает мониторингу компонентов и ёмкости вашего кластера Ceph</p>
+	 </li><li class="listitem">
+	 <p>Он полезен при мониторинге производительности всего кластера и индивидуального узла</p>
+	 </li><li class="listitem">
+	 <p>Он позволяет создавать пулы удаляющего кодирования и кэширующего уровня</p>
+	 </li><li class="listitem">
+	 <p>Он способствует в создании и подключении пулов к Cinder OpenStack</p>
+	 </li><li class="listitem">
+	 <p>Он привносит в кластер Ceph многопользовательский интерфейс управления пользователем</p>
+	 </li>
+   </ul>
+   </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>В настоящее время VSM не способен управлять вашим кластером Ceph, если тот не создан им.
+	      {<span class="emphasis"><em>Прим. пер.: 29 января 2016 выпущена версия VSM 2.1, решившая эту проблему.</em></span>}
+		  </p></td></tr></table>
+     </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0902"> </a>Понимание архитектуры VSM</h3>
+   </div></div></div>
+   <p>В этом рецепте мы быстро пройдёмся по архитектуре Менеджера виртуального хранения, который состоит из следующих компонентов:</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="090201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Контроллер VSM </span></h4>
+   </div></div></div>
+   <p>VSM является приложением на основе веб- интерфейса, которое типично размещается на машине контроллера, которая обычно называется 
+   узлом контроллера VSM. Программное обеспечение контроллера VSM является ядром VSM, которое связывается с кластером Ceph через агентов VSM. 
+   Контроллер VSM собирает все поступающие от агентов VSM и мониторов вашего кластера Ceph данные. Для операций, подобных созданию кластера, 
+   созданию пула и тому подобных контроллер VSM отправляет инструкции агентам VSM для выполнения необходимых действий. Как показано на схеме ниже, 
+   администраторы/ операторы Ceph связываются с узлом контроллера VSM через HTTP или API и они могут применять программное обеспечение VSM.
+   Узел контроллера VSM также связан с контроллером OpenStack для настройки OpenStack на применение Ceph. В дополнение к службе 
+   пользовательского веб- интерфейса, контроллер VSM также размещает MariaDB и RabbitMQ.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="090202"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Агент VSM </span></h4>
+   </div></div></div>
+   <p>Агент VSM является процессом, который выполняется на всех узлах кластера Ceph. Задание агента VSM состоит в отправке настроек сервера, 
+   информации о жизнеспособности/ состоянии кластера, а также данных о производительности на контроллер VSM. Агент VSM использует файл 
+   манифеста сервера для идентификации узла контроллера VSM, проверки его подлинности и определения настроек сервера.</p>
+   <p>Следующая схема иллюстрирует взаимодействие различных компонентов VSM друг с другом а также со инфраструктурой OpenStack и 
+   операторами VSM:</p>
+      <div class="figure"><a id="Fig0901"> </a>
+       <p class="title"><strong>Рисунок 9.1. Взаимодействие компонентов VSM</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0901.jpg" width="704" height="503"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0903"> </a>Сборка среды VSM</h3>
+   </div></div></div>
+   <p>Чтобы применять VSM вам необходимо построить кластер Ceph используя VSM. VSM не может контролировать и управлять существующим 
+   кластером Ceph. В этом рецепте мы применим Vagrant для запуска четырёх виртуальных машин с именами <span class="term"><code>vsm-controller</code></span>,
+   <span class="term"><code>vsm-node1</code></span>, <span class="term"><code>vsm-node2</code></span> и <span class="term"><code>vsm-node3</code></span>.
+   Виртуальная машина <span class="term"><code>vsm-controller</code></span> будет работать в качестве контроллера VSM, а 
+   <span class="term"><code>vsm-nodes {1,2,3}</code></span> будут действовать как узлы агенты выполняющие кластер Ceph.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="090301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Vagrantfile для запуска виртуальных машин VSM доступен в репозитории GitHub <span class="term"><code>ceph-cookbook</code></span>.
+	  Клонируйте этот репозиторий, если вы этого ещё не сделали:</p>
+	   <pre class="screen">
+$ git clone https://github.com/ksingh7/ceph-cookbook.git
+	   </pre>
+	 </li><li class="listitem">
+      <p>Vagrantfile для запуска узлов VSM размещается в каталоге <span class="term"><code>vsm</code></span>:</p>
+	   <pre class="screen">
+$ cd vsm
+	   </pre>
+	 </li><li class="listitem">
+      <p>Запустите виртуальные машины:</p>
+	   <pre class="screen">
+$ vagrant up vsm-controller vsm-node1 vsm-node2 vsm-node3
+
+	teeri:vsm ksingh$ vagrant up vsm-controller vsm-node1 vsm-node2 vsm-node3 
+	Bringing machine 'vsm-controller' up with 'virtualbox' provider... 
+	Bringing machine 'vsm-node1' up with 'virtualbox' provider... 
+	Bringing machine 'vsm-node2' up with 'virtualbox' provider... 
+	Bringing machine 'vsm-node3' up with 'virtualbox' provider... 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Когда виртуальные машины запущены, вы должны получить четыре виртуальные машины, работующие с надлежащей сетевой средой, 
+	  готовой к применению.</p>
+	   <pre class="screen">
+	teeri:vsm ksingh$ vagrant status 
+	Current machine states: 
+	
+	vsm-node1                running (virtualbox) 
+	vsm-node2                running (virtualbox) 
+	vsm-node3                running (virtualbox) 
+	vsm-controller           running (virtualbox) 
+	
+	This environment represents multiple VMs. The VMs are all listed 
+	above with their current state. For more information about a specific 
+	VM, run `vagrant status NAME`. 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Чтобы зарегистрироваться на этих ВМ, воспользуйтесь <span class="term"><code>cephuser</code></span> и в качестве имени пользователя, и 
+	  пароля. Для регистрации <span class="term"><code>root</code></span> применяйте пароль <span class="term"><code>vagrant</code></span>.
+	  Vagrant автоматизирует настройку сетевой среды между этими ВМ со следующими параметрами:</p>
+	   <pre class="screen">
+192.168.123.100 vsm-controller
+192.168.123.101 vsm-node1
+192.168.123.102 vsm-node2
+192.168.123.103 vsm-node3
+	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0904"> </a>Подготовка к VSM</h3>
+   </div></div></div>
+   <p>В последнем рецепте мы предварительно настроили виртуальные машины используя Vagrant; они должны применяться в VSM. В этом рецепте 
+   мы изучим предполётную настройку которая нужна этим ВМ чтобы они могли применяться в VSM.</p>
+   <p>Следует отметить, что применяя Vagrant мы выполнили большую часть предполётной настройки с помощью файла сценария 
+   <span class="term"><code>ceph-cookbook/vsm/post-deploy.sh</code></span>, имеющегося в репозитории GIT, который мы клонировали в нашем 
+   последнем рецепте. Вы можете не захотеть повторять эти четыре шага, поскольку Vagrant уже выполнил их. Мы объясняем эти шаги здесь, 
+   чтобы вы могли узнать что Vagrant выполнил в фоновом режиме.
+   </p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="090401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте пользователя <span class="term"><code>cephuser</code></span> на всех узлах, которые будут применяться для развёртывания 
+	  VSM. Для простоты мы установим пароль этого пользователя как <span class="term"><code>cephuser</code></span>. Вы всегда можете 
+	  применять имя пользователя по своему усмотрению. Также предоставьте этому пользователю права <span class="term"><code>sudo</code></span>:</p>
+	   <pre class="screen">
+# useradd cephuser
+# echo 'cephuser:cephuser' | chpasswd
+# echo &quot;cephuser ALL=(ALL) NOPASSWD: ALL&quot; &gt;&gt; /etc/sudoers
+	   </pre>
+	 </li><li class="listitem">
+      <p>Убедитесь, что NTP настроен:</p>
+	   <pre class="screen">
+# systemctl stop ntpd
+# systemctl stop ntpdate
+# ntpdate 0.centos.pool.ntp.org &gt; /dev/null 2&gt; /dev/null
+# systemctl start ntpdate
+# systemctl start ntpd
+	   </pre>
+	 </li><li class="listitem">
+      <p>Установите пакеты <span class="term"><code>tree</code></span> (не обязательно), <span class="term"><code>git</code></span> и
+	  <span class="term"><code>epel</code></span>:</p>
+	   <pre class="screen">
+# yum install -y tree git epel-release
+	   </pre>
+	 </li><li class="listitem">
+      <p>Добавьте информацию о хостах в ваш файл <span class="term"><code>/etc/hosts</code></span>:</p>
+	   <pre class="screen">
+192.168.123.100 vsm-controller
+192.168.123.101 vsm-node1
+192.168.123.102 vsm-node2
+192.168.123.103 vsm-node3
+	   </pre>
+	 </li>
+   </ol>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Это именно те шаги, которые мы автоматически выполнили с помощью Vagrant, который использовал сценарий 
+	   <span class="term"><code>post-deploy.sh</code></span>. Если вы воспользовались предписанным GitHub 
+	   <span class="term"><code>ceph-cookbook</code></span>, который я создал для VSM, вам не нужно выполнять эти четыре шага.</p></td></tr></table>
+     </div>
+   </div>
+
+   <p>Следующие шаги должны быть выполнены на ваших узлах как это предписано:</p>
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь на узле <span class="term"><code>vsm-controller</code></span>, а также создайте и сделайте 
+	  совместно доступными для использования с другими узлами VSM ключи SSH. В процессе этого шага вам следует ввести пароль для
+	  <span class="term"><code>cephuser</code></span>, который установлен в значение <span class="term"><code>cephuser</code></span>:</p>
+	   <pre class="screen">
+# ssh cephuser@192.168.123.100
+$ mkdir .ssh;ssh-keygen -f .ssh/id_rsa -t rsa -N ''
+$ ssh-copy-id vsm-node1
+$ ssh-copy-id vsm-node2
+$ ssh-copy-id vsm-node3
+	   </pre>
+	 </li><li class="listitem">
+      <p>С помощью Vagrant мы присоединили три виртуальных диска VirtualBox к каждой <span class="term"><code>vsm-nodes {1,2,3}</code></span>,
+	  которые будут использоваться в качестве дисков OSD Ceph. Нам нужно вручную создать разделы на этих дисках для OSD и журнала Ceph, 
+	  чтобы VSM мог применять их в Ceph. Выполните следующие команды на всех <span class="term"><code>vsm-nodes {1,2,3}</code></span>:</p>
+	   <pre class="screen">
+$ sudo parted /dev/sdb -- mklabel gpt
+$ sudo parted -a optimal /dev/sdb -- mkpart primary 10% 100%
+$ sudo parted -a optimal /dev/sdb -- mkpart primary 0 10%
+$ sudo parted /dev/sdc -- mklabel gpt
+$ sudo parted -a optimal /dev/sdc -- mkpart primary 10% 100%
+$ sudo parted -a optimal /dev/sdc -- mkpart primary 0 10%
+$ sudo parted /dev/sdd -- mklabel gpt
+$ sudo parted -a optimal /dev/sdd -- mkpart primary 0 10%
+$ sudo parted -a optimal /dev/sdd -- mkpart primary 10% 100%
+
+	[cephuser@vsm-node1 ~]$ sudo parted /dev/sdb -- mklabel gpt 
+	Warning: The existing disk label on /dev/sdb will be destroyed and all data on this disk will be lost. Do you want to continue? 
+	Yes/No? yes 
+	Information: You may need to update /etc/fstab.
+	[cephuser@vsm-node1 ~]$ 
+	[cephuser@vsm-node1 ~]$ sudo parted -a optimal /dev/sdb mkpart primary 10% 100% 
+	Information: YOU may need to update /etc/fstab. 
+	
+	[cephuser@vsm-node1 ~]$ sudo parted -a optimal /dev/sdb -- mkpart primary 0 10% 
+	Warning: The resulting partition is not properly aligned for best performance. 
+	Ignore/cancel? Ignore 
+	Information: You may need to update /etc/fstab. 
+	
+	[cephuser@vsm-node1 ~]$ 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Когда вы создадите разделы на всех дисках, просмотрите список блочных устройств на этих узлах чтобы проверить, что 
+	  разделы выглядят как показано далее:</p>
+	   <pre class="screen">
+$ lsblk
+	   </pre>
+      <div class="figure"><a id="Fig0902"> </a>
+       <p class="title"><strong>Рисунок 9.2. Список блочных устройств</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0902.jpg" width="641" height="521"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	   </li><li class="listitem">
+      <p>На данном этапе вы выполнили все требования, необходимые для VSM. В качестве необязательный шага хорошей идеей будет сделать снимок 
+	  ваших виртуальных машин чтобы их можно было восстановить, если что-то пойдёт не так.</p>
+	   <pre class="screen">
+	teeri:vsm ksingh$ for i in controller nodel node2 node3 ; do vBoxmanage snapshot vsm-$i take good-state ; done 
+	0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100% 
+	0%...10%...20%...30%...40%...50%...60%...70X...80%...90%...100% 
+	0%...10%...20%...30%...40%...50%...60%...70X...80%...90%...100% 
+	teeri:vsm ksingh$ 
+	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0905"> </a>Установка VSM</h3>
+   </div></div></div>
+   <p>В последнем рецепте мы выполнили все приготовления необходимые для развёртывания VSM. В этом рецепте мы изучим как автоматически развернуть
+   VSM на все узлы.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="090501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+      <p>В данной демонстрации мы используем CentOS7 в качестве основной операционной системы; давайте загрузим репозиторий VSM для 
+	  CentOS7. Зарегистрируемся на вашем узле <span class="term"><code>vsm-controller</code></span> в качестве 
+	  <span class="term"><code>cephuser</code></span> и получим VSM:</p>
+	   <pre class="screen">
+$ wget https://github.com/01org/virtual-storage-manager/releases/download/v2.0.0/2.0.0-216_centos7.tar.gz
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>VSM также доступен для OS Ubuntu и может быть загружен с <a class="link" href="https://github.com/01org/virtual-storage-manager" 
+	   target="_top">https://github.com/01org/virtual-storage-manager</a>.</p></td></tr></table>
+     </div>
+	 </li><li class="listitem">
+      <p>Разверните VSM:</p>
+	   <pre class="screen">
+$ tar -xvf 2.0.0-216_centos7.tar.gz
+$ cd 2.0.0-216
+$ ls -la
+
+	[cephuser@vsm-controller 2.0.0-216]$ ll 
+	total 500 
+	-rw-r--r--. 1 cephuser cephuser  27471 Sep 30 09:44 CHANGELOG.md 
+	-rw-r--r--. 1 cephuser cephuser 124686 Sep 30 09:44 CHANGELOG.pdf 
+	-rwxr-xr-x. 1 cephuser cephuser     94 Sep 30 09:44 get_pass.sh 
+	-rw-r--r--. 1 cephuser cephuser  29959 Sep 30 09:44 INSTALL.md 
+	-rw-r--r--. 1 cephuser cephuser 251846 Sep 30 09:44 INSTALL.pdf 
+	-rw-r--r--. 1 cephuser cephuser    684 Sep 30 09:44 installrc 
+	-rw-r--r--. 1 cephuser cephuser  21758 Sep 30 09:44 install.sh 
+	-rw-r--r--. 1 cephuser cephuser    580 Sep 30 09:44 LICENSE 
+	drwxr-xr-x. 2 cephuser cephuser     65 Sep 30 09:44 manifest 
+	-rw-r--r--. 1 cephuser cephuser    320 Sep 30 09:44 NOTICE 
+	-rwxr-xr-x. 1 cephuser cephuser   1155 Sep 30 09:44 prov_node.sh 
+	-rw-r--r--. 1 cephuser cephuser   3121 Sep 30 09:44 README.md 
+	-rw-r--r--. 1 cephuser cephuser      3 Sep 30 09:44 RELEASE 
+	-rw-r--r--. 1 cephuser cephuser   1176 Sep 30 09:44 rpms.lst 
+	-rwxr-xr-x. 1 cephuser cephuser   1353 Sep 30 09:44 uninstall.sh
+	-rw-r--r--. 1 cephuser cephuser      5 Sep 30 09:44 VERSION 
+	drwxr-xr-x. 3 cephuser cephuser   4096 Sep 30 09:44 vsmrepo 
+	[cephuser@vsm-controller 2.0.0-216]$ 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Установите адрес ваших узла контроллера и агента; добавьте следующие строки в файл <span class="term"><code>installrc</code></span>:</p>
+	   <pre class="screen">
+AGENT_ADDRESS_LIST=&quot;192.168.123.101 192.168.123.102 192.168.123.103&quot;
+CONTROLLER_ADDRESS=&quot;192.168.123.100&quot;
+	   </pre>
+	 </li><li class="listitem">
+      <p>Пооверьте файл <span class="term"><code>installrc</code></span>:</p>
+	   <pre class="screen">
+$ cat installrc | egrep -v &quot;#|^$&quot;
+
+	[cephuser@vsm-controller 2.0.0-216]$ cat installrc | egrep -v &quot;#1A$&quot; 
+	AGENT_ADDRESS_LIST=&quot;192.168.123.101 192.168.123.102 192.168.123.103&quot; 
+	С0NTR0LLER_ADDRESS=&quot;192.168.123.100&quot; 
+	[cephuser@vsm-controller 2.0.0-216]$
+	   </pre>
+	 </li><li class="listitem">
+      <p>В папке <span class="term"><code>manifest</code></span> создайте создайте каталоги использующие имена управляемых вами IP 
+	  <span class="term"><code>vsm-controller</code></span> и <span class="term"><code>vsm-nodes</code></span>:</p>
+	   <pre class="screen">
+$ cd manifest
+$ mkdir 192.168.123.100 192.168.123.101 192.168.123.102 192.168.123.103
+	   </pre>
+	 </li><li class="listitem">
+      <p>Скопируйте пример файла манифеста кластера на <span class="term"><code>192.168.123.100/cluster.manifest</code></span>, который 
+	  является вашим узлом <span class="term"><code>vsm-controller</code></span>:</p>
+	   <pre class="screen">
+$ cp cluster.manifest.sample 192.168.123.100/cluster.manifest
+	   </pre>
+	 </li><li class="listitem">
+      <p>Внесите изменения в ваш файл манифеста кластера который мы добавили на нашем последнем шаге, добавив следующее:</p>
+	   <pre class="screen">
+$ vim 192.168.123.100/cluster.manifest
+
+	[management_addr] 
+	192.168.123.0/24 
+	
+	[ceph_public_addr] 
+	192.168.123.0/24 
+	
+	[ceph_cluster_addr] 
+	192.168.123.0/24 
+	   </pre>
+      <p>Вам следует знать, что в промышленной среде вам рекомендуется иметь раздельные сетевые среды для обмена в среде управления Ceph, 
+	  общедоступном Ceph и среде кластера Ceph. Применяя файл <span class="term"><code>cluster.manifest</code></span>, VSM может быть 
+	  проинструктирован применять эти различные сети для вашего кластера Ceph:</p>
+	 </li><li class="listitem">
+      <p>Измените ваш файл <span class="term"><code>manifest/server.manifest.sample</code></span>, и сделайте следующие правки:</p>
+      <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+         <p>В раздел <span class="term"><code>[vsm_controller_ip]</code></span> добавьте IP вашего контроллера VSM,
+		 <span class="term"><code>192.168.123.100</code></span>.</p>
+	    <pre class="screen">
+$ cp cluster.manifest.sample 192.168.123.100/cluster.manifest
+	    </pre>
+	    </li><li class="listitem">
+         <p>Добавьте имена дисковых устройств для <span class="term"><code>[sata_device]</code></span> и 
+		 <span class="term"><code>[journal_device]</code></span>, как показано на следующем снимке экрана. Убедитесь, что имена 
+		 <span class="term"><code>sata_device</code></span> и <span class="term"><code>journal_device</code></span> разделены 
+		 пробелом.</p>
+	    <pre class="screen">
+	[7200_rpm_sata] 
+	#format [sata_device] [journal_device] 
+	/dev/sdbl /dev/sdb2 
+	/dev/sdcl /dev/sdc2 
+	/dev/sddl /dev/sdd2 
+	    </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Файл <span class="term"><code>server.manifest</code></span> предоставляет некоторые необязательные параметры настройки для 
+		 различных типов дисков. В промышленных средах вам рекомендуется применять применять правильный тип на основании ваших 
+		 аппаратных средств.</p></td></tr></table>
+     </div>
+	    </li><li class="listitem">
+         <p>Если вы не используете OSD диски <span class="term"><code>10krpm_sas</code></span> и журналы по дисковому пути, закомментируйте 
+		 строки <span class="term"><code>%osd-by-path-1% %journal-by-path-1%</code></span> в вашем разделе 
+		 <span class="term"><strong class="userinput">[10krpm_sas]</strong></span>, как это показано на следующем экранном снимке:</p>
+	    <pre class="screen">
+	[10krpm_sas] 
+	#format [sas_device] [journal_device] 
+	#%osd-by-path-l% %journal-by-path-1% 
+	#%osd-by-path-2% %journal-by-path-2% 
+	#%osd-by-path-3% %journal-by-path-3% 
+	#%osd-by-path-4% %journal-by-path-4% 
+	#%osd-by-path-5% %journal-by-path-5% 
+	#%osd-by-path-6% %journal-by-path-6% 
+	#%osd-by-path-7% %journal-by-path-7% 
+	    </pre>
+	    </li>
+	    </ol>
+      </div>
+	 </li><li class="listitem">
+      <p>Когда вы внесёте правки в свой файл <span class="term"><code>manifest/server.manifest.sample</code></span>, проверьте все изменения:</p>
+	   <pre class="screen">
+$ cat server.manifest.sample | egrep -v &quot;#|^$&quot;
+
+	[cephuser@vsm-controller manifest]$ cat server.manifest.sample | egrep -v &quot; 
+	[vsm_controller_ip] 
+	192.168.123.100 
+	[role] 
+	storage 
+	monitor 
+	[auth_key] 
+	token-tenant 
+	[ssd] 
+	[7200_rpm_sata] 
+	/dev/sdbl /dev/sdb2 
+	/dev/sdcl /dev/sdc2 
+	/dev/sddl /dev/sdd2 
+	[10krpm_sas] 
+	[ssd_cached_7200rpm_sata] 
+	[ssd_cached_10krpm_sas] 
+	[ceohuser@vsm-controller manifest]$ 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Скопируйте свой файл <span class="term"><code>manifest/server.manifest.sample</code></span>, который мы изменили на предыдущем шаге, 
+	  на всеваши узлы <span class="term"><code>vsm-node</code></span>, то есть, <span class="term"><code>vsm-node {1,2,3}</code></span>:</p>
+	   <pre class="screen">
+$ cp server.manifest.sample 192.168.123.101/server.manifest
+$ cp server.manifest.sample 192.168.123.102/server.manifest
+$ cp server.manifest.sample 192.168.123.103/server.manifest
+	   </pre>
+	 </li><li class="listitem">
+      <p>Проверьте структуру каталога манифеста:</p>
+	   <pre class="screen">
+$ tree
+
+	[cephuser@vsm-controller manifest] $ tree 
+	
+	├─ 192.168.123.100 
+	│  └— cluster.manifest 
+	├─ 192.168.123.101 
+	│  └— server.manifest 
+	├─ 192.168.123.102 
+	│  └— server.manifest 
+	├─ 192.168.123.103 
+	│  └— server.manifest 
+	├─ cluster.manifest.sample 
+	└─ server.manifest.sample 
+	
+	4 directories, 6 files 
+	[cephuser@vsm-controller manifest] $ 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для начала установки VSM предоставьте права на выполнение для файла <span class="term"><code>install.shr</code></span>:</p>
+	   <pre class="screen">
+$ cd ..
+$ chmod +x install.sh
+	   </pre>
+	 </li><li class="listitem">
+      <p>Наконец, установите VSM, выполнив файл <span class="term"><code>install.shr</code></span> с параметрами 
+	  <span class="term"><code>--check-dependence-package</code></span>, которые загрузят необходимые для установки VSM пакеты из 
+	  <a class="link" href="https//github.com/01org/vsm-dependencies" target="_top">https//github.com/01org/vsm-dependencies</a>:</p>
+	   <pre class="screen">
+$ ./install.sh -u cephuser -v 2.0 --check-dependence-package
+
+	[cephuser@vsm-controller 2.0.0-216]$ ./install.sh -u cephuser -v 2.0 --check-dependence-package 
+	+ echo 'Before auto deploy the vsm, please be sure that you have set the manifest 
+	such as manifest/192.168.100.100/server.manifest. And you have changed the file, too.' 
+	Before auto deploy the vsm, please be sure that you have set the manifest 
+	such as manifest/192.168.100.100/server.manifest. And you have changed the file, too. 
+	+ sleep 5 
+	+++ dirname ./install.sh 
+	++ cd . 
+	++ pwd 
+	+ TOPDIR=/home/cephuser/2.0.0-216 
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Установка VSM займёт несколько минут. Процесс установки может потребовать ввода пароля <span class="term"><code>cephuser</code></span> 
+	   для узла <span class="term"><code>vsm-controller</code></span>. В этом случае, пожалуйста, вводите в качестве пароля 
+	   <span class="term"><code>cephuser</code></span>.</p>
+	   <p>В случае, если вы столкнётесь с какой бы то ни было ошибкой и захотите перезапустить установку VSM, рекомендуется чтобы вы очистили 
+	   вашу систему перед повтором. Для очистки системы выполните файл сценария <span class="term"><code>uninstall.sh</code></span>.</p>
+	   <p>Вы также можете пересмотреть авторскую версию установки VSM проверив файл журнала установки, расположенный в пути репозитория 
+	   <span class="term"><code>ceph-cookbook</code></span>: <span class="term"><code>ceph-cookbook/vsm/vsm_install_log</code></span>.</p>
+	   </td></tr></table>
+     </div>	
+	 </li><li class="listitem">
+      <p>Когда ваша установка VSM завершится, извлеките ваш пароль для своего пользователя <span class="term"><code>admin</code></span> 
+	  выполнив <span class="term"><code>get_pass.sh</code></span> на узле <span class="term"><code>vsm-controller</code></span>:</p>
+	   <pre class="screen">
+$ ./get_pass.sh
+
+	[cephuser@vsm-controller 2.0.0-216]$ ./get_pass.sh 
+	f409fc062564b9a937d1 
+	[cephuserCdvsm-controller 2.0.0-216]$ 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Наконец, зарегистрируйтесь в инструментальной панели VSM, <span class="term"><code>, https://192.168.123.100/dashboard/vsm</code></span>, 
+	  под именем пользователя <span class="term"><code>admin</code></span> с паролем, извлечённым на предыдущем шаге.</p>
+      <div class="figure"><a id="Fig0903"> </a>
+       <p class="title"><strong>Рисунок 9.3. Регистрация в инструментальной панели VSM</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0903.jpg" width="542" height="567"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Стрница загрузки <span class="term"><code>vsm-dashboard</code></span> выглядит следующим образом:</p>
+      <div class="figure"><a id="Fig0904"> </a>
+       <p class="title"><strong>Рисунок 9.4. vsm-dashboard</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0904.jpg" width="534" height="266"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  <p>Ваши параметры мониторинга кластера VSM отображают некоторые великолепные графики для IOPS, латентности, пропускной способности и 
+	  использования процессора, которые предоставляют вам широкую картину того,что происходит в вашем кластере.</p>
+      <div class="figure"><a id="Fig0905"> </a>
+       <p class="title"><strong>Рисунок 9.5. VSM мониторинг кластера</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0905.jpg" width="531" height="318"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0906"> </a>Создание кластера Ceph с применением VSM</h3>
+   </div></div></div>
+   <p>В нашем последнем рецепте мы только что установили VSM; у нас пока нет кластера Ceph. В этом рецепте мы создадим кластер Ceph 
+   при помощи VSM с тем, чтобы VSM смог позже управлять этим кластером. Вы увидите, что создавать кластер при помощи VSM чрезвычайно 
+   просто.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="090601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Для создания кластера из инструментальной панели VSM, перейдите в <span class="term"><strong class="userinput">Cluster Management 
+	  | Create Cluster</strong></span> и затем кликните на кнопку <span class="term"><strong class="userinput">Create Cluster</strong></span>:</p>
+      <div class="figure"><a id="Fig0906"> </a>
+       <p class="title"><strong>Рисунок 9.6. Создание кластера</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0906.jpg" width="1076" height="395"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Выберите все узлы кликнув по флаговой кнопке, с последующими идентификаторами, и, наконец, кликните по кнопке 
+	  <span class="term"><strong class="userinput">Create Cluster</strong></span>:</p>
+      <div class="figure"><a id="Fig0907"> </a>
+       <p class="title"><strong>Рисунок 9.7. Выберите узлы</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0907.jpg" width="1067" height="422"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Создание кластера Ceph займёт несколько мнут. VSM будет очень кратко сообщать о том, что он делает в фоновом режиме в поле состояния 
+	  вашей инструментальной панели, как показано далее:</p>
+      <div class="figure"><a id="Fig0908"> </a>
+       <p class="title"><strong>Рисунок 9.8. Очистка</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0908.jpg" width="440" height="275"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+      <p>После очистки он смонтирует диски как показано в поле состояния инструментальной панели на следующем экранном снимке:
+	  :</p>
+      <div class="figure"><a id="Fig0909"> </a>
+       <p class="title"><strong>Рисунок 9.9. Монтирование</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0909.jpg" width="479" height="267"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Когда развёртывание кластера Ceph завершится, VSM отобразит состояние ваших узлов как 
+	  <span class="term"><strong class="userinput">Active</strong></span>:</p>
+      <div class="figure"><a id="Fig0910"> </a>
+       <p class="title"><strong>Рисунок 9.10. Изменение состояния узлов на активное</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0910.jpg" width="1069" height="342"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Наконец, проверьте состояние кластера из
+	  <span class="term"><strong class="userinput">Dashboard | Cluster Status</strong></span>:</p>
+      <div class="figure"><a id="Fig0911"> </a>
+       <p class="title"><strong>Рисунок 9.11. Состояние кластера</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0911.jpg" width="1076" height="506"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0907"> </a>Исследование инструментальной панели VSM</h3>
+   </div></div></div>
+   <p>Инструментальная панель VSM делает большинство ваших операций по всему кластеру Ceph очень простыми, будь то его развёртывание, 
+   управление сервером, управление/ мониторинг кластера или даже интеграция с OpenStack. Инструментальная панель VSM очень дружелюбна 
+   к пользователю и вы можете исследовать большую часть её функциональности самостоятельно. Инструментальная панель VSM предоставляет 
+   следующие параметры;</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">Dashboard</strong></span>: Предоставляет полное состояние вашей системы включая:</p>
+	 <ul class="itemizedlist" type="circle">
+	  <li class="listitem">
+	  <p><span class="term"><strong class="userinput">VSM Status</strong></span>: Предоставляет вам версию вашего VSM, время его работы, 
+	  версию Ceph и тому подобное</p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Cluster Summary</strong></span>: Предоставляет состояние кластера Ceph, аналогично выводу 
+	  <span class="term"><code>ceph -s</code></span></p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">OSD Summary</strong></span></p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Monitor Summary</strong></span></p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">MDS Summary</strong></span></p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">PG Summary</strong></span></p>
+	  <p>Также предоставляет метрики производительности такие как IOPS, латентность, пропускная способность и использование ЦПУ для всех 
+	  узлов Ceph</p>
+	  </li>
+     </ul>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Server Management</strong></span>: включает следующее:</p>
+	 <ul class="itemizedlist" type="circle">
+	  <li class="listitem">
+	  <p><span class="term"><strong class="userinput">Manage Servers</strong></span>: функции описываются так:</p>
+	   <ul class="itemizedlist" type="circle">
+	    <li class="listitem">
+	    <p>Производит список всех серверов с такой информацией, как управление, адреса сетевых сред кластера и общедоступной, версию Ceph, 
+		состояние и тому подобное.</p>
+	    </li><li class="listitem">
+	    <p>Предоставляет параметры для добавления или удаления серверов, мониторов Ceph, а также запуска и останова серверов.</p>
+	    </li>
+       </ul>
+      <div class="figure"><a id="Fig0912"> </a>
+       <p class="title"><strong>Рисунок 9.12. Управление серверами</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0912.jpg" width="1072" height="394"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Manage Devices</strong></span>: функции описываются так:</p>
+	   <ul class="itemizedlist" type="circle">
+	    <li class="listitem">
+	    <p>Предоставляет список всех OSD Ceph включая их состояние, вес, сервер размещения, а также класс хранения.</p>
+	    </li><li class="listitem">
+	    <p>Позволяет создавать новые OSD, а также перезапускать, удалять и восстанавливать OSD.</p>
+	    </li>
+       </ul>
+      <div class="figure"><a id="Fig0913"> </a>
+       <p class="title"><strong>Рисунок 9.13. Управление устройствами</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0913.jpg" width="1076" height="790"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li>
+     </ul>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Cluster Management</strong></span></p>
+	 <p>Этот раздел инструментальной панели VSM предоставляет определённые возможности для управления кластером Ceph:</p>
+	 <ul class="itemizedlist" type="circle">
+	  <li class="listitem">
+	  <p><span class="term"><strong class="userinput">Create Cluster</strong></span></p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Upgrade Cluster</strong></span></p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Manage Pools</strong></span>: помогает вам создавать пулы с репликациями и удаляющим 
+	  кодированием, добавлять/ удалять уровень кэширования и тому подобное.</p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Manage Storage Group</strong></span>: Добавляет новые группы хранения.</p>
+	  </li>
+     </ul>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Cluster Monitoring</strong></span>: Этот раздел инструментальной панели VSM предоставляет 
+	 полный мониторинг кластера, включая все его компоненты:</p>
+	 <ul class="itemizedlist" type="circle">
+	  <li class="listitem">
+	  <p><span class="term"><strong class="userinput">Storage Group Status</strong></span>:
+	  </p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Pool Status</strong></span>:
+	  </p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">OSD Status</strong></span>:
+	  </p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Monitor Status</strong></span>:
+	  </p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">MDS Status</strong></span>:
+	  </p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">PG Status</strong></span>:
+	  </p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">RBD Status</strong></span>:
+	  </p>
+	  </li>
+     </ul>
+      <div class="figure"><a id="Fig0914"> </a>
+       <p class="title"><strong>Рисунок 9.14. Мониторинг кластера</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0914.jpg" width="1071" height="594"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">OpenStack Integration</strong></span>: Этот раздел инструментальной панели VSM позволяет нам
+	 выполнять интеграцию хранилища Ceph в OpenStack добавляя терминалы OpenStack и предоставляя пулы RBD для OpenStack.</p>
+	 <ul class="itemizedlist" type="circle">
+	  <li class="listitem">
+	  <p><span class="term"><strong class="userinput">Manage RBD Pools</strong></span>: предоставляет пулы для OpenStack</p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">OpenStack Access</strong></span>: Добавляет терминалы OpenStack</p>
+	  </li>
+     </ul>
+      <div class="figure"><a id="Fig0915"> </a>
+       <p class="title"><strong>Рисунок 9.15. Интеграция с OpenStack</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0915.jpg" width="1061" height="669"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">VSM Management</strong></span>: Этот раздел инструментальной панели VSM позволяет нам 
+	 управлять самой инструментальной панелью VSM:</p>
+	 <ul class="itemizedlist" type="circle">
+	  <li class="listitem">
+	  <p><span class="term"><strong class="userinput">Add/Remove User</strong></span>: Создаёт или удаляет пользователя и изменяет его пароль.</p>
+	  </li><li class="listitem">
+	  <p><span class="term"><strong class="userinput">Settings</strong></span>: различные установки, относящиеся к Ceph.</p>
+	  </li>
+     </ul>
+      <div class="figure"><a id="Fig0916"> </a>
+       <p class="title"><strong>Рисунок 9.16. Управление VSM</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0916.jpg" width="1070" height="565"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+    </ul>
+    </div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0908"> </a>Обновление кластера Ceph с применением VSM</h3>
+   </div></div></div>
+   <p>Теперь вы достаточно знакомы с VSM и знаете что он предоставляет привлекательную инструментальную панель которая делает сложные 
+   относящиеся к Ceph операции, такие как создание кластера, чрезвычайно простыми. Другой важный аспект VSM состоит в том, что он автоматизирует 
+   процесс обновления и упрощает его. В этом рецепте мы применим VSM для обновления нашего кластера Ceph Firefly на Ceph Hammer.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="090801"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Перед запуском своего процесса обновления проверьте версию своего текущего кластера перейдя к
+	  <span class="term"><strong class="userinput">VSM | Dashboard | Cluster Status</strong></span>. Она должна быть Ceph Firefly Version 0.80.7.</p>
+	 </li><li class="listitem">
+      <p>Для обновления вашего кластера перейдите к <span class="term"><strong class="userinput">VSM | Cluster Management 
+	  | Ceph Upgrade</strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Обеспечьте следующие детали для обновления своего Ceph:</p>
+      <ol class="orderedlist" type="1"><li class="listitem">
+         <p><span class="term"><strong class="userinput">Package URL</strong></span>:
+		 <a class="link" href="http://download.ceph.com/rpm-hammer/el7/" target="_top">http://download.ceph.com/rpm-hammer/el7/</a>.</p>
+	    </li><li class="listitem">
+         <p><span class="term"><strong class="userinput">Key URL</strong></span>: по умолчанию добавляется самим VSM.</p>
+	    </li><li class="listitem">
+         <p><span class="term"><strong class="userinput">Proxy URL</strong></span>: в случае, когда необходим прокси интернета для доступа к 
+		 нему. В нашем случае не требуется.</p>
+	    </li><li class="listitem">
+         <p><span class="term"><strong class="userinput">SSH User Name</strong></span>: относится к нашему имени пользователя 
+		 <span class="term"><code>cephuser</code></span>, которого мы создали для управления VSM.</p>
+	    </li> 
+      </ol>
+      <div class="figure"><a id="Fig0917"> </a>
+       <p class="title"><strong>Рисунок 9.17. Детали обновления</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0917.jpg" width="1068" height="438"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Поскольку вы предоставили все необходимые детали для VSM, нажмите 
+	  <span class="term"><strong class="userinput">Submit</strong></span>, это запустит процесс обновления вашего кластера и для его завершения 
+	  потребуется несколько минут. Пожалуйста, будьте терпеливы, к тому же при желании вы можете наблюдать свои журналы VSM в 
+	  <span class="term"><code>/var/log/vsm</code></span>.</p>
+	 </li><li class="listitem">
+      <p>Когда обновление завершится, инструментальная панель VSM отобразит сообщение, как показано ниже, оно подтверждает что ваш кластер был обновлён:</p>
+      <div class="figure"><a id="Fig0918"> </a>
+       <p class="title"><strong>Рисунок 9.18. Подтверждение обновления</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0918.jpg" width="400" height="117"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li><li class="listitem">
+      <p>Чтобы удостовериться в завершении обновления, перейдите к <span class="term"><strong class="userinput">VSM | Dashboard 
+	  | Cluster Status</strong></span>. Вашей версией Ceph должна быть 0.94.5, что является Ceph Hammer.</p>
+      <div class="figure"><a id="Fig0919"> </a>
+       <p class="title"><strong>Рисунок 9.19. Проверка новой версии</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0919.jpg" width="537" height="270"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	 </li>
+   </ol>
+   </div>
+   <p>Таким образом VSM делает процесс обновления Ceph исключительно простым. Более того, этот процесс обновления полностью происходит 
+   в реальном масштабе времени, то есть не требует никаких перерывов обслуживания по расписанию для выполнения обновления.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0909"> </a>Дорожная карта VSM</h3>
+   </div></div></div>
+   <p>На момент написания этой книги текущей стабильной версией VSM была 2.0. Это та же версия, которая была продемонстрирована в 
+   данной главе. Благодаря лёгкости в использовании, мощности и интерфейсом с богатой функциональностью VSM становится чрезвычайно 
+   популярным в сообществе Ceph. Следующая редакция VSM должна быть 2.1, которая выйдет с некоторыми исправлениями ошибок и новыми функциями.
+   {<span class="emphasis"><em>Прим. пер.: 29 января 2016 выпущена версия 2.1, на 27 мая 2016 заявлен выпуск версии 2.2.</em></span>}
+   Перечислим некоторые из них:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Новыми функциями VSM 2.1 являются:</p>
+	 <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	   <p>Сообщение имени вашего сервера, который выполняет демон монитора</p>
+	   </li><li class="listitem">
+	   <p>Prototype — реализация Ceph Calamari/VSM</p>
+	   </li><li class="listitem">
+	   <p>Настраиваемые параметры монтирования для файловой системы</p>
+	   </li><li class="listitem">
+	   <p>Идентификация физического местоположения отказавшего диска</p>
+	   </li><li class="listitem">
+	   <p>Удаление неиспользуемого пути диска в процессе добавления нового OSD</p>
+	   </li><li class="listitem">
+	   <p>Отображение логического пути дисков вместо физического при добавлении нового OSD</p>
+	   </li><li class="listitem">
+	   <p>Подключение и управление существующего кластера Ceph</p>
+	   </li><li class="listitem">
+	   <p>Улучшения страницы мониторинга и состояния</p>
+	   </li><li class="listitem">
+	   <p>Отображение информации SMART для устройств хранения</p>
+	   </li>
+     </ul>
+	 </li><li class="listitem">
+	 <p>Исправления ошибок, необходимые в VSM 2.1:</p>
+	 <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	   <p>Кнопка мониторов должна быть перемещена в Управление серверами и она должна вывешиваться когда узел монитора также имеет демон MDS</p>
+	   </li><li class="listitem">
+	   <p>Версия VSM и время его работы должны отображаться даже если кластер не создан</p>
+	   </li><li class="listitem">
+	   <p>Он даёт доступ к прочим опциям инструментальной панели VSM в процессе создания кластера</p>
+	   </li><li class="listitem">
+	   <p>Высвечивается предостережение <span class="term"><strong class="userinput">Number of PG in each OSD is too large</strong></span> 
+	   после обновления кластера Ceph на версию Ceph Hammer.</p>
+	   </li><li class="listitem">
+	   <p>Пароль для доступа к OpenStack отображается простым текстом</p>
+	   </li><li class="listitem">
+	   <p>При установке с предварительно подготовленными пакетами зависимостей установщик останавливает выполнение и высвечивает 
+	   претензии</p>
+	   </li><li class="listitem">
+	   <p>Если сервер отключается, это не отображается в VSM</p>
+	   </li>
+     </ul>
+	 </li>
+    </ul>
+    </div>
+   <p>Это очень ограниченный список новых функциональностей и исправлений ошибок, для последней информации по дорожной карте VSM обращайтесь, 
+   пожалуйста к проекту <span class="term"><strong class="userinput"> Virtual Storage Manager</strong></span> по адресу:
+   <a class="link" href="https://01.org/jira/browse/VSM" target="_top">https://01.org/jira/browse/VSM</a>
+   </p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0910"> </a>Ресурсы VSM</h3>
+   </div></div></div>
+   <p>В этой главе мы изучили наиболее важные аспекты VSM. Если вы планируете использовать VSM в своём окружении, я рекомендовал бы 
+   вам посетить следующие ресурсы для получения дополнительно информации по VSM:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Официальный репозиторий исходного кода:
+	 <a class="link" href="https://github.com/01org/virtual-storage-manager" target="_top">https://github.com/01org/virtual-storage-manager</a>.</p>
+	 </li><li class="listitem">
+	 <p>VSM Wiki:
+	 <a class="link" href="https://github.com/01org/virtual-storage-manager/wiki" target="_top">https://github.com/01org/virtual-storage-manager/wiki</a>.</p>
+	 </li><li class="listitem">
+	 <p>Выпуски VSM, отслеживание разработки и дорожной карты:
+	 <a class="link" href="https://01.org/jira/browse/VSM" target="_top">https://01.org/jira/browse/VSM</a>.</p>
+	 </li><li class="listitem">
+	 <p>Список почтовой рассылки VSM:
+	 <a class="link" href="http://vsm-discuss.33411.n7.nabble.com/" target="_top">http://vsm-discuss.33411.n7.nabble.com/</a>.</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Как вы уже знаете, VSM является проектом с открытым исходным кодом, полезно отметить, что усилия по разработке VSM восходят к Intel 
+   при поддержке его сообщества.</p>
+   <p>Я хочу выразить благодарность <span class="emphasis"><em>Дену Ферберу</em></span> и <span class="emphasis"><em>Ягуангу Вонгу</em></span>
+   из <span class="emphasis"><em>Intel</em></span> а также <span class="emphasis"><em>всему сообществу VSM</em></span> за предоставление в наше 
+   распоряжение прекрасного образчика программного обеспечения для развёртывания и управления нашим кластером Ceph. Чтобы помочь дальнейшей 
+   разработке VSM, пожалуйста, становитесь активными участниками этого сообщества и рассмотрите вопрос о предоставлении обратного значительного 
+   вклада.
+   </p>
+  </div>
+
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 1. Служба идентификации OpenStack Keystone - Справочник рецептов по облакам OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="os-ccc-2ed"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Справочник рецептов по облакам OpenStack"/>
+<link rel="up" href="index.html" title="Справочник рецептов по облакам OpenStack"/>
+<link rel="prev" href="index.html" title="Справочник рецептов по облакам OpenStack"/>
+<link rel="next" href="Ch02.html" title="Глава 2. Запуск службы образов OpenStack"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//openstack-ops_preface.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 1. Служба идентификации OpenStack Keystone';
+PrevRef = 'index.html';
+UpRef = 'index.html';
+NextRef = 'Ch02.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 1. Служба идентификации OpenStack Keystone</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Создание среды песочницы с применением VirtualBox и Vagrant</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку архива облака Ubuntu</p>
+	 </li>
+	<li class="listitem">
+	 <p>Установку службы идентификации OpenStack</p>
+	 </li>
+	<li class="listitem">
+	 <p>Создание владельцев</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку ролей</p>
+	 </li>
+	<li class="listitem">
+	 <p>Добавление пользователей</p>
+	 </li>
+	<li class="listitem">
+	 <p>Определение конечных точек служб</p>
+	 </li>
+	<li class="listitem">
+	 <p>Создание службы владельцев и службы пользователей</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+    <dt><span class="section"><a href="Ch01.html#Introduction">Введение</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Creating_sandbox">Создание среды песочницы с применением VirtualBox и Vagrant</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Installing_Identity">Установка службы идентификации OpenStack</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Creating_tenants">Создание владельцев</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Configuring_roles">Настройка ролей</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Adding_users">Добавление пользователей</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Defiing_service_endpoints">Определение конечных точек служб</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Creating_tenants_users_service">Создание службы владельцев и службы пользователей</a></span></dt>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+   </div></div></div>
+   <p>Служба идентификации OpenStack, известная как <span class="emphasis"><em>Keystone</em></span>, 
+   предоставляет услуги по аутентификации и управлению учетными записями пользователей, а также информацию 
+   о ролях для подражания нашей облачной среды OpenStack.
+   Это важная служба, которая лежит в основе аутентификации и проверки между всеми нашими службами облака OpenStack 
+   и является первой службой, которая должна быть установлена в среде OpenStack.
+   Как только аутентификация успешно проведена, служба идентичности OpenStack отправляет назад марекер 
+   (token) авторизации, который передается между службами.
+   Этот маркер затем используется в качестве вашей аутентификации и проверки того, 
+   что вы можете приступить к использованию таких служб как, например, 
+   службы системы хранения и вычислительной среды OpenStack.
+   Таким образом, настройка службы идентификации OpenStack должна быть выполнена
+   первой и заключается в создании соответствующих ролей для пользователей и служб, 
+   владельцев, учетных записей пользователей а также конечных точек служб API, 
+   которые и составляют инфраструктуру нашего облака.
+   </p>
+   <p>В конце главы у нас будет следующая установка среды:
+   <div class="figure-contents"><div class="mediaobject" align="center">
+		<img src="figures/Fig0101.jpg" align="middle" width="580" height="413" />
+   </div></div><br class="figure-break"/>
+   </p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_sandbox"> </a>Создание среды песочницы с применением VirtualBox и Vagrant</h3>
+   </div></div></div>
+   <p>Создание среды песочницы с применением VirtualBox и Vagrant позволяет нам узнать службу 
+   вычислительной среды OpenStack и экспериментировать с ней.
+   VirtualBox позволяет нам возможность раскручивать виртуальные машины и сетевые среды, 
+   не затрагивая остальную часть нашей рабочей среды, и находится в свободном доступе на 
+   <a class="link" href="http://www.virtualbox.org" target="_top">http://www.virtualbox.org</a>
+   для Windows, Mac OS X и Linux. Vagrant позволяет нам автоматизировать эту задачу, 
+   следовательно мы можем потратить меньше времени на создание наших тестовых сред и 
+   больше времени, на использование OpenStack. Vagrant может устанавливаться с помощью управления 
+   пакетами Ubuntu, а для других операционных систем посетите 
+   <a class="link" href="http://www.vagrantup.com/" target="_top">http://www.vagrantup.com/</a>.
+   Эта тестовая среда может быть использована для оставшейся части данной главы.
+   </p>
+   <p>Предполагается, что компьютер, который вы будете использовать для запуска тестовой среды 
+   имеет достаточную вычислительную мощность, которая имеет поддержку аппаратной виртуализации 
+   (например, Intel VT-X и AMD-V) и имеет по крайней мере 8 ГБ оперативной памяти.
+   Помните, мы создаем виртуальную машину, которая сама по себе будет использоваться для 
+   раскручивания виртуальных машинах, так что, чем больше оперативной памяти у вас есть, тем лучше.
+   </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Getting_ready_01"> </a>Подготовка</h4>
+    </div></div></div>
+    <p>Для начала мы должны загрузить VirtualBox c 
+    <a class="link" href="http://www.virtualbox.org/" target="_top">http://www.virtualbox.org/</a>, 
+    а затем, после загрузки, выполните процедуру установки.
+    Мы также должны скачать и установить Vagrant, что будет рассмотрены в дальнейшей части.
+    На протяжении всей книги предполагаются, что основной операционной системой используемой 
+    для установки OpenStack будет редакция Ubuntu 12.04 LTS. Нам не нужно загружать Ubuntu 12.04 ISO, 
+    поскольку мы используем нашу среду Vagrant, которая сделает это за нас.
+    </p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_to_do_it_01"> </a>Как это сделать...</h4>
+    </div></div></div>
+    <p>Для создания нашей среды песочницы в VirtualBox мы будем использовать Vagrant для определения отдельной виртуальной машины, 
+	которая позволит нам выполнять все службы вычислительной среды OpenStack, необходимые для запуска экземпляров облака.
+    Эта виртуальная машина, которую мы будем называть как контроллер OpenStack, будет настроена, по крайней мере, с 2 Гб 
+	оперативной памяти и 20 Гб свободного пространства на жестком диске, а также будет иметь три сетевых интерфейса.
+    Vagrant автоматически настраивает интерфейс на нашей виртуальной машины, а именно, существует 
+	<span class="emphasis"><em>NAT (Network Address Translate)</em></span>, который позволяет нашей виртуальной машине 
+	подключаться к сети за пределами VirtualBox для загрузки пакетов.
+    Этот интерфейс NAT не упоминается в нашем файле <span class="emphasis"><em>Vagrant</em></span>, но будет виден 
+	на нашей виртуальной машине как <span class="emphasis"><em>eth0</em></span>.
+    Мы настраиваем наш первый интерфейс для использования в нашей среде OpenStack, он будет общедоступным 
+	интерфейсом нашего хоста вычислительной среды OpenStack, второй интерфейс будет для нашей частной сети, 
+	которую вычислительная среда OpenStack использует для внутренней связи между различными хостами вычислительной 
+	среды OpenStack, а третий интерфейс будет использоваться, когда мы рассмотрим сеть Neutron в 
+	<a class="link" href="Ch08.html" target="_top">Главе 8, Сетевые среды OpenStack</a>, как внешнюю сеть 
+	поставщика услуг.
+    </p>
+    <p>Выполните следующие действия, чтобы создать виртуальную машину с <span class="emphasis"><em>Vagrant</em></span>, 
+	которая будет использоваться для запуска служб вычислительной среды OpenStack:
+    </p>
+	<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+     <p>Установите VirtualBox из <a class="link" href="http://www.virtualbox.org/" target="_top">http://www.virtualbox.org/</a>.
+	 Если вы используете версию, поставляемую с редакцией Ubuntu 12.04 LTS, вы столкнетесь с проблемами.
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+	  <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+	  <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+	  <p>Эта книга была написана с использованием версии VirtualBox 4.2.16.</p></td></tr></table>
+	 </div>
+	 </p></li><li class="listitem">
+     <p>Установите Vagrant из <a class="link" href="http://www.vagrantup.com/" target="_top">http://www.vagrantup.com/</a>.
+	 Если вы используете версию, поставляемую с редакцией Ubuntu 12.04 LTS, вы столкнетесь с проблемами.
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+	  <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+	  <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+	  <p>Эта книга была написана с использованием версии Vagrant 1.2.7.</p></td></tr></table>
+	 </p></li><li class="listitem">
+     <p>После установки мы можем определить нашу виртуальную машину и сетевую среду в файле 
+	 с названием <span class="emphasis"><em>Vagrantfile</em></span>. Для этого создайте рабочий каталог 
+	 (например, создайте <span class="emphasis"><em>~/cookbook</em></span> и отредактируйте в ней файл с названием 
+	 <span class="emphasis"><em>Vagrantfile</em></span>, как показано в следующем фрагменте программы:
+	 <pre><code class="bash">
+mkdir ~/cookbook
+cd ~/cookbook
+vim Vagrantfile
+	 </code></pre></p></li><li class="listitem">
+     <p>Теперь мы можем приступить к настройке <span class="emphasis"><em>Vagrant</em></span>,
+	 отредактировав этот файл со следующим кодом:
+<pre><code class="ruby">
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+nodes = {
+  'controller' => [1, 200],
+}
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "precise64"
+  config.vm.box_url =
+  "http://files.vagrantup.com/precise64.box"
+
+  # Forescout NAC workaround
+  # Предварительный обход сетевых адаптеров
+  config.vm.usable_port_range = 2800..2900
+
+  nodes.each do |prefix, (count, ip_start)|
+    count.times do |i|
+      hostname = "%s" % [prefix, (i+1)]
+
+      config.vm.define "#{hostname}" do |box|
+        box.vm.hostname = "#{hostname}.book"
+        box.vm.network :private_network, ip:
+          "172.16.0.#{ip_start+i}", :netmask =>
+            "255.255.0.0"
+        box.vm.network :private_network, ip:
+          "10.10.0.#{ip_start+i}", :netmask =>
+            "255.255.0.0"
+        box.vm.network :private_network, ip:
+          "192.168.100.#{ip_start+i}", :netmask =>
+            "255.255.255.0"
+        # Otherwise using VirtualBox
+        # Иначе используем VirtualBox
+        box.vm.provider :virtualbox do |vbox|
+          # Defaults
+          # Значения по умолчанию
+          vbox.customize ["modifyvm", :id, "--memory",
+            2048]
+          vbox.customize ["modifyvm", :id, "--cpus", 1]
+        end
+      end
+    end
+  end
+end
+</code></pre></p></li><li class="listitem">
+     <p>Теперь мы готовы к включению питания нашего контроллера узла. 
+	 Это делается просто, выполним следующую команду:
+ 	 <pre><code class="bash">
+vagrant up controller
+	 </code></pre>
+	 </p></li></ol>
+	 <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	  <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	  <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	  <p>Поздравляем! Мы успешно создали виртуальную машину VirtualBox выполняющуюся под Ubuntu 12.04, 
+	  которая способна запускать службы контроллера OpenStack.</p></td></tr></table>
+	 </div>
+    </div>
+
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_it_works_01"> </a>Как это работает...</h4>
+    </div></div></div>
+	<p>То что мы сделали, это создали в VirtualBox виртуальную машину определив ее в Vagrant.
+	Vagrant затем настраивает эту виртуальную машину в соответствии с установками, 
+	приведенными в Vagrantfile в каталоге, в котором мы хотим сохранять и запускать наши виртуальные машины VirtualBox.
+    Этот файл основан на синтаксисе на Ruby, строки достаточно хорошо объясняют себя.
+    Мы должны дать следующие пояснения:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	<li class="listitem">
+	 <p>Хост называется &quot;controller&quot;</p>
+	 </li>
+	<li class="listitem">
+	 <p>Виртуальные машины основаны на Precise64 коротком названии Ubuntu 12.04 LTS 64-bit</p>
+	 </li>
+	<li class="listitem">
+	 <p>Мы определили 2 ГБ оперативной памяти, 1 ЦПУ и дополнительный диск с
+	 названием &quot;controller-cinder.vdi&quot;, подключенный к нашей виртуальной машине, который мы 
+	 будем использовать позже в нашей книге.</p>
+	 </li>
+     </ul>
+     </div>
+	</p>
+	<p>Затем мы запускаем виртуальные машины VirtualBox с использованием Vagrant 
+	при помощи следующей команды:</p>
+ 	 <pre><code class="bash">
+vagrant up
+	 </code></pre>
+	<p>Она запустит все перечисленные в Vagrantfie виртуальные машины.
+	Поскольку у нас объявлена только одна, эта виртуальная машина будет 
+	единственной запущенной.</p>
+	<p>Для регистрации на этой новой виртуальной машины мы воспользуемся следующей командой:</p>
+ 	 <pre><code class="bash">
+vagrant ssh controller
+	 </code></pre>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="There_is_more_01"> </a>Что еще существует...</h4>
+    </div></div></div>
+	<p>Для установки тестовой среды вы не ограничены только Vagrant и VirtualBox.
+	Существует целый набор доступных продуктов для виртуализации, которые удобно использовать для 
+	тестирования OpenStack, например, <span class="emphasis"><em>VMware Server</em></span>, 
+	<span class="emphasis"><em>VMware Player</em></span>, и <span class="emphasis"><em>VMware Fusion</em></span>
+	подходят в равной степени.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="See_also_01"> </a>Смотрите также</h4>
+    </div></div></div>
+	<p></p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	<li class="listitem">
+	 <p><a class="link" href="Ch10.html" target="_top">Главу 10, Автоматизация установок OpenStack</a></p>
+	 </li>
+     </ul>
+     </div>
+   </div>
+</div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Config_archive"> </a>Настройка архива облака OpenStack</h3>
+   </div></div></div>
+   <p>Используемая в данной книге редакция Ubuntu 12.04 LTS обеспечивает два репозитория для установки OpenStack.
+   Стандартный репозиторий поставляет редакцию Essex, тогда как поддерживаемый и в дальнейшем репозиторий,
+   называемый архивом облака Ubuntu (Ubuntu Cloud Archive) предоставляет доступ к последней редакции (на момент 
+   написания книги) Grizzly. Мы будем выполнять установку и настройку службы идентификации OpenStack (а также
+   всех остальных служб OpenStack) с использованием пакетов из архива облака Ubuntu для обеспечения нас
+   редакцией программного обеспечения Grizzly.</p>
+  </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Getting_ready_02"> </a>Подготовка</h4>
+    </div></div></div>
+	<p>Убедитесь, что вы зарегистрировались на выбранном для установки сервера службы идентификации OpenStack 
+	или что остальные хосты будут иметь доступ к хосту контроллера облака, на который будет устанавливаться 
+	служба идентификации.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_to_do_it_02"> </a>Как это сделать...</h4>
+    </div></div></div>
+	<p>Выполните следующие шаги настройки Ubuntu 12.04 LTS для использования архива облака Ubuntu:</p>
+   </div>
+
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Installing_Identity"> </a>Установка службы идентификации OpenStack</h3>
+   </div></div></div>
+   <p>
+   </p>
+  </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_it_works_02"> </a>Как это работает...</h4>
+    </div></div></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_tenants"> </a>Создание владельцев</h3>
+   </div></div></div>
+   <p>
+   </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_to_do_it_01"> </a>Как это работает...</h4>
+    </div></div></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Configuring_roles"> </a>Настройка ролей</h3>
+   </div></div></div>
+   <p>
+   </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_to_do_it_01"> </a>Как это работает...</h4>
+    </div></div></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Adding_users"> </a>Добавление пользователей</h3>
+   </div></div></div>
+   <p>
+   </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_to_do_it_01"> </a>Как это работает...</h4>
+    </div></div></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Defiing_service_endpoints"> </a>Определение конечных точек служб</h3>
+   </div></div></div>
+   <p>
+   </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_to_do_it_01"> </a>Как это работает...</h4>
+    </div></div></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_tenants_users_service"> </a>Создание службы владельцев и службы пользователей</h3>
+   </div></div></div>
+   <p>
+   </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="How_to_do_it_01"> </a>Как это работает...</h4>
+    </div></div></div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

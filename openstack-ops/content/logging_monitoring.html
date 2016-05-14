@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Глава 13. Ведение журналов и мониторинг - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="operations.html" title="Эксплуатация"/>
+<link rel="prev" href="network_troubleshooting.html" title="Глава 12. Устранение неполадок сети"/>
+<link rel="next" href="backup_and_recovery.html" title="Глава 14. Резервное копирование и восстановление"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:08+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//logging_monitoring.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 13. Ведение журналов и мониторинг';
+PrevRef = 'network_troubleshooting.html';
+UpRef = 'operations.html';
+NextRef = 'backup_and_recovery.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="chapter">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="logging_monitoring"> </a>Глава 13. Ведение журналов и мониторинг</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="logging_monitoring.html#where_are_logs">Где находятся журналы?</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#how_to_read_logs">Чтение журналов</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#tracing_instance_request">Трассировка запросов экземпляра</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#add_custom_logging">Добавление настраиваемых пользователем операторов ведения журналов</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#rabbitmq">Интерфейс веб- управления RabbitMQ или rabbitmqctl</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#manage_logs_centrally">Централизованно управляемые журналы</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#stacktach">StackTach</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#monitoring">Мониторинг</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#ops-log-monitor-summary">Резюме</a></span></dt></dl>
+</div>
+<p>Поскольку OpenStack состоит из очень большого количества служб, существует 
+много файлов журналов. Цель данного раздела заключается в том, чтобы помочь вам в поиске 
+журналов и работе с ними, а также описывает другие способы отслеживания состояния 
+вашего проекта.
+<a id="d9e5703" class="indexterm"/></p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="where_are_logs"> </a>Где находятся журналы?</h2>
+</div></div></div>
+<p>Большинство служб используют соглашения записи своих файлов журналов 
+в подкатологи каталога <code class="code">/var/log directory</code>, как перечислено в 
+<a class="xref" href="logging_monitoring.html#openstack-log-locations" title="Таблица 13.1. Расположение журналов OpenStack">
+Таблице 13.1, “Расположение журналов OpenStack”</a>.
+<a id="d9e5711" class="indexterm"/>
+<a id="d9e5714" class="indexterm"/></p>
+<table rules="all" id="openstack-log-locations"><caption>Таблица 13.1. Расположение журналов OpenStack</caption><thead><tr>
+          <th>Тип узла</th>
+          <th>Служба</th>
+          <th>Расположение журнала</th>
+        </tr></thead><tbody><tr>
+          <td><p>Контроллер облака</p></td>
+          <td><p> <code class="code">nova-*</code> </p></td>
+          <td><p> <code class="code">/var/log/nova</code> </p></td>
+        </tr><tr>
+          <td><p>Контроллер облака</p></td>
+          <td><p> <code class="code">glance-*</code> </p></td>
+          <td><p> <code class="code">/var/log/glance</code> </p></td>
+        </tr><tr>
+          <td><p>Контроллер облака</p></td>
+          <td><p> <code class="code">cinder-*</code> </p></td>
+          <td><p> <code class="code">/var/log/cinder</code> </p></td>
+        </tr><tr>
+          <td><p>Контроллер облака</p></td>
+          <td><p> <code class="code">keystone-*</code> </p></td>
+          <td><p> <code class="code">/var/log/keystone</code> </p></td>
+        </tr><tr>
+          <td><p>Контроллер облака</p></td>
+          <td><p> <code class="code">neutron-*</code> </p></td>
+          <td><p> <code class="code">/var/log/neutron</code> </p></td>
+        </tr><tr>
+          <td><p>Контроллер облака</p></td>
+          <td><p>horizon</p></td>
+          <td><p> <code class="code">/var/log/apache2/</code> </p></td>
+        </tr><tr>
+          <td><p>Все узлы</p></td>
+          <td><p>misc (swift, dnsmasq)</p></td>
+          <td><p> <code class="code">/var/log/syslog</code> </p></td>
+        </tr><tr>
+          <td><p>Вычислительные узлы</p></td>
+          <td><p>libvirt</p></td>
+          <td><p> <code class="code">/var/log/libvirt/libvirtd.log</code> </p></td>
+        </tr><tr>
+          <td><p>Вычислительные узлы</p></td>
+          <td><p>Консоль (загрузки сообщения) для экземпляров виртуальных машин:</p></td>
+          <td><p> <code class="code">/var/lib/nova/instances/instance-</code><span class="keep-together"><code class="code">&lt;instance id&gt;/console.log</code>
+          </span></p></td>
+        </tr><tr>
+          <td><p>Узлы блочного хранилища</p></td>
+          <td><p>cinder-volume</p></td>
+          <td><p> <code class="code">/var/log/cinder/cinder-volume.log</code>
+          </p></td>
+        </tr></tbody></table>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="how_to_read_logs"> </a>Чтение журналов</h2>
+</div></div></div>
+<p>Службы OpenStack используют стандартные уровни ведения журналов по мере повышения 
+степени важности: DEBUG, INFO, AUDIT, WARNING, ERROR, CRITICAL и TRACE. Таким образом, 
+сообщения появляются в журналах только если они более &quot;серьезные&quot;, чем 
+определенный уровень журнала, причем DEBUG позволяет протоколировать все возникающие сообщения. Например, 
+TRACE регистрируется только если программное обеспечение имеет стек трассировки, в то время 
+как INFO регистрируется для каждого сообщения, включая те, которые предназначены только для 
+информирования.<a id="d9e5815" class="indexterm"/></p>
+<p>Чтобы запретить DEBUG-level ведения журналов, отредактируйте
+<code class="filename">/etc/nova/nova.conf</code> следующим образом:</p>
+<pre class="programlisting brush: bash; ">debug=false</pre>
+<p>Keystone обрабатывается немного по-другому. Чтобы изменить уровень ведения 
+журнала, отредактируйте файл <code class="filename">/etc/keystone/logging.conf</code> и 
+найдите разделы <code class="code">logger_root</code> и <code class="code">handler_file</code>.</p>
+<p><span class="keep-together">Регистрация для horizon настроена в 
+<code class="filename">/etc/openstack_dashboard/local_</code></span><code class="filename">settings.py</code>. 
+Поскольку horizon является веб-приложением Django, он следует 
+<a class="link" href="https://docs.djangoproject.com/en/dev/topics/logging/" title="Django Logging" target="_top">
+рамочным соглашениям Django Logging</a>.</p>
+<p>Первый шаг при поиске источника ошибки обычно начинается с 
+просмотра сообщений в журналах CRITICAL, TRACE или ERROR 
+в конце файла журнала.
+<a id="d9e5831" class="indexterm"/></p>
+<p>Пример сообщения журнала CRITICAL с непосредственно за ним следующими соответствующими TRACE (отслеживание Phyton):</p>
+<pre class="screen">2013-02-25 21:05:51 17409 CRITICAL cinder [-] Bad or unexpected response from the storage volume backend API: volume group
+ cinder-volumes doesn't exist
+2013-02-25 21:05:51 17409 TRACE cinder Traceback (most recent call last):
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/bin/cinder-volume", line 48, in &lt;module&gt;
+2013-02-25 21:05:51 17409 TRACE cinder service.wait()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/cinder/service.py", line 422, in wait
+2013-02-25 21:05:51 17409 TRACE cinder _launcher.wait()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/cinder/service.py", line 127, in wait
+2013-02-25 21:05:51 17409 TRACE cinder service.wait()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/eventlet/greenthread.py", line 166, in wait
+2013-02-25 21:05:51 17409 TRACE cinder return self._exit_event.wait()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/eventlet/event.py", line 116, in wait
+2013-02-25 21:05:51 17409 TRACE cinder return hubs.get_hub().switch()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/eventlet/hubs/hub.py", line 177, in switch
+2013-02-25 21:05:51 17409 TRACE cinder return self.greenlet.switch()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/eventlet/greenthread.py", line 192, in main
+2013-02-25 21:05:51 17409 TRACE cinder result = function(*args, **kwargs)
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/cinder/service.py", line 88, in run_server
+2013-02-25 21:05:51 17409 TRACE cinder server.start()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/cinder/service.py", line 159, in start
+2013-02-25 21:05:51 17409 TRACE cinder self.manager.init_host()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/cinder/volume/manager.py", line 95,
+ in init_host
+2013-02-25 21:05:51 17409 TRACE cinder self.driver.check_for_setup_error()
+2013-02-25 21:05:51 17409 TRACE cinder File "/usr/lib/python2.7/dist-packages/cinder/volume/driver.py", line 116,
+ in check_for_setup_error
+2013-02-25 21:05:51 17409 TRACE cinder raise exception.VolumeBackendAPIException(data=exception_message)
+2013-02-25 21:05:51 17409 TRACE cinder VolumeBackendAPIException: Bad or unexpected response from the storage volume
+ backend API: volume group cinder-volumes doesn't exist
+2013-02-25 21:05:51 17409 TRACE cinder</pre>
+<p>В данном примере <code class="literal">cinder-volumes</code> не смогли стартовать 
+и была проведена трассировка стека, так как их сервер томов не смог установить 
+том системы хранения - вероятно потому, что том LVM, который предполагается в конфигурации
+не существует.</p>
+<p>Вот пример журнала ошибок:</p>
+<pre class="screen">2013-02-25 20:26:33 6619 ERROR nova.openstack.common.rpc.common [-] AMQP server on localhost:5672 is unreachable:
+ [Errno 111] ECONNREFUSED. Trying again in 23 seconds.</pre>
+<p>В данной ошибке служба nova не смогла подключиться к серверу RabbitMQ, 
+поскольку получила сообщение об ошибке отказа в соединении.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="tracing_instance_request"> </a>Трассировка запросов экземпляра</h2>
+</div></div></div>
+<p>Когда экземпляр отказывает работать должным образом, вам обычно приходится 
+отслеживать активность, связанную с этим экземпляром в лог-файлах различных 
+служб <code class="code">nova-*</code>, причем и в контроллере облака, 
+и в вычислительных узлах.
+<a id="d9e5845" class="indexterm"/>
+<a id="d9e5848" class="indexterm"/></p>
+<p>Обычный способ заключается в отслеживании UUID, связанного с экземпляром в журналах служб.</p>
+<p>Рассмотрим следующий пример:</p>
+<pre class="screen">$ nova list
++--------------------------------+--------+--------+--------------------------+
+| ID                             | Name   | Status | Networks                 |
++--------------------------------+--------+--------+--------------------------+
+| fafed8-4a46-413b-b113-f1959ffe | cirros | ACTIVE | novanetwork=192.168.100.3|
++--------------------------------+--------+--------+--------------------------+</pre>
+<p>Здесь <code class="code">faf7ded8-4a46-413b-b113-f19590746ffe</code> 
+- ID, связанный с экземпляром. Если вы выполните поиск этой строки в контроллере облака в 
+файлах <code class="filename">/var/log/nova-*.log</code>, 
+она обнаружится в <code class="filename">nova-api.log</code> 
+и в <code class="filename">nova-scheduler.log</code>. 
+Если вы выполните поиск этой строки в вычислительных узлах в 
+<code class="filename">/var/log/nova-*.log</code>, она обнаружится в 
+<code class="filename">nova-network.log</code> и в 
+<code class="filename">nova-compute.log</code>. Если не возникло сообщений об ошибках 
+ERROR или CRITICAL, самая последняя выведенная запись журнала может обеспечит подсказку 
+о том, что пошло не так.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="add_custom_logging"> </a>Добавление настраиваемых пользователем операторов ведения журналов</h2>
+</div></div></div>
+<p>Если в существующих журналах не достаточно информации, возможно вам потребуется добавить 
+свои собственные операторы для служб <code class="code">nova-*</code>.
+<a id="d9e5866" class="indexterm"/>
+<a id="d9e5869" class="indexterm"/></p>
+<p>Исходные файлы расположены в
+<code class="filename">/usr/lib/python2.7/dist-packages/nova</code>.</p>
+<p>Чтобы добавить оператор ведения журналов, следующая строка должна быть 
+по близости от первых строк файла. Для большинства файлов это уже должно
+присутствовать там:</p>
+<pre class="programlisting brush: python; ">from nova.openstack.common import log as logging
+LOG = logging.getLogger(__name__)</pre>
+<p>Чтобы добавить оператор ведения журналов DEBUG, вы должны выполнить:</p>
+<pre class="programlisting brush: python; ">LOG.debug("This is a custom debugging statement")</pre>
+<p>Вы могли заметить, что все существующие сообщения в журналах имеют предшествующий 
+символ подчеркивания и заключены в круглые скобки, например:</p>
+<pre class="programlisting brush: python; ">LOG.debug(_("Logging statement appears here"))</pre>
+<p>Такое задание формата используется для поддержки перевода сообщений ведения журналов 
+на различные языки при помощи библиотеки интернационализации 
+<a class="link" href="https://docs.python.org/2/library/gettext.html" target="_top">gettext</a>. 
+Вам не нужно делать это для ваших собственных сообщений пользовательских журналов. 
+Однако, если вы хотите внести свой вклад в код проекта OpenStack, 
+который включает операторы протоколирования, вы должны окружить ваши сообщения журнала 
+подчеркиванием и круглыми скобками.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="rabbitmq"> </a>Интерфейс веб- управления RabbitMQ или rabbitmqctl</h2>
+</div></div></div>
+<p>За исключением отказов в соединениях, файлы журналов RabbitMQ, как правило, 
+бесполезны для отладки проблем, связанных с OpenStack. Вместо этого, мы рекомендуем вам 
+использовать интерфейс веб управления RabbitMQ. 
+Aside from connection failures, RabbitMQ log files are generally not
+    useful for debugging OpenStack related issues. Instead, we recommend you
+    use the RabbitMQ web management interface.
+<a id="d9e5885" class="indexterm"/>
+<a id="d9e5887" class="indexterm"/> Включите его в контроллере облака:
+<a id="d9e5890" class="indexterm"/></p>
+<pre class="screen"># /usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management</pre>
+<pre class="screen"># service rabbitmq-server restart</pre>
+<p>Веб- управляемый интерфейс RabbitMQ доступен в вашем контроллере облака по ссылке  
+<span class="emphasis"><em>http://localhost:55672</em></span>.</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>Ubuntu 12.04 устанавливает версию RabbitMQ 2.7.1, которая использует порт 
+55672. RabbitMQ версии 3.0 и выше использует порт 15672. Вы можете 
+проверить, с какой версия RabbitMQ вы работаете на локальном компьютере Ubuntu, выполнив:</p>
+<pre class="screen">$ dpkg -s rabbitmq-server | grep "Version:"
+Version: 2.7.1-0ubuntu4</pre></td></tr></table>
+</div>
+<p>Альтернативой разрешению интерфейса веб- управления RabbitMQ является 
+использование команд <span class="keep-together"><code class="literal">rabbitmqctl</code></span>. Например, 
+<code class="literal">rabbitmqctl list_queues| grep cinder</code> отобразит все 
+оставшиеся в очереди сообщения. Если они существуют, то это возможный признак 
+того, что службы cinder не соединились должным образом с rabbitmq и, возможно, должны 
+быть запущены повторно.</p>
+<p>Элементы для наблюдения за RabbitMQ включают ряд элементов в каждой 
+из очередей и статистики времени обработки для сервера.</p>
+</div>
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="manage_logs_centrally"> </a>Централизованно управляемые журналы</h2>
+</div></div></div>
+
+<div class="toc"><dl><dt><span class="section">
+ <a href="logging_monitoring.html#rsyslog_client_config">Настройка клиента rsyslog</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#rsyslog_server_config">Настройка сервера rsyslog</a></span></dt></dl>
+</div>
+<p>Поскольку, скорее всего, ваше облако состоит из большого количества серверов, вы должны 
+проверить журналы на каждом из этих серверов для создания целостной картины из отдельных событий. 
+Лучшим решением является пересылка всех журналов со всех серверов в центральное местоположение, 
+чтобы все они были доступны из одной области.
+<a id="d9e5908" class="indexterm"/></p>
+<p>Ubuntu использует в качестве службы ведения журналов по умолчанию rsyslog. Поскольку она 
+сама по себе в состоянии отправлять записи на удаленно расположенные журналы, у вас не будет необходимости устанавливать 
+никакие дополнительные службы для поддержки этой функции, просто измените файл конфигурации. 
+При этом, рассмотрите возможность работы вашей системы ведения журналов в сети управления или 
+с помощью защищенного VPN во избежание их перехвата.</p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="rsyslog_client_config"> </a>Настройка клиента rsyslog</h3>
+</div></div></div>
+<p>Для начала настройте все компоненты OpenStack на ведение системных журналов 
+дополнительно к их стандартному месторасположению файлов журналов. Также настройте каждый 
+компонент для регистрации в различных системных журналах. Это сделает более простым 
+разделение журналов по индивидуальным компонентам на центральном 
+сервере:
+<a id="d9e5915" class="indexterm"/></p>
+<p><code class="filename">nova.conf</code>:</p>
+<pre class="programlisting brush: bash; ">use_syslog=True
+syslog_log_facility=LOG_LOCAL0</pre>
+<p><code class="filename">glance-api.conf</code> и <code class="filename">glance-registry.conf</code>:</p>
+<pre class="programlisting brush: bash; ">use_syslog=True
+syslog_log_facility=LOG_LOCAL1</pre>
+<p><code class="filename">cinder.conf</code>:</p>
+<pre class="programlisting brush: bash; ">use_syslog=True
+syslog_log_facility=LOG_LOCAL2</pre>
+<p><code class="filename">keystone.conf</code>:</p>
+<pre class="programlisting brush: bash; ">use_syslog=True
+syslog_log_facility=LOG_LOCAL3</pre>
+<p>По умолчанию Swift делает записи в syslog.</p>
+<p>Затем создайте <code class="filename">/etc/rsyslog.d/client.conf</code> с помощью следующей строки:</p>
+<pre class="programlisting brush: bash; ">*.* @192.168.1.10</pre>
+<p>Это дает указание отсылать все записи в журналы на перечисленные IP. В данном 
+примере IP указывает на контроллер облака.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage">
+<div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="rsyslog_server_config"> </a>Настройка сервера rsyslog</h3>
+</div></div></div>
+<p>Назначьте сервер для централизованного ведения журналов. Лучше 
+всего выбрать сервер, который будет посвящен исключительно этой задаче. 
+Создайте файл <code class="filename">/etc/rsyslog.d/server.conf</code> 
+со следующим содержимым:</p>
+<pre class="programlisting brush: bash; "># Enable UDP
+$ModLoad imudp
+# Listen on 192.168.1.10 only
+$UDPServerAddress 192.168.1.10
+# Port 514
+$UDPServerRun 514
+
+# Create logging templates for nova
+$template NovaFile,"/var/log/rsyslog/%HOSTNAME%/nova.log"
+$template NovaAll,"/var/log/rsyslog/nova.log"
+
+# Log everything else to syslog.log
+$template DynFile,"/var/log/rsyslog/%HOSTNAME%/syslog.log"
+*.* ?DynFile
+
+# Log various openstack components to their own individual file
+local0.* ?NovaFile
+local0.* ?NovaAll
+&amp; ~</pre>
+<p>Приведенный выше пример конфигурации обрабатывает только службу nova. Первоначально 
+он настраивает rsyslog на работу в качестве сервера, который обслуживает порт 514. Далее, он 
+создает ряд шаблонов для записи в журнал. Шаблоны записей в журнал управляют местоположением, 
+в котором хранятся получаемые журналы. При использовании приведенного выше примера, журнал nova из 
+c01.example.com размещается в следующих местах:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>
+<code class="filename">/var/log/rsyslog/c01.example.com/nova.log</code></p></li><li class="listitem">
+<p><code class="filename">/var/log/rsyslog/nova.log</code></p></li></ul></div>
+<p>Также полезно журналы из c02.example.com разместить по адресам:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p><code class="filename">/var/log/rsyslog/c02.example.com/nova.log</code></p></li><li class="listitem">
+<p><code class="filename">/var/log/rsyslog/nova.log</code></p></li></ul>
+</div>
+<p>Таким образом вы имеете индивидуальный файл журнала для каждого вычислительного узла и 
+агрегированный журнал, который содержит записи журналов для всех узлов.</p>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="stacktach"> </a>StackTach</h2>
+</div></div></div>
+<p>StackTach является инструментом, созданным Rackspace для сбора и представления 
+уведомлений, отправляемых <code class="code">nova</code>. Уведомления, по существу, 
+те же записи в журнал, однако могут быть гораздо более детальными. Хороший обзор 
+уведомлений можно найти в  
+<a class="link" href="https://wiki.openstack.org/wiki/SystemUsageData" title="StackTach GitHub repo" target="_top">
+System Usage Data</a>.
+<a id="d9e5962" class="indexterm"/>
+<a id="d9e5964" class="indexterm"/></p>
+<p>Чтобы разрешить <code class="code">nova</code> отправлять уведомления, добавьте следующие 
+строки в <code class="filename">nova.conf</code>:</p>
+<pre class="programlisting brush: bash; ">notification_topics=monitor
+notification_driver=nova.openstack.common.notifier.rpc_notifier</pre>
+<p>Раз уж <code class="code">nova</code> отправляет уведомления, установите и 
+настройте StackTach. Поскольку StackTach является относительно новым продуктом и постоянно 
+меняется, инструкции по установке будут быстро устаревать. Пожалуйста, 
+обращайтесь к ресурсу 
+<a class="link" href="https://github.com/rackerlabs/stacktach" target="_top">StackTach GitHub repo</a> 
+для получения инструкций и демонстрационных видео.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="monitoring"> </a>Мониторинг</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="logging_monitoring.html#process_monitoring">Мониторинг процессов</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#resource_alerting">Оповещение о ресурсах</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#metering_telemetry">Измерения и телеметрия с применением Ceilometer</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#os_resources">Особенные для OpenStack ресурсы</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#intelligent_alerting">Интеллектуальное оповещение</a></span></dt><dt><span class="section">
+ <a href="logging_monitoring.html#trending">Анализ тенденций</a></span></dt></dl>
+</div>
+<p>Существует два типа мониторинга: наблюдение за проблемами и 
+отслеживание тенденций использования. Первый гарантирует, что все службы запущены и 
+работают, создавая функциональное облако. Последний содержит мониторинг 
+использования ресурсов в течение продолжительного времени для того, чтобы принимать обоснованные решения о 
+потенциально узких местах и обновлениях.
+<a id="d9e5977" class="indexterm"/></p>
+
+<div class="sidebar">
+<div class="titlepage"><!--FOOBAR!--><div><div>
+ <p class="title">
+ <strong>Nagios</strong></p>
+</div></div></div>
+<p>Nagios является службой с открытым исходным кодом. Она способна
+выполнять произвольные команды для проверки состояния сервера и сети, а также
+делает возможным серверам отсылку уведомлений обратно в виде пассивного 
+мониторинга. Nagios широко используется начиная с 1999. Хотя доступны более
+современные службы мониторинга, Nagios является зарекомендовавшим себя 
+главным продуктом системного администрирования.
+<a id="d9e5983" class="indexterm"/></p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="process_monitoring"> </a>Мониторинг процессов</h3>
+</div></div></div>
+<p>Основной вид оповещающего мониторинга является простой проверкой и удостоверения в том, 
+что требуемый процесс запущен.  
+A basic type of alert monitoring is to simply check and see
+      whether a required process is running.
+<a id="d9e5988" class="indexterm"/>
+<a id="d9e5991" class="indexterm"/>
+<a id="d9e5993" class="indexterm"/>
+Например, убедитесь, что в контроллере облака запущена служба <code class="code">nova-api</code>: </p>
+<pre class="screen"># ps aux | grep nova-api
+nova 12786 0.0 0.0 37952 1312 ? Ss Feb11 0:00 su -s /bin/sh -c exec nova-api
+--config-file=/etc/nova/nova.conf nova
+nova 12787 0.0 0.1 135764 57400 ? S Feb11 0:01 /usr/bin/python
+ /usr/bin/nova-api --config-file=/etc/nova/nova.conf
+nova 12792 0.0 0.0 96052 22856 ? S Feb11 0:01 /usr/bin/python
+/usr/bin/nova-api --config-file=/etc/nova/nova.conf
+nova 12793 0.0 0.3 290688 115516 ? S Feb11 1:23 /usr/bin/python
+/usr/bin/nova-api --config-file=/etc/nova/nova.conf
+nova 12794 0.0 0.2 248636 77068 ? S Feb11 0:04 /usr/bin/python
+/usr/bin/nova-api --config-file=/etc/nova/nova.conf
+root 24121 0.0 0.0 11688 912 pts/5 S+ 13:07 0:00 grep nova-api</pre>
+<p>Вы можете создавать автоматизированные предупреждения о критических процессах с помощью 
+Nagios и NRPE. Например, для того, чтобы убедиться, что процесс 
+<code class="code">nova-compute</code> запущен на вычислительных узлах, создайте 
+на вашем сервере Nagios оповещение, которое выглядит примерно таким образом:</p>
+<pre class="programlisting">define service {
+    host_name c01.example.com
+    check_command check_nrpe_1arg!check_nova-compute
+    use generic-service
+    notification_period 24x7
+    contact_groups sysadmins
+    service_description nova-compute
+}</pre>
+<p>Затем на фактическом вычислительном узле создайте следующую 
+конфигурацию NRPE:</p>
+<pre class="programlisting">\command[check_nova-compute]=/usr/lib/nagios/plugins/check_procs -c 1: \
+-a nova-compute</pre>
+<p>Nagios проверяет, что по крайней мере одна служба <code class="literal">nova-compute</code> 
+работает в настоящее время.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="resource_alerting"> </a>Оповещение о ресурсах</h3>
+</div></div></div>
+<p>Оповещения о ресурсах предоставляют уведомления когда один или несколько 
+ресурсов достигают критически низкого уровня. Хотя пороги мониторинга должны быть 
+настроены для вашей конкретной среды OpenStack, мониторинг использования ресурсов 
+вообще не является особенным для OpenStack - любой обобщенный тип оповещения будет 
+прекрасно работать.
+<a id="d9e6008" class="indexterm"/>
+<a id="d9e6011" class="indexterm"/>
+<a id="d9e6014" class="indexterm"/>
+<a id="d9e6017" class="indexterm"/></p>
+<p>Некоторые из ресурсов, которые вы захотите контролировать:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Использование дисков</p></li><li class="listitem">
+ <p>Загруженность серверов</p></li><li class="listitem">
+ <p>Использование памяти</p></li><li class="listitem">
+ <p>Сетевой ввод/ вывод </p></li><li class="listitem">
+ <p>Доступные виртуальные ЦПУ (vCPU)</p></li></ul>
+</div>
+<p>Например, для мониторинга дисковой емкости на вычислительном узле с 
+использованием Nagios, добавьте следующие строки в ваши настройки Nagios:</p>
+<pre class="programlisting">define service {
+    host_name c01.example.com
+    check_command check_nrpe!check_all_disks!20% 10%
+    use generic-service
+    contact_groups sysadmins
+    service_description Disk
+}</pre>
+<p>На вычислительноНа вычислительном узле добавьте следующие строки в вашу конфигурацию NRPE:</p>
+<pre class="programlisting">command[check_all_disks]=/usr/lib/nagios/plugins/check_disk -w $ARG1$ -c \
+$ARG2$ -e</pre>
+<p>Nagios выдает уведомление предостережения (WARNING) когда любой диск в вычислительном узле 
+заполняется на 80 процентов и критично (CRITICAL) при заполнении на 90 процентов.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="metering_telemetry"> </a>Измерения и телеметрия с применением Ceilometer</h3>
+</div></div></div>
+<p>Встроенный в OpenStack проект (с кодовым названием ceilometer) собирает
+данные измерений и выдает предупреждения для Compute, Storage и Networking.
+Данные, собираемые при измерении системы могут использоваться для тарификации.
+В зависимости от развертываемой настройки, данные измерений могут быть доступны 
+пользователям на основе реализуемых настроек. Служба Telemetry 
+предоставляет REST API,  описанный в  
+<a class="link" href="http://developer.openstack.org/api-ref-telemetry-v2.html" target="_top">
+http://developer.openstack.org/api-ref-telemetry-v2.html</a>.
+Вы можете узнать  больше о проекте на странице
+<a class="link" href="http://docs.openstack.org/developer/ceilometer" target="_top">
+http://docs.openstack.org/developer/ceilometer</a>.
+<a id="d9e6042" class="indexterm"/>
+<a id="d9e6045" class="indexterm"/>
+<a id="d9e6047" class="indexterm"/>
+<a id="d9e6049" class="indexterm"/>
+<a id="d9e6051" class="indexterm"/></p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="os_resources"> </a>Особенные для OpenStack ресурсы</h3>
+</div></div></div>
+<p>Такие ресурсы как память, диск и процессор являются общими для всех серверов 
+(даже для не OpenStack серверов) и имеют важное значение для 
+общего состояния работоспособности сервера. Когда имеешь дело конкретно с OpenStack, 
+эти ресурсы важны по другой причине: уверенности, что доступно 
+достаточно для запуска экземпляров. Существует несколько способов, которыми вы можете 
+увидеть использование ресурсов OpenStack.
+<a id="d9e6057" class="indexterm"/>
+<a id="d9e6060" class="indexterm"/>
+<a id="d9e6063" class="indexterm"/> 
+Первый обеспечивается командой <code class="code">nova</code>:</p>
+<pre class="programlisting"># nova usage-list</pre>
+<p>Эта команда выводит список того, как много экземпляров выполняют владельцы 
+и некоторую первичную статистику использования комбинированных экземпляров. 
+Эта команда полезна для быстрого обзора вашего облака, но 
+в действительности не снабжает вас большим количеством деталей.</p>
+<p>Далее, база данных <code class="code">nova</code> содержит три таблицы, которые 
+хранят информацию об использовании.</p>
+<p>Таблицы <code class="code">nova.quotas</code> и <code class="code">nova.quota_usages</code>
+хранят информацию о квотах. Если квоты владельца (tenant) отличаются от 
+значений, установленных для квот по умолчанию, тогда их квоты сохраняются в таблице <span class="keep-together"><code class="code">nova.quotas</code></span>. 
+Например:</p>
+<pre class="screen">mysql&gt; select project_id, resource, hard_limit from quotas;
++----------------------------------+-----------------------------+------------+
+| project_id                       | resource                    | hard_limit |
++----------------------------------+-----------------------------+------------+
+| 628df59f091142399e0689a2696f5baa | metadata_items              | 128        |
+| 628df59f091142399e0689a2696f5baa | injected_file_content_bytes | 10240      |
+| 628df59f091142399e0689a2696f5baa | injected_files              | 5          |
+| 628df59f091142399e0689a2696f5baa | gigabytes                   | 1000       |
+| 628df59f091142399e0689a2696f5baa | ram                         | 51200      |
+| 628df59f091142399e0689a2696f5baa | floating_ips                | 10         |
+| 628df59f091142399e0689a2696f5baa | instances                   | 10         |
+| 628df59f091142399e0689a2696f5baa | volumes                     | 10         |
+| 628df59f091142399e0689a2696f5baa | cores                       | 20         |
++----------------------------------+-----------------------------+------------+</pre>
+<p>Таблица <code class="code">nova.quota_usages</code> хранит данные отслеживания того, как много 
+ресурсов использует владелец в настоящее время:</p>
+<pre class="screen">mysql&gt; select project_id, resource, in_use from quota_usages where project_id like '628%';
++----------------------------------+--------------+--------+
+| project_id                       | resource     | in_use |
++----------------------------------+--------------+--------+
+| 628df59f091142399e0689a2696f5baa | instances    | 1      |
+| 628df59f091142399e0689a2696f5baa | ram          | 512    |
+| 628df59f091142399e0689a2696f5baa | cores        | 1      |
+| 628df59f091142399e0689a2696f5baa | floating_ips | 1      |
+| 628df59f091142399e0689a2696f5baa | volumes      | 2      |
+| 628df59f091142399e0689a2696f5baa | gigabytes    | 12     |
+| 628df59f091142399e0689a2696f5baa | images       | 1      |
++----------------------------------+--------------+--------+</pre>
+<p>Сравнив жесткие пределы владельца с его текущим использованием 
+ресурсов, вы можете выяснить процент использования. Например, если этот владелец 
+использует 1 плавающий IP из 10, то он использует 10% от своих квот плавающих IP. 
+Вмето выполнения расчетов вручную вы можете воспользоваться SQL или языком сценариев
+по своему выбору и создать форматированный отчет:</p>
+<pre class="screen">+----------------------------------+------------+-------------+---------------+
+| some_tenant                                                                 |
++-----------------------------------+------------+------------+---------------+
+| Resource                          | Used       | Limit      |               |
++-----------------------------------+------------+------------+---------------+
+| cores                             | 1          | 20         |           5 % |
+| floating_ips                      | 1          | 10         |          10 % |
+| gigabytes                         | 12         | 1000       |           1 % |
+| images                            | 1          | 4          |          25 % |
+| injected_file_content_bytes       | 0          | 10240      |           0 % |
+| injected_file_path_bytes          | 0          | 255        |           0 % |
+| injected_files                    | 0          | 5          |           0 % |
+| instances                         | 1          | 10         |          10 % |
+| key_pairs                         | 0          | 100        |           0 % |
+| metadata_items                    | 0          | 128        |           0 % |
+| ram                               | 512        | 51200      |           1 % |
+| reservation_expire                | 0          | 86400      |           0 % |
+| security_group_rules              | 0          | 20         |           0 % |
+| security_groups                   | 0          | 10         |           0 % |
+| volumes                           | 2          | 10         |          20 % |
++-----------------------------------+------------+------------+---------------+</pre>
+<p>Приведенный выше отчет был сформирован с использованием пользовательского сценария, 
+который может быть найден на странице
+<a class="link" href="https://github.com/cybera/novac/blob/dev/libexec/novac-quota-report" target="_top">GitHub</a>.</p>
+
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>Этот сценарий является специфичным для конкретной установки OpenStack и 
+должен быть изменен, чтобы соответствовать вашей среде. Тем не менее, логика должна 
+быть легко понятна.</p></td></tr></table>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="intelligent_alerting"> </a>Интеллектуальное оповещение</h3>
+</div></div></div>
+<p>Интеллектуальные оповещения можно рассматривать как одну из форм непрерывной 
+интеграции для эксплуатации. Например, вы можете легко проверить что 
+служба образов запущена и работает, удостоверившись, что процессы 
+<code class="code">glance-api</code> и <code class="code">glance-registry</code> 
+запущены, или убедившись, что <code class="code">glace-api</code> отвечает по порту 9292.
+<a id="d9e6092" class="indexterm"/>
+<a id="d9e6095" class="indexterm"/>
+<a id="d9e6099" class="indexterm"/>
+<a id="d9e6101" class="indexterm"/></p>
+<p>Но как вы можете определить, что образы были успешно 
+загружены службой образов? Может оказаться, что диск, на который служба образов 
+сохраняет образы заполнен или сервер S3 выключен. Естественно, 
+вы можете проверить это, выполнив быструю загрузку образа:
+But how can you tell whether images are being successfully
+      uploaded to the Image Service? Maybe the disk that Image Service is
+      storing the images on is full or the S3 backend is down. You could
+      naturally check this by doing a quick image upload:</p>
+<pre class="programlisting brush: bash; ">#!/bin/bash
+#
+# assumes that reasonable credentials have been stored at
+# /root/auth
+
+
+. /root/openrc
+wget https://launchpad.net/cirros/trunk/0.3.0/+download/ \
+     cirros-0.3.0-x86_64-disk.img
+glance image-create --name='cirros image' --is-public=true
+--container-format=bare --disk-format=qcow2 &lt; cirros-0.3.0-x8
+6_64-disk.img</pre>
+<p>Выполняя этот сценарий и прокручивая его в оповещениях для вашей 
+системы мониторинга (например, в Nagios), вы теперь получаете автоматизированный способ 
+проверки работоспособности загрузки образов в каталог образов.
+By taking this script and rolling it into an alert for your
+      monitoring system (such as Nagios), you now have an automated way of
+      ensuring that image uploads to the Image Catalog are working.</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>Вы должны удалять образ после каждой проверки. Еще лучше, проверять: 
+можно ли успешно удалить изображение из службы образов.</p></td></tr></table>
+</div>
+<p>Интеллектуальные оповещения отнимают значительно больше времени для планирования и 
+реализации по сравнению с другими описанными в этой главе предупреждениями. Хорошей 
+структурой реализации интеллектуального оповещения является:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Анализ общих действий в вашем облаке.</p></li><li class="listitem">
+<p>Создание способов автоматической проверки этих действий.</p></li><li class="listitem">
+<p>Свертывание этих тестов в систему предупреждений.</p></li></ul>
+</div>
+<p>Некоторые другие примеры интеллектуального оповещения включают в себя:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Могут ли экземпляры быть запущены и уничтожены? </p></li><li class="listitem">
+<p>Можно ли создавать пользователей?</p></li><li class="listitem">
+<p>Могут ли сохраняться и удаляться объекты?</p></li><li class="listitem">
+<p>Можно ли создавать и уничтожать тома?</p></li></ul>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="trending"> </a>Анализ тенденций</h3>
+</div></div></div>
+<p>Анализ тенденций может вам дать большее представление о том, как ваш облако 
+работает каждый день. Например того, что напряженный день был просто 
+редким явлением, или того, что вы должны начать добавление новых 
+вычислительных узлов.
+<a id="d9e6130" class="indexterm"/>
+<a id="d9e6134" class="indexterm"/>
+<a id="d9e6137" class="indexterm"/></p>
+<p>Анализ тенденций имеет несколько иной подход, чем оповещения. В то время, 
+как оповещения интересуются двузначным результатом (удастся ли проверка или 
+нет), анализ тенденций записывает текущее состояние в определенный 
+момент времени. Как только необходимое количество временных отметок было записано, вы можете 
+увидеть, как значение изменяется с течением времени.
+<a id="d9e6141" class="indexterm"/>
+<a id="d9e6144" class="indexterm"/></p>
+<p>Все упоминавшиеся ранее типы оповещения также могут быть использованы для 
+представления анализа тенденций. Некоторые другие примеры анализа тенденций включают:
+<a id="d9e6148" class="indexterm"/></p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Число экземпляров в каждом вычислительном узле</p></li><li class="listitem">
+<p>Типы используемых предпочтений (шаблонов виртуальных ресурсов)</p></li><li class="listitem">
+<p>Количество используемых томов</p></li><li class="listitem">
+<p>Почасовое количество запросов к хранилищам объектов</p></li><li class="listitem">
+<p>Почасовое количество запросов <code class="literal">nova-api</code></p></li><li class="listitem">
+<p>Статистика ввода/ вывода из ваших служб хранения</p></li></ul>
+</div>
+<p>В качестве примера: запись использования <code class="code">nova-api</code> может позволить вам 
+отслеживать необходимость расширения контроллера облака. Оставляя под наблюдением запросы 
+<code class="code">nova-api</code>, вы можете определить, требуется ли вам 
+порождать больше процессов <code class="literal">nova-api</code> или же зайти дальше 
+и запустить совершенно новый сервер <code class="code">nova-api</code>. Чтобы получить 
+приблизительное число запросов, просмотрите стандартные сообщения INFO в 
+<code class="code">/var/log/nova/nova-api.log</code>:</p>
+<pre class="programlisting"># grep INFO /var/log/nova/nova-api.log | wc</pre>
+<p>Вы можете получить дополнительную статистику, просмотрев количество успешных запросов:</p>
+<pre class="programlisting"># grep " 200 " /var/log/nova/nova-api.log | wc</pre>
+<p>Периодически выполняя эту команду и регистрируя результат, 
+вы можете создать отчет анализа тенденции во времени, который показывает: растет ли, 
+уменьшатся ли или поддерживается в устойчивом состоянии использование вашего <code class="code">nova-api</code>.</p>
+<p>Такой инструмент, как collectd, может быть использован для хранения подобной информации. 
+Поскольку collectd выходит за рамки данной книги, хорошей отправной точкой 
+будет использование collectd для хранения результатов в виде типа данных счетчика (COUNTER). 
+Более подробную информацию можно найти в  
+<a class="link" href="https://collectd.org/wiki/index.php/Data_source" target="_top">
+документации collectd</a>.</p>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops-log-monitor-summary"> </a>Резюме</h2>
+</div></div></div>
+<p>Для стабильной эксплуатации вы хотите быстро замечать отказы и
+эффективно определять причины. Для распределенной системы еще более важно
+отслеживать правильные элементы чтобы отвечать целям уровня сервиса.
+Знание того, где находятся эти журналы в файловой системе или API
+предоставляет вам преимущество. Данная глава также показала как читать,
+интерпретировать и обрабатывать информацию от служб OpenStack таким образом,
+чтобы вы могли осуществлять наблюдение эффективно.</p>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

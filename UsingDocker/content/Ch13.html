@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 13. Безопасность и ограничения контейнеров - Использование Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="UsingDocker"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Использование Docker"/>
+<link rel="up" href="index.html" title="Использование Docker"/>
+<link rel="prev" href ="Ch12.html" title="Глава 12. Оркестровка, кластеризация и управление"/>
+<link rel="next" href="Ix01.html" title="Указатель"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-using-docker";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/UsingDocker/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 13. Безопасность и ограничения контейнеров';
+PrevRef = 'Ch12.html';
+UpRef = 'index.html';
+NextRef = 'Ix01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Часть 3. Инструменты и технологии</h1>
+  </div></div></div>
+  <p></p>
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 13. Безопасность и ограничения контейнеров</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch13.html">13. Безопасность и ограничения контейнеров</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch13.html#13.1">Вещи, о которых стоит беспокоиться</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.2">Эшелонированная оборона</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.2.1">Наименьший уровень привилегий</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.3">Обеспечение безопасности Identidock</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.4">Разделение контейнеров по хостам</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.5">Применение обновлений</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.5.1">Избегайте неподдерживаемых драйверов</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.6">Происхождение образов</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.6.1">Docker Digests</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.6.2">Docker Content Trust</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.6.3">Воспроизводимые и надёжные Dockerfile</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.7">Советы по безопасности</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.7.1">Устанавливайте пользователя</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.2">Ограничивайте сетевую среду контейнера</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.3">Удаляйте двоичные файлы Setuid/Setgid</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.4">Ограничивайте память</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.5">Ограничивайте ЦПУ</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.6">Ограничивайте перезапуски</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.7">Ограничивайте файловые системы</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.8">Ограничивайте возможности</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.9">Применяйте пределы ресурсов (ulimit)</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.8">Работайте с устоявшимся ядром</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.9">Модули безопасности Linux</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.9.1">SELinux</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.9.2">AppArmor</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.10">Аудит</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.11">Реакция на инциденты</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.12">Грядущая функциональность</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.13">Заключение</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p></p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.1"> </a>Вещи, о которых стоит беспокоиться</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.2"> </a>Эшелонированная оборона</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Наименьший уровень привилегий</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.3"> </a>Обеспечение безопасности Identidock</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.4"> </a>Разделение контейнеров по хостам</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.5"> </a>Применение обновлений</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Избегайте неподдерживаемых драйверов</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.6"> </a>Происхождение образов</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.6.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Docker Digests</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.6.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Docker Content Trust</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.6.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Воспроизводимые и надёжные Dockerfile</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7"> </a>Советы по безопасности</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Устанавливайте пользователя</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ограничивайте сетевую среду контейнера</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Удаляйте двоичные файлы Setuid/Setgid</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ограничивайте память</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ограничивайте ЦПУ</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ограничивайте перезапуски</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.7">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ограничивайте файловые системы</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.8">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ограничивайте возможности</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.7.9">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Применяйте пределы ресурсов (ulimit)</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.8">Работайте с устоявшимся ядром</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.9">Модули безопасности Linux</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.9.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">SELinux</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.9.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">AppArmor</span></h4>
+    </div></div></div>
+   <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.10">Аудит</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.11">Реакция на инциденты</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.12">Грядущая функциональность</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="13.13"> </a>Заключение</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

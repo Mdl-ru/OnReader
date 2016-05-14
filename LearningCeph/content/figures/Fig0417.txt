@@ -1,0 +1,23 @@
+﻿[root@ceph-node1 /]#
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# rados -p frontend-services put object1 /etc/hosts
+[root@ceph-node1 /]# rados -p frontend-services ls
+object1
+[root@ceph-node1 /]# rados mksnap snapshot01 -p frontend-services
+created pool frontend-services snap snapshot01
+[root@ceph-node1 /]# rados lssnap -p frontend-services
+5	snapshot01	2014.05.12 13:20:58
+1 snaps
+[root@ceph-node1 /]# rados -p frontend-services rm object1
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# rados -p frontend-services listsnaps object1
+object1:
+cloneid snaps size	overlap
+5	5     237	[]
+
+[root@ceph-node1 /]# rados rollback -p frontend-services object1 snapshot01
+rolled back pool frontend-services to snapshot snapshot01
+[root@ceph-node1 /]# rados -p frontend-services ls
+object1
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# _

@@ -1,0 +1,340 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Реализация облачного хранилища с OpenStack Swift</title>
+   <meta name="Keywords" content="OpenStack, Swift, Ceph, Cloud computing">
+   <meta name="Description" content="Реализация облачного хранилища с OpenStack Swift">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="ToC.htm">Реализация облачного хранилища с OpenStack Swift</a></td>
+</tr>
+<tr><td colspan="2">
+
+<br />
+<h2 align="right">Проектирование, реализация и успешное управление вашим собственным кластером облачного хранилища с использованием популярного программного обеспечения OpenStack Swift.<br /> Кападиа Амар, Варма Средхар,Раджана Крис.<br />Copyright © 2014 Packt Publishing. All rights reserved.</h1>
+<div align="right">Перевод <a href="http://www.amazon.com/Implementing-Cloud-Storage-OpenStack-Swift/dp/1782168052/">978-1782168058</a>: <a href="http://www.mdl.ru/"><img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;" /></a> Copyright © 2014, ссылки обязательны<br />
+см. также <a href="http://support.mdl.ru/OpenStack.Operations.Guide/index.htm">Руководство по эксплуатации OpenStack</a><br />
+список доступных у нас материалов по близкой тематике на русском языке см. на странице <a href="http://www.mdl.ru/Solutions/Put.htm?Nme=GPFS">GPFS</a>
+</div>
+<hr />
+<h1 id="ToC" align="right">Оглавление</h1>
+
+<dl>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="Title.htm">Заглавная страница</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="Acknowledgments.htm">Благодарности</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="Credits.htm">Состав исполнителей</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="Foreword.htm">Предисловие</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="AboutTheAuthors.htm">Об авторах</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="AboutTheReviewers.htm">О наших рецензентах</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="www.PacktPub.com.htm">Поддерживаемые файлы, электронные книги, скидки и т.п.</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="ToC.htm">Оглавление</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="Preface.htm">Вводная часть</a>
+  <dt>&nbsp; 1.<a href="Ch01ru.htm">Облачное хранилище: Почему я не могу быть как Google?</a>
+   <ul>
+      <li><a href="Ch01ru.htm#Ch0101">Элементы облачного хранилища</a>
+         <ul>
+           <li><a href="Ch01ru.htm#Ch010101">Уменьшенная полная стоимость владения</a>
+           <li><a href="Ch01ru.htm#Ch010102">Неограниченное масштабирование</a>
+           <li><a href="Ch01ru.htm#Ch010103">Эластичность</a>
+           <li><a href="Ch01ru.htm#Ch010104">Предоставление по запросу</a>
+           <li><a href="Ch01ru.htm#Ch010105">Универсальный доступ</a>
+           <li><a href="Ch01ru.htm#Ch010106">Множественное владение</a>
+           <li><a href="Ch01ru.htm#Ch010107">Варианты использования</a>
+           <li><a href="Ch01ru.htm#Ch010108">Воздействие приложений</a>
+           <ul>
+             <li><a href="Ch01ru.htm#Ch01010801">Шлюзы облака</a>
+           </ul>
+         </ul>
+      <li><a href="Ch01ru.htm#Ch0102">Хранилище объектов</a>
+      <li><a href="Ch01ru.htm#Ch0103">OpenStack Swift</a>
+      <li><a href="Ch01ru.htm#Ch0104">Заключение</a>
+   </ul>
+  <dt>&nbsp; 2.<a href="Ch02ru.htm">Архитектура OpenStack Swift</a>
+   <ul>
+      <li><a href="Ch02ru.htm#Ch0201">Логическая организация объектов</a>
+      <li><a href="Ch02ru.htm#Ch0202">Реализация Swift</a>
+         <ul>
+           <li><a href="Ch02ru.htm#Ch020201">Ключевые принципы архитектуры</a>
+           <li><a href="Ch02ru.htm#Ch020202">Организация физических данных</a>
+           <li><a href="Ch02ru.htm#Ch020203">Программные серверы информационных каналов</a>
+           <ul>
+             <li><a href="Ch02ru.htm#Ch02020301">Один день из жизни операций создания</a>
+             <li><a href="Ch02ru.htm#Ch02020302">Один день из жизни операций чтения</a>
+             <li><a href="Ch02ru.htm#Ch02020303">Один день из жизни операций обновления</a>
+             <li><a href="Ch02ru.htm#Ch02020304">Один день из жизни операций удаления</a>
+           </ul>
+           <li><a href="Ch02ru.htm#Ch020204">Компоненты программного обеспечения заключительной обработки</a>
+           <ul>
+             <li><a href="Ch02ru.htm#Ch02020401">Репликации</a>
+             <li><a href="Ch02ru.htm#Ch02020402">Корректоры</a>
+             <li><a href="Ch02ru.htm#Ch02020403">Аудиторы</a>
+             <li><a href="Ch02ru.htm#Ch02020404">Другие процессы</a>
+           </ul>
+           <li><a href="Ch02ru.htm#Ch020205">Встроенные функции программного обеспечения промежуточного слоя</a>
+           <ul>
+             <li><a href="Ch02ru.htm#Ch02020501">Аутентификация</a>
+             <li><a href="Ch02ru.htm#Ch02020502">Протоколирование</a>
+             <li><a href="Ch02ru.htm#Ch02020503">Другие модули</a>
+           </ul>
+         </ul>
+      <li><a href="Ch02ru.htm#Ch0203">Дополнительная функциональность</a>
+         <ul>
+           <li><a href="Ch02ru.htm#Ch020301">Поддержка больших объектов</a>
+           <li><a href="Ch02ru.htm#Ch020302">Метаданные</a>
+           <li><a href="Ch02ru.htm#Ch020303">Поддержка мультидиапазонности</a>
+           <li><a href="Ch02ru.htm#Ch020304">CORS</a>
+           <li><a href="Ch02ru.htm#Ch020305">Копии на стороне сервера</a>
+           <li><a href="Ch02ru.htm#Ch020306">Состояние кластера</a>
+         </ul>
+      <li><a href="Ch02ru.htm#Ch0204">Заключение</a>
+   </ul>
+  <dt>&nbsp; 3.<a href="Ch03ru.htm">Установка OpenStack Swift</a>
+   <ul>
+      <li><a href="Ch03ru.htm#Ch0301">Планирование аппаратных средств</a>
+      <li><a href="Ch03ru.htm#Ch0302">Установка сервера и настройка сети</a>
+         <ul>
+           <li><a href="Ch03ru.htm#Ch030201">Шаги предварительной установки</a>
+           <li><a href="Ch03ru.htm#Ch030202">Загрузка и установка Swift</a>
+           <li><a href="Ch03ru.htm#Ch030203">Установка узлов серверов хранения</a>
+            <ul>
+              <li><a href="Ch03ru.htm#Ch03020301">Установка служб</a>
+              <li><a href="Ch03ru.htm#Ch03020302">Форматирование и монтирование дисков</a>
+              <li><a href="Ch03ru.htm#Ch03020303">RSYNC и RSYNCD</a>
+            </ul>
+           <li><a href="Ch03ru.htm#Ch030204">Установка прокси- сервера</a>
+           <li><a href="Ch03ru.htm#Ch030205">Установка кольца</a>
+            <ul>
+              <li><a href="Ch03ru.htm#Ch03020501">Запуск служб на всех узлах хранения</a>
+            </ul>
+           <li><a href="Ch03ru.htm#Ch030206">Поддержка нескольких регионов</a>
+           <li><a href="Ch03ru.htm#Ch030207">Служба Keystone</a>
+            <ul>
+              <li><a href="Ch03ru.htm#Ch03020701">Установка MySQL</a>
+              <li><a href="Ch03ru.htm#Ch03020701">Установка Keystone</a>
+            </ul>
+         </ul>
+      <li><a href="Ch03ru.htm#Ch0303">Заключение</a>
+   </ul>
+  <dt>&nbsp; 4.<a href="Ch04ru.htm">Использование Swift</a>
+   <ul>
+      <li><a href="Ch04ru.htm#Ch0401">Установка клиентов</a>
+      <li><a href="Ch04ru.htm#Ch0402">Создание маркера с использованием аутентификации</a>
+      <li><a href="Ch04ru.htm#Ch0403">Отображение информации метаданных для учетных записей, контейнеров и объектов</a>
+         <ul>
+           <li><a href="Ch04ru.htm#Ch040301">С использованием клиента Swift CLI</a>
+           <li><a href="Ch04ru.htm#Ch040302">С использованием cURL</a>
+           <li><a href="Ch04ru.htm#Ch040303">С использованием REST API</a>
+         </ul>
+      <li><a href="Ch04ru.htm#Ch0404">Вывод списка контейнеров</a>
+         <ul>
+           <li><a href="Ch04ru.htm#Ch040401">С использованием клиента CLI</a>
+           <li><a href="Ch04ru.htm#Ch040402">С использованием cURL</a>
+         </ul>
+      <li><a href="Ch04ru.htm#Ch0405">Вывод списка объектов контейнера</a>
+         <ul>
+           <li><a href="Ch04ru.htm#Ch040501">С использованием клиента Swift CLI</a>
+           <li><a href="Ch04ru.htm#Ch040502">С использованием cURL</a>
+           <li><a href="Ch04ru.htm#Ch040503">С использованием REST API</a>
+         </ul>
+      <li><a href="Ch04ru.htm#Ch0406">Обновление метаданных для контейнера</a>
+         <ul>
+           <li><a href="Ch04ru.htm#Ch040601">С использованием клиента Swift CLI</a>
+           <li><a href="Ch04ru.htm#Ch040602">С использованием REST API</a>
+         </ul>
+      <li><a href="Ch04ru.htm#Ch0407">Переменные окружения</a>
+      <li><a href="Ch04ru.htm#Ch0408">Псевдо- иерархические каталоги</a>
+      <li><a href="Ch04ru.htm#Ch0409">ACL контейнера</a>
+      <li><a href="Ch04ru.htm#Ch0410">Обмен большими объектами</a>
+      <li><a href="Ch04ru.htm#Ch0411">Совместимость с API Amazon S3</a>
+         <ul>
+           <li><a href="Ch04ru.htm#Ch041101">Доступ к Swift с использованием команд S3</a>
+         </ul>
+      <li><a href="Ch04ru.htm#Ch0412">Доступ к Swift с использованием библиотек клиента</a>
+         <ul>
+           <li><a href="Ch04ru.htm#Ch041201">Java</a>
+           <li><a href="Ch04ru.htm#Ch041202">Python</a>
+           <li><a href="Ch04ru.htm#Ch041203">Ruby</a>
+         </ul>
+      <li><a href="Ch04ru.htm#Ch0413">Заключение</a>
+   </ul>
+  <dt>&nbsp; 5.<a href="Ch05ru.htm">Управление Swift</a>
+   <ul>
+      <li><a href="Ch05ru.htm#Ch0501">Повседневное управление</a>
+         <ul>
+           <li><a href="Ch05ru.htm#Ch050101">Мониторинг кластера Swift</a>
+           <ul>
+            <li><a href="Ch05ru.htm#Ch05010101">Swift Recon</a>
+            <li><a href="Ch05ru.htm#Ch05010102">Swift Informant</a>
+            <li><a href="Ch05ru.htm#Ch05010103">Инструменты Swift dispersion</a>
+            <li><a href="Ch05ru.htm#Ch05010104">StatsD</a>
+            <li><a href="Ch05ru.htm#Ch05010105">Метрики Swift</a>
+           </ul>
+         </ul>
+      <li><a href="Ch05ru.htm#Ch0502">Ведение журналов с помощью rsyslog</a>
+      <li><a href="Ch05ru.htm#Ch0503">Управление отказами</a>
+         <ul>
+           <li><a href="Ch05ru.htm#Ch050301">Определение дисковых отказов</a>
+           <li><a href="Ch05ru.htm#Ch050302">Обработка дисковых отказов</a>
+           <li><a href="Ch05ru.htm#Ch050303">Обработка отказов узлов</a>
+           <ul>
+             <li><a href="Ch05ru.htm#Ch05030301">Отказ сервера прокси</a>
+           </ul>
+           <li><a href="Ch05ru.htm#Ch050304">Отказ зоны и региона</a>
+         </ul>
+      <li><a href="Ch05ru.htm#Ch0504">Планирование емкости</a>
+         <ul>
+           <li><a href="Ch05ru.htm#Ch050401">Добавление новых устройств</a>
+           <li><a href="Ch05ru.htm#Ch050402">Добаваление новых систем хранения и серверов прокси</a>
+         </ul>
+      <li><a href="Ch05ru.htm#Ch0505">Миграции</a>
+      <li><a href="Ch05ru.htm#Ch0506">Заключение</a>
+   </ul>
+  <dt>&nbsp; 6.<a href="Ch06ru.htm">Выбор соответствующих аппаратных средств</a>
+   <ul>
+      <li><a href="Ch06ru.htm#Ch0601">Список аппаратных средств</a>
+      <li><a href="Ch06ru.htm#Ch0602">Критерии выбора аппаратных средств</a>
+         <ul>
+           <li><a href="Ch06ru.htm#Ch060201">Шаг 1 - выбор конфигурации сервера хранения</a>
+           <li><a href="Ch06ru.htm#Ch060202">Шаг 2 - определение настроек регионов и зон</a>
+           <li><a href="Ch06ru.htm#Ch060203">Шаг 3 - выбор конфигурации сервера учетных записей и контейнеров</a>
+           <li><a href="Ch06ru.htm#Ch060204">Шаг 4 - выбор конфигурации прокси- сервера</a>
+           <li><a href="Ch06ru.htm#Ch060205">Шаг 5 - Выбор сетевых аппаратных средств</a>
+           <li><a href="Ch06ru.htm#Ch060206">Шаг 6 - выбор соотношений между серверами различного типа</a>
+           <li><a href="Ch06ru.htm#Ch060207">Шаг 7 - Выбор дополнительного сетевого оборудования</a>
+           <li><a href="Ch06ru.htm#Ch060208">Шаг 8 - выбор шлюза облака</a>
+         </ul>
+      <li><a href="Ch06ru.htm#Ch0603">Дополнительные критерии выбора</a>
+      <li><a href="Ch06ru.htm#Ch0604">Стратегия выбора производителя</a>
+         <ul>
+           <li><a href="Ch06ru.htm#Ch060401">Фирменное оборудование</a>
+           <li><a href="Ch06ru.htm#Ch060402">Стандартное оборудование</a>
+         </ul>
+      <li><a href="Ch06ru.htm#Ch0605">Заключение</a>
+   </ul>
+  <dt>&nbsp; 7.<a href="Ch07ru.htm">Настройка вашей установки Swift</a>
+   <ul>
+      <li><a href="Ch07ru.htm#Ch0701">Тестирование производительности</a>
+      <li><a href="Ch07ru.htm#Ch0702">Настройка аппаратных средств</a>
+      <li><a href="Ch07ru.htm#Ch0703">Настройка программного обеспечения</a>
+         <ul>
+           <li><a href="Ch07ru.htm#Ch070301">Обзор колец</a>
+           <li><a href="Ch07ru.htm#Ch070302">Настрока программных каналов данных</a>
+           <li><a href="Ch07ru.htm#Ch070303">Настройка завершающего программного обеспечения</a>
+         </ul>
+      <li><a href="Ch07ru.htm#Ch0704">Дополнительные параметры настройки</a>
+      <li><a href="Ch07ru.htm#Ch0705">Заключение</a>
+   </ul>
+  <dt>&nbsp; 8.<a href="Ch08ru.htm">Дополнительные ресурсы</a>
+   <ul>
+      <li><a href="Ch08ru.htm#Ch0801">Варианты использования</a>
+         <ul>
+           <li><a href="Ch08ru.htm#Ch080101">Предоставление служб</a>
+           <li><a href="Ch08ru.htm#Ch080102">Web 2.0</a>
+           <li><a href="Ch08ru.htm#Ch080103">Предприятия</a>
+         </ul>
+      <li><a href="Ch08ru.htm#Ch0802">Операционные системы, используемые для реализации OpenStack</a>
+      <li><a href="Ch08ru.htm#Ch0803">Виртуализация, используемая в реализациях OpenStack</a>
+      <li><a href="Ch08ru.htm#Ch0804">Инструменты подготовки и распространения</a>
+      <li><a href="Ch08ru.htm#Ch0805">Инструменты мониторинга и отображения</a>
+      <li><a href="Ch08ru.htm#Ch0806">Дополнительная информация</a>
+      <li><a href="Ch08ru.htm#Ch0807">Заключение</a>
+   </ul>
+  <dt>&nbsp; &nbsp; <a href="Appendix.htm">Дополнения. Расширенные характеристики</a>
+   <ul>
+      <li><a href="Appendix.htm#App01">Команды</a>
+      <li><a href="Appendix.htm#App02">List</a>
+         <ul>
+           <li><a href="Appendix.htm#App0201">Примеры</a>
+         </ul>
+      <li><a href="Appendix.htm#App03">Stat</a>
+         <ul>
+           <li><a href="Appendix.htm#App0301">Примеры</a>
+         </ul>
+      <li><a href="Appendix.htm#App04">Post</a>
+         <ul>
+           <li><a href="Appendix.htm#App0401">Примеры</a>
+         </ul>
+      <li><a href="Appendix.htm#App05">Upload</a>
+         <ul>
+           <li><a href="Appendix.htm#App0501">Примеры</a>
+         </ul>
+      <li><a href="Appendix.htm#App06">Download</a>
+         <ul>
+           <li><a href="Appendix.htm#App0601">Примеры</a>
+         </ul>
+      <li><a href="Appendix.htm#App07">Delete</a>
+         <ul>
+           <li><a href="Appendix.htm#App0701">Примеры</a>
+         </ul>
+   </ul>
+  <dt>&nbsp; &nbsp; <a href="Index.htm">Указатель</a>
+</dl>
+
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="www.PacktPub.com.htm">Поддерживаемые файлы, электронные книги, скидки и т.п.</a></td>
+ <td align="center"><a href="ToC.htm">Оглавление</a></td>
+ <td align="right"><a href="Preface.htm">Вводная часть</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+
+<div id="eXTReMe"><a href="http://extremetracking.com/open?login=icswoss">
+<img src="http://t1.extreme-dm.com/i.gif" style="border: 0;"
+height="38" width="41" id="EXim" alt="eXTReMe Tracker" /></a>
+<script type="text/javascript"><!--
+EXref="";top.document.referrer?EXref=top.document.referrer:EXref=document.referrer;//-->
+</script><script type="text/javascript"><!--
+var EXlogin='icswoss' // Login
+var EXvsrv='s9' // VServer
+EXs=screen;EXw=EXs.width;navigator.appName!="Netscape"?
+EXb=EXs.colorDepth:EXb=EXs.pixelDepth;EXsrc="src";
+navigator.javaEnabled()==1?EXjv="y":EXjv="n";
+EXd=document;EXw?"":EXw="na";EXb?"":EXb="na";
+EXref?EXref=EXref:EXref=EXd.referrer;
+EXd.write("<img "+EXsrc+"=http://e0.extreme-dm.com",
+"/"+EXvsrv+".g?login="+EXlogin+"&amp;",
+"jv="+EXjv+"&amp;j=y&amp;srw="+EXw+"&amp;srb="+EXb+"&amp;",
+"l="+escape(EXref)+" height=1 width=1>");//-->
+</script><noscript><div id="neXTReMe"><img height="1" width="1" alt=""
+src="http://e0.extreme-dm.com/s9.g?login=icswoss&amp;j=n&amp;jv=n" />
+</div></noscript></div>
+
+</body>
+</html>

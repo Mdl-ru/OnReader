@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Docker, Ambassadors, cAdvisor, SELinux, etcd, ECS, EC2 Container Service, Open vSwitch, OVS, Mesos, CFS, btrfs, DAC, Flocker, Fleet, Jenkins, Docker Compose, Weave, Kubernetes, Pipework, Clocker, libnetwork Marathon, Giant Swarm, Flannel, СoreOS, Triton, GKE, Google Container Engine, ELK, GELF, IPAM, Kibana, KeyWhiz, Kitematic, LSM, LXC, MCS, MLS, Calico, Raft algorithm, Rancher, Redis, Amazon RDS, SkyDNS, Swarm, Eureka, WeaveDNS, ZooKeeper, VFS, ZFS">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Изучение построения сетей Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningDockerNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Docker является реализацией контейнеров Linux, которая делает возможной создание лёгких переносимых проектов и сред промышленного уровня. Такие среды могут обновляться приращениями. Docker достигает этого за счёт правил локализации, таких как cgroup и пространства имён Linux помимо оверлейной файловой системы с перекрывающимися образами. Docker предоставляет сетевые примитивы, которые позволяют администраторам определять насколько различаются сетевые среды контейнеров для каждого приложения и соединять все его компоненты, а затем распространять их по большому числу серверов и гарантировать координацию между ними независимо от хоста или ВМ на которых они работают. Эта книга покажет вам как создавать, развёртывать и управлять виртуальной сетевой средой для соединения контейнеров, распределённых по одному или множеству хостов."/>
+<link rel="home" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="next" href="Ch01.html" title="Глава 1. Букварь построения сети Docker"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-docker-networking";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningDockerNetworking/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Изучение построения сетей Docker';
+PrevRef = 'Ix01.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="Learning-Proxmox-VE"/>Изучение построения сетей Docker</h1>
+ </div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p>Docker является реализацией контейнеров Linux, которая делает возможной создание лёгких переносимых проектов и сред промышленного уровня. Такие среды могут обновляться приращениями. Docker достигает этого за счёт правил локализации, таких как cgroup и пространства имён Linux помимо оверлейной файловой системы с перекрывающимися образами. Docker предоставляет сетевые примитивы, которые позволяют администраторам определять насколько различаются сетевые среды контейнеров для каждого приложения и соединять все его компоненты, а затем распространять их по большому числу серверов и гарантировать координацию между ними независимо от хоста или ВМ на которых они работают. Эта книга покажет вам как создавать, развёртывать и управлять виртуальной сетевой средой для соединения контейнеров, распределённых по одному или множеству хостов.</p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Радждип Дуа, Вайбхав Кохли, Сантош Кумар Кондури</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2016 Packt Publishing</p>
+<p>Все права защищены. Никакая часть этой книги не может быть воспроизведена, сохранена в поисковой системе или 
+передана в любой форме или любыми средствами без предварительного письменного разрешения издателя, 
+за исключением случаев кратких цитат, встроенных в критических статьях и обзорах.</p>
+<p>При подготовке этой книги были предприняты все усилия чтобы гарантировать точность представленной информации.
+Тем не менее, информация, содержащаяся в этой книге, продается без гарантии в явном или неявном виде.
+Ни авторы, ни Packt Publishing, ни у их дилеры и дистрибьюторы не будут нести ответственность за любые убытки, 
+вызванные или предположительно вызванные прямо или косвенно этой книгой.</p>
+<p>Packt Publishing пыталась предоставить информацию о товарных знаках обо всех компаниях и продуктов, 
+упомянутых в данной книге для надлежащего использования капиталов.
+Тем не менее, Packt Publishing не может гарантировать точность этой информации.</p>
+  <p>Первая публикация на английском языке: 23 февраля 2016</p>
+<p>Ссылка на продукт: 1190216</p>
+<p>Опубликовано Packt Publishing Ltd.</p>
+<p>Packt Publishing Ltd.</p>
+<p>35 Livery Street</p>
+<p>Birmingham B3 2PB, UK.</p>
+<p>ISBN 978-1-78528-095-5</p>
+<p>www.packtpub.com</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2016 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.packtpub.com/books/info/packt/terms-and-conditions" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     <img src="../favicon.ico" align="middle"/>
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2016-04-20</p>
+</div>
+<div>
+</div></div><hr/></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Credits"> </a>Состав исполнителей</h3>
+   Первого издания на английском языке
+ </div></div></div>
+ <dl><dt><strong>Авторы</strong></dt>
+  <dd><dl>
+   <dt>Радждип Дуа</dt>
+   <dt>Вайбхав Кохли</dt>
+   <dt>Сантош Кумар Кондури</dt>
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Рецензент</strong></dt>
+  <dd><dl>
+   <dt>Джон Лангемак</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор выпуска</strong></dt>
+  <dd><dl>
+   <dt>Кунал Парикх</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор сбора данных</strong></dt>
+  <dd><dl>
+   <dt>Тушар Гупта</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор разработки содержания</strong></dt>
+  <dd><dl>
+   <dt>Майур Паваникар</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Технический редактор</strong></dt>
+  <dd><dl>
+   <dt>Дхираж Чанданшив</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Литературные редакторы</strong></dt>
+  <dd><dl>
+   <dt>Джоанна МакМахон</dt>  
+   <dt>Мадхусудан Училь</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор проекта</strong></dt>
+  <dd><dl>
+   <dt>Нидхи Джоши</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Корректор</strong></dt>
+  <dd><dl>
+   <dt>Сафис Едитинг</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Составитель указателя</strong></dt>
+  <dd><dl>
+   <dt>Рекха Наир</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Графика</strong></dt>
+  <dd><dl>
+   <dt>Джейсон Монтейро</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор производства</strong></dt>
+  <dd><dl>
+   <dt>Апарна Бхагат</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Изготовитель переплёта</strong></dt>
+  <dd><dl>
+   <dt>Апарна Бхагат</dt>  
+  </dl></dd>
+ </dl>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Об авторах</h3>
+ </div></div></div>
+ <p><strong>Радждип Дуа</strong>
+ <p><strong>Вайбхав Кохли</strong>
+ <p><strong>Сантош Кумар Кондури</strong>
+ </p>
+</div>
+<div class="section">
+
+<div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Благодарности</h3>
+ </div></div></div>
+ <p></p>
+</div>
+
+
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reviewers"> </a>О рецензенте</h3>
+ </div></div></div>
+ <p><strong>Джон Лангемак</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PacktPub"> </a>www.PacktPub.com</h3>
+ </div></div></div>
+</div>
+
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+	<dt><span class="section"><a href="index.html#Credits">Состав исполнителей</a></span></dt>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Reviewers">Рецензенты</a></span></dt>
+	<dt><span class="section"><a href="index.html#PacktPub">www.PacktPub.com</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+	<dt><span class="section"><a href="index.html#Preface">Предисловие</a></span></dt>
+	<dd><dl>
+	 <dt><span class="section"><a href="index.html#Covers">Что охватывает эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#You_need">Что вам нужно для этой книги</a></span></dt>
+	 <dt><span class="section"><a href="index.html#For_Who">Для кого эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Conventions">Соглашения</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Feedback">Обратная связь с читателями</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Support">Поддержка пользователей</a></span></dt>
+	 <dd><dl>
+	  <dt><span class="section"><a href="index.html#DLcode">Загрузка кода примеров</a></span></dt>
+	  <dt><span class="section"><a href="index.html#DLImages">Загрузка цветных изображений этой книги</a></span></dt>
+	  <dt><span class="section"><a href="index.html#Errata">Опечатки</a></span></dt>
+	  <dt><span class="section"><a href="index.html#Piracy">Незаконное тиражирование</a></span></dt>
+	  <dt><span class="section"><a href="index.html#Questions">Вопросы</a></span></dt>
+	 </dl></dd>
+	</dl></dd>
+  </dl></dd>
+ </dl>
+ <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Букварь построения сети Docker</a></span></dt>
+    <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#0101">Построение сетей и Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010101">Мосты Linux</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010102">Open vSwitch</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010103">NAT</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010104">IPtables</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010105">AppArmor/SELinux</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0102">Мост docker0</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010201">Режим --net default</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010202">Режим --net=none</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010203">Режим --net=container:$container2</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010204">Режим --net=host</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch01.html#01020401">Соответствие порта в контейнере Docker</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0103">Docker OVS</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0104">Сокет домена Unix</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0105">Связывание контейнеров Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010501">Соединения</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0106">Что нового в построении сетей Docker?</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010601">Песочница</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010602">Терминал</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010603">Сетевая среда</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0107">Модель Docker CNM</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0108">Заключение</a></span></dt>
+    </dl></dd>
+    <dt><span class="chapter"><a href="Ch02.html">2. Построение сети Docker взгляд вовнутрь</a></span></dt>
+    <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#0201">Настройка стека IP для Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch02.html#020101">Поддержка IPv4</a></span></dt>
+     <dt><span class="section"><a href="Ch02.html#020102">Поддержка IPv6</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#0202">Настройка сервера DNS</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch02.html#020201">Взаимодействие между контейнером и внешними сетями</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02020101">Ограничение доступа из одного контейнера к другому на SSH</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#0203">Настройка моста Docker</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0204">Перекрывающие и лежащие в основе сетевые среды</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0205">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch03.html">3. Построение вашей первой сетевой среды Docker</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#0301">Введение в Piperwork</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0302">Множество контейнеров поверх одного хоста</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030201">Переплетение ваших контейнеров</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0303">Open vSwitch</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030301">OVS одного хоста</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#03030101">Создание моста OVS</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch03.html#030302">OVS множества хостов</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0304">Построение сетей с оверлейными сетевыми средами - Flannel</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0305">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch04.html">4. Построение сетей в кластере Docker</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch04.html#0401">Docker Swarm</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#040101">Сборка Docker Swarm</a></span></dt>
+     <dt><span class="section"><a href="Ch03.html#040102">Построение сети Docker Swarm</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0402">Kubernetes</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch04.html#040201">Развёртывание Kubernetes в AWS</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040202">Построение сети Kubernetes и его различия с построением сетей Docker</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040203">Развёртывание Kubernetes pod</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0403">Mesosphere</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch04.html#040301">Контейнеры Docker</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040302">Развёртывание веб- приложений с применением Docker</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040303">Развёртывание Mesos в AWS с использованием Docker</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0404">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch05.html">5. Безопасность и QoS для контейнеров Docker</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#0501">Ограничения файловой системы</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050101">Точки монтирования, доступные только для чтения</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05010101">sysfs</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05010102">procfs</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05010103">/dev/pts</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05010104">/sys/fs/cgroup</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch05.html#050102">Копирование при записи</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0502">Возможности Linux</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0503">Безопасность контейнеров в AWS ECS</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0504">Понимание безопасности Docker I - пространства имён ядра</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050401">Пространство имён pid</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050402">Пространство имён net</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05040201">Управление основным пространством имён сетевой среды</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05040202">Настройка пространства имён сетевой среды</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch05.html#050403">Пространство имён User</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05040301">Создание нового пространства имён пользователя</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#0505">Понимание безопасности Docker II - cgroup</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050501">Определение cgroup</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050502">Зачем нужны cgroup?</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050503">Создание cgroup вручную</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050504">Docker и cgroup</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#0506">Применение AppArmor для безопасности контейнеров Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050601">AppArmor и Docker</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050602">Эталонное тестирование безопасности Docker</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05060201">Регулярный аудит демона Docker</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05060202">Создание пользователя для определённого контейнера</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05060203">Не монтируйте конфиденциальные каталоги системы хоста в контейнеры</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05060204">Не применяйте привилегированные контейнеры</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#0507">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch06.html">6. Следующее поколение сетевого стека для Docker: libnetwork</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#0601">Цель</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0602">Разработка</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0603">Объекты CNM</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060301">Песочница</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060302">Терминал</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060303">Сетевая среда</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060304">Контроллер сети</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060305">Атрибуты CNM</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060306">Жизненный цикл CNM</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0604">Драйвер</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060401">Драйвер моста</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060402">Драйвер оверлейной сетевой среды</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0605">Применение оверлейной сетевой среды при помощи Vagrant</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060501">Сборка Vagrant развёртывания оверлейной сетевой среды</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0606">Оверлейная сетевая среда машины Dodcker и Docker Swarm</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060601">Предварительные условия</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060602">Установка хранилища ключ-значение</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060603">Создание кластера Swarm из двух узлов</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060604">Создание оверлейной сетевой среды</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0607">Создание контейнеров с применением оверлейной сетевой среды</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060701">Интерфейс сети контейнера</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0608">Встраиваемый модуль CNI</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060801">Настройка сетевой среды</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060802">Выделение IP</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060803">Интерфейс управления IP адресами</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0609">Драйвер libnetwork проекта Calico</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0610">Заключение</a></span></dt>
+	</dl></dd>
+ </dl>
+	<dt><span class="index"><a href="ix01.html">Указатель</a></span></dt>
+
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preface"> </a>Предисловие</h3>
+ </div></div></div>
+ <p>Эта книга поможет читателю изучить, создать, развернуть и выполнить шаги администрирования построения сети Docker. 
+ Docker является Linux реализацией контейнеров, которая делает возможной создание лёгких и переносимых проектов и сред промышленного уровня.
+ Эти среды могут обновляться приращениями. Docker достигает этого за счёт правил локализации, 
+ таких как cgroup и пространства имён Linux помимо оверлейной файловой системы с перекрывающимися образами.
+ Docker предоставляет сетевые примитивы, которые позволяют администраторам определять насколько различаются сетевые среды контейнеров для каждого приложения и соединять все его компоненты,
+ а затем распространять их по большому числу серверов и при этом гарантировать координацию между ними независимо от того,на каком хосте или ВМ они работают.
+ Эта книга собрала в себя все последние сетевые технологии Docker и предоставляет большие по глубине пояснения с подробностями их настройки.</p>
+</div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Covers"> </a>Что охватывает эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="You_need"> </a>Что вам нужно для этой книги</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="For_Who"> </a>Для кого эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Conventions"> </a>Соглашения</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Обратная связь с читателями</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Загрузка кода примеров</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Support"> </a>Поддержка пользователей</h4>
+  </div></div></div>
+ </div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DLImages"> </a>Загрузка цветных изображений этой книги</h4>
+  </div></div></div>
+  <p>Также мы предоставляем вам файл pdf, который содержит цветные изображения используемых в этой книге снимков экранов/ схем.
+  Цветные изображения помогут вам лучше понять изменения в выводе. Вы можете загрузить этот файл с 
+  <a class="link" href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf"
+  target="_top">http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf</a>
+  </p>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Errata"> </a>Опечатки</h4>
+  </div></div></div>
+ </div>
+ <p></p>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Piracy"> </a>Незаконное тиражирование</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Questions"> </a>Вопросы</h4>
+  </div></div></div>
+ </div>
+
+</div>
+
+<p> </p>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

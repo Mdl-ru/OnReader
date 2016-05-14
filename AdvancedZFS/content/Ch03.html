@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 3. Совместное использование наборов данных - Мастерство FreeBSD: ZFS для профессионалов</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="AdvancedZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="prev" href="Ch02.html" title="Глава 2. Передача полномочий и джейлы"/>
+<link rel="next" href="Ch04.html" title="Глава 4. Репликация"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "advanced-zfs";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 3. Совместное использование наборов данных';
+PrevRef = 'Ch02.html';
+UpRef = 'index.html';
+NextRef = 'Ch04.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 3. Совместное использование наборов данных</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch03.html">3. Совместное использование наборов данных</dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch03.html#01">SMB</a></span></dt>
+     <dt><span class="chapter"><a href="Ch03.html#02">iSCSI</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch03.html#0201">Настройка таргета</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch03.html#03">Network File System</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch03.html#0301">Типы настроек NFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0302">Разрешение NFSv2/v3</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0303">Настройка NFSv2/v3 через ZFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0304">Разрешение NFSv4</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0305">Настройка NFSv4 через ZFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0306">Отладка NFS ZFS</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+   <p>OpenZFS интегрировала совместное использование наборов данных посредством  Server Message Block 
+   (SMB), Network File System (NFS) и Internet Small Computer System Interface (iSCSI). Комплект FreeBSD, 
+   однако, подерживает только NFS и iSCSI. Данная глава проведёт вас по реализациям iSCSI и NFS в 
+   FreeBSD и их тоношению к ZFS, плюс несколько замечаний по применению SMB в ZFS.</p>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>SMB</h3>
+   </div></div></div>
+   <p>Вы можете совместно использовать наборы данных ZFS поверх SMB, с применением программ, аналогичных 
+   Samba (<a class="link" href="https://www.samba.org" target="_top">https://www.samba.org</a>) Это будет 
+   работать в точности как Samba в любой другой файловой системе. ZFS накладывает буквально нулевые ограничения 
+   или требования на Samba, хотя вы, возможно, захотите установить свойство 
+   <span class="term"><strong class="userinput"><code>casesensitivity</code></strong></span>
+   в значение <span class="emphasis"><em>mixed</em></span> для набора данных с клиентами Windows через 
+   SMB. {<span class="emphasis"><em>Прим. пер.: за подробностями о прочих подводных камнях в именах файловоой 
+   системы отсылаем к нашему переводу <a class="link" href="http://www.mdl.ru/Solutions/Put.htm?Nme=FixingFilenames" 
+   target="_top">Исправление имён файлов Unix/Linux/POSIX</a>.</em></span>}
+   </p>
+   <p>Однако, совместно используемый набор данных ZFS может выглядеть чудным для клиентов SMB. По мере заполнения 
+   пула клиент видит сокращение размера набора данных. Мы подробно обсуждали это в книге <a class="link" 
+   href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch06.html#Reading_ZFSDiskUsage" target="_top">Мастерство 
+   FreeBSD: ZFS</a>, однако не будет плохо повторить здесь: если вы наблюдаете за свободным пространством 
+   средствами SMB, вы получите ужасно странные результаты. <a class="link" href="http://www.freenas.org/" 
+   target="_top">FreeNAS</a> содержит специальную поддержку для отображения используемого пространства для Windows 
+   корректным образом.</p>
+   <p>Вы можете усилить Samba с ZFS для реплицирования многих функций, которые можно найти в файловых серверах 
+   Windows. Например, после небольшой работы, снимки ZFS могут быть доступны через 
+   <a class="link" href="https://ru.wikipedia.org/wiki/Теневая_копия" target="_top">Windows Volume 
+   Shadow Copy</a>. FreeNAS применяет многие подобные трюки для поддержки клиентов Windows.</p>
+   <p>Если главная цель для ZFS состоит в поддержке клиентов Windows через SMB, авторы настоятельно рекомендуют 
+   использовать <a class="link" href="http://www.freenas.org/" target="_top">FreeNAS</a>.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>iSCSI</h3>
+   </div></div></div>
+   <p>Вы можете совместно использовать zvol посредством любого предпочитаемого вами программного обеспечения
+   iSCSI таргегов. FreeBSD 10 и последующие версии содержат демон Cam Target Layer 
+   <span class="term"><code>ctld(8)</code></span>, который выступает в качестве службы iSCSI таргета. 
+   Программное обеспечение <span class="term"><code>ctld(8)</code></span> обычно имеет более высокую 
+   производительность, чем пакет    <span class="term"><code>istgt</code></span>, применяемый в более 
+   ранних версиях FreeBSD.</p>
+   <p>Однако, пока инструментарий администрирования ZFS не встроен ни в какое программное обеспечение таргета 
+   iSCSI FreeBSD. Управляйте совместным использованием zvol в рамках <span class="term"><code>ctld</code></span>,
+    а не при помощи <span class="term"><code>zfs(8)</code></span>. Мы рассмотрим настройку таргета iSCSI на 
+	основе zvol и некоторые вопросы производительности для устрйств iSCSI на основе ZFS.</p>
+   <p>Для получения более подробной информации по iSCSI и тому как их применять возьмите книгу Лукаса 
+   <a class="link" href="https://www.michaelwlucas.com/nonfiction/fmsf" target="_top">FreeBSD Mastery: 
+   Specialty Filesystems</a> {<span class="emphasis"><em>Прим. пер.: <a href="javascript:tocall()" 
+   onmouseover="this.href=mail" title="ищем спонсоров на перевод">ищем спонсоров на перевод</a> 
+   <a class="link" href="http://onreader.mdl.ru/SpecialtyFilesystems/content/index.html" target="_top">Специализированные 
+   файловые системы</a>.</em></span>}
+   </p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка таргета </span></h4>
+   </div></div></div>
+   <p>Таргет iSCSI предоставляет службы хранения в стиле SCSI в сетевой среде. Вы можете представлять себе их 
+   как некий iSCSI сервер, однако таргет тонко отличается от сервера. Таргет iSCSI никогда не является сам 
+   по себе инициатором активности. Все запросы должны поступать от клиента, или, 
+   <span class="emphasis"><em>инициатора</em></span>.</p>
+   <p>Основным службам <a class="link" href="https://ru.wikipedia.org/wiki/ISCSI" target="_top">iSCSI</a> 
+   необходимы группа портала, таргет и <a class="link" href="https://ru.wikipedia.org/wiki/LUN" 
+   target="_top">адрес дискового устройства</a>, или LUN (Logical Unit Number). Группа портала является 
+   именем, определяемым для специальной комбинации адреса IP и порта TCP. (&quot;Все IP адреса на данном 
+   хосте&quot; является допустимой компонентой группы портала.) Таргет является особой группой устройств 
+   хранения, экспортируемой через iSCSI. Одна группа портала может иметь любое число таргетов. LUN является 
+   отдельным устройством хранения в пределах одного таргета.</p>
+   <p>Вот часть <span class="term"><code><em>/etc/ctl.conf</em></code></span>, которая определяет отдельную 
+   группу портала.</p>
+	   <pre class="screen"><code>
+portal-group group0 {
+ discovery-auth-group no-authentication
+ listen 0.0.0.0
+ listen [::]
+}
+ 	   </code></pre>
+   <p>Группа портала имеет имя <span class="emphasis"><em>group0</em></span>. Хотя мы можем (и должны)
+   настраивать аутентификацию для промышленного таргета iSCSI, для начала работы нам не требуется 
+   аутентификация. Данная группа портала доступна всем адресам IPv4 и IPv6 на данной машине.</p>
+   <p>Далее мы определяем таргет для данной группы портала. Этот таргет содержит один LUN.</p>
+	   <pre class="screen"><code>
+target iqn.2013-11.org.mwlucas:target0 {
+ auth-group no-authentication
+ portal-group group0
+ lun 0 {
+  path /dev/zvol/vm/db1
+  size 1T
+ }
+}
+ 	   </code></pre>
+   <p>Имена для таргета iSCSI основаны на имени домена организации, предоставляющей это таргет. Теоретически 
+   вы можете присваивать имя своим таргетам iSCSI почти любым способом, кактм вы пожелаете, однпко 
+   некоторое программное обеспечение инициатора пытается применять это имя для установки оптимизации.
+   Будет лучше не копировать имена таргетов ваших коммерческих поставщиков SAN.</p>
+   <p>Схема именования для устройств SCSI всегда начинается со строки <span class="emphasis"><em>iqn</em></span>.
+   Затем у вас идут год и месяц регистрации имени домена с последующим именем домена в обратном порядке. 
+   В нашем случае, mwlucas.org был зарегистрирован в ноябре 2013, поэтому имя таргета начинается с 
+   <span class="emphasis"><em>iqn.2013-11.org.mwlucas</em></span>. Затем у нас идёт двоеточие и собственно имя 
+   данного определённого таргета.</p>
+   <p>Как и группа портала, данный таргет не требует аутентификации. Ключевое слово 
+   <span class="emphasis"><em>portal-group</em></span> привязывает нас к группе потала 
+   <span class="emphasis"><em>group0</em></span> созданной ранее.</p>
+   <p>Данный таргет имеет единственный LUN, номер 0. Мы определяем путь к файлу или устройству и размер 
+   этого таргета. Отметим, что здесь мы используем узел устройства
+   <span class="emphasis"><em>/dev/zvol/vm/db1</em></span>. Хотя zvol может иметь множество узлов устройства,
+   всегда осуществляйте доступ к узлу устройства для iSCSI экспортируя zvol из 
+   <span class="emphasis"><em>/dev/zvol</em></span> {<span class="emphasis"><em>Прим. пер.: подробнее 
+   <a class="link" href="Ch06.html#0405" target="_top">Узлы устройств множества путей</a></em></span>}. 
+   Было бы лучше создавать такие zvol при помощи свойства 
+   <span class="term"><strong class="userinput"><code>volmode</code></strong></span> dev так, чтобы 
+   уровень GEOM сервера не пробовал и не настраивал предварительно этот zvol.
+   {<span class="emphasis"><em>Прим. пер.: см. раздел <a class="link" 
+   href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch04.html#ZvolMode" target="_top">Режим Zvol</a></em></span>
+   первой книги}.</p>
+   <p>Если <span class="emphasis"><em>/etc/ctl.conf</em></span> существует, запустите <span class="term"><code>ctld(8)</code></span>.</p>
+	   <pre class="screen"><code>
+# service ctld start
+ 	   </code></pre>
+   <p>Состояние и сообщения об ошибках появятся в <span class="emphasis"><em>/var/log/messages</em></span>.</p>
+   <p>Если <span class="term"><code>ctld(8)</code></span> не отвечает вашим потребностям, применяйте любое 
+   предпочитаемое вами программное обеспечение таргета. Воспользуйтесь узлом устройства zvol для того, чтобы 
+   предложить его вашему инициатору. {<span class="emphasis"><em>Прим. пер.: повторим, подробнее о множественности
+   путей и связанных с именованием проблем в разделе <a class="link" href="Ch06.html#0405" 
+   target="_top">Узлы устройств множества путей</a>.</em></span>}</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>Network File System</h3>
+   </div></div></div>
+   <p>Про Network File System, или NFS, были написаны целые книги. Много различных операционных систем 
+   поддерживает NFS либо в качестве сервера, либо в качестве клиента, либо оба варианта сразу. Для данной
+   книги мы сосредоточимся на предложении совместных ресурсов NFS посредством инструментария интегрированного
+   с ZFS.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Типы настроек NFS </span></h4>
+   </div></div></div>
+   <p>Вы можете управлять экспортом NFS на основе ZFS при помощи традиционного файла
+   <span class="emphasis"><em>/etc/exports</em></span> FreeBSD и ничего ужасного с вами не случится. Если вы 
+   придерживаетесь старого стиля FreeBSD, <span class="emphasis"><em>/etc/exports</em></span> может даже 
+   ощущаться более комфортным. Однако <span class="term"><code>zfs(8)</code></span> обрабатывает много 
+   аспектов управления NFS для вас, и к тому же работает одинаково на всех платформах ZFS.</p>
+   <p>Однако поскольку вы управляете NFS на своём хосте, мы настоятельно рекомендуем вам выбрать один метод и 
+   придерживаться его. Не применяйте одновременно оба, и <span class="emphasis"><em>/etc/exports</em></span>, и 
+   ZFS для управления вашими совместными ресурсами NFS. FreeBSD читает информацию о совместных ресурсах из обоих 
+   местоположений, делая поиск неисправностей ещё более раздражающим.</p>
+   <p>Хост FreeBSD должен иметь файл <span class="emphasis"><em>/etc/exports</em></span> для обслуживания 
+   совместных ресурсов NFS, даже если вы управляете NFS целиком из ZFS. Простейший способ получить его состоит в 
+   выполнении <span class="emphasis"><em>touch /etc/exports</em></span>, хотя вы можете захотеть экспортировать 
+   файл, который содержит только комментарии, отправляющие прочих системных администраторов к 
+   <span class="term"><code>zfs(8)</code></span>.</p>
+   <p>Как и в случае с iSCSI, мы не собираемся полностью охватывать NFS. Мы обсудим управление NFS с точки зрения 
+   ZFS, отображая, где это полезно, сравнивая с традиционным NFS.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Разрешение NFSv2/v3 </span></h4>
+   </div></div></div>
+   <p>Разрешение NFS на уровне ZFS не даст ничего если хост не выполняет необходимые для NFS службы. Установите 
+   приводимые ниже строки в <span class="emphasis"><em>/etc/rc.conf</em></span> для запуска процессов необходимых 
+   для обслуживания NFS при загрузке.</p>
+	   <pre class="screen"><code>
+nfs_server_enable=YES
+rpcbind_enable=YES
+mountd_enable=YES
+rpc_lockd_enable=YES
+rpc_statd_enable=YES
+ 	   </code></pre>
+   <p>Не все среды требуют все из этих служб, однако их включение потребляет не очень много ресурсов системы и 
+   предложит самый широкий диапазон совместимости и приличную производительность.</p>
+   <p>Вы также можете разрешить хостам в вашей сетевой среде доступ к <span class="term"><code>rpcbind(8)</code></span> 
+   при помощи записи <span class="emphasis"><em>/etc/hosts.allow</em></span>. Вот, например, сетевая среда 
+   203.0.113.0.24 доступ к моим службам NFS.</p>
+	   <pre class="screen"><code>
+rpcbind: 203.0.113.0/255.255.255.0 : allow
+ 	   </code></pre>
+   <p>Без этой записи <span class="emphasis"><em>hosts.allow</em></span> ваши клиенты подводить вас к грани 
+   безумия бессмысленными ошибками.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка NFSv2/v3 через ZFS </span></h4>
+   </div></div></div>
+   <p>ZFS настраивает NFS базируясь на установках для каждого набора данных. Свойство ZFS 
+   <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> предписывает то, как 
+   совместно использовать набор данных. Это свойство может быть установлено в значения 
+   <span class="emphasis"><em>on</em></span>, <span class="emphasis"><em>off</em></span> или в параметр 
+   совместного использования NFS для этого набора данных.</p>
+   <p>Если она установлена в <span class="emphasis"><em>off</em></span>, ZFS не настраивает совместные ресурсы 
+   для этого набора данных. Этот набор данных, однако, всё ещё может совместно использоваться с применением 
+   <span class="emphasis"><em>/etc/exports</em></span>
+   </p>
+   <p>Установка данного свойства в значение <span class="emphasis"><em>on</em></span> делает доступным этого 
+   набора данных для совместного применения через NFS. Это эквивалентно перечислению файловой системой себя в 
+   сприске <span class="emphasis"><em>/etc/exports</em></span>. Установка 
+   <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> в значение 
+   <span class="emphasis"><em>on</em></span> для <span class="emphasis"><em>zroot/home</em></span> будет 
+   аналогично приводимой ниже записи в <span class="emphasis"><em>/etc/exports</em></span>.</p>
+	   <pre class="screen"><code>
+/home
+ 	   </code></pre>
+   <p>Любой хост по всему миру может быть доступным и NFS смонтирует этот хост.</p>
+   <p>Это может быть гораздо более понятно установить доступ только для тех хостов, к которым мы хотим 
+   сделать это.</p>
+	   <pre class="screen"><code>
+# zfs set sharenfs=&quot;203.0.113.208&quot; zroot/home
+ 	   </code></pre>
+   <p>Данная команда создаст <span class="emphasis"><em>/etc/zfs/exports</em></span> подобный такому.</p>
+	   <pre class="screen"><code>
+/home    203.0.113.208
+ 	   </code></pre>
+   <p>Вы можете ввести более сложные значения в свои свойства, заключая их в кавычки или экранируя (escape) 
+   их прочим образом.</p>
+	   <pre class="screen"><code>
+# zfs set sharenfs=&quot;-network 203.0.113.0 -mask 255.255.255.0&quot; zroot/home
+ 	   </code></pre>
+   <p>Любые записи, которые делают допустимые записи <span class="emphasis"><em>/etc/exports</em></span> 
+   могут применяться в качестве значений для
+   <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span>.</p>
+   <p>Свойство <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> 
+   не может поддерживать никакйю настройку NFS, которая требует множества строк в 
+   <span class="emphasis"><em>/etc/exports</em></span>. Для подобных сред вы должны применять традиционный 
+   файл <span class="emphasis"><em>exports</em></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0304"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Разрешение NFSv4 </span></h4>
+   </div></div></div>
+   <p>NFSv4 является совершенно отличным протоколом от NFSv2 или v3. Не делайте доступным NFSv4, пока 
+   не разберётесь с его пониманием. Этот раздел посвящён тем людям, которые уже имеют некое ноу-хау 
+   NFSv4 и работы с ним.</p>
+   <p>Чтобы сделать доступным NFSv4, в <span class="emphasis"><em>/etc/rc.conf</em></span> установите 
+   следующее.</p>
+	   <pre class="screen"><code>
+nfs_server_enable=YES
+mountd_enable=YES
+nfsv4_server_enable=YES
+nfsuserd_enable=YES
+ 	   </code></pre>
+   <p>Вам также понадобится одна строка в <span class="emphasis"><em>/etc/exports</em></span>, определяющая 
+   корень вашего дерева NFS. Это обычный корень файловой системы.</p>
+	   <pre class="screen"><code>
+V4: /
+ 	   </code></pre>
+   <p>Разрешайте и запрещайте совместное применение NFS при помощи свойства 
+   <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> для каждого 
+   индивидуального набора данных.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0305"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка NFSv4 через ZFS </span></h4>
+   </div></div></div>
+   <p>Как и в случае более ранних версий NFS, для настройки экспорта отдельного набора данных применяйте
+   свойство <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span>. Однако, NFSv4 
+   экспортирует всё в дереве каталога, поэтому наследование играет чудесно большое значение.
+   {<span class="emphasis"><em>Прим. пер.: подробности данного подхода в нашем переводе книги Ли Р. Сюрбера 
+   <a class="link" href="http://onreader.mdl.ru/VirtualizationComplete/content/Ch02.html" target="_top">Полная 
+   виртуализация</a>.</em></span>}</p>
+   <p>Установка <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> в значение 
+   <span class="emphasis"><em>on</em></span> сообщает NFS о необходимости совместно использовать этот набор 
+   данных с каждым, без ограничений. Вы целиком полагаетесь на межсетевые экраны или фильтры пакетов для 
+   предотвращения не авторизованного доступа к к этому набору данных и его дочерним наборам данных.
+   {<span class="emphasis"><em>Прим. пер.: подробнее в нашем переводе раздела <a class="link" 
+   href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch04.html#InheritanceAndRenaming" 
+   target="_top">Наследование и переименование</a> первой книги авторов по ZFS.</em></span>} Как и прочие свойства ZFS, 
+   <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> наследуемое свойство. 
+   Если вы устанавливаете совместное применение для <span class="emphasis"><em>zroot/home</em></span>, 
+   вы делаете доступными для совместного применения все домашние каталоги входящие в данный.</p>
+   <p>Установка <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> в 
+   значение <span class="emphasis"><em>off</em></span> сообщает NFS не использовать совместно этот набор данных. Его 
+   применение намеренно переписывает установки <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span>
+   родительского набора данных.</p>
+   <p>Установка данного свойства в значение IP адреса или выражение маски делает доступным совместное применение 
+   этого набора данных в точности как это делается при экспортах NFSv2/v3.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0306"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отладка NFS ZFS </span></h4>
+   </div></div></div>
+   <p>FreeBSD собирает свойства <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> 
+   в файл экспортов, <span class="emphasis"><em>/etc/zfs/exports</em></span>. Если вы знакомы с NFS, 
+   проверка этого файла может снабдить вас внутренним пониманием того, почему совместное применение файлов 
+   работает именно так.</p>
+   <p>Проверьте <span class="emphasis"><em>/var/log/messages</em></span> на клиенте и сервере для получения 
+   намёков почему не прошло монтирование. Большинство общих ошибок которые мы наблюдаем, в ряду сразу после 
+   <span class="emphasis"><em>hosts.allow</em></span> и проблем с межсетевым маршрутизатором, это неверные 
+   свойства <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span>. После 
+   десятилетий практики, Лукас <span class="emphasis"><em>всё ещё</em></span> определяет разрешение сетевых сред 
+   как блоки <a class="link" href="https://ru.wikipedia.org/wiki/CIDR" target="_top">CIDR</a> вместо того, 
+   чтобы делать это в дружественном для NFS формате.</p>
+  </div>   
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

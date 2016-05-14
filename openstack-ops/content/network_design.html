@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 7. Проектирование сети - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="architecture.html" title="Архитектура"/>
+<link rel="prev" href="storage_decision.html" title="Глава 6. Решения систем хранения"/>
+<link rel="next" href="operations.html" title="Эксплуатация"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:01+00:00"/><script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//network_design.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 7. Проектирование сети';
+PrevRef = 'storage_decision.html';
+UpRef = 'architecture.html';
+NextRef = 'operations.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="chapter">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   <a id="network_design"> </a>Глава 7. Проектирование сети</h2>
+  </div></div>
+ </div>
+ 
+ <div class="toc"><dl><dt><span class="section">
+ <a href="network_design.html#mgmt_network">Управляющая сеть</a></span></dt><dt><span class="section">
+ <a href="network_design.html#public_addressing">Параметры для общедоступного адресного пространства</a></span></dt><dt><span class="section">
+ <a href="network_design.html#ip_address_planning">Планирование IP адресов</a></span></dt><dt><span class="section">
+ <a href="network_design.html#network_topology">Топология сети</a></span></dt><dt><span class="section">
+ <a href="network_design.html#services_for_networking">Службы для функционирования сети</a></span></dt><dt><span class="section">
+ <a href="network_design.html#ops-network-conclusion">Выводы</a></span></dt></dl>
+</div>
+
+<p>OpenStack предоставляет богатое сетевое окружение, а данная глава 
+подробно излагает требования и варианты для рассмотрения при проектировании вашего облака.
+<a id="d9e2812" class="indexterm"/>
+<a id="d9e2815" class="indexterm"/></p>
+
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr>
+ <td align="left" valign="top">
+ <p>Если это ваше первое развертывание облачной инфраструктуры 
+ в вашей организации, после прочтения данного раздела вам необходимо вначале обсудить 
+ планы с вашей сетевой командой. Использование сети в рабочем облаке сильно 
+ отличается от традиционных сетевых развертываний, и имеет потенциал к саморазрушению 
+ как на уровне связности, так и на уровне политик.
+ <a id="d9e2820" class="indexterm"/></p></td></tr></table>
+</div>
+
+<p>Например, вы должны планировать количество IP-адресов, которые вам потребуется 
+как для гостевых экземпляров, так и для инфраструктуры управления. 
+Кроме того, вам необходимо изучить и обсудить сетевые подключения облака 
+через серверы прокси и межсетевые экраны.</p>
+
+<p>В даннойглаве мы примедем некоторые примеры реализаций сетей
+для анализа и предоставления информации а некоторых сетевых макетах,
+которые использует OpenStack. Наконец, мы изложим некоторые короткие замечания
+о сетевых службах, которые необходимы для стабильной работы.</p>
+
+<div class="section"><div xmlns="" class="titlepage">
+ <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+  <a id="mgmt_network"> </a>Управляющая сеть</h2>
+ </div></div>
+</div>
+
+<p>A <a class="gloss" href="#" def="&lt;strong&gt;управляющая сеть: &lt;/strong&gt; &lt;p&gt;
+Сетевой сегмент, используемый для администрирования, не виден из общедоступного интернета. &lt;/p&gt;">
+управляющая сеть</a> (выделенная сеть для использования операторами вашего облака) 
+обычно состоит из отдельных комутаторов и отдельных NIC (сетевых интерфейсных плат, network interface cards) 
+и является рекомендуемым параметром. 
+Такое разделение предотвращает системное администрирование и мониторинг системы от
+от воздействия обмена, генерируемого гостями.
+<a id="d9e2829" class="indexterm"/>
+<a id="d9e2831" class="indexterm"/>
+<a id="d9e2833" class="indexterm"/></p>
+
+<p>Рассмотрите возможность создания других частных сетей для связи между 
+внутренними компонентами OpenStack, такими как очереди сообщений
+и вычислительная среда OpenStack. Использование виртуальных
+локальных сетей прекрасно работает в таких сценариях, поскольку оно
+предоставляет метод для создания  множества виртуальных сетей в 
+физической сети.</p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+   <a id="public_addressing"> </a>Параметры для общедоступного адресного пространства</h2>
+  </div></div>
+ </div>
+ 
+ <p>Существуют два основных типа IP-адресов для гостевых виртуальных машин: 
+ фиксированные IP и плавающие IP. Фиксированные IP-адреса присваиваются экземплярам при загрузке, 
+ в то время как плавающие IP-адреса могут менять свои связи с экземплярами в результате 
+ действий пользователя. Оба типа IP-адресов могут быть либо 
+ общедоступными (public), либо частными, в зависимости от вашего варианта использования.
+ <a id="d9e2840" class="indexterm"/>
+ <a id="d9e2843" class="indexterm"/></p>
+ <p>При потребности запуска OpenStack без плавающих IP-адресов, необходимы фиксированные 
+ IP-адреса. Одним из самых распространенных вариантов использования плавающих IP-адресов 
+ является предоставление общедоступных IP-адресов в частном облаке при существовании 
+ ограничения на число доступных IP-адресов. Другим вариантом для пользователя 
+ общедоступного облака является необходимость наличия &quot;статического&quot; 
+ IP-адреса, который может быть переназначен при обновлении или перемещении экземпляра.
+ <a id="d9e2847" class="indexterm"/>
+ <a id="d9e2850" class="indexterm"/></p>
+ 
+ <p>Фиксированные IP-адреса могут быть частными для частных облаков и общедоступными для 
+ общедоступных облаков. Фиксированный IP теряется после завершения работы экземпляра. 
+ Не стоит беспокоиться новым пользователям облачных вычислений, которые могут быть 
+ расстроены такой эфемерностью.
+ <a id="d9e2853" class="indexterm"/>
+ <a id="d9e2856" class="indexterm"/></p>
+</div>
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+   <a id="ip_address_planning"> </a>Планирование IP адресов</h2>
+  </div></div>
+ </div>
+ <p>Инсталляция OpenStack потенциально может иметь много подсетей, причем каждая подсеть 
+ может предоставлять различные виды услуг. Планирование IP адресов может помочь общему 
+ пониманию задач разделов сети и их масштабируемости. Службы управления могут иметь 
+ общедоступные и частные IP-адреса, и, как отмечалось выше, есть несколько вариантов 
+ для адресации экземпляра в общедоступном адресном пространстве.
+  <a id="d9e2861" class="indexterm"/>
+ <a id="d9e2864" class="indexterm"/></p>
+ 
+ <p>Планирование IP адресов может быть разбито на следующие разделы:
+ <a id="d9e2868" class="indexterm"/></p>
+ 
+ <div class="variablelist"><dl><dt>
+  <span class="term">Маршрутизация подсетей</span></dt><dd>
+  <p>Покидающие подсеть пакеты следуют через этот адрес, который может быть 
+  выделенным маршрутизатором или службой 
+  <code class="literal">nova-network</code></p></dd><dt>
+  <span class="term">Управляющая службы общедоступных интерфейсов</span></dt><dd>
+  <p>Через эти адреса осуществляется общий доступ к 
+  <code class="code">swift-proxy</code>, <code class="code">nova-api</code>, 
+  <code class="code">glance-api</code> и horizon, причем адреса могут быть по 
+  одну сторону за балансировщиком нагрузки или указывать на 
+  отдельные компьютеры.</p></dd><dt>
+  <a id="d9e2888" class="indexterm"/>
+  <span class="term">Внутренние коммуникации кластера хранилища объектов</span></dt><dd>
+  <p>Эту частную сеть использует обмен между серверами объектов/ учетных записей / контейнеров, 
+  а также между ними и внутренним интерфейсом серверов прокси.
+  <a id="d9e2891" class="indexterm"/>
+  <a id="d9e2894" class="indexterm"/></p></dd><dt>
+  <span class="term">Взаимодействие компьютеров и хранилищ</span></dt><dd>
+  <p>Эта сеть используется, если эфемерные или блочные хранилища являются 
+  внешними для вычислительных узлов.
+  </p></dd><dt>
+  <span class="term">Внеполосное удаленное управление</span></dt><dd>
+  <p>Эта сеть обычно выделяется в отдельную, если в серверах 
+  имеется выделенная микросхема контроллера удаленного доступа 
+  (<em>прим. пер.: например, с использованием протокола IPMI</em>).
+  </p></dd><dt>
+  <span class="term">Внутриполосное удаленное управление</span></dt><dd>
+  <p>Для системного администрирования или средств мониторинга на 
+  вычислительных узлах или узлах хранения обычно используется 
+  дополнительный интерфейс (например, 1Гб) вместо общедоступного 
+  интерфейса.
+  </p></dd><dt>
+  <span class="term">Свободное пространство дальнейшего роста</span></dt><dd>
+  <p>Часть вашего планирования всегда должна предусматривать добавление 
+  дополнительных услуг служб управления на общедоступной стороне или 
+  дополнительных IP гостевых экземпляров.</p></dd></dl>
+ </div>
+ <p>В качестве примера рассмотрим развертывание и вычислительной среды, и 
+ хранилище объектов OpenStack при доступных диапазонах частных адресов 
+ 172.22.42.0/24 и 172.22.87.0/26. Одним из вариантов деления 
+ пространства может быть следующий:</p>
+ <pre class="programlisting">172.22.42.0/24:
+172.22.42.1   - 172.22.42.3   - маршрутизаторы подсети
+172.22.42.4   - 172.22.42.20  - резерв для сетей
+172.22.42.21  - 172.22.42.104 - Контроллеры удаленного доступа вычислительных узлов 
+                                (включая резерв)
+172.22.42.105 - 172.22.42.188 - Интерфейсы управления вычислительными узлами 
+                                (включая резерв)
+172.22.42.189 - 172.22.42.208 - Контроллеры удаленного доступа прокси Swift
+                                (включая резерв)
+172.22.42.209 - 172.22.42.228 - Интерфейсы управления прокси Swift (включая резерв)
+172.22.42.229 - 172.22.42.252 - Контроллеры удаленного доступа серверов хранения Swift
+                                (включая резерв)
+172.22.42.253 - 172.22.42.254 - резерв
+172.22.87.0/26:
+172.22.87.1  - 172.22.87.3    - маршрутизаторы подсети
+172.22.87.4  - 172.22.87.24   - Внутренние интерфейсы серверов прокси Swift
+                                (включая резерв)
+172.22.87.25 - 172.22.87.63   - Внутренние интерфейсы серверов объектов Swift
+                                (включая резерв)</pre>
+ <p>Аналогичный подход может быть принят для общедоступных IP-адресов, 
+ принимая во внимание, что крупные, диапазоны без сегментации являются предпочтительными 
+ к использованию для IP-адресов гостевых экземпляров. Учтите, что для определенных 
+ сетевых вариантов OpenStack, хостам <code class="literal">nova-compute</code>
+ назначаются общедоступные IP адреса в диапазоне общедоступных IP адресов 
+ гостевых экземпляров.</p>
+</div>
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+   <a id="network_topology"> </a>Топология сети</h2>
+  </div></div>
+ </div>
+ 
+ <div class="toc"><dl><dt><span class="section">
+  <a href="network_design.html#vlans">Настройка VLAN в пределах виртуальных машин OpenStack</a></span></dt><dt><span class="section">
+  <a href="network_design.html#multi_nic">Подготовка множественных NIC</a></span></dt><dt><span class="section">
+  <a href="network_design.html#multi_host_single_host_networks">Работа в сети с многими хостами и с одним хостом</a></span></dt></dl>
+ </div>
+ 
+ <p>Вычислительная среда OpenStack совместно с <code class="literal">nova-network</code>
+ обеспечивает предопределенные модели развертывания сети, причем у каждой
+ из них есть свои сильные и слабые стороны. Выбор управления сетью изменяет
+ топологию сети, соответственно он должен быть выполнен тщательным образом.
+ Вы также должны выбрать между проверенными на практике установками традиционной
+ <code class="literal">nova-network</code> или проектом <span class="keep-together">neutron</span> 
+ для сетевой среды OpenStack. Оба варианта предлагают сетевые средства для 
+ запуска экземпляров для различных реализаций и требований.
+ <a id="d9e2922" class="indexterm"/>
+ <a id="d9e2925" class="indexterm"/>
+ <a id="d9e2928" class="indexterm"/></p>
+ 
+ <p>Для сетевых средств OpenStack в рамках проекта neutron, типовые
+ настройки документированы с идеей, что любую установку, которую вы можете настроить
+ с реальным оборудованием, можно воссоздать с помощью управляемого
+ программным обеспечением эквивалента. Каждый владелец может содержать типовые
+ сетевые компоненты, такие как маршрутизаторы и службы, например, DHCP.</p>
+ 
+ <p><a class="xref" href="network_design.html#network_deployment_options" title="Таблица 7.1. Варианты развертывания сети">
+ Таблица 7.1., “Варианты развертывания сети”</a> описывает варианты развертывания сети как для 
+ традиционного варианта <code class="literal">nova-network</code>, так и для эквивалентной 
+ конфигурации neutron.<a id="d9e2936" class="indexterm"/></p>
+ <table rules="all" width="500" id="network_deployment_options">
+ <caption>Таблица 7.1. Варианты развертывания сети</caption><col width="19%"/><col width="23%"/><col width="24%"/><col width="34%"/><thead><tr valign="top">
+          <th>Модель развертывания сети</th>
+          <th>Преимущества</th>
+          <th>Недостатки</th>
+          <th>Эквивалент neutron</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p>Flat</p></td>
+          <td><p>Чрезвычайно простая топология.</p> 
+		  <p>Отсутствует широковещательный DHCP.</p></td>
+          <td><p>Требует инъекции файлов в экземпляр для настройки сетевого интерфейсов.</p></td>
+          <td>Настройка одного моста в качестве моста интеграции(br-int) идеей
+		  его подключение к физическому интерфейсу пр помощи плагина Modular Layer 2 (ML2),
+		  который по умолчанию использует Open vSwitch.</td>
+        </tr><tr valign="top">
+          <td><p>FlatDHCP</p></td>
+          <td><p>Относительно прост в настройке.</p> 
+		  <p>Стандартное подключение к сети.</p> 
+		  <p>Работает со всеми гостевыми операционными системами.</p></td>
+          <td><p>Требует свой собственный домен DHCP.</p></td>
+          <td>Настройка агентов DHCP и агентов маршрутизации. 
+		  Трансляция сетевых адресов (NAT, Network Address Translation) 
+		  выполняется вне вычислительных узлов, обычно на одном или нескольких
+		  сетевых узлах.</td>
+        </tr><tr valign="top">
+          <td><p>VlanManager</p></td>
+          <td><p>Каждому владельцу выделяется своя собственная VLAN.</p></td>
+          <td><p>Более сложен в настройке.</p> 
+		  <p>Требует свой широковещательный домен DHCP.</p> 
+		  <p>Требует объединения (транкинга) многих VLAN в один порт.</p> 
+		  <p>Стандартное ограничение на число VLAN.</p> 
+		  <p>Коммутаторы должны поддерживать расстановку тегов 802.1q VLAN</p></td>
+          <td><p>Изолированные сети владельцев реализуют некий вид изоляции
+		  обмена 2 уровня между различными сетями. Маркированные VLAN являются
+		  ключевой концепцией, при которой обмен &quot;помечается&quot; простым
+		  идентификатором VLAN. Реализация изолированных сетей может содержать, а может 
+		  не включать в себя дополнительные службы, подобные DHCP, NAT и маршрутизации.</p></td>
+        </tr><tr valign="top">
+          <td><p>Многохостовый FlatDHCP с высокой доступностью (HA)</p></td>
+          <td><p>Сетевой отказ изолируется для виртуальных машин, работающих на 
+		  пострадавшем гипервизоре.</p> 
+		  <p> DHCP- трафик может быть ограничен в пределах одного хоста.</p> 
+		  <p>Сетевой трафик распределяется на вычислительные узлы.</p></td>
+          <td><p>Более сложная настройка.</p> 
+		  <p>Вычислительные узлы обычно нуждаются в IP адресах, доступных из 
+		  внешних сетей.</p>
+          <p>Для работы с миграцией в реальном масштабе времени при работе с сетью 
+		  требуется тщательная настройка опций.</p></td>
+          <td><p>Настройка neutron с множеством DHCP и агентами 3 уровня.
+		  Сетевые узлы не имеют возможности обрабатывать отказы друг друга,
+		  следовательно сетевые службы, например,DHCP, выполняет контроллер.
+		  Вычислительные узлы выполняют плагин ML2 с поддержкой для агентов, подобных
+		  Open vSwitch или Linux Bridge.</p></td>
+        </tr></tbody></table>
+ <p>И службы <code class="literal">nova-network</code>, и службы neutron предоставляют
+ аналогичные возможности, такие как VLAN между виртуальными машинами. Вы также можете предоставить
+ множественные NICs для виртуальных машин с любыми службами. Далее идет
+ дополнительное обсуждение.</p>
+ <div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="vlans"> </a>Настройка VLAN в пределах виртуальных машин OpenStack</h3>
+ </div></div></div>
+ 
+ <p>Конфигурация VLAN, в зависимости от желания, может быть простой или сложной. 
+ Использование VLAN, имеет то преимущество, что обеспечивает каждому проекту свою 
+ собственную подсеть и отделяет широковещательные сообщения от других проектов. 
+ Для эффективного использования сети VLAN со стороны OpenStack, необходимо выделить 
+ диапазон VLAN (один для каждого проекта) и сосредоточить все порты вычислительных 
+ узлов в коммутаторе в единый магистральный порт (trunk port).
+ <a id="d9e3002" class="indexterm"/>
+ <a id="d9e3005" class="indexterm"/>
+ <a id="d9e3007" class="indexterm"/></p>
+ 
+ <p>Например, если в соответствии с вашими оценками данное облако должно поддерживать 
+ максимально 100 проектов, найдите не используемый в настоящее время инфраструктурой 
+ свободный диапазон VLAN (например, VLAN 200 - 299). Вы должны 
+ настроить OpenStack на работу с этим диапазоном, а также настроить порты коммутатора 
+ на допуск трафика VLAN для этого диапазона.</p>
+</div>
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="multi_nic"> </a>Подготовка множественных NIC</h3>
+</div></div></div>
+
+<p>
+OpenStack Networking with <code class="literal">neutron</code> and
+OpenStack Compute with nova-network have the ability to assign
+multiple NICs to instances. For nova-network this can be done
+on a per-request basis, with each additional NIC using up an
+entire subnet or VLAN, reducing the total number of supported
+projects.
+<a id="d9e3016" class="indexterm"/>
+<a id="d9e3018" class="indexterm"/></p>
+</div>
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="multi_host_single_host_networks"> </a>Работа в сети с многими хостами и с одним хостом</h3>
+</div></div></div>
+
+<p>Служба <code class="literal">nova-network</code> имеет возможность 
+работать в режиме с многими или одним хостом. Режим с многими хостами, это
+когда каждый вычислительный узел выполняет копию <code class="literal">nova-network</code> и
+экземпляр на вычислительном узле использует вычислительный узел в качестве шлюза в
+интернет. Вычислительные узлы также размещают плавающие IP и
+группы безопасности для экземпляров на данном узле. Режим с одним хостом
+это когда, например, существует центральный сервер для контроллера облака, 
+выполняющий службу <code class="code">nova-network</code>. Все 
+вычислительные узлы переправляют обмен от экземпляров к контроллеру облака.
+Контроллер облака затем переправляет обмен в интернет. Контроллер облака
+размещает плавающие IP и группы безопасности для всех экземпляров на всех
+вычислительных узлах в облаке.
+<a id="d9e3028" class="indexterm"/>
+<a id="d9e3030" class="indexterm"/>
+<a id="d9e3033" class="indexterm"/>
+<a id="d9e3035" class="indexterm"/></p>
+
+<p>У каждого режима существуют свои преимущества. Лучай с одним узлом оборотной
+стороной имеет единую точку отказа. Если контроллер выходит из строя, 
+экземпляры не могут осуществлять сетевой обмен. Это не верно для случая с несколькими 
+хостами, однако в этом варианте требуется, чтобы каждый вычислительный узел имел
+общедоступный IP адрес для взаимодействия с интернетом. Если у вас нет возможности
+получить значительный блок общедоступных IP адресов, режим с многими хостами не может
+рассматриваться как вариант.</p>
+</div></div>
+
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="services_for_networking"> </a>Службы для функционирования сети</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="network_design.html#ntp">NTP</a></span></dt><dt><span class="section">
+ <a href="network_design.html#dns">DNS</a></span></dt></dl>
+</div>
+
+<p>OpenStack, как и любое сетевое приложение, имеет ряд необходимых к применению стандартных факторов
+например, таких как DNS и NTP.
+<a id="d9e3043" class="indexterm"/></p>
+
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="ntp"> </a>NTP</h3>
+</div></div></div>
+<p>Синхронизация времени является важнейшим элементом для обеспечения бесперебойной 
+работы компонентов OpenStack. Чтобы избежать ошибок при планировании необходимо 
+правильное время, например при репликации объектов в хранилище объектов, а также согласованных 
+меток времени для отладки.
+<a id="d9e3049" class="indexterm"/></p>
+
+<p>Все серверы, выполняющие компоненты OpenStack должны быть в состоянии 
+обеспечить доступ к соответствующему серверу NTP. Вы можете принять решение о 
+настройке локального сервера, или использовать общественные пулы, доступные из
+<a class="link" href="http://www.pool.ntp.org/en/" target="_top"> Проекта сетевого протокола службы времени</a>.</p>
+</div>
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="dns"> </a>DNS</h3>
+</div></div></div>
+
+<p>OpenStack в настоящее время не предоставляет услуги DNS, помимо демона dnsmasq, 
+который расположен на хостах <code class="code">nova-network</code>. Вы можете 
+рассмотреть вопрос о предоставлении динамической службы DNS для обеспечения 
+возможности экземплярам обновлять запись DNS новыми IP-адресами. Вы также можете рассмотреть 
+возможность создания общего прямого и обратного отображения DNS для IP-адресов экземпляра, 
+например vm-203-0-113-123.example.com.
+<a id="d9e3058" class="indexterm"/></p>
+</div></div>
+
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops-network-conclusion"> </a>Выводы</h2>
+</div></div></div>
+
+<p>Вооружившись своим планом IP- адресов и их значениями, а также знаниями о
+топологиях и службах, которые вы можете использовать, вы готовы к
+подготовке сети для своей установки. Не забудьте также проверить 
+<a class="link" href="http://docs.openstack.org/sec/" title="Руководство по безопасности OpenStack" target="_top">
+<span class="emphasis"><em>Руководство по безопасности OpenStack</em></span></a> 
+на предмет советов по безопасности вашей сети. Мы желаем вам хорошего взаимодействия с 
+вашей сетевой командой!
+</p></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

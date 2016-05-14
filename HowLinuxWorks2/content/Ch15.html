@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 15. Инструменты разработки - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch14.html" title="Глава 14. Краткий обзор рабочего стола Linux"/>
+<link rel="next" href="Ch16.html" title="Глава 16. Введение в компиляцию программного обеспечения из исходного кода на C"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 15. Инструменты разработки';
+PrevRef = 'Ch14.html';
+UpRef = 'index.html';
+NextRef = 'Ch16.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 15. Инструменты разработки</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch15.html">15. Инструменты разработки</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch15.html#15.1">15.1 Компилятор C</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch15.html#15.1.1">15.1.1 Множественность исходных файлов</a></span></dt>
+	  <dt><span class="section"><a href="Ch15.html#15.1.2">15.1.2 Файлы и каталоги заголовков</a></span></dt>
+	  <dt><span class="section"><a href="Ch15.html#15.1.3">15.1.3 Связывание с библиотеками</a></span></dt>
+	  <dt><span class="section"><a href="Ch15.html#15.1.4">15.1.4 Совместное использование библиотек</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch15.html#15.2">15.2 make</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch15.html#15.2.1">15.2.1 Пример Makefile</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.2.2">15.2.2 Встроенные правила</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.2.3">15.2.3 Окончательное построение программы</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.2.4">15.2.4 Ограничение временем исправлений</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.2.5">15.2.5 Параметры и опции командной строки</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.2.6">15.2.6 Стандартные макросы и переменные</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.2.7">15.2.7 Обычные цели</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.2.8">15.2.8 Организация Makefile</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch15.html#15.3">15.3 Отладчики</a></span></dt>
+	 <dt><span class="section"><a href="Ch15.html#15.4">15.4 Lex и Yacc</a></span></dt>
+	 <dt><span class="section"><a href="Ch15.html#15.5">15.5 Языки сценариев</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch15.html#15.5.1">15.5.1 Python</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.5.2">15.5.2 Perl</a></span></dt>
+      <dt><span class="section"><a href="Ch15.html#15.5.3">15.5.3 Прочие языки сценариев</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch15.html#15.6">15.6 Java</a></span></dt>
+     <dt><span class="section"><a href="Ch15.html#15.7">15.7 Заглядывая в будущее: сборка пакетов</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p></p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.1"> </a>15.1 Компилятор C</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.1.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.1.1 Множественность исходных файлов</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.1.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.1.2 Файлы и каталоги заголовков</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.1.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.1.3 Связывание с библиотеками</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.1.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.1.4 Совместное использование библиотек</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2"> </a>15.2 make</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.1 Пример Makefile</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.2 Встроенные правила</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.3 Окончательное построение программы</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.4 Ограничение временем исправлений</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.5 Параметры и опции командной строки</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.6 Стандартные макросы и переменные</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.7">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.7 Обычные цели</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.2.8">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.2.8 Организация Makefile</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.3"> </a>15.3 Отладчики</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.4"> </a>15.4 Lex и Yacc</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.5"> </a>15.5 Языки сценариев</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.5.1 Python</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.5.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.5.2 Perl</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.5.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">15.5.3 Прочие языки сценариев</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.6"> </a>15.6 Java</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="15.7"> </a>15.7 Заглядывая в будущее: сборка пакетов</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

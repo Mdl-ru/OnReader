@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Proxmox, FreeNAS, NAS4Free, Nexenta, napp-it, TrueNAS, TurnKey, VirtIO, NUMA, noVNC, ZFS, Gluster, GlusterFS, Ceph, CephFS, CRUSH, RADOS, RBD, OSD, Placement Group, LXC, Linux Container, OpenVZ, UBC, KVM-based, pfSense, VZdump, Zabbix, pmxcfs, Infiniband, Suricata">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Изучаем Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="os-ccc-2ed"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Практическое руководство по разработке, реализации и управлению вашей управляемой программным обеспечением, массивно масштабируемой системы хранения Ceph"/>
+<link rel="home" href="index.html" title="Изучаем Ceph"/>
+<link rel="next" href="Ch01.html" title="Глава 1. Введение в систему хранения Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Изучаем Ceph';
+PrevRef = 'index.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="openstack-operations-guide"/>Изучаем Ceph</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Каран Сингх</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2015 Packt Publishing</p>
+  <p>Первая публикация на английском языке: январь 2015</p>
+<p>Все права защищены. Никакая часть этой книги не может быть воспроизведена, сохранена в поисковой системе или 
+передана в любой форме или любыми средствами без предварительного письменного разрешения издателя, 
+за исключением случаев кратких цитат, встроенных в критических статьях и обзорах.</p>
+<p>При подготовке этой книги были предприняты все усилия чтобы гарантировать точность представленной информации.
+Тем не менее, информация, содержащаяся в этой книге, продается без гарантии в явном или неявном виде.
+Ни авторы, ни Packt Publishing, ни у их дилеры и дистрибьюторы не будут нести ответственность за любые убытки, 
+вызванные или предположительно вызванные прямо или косвенно этой книгой.</p>
+<p>Packt Publishing пыталась предоставить информацию о товарных знаках обо всех компаниях и продуктов, 
+упомянутых в данной книге для надлежащего использования капиталов.
+Тем не менее, Packt Publishing не может гарантировать точность этой информации.</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2015 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.packtpub.com/books/info/packt/terms-and-conditions" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     <img src="../favicon.ico" align="middle"/>
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2015-01-23</p>
+</div>
+<div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p class="title"><strong>Аннотация</strong></p>
+  <p>Практическое руководство по разработке, реализации и управлению вашей управляемой программным обеспечением, 
+  массивно масштабируемой системы хранения Ceph.</p>
+ </div>
+</div></div><hr/></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Credits"> </a>Состав исполнителей</h3>
+   Первого издания на английском языке
+ </div></div></div>
+ <dl><dt><strong>Автор</strong></dt>
+  <dd><dl>
+   <dt>Каран Сингх</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Рецензенты</strong></dt>
+  <dd><dl>
+   <dt>Дзихонг Чен</dt>  
+   <dt>Себастьян Хан</dt>  
+   <dt>Жульен Рекурт</dt>  
+   <dt>Дон Талтон</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор выпуска</strong></dt>
+  <dd><dl>
+   <dt>Тарон Перейра</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор</strong></dt>
+  <dd><dl>
+   <dt>Джеймс Джонс</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор разработки содержания</strong></dt>
+  <dd><dl>
+   <dt>Шубханги Дхамгайе</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Технический редактор</strong></dt>
+  <dd><dl>
+   <dt>Панкаж Кадам</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Литературные редакторы</strong></dt>
+  <dd><dl>
+   <dt>Джанбал Дхармарадж</dt>  
+   <dt>Сайани Мукжерджи</dt>  
+   <dt>Алфида Пайва</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор проекта</strong></dt>
+  <dd><dl>
+   <dt>Харшал Вед</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Корректоры</strong></dt>
+  <dd><dl>
+   <dt>Симран Бхогал</dt>  
+   <dt>Ами Джонсон</dt>  
+   <dt>Кевин МакГован</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Составитель указателя</strong></dt>
+  <dd><dl>
+   <dt>Теджал Сони</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Графика</strong></dt>
+  <dd><dl>
+   <dt>Диша Хария</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор производства</strong></dt>
+  <dd><dl>
+   <dt>Мелвин Дьса</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Изготовитель переплета</strong></dt>
+  <dd><dl>
+   <dt>Мелвин Дьса</dt>  
+  </dl></dd>
+ </dl>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Предисловие</h3>
+ </div></div></div>
+ <p>Нам нравится называть Ceph &quot;будущим систем хранения&quot;, сигнал, который
+ вызывает резонанс в персонале на многих различных уровнях.Для разработчиков систем архитектура системы Ceph охватывает требования для типов систем,
+ которые пытаются построить все; это горизонтально масштабируемые, отказоустойчивые начиная с 
+ этапа проектирования, модульные и расширяемые.Для пользователей Ceph предоставляет широкий спектр интерфейсов хранилищ данных как для 
+ наследования, так и для новых рабочих нагрузок, а также может работать с широким диапазоном 
+ стандартных аппаратных средств, что позволяет развертывать производственные кластеры при скромных инвестициях.
+ Для энтузиастов свободного программного обеспечения Ceph продвигает эту техническую оболочку с полностью открытым 
+ и бесплатным для проверки, изменения и улучшения исходным кодом в отрасли, в которой все еще преобладают 
+ дорогие и принадлежащие компаниям варианты.</p>
+ <p>Проект Ceph начинался как исследовательская инициатива в Университете Калифорнии, Санта Круз, финансируемом 
+ несколькими лабораториями Министерства энергетики (Лос-Ала́мосская национа́льная лаборато́рия, 
+ Ливерморская национальная лаборатория им. Э.Ло́уренса, Национальная лаборатория Сандия).
+ Цель состояла в дальнейшем продвижении проектирования объектно ориентированных систем хранения 
+ масштаба пета-байт. Когда автор предисловия присоединился к группе в 2005г, его первоначальный акцент был направлен
+ на управление масштабируемыми метаданными для файловых систем — как распределить функции иерархии файлов и 
+ каталогов на множество серверов так, чтобы система могла управиться с миллионом процессоров в суперкомпьютере, 
+ сохранением файлов в файловой системе, зачастую в одном и том же каталоге и в одно и то же время.
+ В последующие 3 года мы объединили ключевые идеи годов исследований и построили завершенную архитектуру и
+ рабочую реализацию системы.</p>
+ <p>После публикации первой научной статьи, описывающей Ceph в 2006 году и открытием и размещением исходного кода 
+ в интернете, автор этих строк полагал, что его работа в основном завершена. Система &quot;работала&quot;,
+ и теперь магия сообщества открытого кода и совместной работы могут совершить совместный прорыв и быстрое 
+ преобразование Ceph в открытое программное обеспечение, существования которого всегда желал автор предисловия для 
+ запуска в его собственном центре обработки данных. Потребовалось время, чтобы он осознал, что существует огромная 
+ разница между прототипом и промышленным кодом, а эффективное сообщество открытого кода строится только со временем.
+ По мере продолжения построения развития Ceph в течение следующих нескольких лет мотивация оставалась неизменной.
+ Они построили передовую распределенную систему хранения, которая была полностью свободной (как пиво и разговоры),
+ и смогла повторить то,что Linux сделал для рынка серверов.</p>
+ <p>Построение живого сообщества пользователей вокруг проекта Ceph было наиболее плодотворной частью данного опыта.
+ При построении бизнеса Inktank при производстве Ceph в 2012 и 2013 сообщество было общей темой обсуждения и 
+ изучения. Вопросом в тот момент времени было то как нам сделать инвестиции и осуществить найм для построения 
+ сообщества экспертов и участников, которые не работают на их компанию? Автор предисловия уверен, что это оказалось 
+ судьбоносным решением для понимания модели открытого кода, которое, в конечном итоге, привело к успеху
+ Inktank и Ceph. Мы стремились создать экосистему из пользователей, партнеров и конкурентов, которых мы бы 
+ могли вести без доминирования над ними.</p>
+ <p>Каран Сингх был одним из членов сообщества, которые материализовались вокруг Ceph в течение последних нескольких лет.
+ Он с самого начала и активно участвовал в электронных обсуждениях по почте и на форумах IRC, где пользователи и разработчики 
+ Ceph встречались для онлайн- ведения своего бизнеса чтобы найти помощь для начала работы с Ceph, обсудить
+ оптимальные аппаратные или программные варианты конфигураций, обменяться отчетами о сбоях и отследить ошибки 
+ или сотрудничать в разработке новых функций.</p>
+ <p>Хотя мы и были давно знакомы на протяжении ряда лет, автор предисловия имел возможность встретиться с Караном 
+ персонально недавно, и только потом узнал, что он серьезно работал над книгой по Ceph. Автор предисловия считает, 
+ что данная книга соответствует и свидетельствует тому разнообразию и успеху построенного ими сообщества, которое
+ обеспечивает факт, что данная книга, первая публикуемая по Ceph книга, написанная кем-то,не имевшим прямых связей 
+ с начальной исследовательской командой Ceph или бизнесом Inktank, может протолкнуть ее в центр внимания. Каран 
+ имеет длительные и глубокие корни в сообществе Ceph, которые предоставили ему глубокую перспективу технологии, 
+ ее воздействия и важного для всех пользователей опыта.</p>
+ <p><strong>Сейдж Вейль</strong><br />
+ Главный архитектор Ceph, Red Hat</p>
+</div>
+
+ <div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Об авторе</h3>
+ </div></div></div>
+ <p><strong>Каран Сингх</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reviewers"> </a>Рецензенты</h3>
+ </div></div></div>
+ <p><strong>Джихон Чен</strong>
+ </p>
+ <p><strong>Себастьян Хан</strong>
+ </p>
+ <p><strong>Жульен Рекурт</strong>
+ </p>
+ <p><strong>Дон Талтон</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PacktPub"> </a>www.PacktPub.com</h3>
+ </div></div></div>
+</div>
+
+<div class="section">
+ <p align="center"><em>Автор посвящает эту книгу Светлой памяти его бабушки и дедушки, Лэйт Раджешвари и Хариш Кумар Верма;
+ без их поддержки он никогда бы не существовал в этом мире.</em></p>
+ <p align="center"><em>Эта книга также посвящена его очаровательной жене, его жизни, его талисмане, 
+ Монике Шрестхе Сингх. Автор говорит о своей любви к ней, MJ.</em></p>
+</div>
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+	<dt><span class="section"><a href="index.html#Credits">Состав исполнителей</a></span></dt>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Reviewers">Рецензенты</a></span></dt>
+	<dt><span class="section"><a href="index.html#PacktPub">www.PacktPub.com</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+	<dt><span class="section"><a href="index.html#Preface">Предисловие</a></span></dt>
+	<dd><dl>
+	 <dt><span class="section"><a href="index.html#Covers">Что охватывает эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#You_need">Что вам нужно для этой книги</a></span></dt>
+	 <dt><span class="section"><a href="index.html#For_Who">Для кого эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Conventions">Соглашения</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Feedback">Обратная связь с читателями</a></span></dt>
+	 <dt><span class="section"><a href="index.html#DLcode">Загрузка кода примеров</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Support">Поддержка пользователей</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Errata">Опечатки</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Piracy">Незаконное тиражирование</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Questions">Вопросы</a></span></dt>
+	</dl></dd>
+  </dl></dd>
+ </dl>
+ <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Введение в систему хранения Ceph</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#overview">Обзор Ceph</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#history_and_evolution">История и эволюция Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch01.html#releases">Редакции Ceph</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#storage_future">Ceph и будущее систем хранения</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch01.html#cloud_storage">Ceph как решение для облачного хранилища</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#software-defined">Ceph как определяемое программным обеспечением решение</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#unified_solution">Ceph как универсальное решение для хранения данных</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#next_generation">Архитектура следующего поколения</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#end_of_RAID_era">RAID - конец эпохи</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#compatibility_portfolio">Портфолио совместимости</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch01.html#block_storage">Блочное хранилище Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#fiesystem">Файловая система Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#object_storage">Хранилище объектов Ceph</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#versus_others">Ceph в противовес остальным</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch01.html#GPFS">GPFS</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#iRODS">iRODS</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#HDFS">HDFS</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#Lustre">Lustre</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#Gluster">Gluster</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#Ceph">Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch01.html#Summary">Заключение</a></span></dt>
+    </dl></dd>
+    <dt><span class="chapter"><a href="Ch02.html">2. Моментальное развертывание Ceph</a></span></dt>
+    <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#sandbox_environment">Создание среды песочницы с использованием VirtualBox</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#From_zero">От нуля к Ceph- развертывание вашего первого кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#Scaling_up">Увеличение вашего кластера Ceph в масштабах- добавление монитора и OSD</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch02.html#Adding_monitor">Добавление монитора Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch02.html#Adding_OSD">Добавление OSD Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch03.html">3. Архитектура и компоненты Ceph</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#architecture">Архитектура системы хранения Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#RADOS">Ceph RADOS</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch03.html#Object_Storage_Device">Устройство хранения объектов Ceph</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch03.html#OSD_fiesystem">Файловая система OSD Ceph</a></span></dt>
+          <dt><span class="section"><a href="Ch03.html#OSD_journal">Журнал OSD Ceph</a></span></dt>
+          <dt><span class="section"><a href="Ch03.html#OSD_commands">Команды OSD</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch03.html#monitors">Мониторы Ceph</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch03.html#Monitor_commands">Команды монитора</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch03.html#librados">librados</a></span></dt>
+        <dt><span class="section"><a href="Ch03.html#block_storage">Блочное хранилище Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch03.html#Object_Gateway">Шлюз объектов Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#MDS">MDS Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Deploying_MDS">Развертывание MDS для вашего кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#filesystem">Файловая система Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch04.html">4. Ceph изнутри</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch04.html#under_hood">Под капотом Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#Object">Объект</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#Locating_objects">Местонахождение объектов</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#CRUSH">CRUSH</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#CRUSH_lookup">Нахождение CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#CRUSH_hierarchy">Иерархия CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Recovery_and_rebalancing">Восстановление и балансировка</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Editing_CRUSH_map">Изменение карты CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Customizing">Индивидуальная настройка компоновки кластера</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#PG">Группы размещения</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#Calculating_PG_numbers">Вычисление номеров PG</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Modifying_PG_and_PGP">Изменение PG и PGP</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#peering_and_sets_up">Обмен между PG, наборы включенных и действующих</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#pools">Пулы Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#Pool_operations">Работа пула</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch04.html#Creating_and_listing">Создание пула и просмотр списка пулов</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#data_management">Управление данными Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch05.html">5. Развертывание Ceph - дорога, которую вы обязаны знать</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#Hardware_planning">Планирование аппаратных средств для кластера Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch05.html#Monitor_requirements">Требования монитора</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#OSD_requirements">Требования OSD</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#Network requirements">Требования сетевой среды</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#MDS_requirements">Требования MDS</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#Settingup_VB_env">Настройка вашей среды VirtualBox - еще раз</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#Preparing_installation">Подготовка к установке вашей Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch05.html#Getting_SW">Получение программного обеспечения</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch05.html#Getting_packages">Получение пакетов</a></span></dt>
+          <dt><span class="section"><a href="Ch05.html#Getting_tarballs">Получение tar- архивов Ceph</a></span></dt>
+          <dt><span class="section"><a href="Ch05.html#Getting_from_GitHub">Получение Ceph из GitHub</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#manual_deployment">Развертывание кластера Ceph вручную</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch05.html#Installing_perquisites">Установка дополнительных благ</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#Deploying_cluster">Развертывание кластера Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#Deploying_monitors">Развертывание мониторов</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#Creating_OSDs">Создание OSD</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#Scalingup">Масштабирование вашего кластера</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch05.html#Adding_monitors">Добавление мониторов</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#Adding_OSDs">Добавление OSD</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#ceph-deploy_tool">Развертывание кластера Ceph с использованием инструмента ceph-deploy</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#Upgrading">Модернизация вашего кластера Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch05.html#Upgrading_monitor">Модернизация монитора</a></span></dt>
+        <dt><span class="section"><a href="Ch05.html#Upgrading_OSDs">Модернизация OSD</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch06.html">6. Подготовка хранилища к работе в Ceph</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#RADOS_block_device">Блочные устройства RADOS</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#setup_client">Настройка вашего первого клиента</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#mapping_RBD">Установление соответствия блочных устройств RADOS</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#resizing_RBD">Изменение размера RBD Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#snapshot_RBD">Изготовление моментальных снимков RBD Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#clone_RBD">Клонирование RBD Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#fiesystem">Файловая система Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#kernel_driver_mount">Монтирование CephFS с применением драйвера ядра</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#FUSE_mount">Монтирование CephFS в качестве FUSE</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#Object_storage">Хранение объектов с применением шлюза Ceph RADOS</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#setup_VM">Настройка виртуальной машины</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#install_gateway">Установка шлюза RADOS</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#config_gateway">Настройка шлюза RADOS</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#create_radosgw">Создание пользователя radosgw</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch06.html#Access">Доступ к хранилищу объектов Ceph</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch06.html#S3_API-compat">Совместимое с API S3 хранилище объектов</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#Swift_API-compat">Совместимое с API Swift хранилище объектов</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch07.html">7. Эксплуатация и обслуживание Ceph</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch07.html#service_management">Управление службой Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch07.html#Ceph_with_sysvinit">Выполнение Ceph с использованием sysvinit</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_by_type">Запуск демонов по типам</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Stop_by_type">Останов демонов по типам</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_all">Запуск и останов всех демонов</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_specifiс">Запуск и останов определенного демона</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Running_CaaS">Выполнение Ceph как службы</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_all_byCaaS">Запуск и останов всех демонов</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_specifiс_byCaaS">Запуск и останов определенного демона</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Scaling_out">Увеличение масштаба кластера Ceph</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#Adding_OSD">Добавление узлов OSD в кластер Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Scaling_down">Уменьшение масштаба кластера Ceph</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#Bringing_OSD_out_and_down">Вывод OSD и отключение из кластера Ceph</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#Removing_OSD">Удаление OSD из кластера Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Replacing_failed_disk">Замена отказавшего диска</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Manipulating_CRUSH_maps">Обработка карт CRUSH</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#Identifying_CRUSH_locations">Определение местоположений CRUSH</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#CRUSH_map_internals">Таблицы соответствий CRUSH изнутри</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Different_pools">Разнообразные пулы на различных OSD</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch08.html">8. Наблюдение за вашим кластером Ceph</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_cluster">Наблюдение за кластером Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#Checking_health">Проверка работоспособности кластера</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#Watching_events">Отслеживание событий в кластере</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#utilization_statistics">Статистики использования кластера</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#cluster_status">Проверка состояния кластере</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#authentication_keys">Ключи аутентификации кластера</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_MON">Наблюдение за Ceph MON</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#MON_status">Состояние MON</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#MON_quorum_status">Состояние кворума MON</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_OSD">Наблюдение за Ceph OSD</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#OSD_tree_view">Просмотр дерева OSD</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#OSD_statistics">Статистика OSD</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#Checking_CRUSH_map">Проверка соответствий CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#Monitoring_PG">Наблюдение за группами размещения</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_MDS">Наблюдение за MDS</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_by_dashboards">Наблюдение за Ceph с использованием инструментальной панели на основе открытого кода</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#Kraken">Kraken</a></span></dt>
+        <dd><dl>
+          <dt><span class="section"><a href="Ch08.html#Deploying_Kraken">Развертывание Kraken</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch08.html#ceph-dash_tool">Инструментарий ceph-dash</a></span></dt>
+        <dd><dl>
+          <dt><span class="section"><a href="Ch08.html#Deploying_ceph-dash">Развертывание ceph-dash</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch08.html#Calamari">Calamari</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch09.html">9. Включение Ceph в состав OpenStack</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch09.html#OpenStack_Introduction">Введение в OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#best_match">Ceph - наилучший выбор для OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#Creating_test_environment">Создание среды для тестирования OpenStack</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch09.html#Settingup">Наладка машины OpenSatck</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Installing_OpenStack">Установка OpenSatck</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Ceph_with_OpenStack">Применение Ceph в OpenStack</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Installing_Ceph">Установка Ceph на узел OpenStack</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Config_Ceph">Настройка Ceph для работы с OpenStack</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch09.html#Config_Cinder">Настройка Cinder OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Config_Nova">Настройка Nova OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Config_Glance">Настройка Glance OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Restarting_services">Перезапуск служб OpenStack</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Test_Cinder">Тестирование Cinder OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Test_Glance">Тестирование Glance OpenSatck</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch09.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch10.html">10. Настройка производительности Ceph и эталонное тестирование</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch10.html#performance_overview">Общее представление о производительности Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#hardware_level">Анализ производительности Ceph- аппаратный уровень</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch10.html#Processor">Процессор</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#Memory">Оперативная память</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#Network">Сетевые средства</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#Disk">Диск</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#software_level">Настройка производительности Ceph- уровень программного обеспечения</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch10.html#config_file">Файл настройки кластера</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#Config_sections">Разделы настройки</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch10.html#global_section">Общий раздел</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#MON_section">Раздел MON</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#OSD_section">Раздел OSD</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#MDS_section">Раздел MDS</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#client_section">Раздел client</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#cluster_performance_tuning">Настройка производительности кластера Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch10.html#Global_tuning">Параметры общей настройки</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch10.html#Network">Сетевые ресурсы</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#Max_open_fies">Максимальное число открытых файлов</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch10.html#OSD_tuning">Параметры настройки OSD</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#Client_tuning">Параметры настройки клиента</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#General_performance_tuning">Параметры настройки общей производительности</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#erasure_coding">Кодирование затирания Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch10.html#Low-cost_cold_storage">Замороженное хранение с низкой стоимостью</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#Implementing_erasure_coding">Реализация кодирования затирания</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#cache_tiering">Многоуровневое кэширование Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch10.html#writeback_mode">Режим с обратной записью</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#read-only_mode">Режим только для чтения</a></span></dt>
+        <dt><span class="section"><a href="Ch10.html#Implementing_cache_tiering">Реализация многоуровневого кэширования</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch10.html#Create_pool">Создание пула</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#Create_cache_tier">Создание многоуровневого кэширования</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#Config_cache_tier">Настройка многоуровневого кэширования</a></span></dt>
+          <dt><span class="section"><a href="Ch10.html#Test_cache_tier">Тестирование многоуровневого кэширования</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#RADOS_bench">Эталонное тестирование Ceph с применением оснастки RADOS</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#Summary">Заключение</a></span></dt>
+	</dl></dd>
+ </dl>
+		
+	<dt><span class="index"><a href="ix01.html">Указатель</a></span></dt>
+</div></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preface"> </a>Предисловие</h3>
+ </div></div></div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Covers"> </a>Что охватывает эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="You_need"> </a>Что вам нужно для этой книги</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="For_Who"> </a>Для кого эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Conventions"> </a>Соглашения</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Обратная связь с читателями</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Загрузка кода примеров</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Support"> </a>Поддержка пользователей</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Errata"> </a>Опечатки</h4>
+  </div></div></div>
+ </div>
+ <p></p>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Piracy"> </a>Незаконное тиражирование</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Questions"> </a>Вопросы</h4>
+  </div></div></div>
+ </div>
+
+</div>
+
+<p> </p>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

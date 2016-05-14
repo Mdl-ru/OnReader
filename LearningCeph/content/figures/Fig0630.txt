@@ -1,0 +1,25 @@
+﻿[root@ceph-rgw /]# cat /etc/httpd/conf.d/rgw.conf
+FastCgiExternalServer /var/www/html/s3gw.fcgi -socket /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock
+<VirtualHost *:80>
+        ServerName ceph-rgw.objectstore.com
+        ServerAlias *.ceph-rgw.objectstore.com
+        ServerAdmin test@ceph-rgw.objectstore.com
+        DocumentRoot /var/www/html
+        RewriteEngine On
+        RewriteRule ^/(.*) /s3gw.fcgi?%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+        <IfModule mod_fastcgi.c>
+        <Directory /var/www/html>
+                        Options +ExecCGI
+                        AllowOverride All
+                        SetHandler fastcgi-script
+                        Order allow,deny
+                        Allow from all
+                        AuthBasicAuthoritative Off
+                </Directory>
+        </IfModule>
+        AllowEncodedSlashes On
+        ErrorLog /var/log/httpd/error.log
+        CustomLog /var/log/httpd/access.log combined
+        ServerSignature Off
+</VirtualHost>
+[root@ceph-rgw /]#

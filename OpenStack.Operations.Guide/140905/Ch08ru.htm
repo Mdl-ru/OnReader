@@ -1,0 +1,497 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 8. Что к чему. Руководство по эксплуатации OpenStack.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing">
+   <meta name="Description" content="Глава 8. Что к чему. Руководство по эксплуатации OpenStack.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+<script language="javascript" src="/js/common.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="800" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="500" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="index.htm">Руководство по эксплуатации OpenStack</a></td>
+</tr>
+</table>
+
+
+<h2 align="right">ГЛАВА 8</h2>
+<hr />
+<h1 id="Chapter_08" align="right">Что к чему</h1>
+
+<p>Начиная с этого раздела руководства, мы предполагаем, что у вас есть облако OpenStack и оно работает.
+  Данный раздел поможет вам настроить рабочую среду и использовать ее, чтобы осмотреть ваше облако.</p>
+
+<h2 id="Ch0801">Инструменты командной строки клиента</h2>
+<p>Мы рекомендуем использовать сочетание инструментальных средств интерфейса командной строки OpenStack (CLI) и инструментальной панели OpenStack.
+ Некоторые пользователи с опытом работы в других облачных технологиях может воспользоваться совместимым API EC2, который использует несколько иные соглашения об именовании по сравнению с родным API.
+ Мы выделим эти отличия.</p>
+<p>Мы настоятельно рекомендуем вам установить клиентов командной строки из <span class="red-heading">Python Package Index</span> (PyPI) (<a href="https://pypi.python.org/">https://pypi.python.org/</a>) вместо их установки из пакетов Ubuntu или Fedora.
+ Клиенты находятся в бурном развитии и очень вероятно, что в любой момент времени версия пакетов, распространяемая вашим производителем операционной системы устареет.</p>
+<p>Для управления установкой из архива PyPI используется утилита "pip", а также во многих дистрибутивах доступен пакет "python-pip".
+ Каждый проект OpenStack имеет своего собственного клиента, поэтому в зависимости от работающих на вашем сайте сервисов установите необходимые вам или все из следующих пакетов:</p>
+<ul>
+ <li>python-novaclient (<span class="red-heading">nova</span> CLI)
+ <li>python-glanceclient (<span class="red-heading">glance</span> CLI)
+ <li>python-keystoneclient (<span class="red-heading">keystone</span> CLI)
+ <li>python-cinderclient (<span class="red-heading">cinder</span> CLI)
+ <li>python-swiftclient (<span class="red-heading">swift</span> CLI)
+ <li>python-quantumclient (<span class="red-heading">quantum</span> CLI)
+</ul>
+
+<h3 id="Ch080102">Инструменты установки</h3>
+<p>Чтобы установить (обновить) пакет из PyPI архива с помощью команды pip с правами root:<br />
+<code># pip install [--upgrade] <package-name></code></p>
+<p>Чтобы удалить пакет:<br />
+<code># pip uninstall <package-name></code></p>
+<p>Если вам необходимы самые последние версии клиентов, pip может проводить установку непосредственно из исходящего репозитория git с использованием флага <strong>-e</strong>.
+ Вы должны указать имя устанавливаемого яйца Python.
+ Например:<br />
+<code># pip install -e git+https://github.com/openstack/python-novaclient.git#egg=python-novaclient</code></p>
+<p> Если вы поддерживаете в облаке EC2 API, вы также должны установить пакет "euca2ools" или другой инструмент EC2 API, чтобы вы могли получить привычный вашим пользователям интерфейс.
+ Использование инструментов, основанных на EC2 API, в основном выходит за рамки данного руководства, хотя мы и обсудим получение учетных данных для использования с данным API.</p>
+
+<h3 id="Ch080103">Инструменты коммандной строки для администрирования</h3>
+<p>Существует также ряд <strong>*-manage</strong> инструментов командной строки:</p>
+<ul>
+ <li>nova-manage
+ <li>glance-manage
+ <li>keystone-manage
+ <li>cinder-manage
+</ul>
+<p>В отличие от инструментов, упомянутых выше, инструменты <strong>*-manage</strong> должны запускаться в контроллере облака, причем с правами root, поскольку что они должны иметь доступ по чтению к файлам конфигурации, таким как /etc/nova/nova.conf и выполнять запросы непосредственно в базе данных, а не в качестве <span class="red-heading">оконечных узлов (endpoint) API</span> OpenStack.</p>
+<p>Наличие инструментов <strong>*-manage</strong> является наследуемой проблемой.
+ Именно миграция всей оставшейся в инструментах <strong>*-manage</strong> функциональности на обычные инструменты клиента в конечном счете является целью OpenStack.
+ На сегодняшний день для выполнения некоторых операций по техническому обслуживанию, которые требуют некоторые инструменты <strong>*-manage</strong>, вам необходим SSH на <span class="red-heading">узле контроллера облака</span>.</p>
+
+<h3 id="Ch080104">Получение учетных данных</h3>
+<p>Если вы хотите использовать инструменты командной строки для осуществления запросов к своему облаку OpenStack, вы должны иметь соответствующие полномочия.
+ По сравнению с использованием клиентов командной строки, использование инструментальной панели является гораздо более простым способом получения <span class="red-heading">авторизованных</span> полномочий.
+ В верхней правой навигационной строке выберите ссылку Settings (Настройки), чтобы открыть страницу настроек пользователя, где вы можете задать предпочитаемые язык и часовой пояс для представления инструментальной панели (dashboard).
+ Что еще более важно, данное действие изменяем левую колонку новигации, включая ссылку OpenStack API and EC2 Credentials (Учетные данные OpenStack API и EC2), что позволяет вам создать файлы, которые вы сможете использовать в качестве исходных данных в вашем окружении для присвоения данных переменным окружения, которые должны быть установлены, чтобы инструменты командной строки имели информацию о местоположении терминальных служб, а также вашей аутентификации.</p>
+<p>Для использования собственных утилит OpenStack проследуйте за ссылкой OpenStack API.
+ В верхней части перечислены URL- адреса ваших терминальных служб, а ниже распологается раздел, озаглавленный Download OpenStack RC File (Загрузка RC файлов OpenStack).
+ Для обзора облака в качестве администратора, вы можете выбрать в ниспадающем меню admin.
+ В этом разделе выберите проект, для которого вы хотите получить учетные данные и кликните Download RC.
+ В результате будет создан файл с именем <strong>openrc.sh</strong>, который будет выглядеть примерно так:</p>
+ <p><code>
+#!/bin/bash<br />
+# With the addition of Keystone, to use an openstack cloud you should<br />
+# authenticate against keystone, which returns a **Token** and **Service<br />
+# Catalog**. The catalog contains the endpoint for all services the<br />
+# user/tenant has access to - including nova, glance, keystone, swift.<br />
+#<br />
+# *NOTE*: Using the 2.0 *auth api* does not mean that compute api is 2.0. <br />
+# We use the 1.1 *compute api*<br />
+export OS_AUTH_URL=http://203.0.113.10:5000/v2.0<br />
+# With the addition of Keystone we have standardized on the term **tenant**<br />
+# as the entity that owns the resources.<br />
+export OS_TENANT_ID=98333aba48e756fa8f629c83a818ad57<br />
+export OS_TENANT_NAME="test-project"<br />
+# In addition to the owning entity (tenant), openstack stores the entity<br />
+# performing the action as the **user**.<br />
+export OS_USERNAME=test-user<br />
+# With Keystone you pass the keystone password.<br />
+echo "Please enter your OpenStack Password: "<br />
+read -s OS_PASSWORD_INPUT<br />
+export OS_PASSWORD=$OS_PASSWORD_INPUT<br />
+ </code></p>
+<p>Перевод на русский язык:<br /><code>
+#!/bin/bash<br />
+# При добавлении Keystone, для использования облака openstack вы должны<br />
+# осуществить аутентификацию в keystone, который возвратит **Token** и **Service<br />
+# Catalog**. Каталог содержит терминалы для всех служб, к которым <br />
+# user/tenant имеет доступ - включая nova, glance, keystone, swift.<br />
+#<br />
+# *ПРИМЕЧАНИЕ*: Использование 2.0 *auth api* не означает, что используется compute api 2.0. <br />
+# Мы используем *compute api* 1.1<br />
+export OS_AUTH_URL=http://203.0.113.10:5000/v2.0<br />
+# При добавлении Keystone мы получаем стандартизацию понятия **tenant** (арендатор)<br />
+# как лица (сущности), которому принадлежат ресурсы.<br />
+export OS_TENANT_ID=98333aba48e756fa8f629c83a818ad57<br />
+export OS_TENANT_NAME="test-project"<br />
+# В добавление к лицу- владельцу (tenant), openstack хранит сущности<br />
+# выполняющие действия в качестве **user**.<br />
+export OS_USERNAME=test-user<br />
+# используя Keystone, вы передаете пароль keystone.<br />
+echo "Введите, пожалуйста, пароль OpenStack: "<br />
+read -s OS_PASSWORD_INPUT<br />
+export OS_PASSWORD=$OS_PASSWORD_INPUT<br />
+ </code></p>
+<p><img src="i/Tip.jpg" alt="Tip">Данные операции не сохраняют пароль в простом текстовом виде, что является хорошим обстоятельством.
+ Однако, когда вы получаете или выполняете сценарий, он просит вас ввести пароль, который сохраняется в  переменной окружения OS_PASSWORD.
+ Важно отметьить, что это не требует взаимодействия.
+ Если вам необходимо интерактивное взаимодействие, вы можете хранить значение непосредственно в сценарии, но в этом случае вы должны быть предельно внимательны в вопросах безопасности и прав доступа к этому файлу.</p>
+<p>Совместимые с EC2 полномочия могут быть загружени со ссылки "EC2 Credentials" в левой панели навигатора, затем выберите проект, для которого необходимы права и кликните “Download EC2 Credentials”.
+ В результате будет создан zip файл с сертификатами сервера x509 и фрагментами сценария окружения.
+ Создайте новый каталог в безопасном месте, отличном от местоположения openrc по-умолчанию, поскольку все эти данные представляют действующую информацию аутентификации, необходимую для доступа к вашей идентификации в облаке.
+ Извлеките сюда все данные из архива.
+ У вас должны быть <strong>cacert.pem</strong>, <strong>cert.pem</strong>, <strong>ec2rc.sh</strong> и <strong>pk.pem</strong>.
+ Содержимое <strong>ec2rc.sh</strong> будет подобно следующему:</p>
+ <p><code>
+#!/bin/bash<br />
+NOVARC=$(readlink -f "${BASH_SOURCE:-${0}}" 2>/dev/null) ||\<br />
+NOVARC=$(python -c 'import os,sys; \<br />
+print os.path.abspath(os.path.realpath(sys.argv[1]))' "${BASH_SOURCE:-${0}}")<br />
+NOVA_KEY_DIR=${NOVARC%/*}<br />
+export EC2_ACCESS_KEY=df7f93ec47e84ef8a347bbb3d598449a<br />
+export EC2_SECRET_KEY=ead2fff9f8a344e489956deacd47e818<br />
+export EC2_URL=http://203.0.113.10:8773/services/Cloud<br />
+export EC2_USER_ID=42 # nova does not use user id, but bundling requires it<br />
+export EC2_PRIVATE_KEY=${NOVA_KEY_DIR}/pk.pem<br />
+export EC2_CERT=${NOVA_KEY_DIR}/cert.pem<br />
+export NOVA_CERT=${NOVA_KEY_DIR}/cacert.pem<br />
+export EUCALYPTUS_CERT=${NOVA_CERT} # euca-bundle-image seems to require this <br />
+alias ec2-bundle-image="ec2-bundle-image --cert $EC2_CERT --privatekey \<br />
+$EC2_PRIVATE_KEY --user 42 --ec2cert $NOVA_CERT"<br />
+alias ec2-upload-bundle="ec2-upload-bundle -a $EC2_ACCESS_KEY -s \<br />
+$EC2_SECRET_KEY --url $S3_URL --ec2cert $NOVA_CERT"<br />
+ </code></p>
+<p>Чтобы поместить полномочия EC2 для вашего окружения, получите файл <strong>ec2rc.sh</strong></p>
+
+<h3 id="Ch080105">Трюки и капканы командной строки</h3>
+<p>Путем передачи флага <strong>--debug</strong>, инструменты командной строки могут быть сформированы для показа вызовов OpenStack API, например:<br />
+ <code> 
+# nova --debug list
+ </code></p>
+<p>Данный пример демонстрирует HTTP запрос клиента и ответы терминала, что может быть полезным при создании инструментов, пишущихся под OpenStack API.</p>
+<p><span class="red-heading">Поддержка Keyring</span> (Брелка, <a href="https://wiki.openstack.org/wiki/KeyringSupport">https://wiki.openstack.org/wiki/KeyringSupport</a>) может быть источником путаницы, к моменту написания этих строк существует сообщение об ошибке (<a href="https://bugs.launchpad.net/python-novaclient/+bug/1020238">https://bugs.launchpad.net/python-novaclient/+bug/1020238</a>), которое было открыто, закрыто как неверное, а затем повторно открытое через несколько циклов.</p>
+<p>Проблема в том, что при некоторых обстоятельствах инструменты командной строки пытаются использовать брелок (keyring) Python в качестве кэша полномочий, однако, при некотором подмножестве условий, могут возникнуть другие условия, при которых инструметы будут запрашивать ввод пароля брелка при каждом использовании.
+ Если вы нашли себя в этом подмножестве невезения, добавьте флаг <strong>--no-caching</strong> или установите значение переменной окружения <strong>OS_NO_CACHE=1</strong> для исключения кэширования полномочий.</p>
+<p><img src="i/Tip.jpg" alt="Tip">Это приведет к необходимости выполнения аутентификации инструментов командной строки при каждом и повсеместном взаимодействии с облаком.</p>
+
+<h4 id="Ch08010502">cURL</h4>
+<p>В основе использования командной строки лежит OpenStack API, который является RESTful API, работающим поверх протокола HTTP.
+ Могут возникнуть случаи, когда вы захотите взаимодействовать с API непосредственно или у вас возникнет такая необходимость из-за подозрения в наличии ошибки в инструментах CLI.
+ Лучшим способом выполнить эту задачу будет использование комбинации <span class="red-heading">cURL</span>(<a href="http://curl.haxx.se/">http://curl.haxx.se/</a>) и другого инструмента для разбора ответов JSON, например, <span class="red-heading">jq</span> (<a href="http://stedolan.github.com/jq/">http://stedolan.github.com/jq/</a>).</p>
+<p>Первое, что вы должны сделать, это аутентифицироваться в облаке с помощью ваших учетных данных, чтобы получить <span class="red-heading">маркер (token) аутентификации</span>.</p>
+<p>Ваши учетные данные представляют собой сочетание имени пользователя, пароля и арендатора (tenant или проекта - project).
+ Вы можете получить эти данные из <strong>openrc.sh</strong>, как это обсуждалось ранее.
+ Маркер позволяет взаимодействовать с другими терминальными службами без необходимости повторной аутентификации для каждого последующего запроса.
+ Маркеры, как правило, доступны на 24 часа и, по истечению срока действия маркера, вы получаете предупреждение о несанкционированном ответе (401, Unauthorized) и вы можете запросить другой маркер.</p>
+<p><ol>
+  <li>Просмотрите свой <span class="red-heading">каталог</span> услуг OpenStack:<br />
+   <code>
+$ curl -s -X POST http://203.0.113.10:35357/v2.0/tokens \<br />
+-d '{"auth": {"passwordCredentials": {"username":"test-user", <br />
+"password":"test-password"}, "tenantName":"test-project"}}' \<br />
+-H "Content-type: application/json" | jq<br />
+   </code>
+  <li>Пролистайте ответ JSON, чтобы понять как выложен каталог.<br />
+  Для упрощения работы с последующими запросами сохраните маркер в переменной окружения.<br />
+   <code> 
+$ TOKEN=`curl -s -X POST http://203.0.113.10:35357/v2.0/tokens \<br />
+-d '{"auth": {"passwordCredentials": {"username":"test-user", <br />
+"password":"test-password"}, "tenantName":"test-project"}}' \<br />
+-H "Content-type: application/json" | jq -r .access.token.id`<br />
+   </code><br />
+  Теперь вы можете к вашему маркеру в командной строке с помощью имени переменной $TOKEN.
+  <li>Выберите терминальную службу из каталога услуг, скажем, compute, и попробуйте выполнить запрос, например, выдать список экземпляров (серверов).<br />
+   <code>
+$ curl -s \<br />
+-H "X-Auth-Token: $TOKEN" \<br />
+http://203.0.113.10:8774/v2/98333aba48e756fa8f629c83a818ad57/servers | jq<br />
+   </code>
+ </ol></p>
+<p>Чтобы узнать как должны быть структурированы запросы, прочтите <span class="red-heading">OpenStack API Reference</span> (<a href="http://api.openstack.org/api-ref.html">http://api.openstack.org/api-ref.html</a>).
+ Для пережевывания ответов с помощью jq, прочтите <span class="red-heading">jq Manual</span> (<a href="http://stedolan.github.com/jq/manual/">http://stedolan.github.com/jq/manual/</a>).</p>
+<p>Флаг <strong>-s</strong> используется в приводимых выше командах cURL для предотвращения показа индикатора исполнения.
+ Если у вас возникли проблемы с исполнением команд cURL, вы захотите удалить его.
+ Точно так же, для помощи в устранении трудностей с командами cURL вы можете включить флаг <strong>-v</strong> для показа вам подробного вывода.
+ Существует еще много чрезвычайно полезных функций cURL, обратитесь к страницам руководства (man) для ознакомления со всеми опциями.</p>
+
+<h3 id="Ch080106">Серверы и службы</h3>
+<p>Уществует несколько способов составить вам для себя, как администратора, представление о вашем облаке OpenStack просто используя доступные инструменты OpenStack.
+ Данный раздел даст вам представление о том, как получить обзор вашего облака, его формы, размер и текущее состояние.</p>
+<p>Во- первых, вы можете определить какие серверы входят в состав вашего облака OpenStack выполнив:<br />
+ <code>
+$ nova-manage service list | sort
+ </code></p>
+<p>результат выглядит следующим образом:<br />
+ <code>
+Binary &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Host &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Zone Status &nbsp;State Updated_At<br />
+nova-cert &nbsp;&nbsp; &nbsp; &nbsp; cloud.example.com nova enabled :-) &nbsp; 2013-02-25 19:32:38<br />
+nova-compute &nbsp; &nbsp; c01.example.com &nbsp; nova enabled :-) &nbsp; 2013-02-25 19:32:35<br />
+nova-compute &nbsp; &nbsp; c02.example.com &nbsp; nova enabled :-) &nbsp; 2013-02-25 19:32:32<br />
+nova-compute &nbsp; &nbsp; c03.example.com &nbsp; nova enabled :-) &nbsp; 2013-02-25 19:32:36<br />
+nova-compute &nbsp; &nbsp; c04.example.com &nbsp; nova enabled :-) &nbsp; 2013-02-25 19:32:32<br />
+nova-compute &nbsp; &nbsp; c05.example.com &nbsp; nova enabled :-) &nbsp; 2013-02-25 19:32:41<br />
+nova-consoleauth cloud.example.com nova enabled :-) &nbsp; 2013-02-25 19:32:36<br />
+nova-network &nbsp; &nbsp; cloud.example.com nova enabled :-) &nbsp; 2013-02-25 19:32:32<br />
+nova-scheduler &nbsp; cloud.example.com nova enabled :-) &nbsp; 2013-02-25 19:32:33<br />
+ </code></p>
+<p>Вывод показывает, что существует пять вычислительных узлов и один контроллер облака.
+  Вы видите смайлик подобный <strong>:-)</strong>, который указывает, что услуги включены, работают и функционируют.
+  Если служба не доступна, то <strong>:-)</strong> сменяется на <strong>XXX</strong>.
+  Это признак того, что вы должны определить причину недоступности сервиса.</p>
+<p>Если вы используете Cinder, выполните следующую команду, чтобы увидеть подобный листинг:<br />
+ <code>
+$ cinder-manage host list | sort<br />
+<br />
+host &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;zone<br />
+c01.example.com &nbsp; nova<br />
+c02.example.com &nbsp; nova<br />
+c03.example.com &nbsp; nova<br />
+c04.example.com &nbsp; nova<br />
+c05.example.com &nbsp; nova<br />
+cloud.example.com nova<br />
+ </code></p>
+<p>С помощью этих двух таблиц, у вас теперь есть хороший обзор того, какие серверы и службы создают ваше облако.</p>
+<p>Вы также можете использовать Службу идентификации (Keystone), чтобы увидеть, какие службы доступны в облаке, а также какие терминальные службы настроены для этих служб.</p>
+<p>Следующие команды нужны вам для того, чтобы у вас была оболочка, настроенная с соответствующими административными переменными.</p>
+<p><code>
+$ keystone service-list<br />
+<br />
++-----+----------+----------+----------------------------+<br />
+| id &nbsp;| name &nbsp; &nbsp; | type &nbsp; &nbsp; | description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
++-----+----------+----------+----------------------------+<br />
+| ... | cinder &nbsp; | volume &nbsp; | Cinder Service &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| ... | glance &nbsp; | image &nbsp; &nbsp;| OpenStack Image Service &nbsp; &nbsp;|<br />
+| ... | nova_ec2 | ec2 &nbsp; &nbsp; &nbsp;| EC2 Service &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| ... | keystone | identity | OpenStack Identity Service |<br />
+| ... | nova &nbsp; &nbsp; | compute &nbsp;| OpenStack Compute Service &nbsp;|<br />
++-----+----------+----------+----------------------------+<br />
+ </code></p>
+<p>Приведенный выше вывод показывает, что существует пять настроенных служб.</p>
+<p>Чтобы увидеть терминал каждой службы выполните:<br />
+ <code>
+$ keystone endpoint-list<br />
+<br />
+---+------------------------------------------+--<br />
+ &nbsp;&nbsp; | publicurl &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+---+------------------------------------------+--<br />
+ &nbsp;&nbsp; | http://example.com:8774/v2/%(tenant_id)s |<br />
+ &nbsp;&nbsp; | http://example.com:9292 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+ &nbsp;&nbsp; | http://example.com:8000/v1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+ &nbsp;&nbsp; | http://example.com:5000/v2.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+---+------------------------------------------+--<br />
+<br />
+---+------------------------------------------+--<br />
+ &nbsp;&nbsp; | adminurl &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+---+------------------------------------------+--<br />
+ &nbsp;&nbsp; | http://example.com:8774/v2/%(tenant_id)s |<br />
+ &nbsp;&nbsp; | http://example.com:9292 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+ &nbsp;&nbsp; | http://example.com:8000/v1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+ &nbsp;&nbsp; | http://example.com:5000/v2.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+---+------------------------------------------+--<br />
+ </code></p>
+<p>Этот пример показывает две колонки, вынутые из большего списка.
+ Должно существовать взаимнооднозначное отображение (один-к-одному) между службой и терминалом.
+ Обратите внимание на различные URL-адреса и порты между общественными URL и административными URL для некоторых служб.
+ Вы можете определить версию установленного Compute с помощью команды nova-manag`e:<br />
+ <code>
+$ nova-manage version list
+ </code></p>
+
+<h3 id="Ch080107">Диагностика ваших вычислительных узлов</h3>
+<p>Вы можете получить дополнительную информацию о запущенных виртуальных машинах: использование ими процессоров, памяти, дискового ввода / вывода или сетевого ввода / вывода, в частности, с помощью выполнения команды <em>диагностики nova</em> с<em> ID</em>:<br />
+ <code>
+$ nova  diagnostics <serverID>
+ </code></p>
+<p>Вывод этой команды будет меняться в зависимости от используемого гипервизора.
+ Пример вывода при использовании гипервизора Xen:<br />
+ <code>
++----------------+-----------------+<br />
+| Property &nbsp; &nbsp; &nbsp; | Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++----------------+-----------------+<br />
+| cpu0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 4.3627 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| memory &nbsp; &nbsp; &nbsp; &nbsp; | 1171088064.0000 |<br />
+| memory_target &nbsp;| 1171088064.0000 |<br />
+| vbd_xvda_read &nbsp;| 0.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| vbd_xvda_write | 0.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| vif_0_rx &nbsp; &nbsp; &nbsp; | 3223.6870 &nbsp; &nbsp; &nbsp; |<br />
+| vif_0_tx &nbsp; &nbsp; &nbsp; | 0.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| vif_1_rx &nbsp; &nbsp; &nbsp; | 104.4955 &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vif_1_tx &nbsp; &nbsp; &nbsp; | 0.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++----------------+-----------------+<br />
+ </code></p>
+<p>Хотя команда должна работать с любым гипервизором, который управляется с помощью libvirt (например, KVM, QEMU, LXC), он был протестирован только с KVM.
+ Пример вывода, при гипервизоре KVM:<br />
+ <code>
++------------------+------------+<br />
+| Property &nbsp; &nbsp; &nbsp; &nbsp; | Value &nbsp; &nbsp; &nbsp;|<br />
++------------------+------------+<br />
+| cpu0_time &nbsp; &nbsp; &nbsp; &nbsp;| 2870000000 |<br />
+| memory &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 524288 &nbsp; &nbsp; |<br />
+| vda_errors &nbsp; &nbsp; &nbsp; | -1 &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| vda_read &nbsp; &nbsp; &nbsp; &nbsp; | 262144 &nbsp; &nbsp; |<br />
+| vda_read_req &nbsp; &nbsp; | 112 &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vda_write &nbsp; &nbsp; &nbsp; &nbsp;| 5606400 &nbsp; &nbsp;|<br />
+| vda_write_req &nbsp; &nbsp;| 376 &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vnet0_rx &nbsp; &nbsp; &nbsp; &nbsp; | 63343 &nbsp; &nbsp; &nbsp;|<br />
+| vnet0_rx_drop &nbsp; &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vnet0_rx_errors &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vnet0_rx_packets | 431 &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vnet0_tx &nbsp; &nbsp; &nbsp; &nbsp; | 4905 &nbsp; &nbsp; &nbsp; |<br />
+| vnet0_tx_drop &nbsp; &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vnet0_tx_errors &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| vnet0_tx_packets | 45 &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++------------------+------------+<br />
+ </code></p>
+
+<h2 id="Ch0802">Сеть</h2>
+<p>Далее бросим взгляд на то, как настраиваются в облаке фиксированные (Fixed) IP.
+ Вы можете использовать слиентов командноу строки <em>nova</em> для получения диапазонов IP.<br />
+ <code>
++--------------------------------------+--------+--------------+<br />
+| ID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Label &nbsp;| Cidr &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++--------------------------------------+--------+--------------+<br />
+| 3df67919-9600-4ea8-952e-2a7be6f70774 | test01 | 10.1.0.0/24 &nbsp;|<br />
+| 8283efb2-e53d-46e1-a6bd-bb2bdef9cb9a | test02 | 10.1.1.0/24 &nbsp;|<br />
++--------------------------------------+--------+--------------+ 
+ </code></p>
+<p>Инструмент <em>nova-manage</em> может снабдить вас некоторыми дополнительными деталями.<br />
+ <code>
+$ nova-manage network list<br />
+id IPv4 &nbsp; &nbsp; &nbsp; &nbsp;IPv6 start address DNS1 DNS2 VlanID project uuid <br />
+1 &nbsp;10.1.0.0/24 None 10.1.0.3 &nbsp; &nbsp; &nbsp;None None 300 &nbsp; &nbsp;2725bbd beacb3f2<br />
+2 &nbsp;10.1.1.0/24 None 10.1.1.3 &nbsp; &nbsp; &nbsp;None None 301 &nbsp; &nbsp;none &nbsp; &nbsp;d0b1a796<br />
+ </code></p>
+<p>Этот вывод показывает, что настроены две сети, причем каждая сеть содержит 255 IP адресов (/24 подсети).
+ Первая сеть была назначена определенному проекту, в то время как вторя сеть по-прежнему открыта для назначения.
+ Вы можете можете назначить эту сеть вручную или автоматически при первом запуске проекта.</p>
+<p>Чтобы выяснить, какие плавающие (floating) IP- адреса доступны в вашем облаке, выполните:<br />
+ <code>
+$ nova-manage floating list<br />
+2725bbd458e2459a8c1bd36be859f43f 1.2.3.4 None <br />
+nova vlan20<br />
+None 1.2.3.5 48a415e7-6f07-4d33-ad00-814e60b010ff <br />
+nova vlan20<br />
+ </code></p>
+<p>Здесь доступно два плавающих IP.
+ Первый был выделен проекту, а второй остается нераспределенным.</p>
+
+<h2 id="Ch0803">Пользователи и проекты</h2>
+<p>Чтобы увидеть список проектов, которые были добавлены в облако, выполните:<br />
+ <code>
+$ keystone tenant-list<br />
+<br />
++-----+----------+---------+<br />
+| id &nbsp;| name &nbsp; &nbsp; | enabled |<br />
++-----+----------+---------+<br />
+| ... | jtopjian | True &nbsp; &nbsp;|<br />
+| ... | alvaro &nbsp; | True &nbsp; &nbsp;|<br />
+| ... | everett &nbsp;| True &nbsp; &nbsp;|<br />
+| ... | admin &nbsp; &nbsp;| True &nbsp; &nbsp;|<br />
+| ... | services | True &nbsp; &nbsp;|<br />
+| ... | jonathan | True &nbsp; &nbsp;|<br />
+| ... | lorin &nbsp; &nbsp;| True &nbsp; &nbsp;|<br />
+| ... | anne &nbsp; &nbsp; | True &nbsp; &nbsp;|<br />
+| ... | rhulsker | True &nbsp; &nbsp;|<br />
+| ... | tom &nbsp; &nbsp; &nbsp;| True &nbsp; &nbsp;|<br />
+| ... | adam  &nbsp; &nbsp; | True &nbsp; &nbsp;|<br />
++-----+----------+---------+<br />
+ </code></p>
+<p>Чтобы увидеть пользователей, выполните:<br />
+ <code>
+$ keystone user-list<br />
+<br />
++-----+----------+---------+------------------------------+<br />
+| id &nbsp;| name &nbsp; &nbsp; | enabled | email &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
++-----+----------+---------+------------------------------+<br />
+| ... | everett &nbsp;| True &nbsp; &nbsp;| everett.towne@backspace.com &nbsp;|<br />
+| ... | jonathan | True &nbsp; &nbsp;| jon@sfcu.edu &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| ... | nova &nbsp; &nbsp; | True &nbsp; &nbsp;| nova@localhost &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| ... | rhulsker | True &nbsp; &nbsp;| ryan.hulkster@cyberalbert.ca |<br />
+| ... | lorin &nbsp; &nbsp;| True &nbsp; &nbsp;| lorinhoch@nsservices.com &nbsp; &nbsp; |<br />
+| ... | alvaro &nbsp; | True &nbsp; &nbsp;| Alvaro.Perry@cyberalbert.ca &nbsp;|<br />
+| ... | anne &nbsp; &nbsp; | True &nbsp; &nbsp;| anne.green@backspace.com &nbsp; &nbsp; |<br />
+| ... | admin &nbsp; &nbsp;| True &nbsp; &nbsp;| root@localhost &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| ... | cinder &nbsp; | True &nbsp; &nbsp;| cinder@localhost &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| ... | glance &nbsp; | True &nbsp; &nbsp;| glance@localhost &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| ... | jtopjian | True &nbsp; &nbsp;| joe.topjian@cyberalbert.com &nbsp;|<br />
+| ... | adam &nbsp; &nbsp; | True &nbsp; &nbsp;| adam@ossmanuals.net &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| ... | tom &nbsp; &nbsp; &nbsp;| True &nbsp; &nbsp;| fafield@univm.edu.au &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-----+----------+---------+------------------------------+<br />
+ </code></p>
+<p><img src="i/Tip.jpg" alt="Tip">Иногда пользователь и группа имеют взаимнооднозначное (один-к-одному) отображение.
+  Это происходит для стандартных системных учетных записей, таких как cinder, glance, nova, и swift, или когда только один пользователь является целой частью группы.</p>
+
+<h2 id="Ch0804">Выполнение экземпляров</h2>
+<p>Чтобы посмотреть список запущенных экземпляров, выполните:<br />
+ <code>
+$ nova list --all-tenants<br />
++-----+------------------+--------+-------------------------------------------+<br />
+| ID &nbsp;| Name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Status | Networks &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
++-----+------------------+--------+-------------------------------------------+<br />
+| ... | Windows &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ACTIVE | novanetwork_1=10.1.1.3, 199.116.232.39 &nbsp; &nbsp;|<br />
+| ... | cloud controller | ACTIVE | novanetwork_0=10.1.0.6; jtopjian=10.1.2.3 |<br />
+| ... | compute node 1 &nbsp;&nbsp;| ACTIVE | novanetwork_0=10.1.0.4; jtopjian=10.1.2.4 |<br />
+| ... | devbox &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;| ACTIVE | novanetwork_0=10.1.0.3 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| ... | devstack &nbsp; &nbsp; &nbsp; &nbsp; | ACTIVE | novanetwork_0=10.1.0.5 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| ... | initial &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ACTIVE | nova_network=10.1.7.4, 10.1.8.4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| ... | lorin-head &nbsp; &nbsp; &nbsp;&nbsp;| ACTIVE | nova_network=10.1.7.3, 10.1.8.3 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-----+------------------+--------+-------------------------------------------+<br />
+ </code></p>
+<p>К сожалению эта команда не рассказаtт вам различных подробностей о запущенных экземплярах, например, какие вычислительные узлы экземпляра запущены, какой экземпляр flavor, и так далее.
+  Вы можете использовать следующую команду, чтобы просмотреть сведения об отдельных экземплярах:<br />
+ <code>
+$ nova show <uuid><br />
+ </code>
+Например:<br />
+ <code>
+# nova show 81db556b-8aa5-427d-a95c-2a9a6972f630<br />
++-------------------------------------+-----------------------------------+<br />
+| Property &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-------------------------------------+-----------------------------------+<br />
+| OS-DCF:diskConfig &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | MANUAL &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| OS-EXT-SRV-ATTR:host &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| c02.example.com &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| OS-EXT-SRV-ATTR:hypervisor_hostname | c02.example.com &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| OS-EXT-SRV-ATTR:instance_name &nbsp; &nbsp; &nbsp; | instance-00000029 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| OS-EXT-STS:power_state &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| OS-EXT-STS:task_state &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | None&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| OS-EXT-STS:vm_state &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | active &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| accessIPv4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| accessIPv6 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| config_drive &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| created&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 2013-02-13T20:08:36Z &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| flavor &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| m1.small (6) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| hostId &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ... &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ... &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| image &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Ubuntu 12.04 cloudimg amd64 (...) |<br />
+| key_name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| jtopjian-sandbox &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| metadata &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| {} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| devstack &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| novanetwork_0 network &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10.1.0.5 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| progress &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| security_groups &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | [{u'name': u'default'}] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| status &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ACTIVE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| tenant_id&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ... &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
+| updated&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 2013-02-13T20:08:59Z &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| user_id&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| ... &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;|<br />
++-------------------------------------+-----------------------------------+ 
+</code></p>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch07ru.htm">Глава 7</a></td>
+ <td align="center"><a href="index.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch09ru.htm">Глава 9</a></td>
+</tr></tbody></table>
+
+</tbody></table>
+<h2></h2>
+<p></p>
+<a class="red-heading" href=""></a>
+<code></code>
+</body>
+</html>

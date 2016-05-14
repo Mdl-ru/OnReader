@@ -1,0 +1,22 @@
+﻿[root@ceph-client1 ceph]# cat ceph.client.admin.keyring
+[client.admin]
+        key = AQAinItT8Ip9AhAAs93FrXLrrnVp8/SQhjvTIg==
+        auid = 0
+        caps mds = “allow"
+        caps mon = "allow *"
+        caps osd = "allow *"
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]# mount -t ceph 192.168.57.101:6789:/ /mnt/kernel_cephfs o name=admin,secret=AQAinItT8Ip9AhAAs93FrXLrrnVp8/SQhjvTIg==
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]#
+[root@ceph-client1 ceph]# df -h
+Filesystem            Size  Used Avail use% Mounted on
+/dev/mapper/vg_cephnode1-lv_root
+                      7.3G  2.2G  4.8G  31% /
+tmpfs                 499M  112k  499M   1% /dev/shm
+/dev/sdal             477M   52M  396M  12% /boot
+/dev/rbdO              20G  134M   20G   1% /mnt/ceph-vol1
+192.168.57.101:6789:/
+                       81G  424M   81G   1% /mnt/kernel_cephfs
+[root@ceph-client1 ceph]#

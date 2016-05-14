@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Получение моментальных снимков - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="user_facing_operations.html" title="Глава 10. Операции стороны пользователя"/>
+<link rel="prev" href="attach_block_storage.html" title="Присоединение блочных хранилищ"/>
+<link rel="next" href="database_instances.html" title="Экземпляры в базах данных"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:06+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//snapshots.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Получение моментальных снимков';
+PrevRef = 'attach_block_storage.html';
+UpRef = 'user_facing_operations.html';
+NextRef = 'database_instances.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="snapshots"> </a>Получение моментальных снимков</h2>
+</div></div></div><div class="toc"><dl><dt><span class="section">
+ <a href="snapshots.html#live-snapshots">Моментальные снимки в реальном масштабе времени</a></span></dt></dl></div>
+ <p>Механизм моментальных снимков OpenStack позволяет вам создавать новые образы 
+ из запущенных экземпляров. Это очень удобно для модернизации базовых образов 
+ или получения публикуемых образов, а также для их настройки для локального использования. Чтобы 
+ сделать моментальный снимок работающего экземпляра и поместить его в образ с помощью 
+ интерфейса командной строки (CLI), сделайте следующее:
+ <a id="d9e4444" class="indexterm"/>
+ <a id="d9e4446" class="indexterm"/>
+ <a id="d9e4448" class="indexterm"/></p>
+ <pre class="screen">$ nova image-create &lt;instance name or uuid&gt; &lt;name of new image&gt;</pre>
+ <p>Интерфейс инструментальной панели (Dashboard) для моментальных снимков может ввести в заблуждение, поскольку 
+ страница <span class="guilabel"><strong>Images &amp; Snapshots</strong></span> (Образов и Снимков) 
+ разбивает содержимое на несколько областей:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Images</p> (Образы)</li><li class="listitem">
+ <p>Instance snapshots</p> (Моментальные снимки экземпляров)</li><li class="listitem">
+ <p>Volume snapshots</p> (Моментальные снимки томов)</li></ul></div>
+ <p>Однако моментальный снимок экземпляра <span class="emphasis"><em>является</em></span> образом. 
+ Единственная разница между образом, который вы загружаете непосредственно в службуобразов и образом, 
+ который вы создаете с помощью моментального снимка заключается в том, что созданный моментальным снимком 
+ образ имеет дополнительные свойства в базе данных glance. Эти 
+ свойства можно найти в таблице <code class="literal">image_properties</code>, 
+ и включают в себя:</p><table rules="all" id="d9e4464"><thead><tr>
+          <th>Название</th>
+          <th>Значение</th>
+        </tr></thead><tbody><tr>
+          <td><p><code class="literal">image_type</code></p></td>
+          <td><p>snapshot (моментальный снимок)</p></td>
+        </tr><tr>
+          <td><p><code class="literal">instance_uuid</code></p></td>
+          <td><p>&lt;uuid экземпляра, с которого делается моментальный снимок&gt;</p></td>
+        </tr><tr>
+          <td><p><code class="literal">base_image_ref</code></p></td>
+          <td><p>&lt;uuid оригинального образа экземпляра, с которого выполняется моментальный снимок&gt;</p></td>
+        </tr><tr>
+          <td><p><code class="literal">image_location</code></p></td>
+          <td><p>snapshot (моментальный снимок)</p></td>
+        </tr></tbody></table>
+ <div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="live-snapshots"> </a>Моментальные снимки в реальном масштабе времени</h3>
+ </div></div></div>
+ <p>Моментальные снимки в реальном масштабе времени являются свойством, которое
+ позволяет пользователям делать моментальный снимок работающей виртуальной машины
+ без ее приостановки. Эти моментальные снимки являются просто моментальными снимками
+ только дисков. Выполнение моментальных снимков экземпляров теперь может быть
+ выполнено без простоя (в предположении, что используются QEMU 1.3+ и libvirt 1.0+).
+ <a id="d9e4497" class="indexterm"/></p>
+ <div class="sidebar"><div class="titlepage"><!--FOOBAR!--><div><div>
+  <p class="title"><strong>Обеспечение согласованности моментальных снимков</strong></p>
+ </div></div></div>
+ <p>Содержание взято из записи в блоге Sébastien Han 
+ <a class="link" href="http://www.sebastien-han.fr/blog/2012/12/10/openstack-perform-consistent-snapshots/" title="Служба образов OpenStack" target="_top">
+ “OpenStack: Perform Consistent Snapshots”</a> (OpenStack: 
+ Создание согласованных моментальных снимков).</p>
+ <p>Моментальный снимок фиксирует состояние файловой системы, а не 
+ состояние оперативной памяти. Следовательно, чтобы быть уверенным, что ваш моментальный снимок содержит 
+ необходимые вам данные, перед созданием моментального снимка вы должны убедиться, что:</p>
+ <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Выполняющиеся программы записали свое содержимое на диск</p></li><li class="listitem">
+ <p>Файловая система не имеет никаких &quot;dirty&quot; (&quot;грязных&quot;) буферов: в которые 
+ программа отдала инструкцию сделать запись на диск, однако 
+ операционная система пока не выполнила запись</p></li></ul>
+</div>
+ <p>Чтобы быть уверенным, что важные службы выполнили запись своего содержимого на 
+ диск (например, такие, как базы данных), мы рекомендуем вам прочитать документацию 
+ на эти приложения для определения того, какие команды непосредственно выполняют 
+ синхронизацию их содержимого с диском. Если у вас нет уверенности как ее (синхронизацию) выполнить, 
+ самым надежным способом будет простой нормальный останов выполняющихся 
+ служб.</p>
+ <p>Для решения проблемы &quot;грязного&quot; буфера, мы рекомендуем использование 
+ команды синхронизации перед созданием моментального снимка:</p>
+ <pre class="screen"># sync</pre>
+ <p>Выполнение <code class="code">sync</code> записывает грязный буфер (буферизованный блок, 
+ который был изменен, но пока не был переписан в дисковый блок) на диск.</p>
+ <p>Простое выполнение <code class="code">sync</code> не гарантирует вам полной 
+ согласованности файловой системы. Мы рекомендуем вам использовать инструментарий 
+ <code class="code">fsfreeze</code>, который приводит к прекращению нового доступа к файловой системе 
+ и создает стабильный образ на диске, который предназначен для моментального снимка. 
+ <code class="code">fsfreeze</code> поддерживает несколько файловых систем, 
+ в том числе ext3, ext4 и XFS. Если ваш экземпляр виртуальной машины 
+ работает под Ubuntu, установите пакет util-linux для получения 
+ <code class="code">fsfreeze</code>:</p>
+ <pre class="screen"># apt-get install util-linux</pre>
+ <p>В случае, когда ваша операционная система не имеет доступной версии 
+ <code class="literal">fsfreeze</code>, вы можете использовать 
+ вместо нее <code class="literal">xfs_freeze</code>, который доступен в Ubuntu 
+ из пакета xfsprogs. Несмотря на присутствие в имени &quot;xfs&quot;, xfs_freeze 
+ также работает с ext3 и ext4, если вы используете ядро Linux версии 2.6.29
+ или старше, так как он работает на уровне виртуальной файловой системы (VFS), 
+ имеющейся начиная с версии 2.6.29. xfs_freeze поддерживает те же 
+ аргументы командной строки, что и <code class="literal">fsfreeze</code>.</p>
+ <p>Рассмотрим пример, в котором вы хотите сделать моментальный снимок 
+ тома постоянного хранения блочного устройства, обнаруженного гостевой операционной системой 
+ как <code class="literal">/dev/vdb</code> и смонтированного в 
+ <code class="literal">/mnt</code>. Команда fsfreeze принимает два аргумента:</p>
+ <div class="variablelist"><dl><dt><span class="term">-f</span></dt><dd>
+ <p>Заморозить систему</p></dd><dt><span class="term">-u</span></dt><dd>
+ <p>Растопить (разморозить) систему</p></dd></dl>
+ </div>
+ <p>Чтобы заморозить том при подготовке к созданию моментального снимка, вы должны 
+ выполнить в пределах экземпляра с правами root:</p>
+ <pre class="screen"># fsfreeze -f /mnt</pre>
+ <p>Вы <span class="emphasis"><em>должны смонтировать файловую систему</em></span> до выполнения 
+ вами команды <code class="literal">fsfreeze</code>.</p>
+ <p>После выдачи команды <code class="literal">fsfreeze -f</code>, всем 
+ выполняющимся в файловой системе транзакциям разрешается завершиться, новые 
+ запросы на запись приостанавливаются, а также останавливаются все запросы к файловой системе, 
+ которые могут ее изменить. Что особенно важно, все грязные данные, метаданные и информация 
+ в журналах записываются на диск.</p>
+ <p>После того как том заморожен, не пытайтесь читать с него или 
+ осуществлять запись на него, поскольку все операции ставятся в ожидание (подвешиваются). Операционная система 
+ останавливает все операции ввода/ вывода и любые попытки ввода/ вывода будут задерживаться до тех пор,
+ пока файловая система не будет разморожена.</p>
+ <p>После выполнения команды <code class="literal">fsfreeze</code> создание 
+ моментального снимка становится безопасным. Например, если ваш экземпляр называется 
+ <code class="literal">mon-instance</code> и вы хотите сделать его моментальный снимок в 
+ образ с названием <code class="literal">mon-instance</code>, вы можете теперь выполнить 
+ следующее:</p>
+ <pre class="screen">$ nova image-create mon-instance mon-snapshot</pre>
+ <p>После создания моментального снимка вы можете растопить файловую систему в пределах 
+ экземпляра следующей командой, обладая правами root:</p>
+ <pre class="screen"># fsfreeze -u /mnt</pre>
+ <p>Если вы хотите сделать резервную копию файловой системы root, вы не можете просто 
+ выполнить приводимую выше команду, так как она заморозит приглашение операционной системы (prompt). Вместо 
+ этого выполните с правами root внутри экземпляра следующий однострочный скрипт:</p>
+ <pre class="screen"># fsfreeze -f / &amp;&amp; sleep 30 &amp;&amp; fsfreeze -u /</pre>
+</div></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

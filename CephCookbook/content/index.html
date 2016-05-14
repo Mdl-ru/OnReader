@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Argonaut, Bobtail, Cuttlefish, Dumpling, Emperor, Firefly, Giant, Hammer, Infernalis, Jewel, Civetweb, Cephx, Proxmox, FreeNAS, NAS4Free, Nexenta, napp-it, TrueNAS, TurnKey, VirtIO, NUMA, ZFS, OpenZFS, Gluster, Nova, Glance, Cinder, OpenStack, Keystone, GlusterFS, Ceph, CephFS, CRUSH, RADOS, RADOS Gateway, RGW, RBD, OSD, Placement Group, PG, snap trimming, CFQ">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Более 100 эффективных рецептов призванных помочь вам в проектировании, реализации и сопровождении программно определяемой и массивно масштабируемой системы хранения Ceph"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ix01.html" title="Указатель"/>
+<link rel="next" href="Ch01.html" title="Глава 1. Введение и за его пределами"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Книга рецептов Ceph';
+PrevRef = 'Ix01.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="openstack-operations-guide"/>Книга рецептов Ceph</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Каран Сингх</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2016 Packt Publishing</p>
+<p>Все права защищены. Никакая часть этой книги не может быть воспроизведена, сохранена в поисковой системе или 
+передана в любой форме или любыми средствами без предварительного письменного разрешения издателя, 
+за исключением случаев кратких цитат, встроенных в критических статьях и обзорах.</p>
+<p>При подготовке этой книги были предприняты все усилия чтобы гарантировать точность представленной информации.
+Тем не менее, информация, содержащаяся в этой книге, продается без гарантии в явном или неявном виде.
+Ни авторы, ни Packt Publishing, ни у их дилеры и дистрибьюторы не будут нести ответственность за любые убытки, 
+вызванные или предположительно вызванные прямо или косвенно этой книгой.</p>
+<p>Packt Publishing пыталась предоставить информацию о товарных знаках обо всех компаниях и продуктов, 
+упомянутых в данной книге для надлежащего использования капиталов.
+Тем не менее, Packt Publishing не может гарантировать точность этой информации.</p>
+<p>Первая публикация на английском языке: февраль 2016</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2016 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.packtpub.com/books/info/packt/terms-and-conditions" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     <img src="../favicon.ico" align="middle"/>
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2016-03-01</p>
+</div>
+<div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p class="title"><strong>Аннотация</strong></p>
+  <p>Более 100 эффективных рецептов призванных помочь вам в проектировании, реализации и сопровождении программно определяемой 
+  и массивно масштабируемой системы хранения Ceph.</p>
+ </div>
+</div></div><hr/></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Credits"> </a>Состав исполнителей</h3>
+   Первого издания на английском языке
+ </div></div></div>
+ <dl><dt><strong>Автор</strong></dt>
+  <dd><dl>
+   <dt>Каран Сингх</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Рецензенты</strong></dt>
+  <dd><dl>
+   <dt>Кристиан Айхельман</dt>  
+   <dt>Харука Ивао</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор выпуска</strong></dt>
+  <dd><dl>
+   <dt>Амарабха Банерджи</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор</strong></dt>
+  <dd><dl>
+   <dt>Мита Раджани</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор разработки содержания</strong></dt>
+  <dd><dl>
+   <dt>Кажал Тхапар</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Технический редактор</strong></dt>
+  <dd><dl>
+   <dt>Менза Мэтью</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Литературный редактор</strong></dt>
+  <dd><dl>
+   <dt>Ангад Сингх</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор проекта</strong></dt>
+  <dd><dl>
+   <dt>Швета Х Бирваткар</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Корректоры</strong></dt>
+  <dd><dl>
+   <dt>Safis Editing</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Составитель указателя</strong></dt>
+  <dd><dl>
+   <dt>Рекха Наир</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор производства</strong></dt>
+  <dd><dl>
+   <dt>Мелвин Дьса</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Изготовитель переплета</strong></dt>
+  <dd><dl>
+   <dt>Мелвин Дьса</dt>  
+  </dl></dd>
+ </dl>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Предисловие</h3>
+ </div></div></div>
+ <p></p>
+</div>
+
+ <div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Об авторе</h3>
+ </div></div></div>
+ <p><strong>Каран Сингх</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reviewers"> </a>Рецензенты</h3>
+ </div></div></div>
+ <p><strong>Кристиан Айхельман</strong>
+ </p>
+ <p><strong>Харука Ивао</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PacktPub"> </a>www.PacktPub.com</h3>
+ </div></div></div>
+</div>
+
+<div class="section">
+ <p align="center"><em></em></p>
+ <p align="center"><em></em></p>
+</div>
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+	<dt><span class="section"><a href="index.html#Credits">Состав исполнителей</a></span></dt>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Reviewers">Рецензенты</a></span></dt>
+	<dt><span class="section"><a href="index.html#PacktPub">www.PacktPub.com</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+	<dt><span class="section"><a href="index.html#Preface">Предисловие</a></span></dt>
+	<dd><dl>
+	 <dt><span class="section"><a href="index.html#Covers">Что охватывает эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#You_need">Что вам нужно для этой книги</a></span></dt>
+	 <dt><span class="section"><a href="index.html#For_Who">Для кого эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Conventions">Соглашения</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Feedback">Обратная связь с читателями</a></span></dt>
+	 <dt><span class="section"><a href="index.html#DLcode">Загрузка кода примеров</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Support">Поддержка пользователей</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Errata">Опечатки</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Piracy">Незаконное тиражирование</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Questions">Вопросы</a></span></dt>
+	</dl></dd>
+  </dl></dd>
+ </dl>
+ <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Введение и за его пределами</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#0101">Введение</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0102">Ceph - начало новой эры</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0103">RAID - конец эпохи</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0104">Ceph - обзор архитектуры</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0105">Планирование развёртывания Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#0106">Настройка виртуальной инфраструктуры</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#0107">Установка и настройка Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#0108">Увеличение Ceph в размерах</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#0109">Практическое применение кластера Ceph</a></span></dt>
+    </dl></dd>
+    <dt><span class="chapter"><a href="Ch02.html">2. Работа с блочными устройствами Ceph</a></span></dt>
+    <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#0201">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0202">Работа с блочными устройствами Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0203">Настройка клиента Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0204">Создание блочного устройства Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0205">Отображение блочного устройства Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0206">Изменение размеров RBD Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0207">Работа со снимками RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0208">Работа с клонами RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0209">Быстрый осмотр OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0210">Ceph - наилучшее соответствие OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0211">Настройка OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0212">Настройка OpenStack в качестве клиента Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0213">Настройка Glance под поддержку Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0214">Настройка Cinder под поддержку Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0215">Настройка Nova для подключения Ceph RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0216">Настройка Nova для загрузки экземпляров из Ceph RBD</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch03.html">3. Работа с хранилищем объектов Ceph</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#0301">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0302">Понимание хранения объектов Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0303">Стандартные наладка, установка и настройка шлюза RADOS</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0304">Создание пользователя radosgw</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0305">Доступ к хранилищу объектов Ceph с применением S3 API</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0306">Доступ к хранилищу объектов Ceph с применением Swift API</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0307">Интеграция шлюза RADOS с OpenStack Keystone</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0308">Настройка федеративных шлюзов Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0309">Тестирование федеративных настроек radosgw</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0310">Построение служб файловой синхронизации и совместного использования с применением RGW</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch04.html">4. Работа с файловой системой Ceph</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch04.html#0401">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0402">Понимание файловой системы Ceph и MDS</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0403">Развёртывание MDS Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0404">Доступ к CephFS через драйвер ядра</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0405">Доступ к CephFS через клиента FUSE</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0406">Экспорт файловой системы Ceph в качестве NFS</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0407">ceph-dokan – CephFS для клиентов Windows </a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0408">CephFS вклинивающаяся замена HDFS</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch05.html">5. Мониторинг кластеров Ceph с применением Calamari</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#0501">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0502">Мониторинг кластера Ceph - классический путь</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0503">Мониторинг кластеров Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0504">Наблюдение за мониторами Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0505">Мониторинг OSD Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0506">Мониторинг MDS Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0507">Введение в Ceph Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0508">Построение пакетов Calamari сервер</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0509">Построение пакетов Calamari клиент</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0510">Наладка главного сервера Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0511">Добавление узлов Ceph в Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0512">Мониторинг кластера Ceph в инструментальной панели Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0513">Обнаружение ошибок Calamari</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch06.html">6. Работа в кластере Ceph и управление им</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#0601">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0602">Понимание управления службами Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0603">Координация файла настроек кластера</a></span></dt>
+    <dt><span class="section"><a href="Ch06.html#0604">Выполнение Ceph с применением SYSVINIT</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0605">Выполнение Ceph как службы</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0606">Сопоставление расширения и увеличения в масштабе</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0607">Увеличение в масштабе вашего кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0608">Уменьшение в масштабе вашего кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0609">Замена отказавшего диска в вашем кластере Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0610">Обновление вашего кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0611">Сопровождение вашего кластера Ceph</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch07.html">7. Ceph под колпаком</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch07.html#0701">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0702">Масштабируемость и высокая доступность Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0703">Понимание механизма CRUSH</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0704">Карта CRUSH изнутри</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0705">Карта кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0706">Мониторы высокой доступности</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0707">Аутентификация и авторизация Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0708">Динамическое управление Ceph кластером</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0709">Группы размещения Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0710">Состояние групп размещения</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#0711">Создание пулов Ceph на специфических OSD</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch08.html">8. Планирование промышленного применения и настройка производительности Ceph</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch08.html#0801">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0802">Динамика ёмкости, производительности и стоимости</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0803">Выбор аппаратных и программных компонентов Ceph</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch08.html#ECatASIC">Аппаратная поддержка удаляющего кодирования ASIC ConnectX-4</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#0804">Рекомендации Ceph и настройка производительности</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0805">Удаляющее кодирование Ceph</a></span></dt>
+     <dd><dl>
+	 <dt><span class="section"><a href="Ch08.html#iCPUprices">Рекомендуемые цены Intel на некоторые ЦПУ</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#SwitchTable">Рекомендуемые нами экономичные сетевые коммутаторы для сетевых сред Ceph</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#ECatASIC">Аппаратная поддержка удаляющего кодирования ASIC ConnectX-4</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#DriveTable">Топовые характеристики устройств хранения</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#NVMe">NVMe</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#0806">Создание пула с удаляющим кодированием</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0807">Многоуровневое кэширование Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0808">Создание пула для многоуровневого кэширования</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0809">Создание уровня кэша</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0810">Настройка уровня кэша</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0811">Тестирование уровня кэша</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch09.html">9. Менеджер виртуального хранения Ceph</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch09.html#0901">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0902">Понимание архитектуры VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0903">Сборка среды VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0904">Подготовка к VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0905">Установка VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0906">Создание кластера Ceph с применением VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0907">Исследование инструментальной панели VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0908">Обновление кластера Ceph с применением VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0909">Дорожная карта VSM</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#0910">Ресурсы VSM</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch10.html">10. Ещё о Ceph</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch10.html#1001">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1002">Эталонное тестирование кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1003">Базовый уровень производительности дисков</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1004">Базовый уровень производительности сетевой среды</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1005">Показатели Ceph RADOS</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1006">RADOS load-gen</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1007">Эталонное тестирование блочного устройства Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1008">Эталонное тестирование Ceph RBD с применением FIO</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1009">Сокет администратора Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1010">Применение команды ceph tell</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1011">Ceph REST API</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1012">Профилирование памяти Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1013">Развёртывание Ceph с применением Ansible</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1014">Инструментарий ceph-objectstore</a></span></dt>
+	</dl></dd>
+ </dl>
+		
+	<dt><span class="chapter"><a href="UnderstandingErasureCodingOffload.html">Приложения</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="UnderstandingErasureCodingOffload.html">Понимание разгрузки удаляющего кодирования</a> (Mellanox)</span></dt>
+	<dt><span class="section"><a href="MellanoxOFED.html">Стек протоколов Mellanox OFED</a> (Mellanox)</span></dt>
+	<dt><span class="section"><a href="iNetworkStack.html">Стек протоколов Intel</a> (Mellanox)</span></dt>
+	<dt><span class="section"><a href="iNetworkStack.html">Стек протоколов Intel</a> (Intel)</span></dt>
+	</dl></dd>
+	<dt><span class="index"><a href="ix01.html">Указатель</a></span></dt>
+</div></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preface"> </a>Предисловие</h3>
+ </div></div></div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Covers"> </a>Что охватывает эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="You_need"> </a>Что вам нужно для этой книги</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="For_Who"> </a>Для кого эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Conventions"> </a>Соглашения</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Обратная связь с читателями</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Загрузка кода примеров</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Support"> </a>Поддержка пользователей</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Errata"> </a>Опечатки</h4>
+  </div></div></div>
+ </div>
+ <p></p>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Piracy"> </a>Незаконное тиражирование</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Questions"> </a>Вопросы</h4>
+  </div></div></div>
+ </div>
+
+</div>
+
+<p> </p>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

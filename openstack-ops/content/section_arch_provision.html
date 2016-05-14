@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 2. Инициализация и развертывание - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="architecture.html" title="Архитектура"/>
+<link rel="prev" href="example_architecture.html" title="Глава 1. Пример архитектуры"/>
+<link rel="next" href="cloud_controller_design.html" title="Глава 3. Проектирование контроллера облака и управления облаком"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:42:59+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//section_arch_provision.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+	<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+	<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+	<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+	<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+	<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+	<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+	<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+	<script type="text/javascript" src="search/index-1.js"><!----></script>
+	<script type="text/javascript" src="search/index-2.js"><!----></script>
+	<script type="text/javascript" src="search/index-3.js"><!----></script><script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 2. Инициализация и развертывание';
+PrevRef = 'example_architecture.html';
+UpRef = 'architecture.html';
+NextRef = 'cloud_controller_design.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="chapter">
+  <div xmlns="" class="titlepage">
+   <div>
+    <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+     <a id="section_arch_provision"> </a>Глава 2. Инициализация и развертывание</h2>
+    </div>
+   </div>
+  </div>
+  
+  <div class="toc">
+   <dl><dt><span class="section">
+   <a href="section_arch_provision.html#automated_deploy">Автоматизированное развертывание</a></span></dt>
+   <dt><span class="section">
+   <a href="section_arch_provision.html#auto_config">Автоматизация настройки</a></span></dt>
+   <dt><span class="section">
+   <a href="section_arch_provision.html#remote_mgmt">Удаленное управление</a></span></dt>
+   <dt><span class="section">
+   <a href="section_arch_provision.html#provision-deploy-summary">Заключительные соображения по инициализации и развертыванию OpenStack</a></span></dt>
+   <dt><span class="section">
+   <a href="section_arch_provision.html#provision_conclusion">Выводы</a></span></dt></dl>
+  </div>
+   
+   <p>Важной частью масштабируемости облака является объем усилий, 
+   требующихся для запуска вашего облака. Чтобы свести к минимуму эксплутационные 
+   расходы работы вашего облака, настройте и используйте автоматизированное развертывание 
+   и конфигурирование инфраструктуры с помощью систем управления настройкой, 
+   такими как Puppet или Chef. Будучи объединенными, эти системы значительно 
+   уменьшают ручной труд и вероятность возникновения ошибок оператора.
+   <a id="d9e1186" class="indexterm"/></p>
+   
+   <p>Такая инфрасктруктура включает в себя системы для автоматической установки 
+   начальной конфигурации операционной системы, а впоследствии автоматически и 
+   централизованно координируют настройки всех служб, что одновременно уменьшает 
+   и ручной труд и возможность ошибки. В качестве примеров можно привести Ansible, Chef,
+   Puppet и Salt. Вы также можете использовать OpenStack для развертывания OpenStack, 
+   любовно именуемый TripleO для OpenStack On OpenStack.
+   <a id="d9e1190" class="indexterm"/>
+   <a id="d9e1192" class="indexterm"/></p>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="automated_deploy"> </a>Автоматизированное развертывание</h2>
+	 </div>
+	</div>
+   </div>
+   <div class="toc">
+    <dl><dt><span class="section">
+	<a href="section_arch_provision.html#disk_partition_raid">Создание дисковых разделов и RAID</a></span></dt>
+	<dt><span class="section"><a href="section_arch_provision.html#network_config">Настройка сети</a></span></dt></dl>
+   </div>
+   <p>Система автоматического развертывания устанавливает и настраивает операционные 
+   системы без вмешательства после абсолютно минимального объема ручного труда, 
+   включающего размещение в стойках, привязка адресов MAC к IP и настройки мощностей. 
+   Обычные решения основываются на обертках (wrapper) на основе PXE загрузок и серверов 
+   TFTP для установки базовой операционной системы, передаваемой затем автоматизированным 
+   системам управления настройкой.
+   <a id="d9e1197" class="indexterm"/>
+   <a id="d9e1200" class="indexterm"/></p>
+   
+   <p>И Ubuntu, и Red Hat Linux содержат механизмы для настройки операционной 
+   системы, включающие установку предварительных начальных значений (preseed) и стартеры (kickstart), 
+   которые вы можете использовать после сетевой загрузки. Обычно они используются для 
+   начальной загрузки системы автоматической настройки. Кроме того можно использовать 
+   подход на основе образов для развертывания операционной системы подобный systemimager. 
+   В виртуальной инфраструктуре вы можете использовать оба этих подхода, например, 
+   в случае,когда у вас раздельно работают виртуальные машины ваших управляющих служб 
+   и физической инфраструктуры.</p>
+	
+	<p>При создании плана развертывания сосредоточьтесь на нескольких жизненно важных областях, 
+	поскольку их очень трудно изменять после развертывания. Следующие два раздела
+	обсудят настройки для:</p>
+	
+	<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+	 <p>Создание дисковых разделови установку дисковых массивов для масштабируемости</p></li><li class="listitem">
+	 <p>Настройку сети только для PXE загрузки</p></li></ul>
+	</div><div class="section">
+	<div xmlns="" class="titlepage">
+	 <div>
+	  <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	   <a id="disk_partition_raid"> </a>Создание дисковых разделов и RAID</h3>
+	  </div>
+	 </div>
+	</div>
+	<p>В самом начале любой операционной системы находятся жесткие диски, 
+	на которые устанавливается ОС.
+	<a id="d9e1214" class="indexterm"/>
+	<a id="d9e1216" class="indexterm"/>
+	<a id="d9e1219" class="indexterm"/></p>
+	   
+	<p>Вы должны выполнить следующую настройку на жестких дисках серверов: </p>
+	<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+	 <p>Создание дисковых разделов, которое обеспечит большую гибкость для 
+	 размещения операционной системы и пространства подкачки, как это описывается ниже.</p></li><li class="listitem">
+	 <p>Добавление в массив RAID (RAID используется для сокращения избыточного 
+	 массива независимых дисков, redundant array of independent disks), 
+	 основывающееся на имеющемся у вас в наличии количестве дисков,
+	 таким образом, что вы можете добавлять емкость по мере роста
+	 вашего облака. Некоторые варианты подробнее описывабтся далее по тексту.</p></li></ul>
+	</div>
+	 <p>Простейший вариант заключается в использовании одного жесткого диска с двумя разделами:</p>
+	<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+	 <p>Файловой системой для хранения файлов и каталогов, в которых располагаются
+	 все данные, включая корневой раздел, который стартует и запускает систему</p></li><li class="listitem">
+	 <p>Пространство подкачки для освобождения оперативной памяти под процессы,
+	 как независимое пространство на физическом диске, используемое
+	 исключительно для свопинга и ни для чего более.</p></li></ul>
+	</div>
+	<p>RAID не используется при простейшей установке с одним диском,
+	поскольку в общем случае для промышленной установки вы хотите иметь гарантию,
+	что в случае выхода из строя одного диска, его место заменит другой. Вместо этого,
+	для целей производительности, используйте более одного диска.
+	Число дисков определяет какие типы RAID массивов могут быть построены.</p>
+	
+	<p>Мы рекомендуем, чтобы вы выбрали один из следующих вариантов с 
+	несколькими дисками:</p>
+	<div class="variablelist"><dl><dt>
+	 <span class="term">Вариант 1</span></dt><dd>
+	 <p>Единообразно разбиваем на разделы все диски горизонтальным образом, как показано на следующем 
+	 <a class="xref" href="section_arch_provision.html#disk_partition_figure" title="Рисунок 2.1. Создание разделов дисков">
+	 Рисунке 2.1. “Создание разделов дисков”</a>.</p>
+	 
+	 <p>В данном варианте вы можете назначить различные разделы различным массивам RAID. 
+	 Вы можете выделить раздел 1 первого и второго диска для зеркалированного раздела загрузки 
+	 (<code class="code">/boot</code>). Вы можете сделать раздел 2 всех дисков зеркалированным 
+	 корневым разделом (root). Вы можете использовать 3й раздел всех дисков для томов 
+	 <code class="code">cinder-volumes</code> разделов LVM работающих с массивом RAID 10.</p>
+	 <div class="figure">
+	  <a id="disk_partition_figure"> </a>
+	  <p class="title"><strong>Рисунок 2.1. Создание разделов дисков</strong></p>
+	  <div class="figure-contents">
+	   <div class="mediaobject">
+	    <img src="figures/osog_0201.png"/>
+	   </div>
+	    <span><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0201.png"/>
+	    Источник рисунка</a></span>
+	  </div>
+	 </div><br class="figure-break"/>
+	 
+	 <p>Покончив с неиспользуемыми разделами, такими как 1й раздел на третьем и четвертом дисках, 
+	 вы могли бы максимально использовать дисковое пространство. Однако, производительность 
+	 ввода/вывода может испытывать проблемы при использовании всех дисков для всех задач.</p></dd><dt>
+	 <span class="term">Вариант 2</span></dt><dd>
+	 <p>Добавьте все необработанные (raw) диски в один большой RAID массив на аппаратной или 
+	 программной основе. Вы можете поделить этот большой массив на области загрузки, корня, 
+	 свопинга и LVM. Данный вариант прост в реализации и использует все разделы. Однако 
+	 может пострадать производительность дискового ввода/вывода.</p></dd><dt>
+	 <span class="term">Вариант 3</span></dt><dd>
+	 <p>Выделите диски целиком определенным разделам. Например, вы можете выделить один и два диска 
+	 целиком для разделов загрузки, корня и свопинга под зеркалированный RAID 1. Затем выделите 
+	 целиком диски 3 и 4 для раздела LVM, также под зеркалированным RAID 1. 
+	 Производительность дискового ввода/вывода должна быть лучше, поскольку ввод/вывод 
+	 сосредоточен на выделенных задачах. Однако, раздел LVM будет много меньшим.</p></dd><dt>
+	 <span class="term"><em>{Примечание переводчика: Вариант 4</em></span></dt><dd>
+	 <p><em>Вы можете воспользоваться сетевой файловой системой при наличии достаточных 
+	 (в отношении пропускной способности и латентности) средств коммутации. Это может быть как 
+	 аппаратно реализованная SAN, так и программно настраиваемые СХД. В первом случае, как правило, 
+	 для интерфейса используются протоколы SCSI/ Fibre Channel. В последнем случае можно воспользоваться 
+	 как коммерческим, так и открытым ПО (подробнее: 
+	 <a href="http://www.mdl.ru/Solutions/Put.htm?Nme=GPFS">http://www.mdl.ru/Solutions/Put.htm?Nme=GPFS</a>, 
+	 <a hre="http://www.mdl.ru/Solutions/Put.htm?Nme=Storage">http://www.mdl.ru/Solutions/Put.htm?Nme=Storage</a>).
+	 В данном случае задачи оптимизации использования пространства и пропускной способности будут решать 
+	 средства самой сетевой файловой системы.}</em></p></dl>
+	</div>
+	<div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+	 <table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25">
+	  <img alt="[Совет]" src="../common/images/admon/tip.png"/></td>
+	  <th align="left">Совет</th></tr><tr>
+	  <td align="left" valign="top">
+	  <p>Вы можете найти возможным полностью автоматизировать создание разделов.
+	  Например, MIT использует <a class="link" href="http://fai-project.org/" target="_top">
+	  Fully Automatic Installation (FAI)</a> для первоначального создания 
+	  разделов на основе PXE а затем выполняет установку с применением 
+	  комбинации создания разделов min/max и основанных на процентах.
+	  <a id="d9e1261" class="indexterm"/></p></td></tr></table>
+	</div>
+	<p>Как и в случае большинства вариантов архитектуры, правильный ответ зависит от вашей среды.
+	Если вы используете существующие аппаратные средства, вызнаете дисковую плотность своих 
+	серверов и можете определить некоторые решения на основании приведенных выше вариантов.
+	Если вы собираетесь выполнить процесс покупки, то требования ваших пользователей также могут 
+	помочь вам определить закупаемое оборудование. Вот некоторые примеры из частного облака,
+	предоставляемого веб- разработчикам пользовательских сред компанией AT&amp;T. 
+	Это пример конкретной реализации, так что ваше существующее оборудование или закупка
+	могут отличаться от него.AT&amp;T использует три различных типа оборудования для развертывания:</p>
+	<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+	 <p>Оборудование для узлов контроллера, используется для всех служб 
+	 OpenStack API без запоминания состояния. Примерно 32–64 ГБ оперативной памяти, 
+	 подключенный диск маленького размера, один процессор, различное число ядер, 
+	 например, 6–12.</p></li><li class="listitem">
+	 <p>Оборудование для вычислительных узлов. Обычно 256 или 144 ГБ оперативной памяти,
+     два процессора, 24 ядер. 4–6 ТБ напрямую подключаемого дискового пространства, обычно
+	 в конфигурации RAID 5.</p></li><li class="listitem">
+	 <p>Оборудование для узлов хранения. Обычно для них дисковое пространство оптимизировано
+	 в отношении минимальности стоимости за ГБайт системы хранения, при сохранении
+	 эффективности в плотности стоек.</p></li></ul>
+	</div>
+	<p><em>Примечание переводчика: Сопоставление рекомендуемых производителями к продаже цен (без учета возможных
+	скидок), проведенное в августе 2014г в Москве, компанией <a href="htp://www.mdl.ru">Модуль- Проекты</a>
+	для типового универсального облака приложений с 68 серверами приведено в файле, доступном по адресу
+	<a href="http://www.mdl.ru/Solutions/MdlCloud/68nodesReferences20140822.xls">http://www.mdl.ru/Solutions/MdlCloud/68nodesReferences20140822.xls</a>.
+	Часть предлагаемой аппаратуры уже предполагает наличие процессоров Intel 2600 v3 и ОЗУ 256ГБ.
+	Подробности и более современные предложения вы можете получить у 
+	<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail">нас <img src="/i/9563499.gif" border="0" alt="e-mail" width="69"height="9"/></a> 
+	по запросу.</em></p>
+	<p>Опять же, правильный ответ зависит от вашей среды. Вы должны принимать
+	решение на основании компромисса между использованием пространства, простотой и 
+	производительностью операций ввода/вывода.</p></div>
+	<div class="section"><div xmlns="" class="titlepage">
+	 <div>
+	  <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	   <a id="network_config"> </a>Настройка сети</h3>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>Конфигурирование сети является очень большим разделом, который охватывает несколько 
+	глав данной книги. На текущий момент убедитесь, что ваши сервера могут выполнять PXE загрузку 
+	и успешно взаимодействуют с развертываемым сервером.
+	<a id="d9e1275" class="indexterm"/></p>
+	
+	<p>Например, обычно вы не можете настраивать сетевые адаптеры для VLAN при PXE загрузке. 
+	Кроме этого, как правило, вы не можете выполнять PXE загрузку при связанных сетевых адаптерах. 
+	Если вы работаете по такому сценарию, рассмотрите возможность использования простого 1 GB 
+	коммутатора в частной локальной сети, в которой работает ваше облако.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="auto_config"> </a>Автоматизация настройки</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <p>Целью автоматического управления настройкой является установление и 
+   поддержание согласованности системы без вмешательства оператора. 
+   Вы хотите поддерживать согласованность вашего развертывания, следовательно вы можете иметь 
+   подобное облако каждый раз, повторяя операции. Надлежащее использование инструментария 
+   управления автоматической настройкой гарантирует, что компоненты облачных 
+   систем находятся в определенном состоянии, помимо упрощения развертывания 
+   и распространения изменения конфигурации.
+   <a id="d9e1282" class="indexterm"/>
+   <a id="d9e1284" class="indexterm"/></p>
+   
+   <p>Эти средства также позволяют тестировать и откатывать назад изменения, поскольку 
+   они являются полностью повторяемыми. Все удобно, в данной области сообществом OpenStack был 
+   выполнен большой объем работ. Инструмент управления конфигурациями – Puppet – даже 
+   предоставляет служебные модули для OpenStack, известные как 
+   <a class="link" href="https://github.com/stackforge/puppet-openstack" target="_top">Stackforge</a>. 
+   Средство управления настройкой Chef предоставляется 
+   <a class="link" href="https://github.com/stackforge/openstack-chef-repo" target="_top">https://github.com/stackforge/openstack-chef-repo</a>.
+   Дополнительные системы управления настройкой включают в себя Juju, Ansible и
+   Salt. Также PackStack является утилитой командной строки  Red Hat Enterprise
+    Linux и производных систем, которая использует модули Puppet для поддержки быстрого
+	развертывания OpenStack на существующих серверах поверх соединений SSH.
+   <a id="d9e1290" class="indexterm"/></p>
+   
+   <p>Неотъемлемой частью системы управления настройками являются сами управляемые 
+   ею элементы. Вы должны тщательно проанализировать все элементы, которыми вы хотите - 
+   или нет управлять автоматически. Например, возможно, вы не захотите автоматически 
+   форматировать диски с данными пользователей.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="remote_mgmt"> </a>Удаленное управление</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <p>По нашему опыту, большинство операторов не сидят в непосредственной близости 
+   от работающих в облаке серверов, а также многие из них лишены удовольствия посещать 
+   свои центры данных. OpenStack должен быть целиком настраиваемым удаленно, однако 
+   иногда не все идет по плану.
+   <a id="d9e1296" class="indexterm"/></p>
+   
+   <p>При подобных обстоятельствах будет благом иметь зоны доступа к компонентам 
+   работающих узлов OpenStack. Стандартом де- факто здесь является протокол IPMI, 
+   и для достижения целей центров данных без персонала настоятельно рекомендуется 
+   приобретение такого оборудования.</p>
+   
+   <p>Кроме того, также уделите внимание удаленному управлению питанием. Хотя IPMI 
+   обычно управляет состоянием питания, наличие удаленного доступа к блоку распределения питания (PDU), 
+   к которому подключен сервер может действительно оказаться полезным для случаев, 
+   когда все кажется заклиненным.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="provision-deploy-summary"> </a>Заключительные соображения по инициализации и развертыванию OpenStack</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <p>Вы можете сэкономить время, понимая варианты использования для
+   облаков, которые выхотите создавать. Прецеденты для использования 
+   OpenStack разнообразны. Некоторые из них содержат в себе только 
+   хранилища объектов; другие требуют предварительной настройки 
+   вычислительных ресурсов для ускорения развития среды разработки; 
+   а третьи требуют быстрой инициализации вычислительных ресурсов,
+   которые уже выделены владельцам с требуемым уровнем безопасности
+   в частные сети. Ваши пользователи, возможно, будут нуждаться в 
+   серверах с высокой доступностью для обеспечения работоспособности 
+   своих уже существующих приложений. Возможно, целью будет разработка
+   проекта, который позволит этим уже существующим приложениям работать
+   на множестве экземпляров в облаке отказоустойчивым образом, однако,
+   не иметь цели добавлять их в кластер со временем. Ваши пользователи
+   могут указать, что они масштабировать анализ из-за очень интенсивного
+   использования серверов Windows.
+   <a id="d9e1304" class="indexterm"/></p>
+   
+   <p>Вы можете сэкономить ресурсы, подгоняя наилучшим образом уже
+   имеющееся у вас в настоящее время оборудование. Вы можете структурировать
+   и перепрофилировать эти сервера под объектные хранилища OpenStack. 
+   Все эти соображения и данные пользователей помогут вам создать свою
+   реализацию и ваш собственный план развития.</p>
+   <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25">
+	<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr>
+	<td align="left" valign="top">
+	<p>Для дальнейшего изучения развертывания OpenStack, изучите сопровождаемые
+	компаниями и документированные предварительно настроенные и собранные в пакеты
+	установщики для OpenStack от таких производителей, как 
+	  <a class="link" href="http://www.ubuntu.com/cloud/ubuntu-openstack" target="_top">Canonical</a>,
+	  <a class="link" href="http://www.cisco.com/web/solutions/openstack/index.html" target="_top">Cisco</a>,
+	  <a class="link" href="http://www.cloudscaling.com/" target="_top">Cloudscaling</a>,
+	  <a class="link" href="http://www-03.ibm.com/software/products/en/smartcloud-orchestrator/" target="_top">IBM</a>, 
+	  <a class="link" href="http://www.metacloud.com/" target="_top">Metacloud</a>, 
+	  <a class="link" href="http://www.mirantis.com/" target="_top">Mirantis</a>, 
+	  <a class="link" href="http://www.pistoncloud.com/" target="_top">Piston</a>, 
+	  <a class="link" href="http://www.rackspace.com/cloud/private/" target="_top">Rackspace</a>, 
+	  <a class="link" href="http://www.redhat.com/openstack/" target="_top">Red Hat</a>, 
+	  <a class="link" href="https://www.suse.com/products/suse-cloud/" target="_top">SUSE</a>, 
+	  и 
+	  <a class="link" href="https://www.swiftstack.com/" target="_top">SwiftStack</a>.</p></td></tr></table>
+	</div>
+   </div>
+   <div class="section">
+	<div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="provision_conclusion"> </a>Выводы</h2>
+	 </div>
+	</div>
+   </div>
+	  
+   <p>Решения,принимаемые в отношении обеспечения и развертывания повлияют
+   на обслуживание облака в ежедневном, еженедельном и ежемесячном обслуживании.
+   Ваше управление настройкой может развиваться со временем. Однако, наилучшая
+   проработка и проект должны быть выполнены при предварительном выборе
+   варианта реализации, разбиения дисков и настройки сети.</p>
+  </div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

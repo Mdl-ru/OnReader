@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 12. Перемещение файлов в сетевой среде - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch11.html" title="Глава 11. Введение в сценарии оболочки"/>
+<link rel="next" href="Ch13.html" title="Глава 13. Окружения пользователя"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 12. Перемещение файлов в сетевой среде';
+PrevRef = 'Ch11.html';
+UpRef = 'index.html';
+NextRef = 'Ch13.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 12. Перемещение файлов в сетевой среде</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch12.html">12. Перемещение файлов в сетевой среде</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch12.html#12.1">12.1 Быстрое копирование</a></span></dt>
+	 <dt><span class="section"><a href="Ch12.html#12.2">12.2 rsync</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch12.html#12.2.1">12.2.1 Основы rsync</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.2">12.2.2 Создание точных копий структур каталогов</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.3">12.2.3 Применение завершающей косой черты</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.4">12.2.4 Исключение файлов и каталогов</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.5">12.2.5 Целостность обмена, сохранность и режимы с подробностями</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.6">12.2.6 Сжатие</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.7">12.2.7 Ограничение полосы пропускания</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.8">12.2.8 Передача файлов на ваш компьютер</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.2.9">12.2.9 Дальнейшие темы rsync</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch12.html#12.3">12.3 Введение в совместное использование файлов</a></span></dt>
+	 <dt><span class="section"><a href="Ch12.html#12.4">12.4 Совместное использование в Samba</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch12.html#12.4.1">12.4.1 Настройка сервера</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.2">12.4.2 Управление доступом к серверу</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.3">12.4.3 Пароли</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.4">12.4.4 Запуск сервера</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.5">12.4.5 Диагностика и файлы журналов</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.6">12.4.6 Настройка совместного использования файлов</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.7">12.4.7 Домашние каталоги</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.8">12.4.8 Совместное использование принтеров</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.9">12.4.9 Применение клиента Samba</a></span></dt>
+      <dt><span class="section"><a href="Ch12.html#12.4.10">12.4.10 Доступ к файлам в качестве клиента</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch12.html#12.5">12.5 Клиенты NFS</a></span></dt>
+	 <dt><span class="section"><a href="Ch12.html#12.6">12.6 Другие службы сетевых файлов</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Эта глава исследует варианты перемещения и совместного использования файлов компьютерами в сети. Мы начнем с рассмотрения некоторых 
+  способов копирования файлов, отличных от уже известных вам утилит <span class="term"><code>scp</code></span> и 
+  <span class="term"><code>sftp</code></span>. Затем мы кратко рассмотрим подлинное совместное использования файлов, при котором 
+  вы подключаете каталог с одной машины к другой.</p>
+  <p>В этой главе описываются некоторые альтернативные способы передачи файлов потому что не все проблемы файлового обмена похожи. Иногда 
+  вам нужно обеспечить быстрый временный доступ к машинам о которых вы почти ничего не знаете, иногда вам нужно эффективно поддерживать 
+  копии больших структур каталогов, а иногда вам нужен более устойчивый доступ.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.1"> </a>12.1 Быстрое копирование</h3>
+   </div></div></div>
+   <p>Допустим, вы хотите скопировать файл (или файлы) с вашего компьютера на другой компьютер в вашей сети, и вы не обеспокоены его копированием 
+   обратно и вам не нужно делать нечто причудливое. Вы просто хотите сделать это быстро. Существует удобный способ сделать это при помощи Python. 
+   Просто перейдите в нужный каталог, содержащий файл(ы) и выполните</p>
+	   <pre class="screen">
+$ python -m SimpleHTTPServer
+	   </pre>
+   <p>Это запустит базовый веб- сервер, который сделает текущий каталог доступным любому браузеру в вашей сети. Обычно он работает с портом 
+   8000, таким образом, если машина, на которой вы выполнили данную команду имеет адрес 10.1.2.4, перейдите на получателе по адресу 
+   <span class="term"><code>http://10.1.2.4:8000</code></span> и вы сможете схватить то, что вам нужно.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2"> </a>12.2 rsync</h3>
+   </div></div></div>
+   <p>Если вам нужно переместить всю структуру каталога целиком, вы можете сделать это при помощи <span class="term"><code>scp -r</code></span>
+   - или, если вам нужно немного больше производительности добавьте в конвейер <span class="term"><code>tar</code></span>:</p>
+	   <pre class="screen">
+$ tar cBvf - <span class="emphasis"><em>directory</em></span> | ssh remote_host tar xBvpf -
+	   </pre>
+   <p>Эти методы получают выполненное задание, но не являются очень гибкими. В частности, после завершения обмена, удаленный хост 
+   может не иметь точной копии каталога. Если <span class="emphasis"><em>directory</em></span> уже существует на удаленном компьютере 
+   и содержит некоторые посторонние файлы, эти файлы сохранятся после передачи.</p>
+   <p>Если вам нужно делать такие вещи регулярно (и особенно, если вы планируете автоматизировать данный процесс), используйте специальную 
+   систему синхронизации. В Linux стандартом синхронизации является <span class="term"><code>rsync</code></span>, который предлагет хорошую 
+   производительность и множество полезных способов для выполнения обмена. Мы рассмотрим некоторые из основных режимов работы 
+   <span class="term"><code>rsync</code></span> и ознакомимся с некоторыми из их особенностей.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.1 Основы rsync</span></h4>
+    </div></div></div>
+    <p>Чтобы получить работу <span class="term"><code>rsync</code></span> между двумя хостами, программа <span class="term"><code>rsync</code></span> 
+	должна быть установлена и на источнике, и на получателе, а вам нужно будет обеспечит способ доступа от одной машины к другой. Самый простой 
+	способ передачи файлов заключается в применении учетной записи удаленной оболочки, и мы будем предполагать, что вы хотите обмениваться файлами 
+	посредством SSH доступа. Однако запомните, что <span class="term"><code>rsync</code></span> может пригодиться даже для копирования файлов и 
+	каталогов между разными местоположениями и на одной машине, например, из одной файловой системы в другую.</p>
+    <p>На первый взгляд команда <span class="term"><code>rsync</code></span> не сильно отличается от <span class="term"><code>scp</code></span>.
+	Фактически, вы можете выполнить <span class="term"><code>rsync</code></span> с теми же параметрами. Например, чтобы скопировать группу файлов 
+	в ваш домашний каталог на <span class="emphasis"><em>host</em></span>, введите</p>
+	   <pre class="screen">
+$ rsync <span class="emphasis"><em>file1</em></span> <span class="emphasis"><em>file2</em></span> ... <span class="emphasis"><em>host</em></span>:
+	   </pre>
+    <p>Во всех современных системах <span class="term"><code>rsync</code></span> предполагает, что для соединения с удаленным хостом вы 
+	используете SSH.</p>
+    <p>Остерегайтесь такого сообщения об ошибке:</p>
+	   <pre class="screen">
+rsync not found
+rsync: connection unexpectedly closed (0 bytes read so far)
+rsync error: error in rsync protocol data stream (code 12) at io.c(165)
+	   </pre>
+    <p>Это замечание говорит вам, что ваша удаленная оболочка не может найти <span class="term"><code>rsync</code></span> в этой системе 
+	Если <span class="term"><code>rsync</code></span> отсутствует в пути удаленной системы, но присутствует в ней, примените 
+	<span class="term"><code>--rsync-path=<span class="emphasis"><em>path</em></span></code></span></p>
+    <p>Если ваше имя пользователя на удаленной машине другое, добавьте к имени хоста <span class="emphasis"><em>user@</em></span>, где
+	<span class="emphasis"><em>user</em></span> является вашим именем пользователя на <span class="emphasis"><em>host</em></span>:</p>
+	   <pre class="screen">
+$ rsync <span class="emphasis"><em>file1</em></span> <span class="emphasis"><em>file2</em></span> ... <span class="emphasis"><em>user@host</em></span>:
+	   </pre>
+    <p>Пока вы не предоставите дополнительных опций, <span class="term"><code>rsync</code></span> только копирует файлы. На самом деле, 
+	если вы определяете только опции описанные до сих пор и вы примените в качестве параметра каталог <span class="emphasis"><em>dir</em></span>, 
+	вы увидите следующее сообщение:</p>
+	   <pre class="screen">
+skipping directory <span class="emphasis"><em>dir</em></span>
+	   </pre>
+    <p>Чтобы переслать все иерархии каталога - полностью с символическими ссылками, разрешениями, режимами и устройствами - применяйте опцию 
+	<span class="term"><code>-a</code></span>. Более того, если вы хотите копировать в некуторое место отличное от вашего домашнего каталога 
+	на удаленном хосте, поместите это место назначения после удаленного хоста, как-т так:</p>
+	   <pre class="screen">
+$ rsync -a <span class="emphasis"><em>dir</em></span> <span class="emphasis"><em>host:destination_dir</em></span>
+	   </pre>
+    <p>Копирование каталогов может быть мудреным, поэтому если вы не кверены точно что случится после передачи файлов, примените комбинацию 
+	опций <span class="term"><code>-nv</code></span>. Опция <span class="term"><code>-nv</code></span> просит <span class="term"><code>rsync</code></span>
+	работать в &quot;холостом режиме&quot; - то есть, работать в режиме пробы без реального копирования каких- либо файлов. Опция 
+	<span class="term"><code>-v</code></span> применяется для режима подробностей, который отображает детали о пересылке и вовлеченных в нее 
+	файлах:</p>
+	   <pre class="screen">
+$ rsync -nva <span class="emphasis"><em>dir</em></span> <span class="emphasis"><em>host:destination_dir</em></span>
+	   </pre>
+    <p>Вывод выглядит примерно так:</p>
+	   <pre class="screen">
+building file list ... done
+ml/nftrans/nftrans.html
+[more files]
+wrote 2183 bytes read 24 bytes 401.27 bytes/sec
+	   </pre>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.2 Создание точных копий структур каталогов</span></h4>
+    </div></div></div>
+    <p>По умолчанию <span class="term"><code>rsync</code></span> копирует файлы и каталоги не принимая во внимание предыдущее содержимое катаолга 
+	получателя. Например, если вы пересылает каталог <span class="emphasis"><em>d</em></span>, содержащий файлы 
+	<span class="emphasis"><em>a</em></span> и <span class="emphasis"><em>b</em></span> на машину, у которой уже имеется файл с именем 
+	<span class="emphasis"><em>d/c</em></span>, получатель будет содержать <span class="emphasis"><em>d/a</em></span>,
+	<span class="emphasis"><em>d/b</em></span> и <span class="emphasis"><em>d/c</em></span> после <span class="term"><code>rsync</code></span>.</p>
+    <p>Чтобы сделать точную реплику исходного каталога вы должны удалить файлы в каталоге получателя, которые не существуют в каталоге источника,
+	например, такие как <span class="emphasis"><em>d/c</em></span>. Для выполнения этого применяйте опцию 
+	<span class="term"><code>--delete</code></span>:</p>
+	   <pre class="screen">
+$ rsync -a --delete <span class="emphasis"><em>dir</em></span> <span class="emphasis"><em>host:destination_dir</em></span>
+	   </pre>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+      <p>Это может таить опасности, потому что вам следует обычно проверять каталог получателя на предмет того, существует ли там нечто, что вы 
+	  случайно удалите. Помните, что если вы не уверены в своих обменах, применяйте опцию <span class="term"><code>-n</code></span> для 
+	  исполнения холостого прохода и таким образом вы будете точно знать когда <span class="term"><code>rsync</code></span> 
+	  захочет удалять некий файл.</p></td></tr></table>
+     </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.3 Применение завершающей косой черты</span></h4>
+    </div></div></div>
+    <p>Будьте предельно внимательны при задании каталога источника в командной строке <span class="term"><code>rsync</code></span>. 
+	Рассмотрим основную команду, с которой мы работали до этого:</p>
+	   <pre class="screen">
+$ rsync -a <span class="emphasis"><em>dir</em></span> <span class="emphasis"><em>host:dest_dir</em></span>
+	   </pre>
+    <p>После её завершения вы получите каталог <span class="emphasis"><em>dir</em></span> внутри <span class="emphasis"><em>dest_dir</em></span>
+	на хосте <span class="emphasis"><em>host</em></span>. <a class="link" href="#Fig1201" target="_top">Рисунок 12-1</a> показывает пример
+	того как <span class="term"><code>rsync</code></span> обычно обрабатывает каталог с файлами, имеющими имена <span class="emphasis"><em>a</em></span>
+	и <span class="emphasis"><em>b</em></span>. Однако, добавление косой черты (<span class="term"><code>/</code></span>) существенно 
+	изменяет поведение:</p>
+	   <pre class="screen">
+$ rsync -a <span class="emphasis"><em>dir/</em></span> <span class="emphasis"><em>host:dest_dir</em></span>
+	   </pre>
+    <p>Теперь <span class="term"><code>rsync</code></span> копирует все <span class="term"><strong class="userinput">внутри</strong></span>
+	<span class="emphasis"><em>dir</em></span> в <span class="emphasis"><em>dest_dir</em></span> на <span class="emphasis"><em>host</em></span>.
+	без фактического создания <span class="emphasis"><em>dir</em></span> на хосте получателе. Более того, вы можете рассматривать пересылку 
+	<span class="emphasis"><em>dir/</em></span> как операцию аналогичную <span class="term"><code>cp <span class="emphasis"><em>dir/*</em></span> 
+	<span class="emphasis"><em>dest_dir</em></span></code></span> в локальной файловой системе.</p>
+    <p>Например, скажем, у вас есть каталог <span class="emphasis"><em>dir</em></span>, содержащий файлы <span class="emphasis"><em>a</em></span>
+	и <span class="emphasis"><em>b</em></span> (<span class="emphasis"><em>dir/a</em></span> и <span class="emphasis"><em>dir/b</em></span>).
+	Вы выполняете версию команды с завершающей косой чертой для пересылки его в каталог <span class="emphasis"><em>dest_dir</em></span>
+	на <span class="emphasis"><em>host</em></span>:
+	</p>
+	   <pre class="screen">
+$ rsync -a <span class="emphasis"><em>dir/</em></span> <span class="emphasis"><em>host:dest_dir</em></span>
+	   </pre>
+    <p>Когда пересылка завершится, <span class="emphasis"><em>dest_dir</em></span> содержит копии <span class="emphasis"><em>a</em></span>
+	и <span class="emphasis"><em>b</em></span>, но <span class="term"><strong class="userinput">без</strong></span> 
+	<span class="emphasis"><em>dir</em></span>. Если, однако, вы опустите <span class="term"><code>/</code></span> в конце
+	<span class="emphasis"><em>dir</em></span>, получит копию <span class="emphasis"><em>dest_dir</em></span> с 
+	<span class="emphasis"><em>a</em></span> и <span class="emphasis"><em>b</em></span> внутри. Затем, как результат пересылки, на удаленном 
+	хосте вы получите файлы и каталоги с именами <span class="emphasis"><em>dest_dir/dir/a</em></span> и
+	<span class="emphasis"><em>dest_dir/dir/b</em></span>. <a class="link" href="#Fig1202" target="_top">Рисунок 12-2</a> иллюстрирует как 
+	<span class="term"><code>rsync</code></span> обрабатывает структуру каталога с <a class="link" href="#Fig1201" target="_top">Рисунка 12-1</a> 
+	при использовании завершающей косой черты.</p>
+    <p>При пересылке файлов и каталогов на удаленный хост случайное добавление <span class="term"><code>/</code></span> в конец пути обычно 
+	не более чем неприятность; вы можете зайти на удаленный <span class="emphasis"><em>host</em></span>, добавить каталог 
+	<span class="emphasis"><em>dir</em></span> и вновь поместить все все отосланные элементы назад в <span class="emphasis"><em>dir</em></span>. 
+	К сожалению, вы должны быть аккуратны во избежание бедствий при комбинировании завершающего <span class="term"><code>/</code></span> с 
+	опцией <span class="term"><code>--delete</code></span>, поскольку вы легко можете в этом случае удалить не имеющие к этому 
+	отношению файлы.</p>
+    <div class="figure"><a id="Fig1201"> </a>
+     <p class="title">Рисунок 12-1. Обычное копирование <span class="term"><code>rsync</code></span></p>
+     <div class="figure-contents"><div class="mediaobject">
+      <img src="figures/Fig1201.jpg"/ width="672" height="373"><br />
+      <span></span>
+     </div></div>
+    </div><br class="figure-break"/>
+    <div class="figure"><a id="Fig1202"> </a>
+     <p class="title">Рисунок 12-2. Эффект завершающей косой черты в <span class="term"><code>rsync</code></span></p>
+     <div class="figure-contents"><div class="mediaobject">
+      <img src="figures/Fig1202.jpg"/ width="649" height="221"><br />
+      <span></span>
+     </div></div>
+    </div><br class="figure-break"/>
+
+	<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	  <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	  <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	  <p>Будьте осторожны с функциональностью автоматической подстановки имен файлов вашей оболочкой. GNU readline и многие другие 
+	  библиотеки подстановки (completion libraries) прихватывают слеши в имена подставляемых каталогов.</p></td></tr></table>
+    </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.4 Исключение файлов и каталогов</span></h4>
+    </div></div></div>
+    <p>Одна очень важная функциональность <span class="term"><code>rsync</code></span> состоит в способности исключать файлы из операций 
+	пересылки. Например, скажем, вы хотите переслать локальный каталог <span class="emphasis"><em>src</em></span> на 
+	<span class="emphasis"><em>host</em></span>, но вы хотите исключить все с именем <span class="emphasis"><em>.git</em></span>. Вы 
+	можете это примерно так:</p>
+	   <pre class="screen">
+$ rsync -a --exclude=.git src <span class="emphasis"><em>host:</em></span>
+	   </pre>
+    <p>Отметим, что данная команда исключает <span class="emphasis"><em>все</em></span> файлы и каталоги с именем
+	<span class="emphasis"><em>.git</em></span> так как <span class="term"><code>--exclude</code></span> принимает шаблоны, а не 
+	абсолютные имена файлов. Чтобы исключить один единственный определенный элемент, задайте абсолютный путь, который начинается с
+	<span class="term"><code>/</code></span>, как показано здесь:</p>
+	   <pre class="screen">
+$ rsync -a --exclude=/src/.git src <span class="emphasis"><em>host:</em></span>
+	   </pre>
+	<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	  <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	  <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	  <p>Самый первый <span class="term"><code>/</code></span> в <span class="emphasis"><em>/src/.git</em></span> внутри команды является не 
+	  корневым каталогом вашей системы, а базовым каталогом пересылки.</p></td></tr></table>
+    </div>
+    <p>Приведем еще несколько дополнительных советов о том, как исключать шаблоны:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Вы можете иметь столько параметров <span class="term"><code>--exclude</code></span> сколько вам хочется.</p>
+	 </li>
+	 <li class="listitem">
+	  <p>Если вы используете некоторые шаблоны неоднократно, разместите их в простом текстовом файле (по одному шаблону в строке) и 
+	  применяйте <span class="term"><code>--exclude-from=<span class="emphasis"><em>file</em></span></code></span></p>
+	 </li>
+	 <li class="listitem">
+	  <p>Чтобы исключить каталог с именем <span class="emphasis"><em>item</em></span></code>, но включить все файлы с этим именем 
+	  применяйте завершающую косую черту:
+	  <span class="term"><code>--exclude=<span class="emphasis"><em>item/</em></span></code></code>.</span></p>
+	 </li>
+	 <li class="listitem">
+	  <p>Шаблон исключений основывается на полном имени компонентов файла или каталога и может содержать простые символы подстановки. Например, 
+	  <span class="term"><code>t*s</code></span> соответствует <span class="emphasis"><em>this</em></span>, но не соответствует
+	  <span class="emphasis"><em>ethers</em></span>.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Если вы исключаете каталог или имя файла, но находите, что ваш шаблон слишком ограничивает, применяйте 
+	  <span class="term"><code>--include</code></span> для определения включения другого файла или каталога.</p>
+	 </li>
+    </ul>
+    </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.5 Целостность обмена, сохранность и режимы с подробностями</span></h4>
+    </div></div></div>
+    <p>Чтобы ускорить работу <span class="term"><code>rsync</code></span> применяет быструю проверку для определения того нет ли уже каких- либо 
+	файлов источника пересылки у получателя. Данная быстрая проверка применяет комбинацию размера файла и его последней даты изменения. Когда 
+	вы первый раз пересылаете всю иерархию каталога на удаленный хост, <span class="term"><code>rsync</code></span> видит, что никакой из 
+	этих файлов еще не существует у получателя, и он пересылает все. Проверка вашей пересылки посредством <span class="term"><code>rsync -n</code></span>
+	проверит это для вас.</p>
+    <p>После первого выполнения <span class="term"><code>rsync</code></span>, выполните ее еще раз используя <span class="term"><code>rsync -v</code></span>.
+	На это раз вы должны увидеть что никакие файлы не будут отображены в этом списке пересылки, поскольку данный набор файлов уже существует с обеих 
+	сторон, причем с теми же датами изменений.</p>
+    <p>Когда файлы на стороне источника не являются идентичными файлам на стороне получателя, <span class="term"><code>rsync</code></span> 
+	пересылает файлы и перезаписывает все уже существующие на удаленной стороне файлы. Однако, поведение по умолчанию могут быть неадекватным, 
+	поскольку вам может понадобиться дополнительное подтверждение, что файлы все- таки  те же самые перед их пропуском при пересылке или вы можете 
+	захотеть поместить некоторые дополнительные меры безопасности. Вот некоторые опции, которые могут быть вам полезны:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	  <p><span class="term"><strong class="userinput"><code>--checksum</code></strong></span> (сокращенно: 
+	  <span class="term"><strong class="userinput"><code>-c</code></strong></span>): Вычислять контрольные суммы (в основном уникальные подписи) 
+	  ваших файлов для проверки того что они одинаковые. Это предполагает дополнительные ресурсы ввода/ вывода и центрального процессора при 
+	  пересылке, однако если вы имеете дело с критически важными данными или файлами часто имеющими неизменные размеры, эта опция становится 
+	  обязательной.</p>
+	 </li>
+	 <li class="listitem">
+	  <p><span class="term"><strong class="userinput"><code>--ignore-existing</code></strong></span>: Не затирает уже имеющиеся у получателя 
+	  файлы.</p>
+	 </li>
+	 <li class="listitem">
+	  <p><span class="term"><strong class="userinput"><code>--backup</code></strong></span> (сокращенно: 
+	  <span class="term"><strong class="userinput"><code>-b</code></strong></span>): Не затирает уже имеющиеся у получателя файлы, а переименовывает 
+	  эти существующие файлы добавляя суффикс <span class="term"><code>~</code></span> к их именам перед пересылкой новых файлов.</p>
+	 </li>
+	 <li class="listitem">
+	  <p><span class="term"><strong class="userinput"><code>--suffix=s</code></strong></span>: изменяет суффикс, используемый в 
+	  <span class="term"><code>--backup</code></span> с <span class="term"><code>~</code></span> на
+	  <span class="term"><code>s</code></span>.</p>
+	 </li>
+	 <li class="listitem">
+	  <p><span class="term"><strong class="userinput"><code>--update</code></strong></span> (сокращенно: 
+	  <span class="term"><strong class="userinput"><code>-u</code></strong></span>): Не затирает никакие файлы на получателе которые имеют 
+	  более позднюю дату по сравнению с соответствующим файлом на вашем источнике.</p>
+	 </li>
+    </ul>
+    </div>
+    <p>Без специальных опций <span class="term"><code>rsync</code></span> работает быстро, производя вывод только там, где возникают проблемы.
+	Однако, вы можете применить <span class="term"><code>rsync -v</code></span> для режима с подробным выводом или 
+	<span class="term"><code>rsync -vv</code></span> для еще большего числа подробностей. (Вы можете пришпиливать столько опций 
+	<span class="term"><code>v</code></span> сколько пожелаете, но два, вероятно, уже больше чем нужно.) Для полного итога после пересылки 
+	применяйте <span class="term"><code>rsync --stats</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.6 Сжатие</span></h4>
+    </div></div></div>
+    <p>Многим пользователям нравится опция <span class="term"><code>-z</code></span> в объединении с 
+	<span class="term"><code>-a</code></span> для сжатия данных перед их пересылкой:</p>
+	   <pre class="screen">
+$ rsync -az <span class="emphasis"><em>dir</em></span> <span class="emphasis"><em>host:destination_dir</em></span>
+	   </pre>
+    <p>Сжатие может улучшать производительность в определенных ситуациях, таких, как при загрузке большого количества данных при медленных 
+	соединениях (подобно медленным исходящим каналам во многих соединениях DSL) или когда высока латентность между этими двумя хостами. 
+	Однако, поверх высокоскоростной локальной сетевой среды две терминальные машины могут быть ограничены временем центральных процессоров, 
+	которое потребуется для сжатия и распаковки данных, следовательно несжатая пересылка может оказаться более быстрой.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.7">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.7 Ограничение полосы пропускания</span></h4>
+    </div></div></div>
+    <p>Достаточно легко забить восходящее Интернет соединение при загрузке большого объема данных на удаленный хост. Даже если вы не будете 
+	использовать вашу (обычно значительную) нисходящую пропускную способность во время такого пересылки, ваше соединение будет по-прежнему 
+	казаться довольно медленным, если вы позволите <span class="term"><code>rsync</code></span> работать так быстро, как это возможно, 
+	поскольку исходящим пакетам TCP, таким как запросы HTTP придется конкурировать с пересылкой за пропускную способности вашей восходящей 
+	линии связи.</p>
+    <p>Чтобы избежать это, применяйте <span class="term"><code>--bwlimit</code></span> чтобы предоставлять вашей восходящей линии небольшое 
+	пространство для передышки. Например, чтобы ограничить пропускную способность доя 10'000кб/с вы можете сделать что- то нечто вроде:</p>
+	   <pre class="screen">
+$ rsync --bwlimit=10000 -a <span class="emphasis"><em>dir</em></span> <span class="emphasis"><em>host:destination_dir</em></span>
+	   </pre>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.8">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.8 Передача файлов на ваш компьютер</span></h4>
+    </div></div></div>
+    <p>Команда <span class="term"><code>rsync</code></span> предназначена не только для копирования файлов с вашей локальной машины на некий 
+	удаленный хост. Вы также можете пересылать файлы с удаленной машины на ваш локальный хост путем размещения удаленного хоста и пути 
+	удаленного источника в качестве первого аргумента в командной строке. Следовательно, чтобы переслать <span class="emphasis"><em>src_dir</em></span>
+	на том хосте в <span class="emphasis"><em>dest_dir</em></span> на вашем локальном хосте, выполните эту команду:</p>
+	   <pre class="screen">
+$ rsync -a <span class="emphasis"><em>host:src_dir dest_dir</em></span>
+	   </pre>
+	<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	  <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	  <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	  <p>Как уже упоминалось ранее, вы можете применять <span class="term"><code>rsync</code></span> для дублирования каталогов на ваших
+	  локальных машинах, полностью опуская <span class="term"><code>host:</code></span>.</p></td></tr></table>
+    </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.2.9">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.2.9 Дальнейшие темы rsync</span></h4>
+    </div></div></div>
+    <p>Всякий раз, когда вам нужно копировать множество файлов, <span class="term"><code>rsync</code></span> должна быть одной из первых утилит, 
+	которая приходит на ум. Запуск <span class="term"><code>rsync</code></span> в пакетном режиме особенно полезен и вы найдете множество 
+	вариантов использования вспомогательных файлов связанных с параметрами команды, ведением журналов, а также пересылкой состояния. В частности, 
+	файлы состояния делают длинные пересылки более быстрыми и легкими для возобновления при их прерывании.</p>
+    <p>Вы также найдете <span class="term"><code>rsync</code></span> полезным для создания резервных копий. Например, вы можете подключить 
+	интернет хранилище, подобное Amazon S3 {<span class="emphasis"><em>Прим. пер.: или сделанное своими руками на базе 
+	<a class="link" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch01.html" target="_top">ZFS</a></em></span>}, к вашей системе 
+	Linux {<span class="emphasis"><em>Прим. пер.: или Windows, <a href="javascript:tocall()" onmouseover="this.href=mail">обращайтесь</a> к  
+	нашим специалистам за консультацией</em></span>}, а затем применять <span class="term"><code>rsync --delete</code></span> для 
+	периодической синхронизации файловой системы с сетевым хранилищем для создания очень эффективной системы резервного копирования.</p>
+    <p>Существует много дополнительных опций командной строки чем было описано здесь. Для грубого обзора выполните 
+	<span class="term"><code>rsync --help</code></span>. Вы найдете более подробную информацию в вашей странице руководства 
+	<span class="term"><code>rsync(1)</code></span>, а также на домашней странице <span class="term"><code>rsync</code></span>:
+	<a class="link" href="http://rsync.samba.org/" target="_top">http://rsync.samba.org/</a></em></span>.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.3"> </a>12.3 Введение в совместное использование файлов</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4"> </a>12.4 Совместное использование в Samba</h3>
+   </div></div></div>
+   <p>.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.1 Настройка сервера</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.2 Управление доступом к серверу</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.3 Пароли</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.4 Запуск сервера</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.5 Диагностика и файлы журналов</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.6 Настройка совместного использования файлов</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.7">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.7 Домашние каталоги</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.8">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.8 Совместное использование принтеров</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.9">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.9 Применение клиента Samba</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.4.10">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">12.4.10 Доступ к файлам в качестве клиента</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.5"> </a>12.5 Клиенты NFS</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="12.6"> </a>12.6 Другие службы сетевых файлов</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

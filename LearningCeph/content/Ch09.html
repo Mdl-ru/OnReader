@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 9. Включение Ceph в состав OpenStack - Изучаем Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningCeph"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем Ceph"/>
+<link rel="up" href="index.html" title="Изучаем Ceph"/>
+<link rel="prev" href="Ch08.html" title="Глава 8. Наблюдение за вашим кластером Ceph"/>
+<link rel="next" href="Ch10.html" title="Глава 10. Настройка производительности Ceph и эталонное тестирование"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningCeph/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 9. Включение Ceph в состав OpenStack';
+PrevRef = 'Ch08.html';
+UpRef = 'index.html';
+NextRef = 'Ch10.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 9. Включение Ceph в состав OpenStack</h1>
+  </div></div></div>
+   <p>Каждой облачной платформе необходимо устойчивое, надежное, масштабируемое, поддерживающее весь необходимый функционал решение 
+   для хранения данных которое удовлетворяет всем ее требованиям по рабочим нагрузкам. Ceph удивительно быстро выступило в качестве 
+   решения облачного хранилища, которое бесшовно интегрируется с  OpenStack и другими облачными платформами. Уникальная, унифицированная 
+   и распределенная архитектура Ceph делает ее правильным выбором для основы облачного хранилища.</p>
+   <p>В данной главе мы рассмотрим следующие темы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	  <p>Введение в OpenStack</p>
+	 </li>
+	<li class="listitem">
+	 <p>Ceph - наилучшее соответствие для OpenStack.</p>
+	</li>
+	<li class="listitem">
+	 <p>Создание среды OpenStack</p>
+	</li>
+	<li class="listitem">
+	 <p>Интеграция Ceph и OpenStack</p>
+	</li>
+   </ul>
+   </div>
+  
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch09.html#OpenStack_Introduction">Введение в OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#best_match">Ceph - наилучший выбор для OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#Creating_test_environment">Создание среды для тестирования OpenStack</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch09.html#Settingup">Наладка машины OpenSatck</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Installing_OpenStack">Установка OpenSatck</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Ceph_with_OpenStack">Применение Ceph в OpenStack</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Installing_Ceph">Установка Ceph на узел OpenStack</a></span></dt>
+        <dt><span class="section"><a href="Ch09.html#Config_Ceph">Настройка Ceph для работы с OpenStack</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch09.html#Config_Cinder">Настройка Cinder OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Config_Nova">Настройка Nova OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Config_Glance">Настройка Glance OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Restarting_services">Перезапуск служб OpenStack</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Test_Cinder">Тестирование Cinder OpenSatck</a></span></dt>
+          <dt><span class="section"><a href="Ch09.html#Test_Glance">Тестирование Glance OpenSatck</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch09.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="OpenStack_Introduction"> </a>Введение в OpenStack</h3>
+   </div></div></div>
+   <p>OpenStack является свободной платформой программного обеспечения с открытым исходным кодом, для построения и управления 
+   общедоступными и  частными облачными вычислительными платформами. Она управляется независимой некоммерческой организацией, 
+   известной как фонд OpenStack. Она имеет наибольшее и самое активное сообщество, поддерживаемое такими технологическими 
+   гигантами как HP, Red Hat, Dell, Cisco, IBM, Rackspace и многими, многими другими. Основная идея OpenStack для облака 
+   заключается в том, что оно должно быть простым для реализации и массивно масштабируемым.</p>
+   <p>OpenStack рассматривается как облачная операционная система, которая позволяет пользователям незамедлительно 
+   разворачивать сотни виртуальных машин автоматизированным способом. Она также обеспечивает эффективное, не имеющее преград 
+   управление этими машинами. OpenStack известна своими возможностями динамичного увеличения и уменьшения масштаба, а также 
+   распределенной архитектурой,делающими ваше облачное окружение устойчивым и готовым к будущему.</p>
+   <p>OpenStack предоставляет платформу уровня предприятия класса инфраструктура-как-служба 
+   (<span class="term"><span class="emphasis"><em>IaaS, Infrastructure-as-a-service</em></span></span>) для всех ваших 
+   облачных потребностей. Ниже приводится архитектура OpenStack:</p>
+        <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0901.jpg"/></div><br />
+        </div>
+   <p>OpenStack состоит из отдельных различных программных компонентов которые работают совместно чтобы обеспечивать облачные 
+   службы. Сообщество OpenStack идентифицировало девять ключевх компонентов, которые составляют ядро OpenStack.</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Nova</em></span></span>:
+	  Это вычислительная часть которая разработана для управления и автоматизации пулов вычислительных ресурсов и может работать 
+	  с различными технологиями виртуализации, такими как QEMU/KVM, Xen, Hyper-V, VMware, bare metal и контейнеры Linux.</p>
+	 </li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Swift</em></span></span>:
+	  Обеспечивает OpenStack возможности хранилища объектов.</p>
+	</li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Cinder</em></span></span>:
+	  Компонента блочного хранения, предоставляющая постоянно хранимые тома для экземпляров OpenStack.</p>
+	</li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Glance</em></span></span>:
+	  Служба образов для OpenStack, которая делает развертывание виртуальных машин легким и быстрым.</p>
+	</li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Neutron</em></span></span>:
+	  Компонента сетевой среды для OpenStack.</p>
+	</li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Horizon</em></span></span>:
+	  Инструментальная панель управления OpenStack.</p>
+	</li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Keystone</em></span></span>:
+	  Предоставляет службу идентификации для OpenStack, а также управляет аутентификацией в OpenStack.</p>
+	</li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Ceilometer</em></span></span>:
+	  Обеспечивает службы телеметрии OpenStack и позволяет провайдерам облаков службы выписки счетов и прогнозирования трафика (billing), 
+	  а также автоматического масштабирования.</p>
+	</li>
+	<li class="listitem">
+	  <p><span class="term"><span class="emphasis"><em>Heat</em></span></span>:
+	  Компонента координации (orchestration) в OpenStack.</p>
+	</li>
+   </ul>
+   </div>
+   <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+    <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+    <p>Для получения дополнительной информации по OpenStack посетите <a class="xref" href="http://www.openstack.org/"
+	  title="openstack.org">http://www.openstack.org/</a>.</p></td></tr></table>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="best_match"> </a>Ceph - наилучший выбор для OpenStack</h3>
+   </div></div></div>
+   <p>В последние несколько лет OpenStack приобрела удивительную популярность, поскольку она полностью определяется программным 
+   обеспечением, вне зависимости от того, используется ли она для вычислений, коммуникаций или даже для хранения. Когда вы 
+   обсуждаете о хранении для OpenStack, Ceph получает все преимущества. Ceph предоставляет устойчивую, надежную основу хранения, 
+   которую ищет OpenStack. Он бесшовно интегрируется с такими компонентами OpenStack, как Cinder, Glance, Nova и keystone, что 
+   обеспечивает всю-в-одном основу облачного хранилища для OpenStack. Перечислим некоторые ключевые преимущества, которые 
+   делают Ceph лучшим выбором для OpenStack.</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	  <p>Ceph предоставляет основу хранения класса предприятия с богатым функционалом при очень низкой стоимости за гигабайт, 
+	  что помогает удерживать низкую стоимость развертывания OpenStack.</p>
+	 </li>
+	<li class="listitem">
+	 <p>Ceph является единым решением хранения блоков, файлов и объектов для OpenStack, позволяя приложениям использовать хранилище 
+	 так, как им нужно.</p>
+	</li>
+	<li class="listitem">
+	 <p>Ceph предоставляет расширенные возможности блочного хранения для облаков OpenStack, которые включают легкое-и-быстрое 
+	 раскручивание, резервирование и клонирование виртуальных машин.</p>
+	</li>
+	<li class="listitem">
+	 <p>Он предоставляет экземплярам OpenStack постоянно хранимые тома по умолчанию, которые способны работать как обычные 
+	 серверы, в которых данные не очищаются при перезагрузке виртуальных машин.</p>
+	</li>
+	 <li class="listitem">
+	  <p>Ceph поддерживает возможность для OpenStack быть независимой от хостов путем обеспечения миграции виртуальных машин 
+	  и расширения масштабов компонент хранилища без влияния на виртуальные машины.</p>
+	 </li>
+	<li class="listitem">
+	 <p>Он предоставляет функционал моментальных снимков томам OpenStack, которые также могут использоваться как средство для 
+	 резервирования.</p>
+	</li>
+	<li class="listitem">
+	 <p>Возможности Ceph по клонированию в режиме копирования при записи (copy-on-write) позволяет OpenStack раскручивать 
+	 множество экземпляров за один раз, что помогает большим временным затратам механизма инициализации.</p>
+	</li>
+	<li class="listitem">
+	 <p>Ceph поддерживает богатые интерфейсы хранения объектов совместимые как с Swift, так и с S3.</p>
+	</li>
+   </ul>
+   </div>
+   <p>Сообщества Ceph и OpenStack тесно работают на протяжении последних лет, чтобы сделать интеграцию более бесшовной, а также 
+   использовать новые свойства, которые они запускают. В будущем мы ожидаем, что OpenStack и Ceph станут еще ближе друг другу, 
+   благодаря приобретению фирмой Red Hat Inktank, компании, поддерживающей Ceph, поскольку Red Hat является одним из основных 
+   участников проекта OpenStack.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_test_environment"> </a>Создание среды для тестирования OpenStack</h3>
+   </div></div></div>
+   <p>В данном разделе мы развернем тестовую среду OpenStack с одним узлом, которая позже в данной главе будет использована для 
+   интеграции с Ceph. Для развертывания OpenStack мы будем использовать дистрибутив OpenStack Red Hat, называемый RDO, который 
+   является версией OpenSatck сообщества открытого кода Red Hat. Для получения дополнительной информации по RDO OpenStack посетите 
+   <a class="xref" href="http://openstack.redhat.com/" title="openstack.redhat.com">http://openstack.redhat.com/</a>.</p>
+   
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Settingup"> </a>Наладка машины OpenSatck</h4>
+      </div></div></div>
+      <p>Для выполнения установки OpenStack с одним узлом, мы создадим виртуальную машину с именем 
+	  <span class="term"><code>os-node1</code></span>. Нам нужно установить операционную систему на этой новой виртуальной машине.
+	  В нашем случае мы установим CentOS 6.4; если вы пожелаете, вы также можете выбрать любую другую операционную систему на 
+	  основе RHEL вместо CentOS. Выполните следующие шаги:</p>
+	  <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Создайте новую виртуальную машину VirtualBox для установки OpenStack:</p>
+	   <pre class="screen">
+# VboxManage createvm --name os-node1 --ostype RedHat_64 --register
+# VBoxManage modifyvm os-node1 --memory 4096 --nic1 nat -- nic2 hostonly --hostonlyadapter2 vboxnet1
+# VBoxManage storagectl os-node1 --name &quot;IDE Controller&quot; --add ide --controller PIIX4 --hostiocache on --bootable on
+# VBoxManage storageattach os-node1 --storagectl "IDE Controller" --type dvddrive --port 0 --device 0 --medium CentOS-6.4-x86_64-bin-DVD1.iso</pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+        <p>Вы должны указать правильный абсолютный путь к ISO- файлу с CentOS в параметре <span class="term"><code>--medium</code></span> 
+	    для приведенной выше команды.</p></td></tr></table>
+       </div>
+	   <pre class="screen">
+# VBoxManage storagectl os-node1 --name &quot;SATA Controller&quot; --add sata --controller IntelAHCI --hostiocache on --bootable on
+# VBoxManage createhd --filename OS-os-node1.vdi --size 10240
+# VBoxManage storageattach os-node1 --storagectl &quot;SATA Controller&quot; --port 0 --device 0 --type hdd --medium OS-osnode1.vdi 
+# VBoxManage startvm os-node1 --type gui</pre>
+      </li><li class="listitem">
+       <p>Когда виртуальная машина создана и запущена, установите операционную систему CentOS, следуя документации по установке ОС, 
+	   доступной на <a class="xref" 
+	   href="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/index.html" 
+	   title="Red Hat Enterprise Linux 6 Installation Guide">
+	   https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/index.html</a>.
+	   В процессе установки обеспечьте для хоста имя <span class="term"><code>os-node1</code></span>.</p>
+      </li><li class="listitem">
+       <p>Когда вы успешно установите операционную систему, измените настройки сети этой машины. Убедитесь, что вы редактируете 
+	   файл с правильным именем сетевого устройства; в нашем случае сетевыми устройствами являются 
+	   <span class="term"><code>eth2</code></span> и <span class="term"><code>eth3</code></span> (существует вероятность, что 
+	   имена устройств могут изменить свои названия в вашей среде, однако это не должно создать проблем). Когда файлы настройки 
+	   сетевых устройств отредактированы, перезапустите сетевые службы. Выполните следующие шаги для изменения настройки сети:</p>
+  	   <div class="itemizedlist">
+	   <ul class="itemizedlist" type="circle">
+	    <li class="listitem">
+	     <p>Измените файл <span class="term"><code>/etc/sysconfig/network-scripts/ifcfg-eth2</code></span> и добавьте:</p>
+	   <pre class="screen"><code>
+ONBOOT=yes
+BOOTPROTO=dhcp</code></pre>
+	    </li>
+	     <p>Измените файл <span class="term"><code>/etc/sysconfig/network-scripts/ifcfg-eth3</code></span> и добавьте:</p>
+	   <pre class="screen"><code>
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=192.168.57.201
+NETMASK=255.255.255.0</code></pre>
+	     <p>Измените файл <span class="term"><code>/etc/hosts</code></span> и добавьте:</p>
+	   <pre class="screen"><code>
+192.168.57.101 ceph-node1
+192.168.57.102 ceph-node2
+192.168.57.103 ceph-node3
+192.168.57.200 ceph-client1
+192.168.57.201 os-node1</code></pre>
+	    </li>
+       </ul>
+       </div>
+      </li><li class="listitem">
+       <p>Убедитесь, что новый узел, <span class="term"><code>os-node1</code></span>, может взаимодействовать с узлами кластера Ceph:</p>
+	   <pre class="screen">
+# ping ceph-node1
+# ping ceph-node2
+# ping ceph-node3</pre>
+      </li><li class="listitem">
+       <p>Поскольку данная установка предназначена для тестирования, вам следует запретить межсетевой экран и установить 
+	   <span class="term"><code>selinux</code></span> в <span class="term"><code>permissive</code></span> чтобы избежать 
+	   усложнений:</p>
+	   <pre class="screen">
+# setenforce 0
+# service iptables stop</pre>
+      </li>
+      </ol>
+      </div>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Installing_OpenStack"> </a>Установка OpenSatck</h4>
+      </div></div></div>
+      <p>В данном разделе мы представим вам пошаговую инструкцию для установки редакции Icehouse OpenStack RDO. Если вам интересно 
+	  ознакомиться с установкой RDO OpenStack, посетите <a class="xref" href="http://openstack.redhat.com/Quickstart" 
+	  title="openstack.redhat.com/Quickstart">http://openstack.redhat.com/Quickstart</a></p>
+	  <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Обновите текущие пакеты операционной системы чтобы избежать предостережения/ошибки вызванные несовместимостью версий
+	   пакетов:</p>
+	   <pre class="screen">
+# yum update -y</pre>
+      </li><li class="listitem">
+       <p>Установите пакеты RDO:</p>
+	   <pre class="screen">
+# yum install -y https://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-4.noarch.rpm</pre>
+      </li><li class="listitem">
+       <p>Установите пакеты OpenStack packstack:</p>
+	   <pre class="screen">
+# yum install -y openstack-packstack</pre>
+      </li><li class="listitem">
+       <p>Наконец запустите установку компонентов OpenStack с использованием <span class="term"><code>packstack</code></span>, 
+	   который выполнит абсолютно свободную от ручной работы установку OpenStack:</p>
+	   <pre class="screen">
+# packstack --allinone</pre>
+	   <pre class="screen">
+Applying 10.0.2.15_ring_swift.pp
+10.0.2.15_ring_swift.pp:                             [  DONE ]
+Applying 10.0.2.15_swift.pp
+Applyi ng 10.0.2.15_provision_demo.pp
+10.0.2.15_swift.pp:                                  [  DONE ]
+10.0.2.15_provision_demo.pp:                         [  DONE ]
+Applying 10.0.2.15_mongodb.pp
+10.0. 2.15_mongodb.pp:                               [  DONE ]
+Applying 10.0.2.15_ceilometer.pp
+Applying 10.0.2.15_nagios.pp
+Applyi ng 10.0.2.15_nagios_nrpe.pp
+10.0.2.15_ceilometer.pp:                             [  DONE ]
+10.0.2.15_nagios.pp:                                 [  DONE ]
+10.0.2.15_nagios_nrpe.pp:                            [  DONE ]
+Applying 10.0.2.15_postscript.pp
+10.0. 2.15_postscript.pp:                            [  DONE ]
+Applying Puppet manifests                            [  DONE ]
+Finalizing                                           [  DONE ]
+
+  **** Installation completed successfully ******</pre>
+      </li><li class="listitem">
+       <p>После того, как <span class="term"><code>packstack</code></span> выполнит установку, он отобразит некоторую 
+	   дополнительную информацию, включающую URL инструментальной панели OpenStack Horizon и полномочия, которые могут быть 
+	   использованы для работы с OpenStack:</p>
+	   <pre class="screen">
+Additional information:
+ * A new answerfile was created in: /root/packstack-answers-20140823-195321.txt
+ * Time synchronization installation was skipped. Please note that unsynchronized time on s
+erver instances might be problem for some OpenStack components.
+ * File /root/keystonerc_admin has been created on OpenStack client host 10.0.2.15. To use
+the command line tools you need to source the file.
+ * To access the OpenStack Dashboard browse to http://10.0.2.15/dashboard .
+Please, find your login credentials stored in the keystonerc_admin in your home directory.
+ * To use Nagios, browse to http://10.0.2.1S/nagios username: nagiosadmin, password: bd9321
+71484e4e16
+ * Because of the kernel update the host 10.0.2.15 requires reboot.
+ * The installation log file is available at: /var/tmp/packstack/20140823-195320-YSt3Kn/ope
+nstack-setup.log
+ * The generated manifests are available at: /var/tmp/packstack/20140823-195320-YSt3Kn/mani
+fests
+[root@os-node1 ~]#</pre>
+      </li><li class="listitem">
+       <p>Полномочия для регистрации с учетной записью администратора будут сохранены в файле 
+	   <span class="term"><code>/root/keystone_rc</code></span></p>
+	   <pre class="screen">
+[root@os-node1 ~]# cat /root/keystonerc_admin
+export OS_USERNAME=admin
+export OS_TENANT_NAME=admin
+export OS_PASSWORD=1da01eb3782e4b88
+export OS_AUTH_URL=http://10.0.2.15:5000/v2.0/
+export PSl='[\u@\h \W(keystone_admin)]\$ '
+[root@os-node1 ~]#</pre>
+      </li><li class="listitem">
+       <p>Наконец откроем веб браузер, в строк навигации введем URL инструментальной панели OpenStack Horizon и применим 
+	   полномочия пользователя с правами администратора:</p>
+        <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0905.jpg"/></div><br />
+        </div>
+      </li><li class="listitem">
+       <p>Теперь вы развернули среду OpenStack с одним узлом, которая готова к интеграции с Ceph. Вам будет представлен 
+	   следующий экран:</p>
+        <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0906.jpg"/></div><br />
+        </div>
+      </li>
+      </ol>
+      </div>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_with_OpenStack"> </a>Применение Ceph в OpenStack</h4>
+      </div></div></div>
+      <p>OpenStack является модульной системой, которая имеет уникальные компоненты для конкретного набора задач. Существуют 
+	  определенные компоненты, которым необходимы надежные системы хранения данных, подобные Ceph и расширяют полную интеграцию с ними, 
+	  как это показано на следующем рисунке. Каждый из этих компонентов использует Ceph своим собственным способом для хранения блочных 
+	  устройств и объектов. Большинство облачных реализаций, основанных на OpenStack и Ceph, используют Cinder, Glance и Swift, 
+	  интегрированные с Ceph. Интеграция keystone используется когда вам нужно S3- совместимое хранилище объектов на системе хранения 
+	  Ceph. Интеграция Nova делает возможной загрузку с томов со способностями Ceph для вашего облака OpenStack.</p>
+        <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0907.jpg"/></div><br />
+        </div>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Installing_Ceph"> </a>Установка Ceph на узел OpenStack</h4>
+      </div></div></div>
+      <p>Узлы OpenStack должны быть клиентами Ceph, чтобы быть способными осуществлять доступ к кластеру Ceph. Для этого установите 
+	  пекеты Ceph на узлы OpenStack и убедитесь, что они могут осуществлять доступ к кластерам Ceph:</p>
+	  <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Чтобы установить пакеты Ceph на узлы OpenStack, воспользуйтесь утилитой <span class="term"><code>ceph-deploy</code></span> 
+	   с любого из узлов мониторов Ceph. В нашем случае мы используем <span class="term"><code>ceph-node1</code></span> для 
+	   установки пакетов Ceph с применением инструментария <span class="term"><code>ceph-deploy</code></span>:</p>
+	   <pre class="screen">
+# ceph-deploy install os-node1</pre>
+      </li><li class="listitem">
+       <p>Используйте <span class="term"><code>ceph-deploy</code></span> для копирования колец ключей клиентов Ceph с правами 
+	   администраторов на узлы OpenStack:</p>
+	   <pre class="screen">
+# ceph-deploy admin os-node1</pre>
+      </li><li class="listitem">
+       <p>Проверьте кольцо ключей Ceph и файл настройки в <span class="term"><code>/etc/ceph</code></span> на узле OpenStack 
+	   и попытайтесь соединиться с кластером:</p>
+	   <pre class="screen">
+[root@os-node1 ~]# ls -l /etc/ceph
+total 12
+-rw-r—-r—-. 1 root root 137 Aug 24 00:25 ceph.client.admin.keyring
+-rw-r—-r-—. 1 root root 573 Aug 24 00:25 ceph.conf
+-rwxr-xr-x. 1 root root  92 Jul 30 04:36 rbdmap
+[root@os-node1 -]#
+[root@os-node1 -]# ceph -s
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_OK
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0fceph-node2=192.168.57.102:6789/0,
+ceph-node3=192.168.57.103:6789/0}, election epoch 1060, quorum 0,1,2 ceph-node1,ceph-node2,ce
+ph-node3
+     mdsmap e96: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e869: 9 osds: 9 up, 9 in
+      pgmap v4931: 1536 pgs, 13 pools, 1352 kB data, 2650 objects
+            509 MB used, 82335 MB / 82844 MB avail
+                1536 active+clean
+[root@os-node1 ~]#</pre>
+      </li>
+      </ol>
+      </div>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Config_Ceph"> </a>Настройка Ceph для работы с OpenStack</h4>
+      </div></div></div>
+      <p>На данный момент времени ваш узел OpenStack <span class="term"><code>ceph-node1</code></span> может соединяться с вашим 
+	  кластером. Теперь мы настроим Ceph для OpenStack. Чтобы сделать это, выполните следующие команды с 
+	  <span class="term"><code>ceph-node1</code></span>, если специально не оговорен другой узел:</p>
+	  <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+        <p>Создайте выделенные пулы Ceph для OpenStack Cinder и Glance. Убедитесь в использовании надлежащего числа групп 
+		размещения для вашей среды:</p>
+	   <pre class="screen">
+# ceph osd pool create volumes 128
+# ceph osd pool create images 128</pre>
+      </li><li class="listitem">
+        <p>Создайте нового пользователя для Cinder и Glance чтобы использовать аутентификацию cephx:</p>
+	   <pre class="screen">
+# ceph auth get-or-create client.cinder mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes,allow rx pool=images'
+# ceph auth get-or-create client.glance mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=images'</pre>
+      </li><li class="listitem">
+        <p>Создайте файлы колец ключей для созданных новых пользователей <span class="term"><code>client.cinder</code></span> и 
+		<span class="term"><code>client.glance</code></span> и предоставьте им доступ в качестве пользователей OpenStack Cinder и Glance:</p>
+	    <pre class="screen">
+# ceph auth get-or-create client.cinder | tee /etc/ceph/ceph.client.cinder.keyring
+# chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
+# ceph auth get-or-create client.glance | tee /etc/ceph/ceph.client.glance.keyring
+# chown glance:glance /etc/ceph/ceph.client.glance.keyring</pre>
+        <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+         <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+         <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+         <p>Проверьте что файл <span class="term"><code>/etc/ceph/ceph.conf</code></span> имеет полномочия на чтение для пользователей 
+		 Cinder. Обычно он должен иметь полномочия 644.</p></td></tr></table>
+        </div>
+      </li><li class="listitem">
+        <p>Процесс <span class="term"><code>libvirt</code></span> требует доступа к кластеру Ceph при подключении и отключении 
+		блочных устройств от Cinder и создании временной копии ключа <span class="term"><code>client.cinder</code></span> 
+		который будет добавлен к <span class="term"><code>libvirt</code></span> на следующем шаге:</p>
+	    <pre class="screen">
+# ceph auth get-key client.cinder | tee /tmp/client.cinder.key</pre>
+      </li><li class="listitem">
+        <p>Добавьте ключ безопасности <span class="term"><code>libvirt</code></span> и удалите временную копию ключа 
+		<span class="term"><code>client.cinder</code></span>:</p>
+	    <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+          <p>Создайте UUID:</p>
+	      <pre class="screen">
+# uuidgen</pre>
+        </li><li class="listitem">
+          <p>Создайте файл безопасности со следующим содержанием и убедитесь, что вы используете UUID, который вы сгенерировали 
+		  на предыдущем этапе:</p>
+	      <pre class="screen"><code>
+cat &gt; secret.xml &lt;&lt;EOF
+&lt;secret ephemeral='no' private='no'&gt;
+ &lt;uuid&gt;63b033bb-3305-479d-854b-cf3d0cb6a50c&lt;/uuid&gt;
+ &lt;usage type='ceph'&gt;
+ &lt;name&gt;client.cinder secret&lt;/name&gt;
+ &lt;/usage&gt;
+&lt;/secret&gt;
+EOF</code></pre>
+        </li><li class="listitem">
+          <p>Определите ключ и храните значение ключа в безопасности. Нам потребуется это секретное значения на последующих шагах:</p>
+	      <pre class="screen">
+# virsh secret-define --file secret.xml</pre>
+	      <pre class="screen">
+[root@os-node1 ceph]# uuidgen
+63b033bb-3305-479d-854b-cf3d0cb6a50c
+[root@os-node1 ceph]#
+[root@os-node1 ceph]# cat &gt; secret.xml «EOF
+&gt; &lt;secret ephemeral='no' private='no'&gt;
+&gt;   &lt;uuid&gt;63b033bb-3305-479d-854b-cf3d0cb6a50c&lt;/uuid&gt;
+&gt;   &lt;usage type='ceph'&gt;
+&gt;     &lt;name&gt;client.cinder secret&lt;/name&gt;
+&gt;   &lt;/usage&gt;
+&gt; &lt;/secret&gt;
+&gt; EOF
+[root@os-node1 ceph]# virsh secret-define -—file secret.xml
+Secret 63b033bb-3305-479d-854b-cf3d0cb6a50c created</pre>
+          <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+           <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+           <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+           <p>Ключ безопасности, созданный на этом шаге обычно тот же, что и UUID.</p></td></tr></table>
+          </div>
+        </li><li class="listitem">
+          <p>Установите значение ключа и удалите временные файлы.Удаление файлов не является обязательным; это делается только для 
+		  очистки сситемы:</p>
+	      <pre class="screen">
+# virsh secret-set-value --secret 63b033bb-3305-479d-854bcf3d0cb6a50c --base64 $(cat /tmp/client.cinder.key) &amp;&amp; rm/tmp/client.cinder.key secret.xml</pre>
+	      <pre class="screen">
+[root@os-node1 ceph]# virsh secret-set-value -—secret 63b033bb-3305-479d-854b-cf3d0cb6a50c -—base64 $(cat
+/tmp/client.cinder.key) &amp;&amp; rm /tmp/client.cinder.key secret.xml
+Secret value set
+
+rm: remove regular file '/tmp/client.cinder.key'? y
+rm: remove regular file secret.xml'? y
+[root@os-node1 ceph]#</pre>
+        </li>
+        </ol>
+        </div>
+        </li>
+      </ol>
+      </div>
+	  
+     </div>
+       <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Config_Cinder"> </a>Настройка Cinder OpenSatck</h5>
+        </div></div></div>
+        <p>В настоящий момент времени мы завершили настройку с точки зрения Ceph. Дальше мы выполним настройку компонентов 
+		OpenStack Cinder, Glance и Nova для использования Ceph. Cinder поддерживает множество систем хранения. Чтобы настроить Cinder 
+		для использования Ceph измените файл настройки Cinder и определите драйвер RBD,который должен будет использовать OpenStack Cinder.</p>
+        <p>Чтобы сделать это вы должны также определить имя пула, который мы создали для томов Cinder ранее. На своем узле OpenStack 
+		отредактируйте файл <span class="term"><code>/etc/cinder/cinder.conf</code></span> и внесите следующие изменения:</p>
+	    <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+          <p>Дойдите до раздела <span class="term"><code>Options defined in cinder.volume.manager</code></span> в файле 
+		  <span class="term"><code>/etc/cinder/cinder.conf</code></span> и добавьте драйвер RBD для Cinder:</p>
+	      <pre class="screen"><code>
+volume_driver=cinder.volume.drivers.rbd.RBDDriver</code></pre>
+        </li><li class="listitem">
+          <p>Дойдите до раздела <span class="term"><code>Options defined in cinder.volume.drivers.rbd</code></span> в файле 
+		  <span class="term"><code>/etc/cinder/cinder.conf</code></span> и добавьте (замените UUID безопасности на 
+		  значение вашего окружения) следующим:</p>
+	      <pre class="screen"><code>
+rbd_pool=volumes
+rbd_user=cinder
+rbd_ceph_conf=/etc/ceph/ceph.conf
+rbd_flatten_volume_from_snapshot=false
+rbd_secret_uuid=63b033bb-3305-479d-854b-cf3d0cb6a50c
+rbd_max_clone_depth=5</code></pre>
+        </li><li class="listitem">
+          <p>Дойдите до раздела <span class="term"><code>Options defined in cinder.common.config</code></span> в файле 
+		  <span class="term"><code>/etc/cinder/cinder.conf</code></span> и добавьте:</p>
+	      <pre class="screen"><code>
+glance_api_version=2</code></pre>
+          <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+           <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+           <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+           <p>Если вы используете множество систем хранения, данный параметр должен быть помещен в раздел 
+		   <span class="term"><code>[default]</code></span> файла <span class="term"><code>/etc/cinder/cinder.conf</code></span>.</p></td></tr></table>
+          </div>
+        </li><li class="listitem">
+          <p>Сохраните файл настройки Cinder и выйдите из редактора.</p>
+        </li>
+        </ol>
+        </div>
+        </li>
+       </div>
+	   
+       <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Config_Nova"> </a>Настройка Nova OpenSatck</h5>
+        </div></div></div>
+        <p>Чтобы загрузить экземпляры OpenStack непосредственно в Ceph, т.е. загрузиться с применением свойств тома, вы 
+		должны настроить эфемерное устройство хранения для Nova. Чтобы успешно выполнить это измените 
+		<span class="term"><code>/etc/nova/nova.conf</code></span>:</p>
+	    <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+          <p>Дойдите до раздела <span class="term"><code>Options defined in nova.virt.libvirt.imagebackend</code></span> и добавьте:</p>
+	      <pre class="screen"><code>
+images_type=rbd
+images_rbd_pool=rbd
+images_rbd_ceph_conf=/etc/ceph/ceph.conf</code></pre>
+        </li><li class="listitem">
+          <p>Дойдите до раздела <span class="term"><code>Options defined in nova.virt.libvirt.volume</code></span> и добавьте 
+		  (замените UUID безопасности значением вашей среды):</p>
+	      <pre class="screen"><code>
+rbd_user=cinder
+rbd_secret_uuid=63b033bb-3305-479d-854b-cf3d0cb6a50c</code></pre>
+        </li>
+        </ol>
+        </div>
+       </div>
+	   
+       <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Config_Glance"> </a>Настройка Glance OpenSatck</h5>
+        </div></div></div>
+        <p>OpenSatck Glance способен поддерживать множество систем хранения. В данном разделе мы научимся настраивать OpenSatck Glance 
+		использовать Ceph для хранения образов Glance:</p>
+	    <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+          <p>Чтобы использовать блочное устройство Ceph для хранения образов Glance измените файл 
+		  <span class="term"><code>/etc/glance/glance-api.conf</code></span> и добавьте:</p>
+  	      <div class="itemizedlist">
+	      <ul class="itemizedlist" type="circle">
+	       <li class="listitem">
+            <p>Предложение <span class="term"><code>default_store=rbd</code></span> для раздела <span class="term"><code>default</code></span> 
+			в файле <span class="term"><code>glance-api.conf</code></span></p>
+	       </li>
+	       <li class="listitem">
+          <p>Дойдите до раздела <span class="term"><code>RBD Store Options</code></span> в файле 
+		  <span class="term"><code>glance-api.conf</code></span> и добавьте:</p>
+	      <pre class="screen"><code>
+rbd_store_user=glance
+rbd_store_pool=images</code></pre>
+	       </li>
+	       <li class="listitem">
+            <p>Если у вас существует необходимость в копировании при записи (copy-on-write), установите
+			<span class="term"><code> show_image_direct_url=True</code></span></p>
+	       </li>
+          </ul>
+          </div>
+        </li><li class="listitem">
+          <p>Сохраните файл настройки Glance и выйдите из редактора.</p>
+        </li>
+        </ol>
+        </div>
+       </div>
+
+       <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Restarting_services"> </a>Перезапуск служб OpenStack</h5>
+        </div></div></div>
+        <p>Чтобы изменения вступили в силу вы должны перезапустить службы OpenStack с применением следующих команд:</p>
+	      <pre class="screen">
+# service openstack-glance-api restart
+# service openstack-nova-compute restart
+# service openstack-cinder-volume restart</pre>
+       </div>
+	   
+       <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Test_Cinder"> </a>Тестирование Cinder OpenSatck</h5>
+        </div></div></div>
+        <p>Вы можете работать с Cinder с применением CLI или GUI. Сейчас мы протестируем Cinder из каждого из этих 
+		интерфейсов.</p>
+         <div class="section">
+          <div xmlns="" class="titlepage"><div><div>
+           <h6 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Test_Glance"> </a>Применение Cinder CLI</h6>
+          </div></div></div>
+          <p>Выполните следующие шаги:</p>
+	      <div class="orderedlist">
+          <ol class="orderedlist" type="1"><li class="listitem">
+            <p>Получите исходный код файла OpenStack RDO <span class="term"><code>keystonerc_admin</code></span>, который 
+			будет автоматически создан объявлением установки OpenStack:</p>
+	        <pre class="screen">
+# source /root/keystonerc_admin</pre>
+          </li><li class="listitem">
+            <p>Создайте ваш первый том Cinder с объемом 10ГБ, который должен быть создан на вашей системе хранения Ceph 
+			по умолчанию:</p>
+	        <pre class="screen">
+# cinder create --display-name ceph-volume01 --displaydescription &quot;Cinder volume on CEPH storage&quot; 10</pre>
+	        <pre class="screen">
+[root@os-node1 ~(keystone_admin)]# cinder create —-display-name ceph-volume01 —display-description &quot;Cinder volume on CEPH storage&quot; 10
++------------------------------------------------------------+
+|       Property      |                value                 |
++---------------------+--------------------------------------+
+|     attachments     |                  []                  |
+|  availability_zone  |                 nova                 |
+|       bootable      |                false                 |
+|      created at     |      2014-O8-24TO0:09:48.299357      |
+| display_description |    Cinder volume on CEPH storage     |
+|     display.name    |            ceph-volume01             |
+|      encrypted      |                False                 |
+|          id         | 00a90cd9-c2ea-4154-b045-6a837ac343da |
+|       metadata      |                  {}                  |
+|         size        |                  10                  |
+|     snapshot_id     |                 None                 |
+|     source_volid    |                 None                 |
+|      status         |               creating               |
+|     volume_type     |                 None                 |
++---------------------+--------------------------------------+
+
+[root@os-node1 ~(keystone_admin)]#</pre>
+          </li><li class="listitem">
+            <p>Пока OpenStack Cinder создает ваш том, вы можете осуществить мониторинг вашего кластера с помощью 
+			<span class="term"><code>#ceph -s</code></span>, где вы пронаблюдаете за операциями записи в кластере.</p>
+          </li><li class="listitem">
+            <p>Наконец, проверьте состояние вашего тома Cinder; убедитесь, что состояние вашего тома Cinder является 
+			available:</p>
+	        <pre class="screen">
+# cinder list</pre>
+	        <pre class="screen">
+[rootgos-node1 ~(keystone_admin)j#
+[root@os-node1 ~(keystone_admin)]# cinder list
++--------------------------------------+-----------+---------------+------+-------------+-----------+-------------+
+|                  ID                  |   Status  |  Display Name | Size | volume Type | Bootable  | Attached to |
++--------------------------------------+-----------+---------------+------+-------------+-----------+-------------+
+I 00a90cd9-c2ea-4154-b045-6a837ac343da | available | ceph-volumeOl |  10  |     None    |  false    |             |
++--------------------------------------+-----------+---------------+------+-------------+-----------+-------------+
+[rootgos-node1 ~(keystone_admin)j#</pre>
+          </li>
+          </ol>
+          </div>
+         </div>
+		 
+         <div class="section">
+          <div xmlns="" class="titlepage"><div><div>
+           <h6 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Test_Glance"> </a>Применение GUI Horizon</h6>
+          </div></div></div>
+          <p>Вы можете создавать тома Cinder и управлять ими из инструментальной панели Horizon. Откройте веб интерфейс 
+		  OpenStack Horizon и найдите раздел томов:</p>
+	      <div class="orderedlist">
+          <ol class="orderedlist" type="1"><li class="listitem">
+            <p>Кликните на <span class="term"><span class="emphasis"><em>Create volume</em></span></span> и заполните 
+			поля подробностей о томе:</p>
+            <div class="informalfigure"><div class="mediaobject">
+             <img src="figures/Fig0913.jpg"/></div><br />
+            </div>
+          </li><li class="listitem">
+            <p>Когда вы создадите том из GUI Horizon, он отобразит состояние ваших томов:</p>
+            <div class="informalfigure"><div class="mediaobject">
+             <img src="figures/Fig0914.jpg"/></div><br />
+            </div>
+          </li><li class="listitem">
+            <p>Наконец проверьте ваш пул томов Ceph; вы можете найти объекты в вашем пуле Ceph, содержащем том с ID.
+			Например, вы можете идентифицировать имя объекта, а именно 
+			<span class="term"><code>rbd_id.volume-00a90cd9-c2ea-4154-b045-6a837ac343da</code></span> для тома Cinder c 
+			именем <span class="term"><code>ceph-volume01</code></span>, имеющий идентификатор 
+			<span class="term"><code>00a90cd9-c2ea-4154-b045-6a837ac343da</code></span> в пуле томов Ceph:</p>
+	        <pre class="screen">
+[root@os-node1 ~(keystone_admin)]# cinder list
++--------------------------------------+-----------+---------------+------+-------------+----------+-------------+
+|                  ID                  |   Status  |  Display Name | Size | volume Type | Bootable | Attached to |
++--------------------------------------+-----------+---------------+------+-------------+----------+-------------+
+| 00a90cd9-c2ea-4154-b045-6a837ac343da | available | ceph-volume01 |  10  |     None    |  false   |             |
+| ce8bl344-80d8-42d6-8e22-8c4dl7abcfeb | available | ceph-volume02 |  10  |     None    |  false   |             |
++--------------------------------------+-----------+---------------+------+-------------+----------+-------------+
+[root@os-node1 ~(keystone_admin)]#
+[root@os-node1 ~(keystone_admin)]# rados -p volumes ls
+rbd_di rectory
+rbd_header.4c381910a0d0
+rbd_header.4a885399b49f
+rbd_id.volume-ce8b1344-80d8-42d6-8e22-8c4d17abcfeb
+rbd_id.volume-00a90cd9-c2ea-4154-b045-6a837ac343da
+[root@os-nodel -(keystone_admi n)]#</pre>
+          </li><li class="listitem">
+            <p>Вы можете подключать эти тома к экземплярам виртуальных машин OpenStack как блочные хранилища и осуществлять 
+			к ним доступ на основе ваших потребностей.</p>
+          </li>
+          </ol>
+          </div>
+         </div>
+       </div>
+	   
+       <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Test_Glance"> </a>Тестирование Glance OpenSatck</h5>
+        </div></div></div>
+        <p>Вы можете использовать OpenStack Glance для хранения образов операционных систем для экземпляров. Эти образы в конечном 
+		итоге будут сохраняться в системе хранения Ceph.</p>
+        <p>Выполните следующие шаги для тестирования OpenStack Glance:</p>
+	    <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+          <p>Перед добавлением образа Glance проверьте пул образов Ceph. Поскольку мы не импортировали никакие образы, пул Ceph 
+		  должен быть пустым:</p>
+	        <pre class="screen">
+# rados -p images ls</pre>
+        </li><li class="listitem">
+          <p>Загрузите образы, которые могут быть использованы в OpenStack через интернет:</p>
+	        <pre class="screen">
+# wget http://cloud-images.ubuntu.com/precise/current/preciseserver-cloudimg-amd64-disk1.img</pre>
+	        <pre class="screen">
+[root@os-node1 glance(keystone_admin)]# wget http://cloud-images.ubuntu.com/precise/current/precise-server-cloodimg-ajnd64-diskl.img
+--2014-08-26 19:39:26-- http://cloud-images.ubuntu.com/precise/current/precise-server-cloudimg-amd64-disk1.img
+Resolving cloud-images.ubuntu.com... 91.189.88.141
+connecting to cloud-images.ubuntu.com|91.189.88.1411:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 261227008 (249M) [application/octet-stream]
+Saving to: “precise-server-cloudimg-and64-diskl.img”
+100%[=============================================================================================>) 261.227.008 6.46M/s in 52s
+2014-08-26 19:40:19 (4.76 mb/s) - “precise-server-cloudimg-amd64-disk1.img” saved [261227008/261227008]
+
+[root@os-node1 glance(keystone_admin)]#</pre>
+        </li><li class="listitem">
+          <p>Создайте образ Glance:</p>
+	        <pre class="screen">
+# glance image-create --name=&amp;ubuntu-precise-image&amp; --ispublic=True --disk-format=qcow2 --container-format=ovf &lt; precise-server-cloudimg-amd64-disk1.img</pre>
+	        <pre class="screen"><code>
+[root@os-node1 glance(keystone_admin)]# glance image-create -—name=&quot;ubuntu-precise-image&quot; -—is-public=True
+-—disk-format=qcow2 —-container-format=ovf  &lt;  precise-server-cloudimg-amd64-disk1.img
++-------------------+--------------------------------------+
+| Property          | Value                                |
++-------------------+--------------------------------------+
+| checksum          | 23034c4e06f9f012099d61d4a4e5248d     |
+| container_format  | ovf                                  |
+| created_at        | 2014-08-26T16:49:33                  |
+| deleted           | False                                |
+| deleted_at        | None                                 |
+| disk_format       | qcow2                                |
+| id                | 249cc4be-474d-4137-80f6-dc03f77b3d49 |
+| is_public         | True                                 |
+| min_disk          | 0                                    |
+| min_ram           | 0                                    |
+| name              | ubuntu-precise-image                 |
+| owner             | a84af521b50f41bba704f8dc0e1ae15d     |
+| protected         | False                                |
+| size              | 261227008                            |
+| status            | active                               |
+| updated_at        | 2014-08-26T16:50:18                  |
+| virtual_size      | None                                 |
++-------------------+--------------------------------------+
+[root@os-node1 glance(keystone_admin)]#</code></pre>
+        </li><li class="listitem">
+          <p>Проверьте список образов Glance,а также сделайте запрос к вашему пулу образов Ceph для получения идентификаторов 
+		  образов Glance:</p>
+	        <pre class="screen"><code>
+# glance image-list
+# rados -p images ls | grep -i 249cc4be-474d-4137-80f6-dc03f77b3d49</code></pre>
+	        <pre class="screen">
+[root@os-node1 glance(keystone_admin)]# glance image-list
++----------------------------------------+----------------------+-------------+------------------+------------+---------+
+| ID                                     | Name                 | Disk Format | Container Format | Size       |  Status |
++----------------------------------------+----------------------+-------------+------------------+------------+---------+
+I dll84d23-b568-49f2-9aa7-le4d2e915224   | cirros               | qcow2       | bare             | 13147648   |  active |
+| 249cc4be-474d-4137-80f6-dc03f77b3d49   | ubuntu-precise-image | qcow2       | ovf              | 261227008  |  active |
++----------------------------------------+---------------------+-------------+-------------------+------------+---------+
+[root@os-node1 glance(keystone_admin)]#
+[root@os-node1 glance(keystone_admin)]# rados -p images ls | grep -i 249cc4be-474d-4137-80f6-dc03f77b3d49
+rbd_id.249cc4be-474d-4137-80f6-dc03f77b3d49
+[root@os-node1 glance(keystone_admin)]#</pre>
+        </li><li class="listitem">
+          <p>Вывод предыдущей команды подтверждает, что мы импортировали образ Ubuntu в OpenStack Glance, который был сохранен в 
+		  томах образов Ceph.</p>
+        </li>
+        </ol>
+        </div>
+       </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В данной главе мы обсудили OpenStack и его компоненты, а также как они бесшовно интегрируются с Ceph. Демонстрационный раздел 
+   поможет вам изучить интеграцию OpenStack в пошаговом режиме, а затем протестировать каждую компоненту OpenStack. В следующей главе 
+   мы сосредоточимся на некоторых основных хитростях настройки производительности вашего кластера Ceph, а также на эталонном 
+   тестировании вашего кластера.
+   </p>
+  </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

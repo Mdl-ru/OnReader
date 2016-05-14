@@ -1,0 +1,1450 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 5. Мониторинг кластеров Ceph с применением Calamari - Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch04.html" title="Глава 4. Работа с файловой системой Ceph"/>
+<link rel="next" href="Ch06.html" title="Глава 6. Работа в кластере Ceph и управление им"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 5. Мониторинг кластеров Ceph с применением Calamari';
+PrevRef = 'Ch04.html';
+UpRef = 'index.html';
+NextRef = 'Ch06.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 5. Мониторинг кластеров Ceph с применением Calamari</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Мониторинг кластера Ceph - классический путь</p>
+	 </li><li class="listitem">
+	 <p>Мониторинг кластеров Ceph</p>
+	 </li><li class="listitem">
+	 <p>Введение в Ceph Calamari</p>
+	 </li><li class="listitem">
+	 <p>Построение пакетов Calamari сервер</p>
+	 </li><li class="listitem">
+	 <p>Построение пакетов Calamari клиент</p>
+	 </li><li class="listitem">
+	 <p>Наладка главного сервера Calamari</p>
+	 </li><li class="listitem">
+	 <p>Добавление узлов Ceph в Calamari</p>
+	 </li><li class="listitem">
+	 <p>Мониторинг кластера Ceph в инструментальной панели Calamari</p>
+	 </li><li class="listitem">
+	 <p>Обнаружение ошибок Calamari</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch05.html">5. Мониторинг кластеров Ceph с применением Calamari</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch05.html#0501">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0502">Мониторинг кластера Ceph - классический путь</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0503">Мониторинг кластеров Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0504">Наблюдение за мониторами Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0505">Мониторинг OSD Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0506">Мониторинг MDS Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0507">Введение в Ceph Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0508">Построение пакетов Calamari сервер</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0509">Построение пакетов Calamari клиент</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0510">Наладка главного сервера Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0511">Добавление узлов Ceph в Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0512">Мониторинг кластера Ceph в инструментальной панели Calamari</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0513">Обнаружение ошибок Calamari</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0501"> </a>Введение</h3>
+   </div></div></div>
+   <p>Вне зависимости от того есть ли у вас небольшой, средний или экзамасштабный кластер, мониторинг является наиболее критически важной 
+   частью вашей инфраструктуры. После окончания вами проектирования, развёртывания и реализации промышленных служб вашего кластера Ceph, 
+   мониторинг становится главной обязанностью администратора системы хранения. В данной главе мы узнаем о различных подходах к наблюдению 
+   за вашим кластером Ceph и его компонентами. Мы рассмотрим как мониторинг через командную строку (CLI), так и через графический интерфейс (GUI), 
+   использующий встроенный инструментария CLI; мы также внедрим Calamari, являющийся инструментальной панелью управления кластером Ceph с 
+   открытым исходным кодом.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0502"> </a>Мониторинг кластера Ceph - классический путь</h3>
+   </div></div></div>
+   <p>Будучи администратором системы хранения, вам необходимо отслеживать ваш кластер хранения Ceph и выяснять что происходит в нём в данный 
+   момент. Регулярное и дисциплинированное отслеживание держит вас в курсе о состоянии вашего кластера. На основании уведомлений мониторинга 
+   вы получите небольшой зазор по времени для принятия необходимых мер до отключения службы.</p>
+   <p>Наблюдение за кластером Ceph является повседневной задачей, которая включает в себя мониторинг MON, OSD, MDS, PG, а также подготовку 
+   служб хранения таких, как RBD, Radosgw, CephFS и клиентов Ceph. По умолчанию Ceph поставляется с богатым набором инструментария командной 
+   строки и API для выполнения наблюдения за этими компонентами. Кроме того, существуют проекты с открытым исходным кодом которые интенсивно 
+   развиваются для целей мониторинга кластеров Ceph в инструментальной панели единого обзора с GUI. В следующем рецепте мы сосредоточимся 
+   на инструментах CLI Ceph для мониторинга кластера.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0503"> </a>Мониторинг кластеров Ceph</h3>
+   </div></div></div>
+   <p>В этом рецепте мы будем изучать команды, применяемые для мониторинга всего кластера Ceph.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Здесь мы распространяемся о мониторинге вашего кластера Ceph. Далее шаги раскрываются в поясняющих темах.</p>
+   
+   <p class="title"><strong>Проверка жизнеспособности кластера</strong></p>
+   <p>Для проверки жизнеспособности вашего кластера примените команду <span class="term"><code>ceph</code></span> с последующим 
+   <span class="term"><code>health</code></span> в качестве параметра:</p>
+	   <pre class="screen">
+# ceph health
+	   </pre>
+   <p>Вывод этой команды будет состоять из нескольких разделов, разделяемых точкой с запятой:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph health 
+	HEALTH_WARN 64 pgs degraded; 1408 pgs stuck unclean; recovery 1/5744 objects degraded (0.017%) 
+	[root@ceph-node1 ~]# 
+	   </pre>
+   <p>Первый раздел вывода показывает что ваш кластер находится в состоянии предостережения, <span class="term"><code>HEALTH_WARN</code></span>, 
+   поскольку 64 группы размещения (<span class="term"><strong class="userinput">PG, placement groups</strong></span>) деградировали. Второй 
+   раздел представляет, что 1408 PG не очищены, третий раздел вывода представляет, что кластер выполняет восстановление 1 из 5744 объектов и 
+   этот кластер на 0.017% деградировал. Если ваш кластер жизнеспособен, вы получите вывод, что <span class="term"><code>HEALTH_OK</code></span>.</p>
+   <p>Для получения дополнительных деталей по состоянию вашего кластера примените команду <span class="term"><code>ceph health detail</code></span>.
+   Эта команда сообщит вам обо всех PG, которые не активны и не очищены, т.е. здесь будут выведены с подробностями все PG, которые не очищены, 
+   не согласованы и деградировали. Если ваш кластер в жизнеспособен, вы получите вывод, что <span class="term"><code>HEALTH_OK</code></span>.</p>
+   <p>Вывод этой команды будет состоять из нескольких разделов, разделяемых точкой с запятой:</p>
+	   <pre class="screen">
+	[root@ceph-node2 ceph]# ceph health detail 
+	HEALTH_ERR 61 pgs degraded; 6 pgs inconsistent; 1312 pgs stuck unclean; recovery 3/5746 objects degraded (0.052%); 8 scrub errors 
+	pg 9.76 is stuck unclean since forever, current state active+remapped, last acting [7,3,2] 
+	pg 8.77 is stuck unclean since forever, current state active+remapped, last acting [4,6,8] 
+	pg 7.78 is stuck unclean for 788849.714074, current state active+remapped, last acting [6,5,1] 
+	pg 6.79 is stuck unclean since forever, current state active+remapped, last acting [4,7,8] 
+	pg 5.7a is stuck unclean since forever, current state active+remapped, last acting [7,4,2] 
+	pg 4.7b is stuck unclean since forever, current state active+remapped, last acting [7,3,1] 
+	pg 11.74 is stuck unclean for 788413.925336, current state active+remapped, last acting [4,7,8] 
+	pg 10.75 is stuck unclean for 788412.797947, current state active+remapped, last acting [7,3,0] 
+	   </pre>
+   <p class="title"><strong>Мониторинг событий кластера</strong></p>
+   <p>Вы можете наблюдать за событиями кластера применяя команду <span class="term"><code>ceph</code></span> с параметром 
+   <span class="term"><code>-w</code></span>. Эта команда высветит сообщения обо всех событиях вашего кластера, включая информационные (INF),
+   предостерегающие (WRN) и сообщения об ошибках (ERR) в реальном времени. Вывод данной команды будет непрерывным, изменяемым кластеров вживую;
+   для возврата в оболочку вы можете применить <span class="emphasis"><em><code>Ctrl + C</code></em></span>:</p>
+	   <pre class="screen">
+# ceph -w
+
+	[root@ceph-node1 ~]# ceph -w 
+	    cluster 9609b429-eee2-4e23-af31-28a24fcf5cbc 
+	     health HEALTH_OK 
+	     monmap e3: 3 mons at {ceph-node1=192.168.1.101:6789/0,ceph-node2=192.168.1.102:6789/0,ceph-node3=192.168.1.103:6789/0}, election epoch 640, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3 
+	     mdsmap e68: 1/1/1 up {0=ceph-node2=up:active} 
+	     osdmap e1821: 9 osds: 9 up, 9 in 
+	      pgmap v20731: 1628 pgs, 45 pools, 2422 MB data, 3742 objects 
+	            7605 MB used, 127 GB / 134 GB avail 
+	                1628 active+clean 
+	
+	2015-06-06 20:13:27.047075 mon.0 [INF] pgmap v20731: 1628 pgs: 1628 active+clean; 2422 MB data, 7605 MB used, 127 GB / 134 GB avail; 7931 kB/s, 1 objects/s recovering 
+	2015-06-06 20:14:25.958762 mon.0 [INF] from.'client.? 192.168.1.103:0/1008239' entity='cli ent.admin' cmd.[{&quot;prefix&quot;: &quot;pg repair&quot;, &quot;pgid&quot;: &quot;43.29&quot;}]: dispatch 
+	2015-06-06 20:14:32.031029 mon.0 [INF] pgmap v20732: 1628 pgs: 1628 active+clean; 2422 MB data, 7605 MB used, 127 GB / 134 GB avail 
+	2015-06-06 20:14:57.541278 mon.0 [INF] pgmap v20733: 1628 pgs: 1628 active+clean; 2422 MB data, 7621 MB used, 127 GB / 134 GB avail 
+	2015-06-06 20:15:02.371735 mon.0 [INF] pgmap v20734: 1628 pgs: 1628 active+clean; 2422 MB data, 7633 MB used, 127 GB / 134 GB avail 
+	   </pre>
+   <p>Существуют также прочие параметры, которые могут применяться с командой <span class="term"><code>ceph</code></span> для сбора различных 
+   типов подробностей сообщений. Это:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--watch-debug</code></strong></span>: для отслеживания сообщений отладки</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--watch-info</code></strong></span>: для отслеживания информационных сообщений</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--watch-sec</code></strong></span>: для отслеживания сообщений безопасности</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--watch-warn</code></strong></span>: для отслеживания предупреждающих сообщений</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--watch-error</code></strong></span>: для отслеживания сообщений об ошибке</p>
+	 </li>
+    </ul>
+    </div>
+   <p class="title"><strong>Статистика использования кластера</strong></p>
+   <p>Чтобы узнать статистику использования пространства вашего кластера примените команду <span class="term"><code>ceph</code></span> с параметром 
+   <span class="term"><code>df</code></span>. Эта команда покажет общий размер кластера, доступный размер, используемый размер и проценты. Она также 
+   высветит информацию о пулах, такую как имя пула, идентификатор, использование и число объектов в каждом пуле:</p>
+	   <pre class="screen">
+# ceph df
+
+	[root@ceph-node1 ..]# ceph df 
+	GLOBAL:
+	    SIZE     AVAIL      RAW USED       %RAW USED
+		134G       127G        7440M            5.39
+	POOLS: 
+	    NAME                              ID      USED      %USED     MAX AVAIL     OBJECTS 
+	    rbd                               0         114M     0.08        42924M        2629 
+	    images                            1       53002k     0.04        42924M          12 
+	    volumes                           2           47        0        42924M           8 
+	    vms                               3         208M     0.15        42924M          31 
+	    .rgw.root                         4          162        0        42924M           2 
+	    .rgw.control                      5            0        0        42924M           8 
+	    .rgw                              6         2731        0        42924M          15 
+	    .rgw.gc                           7            0        0        42924M          32 
+	    .users.uid                        8          736        0        42924M           4 
+	    .users.email                      9            8        0        42924M           1 
+	    .users                            10          16        0        42924M           2 
+	    .users.swift                      11           8        0        42924M           1 
+	    .rgw.buckets.index                12           0        0        42924M           9 
+	    .rgw.buckets                      13        1744        0        42924M           4 
+	   </pre>
+   <p class="title"><strong>Проверка состояния кластера</strong></p>
+   <p>Проверка состояния кластера является наиболее общей и наиболее частой операцией при управлении кластером Ceph. Вы можете проверить состояние 
+   вашего кластера с применением команды <span class="term"><code>ceph</code></span> и <span class="term"><code>status</code></span> в качестве 
+   параметра:</p>
+	   <pre class="screen">
+# ceph status
+	   </pre>
+   <p>Вместо подкоманды <span class="term"><code>status</code></span> вы можете применить более короткую версию, <span class="term"><code>-s</code></span>,
+   как опцию:</p>
+	   <pre class="screen">
+# ceph -s
+	   </pre>
+   <p>Следующий снимок экрана покажет состояние нашего кластера:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph -s 
+	    cluster 9609b429-eee2-4e23-af31-28a24fcf5cbc 
+	    health HEALTH_OK 
+	    monmap e3: 3 mons at {ceph-node1=192.168.1.101:6789/0,ceph-node2=192.168.1.102:6789/0,ceph-node3=192.168.1.103:6789/0}, election epoch 640, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3 
+	    mdsmap e73: 1/1/1 up {0=ceph-node2=up:active} 
+	    osdmap el823: 9 osds: 9 up, 9 in 
+	     pgmap v20762: 1628 pgs, 45 pools, 2422 MB data, 3742 objects 
+	           7440 MB used, 127 GB / 134 GB avail 
+	               1628 active+clean 
+	[root@ceph-node1 ~]# 
+	   </pre>
+   <p>Эта команда выводит на экран массу полезной информации для вашего кластера Ceph:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>cluster</code></strong></span>: Эта команда представляет ваш уникальный 
+	 идентификатор кластера Ceph.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>health</code></strong></span>: Эта команда показывает жизнеспособность кластера</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>monmap</code></strong></span>: Эта команда представляет версию эпохи карты 
+	 монитора, информацию о мониторе, версию эпохи выбора монитора и состояние кворума монитора.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>mdsmap</code></strong></span>: Эта команда представляет вашу версию эпохи 
+	 <span class="term"><code>mdsmap</code></span> и ваше состояние <span class="term"><code>mdsmap</code></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>osdmap</code></strong></span>: Эта команда представляет вашу эпоху 
+	 <span class="term"><code>osdmap</code></span>, общее число OSD (total), число работающих OSD (up) и число OSD в наличии (in).</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>pgmap</code></strong></span>: Эта команда показывает вашу версию 
+	 <span class="term"><code>pgmap</code></span>, общее число PG, число пулов, используемая ёмкость для одной копии, а также общее 
+	 число объектов. Она также отображает информацию об использовании кластера, включая размер использования, размер свободного пространства 
+	 и общий размер. Наконец, она отображает состояние PG.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Чтобы увидеть состояние кластера в реальном времени, вы можете применить <span class="term"><code>ceph status</code></span> 
+		 в команде Linux <span class="term"><code>watch</code></span>:</p>
+	   <pre class="screen">
+# watch ceph -s
+	   </pre>
+		 </td></tr></table>
+       </div>
+	 </li>
+    </ul>
+    </div>
+   <p class="title"><strong>Записи аутентификации вашего кластера</strong></p>
+   <p>Ceph работает с системой аутентификации на основе ключей. Все компоненты кластера взаимодействуют друг с другом раз они подвергаются 
+   аутентификации системы на основе ключей. Вы можете применить команду <span class="term"><code>ceph</code></span> с подкомандой 
+   <span class="term"><code>auth list</code></span> для получения списка всех ваших ключей:</p>
+	   <pre class="screen">
+# ceph auth list
+	   </pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Чтобы узнать больше об операциях команды вы можете использовать <span class="term"><code>help</code></span> в качестве дополнительного 
+		 параметра. Например, выполните <span class="term"><code># ceph auth --help</code></span> и примените команду согласно предписаниям подсказки.</p>
+		 </td></tr></table>
+       </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0504"> </a>Наблюдение за мониторами Ceph</h3>
+   </div></div></div>
+   <p>Обычно кластер Ceph развёртывается с более чем одним экземпляром MON для высокой доступности. Так как существует большое число мониторов, 
+   они должны достигать кворума для поддержки надлежащего функционирования кластера.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Мы сосредоточимся сейчас на командах для наблюдения за мониторами. Шаги будут раскрываться в поясняющих темах.</p>
+   
+   <p class="title"><strong>Проверка состояния монитора</strong></p>
+   <p>Для отображения состояния монитора кластера и карты MAP воспользуйтесь командой <span class="term"><code>ceph</code></span> с дополнительным 
+   параметром  либо <span class="term"><code>mon stat</code></span> либо <span class="term"><code>mon dump</code></span>:</p>
+	   <pre class="screen">
+# ceph mon stat
+# ceph mon dump
+	   </pre>
+   <p>Следующий снимок экрана отображает вывод этих команд:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph mon stat 
+	e3: 3 mons at {ceph-node1=192.168.1.101:6789/0,ceph-node2=192.168.1.102:6789/0,ceph-node3 =192.168.1.103:6789/0}, election epoch 640, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ceph mon dump 
+	dumped monmap epoch 3 
+	epoch 3 
+	fsid 9609b429-eee2-4e23-af31-28a24fcf5cbc 
+	last_changed 2015-03-18 00:20:07.092486 
+	created 0.000000 
+	0: 192.168.1.101:6789/0 mon.ceph-node1 
+	1: 192.168.1.102:6789/0 mon.ceph-node2 
+	2: 192.168.1.103:6789/0 mon.ceph-node3 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	   
+   <p class="title"><strong>Проверка состояния кворума мониторов</strong></p>
+   <p>Для поддержания кворума между мониторами Ceph кластер всегда должен иметь более половины доступных в кластере мониторов. Проверка 
+   состояния кворума вашего кластера очень полезна во время определения проблем с мониторами. Вы можете проверить состояние кворума 
+   при помощи команды <span class="term"><code>ceph</code></span> с подкомандой <span class="term"><code>quorum_status</code></span>:</p>
+	   <pre class="screen">
+# ceph quorum_status -f json-pretty
+	   </pre>
+   <p>Следующий снимок отображает вывод этой команды:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph quorum_status -f json-pretty 
+	
+	{ &quot;election_epoch&quot;: 640, 
+	  &quot;quorum&quot;: [ 
+	        0, 
+	        1, 
+	        2], 
+	  &quot;quorum_names&quot;: [ 
+	        &quot;ceph-node1&quot;, 
+	        &quot;ceph-node2&quot;, 
+	        &quot;ceph-node3&quot;], 
+	  &quot;quorum_leader_name&quot;: &quot;ceph-node1&quot;, 
+	  &quot;monmap&quot;: { &quot;epoch&quot;: 3, 
+	      &quot;fsid&quot;: &quot;9609b429-eee2-4e23-af31-28a24fcf5cbc&quot;, 
+	      &quot;modified&quot;: &quot;2015-03-18 00:20:07.092486, 
+	      &quot;created&quot;: &quot;0.000000&quot;, 
+	      &quot;mons&quot;: [
+		        { &quot;rank&quot;: 0, 
+	              &quot;name&quot;: &quot;ceph-node1&quot;, 
+	              &quot;addr&quot;: &quot;192.168.1.101:6789\/0&quot;}, 
+	            { &quot;rank&quot;: 1, 
+				  &quot;name&quot;: &quot;ceph-node2&quot;, 
+	              &quot;addr&quot;: &quot;192.168.1.102:6789\/0}, 
+	            { &quot;rank&quot;: 2, 
+	              &quot;name&quot;: &quot;ceph-node3&quot;, 
+	              &quot;addr&quot;: &quot;192.168.1.103:6789\/0&quot;}]}} 
+	[root@ceph-node1 ~]# 
+	   </pre>
+   <p>Состояние кворума высвечивает <span class="term"><code>election_epoch</code></span>, что является номером версии выборов и
+   <span class="term"><code>quorum_leader_name</code></span>, которое обозначает имя вашего хоста, руководящего кворумом. Оно также 
+   отображает эпоху карты монитора и идентификатор кластера. Каждому монитору кластера выделяется ранг. Для операций ввода/ вывода 
+   клиенты вначале соединяются с ведущим монитором кворума; если ваш ведущий монитор недоступен, клиент тогда соединяется со следующим 
+   по рангу монитором.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Для генерации форматированного вывода команды Ceph применяйте параметр <span class="term"><code>-f json-pretty</code></span>.</p>
+		 </td></tr></table>
+       </div>
+
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0505"> </a>Мониторинг OSD Ceph</h3>
+   </div></div></div>
+   <p>Мониторинг OSD является решающей задачей и требует полного внимания, поскольку существует множество OSD для наблюдения и заботы. 
+   Чем больше ваш кластер, тем больше OSD он будет иметь и тем более скурпулёзное наблюдение вам потребуется. Обычно хосты кластеров Ceph 
+   заполнены большим числом дисков, поэтому вероятность столкнуться с отказом OSD очень высока.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Мы сосредоточимся сейчас на командах для наблюдения за OSD. Шаги будут раскрываться в последующих поясняющих темах:</p>
+
+   <p class="title"><strong>Обзор дерева OSD</strong></p>
+   <p>Обзор дерева OSD очевидно полезен для получения информации о состояниях OSD таких как <span class="term"><code>IN</code></span> или 
+   <span class="term"><code>OUT</code></span> и <span class="term"><code>UP</code></span> или <span class="term"><code>DOWN</code></span>.
+   Обзор дерева OSD отображает все узлы со всеми их OSD и их местоположение в карте CRUSH. Вы можете попробовать отображение своего 
+   дерева OSD с применением следующей команды:</p>   
+	   <pre class="screen">
+# ceph osd tree
+
+	[root@ceph-node1 ~]# ceph osd tree 
+	# id    weight  type name       up/down reweight 
+	-1      0.08995 root default 
+	-2      0.02998         host ceph-node1 
+	0       0.009995                        osd.0   up      1 
+	1       0.009995                        osd.1   up      1 
+	2       0.009995                        osd.2   up      1 
+	-3      0.02998         host ceph-node2 
+	3       0.009995                        osd.3   up      1 
+	4       0.009995                        osd.4   up      1 
+	5       0.009995                        osd.5   up      1 
+	-4      0.02998         host ceph-node3 
+	6       0.009995                        osd.6   up      1 
+	7       0.009995                        osd.7   up      1 
+	8       0.009995                        osd.8   up      1 
+[root@ceph-node1 ~]# 
+	   </pre>
+   <p>эта команда отображает различную полезную информацию для OSD Ceph, такую как вес, состояние <span class="term"><code>UP/DOWN</code></span>
+   и <span class="term"><code>IN/OUT</code></span>. Выдача будет прекрасно отформатирована в виде вашей карты Ceph CRUSH. Если вы 
+   сопровождаете большой кластер, этот формат даст вам преимущества определения местоположения OSD и его сервера хоста в длинном 
+   перечне.</p>
+   
+   <p class="title"><strong>Статистика OSD</strong></p>
+   <p>Чтобы проверить статистику OSD, примените <span class="term"><code># ceph osd stat</code></span>; эта команда поможет вам получить 
+   эпоху карты, общее число OSD и их состояния <span class="term"><code>IN</code></span> и <span class="term"><code>UP</code></span>.</p>
+   <p>Для получения подробной информации о кластере Ceph и OSD выполните следующую команду:</p>
+	   <pre class="screen">
+# ceph osd dump
+	   </pre>
+   <p>Это очень полезная команда, которая выведет эпоху карты ваших OSD, подробности пула, включающие его идентификатор, имя пула, тип пула, 
+   т.е. реплицируемый или затираемый (erasure, кодируемый), набор правил CRUSH и PG. Эта команда также отобразит информацию по каждому OSD, 
+   такую как идентификатор OSD, его состояние, вес, эпоху интервала последней очистки и тому подобное. Вся эта информация очень полезна для 
+   мониторинга кластера и обнаружения ошибок.</p>
+   <p>Вы также можете сделать чёрный список OSD для предотвращения их соединения с прочим OSD с тем, чтобы не осуществлялся никакой процесс 
+   тактов определения жизнеспособности. В основном он применяется для предотвращения запаздываний сервера метаданных в создании 
+   плохих изменений данных в вашем OSD, чёрнные списки ведутся Ceph самостоятельно и не требуют ручного вмешательства, однако о них стоит 
+   знать.</p>
+   <p>Для отображения клиентов в чёрном списке выполните следующую команду:</p>
+	   <pre class="screen">
+# ceph osd blacklist ls
+	   </pre>
+   
+   <p class="title"><strong>Проверка вашей карты CRUSH</strong></p>
+   <p>Вы можете запрашивать свою карту CRUSH непосредственно из команд <span class="term"><code># ceph osd</code></span>. Утилита командной 
+   строки карты CRUSH может сохранить много времени системного администратора, по сравнению с обычным способом просмотра и её редактирования 
+   после декомпиляции вашей карты CRUSH:</p>   
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Для просмотра карты CRUSH выполните следующую команду:</p>
+	   <pre class="screen">
+# ceph osd crush dump
+	   </pre>
+	 </li><li class="listitem">
+	 <p>Для просмотра правил карты CRUSH выполните следующую команду:</p>
+	   <pre class="screen">
+# ceph osd crush rule list
+	   </pre>
+	 </li><li class="listitem">
+	 <p>Для просмотра подробностей правил карты CRUSH выполните следующую команду:</p>
+	   <pre class="screen">
+# ceph osd crush rule dump &lt;crush_rule_name&gt;
+	   </pre>
+	 </li>
+   </ul>
+   </div>
+   <p>Следующий рисунок отображает вывод нашего запроса карты CRUSH:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph osd crush rule list 
+	[
+	  &quot;replicated_rulesee] 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ceph osd crush rule dump replicated_ruleset 
+	{ &quot;rule_id&quot;: 0, 
+	  &quot;rule_name&quot;: &quot;replicated_ruleset&quot;, 
+	  &quot;ruleset&quot;: 0, 
+	  &quot;type&quot;: 1, 
+	  &quot;min_size&quot;: 1, 
+	  &quot;maxsize&quot;: 10, 
+	  &quot;steps&quot;: [ 
+	        { &quot;op&quot;: &quot;take&quot;, 
+	          &quot;item&quot;: -1, 
+	          &quot;item_name&quot;: &quot;default&quot;}, 
+	        { &quot;op&quot;: &quot;chooseleaf_firstn&quot;, 
+	          &quot;num&quot;: 0, 
+	          &quot;type&quot;: &quot;host&quot;}, 
+	        { &quot;op&quot;: &quot;emit&quot;}]} 
+	[root@ceph-node1 ~]# 
+	   </pre>
+   <p>Если вы управляете большим кластером с несколькими сотнями OSD, иногда бывает трудно найти местоположение определённого OSD в карте 
+   CRUSH. Это также трудно сделать, если ваша карта CRUSH содержит множественную иерархию сегментов (bucket). Вы можете воспользоваться 
+   <span class="term"><code>ceph osd find</code></span> для поиска некоего OSD и определении его местоположения в карте CRUSH:</p>
+	   <pre class="screen">
+# ceph osd find &lt;Numeric_OSD_ID&gt;
+
+	[root@ceph-node1 ~]# ceph osd find 4 
+	{ &quot;osd&quot;: 4, 
+	  &quot;ip&quot;: &quot;192.168.1.102:6811\/3897&quot;, 
+	  &quot;crush_location&quot;: { &quot;host&quot;: &quot;ceph-node2&quot;, 
+	      &quot;root&quot;: &quot;default}}
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]#
+	   </pre>
+   
+   <p class="title"><strong>Мониторинг PG</strong></p>
+   <p>OSD хранят PG, причём каждая PG содержит объекты. Общая жизнеспособность кластера в основном зависит от PG. Кластер будет оставаться в 
+   состоянии <span class="term"><code>HEALTH_OK</code></span> только если все PG находятся в состоянии <span class="term"><code>active</code></span> 
+   + <span class="term"><code>clean</code></span>. Если ваш кластер Ceph испытывает проблемы с жизнеспособностью, то существует вероятность, что 
+   ваши группы размещения не <span class="term"><code>active</code></span> + <span class="term"><code>clean</code></span>. Группы размещения 
+   могут существовать в различных состояниях, и даже в комбинации состояний. Вот некоторые состояния, в которых могут находиться PG:</p> 
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>Creating</code></span>: PG создана.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Peering</code></span>: Процесс приведения в действие всех ваших OSD которые хранят PG в соответствие между 
+	 состоянием всех объектов включая их метаданные в этой PG {<span class="emphasis"><em>Прим. пер.: одноранговый обмен</em></span>}.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Active</code></span>: когда операция однорангового обмена завершится, Ceph отображает все PG как активные.
+	 В активном состоянии данные в вашей PG доступны в первичной PG и её реплике для операций вводо/ вывода.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Clean</code></span>: Состояние очищено означает, что первичный и вторичный OSD успешно выполнили одноранговый обмен 
+	 и никакие PG не перемещаются из своего правильного местоположения. Оно также показывает, что PG реплицированы необходимое число раз.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Down</code></span>: Это означает, что реплика со своими необходимыми данными отключена, поэтому PG выключена.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Degraded</code></span>: Когда OSD переходит в <span class="term"><code>DOWN</code></span>, Ceph изменяет 
+	 состояние всех своих PG, которые назначены на этот OSD на <span class="term"><code>DEGRADED</code></span>. После того как OSD становится 
+	 <span class="term"><code>UP</code></span>, оно должно выполнить одноранговый обмен вновь чтобы очистить деграировашие PG. Если OSD 
+	 остаётся <span class="term"><code>DOWN</code></span> и <span class="term"><code>OUT</code></span> более чем 300 секунд, Ceph выполняет 
+	 восстановление всех своих деградировавших PG из PG их реплик для поддержания необходимого количества реплик. Клиенты могут выполнять 
+	 ввод/ вывод даже после того как PG находятся в деградировавшем состоянии.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Recovering</code></span>: Когда OSD переходит в <span class="term"><code>DOWN</code></span>, содержимое этих PG 
+	 такого OSD берётся из содержимого PG реплик в других OSD. Когда OSD возвращается в <span class="term"><code>UP</code></span>, Ceph 
+	 инициирует операцию восстановления этой PG чтобы поддержать её актуальность с PG реплики и прочих OSD.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Backfilling</code></span>: Когда новое OSD добавлен в ваш кластер, Ceph пытается выполнить балансировку данных 
+	 перемещая некоторые PG с других OSD на этот новое OSD; этот процесс называется заплонением (backfilling). Когда заполнение выполнится для 
+	 данной PG, ваше OSD может принимать участие в вводе/ выводе клиента.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Remapped</code></span>: Всякий раз когда существуют изменения в вашем действующем наборе (acting set) PG, происходит 
+	 миграция данных со старого действующего набора OSD на новый действующий набор OSD. Эта операция может занять некоторое время в зависимости 
+	 от размера данных которое подлежит миграции на новый OSD. В течение этого времени старый первичный OSD старого действующего набора 
+	 обслуживает запросы клиентов. Как только операция миграции завершится, Ceph воспользуется новым первичным OSD из этой действующем наборе.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Под действующим набором (acting set) понимается группа OSD отвечающая за PG. Первичный OSD называется первым OSD из действующего набора 
+		 и он отвечает за ваши операции одорангового обмена для каждой PG с их вторичными/ третичными OSD. Он также принимает операции записи 
+		 от клиентов. Ваш OSD, будучи включённым <span class="term"><code>UP</code></span>, остаётся в активном наборе. Как только первичный OSD 
+		 становится <span class="term"><code>DOWN</code></span>, вначале он удаляется из набора включённых (<span class="term"><code>UP</code></span>); 
+		 ваш вторичный OSD переводится в состояние первичного OSD.</p>
+		 </td></tr></table>
+       </div>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>Stale</code></span>: OSD Ceph выдают сообщение о своей статистике монитору Ceph каждые 0.5 секунд; если их первичные 
+	 OSD действующего набора OSD возможно отказывают в предоставлении сообщений своей статистики мониторам, или прочие OSD сообщили что первичный OSD
+	 перешёл в <span class="term"><code>DOWN</code></span>, монитор рассматривает эту PG как утратившую силу (stale).</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Вы можете пронаблюдать за PG применив следующие команды:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Чтобы получить состояние PG, выполните <span class="term"><code># ceph pg stat</code></span>:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph pg stat 
+	v20780: 1628 pgs: 1628 active+clean; 2422 MB data, 7440 MB used, 127 GB / 134 GB avail 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 <p>Вывод команды <span class="term"><code>pg stat</code></span> отобразит много информации в специфическом формате:
+	 <span class="term"><code>vNNNN: X pgs: Y active+clean; R MB data, U MB used, F GB / T GB avail</code></span>.</p>
+	 <p>Где переменные определены следующим образом:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	   <p><span class="term"><strong class="userinput"><code>vNNNN</code></strong></span>: Это номер версии карты вашей PG</p>
+	   </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput"><code>X</code></strong></span>: Общее число PG</p>
+	   </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput"><code>Y</code></strong></span>: Число PG, которые имеют состояние 
+	   <span class="term"><code>active+clean</code></span></p>
+	   </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput"><code>R</code></strong></span>: сохранённые сырые данные</p>
+	   </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput"><code>U</code></strong></span>: реально сохранённые после репликаций данные</p>
+	   </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput"><code>F</code></strong></span>: оставшаяся свободная ёмкость</p>
+	   </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput"><code>T</code></strong></span>: Общая ёмкость</p>
+	   </li>
+     </ul>
+     </div>
+	 </li><li class="listitem">
+	 <p>Для получения списка PG, выполните следующее:</p>
+	   <pre class="screen">
+# ceph pg dump -f json-pretty
+	   </pre>
+	 <p>Эта команда сгенерирует много существенной информации по отношению к PG, например версию карты PG, идентификатор PG, 
+	 состояние PG, действующий набор, первичный действующий набор и тому подобное. Вывод этой команды может быть гигантским в зависимости от 
+	 числа PG в вашем кластере.</p>
+	 </li><li class="listitem">
+	 <p>Чтобы запросить подробную информацию для определённой PG выполните следующую команду, имеющую такой синтаксис
+	 <span class="term"><code>ceph pg &lt;PG_ID&gt; query</code></span>:</p>
+	   <pre class="screen">
+# ceph pg 2.7d query
+	   </pre>
+	 </li><li class="listitem">
+	 <p>Чтобы выдать перечень застрявших (stuck) PG выполните следующую команду, имеющую такой синтаксис
+	 <span class="term"><code>ceph pg dump_stuck &lt; unclean | Inactive | stale &gt; query</code></span>:</p>
+	   <pre class="screen">
+# ceph pg dump_stuck unclean
+	   </pre>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0506"> </a>Мониторинг MDS Ceph</h3>
+   </div></div></div>
+   <p>Серверы метаданных используются исключительно для CephFS, которая пока не готова к промышленному применению на настоящий момент.
+   Сервер метаданных имеет различные состояния, такие как, <span class="term"><code>UP</code></span>, <span class="term"><code>DOWN</code></span>,
+   <span class="term"><code>ACTIVE</code></span> и <span class="term"><code>INACTIVE</code></span>. При выполнении мониторинга 
+   MDS вам следует проверять что состояние MDS <span class="term"><code>UP</code></span> и <span class="term"><code>ACTIVE</code></span>.
+   Следующие команды помогут вам получит информацию связанную с MDS Ceph.</p> 
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Мы сосредоточимся сейчас на командах для наблюдения за OSD. Шаги будут раскрываться в последующих поясняющих темах:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Проверьте перечень файловых систем CephFS:</p>
+	   <pre class="screen">
+# ceph fs ls
+	   </pre>
+	 </li><li class="listitem">
+      <p>Проверьте состояние MDS:</p>
+	   <pre class="screen">
+# ceph mds stat
+	   </pre>
+	 </li><li class="listitem">
+      <p>Отобразите подробности вашего сервера метаданных:</p>
+	   <pre class="screen">
+# ceph mds dump
+
+	[root@ceph-node1 ~]# ceph fs ls 
+	name: cephfs, metadata pool: cephfs_metadata, data pools: [cephfs_data ] 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ceph mds stat 
+	e73: 1/1/1 up {O=ceph-node2=up:active} 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ceph mds dump 
+	dumped mdsmap epoch 73 epoch 73 
+	flags 0 
+	created 2015-05-19 00:18:45.398790 
+	modified        2015-06-06 20:15:21.386153 
+	tableserver     0 
+	root    0 
+	session_timeout 60 
+	session_autoclose       300 
+	max_file_size   1099511627776 
+	last failure    0 
+	last_failure_osd_epoch  1822 
+	compat compat={},rocompat=11,incompat={1=base v0.20,2=client writeable ranges,3=default file layouts on dirs,4=dir inode in separate object,5=mds uses versioned encoding,6=dirfrag is stored in omap,8=no anchor table} 
+	max_mds 1 
+	in      0 
+	up      {0=47181} 
+	failed 
+	stopped 
+	data_pools     43 
+	metadata_pool  44 
+	inline_data    disabled 
+	47181: 192.168.1.102:6800/7314 'ceph-node2' mds 0.15 up:active seq 6 
+	[root@ceph-node1 ~]#
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0507"> </a>Введение в Ceph Calamari</h3>
+   </div></div></div>
+   <p>Calamari является платформой управления для Ceph; привлекательной инструментальной панелью для мониторинга и управления вашим кластером 
+   Ceph. Она была изначально разработана компанией Inktank как проприетарное программное обеспечение, и была продуктом Inktank Ceph 
+   Enterprise, который предлагался их пользователям. Сразу после приобретения Inktank компанией Red Hat, она стала открытым исходным кодом 
+   Red Hat, 30 мая 2014. Calamari имеет различные великолепные наборы функциональности, а их последующая дорожная карта весьма впечатляет. 
+   Calamari имеет две части, причём каждая часть имеет свои собственные репозитории:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">Frontend</strong></span>: Это основанный на браузере графический интерфейс 
+	 пользователя, который в основном реализован на JavaScript. Часть внешнего интерфейса (Frontend) применяет Calamari REST API и 
+	 строится на модульной основе, поэтому каждый компонент внешнего интерфейса может обновляться независимо. Внешний интерфейс 
+	 Calamari стал открытым исходным кодом с лицензией <a class="link" href="https://ru.wikipedia.org/wiki/Лицензия_MIT" 
+	 target="_top">MIT</a>; вы можете найти его в репозитории <a class="link" href="https://github.com/ceph/calamari-clients" 
+	 target="_top">https://github.com/ceph/calamari-clients</a>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Backend</strong></span>: Серверная часть (Backend) Calamari является ядром платформы, 
+	 которое написано на Python. Она также применяет прочие компоненты, такие как SaltStack, ZeroRPC, graphite, Django-rest-framework, Django, 
+	 gevent и тому подобные, а также предоставляет новый REST API для интеграции с Ceph и другими системами. Calamari был переделан в 
+	 своей новой версии, в которой он использует REST API для взаимодействия сосвоим кластером Ceph. Предыдущая редакция Calamari применяла 
+	 Ceph REST API, который является слегка ограничительным для этих целей. Серверная часть Calamari является открытым исходным кодом с лицензией 
+	 <a class="link" href="https://ru.wikipedia.org/wiki/GNU_Lesser_General_Public_License" target="_top">LGPL2+</a>; вы можете найти её 
+	 репозиторий по адресу; <a class="link" href="https://github.com/ceph/calamari" target="_top">https://github.com/ceph/calamari</a>.</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Calamari имеет хорошую документацию доступную на <a class="link" href="http://calamari.readthedocs.org" 
+   target="_top">http://calamari.readthedocs.org</a>; являетесь ли вы оператором или разработчиком, работающим над Calamari или разработчиком, 
+   применяющим Calamati REST API, эта документация является хорошим источником информации для начала вашей работы с Calamari. Как и Ceph, 
+   Calamari разрабатывается как восходящий продукт; вы можете включиться в Calamari на IRC по адресу <a class="link" href="irc://irc.oftc.net/ceph" 
+   target="_top">irc://irc.oftc.net/ceph</a>, зарегистрироваться в почтовой рассылке на <a class="link" href="mailto:ceph-calamari@ceph.com" 
+   target="_top">ceph-calamari@ceph.com</a>, или послав запрос на учётную запись Calamari GitHub на 
+   <a class="link" href="https://github.com/ceph/calamari" target="_top">https://github.com/ceph/calamari</a> и 
+   <a class="link" href="https://github.com/ceph/calamariclients" target="_top">https://github.com/ceph/calamariclients</a>.</p>
+   <p>В настоящее время Calamari не предоставляет готовых к установке пакетов, поэтому вам придётся построить их для своей среды. В этом рецепте 
+   мы изучим построение пакетов сервера Calamari Ceph из исходных кодов. Построение таких пакетов иногда является серъёзным вызовом, поскольку 
+   вы можете не выполнить его одним ударом. Поэтому, чтобы уменьшить сложность, я построил такие пакеты для вас и вы можете их загрузить с 
+   <a class="link" href="https://github.com/ksingh7/cephcalamari-packages" target="_top">https://github.com/ksingh7/cephcalamari-packages</a>, 
+   поэтому можете пропустить следующие два рецепта, напрямую перескочив на <a class="link" href="Ch05.html#0510" target="_top">необходимые 
+   условия для установки</a>. Для тех, кому интересно построение пакетов из исходных кодов, давайте приступим. 
+   {<span class="emphasis"><em>Прим. пер.: также см. <a class="link" href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch15.html" 
+   target="_top">Глава 15. Инструменты разработки</a> в нашем переводе &quot;Как работает Linux&quot; Брайана Варда</em></span>}.</p>
+   <p></p>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0508"> </a>Построение пакетов Calamari сервер</h3>
+   </div></div></div>
+   <p>Calamari предоставляет готовую к применению конфигурацию Vagrant для некоторых типов ОС. Определите тип 
+   вашего работающего хоста Calamari, для которого вы хотите построить пакеты; в нашем случае это CentOS7.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050801"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Клонируйте репозиторий сервера Calamari с применением следующей команды:</p>
+	   <pre class="screen">
+$ git clone https://github.com/ceph/calamari.git
+	   </pre>
+	 </li><li class="listitem">
+      <p>Diamond является демоном Python, который собирает метрики системы и публикует их в Graphite. Он способен собирать метрики 
+	  ЦПУ, оперативной памяти, сетевой среды, ввода/ вывода, нагрузок и дисков. Для дополнительной информации по Diamond обратитесь к 
+	  <a class="link" href="http://diamond.readthedocs.org/" target="_top">http://diamond.readthedocs.org/</a>. В настоящее время 
+	  Calamari производит своё собственное ответвление Diamond. Для получения Diamond клонируйте следующий репозиторий:
+	  </p>
+	   <pre class="screen">
+$ cd calamari/vagrant/centos-build
+	   </pre>
+	 </li><li class="listitem">
+      <p>В репоитории <span class="term"><code>calamari</code></span> вы найдёте каталог <span class="term"><code>vagrant</code></span>, 
+	  который предоставляет среду разработки для различных типов операционных систем. Переместитесь в следующий путь для CentOS:</p>
+	   <pre class="screen">
+	teeri:git ksinghS git clone https://github.com/ceph/calamari.git 
+	Cloning into 'calamari'... 
+	remote: Counting objects: 11265, done. 
+	remote: Total 11265 (delta 0), reused 0 (delta 0), pack-reused 11265 
+	Receiving objects: 100% (11265/11265), 20.83 MiB 1 1.62 MiB/s, done. 
+	Resolving deltas: 100% (6064/6064), done. 
+	Checking connectivity... done. 
+	teeri:git ksinghS 
+	teeri:git ksinghS git clone https://github.com/ceph/Diamond.git --branch.calamari 
+	Cloning into 'Diamond'... 
+	remote: Counting objects: 18182, done. 
+	remote: Total 18182 (delta 0), reused 0 (delta 0), pack-reused 18182 
+	Receiving objects: 100% (18182/18182), 4.15 MiB 1 2.28 MiB/s, done. 
+	Resolving deltas: 100% (7151/7151), done. 
+	Checking connectivity... done. 
+	teeri:git ksinghS 
+	teeri:git ksinghS cd calamari/vagrant/centos-build 
+	teeri:centos-build ksinghS 
+	teeri:centos-build ksinghS ls -l 
+	total 8 
+	-rw-r--r--  1 ksingh  staff  1114 Jun  7 21:05 Vagrantfile 
+	drwxr-xr-x  4 ksingh  staff   136 Jun  7 21:05 salt 
+	teeri:centos-build ksinghS 
+	   </pre>
+	 </li><li class="listitem">
+      <p>На момент написания этой главы Vagrant не предоставлял скомпонованной настройки для CentOS7. 
+	  {<span class="emphasis"><em>Прим. пер.: На момент перевода <span class="term"><code>calamari/vagrant/centos7-build</code></span> 
+	  присутствует, так что следующие два шага можно пропустить</em></span>}. Итак, мы модифицируем среду CentOS6 Vagrant, установив 
+	  <span class="term"><code>config.vm.box</code></span> как <span class="term"><code>config.vm.box = &quot;boxcutter/centos71&quot;</code></span>.</p>
+	 </li><li class="listitem">
+      <p>Поднимем блок Vagrant воспользовавшись следующей командой:</p>
+	   <pre class="screen">
+$ vagrant up
+
+	=&gt; default: Running provisioner: salt... 
+	Copying salt minion config to vm. 
+	Checking if salt-minion ls installed 
+	salt-minion was not found. 
+	Checking if salt-call is installed 
+	salt-call was not found. 
+	Bootstrapping Salt... (this, may take a while) 
+	
+	Salt successfully configured and installed! 
+	run_overstate set to false. Not running state.oyerstate. 
+	run_highstate set to false. Not running state.highstate. 
+	   </pre>
+	 </li><li class="listitem">
+      <p>На данный момент наша среда разработки CentOS7 готова; мы должны зарегистрироваться на этой машине и выполнить 
+	  <span class="term"><code>salt-call</code></span> для начала построения пакетов:</p>
+	   <pre class="screen">
+$ vagrant ssh
+$ sudo salt-call state.highstate
+
+	[vagrant@local host ~] $ 
+	[vagrant@local host ~] $ sudo salt-call state .highstate 
+	[INFO ] Loading fresh modules for state activity 
+	[INFO ] Fetching file from saltenv 'base', ** done ** 'top.sls' 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Процесс построения займёт некоторое время; наконец, вы должны получить вывод похожий на следующее:</p>
+	   <pre class="screen">
+	Summary
+	------------
+	Succeeded: 9 (changed=6)
+	Failed:    0
+	------------
+	Total states run:      9
+	[vagrant@local host ~]$
+	   </pre>
+	 </li><li class="listitem">
+      <p>На данный момент у вас имеется окончательно скомпонованные пакеты для сервера Calamari и Diamond. Вы можете найти установочные 
+	  файлы RPM на один каталог выше вашего клонированного репозитория <span class="term"><code>calamari</code></span>.</p>
+	 </li>
+	 </ol>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0509"> </a>Построение пакетов Calamari клиент</h3>
+   </div></div></div>
+   <p>В этом рецепте мы изучим построение пакетов клиента Calamari. Большинство шагов аналогичны тому, что мы делали в предыдущем разделе, 
+   то есть при построении пакета сервера.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050901"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Клонируйте репозиторий клиента Calamari:</p>
+	   <pre class="screen">
+$ git clone https://github.com/ceph/calamari-clients.git
+	   </pre>
+	 </li><li class="listitem">
+      <p>Измените рабочий каталог на тот, который предоставляет среду Diamond Centos:
+	  </p>
+	   <pre class="screen">
+$ cd calamari-clients/vagrant/centos-package
+	   </pre>
+	 </li><li class="listitem">
+      <p>Измените среду <span class="term"><code>Vagrantfile</code></span> и установите <span class="term"><code>config.vm.box</code></span> 
+	  следующим образом: <span class="term"><code>config.vm.box = &quot;boxcutter/centos71&quot;</code></span>.
+	  {<span class="emphasis"><em>Прим. пер.: На момент перевода <span class="term"><code>calamari/vagrant/centos7-build</code></span> 
+	  присутствует, так что это шаг можно пропустить</em></span>}. </p>
+	 </li><li class="listitem">
+      <p>Далее поднимем нашу машину:</p>
+	   <pre class="screen">
+$ vagrant up
+	   </pre>
+	 </li><li class="listitem">
+      <p>На данный момент наша среда разработки CentOS7 готова; мы должны зарегистрироваться на этой машине и выполнить 
+	  <span class="term"><code>salt-call</code></span> для начала построения пакетов:</p>
+	   <pre class="screen">
+$ vagrant ssh
+$ sudo salt-call state.highstate
+	   </pre>
+	 </li><li class="listitem">
+      <p>Процесс построения займёт некоторое время; наконец, вы должны получить вывод похожий на следующее:</p>
+	   <pre class="screen">
+	-----------
+	           ID: copyout_build_product
+	     Function: cmd.run
+	       Result: True
+	      Comment: Command &quot;cp calamari-clients*tar.gz /git/&quot; run
+	      Changes: 
+	               ----------
+	               pid:
+	                   25090
+	               retcode:
+	                   0
+	               stderr:
+	               stdщге:
+	Summary
+	-------------
+	Succeeded: 13
+	Failed:     0
+	-------------
+	Total:      13
+	[vagrant@local host ~]$
+	   </pre>
+	 </li><li class="listitem">
+      <p>На данный момент у вас имеется окончательно скомпонованные пакеты для клиента Calamari и вы можете найти установочные 
+	  файлы RPM на один каталог выше вашего клонированного репозитория <span class="term"><code>calamari</code></span>.</p>
+	  </li>
+	 </ol>
+    </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0510"> </a>Наладка главного сервера Calamari</h3>
+   </div></div></div>
+  <p>В последних рецептах мы скомпилировали необходимые для Calamari пакеты, которые включают в себя <span class="term"><code>calamari-server</code></span>, 
+  <span class="term"><code>calamari-client</code></span> и <span class="term"><code>diamond</code></span>. Если вы не компилировали 
+  эти пакеты, вы можете загрузить их из моего репозитория GitHub: <a class="link" 
+  href="https://github.com/ksingh7/ceph-calamari-packages/tree/master/CentOS-el7" 
+  target="_top">https://github.com/ksingh7/ceph-calamari-packages/tree/master/CentOS-el7</a>:</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="051001"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+    <div class="orderedlist">
+    <p>В данной демонстрации мы настроим <span class="term"><code>ceph-node1</code></span> в качестве главного (master) сервера, а также как 
+	узел <span class="term"><code>salt-minion</code></span>, а <span class="term"><code>ceph-node2</code></span> и
+	<span class="term"><code>ceph-node3</code></span> только как подчинённые (minion) узлы <span class="term"><code>salt-minion</code></span>. 
+	На момент написания этого рецепта Calamari не поддерживал salt версии 2015, поэтому я умышленно применил версию salt 2014.</p>
+	<p>Давайте начнём установку сервера Calamari:</p>
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>На <span class="term"><code>ceph-node1</code></span>  установите зависимости пакетов требующиеся salt и серверу Calamari:</p>
+	   <pre class="screen">
+yum install -y python-crypto PyYAML systemd-python yum-utils m2crypto pciutils python-msgpack systemd-python python-zmq
+	   </pre>
+	  </li><li class="listitem">
+      <p>
+	  <span class="term"><code>ceph-node1</code></span> 
+	  сервера Calamari:</p>
+	   <pre class="screen">
+$ git clone https://github.com/ceph/calamari-clients.git
+	   </pre>
+	  </li><li class="listitem">
+      <p>По умолчанию, CentOS7 установит самую последнюю версию salt, поэтому, чтобы установить версию salt 2014, настройте salt repo:</p>
+	   <pre class="screen">
+# wget https://copr.fedoraproject.org/coprs/saltstack/salt/repo/epel-7/saltstack-salt-epel-7.repo -O /etc/yum.repos.d/saltstacksalt-epel-7.repo
+	   </pre>
+	  </li><li class="listitem">
+      <p>Установите salt master и salt minion версии 2014.7.5:</p>
+	   <pre class="screen">
+# yum --disablerepo=&quot;*&quot; --enablerepo=&quot;salt*&quot; install -y saltmaster-2014.7.5-1.el7.centos
+	   </pre>
+	  </li><li class="listitem">
+      <p>Поскольку данная установка выполняется исключительно для тестовых целей, мы остановим и запретим межсетевой экран:</p>
+	   <pre class="screen">
+# systemctl stop firewalld
+# systemctl disable firewalld
+	   </pre>
+	  </li><li class="listitem">
+      <p>Далее установим пакет сервера Calamari. Убедимся что это не обновит версию salt до 2015:</p>
+	   <pre class="screen">
+# yum install https://github.com/ksingh7/ceph-calamari-packages/raw/master/CentOS-el7/calamari-server-1.3.0.1-49_g828960a.el7.centos.x86_64.rpm
+	   </pre>
+	  </li><li class="listitem">
+      <p>Далее установим пакет сервера Calamari, который устанавливает компоненты инструментальной панели Calamari:</p>
+	   <pre class="screen">
+# yum install -y https://github.com/ksingh7/ceph-calamaripackages/raw/master/CentOS-el7/calamari-clients-1.2.2-32_g931ee58.el7.centos.x86_64.rpm
+	   </pre>
+	  </li><li class="listitem">
+      <p>Сделаем доступной и запустим службу <span class="term"><code>salt-master</code></span>:</p>
+	   <pre class="screen">
+# systemctl enable salt-master
+# systemctl restart salt-master
+	   </pre>
+	  </li><li class="listitem">
+      <p>На данный момент сервер Calamari установлен и мы должны настроить его выполнив следующую команду:</p>
+	   <pre class="screen">
+# calamari-ctl initialize
+
+	[root@ceph-node1 ~]# calamari-ctl initialize  
+	[INFO] Loading configuration.. 
+	[INFO] Starting/enabling salt... 
+	[INFO] Starting/enabling postgres... 
+	[INFO] Initializing database... 
+	[INFO] You will now be prompted for login detai1s for the administrative user account. 
+	This is the account you will use to log into the web interface once setup is complete. 
+	username (1eave blank to use 'root') : root 
+	Email address: karan_singhl@live.com 
+	Password: 
+	Password (again): 
+	Superuser created successfully. 
+	[INFO] Initializing web interface... 
+	[INFO] Starting/enabling services... 
+	[INFO] Restarting services... 
+	[INFO] Complete. 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	  </li><li class="listitem">
+      <p>На момент написания этого раздела Calamari имел известный баг (обновление подключённого подчинённого), который 
+	  завершался с ошибкой в процессе шага инициализации Calamari. Вы можете пропустить этот шаг если ваша команда инициализации
+	  <span class="term"><code>calamari-ctl</code></span> прошла успешно. Для коррекции этого бага измените файл
+	  <span class="term"><code>/opt/calamari/venv/lib/python2.7/site-packages/calamari_cthulhu-0.1-py2.7.egg/cthulhu/calamari_ctl.py</code></span> 
+	  <span class="term"><code>update_connected_minions()</code></span>, закомментировав строку 255, которая выдаёт сообщение
+	  сервера Calamari:</p>
+	   <pre class="screen">
+	[root@ceph-node1 cthulhu]# cat calamari_ctl.py | grep &quot;update_connectedminions()&quot; | grep -v def # update_connected_minions() 
+	[root@ceph-node1 cthulhul# 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Далее переместитесь в инструментальную панель Calamari набрав в своём браузере 
+	  <span class="term"><code>http://192.168.1.101/dashboard/</code></span> и предоставив имя пользователя <span class="term"><code>root</code></span> 
+	  и пароль, который вы установили на последнем шаге.</p>
+      <div class="figure"><a id="Fig0501"> </a>
+       <p class="title"><strong>Рисунок 5.1.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0501.jpg" width="413" height="410"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li><li class="listitem">
+      <p>Когда вы зарегистрируетесь в инструментальной панели Calamari, вы увидите экран аналогичный приводимому ниже;
+	  на данный момент это новая установка Calamari, нам необходимо добавить в неё узлы Ceph, и это будет описано в следующем разделе.</p>
+      <div class="figure"><a id="Fig0502"> </a>
+       <p class="title"><strong>Рисунок 5.2.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0502.jpg" width="1043" height="673"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li>
+	 </ol>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0511"> </a>Добавление узлов Ceph в Calamari</h3>
+   </div></div></div>
+   <p>На данный момент у нас есть работающий главный сервер Calamari. Чтобы наблюдать за вашим кластером Ceph при помощи Calamari, нам 
+   нужно добавить узлы Ceph в Calamari. Давайте начнём это.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Так как <span class="term"><code>ceph-node1</code></span> играет двойную роль и главного сервера Calamari и узла Calamari Ceph, 
+		 мы уже выполнили первые два шага на узле <span class="term"><code>ceph-node1</code></span>. Выполняйте первые два шага на узлах 
+		 <span class="term"><code>ceph-node2</code></span> и <span class="term"><code>ceph-node3</code></span>, пока не будет предписано 
+		 иного:</p>
+		 </td></tr></table>
+       </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="051101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>На <span class="term"><code>ceph-node2</code></span> и <span class="term"><code>ceph-node3</code></span> 
+	  сделайте доступными репозитории salt 2014  <span class="term"><code>yum</code></span>:</p>
+	   <pre class="screen">
+# wget https://copr.fedoraproject.org/coprs/saltstack/salt/repo/epel-7/saltstack-salt-epel-7.repo -O /etc/yum.repos.d/saltstack-salt-epel-7.repo
+	   </pre>
+	  </li><li class="listitem">
+      <p>Установите зависимости пакетов вручную:</p>
+	   <pre class="screen">
+# yum install -y python-crypto PyYAML systemd-python yum-utils m2crypto pciutils python-msgpack systemd-python python-zmq
+	   </pre>
+	  </li>
+	 </ol>
+    </div>
+	<p>Теперь выполняем эти шаги на <span class="term"><code>ceph-node1</code></span>, <span class="term"><code>ceph-node2</code></span>,
+	а также как и на <span class="term"><code>ceph-node3</code></span>:</p>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+	  <p>Установите пакет <span class="term"><code>salt-minion-2014</code></span>:</p>
+	   <pre class="screen">
+# yum --disablerepo=&quot;*&quot; --enablerepo=&quot;salt*&quot; install -y saltminion-2014.7.5-1.el7.centos
+	   </pre>
+	  </li><li class="listitem">
+      <p>Установите пакет Diamond:</p>
+	   <pre class="screen">
+# yum install -y https://github.com/ksingh7/ceph-calamaripackages/raw/master/CentOS-el7/diamond-3.4.582-0.noarch.rpm
+	   </pre>
+      <p>Сделайте доступной и запустите службу Diamond:</p>
+	   <pre class="screen">
+# systemctl enable diamond
+# systemctl restart diamond
+	   </pre>
+	  </li><li class="listitem">
+      <p>Далее настройте подчинённые salt на применение <span class="term"><code>ceph-node1</code></span> в качестве главного узла 
+	  Calamari:</p>
+	   <pre class="screen">
+# echo &quot;master: ceph-node1&quot; &gt; /etc/salt/minion.d/calamari.conf
+	   </pre>
+	  </li><li class="listitem">
+      <p>Сделайте доступной и запустите службу <span class="term"><code>salt-minion</code>:</p>
+	   <pre class="screen">
+ctl enable salt-minion
+# systemctl restart salt-minion
+	   </pre>
+	  <p>Теперь <span class="term"><code>salt-minion</code></span>, т.е. узлы Calamari Ceph настроены для применения главным сервером 
+	  Calamari. Далее нам необходимо зарегистрироваться на главном сервере Calamari, т.е. на <span class="term"><code>ceph-node1</code></span>
+	  чтобы перечислить и принять ключи salt от подчинённых.</p>
+	  </li><li class="listitem">
+      <p>На <span class="term"><code>ceph-node1</code></span> выведем следующим образом список salt-key:</p>
+	   <pre class="screen">
+# salt-key -L
+	   </pre>
+	  </li><li class="listitem">
+      <p>Далее примем salt-key подчинённых:</p>
+	   <pre class="screen">
+# salt-key -A
+	   </pre>
+	  </li><li class="listitem">
+      <p>Проверим приём ключей подчинённых:</p>
+	   <pre class="screen">
+# salt-key -L
+
+	[root@ceph-node1 etc]# salt-key -L
+	Accepted Keys:
+	ceph-node1
+	ceph-node2
+	ceph-node3
+	Unaccepted Keys:
+	Rejected Keys:
+	   </pre>
+	  </li><li class="listitem">
+      <p>Наконец, откроем свой браузер и посетим инструментальную панель Calamari для проверки вашего кластера:</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+      <p>Иногда случается, что Calamari не может найти кластер Ceph сразу после приёма ключей подчинённых salt. В этом случае дайте 
+	  некоторое время Calamari и salt изучить кластер Ceph.</p></td></tr></table>
+     </div>
+	  </li>
+	 </ol>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0512"> </a>Мониторинг кластера Ceph в инструментальной панели Calamari</h3>
+   </div></div></div>
+   <p>Наблюдение за кластером Ceph из инструментальной панели Calamari достаточно непосредственное. Давайте посмотрим как:</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="051201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Инструментальная панель отображает массу полезной информации:</p>
+      <div class="figure"><a id="Fig0503"> </a>
+       <p class="title"><strong>Рисунок 5.3. Инструментальная панель</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0503.jpg" width="746" height="443"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li><li class="listitem">
+      <p>OSD могут наблюдаться с помощью параметра рабочего места OSD:</p>
+      <div class="figure"><a id="Fig0504"> </a>
+       <p class="title"><strong>Рисунок 5.4. Рабочее место OSD</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0504.jpg" width="1066" height="389"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li><li class="listitem">
+      <p>Calamari даёт некоторые прекрасные возможности наблюдения использования ресурсов хоста в форме графиков. 
+	  Следующий график представляет сводку ЦПУ для <span class="term"><code>ceph-node1</code></span>:</p>
+      <div class="figure"><a id="Fig0505"> </a>
+       <p class="title"><strong>Рисунок 5.5. Использование ЦПУ <span class="term"><code>ceph-node1</code></span></strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0505.jpg" width="1040" height="615"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li><li class="listitem">
+      <p>Этот график представляет среднюю загруженность <span class="term"><code>ceph-node1</code></span>; для лучшего 
+	  понимания изучите условные обозначения (legend):</p>
+      <div class="figure"><a id="Fig0506"> </a>
+       <p class="title"><strong>Рисунок 5.6. Средняя загруженность <span class="term"><code>ceph-node1</code></span></strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0506.jpg" width="1036" height="460"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li><li class="listitem">
+      <p>Наконец, далее представлен график использования оперативной памяти на <span class="term"><code>ceph-node2</code></span>. 
+	  Вы также можете смотреть на использование памяти во временном представлении выравнивая параметр 
+	  <span class="term"><strong class="userinput"><code>Time Axis</code></strong></span> в правой стороне панели:</p>
+      <div class="figure"><a id="Fig0507"> </a>
+       <p class="title"><strong>Рисунок 5.7. Использование оперативной памяти <span class="term"><code>ceph-node2</code></span></strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0507.jpg" width="1036" height="460"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+	  </li>
+	 </ol>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0513"> </a>Обнаружение ошибок Calamari</h3>
+   </div></div></div>
+   <p>Нахождение ошибок Calamari порой очень хитроумно. В этом рецепте я привожу некую коллекцию руководств, которые помогут вам 
+   находить ошибки вашего окружения Calamari.</p>
+ 
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="051301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Проверьте, доступны ли для сервера Calamari, т.е. salt-master, его подчинённые, т.е salt-minor:</p>
+	   <pre class="screen">
+'*' test.ping
+	   </pre>
+	  </li><li class="listitem">
+      <p>Убедитесь что salt-master может опрашbвать ваш кластер Ceph и получать от кластера информацию:</p>
+	   <pre class="screen">
+# salt '*' ceph.get_heartbeats output
+	   </pre>
+	  </li><li class="listitem">
+      <p>Проверьте, что salt-minor узел (узел кластера Ceph) может связаться с salt-minor:</p>
+	   <pre class="screen">
+# salt-minion -l debug
+	   </pre>
+	  </li><li class="listitem">
+      <p>Если salt-minor выдаёт ошибку <span class="term"><strong class="userinput"><code>The Salt Master server's public key did not 
+	  authenticate!</code></strong></span> в файл журнала <span class="term"><code>salt-minor</code></span>, т.е. 
+	  <span class="term"><code>/var/log/salt</code></span>:</p>
+	   <pre class="screen">
+	2015-06-26 09:57:27,531 [salt.crypt][CRITICAL] The Salt Master server's public key did not authenticate! 
+	The master may need to be updated if it is a version of Salt lower than 2014.7.5, or 
+	If you are confident that you are connecting to a valid Salt Master, then remove the 
+	master public key and restart the Salt Minion. 
+	The master public key can be found at: 
+	/etc/salt/pki/minion/minion_master.pub 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Чтобы решить эту проблему, нам нужно удалить salt-key <span class="term"><code>minion</code></span> а также общедоступный ключ 
+	  главного сервера и посторно созать их оба с применением следующих команд:</p>
+	   <pre class="screen">
+# rm -rf /etc/salt/pki/minion/minion_master.pub
+# systemctl stop salt-minion
+	   </pre>
+	   
+	   <p>Теперь выполним следующий набор шагов:</p>
+	   <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+         <p>На <span class="term"><code>salt-master</code></span> удалим ключ подчинённого:</p>
+	     <pre class="screen">
+# salt-key -L
+# slat-key -D &lt;minion name&gt;
+	     </pre>
+		 </li><li class="listitem">
+         <p>Запустим службу <span class="term"><code>salt-minion</code></span>:</p>
+	     <pre class="screen">
+# systemctl start salt-minion
+	     </pre>
+		 </li><li class="listitem">
+         <p>На <span class="term"><code>salt-master</code></span> примем новый ключ подчинённого:</p>
+	     <pre class="screen">
+# salt-key -L
+# salt-key -A
+	     </pre>
+		 </li><li class="listitem">
+         <p>Наконец, на <span class="term"><code>salt-minion</code></span> применим 
+		 <span class="term"><code># salt-minion -l</code></span> и убедимся, что не получаем ошибку вновь.</p>
+	    </li>
+	   </ol>
+      </div>
+	  
+	  </li><li class="listitem">
+      <p>Выполнение команды <span class="term"><code>calamari-ctl initialize</code></span> распространяет ошибку 
+	  <span class="term"><strong class="userinput"><code>could not connect to server: Connection refused</code></strong></span>
+	  следующим образом:</p>
+	   <pre class="screen">
+	[root@ceph—node1]# calamari—ctl initialize 
+	[INFO] Loading configuration.. 
+	[INFO] Starting/enabling salt... 
+	[INFO] Starting/enabling postgres... 
+	[ERROR] (OperationalError) could not connect to server: Connection refused 
+	  Is the server running on host &quot;localhost&quot; (::1) and accepting 
+	  TCP/IP connections on port 5432? 
+	сould not connect to server: Connection refused 
+	  Is the server running on host &quot;localhost&quot; (127.0.0.1) and accepting 
+	  TCP/IP connections on port 5432? 
+	 None None 
+	[ERROR] We are sorry, an unexpected error occurred. Debugging information has 
+	been written to a file at '/tmp/2015-06-24_1919.txti', please include this when seeking technical support. 
+	[root@ceph—node1]# 
+	   </pre>
+
+	   <p>Тогда выполним приводимый ниже набор шагов:</p>
+	   <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+        <p>Вначале проверим, что служба <span class="term"><strong class="userinput"><code>postgres</code></strong></span>
+		выполняется:</p>
+	     <pre class="screen">
+# systemctl status postgres
+	     </pre>
+		 </li><li class="listitem">
+         <p>Зарегистрируемся на <span class="term"><strong class="userinput"><code>postgres</code></strong></span> и проверим 
+		 существует ли база данных Calamari или нет:</p>
+	     <pre class="screen">
+# sudo -u postgres psql
+List postgres databases # \l
+
+	[root@ceph-node1]# sudo -u postgres psql 
+	psql (9.2.10) 
+	Type &quot;help&quot; for help. 
+	postgres=# 
+	postgres=# \l
+	                                  List of databases 
+	   Name    |  Owner   | Encoding |   Collate   |     Ctype   |   Access privileges  
+	-----------+----------+----------+-------------+-------------+-----------------------
+	postgres   | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+	template@  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          + 
+	           |          |          |             |             | postgres=CTc/postgres 
+	templatel  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          + 
+	           |          |          |             |             | postgres=CTc/postgres 
+	(3 rows) 
+	postgres=# 
+	     </pre>
+		 </li><li class="listitem">
+         <p>Вы можете увидеть что не существует базы данных с именем <span class="term"><code>calamari</code></span>; 
+		 тогда вам необходимо выполнить <span class="term"><code>salt</code></span> для создания пользователя и базы данных
+		 <span class="term"><code>calamari</code></span> в <span class="term"><strong class="userinput"><code>postgres</code></strong></span>:</p>
+	     <pre class="screen">
+# salt-call --local state.template /opt/calamari/salt-local/postgres.sls
+	     </pre>		 
+		 </li><li class="listitem">
+         <p>Наконец, повторно выполним <span class="term"><code># calamari-ctl initialize</code></span>; теперь это должно
+		 работать.</p>
+	    </li>
+	   </ol>
+      </div>
+
+	  </li><li class="listitem">
+      <p>Командная строка  <span class="term"><code>calamari-ctl initialize</code></span> не отрабатывается и распространяет ошибку 
+	  <span class="term"><strong class="userinput"><code>Updating already connected nodes. failed with rc=2</code></strong></span>
+	  как показано ниже на снимке экрана:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# calamari-ctl initialize 
+	[INFO] Loading configuration.. 
+	[INFO] Starting/enabling salt... 
+	[INFO] Starting/enabling postgres... 
+	[INFO] Initializing database... 
+	[INFO] You will now be prompted for login details for the administrative user account. 
+	This is the account you will use to log into the web interface once setup is complete. 
+	Username (leave blank to use 'root'): 
+	Email address: karan_singhl@live.com 
+	Password: 
+	Password (again): 
+	Superuser created successfully. 
+	[INFO] Initializing web interface... 
+	[INFO] Starting/enabling services... 
+	[INFO] Updating already connected nodes. 
+	[ERROR] Updating already connected nodes. failed with rc=2 
+	[ERROR] We are sorry, an unexpected error occurred. Debugging information has 
+	been written to a file at 'tmp/2015-06-22_1855.txt', please include this when seeking technical support. 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Чтобы исправить эту ошибку, измените файл 
+	  <span class="term"><code>/opt/calamari/venv/lib/python2.7/sitepackages/calamari_cthulhu-0.1-py2.7.egg/cthulhu/calamari_ctl.py</code></span> 
+	  и уберите комментарий в строке 255, который выводит <span class="term"><code>ceph-node3</code></span> 
+	  сделайте доступными репозитории salt 2014  <span class="term"><code>update_connected_minions()</code></span>:</p>
+	   <pre class="screen">
+	[root@ceph-node1 cthulhu]# cat calamari_ctl.py | grep &quot;update_connected_minions()&quot; | grep -v def 
+	   # update_connected_minions() 
+	[root@ceph-node1 cthulhul# 
+	   </pre>
+	  </li>
+	 </ol>
+    </div>
+  </div>
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

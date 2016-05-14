@@ -1,0 +1,1406 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Репликация - Мастерство FreeBSD: ZFS для профессионалов</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="AdvancedZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Совместное использование наборов данных"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Тома ZFS"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "advanced-zfs";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Репликация';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Репликация</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch04.html">4. Репликация</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch04.html#01">Но у меня есть Rsync!</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#02">Зачем нужны репликации?</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#03">Основы репликаций</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch04.html#0301">Локальная репликация</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0302">Просмотр копий</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch04.html#04">Удалённая репликация</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch04.html#0401">Пользователи и наборы данных репликации</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0402">Полная удалённая репликация набора данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0403">Инкрементальная репликация</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0404">Допущения инкрементальной репликации</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0405">Дифференциальная репликация</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0406">Ограничения пропускной способности SSH</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch04.html#05">Сложности инкрементальных репликаций</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#06">Рекурсивные репликации</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#07">Дополнительные параметры отсылки</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch04.html#0701">Отсылка свойств</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0702">Дедуплицированный поток данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0703">Отладка и тестирование</a></span></dt>
+       <dd><dl>
+         <dt><span class="chapter"><a href="Ch04.html#070301">Большие и маленькие блоки</a></span></dt>
+       </dl></dd>
+       <dt><span class="chapter"><a href="Ch04.html#0704">Дополнительные параметры приёма</a></span></dt>
+       <dd><dl>
+         <dt><span class="chapter"><a href="Ch04.html#070401">Управление путём и монтированием</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070402">Изменение отката</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070403">Отладка и тестирование</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070404">Клонирование по предписанию</a></span></dt>
+       </dl></dd>
+       <dt><span class="chapter"><a href="Ch04.html#0705">Закладки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0706">Возобновляемая отсылка</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0707">Автоматизация репликаций</a></span></dt>
+       <dd><dl>
+         <dt><span class="chapter"><a href="Ch04.html#070701">Применение zxfer</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070702">Режим извлечения zxfer</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070703">Циклическая замена снимков</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070704">Сохранение старых снимков</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070705">Свойства и аварийное восстановление</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070706">Дополнительные параметры zxfer</a></span></dt>
+       </dl></dd>
+     </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+   <p>Итак, что жет такое в точности [/ˌrepləˈkāSH(ə)n/]? В ZFS это означает точную копию вашей файловой системы, 
+   где- либо ещё. Это другое место может быть другим набором данных в вашем пуле, вторым пулом в вашей системе, 
+   внешним диском, удалённой системой, лентой или просто файлом. Вы можете просто определить &quot;Я хочу 
+   <span class="emphasis"><em>эту</em></span> файловую систему в <span class="emphasis"><em>этом</em></span>
+   месте,&quot; и создание выполнится. Репликация ZFS имеет некоторые свойства архитектуры, которые делают её 
+   особенно мощной.</p>
+   <p>Программы подобные <span class="term"><code>dump(8) </code></span> и
+   <span class="term"><code>rsync(1)</code></span> рассчитывают получить неким образом уведомление подтверждения
+   получения данных. Процесс репликации ZFS является однонаправленным - отправитель не нуждается в обратной 
+   связи с принимающей стороной. Поскольку репликация не ожидает никакого подтверждения, получателю ZFS не 
+   требуется никакая интеллектуальность; он должен только принять поток байт и сделать с ним что-то.</p>
+   <p>Система репликации интегрирована со снимкам. Снимок является статичной, неизменяемой сущностью, что означает, 
+   что передаваемый набор данных полностью согласован, в отличие от сброса <span class="term"><code>dump</code></span> 
+   или <span class="term"><code>rsync</code></span> работающей файловой системы. Репликация на основе снимка также 
+   означает что вы можете выполнять инкрементальную репликацию, отправляя только блоки, которые были изменены между 
+   двумя снимками. При инкрементальной репликации вам никогда не придётся отправлять одни и те же данные дважды.</p>
+   <p>Функциональность репликации ZFS разработана для полного использования ваших дисков. Единственное ограничение 
+   того, как быстро вы можете реплицировать данные между машинами состоит в скорости соединения вашей сетевой 
+   среды.</p>
+   <p>Репликация ZFS состоит из двух частей: <span class="term"><code>zfs send</code></span>, которая 
+   преобразует в последовательную форму снимок или последовательность снимков в единый поток данных, а также
+   <span class="term"><code>zfs receive</code></span>, который возвращает этот поток назад в файловую систему 
+   ZFS.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>Но у меня есть Rsync!</h3>
+   </div></div></div>
+   <p>В течение десятилетий <span class="term"><code>rsync(1)</code></span> был стандартным инструментом 
+   для синхронизации между машинами. Чтобы синхронизировать файлы, <span class="term"><code>rsync</code></span> 
+   обходит ваше дерево каталога, вычисляя временные штампы и криптографические контрольные суммы каждого 
+   файла и сравнивает их с соответствующими файлами на удалённой стороне. Многие организации разработали 
+   громадные инфраструктуры на основе <span class="term"><code>rsync</code></span>.</p>
+   <p>ZFS разработана для максимизации производительности диска. Она побивает <span class="term"><code>rsync</code></span>
+   настолько сильно, что маме <span class="term"><code>rsync</code></span> требуется срочная медицинская 
+   помощь. ZFS поддерживает список блоков диска которые отличаются между каждым последующим снимком. Процесс 
+   репликациине требует определять какие файлы были изменены - наша файловая система уже имеет эту 
+   информацию. Процесс репликации начинает отправку этих блоков настолько быстро, насколько это возможно, 
+   немедленно. Так как изменённые блоки содержат все метаданые для пересборки данных файлов, процесс 
+   репликации даже не нуждается в знании того, какие файлы соотносятся с этими блоками.</p>
+   <p>Пока <span class="term"><code>rsync</code></span> обходит вашу файловую систему, просматривая каждый файл, 
+   проверяя его временной штамп, вычисляя контрольную сумму и сравнивая их с версиями на вашей другой стороне, 
+   ZFS уже завершит свою работу. Если у вас имеется 10ТБ данных, причём только 1ГБ изменён, 
+   <span class="term"><code>rsync</code></span> всё- таки вынужден проверять каждый файл. ZFS только захватывает 
+   1ГБ изменённых блоков и отправляет их.</p>
+   <p>Системный администратор, которому нужна более быстрая синхронизация <span class="term"><code>rsync</code></span>, 
+   могут предписывать <span class="term"><code>rsync</code></span> жульничать и предполагать что если последнее 
+   время модификации на обиех сторонах, и локального и удалённого файлов, одно и то же, то файлы не изменялись. 
+   (Это в действительности не всегда истинно, однако не фиксируйте это против <span class="term"><code>rsync</code></span> -
+   системные администраторы должны лучше знать что делают.) Когда временной штамп был изменён, 
+   <span class="term"><code>rsync</code></span> вычисляет контрольные суммы на порциях данного файла на обеих 
+   сторонах и сравнивает эти контрольные суммы. Если он находит разницу, он затем вычисляет дельту и пересылает 
+   её. Это означает, что если вы делаете небольшие изменения в большом файле, <span class="term"><code>rsync</code></span> 
+   должен прочитать и вычислить контрольную сумму всего файла с обеих, локальной и удалённой сторон. Применяя 
+   <span class="term"><code>rsync</code></span> для поддержки копии такого образа диска ВМ в 500ГБ на машине 
+   резервной копии съедает всю связку дисковой производительности и процессорного времени.</p>
+   <p>Каждый блок в ZFS имеет дату рождения (<span class="emphasis"><em>birthtime</em></span>), идентификатор 
+   группы транзакции момента создания блока. Процесс репликации отправляет все блоки новее чем последнее 
+   время выполнения репликации. При этом не имеет значения, получается ли данный блок из нового файла, или же 
+   из середины огромного файла.</p>
+   <p>Преимущества репликаций на основе снимка в действительности вступают в игру когда вы выполняете 
+   синхронизацию файловых систем на регулярной основе. Предположим, вы реплицируете снимок на удалённый сервер 
+   резервных копий. По истечении часа, вы создаёте новый снимок и инкрементально отправляете этот снимок 
+   на сервер резервных копий. ZFS завершится в несколько секунд, в то время как <span class="term"><code>rsync</code></span>
+   всё ещё обходит первый уровень каталогов.</p>
+   <p><span class="term"><code>Rsync(1)</code></span> поддерживает режим резервного копирования снимка
+   (<span class="emphasis"><em>snapshot</em></span>). Однако, снимки в <span class="term"><code>rsync</code></span> 
+   полностью отличаются от снимков ZFS. При снимках <span class="term"><code>rsync</code></span>, 
+   если вы изменили 1 байт файла в 1ГБ, <span class="term"><code>rsync</code></span> сохраняет две 
+   полные копии этого файла. ZFS, с другой стороны, сохраняет две различные копии одного блока. Обе версии 
+   этого файла совместно используют остальные блоки.</p>
+   <p>В защиту <span class="term"><code>rsync</code></span> скажем, что он является межплатформенным, 
+   совместимым с различными файловыми системами инструментом. Вы можете применять 
+   <span class="term"><code>rsync</code></span> для синхронизации деревьев каталогов между операционными 
+   системами и между файловыми системами. Лукас применял <span class="term"><code>rsync</code></span> 
+   для синхронизации деревьев каталогов между сильно различающимися Unix- подобными платформами, например, 
+   FreeBSD, и AIX, и Linux.</p>
+   <p>Однако, если вы применяете ZFS, репликация уникально подогнана для работы с ZFS. Репликация понимает и 
+   дублирует свойства ZFS. Она может поддерживать взаимосвязь между клоном и его родителем, в то время как 
+   <span class="term"><code>rsync</code></span> потеряет эту связь и откажется от всех ваших сохранений 
+   пространства. <span class="term"><code>Rsync(1)</code></span> работает не так хорошо на сырых блочных
+   устройствах, в то время как ZFS работает с zvol. Репликация также применяет интегрированные в файловую 
+   систему контрольные суммы, поэтому отсутствует риск того, что ваша файловая система получит что-то отличающееся 
+   от своих оригиналов.</p>
+   <p>Репликация ZFS также безразлична к версии. Свойства нового пула разрешены только если вы преднамеренно 
+   добавите флаги командной строки при запросе к нему. Это позволяет репликации ZFS легко перемещать данные между 
+   пулами с различными версиями.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>Зачем нужны репликации?</h3>
+   </div></div></div>
+   <p>Репликации вступают в игру различными способами: наиболее очевидный заключается в резервном копировании, 
+   а также в тестировании, виртуализации и при миграциях данных.</p>
+   <p>Вы на самом деле помните, что RAID не является резервной копией, так? Даже RAID-Z3 не является 
+   соответствующей резервной копией. Когда ваша машина попала в пожар, когда закон принуждает конфисковать 
+   всё оборудование у вашего поставщика услуг, или когда вы случайно удаляете все жизненно важные наборы данных, 
+   RAID-Z3 не поможет вам. Выполните репликацию вашего важного пула на внешний диск, на машину резервных 
+   копий или в ленточную библиотеку. Теперь вы можете получить её назад даже после полной утраты вашего 
+   оборудования. Привлекательность ZFS состоит в том, что после начальной репликации 
+   <span class="emphasis"><em>каждая</em></span> резервная копия может быть инкрементальной.</p>
+   <p>Давайте сделаем шаг вперёд. Может оказаться, что простой способности восстановления ваших данных будет 
+   недостаточно. Вы должны гарантировать чтобы ваши данные были всегда доступны, 24x7x365. Вам нужна 
+   высокая доступность (High Availability). Реплицируйте ваши данные на второй и третий серверы, причём с 
+   инкрементальными снимками через каждые несколько минут. Теперь у вас всегда имеются готовые данные для 
+   работы на n+2 серверах горячей замены. Поместите один из этих серверов резервных копий в удалённое 
+   местоположение и вы защититесь даже от полного разрушения оборудования. (Поддержка географической 
+   высокой доступности для вашего ИТ персонала является отдельной проблемой. Мы рекомендуем разрешать всем 
+   работать из своего дома. Для достижения наилучших результатов, купите им дома в местах, подобных Фиджи и 
+   Сейшелам. Воткните непопулярных парней в Отрыжку лося на Аляске.)</p>
+   <p>Таким образом, там у вас будет прекрасный набор данных пользовательской информации. Вы захотите 
+   протестировать самую новую версию вашей биллинговой системы с ней. Вместо того, чтобы клонировать данные 
+   на той же самой машине, вам нужна полностью отделённая копия в новой среде разработки. Будет ли получателем 
+   удалённая машина, или новый набор данных в том же самом пуле, репликация ZFS является самым быстрым и 
+   надёжным способом копирования данных.</p>
+   <p>У вас имеются десятки и сотни идентичных машин, ВМ или контейнеров? Применяйте репликацию ZFS для 
+   развёртывания вашего идеально изготовленного вручную образа повсеместно. Если вы разработали свою систему 
+   должным образом, вы можете даже применять инкрементальные репликации для развёртывания обновлений.</p>
+   <p>Репликация также великолепно упрощает миграцию данных, даже огромные объёмы данных на нелепые расстояния.
+   Может быть вам придётся выполнять миграцию массивного набора данных на другую сторону страны, или даже через 
+   всю планету. При достаточном объёме данных даже 10Gb/s Ethernet в том же самом центре обработки данных 
+   кажется слишком медленным! Предположим, у вас есть много терабайт данных, которые всегда используются и 
+   подвергаются постоянным незначительным перемешиваниям, например, как в случае пользовательских баз данных.
+   Копирование этих данных через интернет в другой конец страны, или даже мира, займёт дни - но к тому 
+   времени данные уже изменятся. Процесс репликации на основе <span class="term"><code>rsync</code></span> 
+   займёт столько времени, что он, скорее всего, никогда не нагонит изменения. Ваши администраторы 
+   умные люди и, скорее всего, придумают хитроумный план перемещения ваших данных с какого- либо сорта сложной 
+   схемой сегментации. Эти планы могут успешно выполняться, однако увеличивают риск и всегда привносят 
+   высокую нагрузку и чувство неудовлетворённости.</p>
+   <p>Если пропускная способность доступная для синхронизации превосходит скорость обмена данных, применяйте 
+   вместо этого ZFS. Ваша первая репликация ZFS, которая содержит каждый кусочек информации из этого гигантского 
+   набора данных, может занять несколько дней или недель. Вы можете даже посчитать более практичным выполнить 
+   синхронизацию на ленту с ночной доставкой. {<span class="emphasis"><em>Прим. пер.: Курьерская служба 
+   доставки всё ещё конкурентоспособна для перемещения гигантских объёмов информации на большие расстояния!</em></span>}
+   Однако, когда эта синхронизация завершится, вторая репликация нового снимка будет не столь продолжительной. 
+   При помощи нескольких репликаций, по мере того, как ваша скорость изменений станет медленнее доступной для 
+   резервного копирования полосы пропускания, репликации ZFS догонят практически работу в реальном масштабе 
+   времени.</p>
+   <p>В День Большого Переключения заморозьте свой нбор данных на несколько мгновений пока вы выполняете 
+   репликацию самых последних изменений. Вероятно, вы получите несколько мгновений паники по поводу балансировщиков 
+   нагрузки, межсетевых экранов, новых серверов и всех прочих гаджетов необходимых для поддержки такого 
+   массивного набора данных, однако сами данные не создадут вам проблем.</p>
+  </div>
+    
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>Основы репликаций</h3>
+   </div></div></div>
+   <p>ZFS не реплицирует наборы данных. Она выполняет репликацию снимков. Снимки не изменяются в процессе 
+   репликации (или в любое другое время), поэтому они гарантирую внутреннюю непротиворечивость. Начните с 
+   создания снимка ваших данных.</p>
+	   <pre class="screen"><code>
+# zfs snapshot mypool/somedata@snappycomeback
+ 	   </code></pre>
+   <p>Теперь давайте выполним репликацию этого снимка и локально, и на удалённый хост.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Локальная репликация </span></h4>
+   </div></div></div>
+   <p>Репликация ZFS имеет одно направление, что означает, что она не нуждается ни в каком обратном отклике 
+   от получателя. Это подразумевает, что вы можете сбрасывать снимок в любую другую программу, применяя 
+   стандартное перенаправление оболочки Unix и конвейеры (pipe). В нашем примере я подаю вывод 
+   <span class="term"><code>zfs send</code></span> в обычный файл. (Если вы добавите флаг 
+   <span class="term"><code>-v</code></span>, <span class="term"><code>zfs send</code></span> будет выводить 
+   каждую секунду сводку прохождения.)</p>
+	   <pre class="screen"><code>
+# zfs send mypool/somedata@snappycomeback &gt; backup_file
+ 	   </code></pre>
+   <p>Этот файл является нашим первым применением репликации ZFS, поэтому он не инкрементальный. Он 
+   содержит всё из данного снимка. Он примерно того же размера что и сам набор данных. Это не очень 
+   полезно в том виде как есть, однако - очень мало людей смогут прочитать потоковую файловую систему без 
+   её обратного превращения в файловую систему. (Люди, которые могут читать потоковую файловую систему не 
+   превращая её обратно в файловую систему, имеют гораздо лучшее применение своему времени.) Поэтому давайте 
+   вернём этот набор данных назад в ZFS при помощи <span class="term"><code>zfs receive</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs receive mypool/copy &lt; backup_file
+ 	   </code></pre>
+   <p><span class="term"><code>Zfs(8)</code></span> прочитает поток репликации из 
+   <span class="term"><code>backup_file</code></span> и создаст новый набор данных из него, точный дубль 
+   оригинального набора данных.</p>
+   <p>Вам не обязателен некий файл в промежутке локальной репликации. Это Unix- подобная система. У нас 
+   существует магия конвейеров. Данный хост имеет домашние каталоги в корне пула, однако я перемещаю копию 
+   в новый пул.</p>
+	   <pre class="screen"><code>
+# zfs send zroot/home@weds | zfs receive mypool/home
+ 	   </code></pre>
+   <p>Теперь я могу перетасовать пару точек монтирования набора данных и переместить свой домашний каталог 
+   в свой новый пул.</p>
+   <p>Однонаправленная природа ZFS делает возможным выполнять репликацию в любое место, куда нацеливается 
+   команда, например, на ленту. При помощи конвейера вы можете слить <span class="term"><code>zfs send</code></span>
+   через SSH в <span class="term"><code>zfs receive</code></span>, позволяя вам реплицировать набор данных 
+   на удалённую машину.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр копий </span></h4>
+   </div></div></div>
+   <p>Хотите заглянуть вовнутрь файла потока? Утилита <span class="term"><code>zstreamdump(8)</code></span> 
+   опросит потоки и раскроет подробности. Вы можете опрашивать сам файл или читать напрямую из 
+   <span class="term"><code>zfs send</code></span>.</p>
+	   <pre class="screen"><code>
+# zstreamdump &lt; backup_file
+ 	   </code></pre>
+   <p>Программа <span class="term"><code>zstreamdump</code></span> отвечает одним разделом подобным приводимому 
+   для всех и каждого снимка в пределах потока <span class="term"><code>zfs send</code></span>.</p>
+	   <pre class="screen"><code>
+BEGIN record
+ hdrtype = 1
+ features = 4
+ magic = 2f5bacbac
+ creation_time = 56a53713
+ type = 2
+ flags = 0x0
+ toguid = 424654598740125b
+ fromguid = 0
+ toname = mypool/somedata@snappycomeback
+END checksum = 14035a747cefd2/65f5a463eb5427f0/
+3e70de6ff7d7456/497949c053fadcb3
+ 	   </code></pre>
+   <p>Этот вывод имеет группу информации о потоке <span class="term"><code>zfs send</code></span>.
+   Тяжёлая участь в том, что ничто из этого не представлено дружелюбным человеку образом.  Даже при таких 
+   обстоятельствах мы можем выделить несколько порций информации из него.</p>
+   <p>Поле <span class="emphasis"><em>creation_time</em></span> даёт время выполнения 
+   <span class="term"><code>zfs send</code></span>, в принятом измерении секунд от эпохи Unix - в 
+   шестнадцатеричном представлении, естественно, потому как почему бы не применять шестнадцатеричное 
+   представление для дат? Преобразуем это значение (56a53713) в читаемое по- человечески значение при помощи 
+   <span class="term"><code>date(1)</code></span>. Поместим <span class="emphasis"><em>0x</em></span> в начало 
+   значения для обозначения того, что это шестнадцатеричное значение.</p>
+	   <pre class="screen"><code>
+$ date -r 0x56a53713
+Sun Jan 24 15:41:55 EST 2016
+ 	   </code></pre>
+   <p>На хостах с не FreeBSD <span class="term"><code>date</code></span> может не принимать шестнадцатеричные 
+   значения. Хотя существует множество способов преобразования, вы можете попробовать что-то подобное 
+   следующему.</p>
+	   <pre class="screen"><code>
+$ printf &quot;%d\n&quot; 0x56a53713 | xargs date -r
+ 	   </code></pre>
+   <p>Каждый снимок имеет читаемое человеком имя, определяемое в <span class="emphasis"><em>toname</em></span>.
+   Данный снимок называется <span class="term"><code><em>mypool/somedata@snappycomeback</em></code></span>, и 
+   высвечивает важность применения значимых имён для наборов данных и снимков.</p>
+   <p>Каждый снимок в пределах потока имеет глобальный уникальный идентификатор, или GUID. GUID данного снимка 
+   появляется в поле <span class="emphasis"><em>toguid</em></span>.</p>
+   <p>Поле <span class="emphasis"><em>fromgid</em></span> применяется для инкрементальных отправок ZFS (см. 
+   раздел <a class="link" href="Ch04.html#0403" target="_top">Инкрементальная репликация</a> позже в этой 
+   главе), включая только изменения между двумя снимками. В данном примере оно установлено в ноль, что 
+   означает, что данный поток <span class="term"><code>zfs send</code></span> содержит полный снимок. Он 
+   не является инкрементальным. Поскольку он является полным снимком, восстановление этого 
+   <span class="term"><code>zfs send</code></span> в работающий набор данных будет иметь смысл. (Вы 
+   можете восстанавливать инкрементальный поток ZFS, однако вам необходимо скопировать снимок, на котором он 
+   основан.)</p>
+   <p>Если поток имеет множество снимков внутри - скажем, для инкрементального или рекурсивного 
+   <span class="term"><code>zfs send</code></span> - вы можете применять значения 
+   <span class="emphasis"><em>toguid</em></span> и <span class="emphasis"><em>fromguid</em></span> для 
+   воссоздания того, как снимки подгоняются друг к другу. Однако, возможно, будет проще восстановить поток 
+   <span class="term"><code>zfs send</code></span> в набор данных посмотреть на него таким образом.</p>
+   <p>Каждый раздел завершается <span class="emphasis"><em>checksum</em></span>. Вы не можете использовать 
+   контрольную сумму для проверки вручную снимка в этом разделе, однако прекрасно знать что ZFS использует 
+   контрольные суммы.</p>
+   <p>После детализации каждого снимка, <span class="term"><code>zstreamdump</code></span> выводит резюме.</p>
+	   <pre class="screen"><code>
+SUMMARY:
+ Total DRR_BEGIN records = 5
+ Total DRR_END records = 6
+…
+ Total records = 170
+ Total write size = 10523136 (0xa09200)
+ Total stream length = 10554216 (0xa10b68)
+ 	   </code></pre>
+   <p>Это резюме включает целую группу внутренних метаданных ZFS. Наиболее интересной частью здесь является 
+   число записей DRR_BEGIN, которое соответствует числу снимков в данном потоке. Размер в конце представлен 
+   в байтах. Записываемый размер является размером данных, включённых в данный поток, в то время как длина 
+   потока это размер самого потока. (Поток <span class="term"><code>zfs send</code></span> имеет метаданные 
+   для восстановления данных на диск которые не должны записываться на этот диск.)</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04"> </a>Удалённая репликация</h3>
+   </div></div></div>
+   <p>Чтобы реплицировать ZFS на удалённый хост, этому удалённому хосту потребуется пользователь, который 
+   может получить доступ к репликации и безопасному конвейеру к этому удалённому хосту. Наиболее общим типом 
+   безопасного конвейера является SSH, поэтому мы предполагаем его вашим инструментом. В долгосрочном периоде, 
+   самым простым способом применения SSH является аутентификация на основе ключей. Если вы не знакомы с 
+   аутентификацией на основе ключей, справьтесь в любом из бесчисленных руководств иои в книге Лукаса 
+   <a class="link" href="https://www.tiltedwindmillpress.com/?product=ssh-mastery-openssh-putty-tunnels-and-keys-ebook" 
+   target="_top">SSH Mastery</a> (Tilted Windmill Press, 2012). {<span class="emphasis"><em>Прим. пер.: 
+   на нашем сайте см. перевод статьи <a class="link" href="http://support.mdl.ru/kimmo.suominen.com/docs/ssh/index.htm" 
+   target="_top">Приступая к работе с SSH</a> Киммо Суоминен</em></span>}.</p>
+   <p>Для получения потоков репликаций вы можете использовать учётную запись 
+   <span class="term"><strong class="userinput"><code>root</code></strong></span>, однако  это означает допуск 
+   регистрации SSH с правами <span class="term"><strong class="userinput"><code>root</code></strong></span>.
+   SSH с правами <span class="term"><strong class="userinput"><code>root</code></strong></span> это плохая идея. 
+   И на самом деле, вы хотите чтобы некий сценарий оболочки сопровождаемый этим случайным парнем не пойми откуда из 
+   интернета пасся с правами <span class="term"><strong class="userinput"><code>root</code></strong></span> 
+   на всех ваших машинах? Вместо этого создайте пользователя без привилегий и назначьте ему права на репликации, 
+   как это обсуждалось в <a class="link" href="Ch02.html" target="_top">Главе 2</a>.</p>
+   <p>Аналогично, хотя вы и можете отсылать наборы данных с правами <span class="term"><strong 
+   class="userinput"><code>root</code></strong></span>, вы можете захотеть чтобы обычный оператор или 
+   нормальный пользователь мог иметь возможность отправлять наборы данных.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пользователи и наборы данных репликации </span></h4>
+   </div></div></div>
+   <p>На обоих хостах, отправляющем и принимающем, мы создаём пользователя, выделенного для репликации. 
+   В нашем примере пользователь имеет им <span class="term"><strong class="userinput"><code>replicator</code></strong></span>.
+   Ему требуется оболочка, но при этом никакого специального участия в группах.</p>
+	   <pre class="screen"><code>
+local# pw user add replicator -m -s /bin/sh
+remote# pw user add replicator -m -s /bin/sh
+ 	   </code></pre>
+   <p>На отправляющем хосте пользователю репликации нужны полномочия 
+   <span class="term"><strong class="userinput"><code>send</code></strong></span> и
+   <span class="term"><strong class="userinput"><code>snapshot</code></strong></span> для пересылаемого набора 
+   данных. Ниже мы предоставляем <span class="term"><strong class="userinput"><code>replicator</code></strong></span>
+   эти полномочия на домашние каталоги пользователей. </p>
+	   <pre class="screen"><code>
+# zfs allow -u replicator send,snapshot zroot/usr/home
+ 	   </code></pre>
+   <p>Отправляющему пользователю требуется пара ключей SSH. Пользователь, который применяет свою учётную запись 
+   и на отправляющей, и на принимающей сторонах может применять свои собственные ключи SSH для этого. Для 
+   выделенных учётных записей сгенерируйте пару ключей при помощи 
+   <span class="term"><code>ssh-keygen(1)</code></span>.</p>
+	   <pre class="screen"><code>
+# su replicator
+$ ssh-keygen
+ 	   </code></pre>
+   <p>Программа <span class="term"><code>ssh-keygen</code></span> предложит вам ввести идентификационную 
+   фразу (passphrase). Если в пересылке наборов данных ZFS будут принимать участие люди, воспользуйтесь 
+   идентификационной фразой. Если вы делаете это для процесса автоматизации, применяйте пустую 
+   идентификационную фразу.</p>
+   <p>Ключом будет файл <span class="term"><code><em>.ssh/id_rsa.pub</em></code></span> в домашнем 
+   каталоге учётной записи этого пользователя. Также мы рекомендуем ограничить хосты, с которых 
+   этот ключ может регистрироваться на данной удалённой машине, чтобы помочь защитить этот удалённый хост, 
+   а также ваши резервные копии на случай кражи данного ключа.</p>
+   <p>Теперь застваим этого непривилегированного пользователя установить его общедоступный ключ в его 
+   учётную запись на удалённой машине. Здесь мы отправим новый ключ в учётную запись с тем же именем 
+   пользователя на наш хост <span class="term"><strong class="userinput"><code>hotspare</code></strong></span>.</p>
+	   <pre class="screen"><code>
+$ ssh-copy-id -i .ssh/id_rsa.pub hotspare
+ 	   </code></pre>
+   <p>Проверим что мы можем зарегистрирваться на принимающем хосте в качестве этого пользователя.</p>
+   <p>На принимающем хосте такой пользователь должен владеть точкой монтирования для получаемого 
+   набора данных. Система также лолжна разрешать непривилегированным пользователям монтировать 
+   файловые системы в каталоги, которыми они владеют, при помощи <span class="term"><code>vfs.usermount
+   sysctl</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs create -o mountpoint=/backup remotepool/backup
+# chown replicator:replicator /backup
+# sysctl vfs.usermount=1
+ 	   </code></pre>
+   <p>Нашему непривилегированному пользователю требуются полномочия ZFS 
+   <span class="term"><strong class="userinput"><code>compression</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>create</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>mount</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span> и
+   <span class="term"><strong class="userinput"><code>receive</code></strong></span> на целевом наборе данных. 
+   Здесь я назначаю пользователю <span class="term"><strong class="userinput"><code>replicator</code></strong></span> 
+   привелегии для набора данных <span class="term"><code><em>remotepool/backup</em></code></span>. 
+   Если вы собираетесь автоматизировать репликации ZFS, включая разрушение снимков с истекшей датой, 
+   вы захотите также добавить свойство <span class="term"><strong class="userinput"><code>destroy</code></strong></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow -u replicator compression,mountpoint,create,mount,receive remotepool/backup
+ 	   </code></pre>
+   <p>Такой непривилегированный пользователь может теперь выполнять репликации этого набора данных.</p>
+   <p>Если вы хотите выполнять репликации всех свойств набора данных, вы должны разрешить пользователю 
+   <span class="term"><strong class="userinput"><code>replicator</code></strong></span> устанавливать все эти 
+   свойства. С подробностями того, как создавать набор полномочий вы можете ознакомиться в 
+   <a class="link" href="Ch02.html" target="_top">Главе 2</a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Полная удалённая репликация набора данных </span></h4>
+   </div></div></div>
+   <p>Чтобы реплицировать набор данных ZFS, вначале создайте снимок. Я предоставил своему непривилегированному 
+   пользователю полномочия создавать снимки в точности для этой цели, поэтому давайте позволим ему делать это.</p>
+	   <pre class="screen"><code>
+$ zfs snapshot zroot/usr/home@monday
+ 	   </code></pre>
+   <p>Теперь применим <span class="term"><code>zfs send</code></span> для передачи данного снимка, подключив 
+   его к конвейеру SSH и сбросив его в <span class="term"><code>zfs receive</code></span>. Запомните, 
+   <span class="term"><code>ssh(1)</code></span> позволяет вам выполнять команды на вашем удалённом хосте. 
+   Поскольку это первый раз, когда мы реплицируем данный набор данных, отправляемый поток включает все блоки 
+   в данном снимке.</p>
+	   <pre class="screen"><code>
+$ zfs send zroot/usr/home@monday | \
+      ssh user@host zfs receive remotepool/backup
+ 	   </code></pre>
+   <p>Помимо реплицирования в пул на другой машине вы можете выполнять репликацию в тот же самый пул или во 
+   второй пул на той же машине, в файл или в конвейер (pipe). Реплицирование в файл или конвейер может быть 
+   полезным для резервных копирований, например, на ленту, или в случае различных файловых систем.</p>
+   <p>Вы можете заставить хост зарегистрироваться на другом хосте, чтобы  переключить <span class="term"><code>zfs 
+   send</code></span> если вам это нужно, изменив выполнение репликаций ZFS с модели активной доставки (push) 
+   на извлечение по запросу (pull).</p>
+	   <pre class="screen"><code>
+$ ssh user@host zfs send zroot/usr/home@monday | \
+      zfs receive remotepool/backup
+ 	   </code></pre>
+   <p>В данной книге мы предполагаем, что вы выполняете отправку из локального набора данных для согласованности, 
+   однако всё работает и в другом направлении.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0403"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Инкрементальная репликация </span></h4>
+   </div></div></div>
+   <p>Действительную силу мы получаем от инкрементальных репликаций. Теперь, когда у нас имеются все 
+   реплицированные данные из нашего набора данных на понедельник, репликация во вторник требует отправки только 
+   изменённых блоков. Сторона команды <span class="term"><code>receive</code></span> не изменялась вовсе, 
+   однако на стороне <span class="term"><code>send</code></span> мы применим флаг 
+   <span class="term"><code>-i</code></span>, чтобы указать на необходимость отправки самого последнего снимка.</p>
+	   <pre class="screen"><code>
+$ zfs snapshot zroot/usr/home@tuesday
+$ zfs send -i @monday zroot/usr/home@tuesday | \
+      ssh user@host zfs receive remotepool/backup/home
+ 	   </code></pre>
+   <p>ZFS отправит только блоки которые были изменены между снимками @monday и @tuesday, сохраняя время и 
+   пропускную способность.</p>
+   <p>Теперь взглянем на наш набор данных в принимающей системе.</p>
+	   <pre class="screen"><code>
+# zfs list -t snap -r zroot/backup
+NAME                         USED  AVAIL  REFER  MOUNTPOINT
+zroot/backup/usrhome@monday    8K      -  49.0M           -
+zroot/backup/usrhome@tuesday    0      -  49.0M           -
+ 	   </code></pre>
+   <p>Теперь отображены два снимка.</p>
+   <p>Одна распространённая ошибка при инкрементальных резервных копиях заключается в отсутствии определения 
+   самого последнего снимка, который существует на вашей удалённой системе. Если вы не определите самый 
+   последний снимок который был передан, вы получите ошибку.</p>
+	   <pre class="screen"><code>
+# zfs send zroot/usr/home@tuesday | \
+      ssh hotspare zfs recv remotepool/backup/usrhome
+cannot receive new filesystem stream: destination
+remotepool/backup/usrhome’ exists
+must specify -F to overwrite it
+ 	   </code></pre>
+   <p>Опасность подобного сообщения об ошибке состоит в том, что оно предлагает способы сделать эту ошибку 
+   невидимой вместо того чтобы устранить причину лежащей в основе проблемы. Перезапись вашего удалённого 
+   набора данных сотрёт ваши более ранние снимки и будет повторно отправлять все данные.</p>
+   <p>Применяя <span class="term"><code>-i</code></span>, вы можете опускать знак <span class="term"><code>@</code></span> 
+   в начале имени снимка. Флаг <span class="term"><code>-i</code></span> означает &quot;это снимок&quot;, так что 
+   можно смело предполагать, что вы имели в виду поместить <span class="term"><code>@</code></span> 
+   в начале имени, но просто решили не беспокоиться об этом.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0404"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Допущения инкрементальной репликации </span></h4>
+   </div></div></div>
+   <p>Инкрементальные резервные копии на ленту почти можно исправлять: вы можете перезаписывать их, но кто в 
+   21 веке будет выполнять исправления файла напрямую на ленте. Инкрементальные резервные копии на диск, однако, 
+   очень легко изменять.</p>
+   <p>Репликации приращениями требуют, чтобы принимаемая копия набора данных не менялась между выполнениями 
+   репликации. Изменения в этих копиях развалят весь процесс. Если вы измените резервную копию своего 
+   набора данных, следующее обновление приращения больше не будет подходить к вашей резервной копии. 
+   Если вы вздумаете редактировать реплики набора данных на машине резервных копий, создайте клон всех 
+   полученных наборов данных и только после этого редактируйте. Если кто-то случайно или по незнанию изменил 
+   реплику, откатите изменения назад к последнему общему снимку. Заставьте получатель принудительно 
+   выполнить откат к соответствующему удалённому (расположенному на стороне) снимку добавив флаг 
+   <span class="term"><code>-F</code></span> в свою команду <span class="term"><code>zfs receive</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs send -i @monday zroot/usr/home@tuesday | ssh \
+     user@hotspare zfs receive -F remotepool/backup/home
+ 	   </code></pre>
+   <p>Предотвратите изменения в репликах наборов данных установив свойство ZFS 
+   <span class="term"><strong class="userinput"><code>readonly</code></strong></span> в значение 
+   <span class="emphasis"><em>on</em></span> для реплицируемых данных. Имея данные ранее полномочия, 
+   пользователь может добавлять снимки в наборы данных только для записи.</p>
+	   <pre class="screen"><code>
+# zfs set readonly=on remotepool/backup
+ 	   </code></pre>
+   <p>Всё- таки вы ещё можете добавлять снимки в <span class="term"><code><em>remotepool/backup</em></code></span>. 
+   Вы можете опрашивать эти файлы в своём наборе данных. Однако никто не сможет изменять эти файлы не 
+   изменив значение свойства ZFS <span class="term"><strong class="userinput"><code>readonly</code></strong></span>.
+   И каждый с подобным доступом обязан лучше знать или иметь крайне насущную необходимость чтобы 
+   сделать такой набор данных рабочим прямо сейчас.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0405"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Дифференциальная репликация </span></h4>
+   </div></div></div>
+   <p>Репликация ZFS может быть выполнена на любых двух снимках одного и того же набора данных, таким образом, 
+   вы можете также выполнять дифференциальные резервные копии. Применение флага <span class="term"><code>-I</code></span>
+   (i в верхнем регистре), вместо <span class="term"><code>-i</code></span> отправит все существующие между 
+   определяемыми двумя снимками снимки.</p>
+   <p>Предположим, репликация снимка вторника отказала из- за случайного сетевого происшествия (Системные 
+   администраторы могут обвинять любую трудность как возникшую в результате &quot;случайной сетевой 
+   проблемы&quot;, это занесено в Кодекс Поведения). В среду вы хотите отослать оба снимка вторника и среды.</p>
+	   <pre class="screen"><code>
+# zfs send -I @monday zroot/usr/home@wednesday | \
+      ssh hotspare zfs recv remotepool/backup/usrhome
+ 	   </code></pre>
+   <p>Получетель теперь имеет снимок вторника, даже хотя вы никогда намеренно его не отсылали.</p>
+   <p>Опытные в выполнении резервного копирования люди реализуют то, что мы используем в cловах 
+   &quot;инкременталное&quot; и &quot;дифференциальное&quot; слегка отличным способом, чем это делает 
+   большая часть программного обеспечения резервного копирования. Программное обеспечение резервного 
+   копирования написано для отправки блоков на ленту и минимизирует число лент, которое вам необходимо 
+   для восстановления файлов. Мы можем изобрести новый язык, мы можем рыть глубже для точно подходящих, 
+   но незнакомых слов (Лукаса сильно радует, если принимаетесь узнавать какое-то непонятное слово, которое 
+   отлично соответствует резервному копированию ZFS, вероятно, из языка тональностей, причём с добавлением 
+   щёлкающих звуков и Банту, и по-Койсански, Джуд считает что у Лукаса нет на то прав), или мы можем 
+   растянуть только слегка существующий язык.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0406"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ограничения пропускной способности SSH </span></h4>
+   </div></div></div>
+   <p>Вы можете обнаружить, что соединение SSH является недостаточно быстрым для ваших потребностей. Те из вас, 
+   кому нужны репликации быстрее чем пара сотен мегабайт в секунду возможно должны рассмотреть внешние решения 
+   для безопасности, например, выделенный VPN. SSH не может обрабатывать данные так быстро без очень специфичных 
+   изменений, поэтому рассмотрите возможности <span class="term"><code>mbuffer(1)</code></span>.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05"> </a>Сложности инкрементальных репликаций</h3>
+   </div></div></div>
+   <p>Репликация ZFS является однонаправленной, от отправителя к получателю. Отправитель не получает никакой 
+   обратной связи от получателя, позволяя сброс потока каким угодно образом. Это становится существенным при 
+   выборе между инкрементальной и дифференциальной репликацией.</p>
+   <p>Инкрементальное резервное копирование (с <span class="term"><code>-i</code></span>) отправляет 
+   все блоки, которые были изменены между датой рождения первого снимка и последнего снимка, без 
+   отправки каких бы то ни было снимков, которые существуют между ними. Если набор данных имеет снимок для 
+   каждого дня недели, <span class="term"><code>zfs send -i monday zroot/usr/home@thursday</code></span>
+   создаёт поток который зависит от вашего существующего на принимающей стороне снимка @monday, а 
+   результатом будет создаваемый там снимок @thursday. Никакие промежуточные снимки не реплицируются.</p>
+   <p>Дифференциальные резервные копирования (с <span class="term"><code>-I</code></span>) работают в точности 
+   как инкрементальные резервные копирования, однако они создают все промежуточные снимки. Команда навроде 
+   <span class="term"><code>zfs send -I @monday zroot/usr/home@thursday</code></span> требует чтобы снимок 
+   @monday существовал на удалённой стороне, и она создаёт при своём проходе отсутствующие снимки @tuesday 
+   и @wednesday.</p>
+   <p>Предположим, вы автоматически берёте ежедневные снимки набора данных и вы хотите отправлять их на 
+   удалённый сервер. Выполните репликацию снимка @monday в свой удалённый пул.</p>
+	   <pre class="screen"><code>
+# zfs send zroot/usr/home@monday | \
+      zfs receive hotspare remotepool/backup/usrhome
+ 	   </code></pre>
+   <p>Проверьте на вашем удалённом хосте наличие снимка @monday.</p>
+	   <pre class="screen"><code>
+# zfs list -t all -r remotepool/backup/usrhome
+NAME                           USED  AVAIL  REFER  MOUNTPOINT
+remotepool/backup/usrhome     19.5K   472M  19.5K  /remotepool/weekday
+remotepool/backup/usrhome@monday  0      -  19.5K  -
+ 	   </code></pre>
+   <p>Теперь инкрементально реплицируйте снимок @tuesday.</p>
+	   <pre class="screen"><code>
+# zfs send -i monday remotepool/backup/usrhome@tuesday \
+      | zfs receive remotepool/weekday
+ 	   </code></pre>
+   <p>Проверьте свой удалённый хост, вы найдёте оба снимка.</p>
+	   <pre class="screen"><code>
+# zfs list -t all -r remotepool/backup/usrhome
+NAME                               USED  AVAIL  REFER  MOUNTPOINT
+remotepool/backup/usrhome           29K   472M  19.5K  /remotepool/weekday
+remotepool/backup/usrhome@monday  9.50K      -  19.5K  -
+remotepool/backup/usrhome@tuesday     0      -  19.5K  -
+ 	   </code></pre>
+   <p>В среду вы были отключены на ухаживания - о-э-э, я имею в виду &quot;заболели&quot; - поэтому 
+   вы не сделали репликацию. В четверг вы хотите догнать, поэтому выполняете дифференциальную 
+   репликацию снимка @thursday.</p>
+	   <pre class="screen"><code>
+# zfs send -I tuesday zroot/usr/home@thursday | \
+      zfs receive remotepool/backup/usrhome
+ 	   </code></pre>
+   <p>Наш хост горячего резерва теперь имееет четыре снимка.</p>
+	   <pre class="screen"><code>
+# zfs list -t all -r remotepool/backup/usrhome
+NAME                                  USED  AVAIL  REFER  MOUNTPOINT
+remotepool/backup/usrhome              48K   472M  19.5K  /remotepool/weekday
+remotepool/backup/usrhome@monday     9.50K      -  19.5K  -
+remotepool/backup/usrhome@tuesday    9.50K      -  19.5K  -
+remotepool/backup/usrhome@wednesday  9.50K      -  19.5K  -
+remotepool/backup/usrhome@thursday       0      -  19.5K  -
+ 	   </code></pre>
+   <p>Однако, предположим, что нанесённые увечья беспредельных коала стоили вам сна ночи в четверг. 
+   Шатаясь утром в пятницу вы решаете выполнить этот день чтобы ничего не разрушить. Настраивая 
+   репликацию текущего дня вы случайно пытаетесь выполнить инкрементальное (<span class="term"><code>-i</code></span>) 
+   <span class="term"><code>zfs send</code></span> с @monday по @friday.</p>
+	   <pre class="screen"><code>
+# zfs send -i monday mypool/weekday@friday | \
+      zfs receive remotepool/weekday
+cannot receive incremental stream: destination
+remotepool/weekday has been modified since most recent
+snapshot.
+ 	   </code></pre>
+   <p>Возможно вы чертовски хорошо знаете, что вы не изменяли эти снимки. Никто не имеет права входить 
+   на эту машину. Однако они были изменены - снимки @tuesday, @wednesday и @thursday находятся в пути.</p>
+   <p>Если вы не уверены что снимки могут существовать на вашей удалённой стороне, вы можете воспользоваться 
+   <span class="term"><code>-I</code></span> для отправки всех промежуточных снимков. В качестве альтернативы 
+   вы можете определить <span class="term"><code>-F</code></span> в своей команде 
+   <span class="term"><code>zfs receive</code></span> для принуждения её удалять всё что стоит на пути.</p>
+	   <pre class="screen"><code>
+# zfs send -i @monday zroot/usr/home@friday | \
+zfs receive -F remotepool/backup/usrhome
+ 	   </code></pre>
+   <p>Нежелательной стороной эффекта применения <span class="term"><code>zfs receive -F</code></span> 
+   &quot;удалять всё, что стоит на пути&quot; заключается в разрушении промежуточных снимков.</p>
+	   <pre class="screen"><code>
+# zfs list -t all -r remotepool/weekday
+NAME                               USED  AVAIL  REFER  MOUNTPOINT
+remotepool/backup/usrhome           29K  472M   19.5K  /remotepool/weekday
+remotepool/backup/usrhome@monday  9.50K     -   19.5K  -
+remotepool/backup/usrhome@friday      0     -   19.5K  -
+ 	   </code></pre>
+   <p>Мы хотим вернуть эти снимки назад, поэтому давайте попытаемся снова. На нашем хосте горячего резерва мы 
+   уничтожим самый новый снимок.</p>
+	   <pre class="screen"><code>
+# zfs destroy remotepool/backup/usrhome@friday
+ 	   </code></pre>
+   <p>Теперь у нас есть отправитель передающий все эти снимки, либо по одному за раз, либо все сразу. 
+   Здесь мы отправляем один снимок, просто чтобы быть уверенными, что мы ничего не разрушили ещё в эту 
+   пятницу с затуманенными глазами.</p>
+	   <pre class="screen"><code>
+# zfs send -i monday mypool/weekday@tuesday | \
+      zfs receive -F remotepool/weekday
+ 	   </code></pre>
+   <p>Факт состоит в том, что репликация является однонаправленной означает что при дифференциальном 
+   резервном копировании вы можете отправлять перекрывающиеся снимки, передавая снимок, который уже 
+   существует на удалённой стороне. Если мы отправляем все снимки между @monday и @friday, в то время 
+   как @tuesday уже существует в удалённом пуле, ваш источник отправит все изменённые данные, даже те блоки, 
+   которые уже имеются на удалённой стороне. Удалённая сторона быстро пройдёт вперёд через уже имеющиеся блоки, 
+   а затем создаст отсутствующие снимки - в нашем случае с @wednesday по @friday.</p>
+   <p>Лучшей практикой в этом случае будет избегать коал. А ещё их хаоса.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06"> </a>Рекурсивные репликации</h3>
+   </div></div></div>
+   <p>ZFS также поддерживает <span class="emphasis"><em>рекурсивные репликации, которые реплицируют набор данных 
+   и всех его потомков в одной команде. Вот пример пула с тремя наборами данных.</em></span></p>
+	   <pre class="screen"><code>
+NAME            USED  AVAIL  REFER  MOUNTPOINT
+mypool          401M  3.09T   192K  /mypool
+mypool/family  50.2M  3.09T  50.2M  /mypool/family
+mypool/home     150M  3.09T   150M  /mypool/home
+mypool/work     200M  3.09T   200M  /mypool/work
+ 	   </code></pre>
+   <p>Возьмём рекурсивный снимок этого набора данных и его потомков.</p>
+	   <pre class="screen"><code>
+# zfs snapshot -r mypool@first
+# zfs list -t all -r mypool
+NAME                USED  AVAIL  REFER  MOUNTPOINT
+mypool              401M  3.09T   192K  /mypool
+mypool@first           0      -   192K  -
+mypool/family      50.2M  3.09T  50.2M  /mypool/family
+mypool/family@first    0      -  50.2M  -
+mypool/home         150M  3.09T   150M  /mypool/home
+mypool/home@first      0      -   150M  -
+mypool/work         200M  3.09T   200M  /mypool/work
+mypool/work@first      0      -   200M  -
+ 	   </code></pre>
+   <p>Теперь мы выполним репликацию этого снимка и всех его потомков одновременно, применяя рекурсивную отправку.</p>
+	   <pre class="screen"><code>
+# zfs send -Rv mypool@first | \
+      zfs receive remotepool/backup
+send from @ to mypool@first estimated size is 9.50K
+send from @ to mypool/work@first estimated size is 200M
+send from @ to mypool/family@first estimated size is 50.1M
+send from @ to mypool/home@first estimated size is 150M
+total estimated size is 401M
+…
+ 	   </code></pre>
+   <p>Рекурсивная отправка также рабоает с инкрементальными (<span class="term"><code>-i</code></span>) и 
+   дифференциальными (<span class="term"><code>-I</code></span>) резервными копиями, в точности таким же 
+   образом. Теперь вы можете принудительно разрушить любой набор данных и его потомков одновременно!</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07"> </a>Дополнительные параметры отсылки</h3>
+   </div></div></div>
+   <p>Отправитель может изменять различными способами то, как он отправляет наборы данных.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0701"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отсылка свойств </span></h4>
+   </div></div></div>
+   <p>Чтобы отправлять свойства так же как и сами актуальные данные, добавьте флаг <span class="term"><code>-p</code></span>.
+   Когда свойства принимаемого набора данных отличаются от уже имеющихся в этом наборе данных, 
+   <span class="term"><code>zfs receive</code></span> пытается изменить свойства в соответствии с отправляемыми.
+   То есть, если вы реплицируете свойства из набора данных, который применяет сжатие <span class="term"><code>lz4</code></span> 
+   для набора данных, который уже использует <span class="term"><code>lz4</code></span>, 
+   <span class="term"><code>zfs receive</code></span> ничего не делает с этим свойством. Однако, если отправитель 
+   применяет сжатие <span class="term"><code>gzip-9</code></span>, получатель произведёт изменения для 
+   соответствия оригиналу.</p>
+   <p>Получивший набор данных пользователь должен иметь полномочия для установления свойств, которые вы хотите 
+   реплицировать. Если этот пользователь имеет полномочия для репликации некоторых, но не всех свойств, 
+   допустимые свойства получают установку, а не разрешённые свойства отвергаются.</p>
+   <p>Предположим, наш исходный набор данных имеет <span class="term"><strong class="userinput"><code>dedup</code></strong></span>
+   установленное в значение <span class="emphasis"><em>on</em></span> и 
+   <span class="term"><strong class="userinput"><code>compression</code></strong></span> установленное в
+   <span class="term"><code>gzip-9</code></span>. Принимающий набор данных имеет 
+   <span class="term"><strong class="userinput"><code>dedup</code></strong></span> установленное в значение 
+   <span class="emphasis"><em>off</em></span> и 
+   <span class="term"><strong class="userinput"><code>compression</code></strong></span> установленное в
+   <span class="term"><code>lz4</code></span>. Мы хотим, чтобы принимающий набор данных использовал то же самое 
+   свойство <span class="term"><strong class="userinput"><code>compression</code></strong></span>, но не 
+   установки <span class="term"><strong class="userinput"><code>dedup</code></strong></span>. Мы разрешаем нашему 
+   пользователю репликаций изменять <span class="term"><strong class="userinput"><code>compression</code></strong></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow -u replicator compress zroot/backup
+ 	   </code></pre>
+   <p>Когда мы отправляем свой набор данных мы получаем ошибку.</p>
+	   <pre class="screen"><code>
+cannot receive compression dedup on remotepool/backup:
+permission denied
+ 	   </code></pre>
+   <p>Это прекрасно - мы не хотим устанавливать свойство 
+   <span class="term"><strong class="userinput"><code>dedup</code></strong></span> на нашей реплике. Однако, 
+   свойство <span class="term"><strong class="userinput"><code>compression</code></strong></span> реплицируется 
+   как ожидалось.</p>
+   <p>Зачем нам реплицировать свойства вместо того чтобы просто устанавливать их на получателе? Ручная 
+   настройка может быть прекрасна для простых свойств подобных 
+   <span class="term"><strong class="userinput"><code>compression</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>dedup</code></strong></span>, однако не так удобно для 
+   сложных свойств подобных <span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> 
+   или любым из имеющихся квот.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0702"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Дедуплицированный поток данных </span></h4>
+   </div></div></div>
+   <p>Дедуплицированы ли ваши данные? Пригодны ли они для дедупликации? ZFS позволяет вам дедуплицировать 
+   поток данных <span class="term"><code>zfs send</code></span>. Применение <span class="term"><code>-D</code></span>
+   отсылает каждый уникальный блок только один раз. Это не изменяет то, что адресат записывает на диск, а 
+   влияет только на сам поток данных.</p>
+   <p>Дедупликация потока данных применяет отличный набор памяти дедупликации от используемого дедупликацией 
+   на диске. Если ваши данные могут быть эффективно дедуплицированы, однако эта дедупликация использует 
+   многие гигабайты оперативной памяти, то оба участника, и хост отправителя, и хост получателя нуждаются 
+   в аналогичном объёме памяти для дедупликациии потока данных. Не так легко дедуплицировать в 
+   <span class="term"><code>zfs send</code></span>!</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0703"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отладка и тестирование </span></h4>
+   </div></div></div>
+   <p><span class="term"><code>zfs send</code></span> поддерживает пару параметров которые могут помочь с 
+   отладкой, тестированием и мониторингом.</p>
+   <p>Параметр <span class="term"><code>-v</code></span> делает <span class="term"><code>zfs send</code></span>
+   многословным. Он выдаёт информацию о данных которые подлежат отправке и добавляет регулярные обновления 
+   состояния.</p>
+   <p>Флаг <span class="term"><code>-P</code></span> выводит информацию о правах отправляемых потоков когда 
+   поток начинает своё течение. Руководство описывает эту информацию как &quot;машинно- читаемую&quot;. 
+   Эту информацию могут читать люди, однако она не очень хорошо табулироана. Однако, она исключительно 
+   питает ваши сценарии.</p>
+   <p>Флаг <span class="term"><code>-n</code></span> предотвращает реальную отсылку каких- либо данных 
+   <span class="term"><code>zfs send</code></span>. Вместо этого, в комбинации с 
+   <span class="term"><code>-v</code></span> и <span class="term"><code>-P</code></span></p>, он выдаёт 
+   статистику о том, что <span class="term"><code>zfs send</code></span> будет делать если он будет реально 
+   выполняться.</p>
+
+	<a id="070301"> </a>
+	<p class="title"><strong>Большие и маленькие блоки</strong></p>
+    <p>Более новые версиии ZFS могут поддерживать блоки дисков больше чем 128кБ при помощи функциональности 
+	<span class="term"><code>zpool(8)</code></span> <span class="term"><code>large_blocks</code></span>.
+	Флаг <span class="term"><code>-L</code></span> позволяет <span class="term"><code>zfs send</code></span> 
+	включать большие блоки вместо того, чтобы дробить их на блоки меньшего размера. Принимающий пул также 
+	должен поддерживать большие блоки.</p>
+    <p>Для хостов, которые в действительности имеют маленькие блоки, <span class="term"><code>-e</code></span>
+	усекает размер потока данных с помощью свойства
+	<span class="term"><strong class="userinput"><code>embedded_data</code></strong></span>. Пул назначения 
+	должен также поддерживать флаг свойства 
+	<span class="term"><strong class="userinput"><code>embedded_data</code></strong></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0704"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Дополнительные параметры приёма </span></h4>
+   </div></div></div>
+   <p>Получатель может корректировать как он сохраняет приходящий поток ZFS посредством параметров для
+   <span class="term"><code>zfs send</code></span>.</p>
+
+	<a id="070401"> </a>
+	<p class="title"><strong>Управление путём и монтированием</strong></p>
+    <p>Принимаемый поток ZFS содержит путь пула и набора данных источника. Вы можете либо сохранять этот путь, 
+	либо отбирать его.</p>
+    <p>Добавляя флаг <span class="term"><code>-d</code></span>, вы предписываете 
+	<span class="term"><code>zfs receive</code></span> применять полный путь его источника (за исключением имени пула) 
+	в качестве пути к набору данных получателя вместо того, чтобы запрашивать системного администратора 
+	определять набор данных получателя. Ранее мы реплицировали <span class="term"><code><em>zroot/usr/home</em></code></span> 
+	в <span class="term"><code><em>remotepool/backup/usr/home</em></code></span>. Применяя здесь 
+	<span class="term"><code>-d</code></span>, мы сообщаем <span class="term"><code>zfs receive</code></span> 
+	что он должен использовать путь источника на получателе.</p>
+	   <pre class="screen"><code>
+$ zfs send zroot/usr/home@monday | \
+      ssh hotspare zfs receive -d remotepool/backup
+ 	   </code></pre>
+    <p>Получатель создёт <span class="term"><code><em>remotepool/backup/usr/home</em></code></span> и 
+	запихивает туда снимок @monday. Эта функция очень полезна при выполнении репликации многих уровней 
+	наборов данных.</p>
+    <p>Альтернативно вы можете отбирать большую часть информации вашего пути. Добавляя флаг 
+	<span class="term"><code>-e</code></span> вы одаёте указание <span class="term"><code>zfs receive</code></span> 
+	использовать самую последнюю часть пути для именования этого набора данных. Здесь мы выполним то же самое 
+	резервное копирование, однако отнимем большую часть вашего пути.</p>
+	   <pre class="screen"><code>
+$ zfs send zroot/usr/home@monday | \
+      ssh zfs2 zfs receive -e remotepool/backup
+ 	   </code></pre>
+    <p>Команда <span class="term"><code>zfs receive</code></span> выполняет поиск в пути 
+	<span class="term"><code><em>zroot/usr/home</em></code></span> и отбрасывает всё кроме последней порции, 
+	<span class="term"><code><em>home</em></code></span>. Получаемый поток данных уходит в 
+	<span class="term"><code><em>remotepool/backup/home</em></code></span>.</p>
+    <p>Наконец, параметр <span class="term"><code>-u</code></span> предписывает <span class="term"><code>zfs receive</code></span>
+	не монтировать получаемые снимки. Данные существуют для монтирования, если пожелает системный администратор,
+	однако монтироание набора данных может приводить к изменению этих данных.</p>
+
+	<a id="070402"> </a>
+	<p class="title"><strong>Изменение отката</strong></p>
+    <p>Если кто- то изменил принятый набор данных, попытка инкрементально добавить новый снимок к этой 
+	реплике провалится. Набор данных принимаемого снимка должен быть нетронутым для того, чтобы 
+	<span class="term"><code>zfs receive</code></span> принимал инкрементальные или дифференциальные
+	обновления.</p>
+    <p> Флаг <span class="term"><code>-F</code></span> предписывает <span class="term"><code>zfs receive</code></span> 
+	откатить назад любые изменения, которые препятствуют принятию этого снимка.</p>
+
+	<a id="070403"> </a>
+	<p class="title"><strong>Отладка и тестирование</strong></p>
+   <p>Во многом схоже с <span class="term"><code>zfs send</code></span>, <span class="term"><code>zfs 
+   receive</code></span> поддерживает параметры подробностей и без результатов.</p>
+   <p>Параметр <span class="term"><code>-v</code></span> делает <span class="term"><code>zfs receive</code></span>
+   многословным. Он выдаёт информацию о принимаемых данных и добавляет регулярные обновления 
+   состояния.</p>
+   <p>Флаг <span class="term"><code>-n</code></span> предотвращает реальную запись каких- либо данных
+   <span class="term"><code>zfs receive</code></span> на диск. Вместо этого, в комбинации с 
+   <span class="term"><code>-v</code></span> он выдаёт статистику о том, что 
+   <span class="term"><code>zfs receive</code></span> будет делать если он будет реально 
+   выполняться.</p>
+   <p>Хотя многословность может быть полезной, параметр <span class="term"><code>-n</code></span> 
+   ограничивает утилиту в приёме данных. Хост получает отсылаемые по сети на этот хост данные, и получатель 
+   выполнит некоторый численный анализ, а затем отвергнет эти данные. Чтобы записать эти данные на диск 
+   вы должны пересылать их повторно.</p>
+
+	<a id="070404"> </a>
+	<p class="title"><strong>Клонирование по предписанию</strong></p>
+    <p>Вам может понадобиться отправка набора данных, который, как вы знаете, вы захотите смешать с навозом. 
+	В версии FreeBSD 10.3 вы можете предписать <span class="term"><code>zfs receive</code></span> 
+	сохранять приходящий поток репликации в виде клона вместо того чтобы делать его снимком. Клонирование по 
+	предписанию работает только с инкрементальными репликациями.</p>
+    <p>Чтобы заставить <span class="term"><code>zfs receive</code></span> создавать клон, добавьте флаг 
+	<span class="term"><code>-o</code></span> и определите источник как набор данных, который вы хотите 
+	клонировать. Команда <span class="term"><code>zfs receive</code></span> возьмёт этот набор данных, 
+	добавит приходящий снимок к нему и отделит клон от вашего оригинала.</p>
+    <p>На протяжении этой главы мы выполняли резервное копирование <span class="term"><code><em>zroot/usr/home</em></code></span>
+	на удалённый сервер. Предположим, что нам нужен клон для чтения- записи снимка среды. Мы начнём клонирование со снимка вторника.</p>
+	   <pre class="screen"><code>
+$ zfs send -i @tuesday zroot/usr/home@wednesday | \
+      ssh hotspare zfs receive \
+      -o origin=remotepool/usr/home@tuesday \
+      remotepool/usr/wedshome
+ 	   </code></pre>
+    <p>оператор <span class="term"><code>-o origin</code></span> сообщает <span class="term"><code>zfs receive</code></span>
+	что мы начинаем со снимка <span class="term"><code><em>remotepool/usr/home@tuesday</em></code></span> и 
+	создаём клон. Последний параметр определяет имя клона, <span class="term"><code><em>remotepool/usr/wedshome</em></code></span>.
+	Мы можем теперь перейти в <span class="term"><code><em>/remotepool/usr/wedshome </em></code></span> и 
+	выполнить любые нужные нам изменения без какого- либо воздействия на последующие репликации.</p>
+    <p>Запомните, что создание такого клона, однако, не добавляет переданный снимок к снимкам в первоначальном 
+	местоположении. Если мы хотим также создать <span class="term"><code><em>remotepool/usr/home@wednesday</em></code></span>,
+	мы должны осуществить пересылку повторно, без параметра <span class="term"><code>-o origin</code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0705"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Закладки </span></h4>
+   </div></div></div>
+   <p>Снимки могут потреблять большое пространство, в особенности на занятой файловой системе. Если у вас 
+   есть пользователи, разрабатывающие новое программное обеспечение, загружают ISO, а затем отбраковывают их 
+   и повсеместно сбрасывают файлы ядра, тогда снимки могут получить достаточно много. К сожалению, 
+   инкрементальные репликации строятся из снимков. Закладки (bookmark) являются способом обходить необходимость 
+   сохранить старые снимки, в то же время выполняя инкрементальные репликации.</p>
+   <p>Инкрементальной репликации не нужно знать всё о блоках, которые уже были отправлены. Она должна знать 
+   время рождения самого нового уже отосланного блока, поэтому она может отсылать все более новые блоки. 
+   Закладка является урезанным до самого минимума снимком, оставляющим только время рождения самого 
+   нового блока в этом снимке. Вы можете применять закладку в качестве отправной точки инкрементальной 
+   репликации.</p>
+   <p>Создадим закладку снимка @friday на наборе данных дней недели. Имена закладок начинаются с символа 
+   решётки (#).</p>
+	   <pre class="screen"><code>
+# zfs bookmark zroot/usr/home@friday \
+      zroot/usr/home#bm-friday
+ 	   </code></pre>
+   <p>Просмотрите свою закладку при помощи <span class="term"><code>zfs list</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs list -t all -r mypool/weekday
+NAME                    USED  AVAIL  REFER  MOUNTPOINT
+zroot/usr/home          360K  13.5G    96K  /mypool/weekday
+zroot/usr/home@monday    64K      -    96K  -
+zroot/usr/home@tuesday   64K      -    96K  -
+zroot/usr/home@wednesday 64K      -    96K  -
+zroot/usr/home@thursday  64K      -    96K  -
+zroot/usr/home@friday     8K      -    96K  -
+zroot/usr/home#bm-friday   -      -      -  -
+ 	   </code></pre>
+   <p>Теперь удалим все снимки из пула источника:</p>
+	   <pre class="screen"><code>
+# zfs destroy -v zroot/usr/home@%
+will destroy zroot/usr/home@monday
+…
+ 	   </code></pre>
+   <p>На текущий момент у вас осталась только закладка.</p>
+	   <pre class="screen"><code>
+# zfs list -t all -r mypool/weekday
+NAME                     USED  AVAIL  REFER  MOUNTPOINT
+zroot/usr/home            96K  13.5G    96K  /mypool/weekday
+zroot/usr/home#bm-friday    -      -      -  -
+ 	   </code></pre>
+   <p>В субботу испеките свежий снимок.</p>
+	   <pre class="screen"><code>
+# zfs snapshot zroot/usr/home@saturday
+# zfs list -t all -r zroot/usr/home
+NAME                    USED  AVAIL  REFER  MOUNTPOINT
+mypool/weekday           96K  13.5G    96K  /mypool/weekday
+mypool/weekday@saturday    0      -    96K  -
+mypool/weekday#bm-friday   -      -      -  -
+ 	   </code></pre>
+   <p>Не предусмотрительно закладки выводятся в списке после снимков, даже когда они старше чем эти снимки. 
+   Однако, командная строка ZFS очень выразительна. Чтобы сделать вещи проще, давайте используем 
+   <span class="term"><code>-t</code></span> чтобы указывать ей выводить только снимки и закладки. Флаг 
+   <span class="term"><code>-s</code></span> предписывает <span class="term"><code>zfs(8)</code></span> 
+   сортировть наш вывод, поэтому мы выполним сортироваку по свойству
+   <span class="term"><strong class="userinput"><code>creation</code></strong></span> (дате создания).
+   Чтобы игнорировать снимки дочерних наборов данных, добавьте <span class="emphasis"><em>1</em></span> в 
+   максимальную глубину рекурсии {<span class="term"><code>-d</code></span>}.</p>
+	   <pre class="screen"><code>
+# zfs list -t snapshot,bookmark -s creation \
+      -d 1 zroot/usr/home
+NAME                     USED  AVAIL  REFER  MOUNTPOINT
+zroot/usr/home#bm-friday    -      -      -  -
+zroot/usr/home@saturday   64K      -    96K  -
+ 	   </code></pre>
+   <p>Теперь реплицируем снимок @saturday на удалённый хост, применяя закладку 
+   <span class="emphasis"><em>bm-friday</em></span> в качестве <span class="term"><code>fromsnap</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs send -i #bm-friday zroot/usr/home@saturday | \
+ssh hotspare zfs receive remotepool/backup/usrhome
+ 	   </code></pre>
+   <p>Удалённый хост захватывает снимок @saturday в качестве инкрементального снимка, даже несмотря 
+   на то, что хост источника больше не имеет снимка пятницы.</p>
+	   <pre class="screen"><code>
+# zfs list -t all -r remotepool/usrhome
+NAME                                 USED  AVAIL  REFER  MOUNTPOINT
+remotepool/backup/usrhome           58.5K   472M  19.5K  /remotepool/weekday
+remotepool/backup/usrhome@monday    9.50K      -  19.5K  -
+remotepool/backup/usrhome@tuesday   9.50K      -  19.5K  -
+remotepool/backup/usrhome@wednesday 9.50K      -  19.5K  -
+remotepool/backup/usrhome@thursday  9.50K      -  19.5K  -
+remotepool/backup/usrhome@friday       1K      -  19.5K  -
+remotepool/backup/usrhome@saturday      0      -  19.5K  -
+ 	   </code></pre>
+   <p>Закладки позволяют нам удалять снимки в пуле источника, сохраняя пространство, однако сохраняйте 
+   их в целевом пуле, чтобы мы всё- таки могли вернуться назад к более ранним версиям файлов.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0706"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Возобновляемая отсылка </span></h4>
+   </div></div></div>
+   <p>Только то, что ZFS делает репликацию простой, не означает что реальный мир будет с вами сотрудничать. 
+   По мере роста набора данных в размере растёт вероятность того, что некая кратковременная проблема 
+   разорвёт ваше соединение и прервёт ваш поток. Если вы уже почти завершили выполнение передачи потока 
+   данных в 40ГБ через интернет, двухминутный перебой в работе вашего интернет- провайдера может вызвать 
+   некую вполне заслуженную ярость. Не ходите после этого как носильщик с топором; вместо этого воспользуйтесь 
+   возобновляемыми <span class="term"><code>zfs send</code></span>, позволяя возобновить прерванные репликации. 
+   Возобновляемые <span class="term"><code>zfs send</code></span> впервые появились в FreeBSD 10.3 в начале 
+   2016.</p>
+   <p>Чтобы сделать поток ZFS возобновляемым, добавьте флаг <span class="term"><code>-s</code></span> в 
+   <span class="term"><code>zfs receive</code></span>.</p>
+   <p>Набор данных <span class="term"><code><em>mypool/from</em></code></span> имеет размер в несколько 
+   гигабайт. Добавив <span class="term"><code>-s</code></span> в оператор <span class="term"><code>zfs 
+   receive</code></span>, однако, мы делаем это поток возобновляемым. Что хорошо, потому что мы собираемся 
+   прервать передачу при помощи <span class="term"><code>CTRL-C</code></span>.</p>
+	   <pre class="screen"><code>
+local# zfs snapshot mypool/from@resumeme
+local# zfs send -v mypool/from@resumeme | \
+       ssh hotspare zfs receive -s remotepool/to
+full send of mypool/from@resumeme estimated size is 2.00G
+total estimated size is 2.00G
+TIME      SENT   SNAPSHOT
+17:12:43  279M   mypool/from@resumeme
+17:12:44  529M   mypool/from@resumeme
+17:12:45  786M   mypool/from@resumeme
+^C
+ 	   </code></pre>
+   <p>Конечно, поскольку репликация ZFS однонаправленная, отправитель не имеет никакого понятия о том, 
+   какие блоки получатель в действительности захватил и записал на свой диск. Без возобновляемой отправки 
+   вы должны запустить всю передачу заново.</p>
+   <p>На принимающем хосте, частично полученный набор данных имеет новое свойство, 
+   <span class="term"><strong class="userinput"><code>receive_resume_token</code></strong></span>. 
+   Отправителю требуется значение этого свойства для того, чтобы уловить сколько он может пропустить.</p>
+	   <pre class="screen"><code>
+remote# zfs get -H -o value receive_resume_token \
+        remotepool/to
+1-db9a171a3-c8-789c636064000310a500c4ec50360710e72765a5269740d80cd8e4d3d28a534b40320b-4c61f26c48f2499525a9c540da20ecb02936fd25f9e9a599290c-0cae0dba41478e981fb24092e704cbe725e6a6323014a5e6e-697a416e4e7e7e8a715e5e73a14a51697e6a68264100000648b1d2c
+ 	   </code></pre>
+   <p>Теперь предоставим этот маркер (token) отправителю при помощи флага <span class="term"><code>-t</code></span>. 
+   Вам не нужно включать набор данных источника, поскольку этот маркер уже содержит всё необходимое для 
+   <span class="term"><code>zfs send</code></span>. Добавление <span class="term"><code>-v</code></span>, 
+   однако, насыпет больше подробностей о передаче.</p>
+	   <pre class="screen"><code>
+local# zfs send -v -t 1-db9a171a3-c8-789c636064000310a-500c4ec50360710e72765a5269740d80cd8e4d3d28a534b40320b4c61f-26c48f2499525a9c540da20ecb02936fd25f9e9a599290c0cae0dba41478e981fb24092e704cbe725e6a6323014a5e6e697a416e4e7e7e-8a715e5e73a14a51697e6a68264100000648b1d2c | zfs receive -s remotepool/to
+resume token contents:
+nvlist version: 0
+ object = 0x8
+ offset = 0x35a00000
+ bytes = 0x35c35630
+ toguid = 0xc237c4c4522d8045
+ toname = mypool/from@resumeme
+full send of mypool/from@resumeme estimated size is 1.16G
+TIME       SENT  SNAPSHOT
+17:38:20   263M  mypool/from@resumeme
+17:38:21   472M  mypool/from@resumeme
+…
+17:42:04  1.16G  mypool/from@resumeme
+ 	   </code></pre>
+   <p>Когда <span class="term"><code>zfs receive</code></span> завершится, это свойство очистится.</p>
+	   <pre class="screen"><code>
+# zfs get receive_resume_token remotepool/to
+NAME           PROPERTY              VALUE    SOURCE
+remotepool/to  receive_resume_token      -    -
+ 	   </code></pre>
+   <p>Если вы не возобновите эту отправку, пул назначения получит неиспользуемый, незавершённый набор данных 
+   у себя, занимая место, которое может быть лучше использовано, ну..., да чем угодно. Удалите это 
+   при помощи <span class="term"><code>-A</code></span>.</p>
+	   <pre class="screen"><code>
+remote# zfs receive -A remotepool/to
+ 	   </code></pre>
+   <p>Таким образом мы удаляем частично приняты поток и освобождаем это пространство.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0707"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Автоматизация репликаций </span></h4>
+   </div></div></div>
+   <p>Все хотят резервные копии, однако резервные копии, которые должны выполняться вручную не являются 
+   резервными копиями - потому что они не будут происходить. Несомненно, вы сделаете их один или два раза, 
+   однако в один прекрасный день кофейник прервёт вас и вы едва ли сможете вспомнить когда вы забывали о
+   своём раздражении. Надёжные резервные копии требуют автоматизации и тестирования. Тестирование всегда 
+   является именно вашей задачей, однако для автоматизации у нас есть 
+   <span class="term"><code>zxfer</code></span></p>
+   <p><span class="term"><code>Zxfer(8)</code></span> опрашивает выбранные локальные и удалённые наборы данных, 
+   определяет какие снимки должны быть реплицированы чтобы синхронизировать эти два набора данных, и 
+   пересылает эти наборы данных. Она также может удалять снимки на удалённой стороне если они были удалены 
+   из вашего локального пула.</p>
+   <p>FreeBSD не содержит <span class="term"><code>zxfer</code></span> по умолчанию, однако вы легко можете 
+   установить его при помощи <span class="term"><code>pkg</code></span>. <span class="term"><code>zxfer</code></span> 
+   может работать и в режиме активной доставки (push) и в режиме на извлечение по запросу (pull), вам только 
+   необходимо установить его в одной из ваших систем. Для целей нашей демонстрации мы установим его на 
+   обоих узлах.</p>
+	   <pre class="screen"><code>
+# pkg install zxfer
+ 	   </code></pre>
+   <p>Команда <span class="term"><code>zxfer</code></span> в настоящее время не поддерживает ни закладки, 
+   ни возобновляемые репликации. Она также не устанавливает учётные записи пользователя репликации. Вы должны 
+   настроить эти учётные записи, создать ключи SSH, и установить полномочия в точности, как если бы вы 
+   выполняли обычную репликацию.</p>
+
+	<a id="070701"> </a>
+	<p class="title"><strong>Применение zxfer</strong></p>
+    <p>Все наши примеры использовали режим активной доставки (push); хост с текущими наборами данных 
+	продвигает их на получателя репликации. Мы начнём применять <span class="term"><code>zxfer</code></span> 
+	аналогичным образом <span class="term"><code>zxfer</code></span>. Сделаем доступным режим активной 
+	доставки (push) при помощи <span class="term"><code>-T</code></span> и зарегистрируемся на нашем 
+	удалённом хосте.</p>
+    <p>Применение <span class="term"><code>zxfer</code></span> требует чтобы вы определяли хотите ли вы 
+	реплицировать только один набор данных, или набор данных вместе с его потомками. Флаг 
+	<span class="term"><code>-R</code></span> делает возможной рекурсию, в то время как 
+	<span class="term"><code>-N</code></span> указывает на единственный набор данных и его снимки. Для 
+	резервного копирования практически всегда верен режим рекурсии.</p>
+	<p>Для получения деталей вы также можете добавить <span class="term"><code>-v</code></span>.</p>
+	   <pre class="screen"><code>
+$ zxfer -v -T user@host -R localpath remotepath
+ 	   </code></pre>
+    <p>Если учётная запись пользователя одна и та же с обеих сторон, вы можете пропукать идентификацию 
+	вашего пользователя.</p>
+    <p>Один момент, который следует помнить, состоит в том, что аргументы, которые принимают аргумент сами 
+	по себе не могут быть объединены с аргументами, которые не требуют этого. Вы можете применить 
+	<span class="term"><code>-v -T user@host</code></span>, однако 
+	<span class="term"><code>-vT user@host</code></span> заставит <span class="term"><code>zxfer</code></span> 
+	горько жаловаться. (Так как <span class="term"><code>zxfer</code></span> является сценарием оболочки, 
+	он применяет <span class="term"><code>getopt(1)</code></span> для обработки аргументов командной строки, 
+	вместо того чтобы обрабатывать причудливые параметры, доступные в более сложных языках.)</p>
+    <p> Здесь мы реплицируем набор данных <span class="term"><code><em>zroot/somedata</em></code></span> в пул
+	<span class="term"><code><em>remotepool/backups</em></code></span> на нашем хосте
+	<span class="term"><strong class="userinput"><code>remote</code></strong></span>.</p>
+	   <pre class="screen"><code>
+local$ zxfer -T replicator@remote \
+      -R mypool/somedata remotepool/backups
+ 	   </code></pre>
+    <p>Если вы добавите <span class="term"><code>-v</code></span> для многословного режима, вы обнаружите, что  
+	<span class="term"><code>zxfer</code></span> пересылает каждый снимок.</p>
+	   <pre class="screen"><code>
+Sending zroot/somedata@snappy to remotepool/backups/somedata.
+Sending zroot/somedata@reply to remotepool/backups/somedata.
+(incremental to zroot/somedata@snappy.)
+Sending zroot/somedata@more to remotepool/backups/somedata.
+(incremental to zroot/somedata@reply.)
+ 	   </code></pre>
+    <p>Когда <span class="term"><code>zxfer</code></span> выйдет, ваш хост
+	<span class="term"><strong class="userinput"><code>remote</code></strong></span> имеет все необходимые 
+	снимки.</p>
+	   <pre class="screen"><code>
+remote$ zfs list -t all -r remotepool/backups/somedata
+NAME                                USED  AVAIL  REFER  MOUNTPOINT
+remotepool/backups/somedata        10.1M  15.0G  10.1M  /remotepool/backups/somedata
+remotepool/backups/somedata@snappy    8K      -  10.1M  -
+remotepool/backups/somedata@reply     8K      -  10.1M  -
+remotepool/backups/somedata@more      8K      -  10.1M  -
+ 	   </code></pre>
+    <p>Последующие репликации поверх этих снимков могут выполняться как в режиме активной доставки (push), 
+	так и в режиме на извлечение по запросу (pull). Давайте попробуем следующим режим извлечения.</p>
+
+	<a id="070702"> </a>
+	<p class="title"><strong>Режим извлечения zxfer</strong></p>
+    <p>В режиме извлечения (pull), <span class="term"><code>zxfer</code></span> регистрируется на удалённой 
+	машине через SSH и выполняет <span class="term"><code>zxfer send</code></span> для передачи снимков назад 
+	на хост, выполняющий <span class="term"><code>zxfer</code></span>. Воспользуйтесь флагом 
+	<span class="term"><code>-O</code></span> с регистрационным именем и именем хоста для обозначения 
+	режима извлечения. Всё остальное является в точности таким же.</p>
+	   <pre class="screen"><code>
+$ zxfer -v -O user@host -R localpath remotepath
+ 	   </code></pre>
+    <p>Теперь создадим дополнительный снимок на хосте источника.</p>
+	   <pre class="screen"><code>
+local$ zfs snapshot mypool/somedata@new
+ 	   </code></pre>
+    <p>На машине назначения выполним <span class="term"><code>zxfer</code></span> для затягивания 
+	снимка. Здесь мы добавляем <span class="term"><code>-v</code></span> чтобы видеть дополнительные 
+	прдробности того, что происходит в действительности.
+	</p>
+	   <pre class="screen"><code>
+remote# zxfer -v -O replicator@local \
+        -R zroot/somedata remotepool/backups
+Sending mypool/somedata@new to zroot/backups/somedata.
+(incremental to zroot/somedata@more.)
+ 	   </code></pre>
+    <p>Смонтироанный набор данных обновлён новым снимком.</p>
+
+	<a id="070703"> </a>
+	<p class="title"><strong>Циклическая замена снимков</strong></p>
+    <p>Если вы сохраняете отправляемые снимки, рано или поздно ваш удалённый пул заполнится.
+	Вероятнее всего, вы хотите уничтожать удалённые (расположенные вовне) снимки, которые больше 
+	не существуют на машине источника. Чтобы выполнять это применяйте <span class="term"><code>-d</code></span>.
+	Начните с удаления некого старого снимка.</p>
+	   <pre class="screen"><code>
+local# zfs destroy zroot/somedata@reply
+ 	   </code></pre>
+    <p>Применяйте флаг <span class="term"><code>-d</code></span> для подрезки всех удалённых снимков с 
+	получателя.</p>
+	   <pre class="screen"><code>
+local$ zxfer -vd -T remote \
+       -R zroot/somedata remotepool/backup
+ 	   </code></pre>
+    <p>В режиме с выводом подробностей <span class="term"><code>zxfer</code></span> отобразит 
+	каждый набор данных, который он разрушит также как и те наборы, которые он создаёт.</p>
+	   <pre class="screen"><code>
+Destroying destination snapshot
+      remotepool/backup/somedata@reply.
+ 	   </code></pre>
+    <p>Вы можете наблюдать как ваша опрометчиво набранная команда разрушает ваши возлюбленный данные.</p>
+
+	<a id="070704"> </a>
+	<p class="title"><strong>Сохранение старых снимков</strong></p>
+    <p>Общеупотребимый режим снимка вызывается для изготовления снимка каждые 15 минут, а также 
+	каждые час, день, неделю и месяц. (Мы обсуждали такую циклическую схему в разделе 
+	<a class="link" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch07.html#RotationSchedule" 
+	target="_top">Циклическое расписание</a> первой книги по ZFS.) Хост отбрасывает 15- минутные 
+	снимки после нескольких часов, снимки каждого часа после пары дней и так далее. Несомненно, вы 
+	захотите отбрасывать такие 15- минутные снимки на своём удалённом хосте, однако вы можете 
+	захотеть, чтобы ваш удалённый хост оставлял некоторые снимки даже после того, как источник их 
+	разрушит. Многие из нас хотят сохранять еженедельные и ежемесячные снимки в виде долговременных 
+	резервных копий.</p>
+    <p>Флаг <span class="term"><code>-g</code></span> позволит вам защищать наиболее старые резервные 
+	копии с аргументом числа дней. Например, <span class="term"><code>-g 375</code></span> сообщит 
+	<span class="term"><code>zxfer</code></span> не удалять снимки которые хранятся 375 дней или более.</p>
+    <p>Допустим, вы хотите сохранять все свои ежемесячные снимки, однако автоматически удаляете все прочие 
+	снимки, которые были удалены на источнике. Источник удаляет ежемесячные снимки по прошествии трёх 
+	месяцев, а еженедельные снимки после шести недель. Шесть недель это 42 дня. Добавим дополнительную 
+	неделю для системных аномалий, получим 49 дней. Использование <span class="term"><code>-g</code></span> 
+	с значением 50 сообщит <span class="term"><code>zxfer</code></span> не удалять никакие снимки имеющие 
+	возраст 50 дней или старше.</p>
+	   <pre class="screen"><code>
+local$ zxfer -vd -g 50 -T remote \
+       -R zroot/somedata remotepool/backup
+ 	   </code></pre>
+    <p>В конечном счёте ваш пул резервных копий переполнится. Вам придётся прийти и почистить ваши снимки, 
+	которые стары настолько, что они больше не несут в себе никакой пользы. Это не имеет никакой разницы с 
+	чисткой корпоративного чулана с лентами.</p>
+
+	<a id="070705"> </a>
+	<p class="title"><strong>Свойства и аварийное восстановление</strong></p>
+    <p>Часто вы будете хотеть реплицировать сложные свойства, например, 
+	<span class="term"><strong class="userinput"><code>sharenfs</code></strong></span> и любые из ваших 
+	квот. Параметр <span class="term"><code>-P</code></span> сообщает <span class="term"><code>zxfer</code></span> 
+	о необходимости установить свойства в получателе в соответствии с его источником.</p>
+    <p>В некоторых случаях вы хотите знать значения свойств, но не хотите восстанавливать их сразу 
+	после репликации. команда <span class="term"><code>zxfer</code></span> может копировать свойства 
+	набора данных в некий текстовый файл, делая возможным восстанавливать их из этого файла позже.</p>
+    <p>Флаг <span class="term"><code>-k</code></span> предписывает <span class="term"><code>zxfer</code></span> 
+	создавать текстовый файл свойств, причём в корневом каталоге данной реплики. Этот файл будет иметь имя 
+	<span class="term"><code><em>.zxfer_backup_info</em></code></span> с последующей точкой и именем пула. 
+	Если вы реплицируете весь пул <span class="term"><code><em>zroot</em></code></span> хоста 
+	<span class="term"><strong class="userinput"><code>web5</code></strong></span> в 
+	<span class="term"><code><em>remotepool/web5</em></code></span> на хосте резервного копирования, ваш 
+	файл резервных копий свойств будет находиться в 
+	<span class="term"><code><em>remotepool/web5/.zxfer_backup_info.zroot</em></code></span>.</p>
+    <p>Для восстановления набора данных и свойств пула из текстового файла применяйте флаг 
+	<span class="term"><code>-e</code></span>.</p>
+    <p>Обычная конфигурация для хоста предполагает иметь набор пула отдельно для приёма резервных копий и 
+	затем выделить набор пула отдельно для аварийного восстановления. Если машина источник выходит из строя, 
+	вы можете применить <span class="term"><code>zxfer</code></span> локально для копирования самой последней 
+	резервной копии в пул аварийного восстановления. Вы найдёте ровно такой пример в странице руководства
+	<span class="term"><code>zxfer(8)</code></span>, однако мы приведём общий пример, содержащий  
+	восстановление свойств. Я восстанавливаю нашу резервную копию хоста 
+	<span class="term"><strong class="userinput"><code>web5</code></strong></span> в пул, тоже имеющий
+	имя <span class="term"><code><em>web5</em></code></span>.</p>
+	   <pre class="screen"><code>
+# zxfer -deFPv -R remotepool/web5/ web5
+ 	   </code></pre>
+    <p>Загрузитесь из нового пула <span class="term"><code><em>web5</em></code></span> и вы восстановили 
+	службу!</p>
+
+	<a id="070706"> </a>
+	<p class="title"><strong>Дополнительные параметры zxfer</strong></p>
+    <p>Программа <span class="term"><code>zxfer</code></span> имеет целую массу опций для копирования в 
+	раздращающих обстоятельствах.</p>
+    <p>Если у вас сложная настройка SSH, вам может понадобиться установить некоторые опции клиента для 
+	<span class="term"><code>zxfer</code></span> в <span class="term"><code><em>$HOME/.ssh/config</em></code></span>
+	пользователя. В качестве альтернативы вы можете добавлять эти опции в одиночных кавычках к 
+	<span class="term"><code>-O</code></span> и <span class="term"><code>-T</code></span>.</p>
+    <p>Флаги <span class="term"><code>-O</code></span> и <span class="term"><code>-T</code></span> могут 
+	также применяться для внутреннего ввода (inject) опций SSH, а также аргументов командной строки. 
+	Дополнительные параметры перед пользователем или хостом будут переданы в SSH, в то время как все 
+	команды после пользователя и хоста ставятся в начале команды <span class="term"><code>zfs(8)</code></span>.
+	(Однако, вам лучше обслужить настройки полномочий набора данных ZFS, чем применять 
+	<span class="term"><code>sudo</code></span>.)</p>
+	   <pre class="screen"><code>
+-O ‘-oPort=1022 -i /path/to/key/file \
+      replication@hotspare sudo’
+ 	   </code></pre>
+    <p>Флаг <span class="term"><code>-F</code></span> предписывает <span class="term"><code>zfs receive</code></span> 
+	откатить назад все наборы данных, которые блокируют репликацию. Если вы изменили реплицируемый набор данных, 
+	<span class="term"><code>-F</code></span> снесёт эти изменения.</p>
+    <p>Вы можете заставить <span class="term"><code>zxfer</code></span> выполнять снимок автоматически перед 
+	выполнением. Это не удалит старые снимки, поэтому это не является должным режимом циклической замены 
+	снимка. Однако, это работает для создания немедленной резервной копии, оставляя проблемы с очисткой 
+	на другой день. Добавьте <span class="term"><code>-s</code></span> чтобы заставить 
+	<span class="term"><code>zxfer</code></span> выполнять снимки каждого реплицируемого набора данных.</p>
+    <p>Наконец, флаг <span class="term"><code>-n</code></span> переключает режим без реального выполнения 
+	(no-op). Программа <span class="term"><code>zxfer</code></span> не передаёт и не удаляет никакие снимки.
+	Вместо этого она выполняет свои анализы и выводит то, что она делала бы если бы 
+	<span class="term"><code>-n</code></span> не был установлен.</p>
+    <p>Теперь, когда мы прошли сквозь репликации, эссе о томах ZFS должно показаться лёгким в сравнении с 
+	этим. Или, может быть, нет...</p>
+  </div>
+   
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 7. Балансировка нагрузки обмена в Neutron</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningOpenStackNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="up" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="prev" href="Ch06.html" title="Глава 6. Создание маршрутизатора в Neutron"/>
+<link rel="next" href="Ch08.html" title="Глава 8. Защита экземпляров в сетевой среде"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//openstack-ops_preface.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 7. Балансировка нагрузки обмена в Neutron';
+PrevRef = 'Ch06.html';
+UpRef = 'index.html';
+NextRef = 'Ch08.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 7. Балансировка нагрузки обмена в Neutron</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch07.html#load_balancing_fundamentals">Основы балансировки нагрузки</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch07.html#algorithms">Алгоритмы балансировки нагрузки</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#monitoring">Мониторинг</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#session_persistence">Устойчивость сеанса</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#integrate_load_balancers">Встраивание балансировщика нагрузки в сетевую среду</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch07.html#network_namespaces">Пространства имен сетевой среды</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#instal_LBaaS">Установка балансировщика нагрузки как службы</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#config_LBaaS">Настройка агента службы Neutron LBaaS</a></span></dt>
+	    <dd><dl>
+		  <dt><span class="section"><a href="Ch07.html#itf_driver">Определение драйвера интерфейса</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#dev_driver">Определение драйвера устройства</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#change_ug">Изменение группы пользователя</a></span></dt>
+        </dl></dd>
+		<dt><span class="section"><a href="Ch07.html#define_plugin">Определение подключаемой программы службы</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#start_LBaaS">Запуск агента службы Neutron LBaaS</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#enable_LBaaS_inHorizon">Разрешение LBaaS в Horizon</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#CLI_management_LB">Управление балансировщиком нагрузки в командной строке</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#CLI_managing_pools">Управление пулами в командной строке</a></span></dt>
+	    <dd><dl>
+		  <dt><span class="section"><a href="Ch07.html#CLI_create_pool">Создание пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_delete_pool">Удаление пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_listing_pool">Просмотр пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_pool_details">Просмотр подробностей пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_pool_statistics">Просмотр статистик пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_update_pool">Модернизация пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_pool_w_agent">Просмотр пулов, связанных с агентом</a></span></dt>
+        </dl></dd>
+		<dt><span class="section"><a href="Ch07.html#CLI_managing_pools_members">Управление участниками пулов в командной строке</a></span></dt>
+	    <dd><dl>
+		  <dt><span class="section"><a href="Ch07.html#CLI_create_poolmember">Создание участников пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_delete_poolmember">Удаление участников пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_listing_poolmember">Просмотр участников пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_poolmember_details">Просмотр подробностей участников пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_update_poolmember">Модернизация участников пула</a></span></dt>
+        </dl></dd>
+		<dt><span class="section"><a href="Ch07.html#CLI_managing_health_monitors">Управление мониторами состояний в командной строке</a></span></dt>
+	    <dd><dl>
+		  <dt><span class="section"><a href="Ch07.html#CLI_create_health_monitor">Создание монитора состояния</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_delete_health_monitor">Удаление монитора состояния</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_health_monitor_to_pool">Связывание монитора состояния с пулом</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_health_monitor_from_pool">Отсоединение монитора состояния от пула</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_listing_health_monitor">Просмотр мониторов состояния</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_health_monitor_details">Просмотр подробностей монитора состояния</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_update_health_monitor">Модернизация монитора состояния</a></span></dt>
+        </dl></dd>
+		<dt><span class="section"><a href="Ch07.html#CLI_managing_virtual_IP">Управление виртуальными IP в командной строке</a></span></dt>
+	    <dd><dl>
+		  <dt><span class="section"><a href="Ch07.html#CLI_create_virtual_IP">Создание виртуального IP</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_delete_virtual_IP">Удаление виртуального IP</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_listing_virtual_IP">Просмотр виртуальных IP</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_virtual_IP_details">Просмотр подробностей виртуального IP</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#CLI_update_virtual_IP">Модернизация виртуального IP</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#load_balancer_build">Построение балансировщика нагрузки</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#create_pool">Создание пула</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#create_poolmember">Создание участников пула</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#create_health_monitor">Создание монитора состояния</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#create_virtual_IP">Создание виртуального IP</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#LBaaS_network_namespace">Пространство имен сетевой среды LBaaS</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#Confim_LB_functionality">Подтверждение функциональности балансировщика нагрузки</a></span></dt>
+	    <dd><dl>
+		  <dt><span class="section"><a href="Ch07.html#observ_health_monitors">Наблюдение за монитором состояния</a></span></dt>
+		  <dt><span class="section"><a href="Ch07.html#ext_connect_to_virtual_IP">Внешнее подсоединение к заданному виртуальному IP</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#dashboard_management_LB">Управление балансировщиком нагрузки в инструментальной панели</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#dashboard_create_pool">Создание пула в инструментальной панели</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#dashboard_create_poolmembers">Создание участников пула в инструментальной панели</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#dashboard_create_health_monitors">Создание монитора состояния в инструментальной панели</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#dashboard_create_virtual_IP">Создание виртуального IP в инструментальной панели</a></span></dt>
+	    <dd><dl>
+		  <dt><span class="section"><a href="Ch07.html#dashboard_ext_connect_to_virtual_IP">Внешнее подсоединение к заданному виртуальному IP</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+  
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="load_balancing_fundamentals"> </a>Основы балансировки нагрузки</h2>
+   </div></div></div>
+   <p></p>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="algorithms"> </a>Алгоритмы балансировки нагрузки</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+  <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="monitoring"> </a>Мониторинг</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+  <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="session_persistence"> </a>Устойчивость сеанса</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="integrate_load_balancers"> </a>Встраивание балансировщика нагрузки в сетевую среду</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="network_namespaces"> </a>Пространства имен сетевой среды</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="instal_LBaaS"> </a>Установка балансировщика нагрузки как службы</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_LBaaS"> </a>Настройка агента службы Neutron LBaaS</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="itf_driver"> </a>Определение драйвера интерфейса</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dev_driver"> </a>Определение драйвера устройства</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="change_ug"> </a>Изменение группы пользователя</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="define_plugin"> </a>Определение подключаемой программы службы</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="start_LBaaS"> </a>Запуск агента службы Neutron LBaaS</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="enable_LBaaS_inHorizon"> </a>Разрешение LBaaS в Horizon</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_management_LB"> </a>Управление балансировщиком нагрузки в командной строке</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_create_pool"> </a>Создание пула</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_delete_pool"> </a>Удаление пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_listing_pool"> </a>Просмотр пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_pool_details"> </a>Просмотр подробностей пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_pool_statistics"> </a>Просмотр статистик пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_update_pool"> </a>Модернизация пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_pool_w_agent"> </a>Просмотр пулов, связанных с агентом</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_managing_pools_members"> </a>Управление участниками пулов в командной строке</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_create_poolmember"> </a>Создание участников пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_delete_poolmember"> </a>Удаление участников пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_listing_poolmember"> </a>Просмотр участников пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_poolmember_details"> </a>Просмотр подробностей участников пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_update_poolmember"> </a>Модернизация участников пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_managing_health_monitors"> </a>Управление мониторами состояний в командной строке</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_create_health_monitor"> </a>Создание монитора состояния</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_delete_health_monitor"> </a>Удаление монитора состояния</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_health_monitor_to_pool"> </a>Связывание монитора состояния с пулом</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_health_monitor_from_pool"> </a>Отсоединение монитора состояния от пула</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_listing_health_monitor"> </a>Просмотр мониторов состояния</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_health_monitor_details"> </a>Просмотр подробностей монитора состояния</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_update_health_monitor"> </a>Модернизация монитора состояния</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_managing_virtual_IP"> </a>Управление виртуальными IP в командной строке</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_create_virtual_IP"> </a>Создание виртуального IP</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_delete_virtual_IP"> </a>Удаление виртуального IP</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_listing_virtual_IP"> </a>Просмотр виртуальных IP</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_virtual_IP_details"> </a>Просмотр подробностей виртуального IP</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_update_virtual_IP">"> </a>Модернизация виртуального IP</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+   </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="load_balancer_build"> </a>Построение балансировщика нагрузки</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_pool"> </a>Создание пула</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_poolmember"> </a>Создание участников пула</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_health_monitor"> </a>Создание монитора состояния</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_virtual_IP"> </a>Создание виртуального IP</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="LBaaS_network_namespace"> </a>Пространство имен сетевой среды LBaaS</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Confim_LB_functionality"> </a>Подтверждение функциональности балансировщика нагрузки</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="observ_health_monitors"> </a>Наблюдение за монитором состояния</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ext_connect_to_virtual_IP"> </a>Внешнее подсоединение к заданному виртуальному IP</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+	 </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_management_LB"> </a>Управление балансировщиком нагрузки в инструментальной панели</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_create_pool"> </a>Создание пула в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_create_poolmembers"> </a>Создание участников пула в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_create_health_monitors"> </a>Создание монитора состояния в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_create_virtual_IP"> </a>Создание виртуального IP в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_ext_connect_to_virtual_IP"> </a>Внешнее подсоединение к заданному виртуальному IP</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h2>
+   </div></div></div>
+   <p></p>
+  </div>
+
+
+ </div>
+
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

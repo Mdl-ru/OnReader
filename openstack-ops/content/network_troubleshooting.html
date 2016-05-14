@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 12. Устранение неполадок сети - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="operations.html" title="Эксплуатация"/>
+<link rel="prev" href="maintenance.html" title="Глава 11. Обслуживание, сбои и отладка"/>
+<link rel="next" href="logging_monitoring.html" title="Глава 13. Ведение журналов и мониторинг"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:08+00:00"/><script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//network_troubleshooting.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]--><link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 12. Устранение неполадок сети';
+PrevRef = 'maintenance.html';
+UpRef = 'operations.html';
+NextRef = 'logging_monitoring.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="chapter"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="network_troubleshooting"> </a>Глава 12. Устранение неполадок сети</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="network_troubleshooting.html#check_interface_states">Использование &quot;ip a&quot; для проверки состояний интерфейса</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#nova_network_traffic_in_cloud">Визуализация сетевого обмена nova-network в облаке</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#neutron_network_traffic_in_cloud">Визуализация потоков данных сетевых служб OpenStack в облаке</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#failure_in_path">Поиск неисправностей в пути</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#tcpdump">tcpdump</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#iptables">iptables</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#network_config_database">Настройка сети в базе данных для nova-network</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#debug_dhcp_issues">Отладка проблем DHCP с применением nova-network</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#debugging_dns_issues">Проблемы отладки DNS</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#trouble_shooting_ovs">Поиск неисправностей Open vSwitch</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#dealing_with_netns">Операции с сетевым пространством имен</a></span></dt><dt><span class="section">
+ <a href="network_troubleshooting.html#ops-network-troubleshooting-summary">Резюме</a></span></dt></dl>
+</div>
+<p>К сожалению, поиск и устранение неисправностей сети может быть очень сложной и 
+запутанной процедурой. Вопросы с сетью могут вызывать проблемы в различных местах 
+облака. Использование процедуры логического устранения неполадок может уменьшить беспорядок 
+и более быстро изолировать именно то место, где есть проблема сети. 
+Цель данной главы- предоставить вам информацию, которая необходима для определения
+любой проблемы для либо<code class="literal">nova-network</code> или 
+сетевого ресурса OpenStack (neutron) с Linux Bridge or Open vSwitch.
+<a id="d9e5217" class="indexterm"/>
+<a id="d9e5220" class="indexterm"/>
+<a id="d9e5223" class="indexterm"/></p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="check_interface_states"> </a>Использование &quot;ip a&quot; для проверки состояний интерфейса</h2>
+</div></div></div>
+<p>Используйте следующую команду на вычислительных узлах и узлах, с работающими 
+<code class="literal">nova-network</code>, чтобы увидеть информацию об интерфейсах, 
+включая информацию об IP-адресах, VLAN и работают ли ваши интерфейсы:
+<a id="d9e5230" class="indexterm"/>
+<a id="d9e5232" class="indexterm"/>
+<a id="d9e5234" class="indexterm"/></p>
+<pre class="screen"># ip a</pre>
+<p>Если вы испытываете любой вид проблем с сетью, одна хорошая начальная здравая 
+проверка заключается в том, чтобы убедиться, что ваши интерфейсы работают. Например:</p>
+<pre class="screen">$ ip a | grep state
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 16436 qdisc noqueue state UNKNOWN
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP
+   qlen 1000
+3: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast
+   master br100 state UP qlen 1000
+4: virbr0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN
+5: br100: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP
+</pre>
+<p>Вы можете спокойно игнорировать состояние <code class="literal">virbr0</code>, который 
+является мостом (bridge) по умолчанию созданным libvirt и не используемым OpenStack.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="nova_network_traffic_in_cloud"> </a>Визуализация сетевого обмена nova-network в облаке</h2>
+</div></div></div>
+<p>Если вы вошли в систему экземпляра и выполняете ping на внешний хост, например Google
+— пакеты ping имеют маршрутизацию показанную на
+<a class="xref" href="network_troubleshooting.html#traffic-12-1" title="Рисунок 12.1. Маршрутизация обмена для ping-а пакетов">
+Рисунке 12.1, “Маршрутизация обмена для ping-а пакетов”</a>.
+<a id="d9e5246" class="indexterm"/>
+<a id="d9e5248" class="indexterm"/></p>
+<div class="figure"><a id="traffic-12-1"> </a><p class="title"><strong>
+Рисунок 12.1. Маршрутизация обмена для ping-а пакетов</strong></p>
+<div class="figure-contents"><div class="mediaobject">
+ <img src="figures/osog_1201.png" width="634" height="345"/><br />
+ <span><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_1201.png">
+ Источник рисунка</a></span>
+</div></div></div><br class="figure-break"/>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+ <p>Экземпляр генерирует пакет и помещает его в виртуальную сетевую плату (virtual NIC) 
+ внутри экземпляра, например, такую, как, 
+ <code class="literal">eth0</code>.</p></li><li class="listitem">
+ <p>Пакет передается виртуальной сетевой плате вычислительного хоста, например, 
+ <code class="literal">vnet1</code>. Вы можете узнать какой именно сетевой адаптер (vnet NIC) 
+ используется, просмотрев файл <code class="filename">/etc/libvirt/qemu/instance-xxxxxxxx.xml</code>.</p></li><li class="listitem">
+ <p>Из vnet NIC пакет передается в мост вычислительного узла, например 
+ <code class="code">br100</code>.</p>
+ <p>Если у вас выполняется FlatDHCPManager, на вычислительном узле присутствует один мост. 
+ Если у вас выполняется VlanManager, по одному мосту существует для каждой VLAN.</p>
+ <p>Чтобы найти какой мост будет использовать пакет, выполните команду:
+        </p><pre class="screen">$ brctl show</pre>
+ <p>Найдите vnet NIC. Вы также можете воспользоваться <code class="filename">nova.conf</code> и найти параметр
+ <code class="code">flat_interface_bridge</code>.</p></li><li class="listitem">
+ <p>Пакеты перемещается в главную сетевую плату вычислительного узла. Вы опять 
+ можете найти эту сетевую плату в выводе результата <code class="literal">brctl</code>, или вы 
+ можете найти ее с помощью ссылки на параметр <code class="literal">flat_interface</code>
+ в <code class="filename">nova.conf</code>.</p></li><li class="listitem">
+ <p>После того, как пакет попадает в этот сетевой адаптер, он передается в шлюз по умолчанию 
+ для данного вычислительного узла. Наиболее вероятно, что теперь пакет находится вне вашего контроля 
+ в данной точке. Диаграмма изображает внешний шлюз. 
+ Тем не менее, в конфигурации по умолчанию с многими хостами, хост 
+ вычислительного узла является шлюзом.</p></li></ol>
+ </div>
+ <p>Чтобы увидеть путь ответа ping, измените направление.
+ Из рассмотренного пути вы можете увидеть, что один пакет проходит через четыре 
+ различных сетевых адаптера. Если возникает проблема с любой из этих сетевых плат, 
+ возникает проблема с сетью.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="neutron_network_traffic_in_cloud"> </a>Визуализация потоков данных сетевых служб OpenStack в облаке</h2>
+</div></div></div>
+<p>Сетевая служба OpenStack, neutron, имеет гораздо больше степеней свободы чем 
+предоставляет <code class="literal">nova-network</code> своими подключаемыми 
+внутренними серверами. Она может быть настроена на работу с плагинами с открытым
+кодом или собственного производства поставщиков, которые управляют оборудованием
+сетей, определяемым программным обеспечением (SDN, software defined networking) или
+плагинами, которые используют имеющиеся у Linux функции на ваших хостах, таких как 
+Open vSwitch или Linux Bridge.<a id="Topen" class="indexterm"/></p>
+<p>Глава сетевых ресурсов  OpenStack 
+<a class="link" href="http://docs.openstack.org/admin-guide-cloud/content/ch_networking.html" title="Руководство администратора облака" target="_top">
+Руководства администратора облака</a> описывает разнообразие сетевых сценариев 
+и способов их подключений. Цель данного раздела заключается в предоставлении вам
+инструментов для устранения неисправностей различных компонентов, которые, однако,
+совместно работают по вертикали в вашей среде.</p>
+<p>Для данного примера мы используем внутренние сервера Open vSwitch (OVS). 
+Другие плагины будут иметь очень отличные потоки данных. Согласно опросу пользователей
+OpenStack в октябре 2013, OVS является наиболее популярным драйвером развертывания сети,
+более чем с 50 процентами сайтов, использующими его по сравнению с занявшим второе место
+драйвером Linux Bridge driver. Для справки, мы опишем все этапы в кругообороте при помощи 
+<a class="xref" href="network_troubleshooting.html#neutron-packet-ping" title="Рисунок 12.2. Сетевые пути Neutron">
+Рисунка 12.2, “Сетевые пути Neutron”</a>.</p>
+
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<p>Экземпляр формирует пакет и помещает его в виртуальный  NIC
+внутри экземпляра, например,  eth0.</p></li><li class="listitem">
+<p>Пакет передается в устройство тест-порта (TAP, Test Access Point) в
+вычислительном хосте, например, tap690466bc-92. Просмотрев файл 
+<code class="filename">/etc/libvirt/qemu/instance-xxxxxxxx.xml</code>,
+вы можете определить какой тест- порт (TAP) используется.</p>
+<p>Имя устройства тест- порта (TAP) строится с использованием первых 11 символов ID порта 
+(10 шестнадцатеричных цифр плюс входящий в их состав символ дефиса '-'), 
+следовательно, если вы увидите построенное иначе имя устройства, это будет означать 
+использование команды <code class="literal">neutron</code>. 
+Она возвращает список конвейера с разделителями, первым элементом которого будет ID порта.
+Например, для получения ID порта, связанного с IP адресом 10.0.0.10, выполните:</p>
+<pre class="screen"># neutron port-list | grep 10.0.0.10 | cut -d \| -f 2
+ ff387e54-9e54-442b-94a3-aa4481764f1d</pre>
+<p>Взяв первые 11 символов, мы сможем построить имя устройства tapff387e54-9e
+из результата вывода.</p></li></ol>
+</div>
+<div class="figure"><a id="neutron-packet-ping"> </a>
+ <p class="title"><strong>Рисунок 12.2. Сетевые пути Neutron</strong></p>
+ <div class="figure-contents"><div class="mediaobject">
+  <img src="figures/osog_1202.png"/ width="619" height="592"><br />
+  <span><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_1202.png">
+  Источник рисунка</a></span>
+ </div></div></div><br class="figure-break"/>
+ <div class="orderedlist"><ol class="orderedlist" start="3" type="1"><li class="listitem">
+ <p>Устройство тест-порта (TAP) присоединяется к объединяющему (integration) мосту,
+<code class="code">br-int</code>. Этот мост соединяет все устройства тест- портов (TAP)
+экземпляра и все остальные мосты системы. В данном примере у нас имеется 
+<code class="code">int-br-eth1</code> и <code class="code">patch-tun</code>.
+<code class="code">int-br-eth1</code> является первой половиной пары veth, присоединенной к мосту
+<code class="code">br-eth1</code>, который обрабатывает сеть VLAN, создающую
+магистральную линию сквозь физические устройства Ethernet <code class="code">eth1</code>. 
+<code class="code">patch-tun</code> является внутренним портом Open vSwitch, который
+соединяет мост <code class="code">br-tun</code> с сетями GRE.</p>
+ <p>Устройства тест-порта (TAP) и устройства veth являются обычными устройствами Linux и 
+ могут обследованы при помощи обычных инструментов, таких как <code class="literal">ip</code> 
+ и <code class="literal">tcpdump</code>. Внутренние устройства Open vSwitch, например, 
+ <code class="code">patch-tun</code>, видны только в рамках среды Open vSwitch. 
+ Если вы попробуете выполнить <code class="literal">tcpdump -i patch-tun</code>, 
+ это вызовет ошибку с сообщением, что такое устройство не существует.</p>
+ <p>Существует возможность просмотра пакетов во внутренних интерфейсах, однако
+ это требует некоторой сетевой акробатики. Вначале вы должны создать фиктивное (dummy) 
+ сетевое устройство, которое могут видеть обычные инструменты Linux. Затем
+ вам необходимо добавить его в мост, содержащий внутренние интерфейсы, 
+ которые вы хотите отслеживать. Наконец, вы должны запросить Open vSwitch 
+ зеркалировать весь обмен к- или от- внутреннего порта на этот фиктивный порт.
+ После всего этого вы можете выполнить <code class="literal">tcpdump</code> 
+ на фиктивном интерфейсе и увидеть трафик внутреннего порта.</p>
+ <div class="procedure">
+ <a id="d9e5325"> </a>
+ <p class="title"><strong>Для перехвата пакетов из внутреннего интерфейса 
+ <code class="code">patch-tun</code> в объединяющем (integration) мосту
+ <code class="code">br-int</code>:</strong></p><ol class="procedure" type="1"><li class="step">
+ <p>Создайте и настройте фиктивный интерфейс, <code class="code">snooper0</code>:</p>
+ <pre class="screen"># ip link add name snooper0 type dummy</pre>
+ <pre class="screen"># ip link set dev snooper0 up
+</pre></li><li class="step">
+<p>Добавьте устройство <code class="code">snooper0</code> к мосту
+<code class="code">br-int</code>:</p>
+<pre class="screen"># ovs-vsctl add-port br-int snooper0
+</pre></li><li class="step">
+<p>Создайте зеркало <code class="code">patch-tun</code> на
+<code class="code">snooper0</code> (возвращает UUID порта зеркала):</p>
+<pre class="screen"># ovs-vsctl -- set Bridge br-int mirrors=@m  -- --id=@snooper0 \
+get Port snooper0  -- --id=@patch-tun get Port patch-tun  \
+-- --id=@m create Mirror name=mymirror select-dst-port=@patch-tun \
+select-src-port=@patch-tun output-port=@snooper0</pre></li><li class="step">
+<p>Польза. Теперь вы можете просматривать обмен в <code class="code">patch-tun</code>
+выполнив <code class="literal">tcpdump -i snooper0</code>.</p></li><li class="step">
+<p>Проведите очистку, очистив все зеркала в <code class="code">br-int</code> и
+удалиы фиктивные интерфейсы:</p><pre class="screen"># ovs-vsctl clear Bridge br-int mirrors
+</pre><pre class="screen"># ovs-vsctl del-port br-int snooper0
+</pre><pre class="screen"># ip link delete dev snooper0
+</pre></li></ol>
+</div>
+<p>В объединенном (integration) мосте сети разделяются при помощи 
+внутренних VLANs в зависимости от определенных на них служб.
+Это позволяет экземплярам на одном хосте взаимодействовать напрямую без
+перекачки остатка виртуальной или физической сети. 
+ID таких внутренних VLAN основаны на порядке их создания в узле и могут различаться 
+между узлами. Подобные ID не имеют никакой связи с ID сегментации, используемыми при
+определении сети и в физических соединениях.</p>
+<p>Метки (tags) VLAN транслируются между внешними метками, определенными при создании
+сети и внутренними метками в различных местах. В
+<code class="code">br-int</code>, пакеты, приходящие от <code class="code">int-br-eth1</code> 
+транслируются их внешних меток во внутренние.
+Другие трансляции также происходят в других мостах и будут обсуждаться в 
+своих разделах.</p>
+<div class="procedure"><a id="d9e5358"> </a>
+<p class="title"><strong>Чтобы обнаружить какая внутренняя метка VLAN
+используется для данного внешнего VLAN при помощи команды 
+<code class="literal">ovs-ofctl</code>:</strong></p><ol class="procedure" type="1"><li class="step">
+<p>Найдите метку внешней VLAN интересующей вас сети. Это будет <code class="code">provider:segmentation_id</code>,
+возвращаемые сетевой службой:</p>
+<pre class="screen"># neutron net-show --fields provider:segmentation_id &lt;network name&gt;
++---------------------------+--------------------------------------+
+| Field                     | Value                                |
++---------------------------+--------------------------------------+
+| provider:network_type     | vlan                                 |
+| provider:segmentation_id  | 2113                                 |
++---------------------------+--------------------------------------+
+</pre></li><li class="step">
+<p>В данном случае выполните grep для <code class="code">provider:segmentation_id</code>, 2113, 
+в выводе результата <code class="literal">ovs-ofctl dump-flows
+            br-int</code>:</p>
+<pre class="screen"># ovs-ofctl dump-flows br-int|grep vlan=2113
+cookie=0x0, duration=173615.481s, table=0, n_packets=7676140, \
+n_bytes=444818637, idle_age=0, hard_age=65534, priority=3, \
+in_port=1,dl_vlan=2113 actions=mod_vlan_vid:7,NORMAL
+</pre>
+<p>Здесь вы можете увидеть,что принимающиеся в порт ID 1 
+пакеты с меткой VLAN 2113 модифицируются таким образом,
+чтобы иметь метку внутренней VLAN, равной 7. 
+Погрузившись немного глубже, вы можете убедиться, что порт 1 фактически является 
+<code class="code">int-br-eth1</code>:</p>
+<pre class="screen"># ovs-ofctl show br-int
+OFPT_FEATURES_REPLY (xid=0x2): dpid:000022bc45e1914b
+n_tables:254, n_buffers:256
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS QUEUE_STATS \
+ARP_MATCH_IP
+actions: OUTPUT SET_VLAN_VID SET_VLAN_PCP STRIP_VLAN SET_DL_SRC \
+SET_DL_DST SET_NW_SRC SET_NW_DST SET_NW_TOS SET_TP_SRC \
+SET_TP_DST ENQUEUE
+ 1(int-br-eth1): addr:c2:72:74:7f:86:08
+     config:     0
+     state:      0
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 2(patch-tun): addr:fa:24:73:75:ad:cd
+     config:     0
+     state:      0
+     speed: 0 Mbps now, 0 Mbps max
+ 3(tap9be586e6-79): addr:fe:16:3e:e6:98:56
+     config:     0
+     state:      0
+     current:    10MB-FD COPPER
+     speed: 10 Mbps now, 0 Mbps max
+ LOCAL(br-int): addr:22:bc:45:e1:91:4b
+     config:     0
+     state:      0
+     speed: 0 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
+</pre></li></ol>
+</div></li><li class="listitem">
+<p>Следующий этап зависит от того настроена ли виртуальная сеть на 
+использование меток (tags) 802.1q VLAN или GRE:</p>
+<div class="orderedlist"><ol class="orderedlist" type="a"><li class="listitem">
+ <p>Сети на основе VLAN покидают объединяющий мост через интерфейс veth
+ <code class="code">int-br-eth1</code>, а приходят в него через
+ <code class="code">br-eth1</code> другого участника пары veth
+ <code class="code">phy-br-eth1</code>. Пакеты в этом интерфейсе 
+ приходят с внутренними метками (tags) VLAN и транслируются во внешние
+ метки (tags) в порядке, обратном описанному выше:</p>
+<pre class="screen"># ovs-ofctl dump-flows br-eth1|grep 2113
+cookie=0x0, duration=184168.225s, table=0, n_packets=0, n_bytes=0, \
+idle_age=65534, hard_age=65534, priority=4,in_port=1,dl_vlan=7 \
+actions=mod_vlan_vid:2113,NORMAL</pre>
+<p>Пакеты теперь помечаются метками внешнего VLAN, затем выходят в физическую сеть через
+<code class="code">eth1</code>. Коммутирующий эти интерфейсы Layer2 соединен
+таким образом, чтобы быть настроенным на прием трафика с используемым ID VLAN. 
+Следующий интервал связи (hop) для этого пакета должен происходить также в сети
+layer-2.</p></li><li class="listitem">
+ <p>Сети на основе GRE проходят через <code class="code">patch-tun</code> в
+ мост туннеля <code class="code">br-tun</code> в интерфейсе
+<code class="code">patch-int</code>. Этот мост также содержит один порт для каждого
+однорангового (peer) участника туннеля GRE, т.е. по одному для каждого 
+вычислительного узла и сетевого узла в вашей сети. Порты нумеруются 
+последовательно от <code class="code">gre-1</code> и так далее.</p>
+<p>Соответствие интерфейсов <code class="code">gre-&lt;n&gt;</code> 
+конечным точкм туннеля можно установить просмотрев состояние Open vSwitch:</p>
+<pre class="screen"># ovs-vsctl show |grep -A 3 -e Port\ \"gre-
+        Port "gre-1"
+            Interface "gre-1"
+                type: gre
+                options: {in_key=flow, local_ip="10.10.128.21", \
+                out_key=flow, remote_ip="10.10.128.16"}
+</pre>
+<p>В данном случае <code class="code">gre-1</code> является туннелем из 
+IP 10.10.128.21, который должен соответствовать внутреннему интерфейсу 
+данного узла, к IP 10.10.128.16 на удаленной стороне.</p>
+<p>Такие туннели используются в обычных таблицах маршрутизации в хосте 
+для переправки получающихся в результате пакетов GRE, следовательно,
+не существует требования для конечных точек GRE присутствовать в одной
+и той же сети layer-2, в отличие от инкапсуляции VLAN.</p>
+<p>Все интерфейсы в <code class="code">br-tun</code> являются внутренними 
+по отношению к Open vSwitch. Дляотслеживания трафика в нем вы должны установить
+порт зеркала, как это было описано выше для <code class="code">patch-tun</code> в
+мосте <code class="code">br-int</code>.</p>
+<p>Все трансляции туннеля GRE в- и из- внутренних VLAN происходят
+в мосте.</p></li></ol>
+</div>
+<div class="procedure">
+<a id="d9e5401"> </a>
+<p class="title"><strong>Чтобы обнаружить какие метки (tags) внутренних VLAN
+используются для туннеля GRE при помощи команды <code class="literal">ovs-ofctl</code>:</strong></p><ol class="procedure" type="1"><li class="step">
+<p>Найдите <code class="code">provider:segmentation_id</code> 
+интересующей вас сети. Это то же поле, которое используется для ID VLAN 
+в сетях на основе VLAN:</p>
+<pre class="screen"># neutron net-show --fields provider:segmentation_id &lt;network name&gt;
++--------------------------+-------+
+| Field                    | Value |
++--------------------------+-------+
+| provider:network_type    | gre   |
+| provider:segmentation_id | 3     |
++--------------------------+-------+
+</pre></li><li class="step">
+<p>В данном случае осуществите grep для 0x&lt;<code class="code">provider:segmentation_id</code>&gt;,
+0x3, в выдаче результата <code class="literal">ovs-ofctl dump-flows br-tun</code>:</p>
+<pre class="screen"># ovs-ofctl dump-flows br-tun|grep 0x3
+cookie=0x0, duration=380575.724s, table=2, n_packets=1800, \
+n_bytes=286104, priority=1,tun_id=0x3 \
+actions=mod_vlan_vid:1,resubmit(,10)
+ cookie=0x0, duration=715.529s, table=20, n_packets=5, \
+n_bytes=830, hard_timeout=300,priority=1, \
+vlan_tci=0x0001/0x0fff,dl_dst=fa:16:3e:a6:48:24 \
+actions=load:0-&gt;NXM_OF_VLAN_TCI[], \
+load:0x3-&gt;NXM_NX_TUN_ID[],output:53
+ cookie=0x0, duration=193729.242s, table=21, n_packets=58761, \
+n_bytes=2618498, dl_vlan=1 actions=strip_vlan,set_tunnel:0x3, \
+output:4,output:58,output:56,output:11,output:12,output:47, \
+output:13,output:48,output:49,output:44,output:43,output:45, \
+output:46,output:30,output:31,output:29,output:28,output:26, \
+output:27,output:24,output:25,output:32,output:19,output:21, \
+output:59,output:60,output:57,output:6,output:5,output:20, \
+output:18,output:17,output:16,output:15,output:14,output:7, \
+output:9,output:8,output:53,output:10,output:3,output:2, \
+output:38,output:37,output:39,output:40,output:34,output:23, \
+output:36,output:35,output:22,output:42,output:41,output:54, \
+output:52,output:51,output:50,output:55,output:33
+</pre>
+<p>Здесь вы видите три потока, связанных с туннелем GRE. 
+Первый является трансляцией из входящих в этот туннель пакетов с ID 
+данного туннеля в ID 1 внутренней VLAN. Второй показывает поток
+одноадресной передачи в порт вывода 53 для пакетов, предназначенных 
+MAC адресу fa:16:3e:a6:48:24. Третий отображает трансляцию из внутреннего
+представления VLAN в ID туннеля GRE лавинно маршрутизирующиеся во
+все выводящие порты. Для более подробного ознакомления с особенностями 
+описания потока обратитесь к оперативной странице руководства для 
+<code class="literal">ovs-ofctl</code>. Каки в предыдущем примере VLAN,
+соответствие численных ID портов с их именами может быть установлено
+путем просмотра результата вывода 
+<code class="literal">ovs-ofctl show br-tun</code>.</p></li></ol>
+</div></li><li class="listitem">
+<p>Затем пакет получается на сетевом узле. Обратите внимание, что любое 
+перемещение в L3-агенте или DHCP -агенте будут видны только в пределах 
+их сетевого пространства имен. Просмотр любых интерфейсов за пределами этих 
+пространств имен, даже тех, которые осуществляют сетевой трафик, покажет только 
+широковещательные пакеты, такие как протоколы разрешения адресов (ARP), а 
+одноадресный трафик к маршрутизатору или DHCP адрес не будет виден. 
+См. <a class="link" href="http://docs.openstack.org/openstack-ops/content/network_troubleshooting.html#dealing_with_netns" target="_top">
+Работа с сетевыми пространствами имен</a> для подробностей о том, как выполнять команды внутри этих пространств имен.</p>
+<p>Кроме того, можно настроить сети на основе VLAN на использование внешних маршрутизаторов вместо L3-агента, показанного здесь, 
+при условии, что внешний маршрутизатор находится в той же VLAN:</p>
+<div class="orderedlist"><ol class="orderedlist" type="a"><li class="listitem">
+ <p>Сети на основе VLAN воспринимаются как помеченные пакеты в физическом сетевом интерфейсе, 
+ в данном примере, <code class="code">eth1</code>. 
+ Так же, как на вычислительном узле, этот интерфейс является членом моста <code class="code">br-eth1</code>.</p></li><li class="listitem">
+ <p>Сети на основе GRE будут переданы в туннель моста <code class="code">br-tun</code>, 
+ который ведет себя так же, как интерфейсы GRE на вычислительном узле.</p></li></ol>
+</div></li><li class="listitem">
+<p>Далее, пакеты из любого входа проходят объединяющий мост, снова в точности как на вычислительном узле.</p></li><li class="listitem">
+<p>Затем пакет изготавливается для L3-агента. Это на самом деле другое 
+устройство тест-порта (TAP) в пространстве имен сети маршрутизатора. Пространство имен 
+маршрутизатора именуется  в форме <code class="code">qrouter-&lt;router-uuid&gt;</code>. 
+Запуск <code class="literal">ip a</code>, в рамках пространства имен покажет имя устройства тест-порта (TAP), 
+QR-e6256f7d-31 в нашем примере:</p>
+<pre class="screen"># ip netns exec qrouter-e521f9d0-a1bd-4ff4-bc81-78a60dd88fe5 ip a|grep state
+10: qr-e6256f7d-31: &lt;BROADCAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue \
+    state UNKNOWN
+11: qg-35916e1f-36: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 \
+    qdisc pfifo_fast state UNKNOWN qlen 500
+28: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 16436 qdisc noqueue state UNKNOWN
+</pre></li><li class="listitem">
+<p>Интерфейс <code class="code">qg-&lt;n&gt;</code> в L3-агенте пространства имен маршрутизатора 
+пересылает пакет своему следующему интервалу связи (hop) через устройство 
+<code class="code">eth2</code> во внешней моста <code class="code">br-ex</code>. Этот 
+мост построен так же, как <code class="code">br-eth1</code> и может быть 
+проверен таким же образом.</p></li><li class="listitem">
+<p>Этот внешний мост также включает в себя физический сетевой интерфейс, 
+в нашем примере <code class="code">eth2</code>, который, наконец, 
+выгружает пакет во внешнюю сеть, определенную для внешнего маршрутизатора или 
+получателя.</p></li><li class="listitem">
+<p>Агенты DHCP, оперирующие в сети OpenStack работают в пространствах имен, 
+подобных L3-агентам. DHCP пространства имен именуются 
+как <code class="code">qdhcp-&lt;uuid&gt;</code> и имеют устройство 
+тест-порта (TAP) в объединяющем мосте. Отладка проблем DHCP обычно включает в себя работу 
+внутри пространства имен этой сети.
+<a id="d9e5447" class="indexterm"/></p></li></ol>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="failure_in_path"> </a>Поиск неисправностей в пути</h2>
+</div></div></div>
+<p>Используйте команду ping, чтобы быстро найти где существует отказ в сетевом пути. 
+В экземпляре вначале убедитесь, можете ли вы проверить связь (ping) с внешним хостом, например, 
+google.com. Если да, то вообще не должно быть проблемы с сетью.</p>
+<p>Если нет, попробуйте выполнить ping к IP адресу вычислительного узла, на котором 
+располагается экземпляр. Если ping к этому IP выполняется, то проблема находится 
+где- то между вычислительным узлом и его шлюзом по умолчанию.</p>
+<p>Если ping на IP адрес данного вычислительного узла не выполняется, проблема между 
+экземпляром и вычислительным узлом. Она может заключаться и в мосте, 
+соединяющем основную сетевую плату вычислительного узла и vnet 
+NIC экземпляра.</p>
+<p>И последний тест заключается в запуске второго экземпляра и проверке того, что оба 
+экземпляра могут осуществлять ping друг к другу. Если да, то проблема может быть связана 
+с брандмауэром (firewall) на данном вычислительном узле.
+<a id="d9e5454" class="indexterm"/>
+<a id="d9e5456" class="indexterm"/></p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="tcpdump"> </a>tcpdump</h2>
+</div></div></div>
+<p>Один замечательный, хотя и чересчур глубокий, способ устранения неполадок сети заключается 
+в использовании <code class="literal">tcpdump</code>. Мы рекомендуем использовать 
+<code class="literal">tcpdump</code> в различных точках сетевого пути, чтобы 
+провести корреляцию того, где может быть проблема. Если вы предпочитаете работать с графическим интерфейсом (GUI), 
+либо напрямую или с использованием перехвата <code class="literal">tcpdump</code> попробуйте в обоих случаях 
+<a class="link" href="http://www.wireshark.org/" title="Wireshark" target="_top">Wireshark</a>.
+<a id="d9e5466" class="indexterm"/></p>
+<p>Например, выполните следующую команду:</p>
+<pre class="screen">tcpdump -i any -n -v \ 'icmp[icmptype] = icmp-echoreply or icmp[icmptype] =
+icmp-echo'</pre>
+<p>Выполните ее из командной строки в следующих областях:</p>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<p>На внешнем сервере за пределами облака</p></li><li class="listitem">
+<p>На вычислительном узле</p></li><li class="listitem">
+<p>В экземпляре, запущенном на вычислительном узле</p></li></ol>
+</div>
+<p>В нашем примере эти местоположения имеют следующие IP-адреса:</p>
+<pre class="screen">Instance
+                          10.0.2.24
+                          203.0.113.30
+                          Compute Node
+                          10.0.0.42
+                          203.0.113.34
+                          External Server
+                          1.2.3.4</pre>
+<p>Затем откройте новую оболочку на экземпляре и потом выполните ping к внешнему 
+хосту, на котором работает <code class="literal">tcpdump</code>.
+Если сетевой путь к внешнему серверу и обратно полностью работоспособен, вы видите нечто вроде 
+следующего:</p>
+<p>На внешнем сервере:</p>
+<pre class="screen">12:51:42.020227 IP (tos 0x0, ttl 61, id 0, offset 0, flags [DF], \
+proto ICMP (1), length 84)
+    203.0.113.30 &gt; 1.2.3.4: ICMP echo request, id 24895, seq 1, length 64
+12:51:42.020255 IP (tos 0x0, ttl 64, id 8137, offset 0, flags [none], \
+proto ICMP (1), length 84)
+    1.2.3.4 &gt; 203.0.113.30: ICMP echo reply, id 24895, seq 1, \
+    length 64</pre>
+<p>На вычислительном узле:</p>
+<pre class="screen">12:51:42.019519 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], \
+proto ICMP (1), length 84)
+    10.0.2.24 &gt; 1.2.3.4: ICMP echo request, id 24895, seq 1, length 64
+12:51:42.019519 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], \
+proto ICMP (1), length 84)
+    10.0.2.24 &gt; 1.2.3.4: ICMP echo request, id 24895, seq 1, length 64
+12:51:42.019545 IP (tos 0x0, ttl 63, id 0, offset 0, flags [DF], \
+proto ICMP (1), length 84)
+    203.0.113.30 &gt; 1.2.3.4: ICMP echo request, id 24895, seq 1, length 64
+12:51:42.019780 IP (tos 0x0, ttl 62, id 8137, offset 0, flags [none], \
+proto ICMP (1), length 84)
+    1.2.3.4 &gt; 203.0.113.30: ICMP echo reply, id 24895, seq 1, length 64
+12:51:42.019801 IP (tos 0x0, ttl 61, id 8137, offset 0, flags [none], \
+proto ICMP (1), length 84)
+    1.2.3.4 &gt; 10.0.2.24: ICMP echo reply, id 24895, seq 1, length 64
+12:51:42.019807 IP (tos 0x0, ttl 61, id 8137, offset 0, flags [none], \
+proto ICMP (1), length 84)
+    1.2.3.4 &gt; 10.0.2.24: ICMP echo reply, id 24895, seq 1, length 64</pre>
+<p>В экземпляре:</p>
+<pre class="screen">12:51:42.020974 IP (tos 0x0, ttl 61, id 8137, offset 0, flags [none], \
+proto ICMP (1), length 84)
+ 1.2.3.4 &gt; 10.0.2.24: ICMP echo reply, id 24895, seq 1, length 64</pre>
+<p>Здесь внешний сервер получил запрос ping и послал ping-ответ.
+На вычислительном узле вы можете увидеть, что и сам ping и ping ответ 
+успешно выполнены. Вы также должны увидеть дублированные пакеты на 
+вычислительном узле, как показано выше, потому что <code<code class="literal">tcpdump</code> 
+захватывает пакет как в мосте, так и на исходящем интерфейсе.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="iptables"> </a>iptables</h2>
+</div></div></div>
+<p>С использованием <code class="literal">nova-network</code> вычислительная среда 
+OpenStack автоматически управляет iptables, в том числе пересылкой пакетов к экземпляру и от 
+него на вычислительном узле, переадресацию (forwarding) трафика плавающих IP и 
+управление правилами безопасности группы.
+<a id="d9e5494" class="indexterm"/>
+<a id="d9e5496" class="indexterm"/></p>
+<p>Выполните следующую команду, чтобы посмотреть текущую конфигурацию iptables:</p>
+<pre class="screen"># iptables-save</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Если вы измените конфигурацию, она вернется в следующий раз, когда вы 
+ перезагрузите <code class="literal">nova-network</code>. Вы должны использовать OpenStack для 
+ управления iptables.</p></td></tr></table>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="network_config_database"> </a>Настройка сети в базе данных для nova-network</h2>
+</div></div></div><div class="toc"><dl><dt><span class="section">
+ <a href="network_troubleshooting.html#dissasociate_floating_ip">Ручное отключение плавающих IP</a></span></dt></dl></div>
+ <p>При использовании <code class="literal">nova-network</code> база данных nova 
+ содержит несколько таблиц с сетевой информацией:<a id="d9e5508" class="indexterm"/>
+ <a id="d9e5511" class="indexterm"/></p>
+<div class="variablelist"><dl><dt><span class="term"><code class="literal">fixed_ips</code></span></dt><dd>
+ <p>Содержит все возможные IP-адреса для подсети (подсетей) добавленных в 
+ вычислительную среду. Эта таблица связана с таблицей <code class="literal">instances</code> 
+ (экземпляров) посредством столбца (Прим. пер.: более правильно с точки зрения баз данных: атрибута, поля) 
+ <code class="literal">fixed_ips.instance_uuid</code>.</p></dd><dt><span class="term"><code class="literal">floating_ips</code></span></dt><dd>
+ <p>Содержит все плавающие IP адреса, которые были добавлены в вычислительную среду.
+ Эта таблица связана с таблицей <code class="literal">fixed_ips</code> через
+ столбец <code class="literal">floating_ips.fixed_ip_id</code>.</p></dd><dt><span class="term"><code class="literal">instances</code></span></dt><dd>
+ <p>Не совсем характерна для сети, но она содержит информацию 
+ об экземпляре, который использует <code class="literal">fixed_ip</code> 
+ и не обязательные <code class="literal">floating_ip</code>.</p></dd></dl></div>
+ <p>Из этих таблиц вы можете увидеть, что плавающие IP технически  
+ никогда напрямую не связаны с экземпляром; соединение всегда должно проходить
+ через фиксированный IP.</p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="dissasociate_floating_ip"> </a>Ручное отключение плавающих IP</h3>
+</div></div></div>
+ <p>Иногда экземпляр завершается, но плавающий IP не был правильно 
+ отсоединен от этого экземпляра. Поскольку база данных находится в 
+ несогласованном состоянии, обычные инструменты для отсоединения IP больше
+ не работают. Чтобы исправить это, необходимо вручную обновить базу данных.
+ <a id="d9e5540" class="indexterm"/>
+ <a id="d9e5543" class="indexterm"/></p>
+ <p>Сначала найдите UUID экземпляра выполнив запрос:</p>
+ <pre class="screen">mysql&gt; select uuid from instances where hostname = 'hostname';</pre>
+ <p>Далее, найдите запись фиксированного IP для этого UUID:</p>
+ <pre class="screen">mysql&gt; select * from fixed_ips where instance_uuid = '&lt;uuid&gt;';</pre>
+ <p>Теперь вы можете получить соответствующую запись плавающего IP:</p>
+ <pre class="screen">mysql&gt; select * from floating_ips where fixed_ip_id = '&lt;fixed_ip_id&gt;';</pre>
+ <p>И, наконец, вы можете отсоединить плавающий IP:</p>
+<pre class="screen">mysql&gt; update floating_ips set fixed_ip_id = NULL, host = NULL where
+       fixed_ip_id = '&lt;fixed_ip_id&gt;';</pre>
+ <p>При необходимости также можно освободить IP из пула пользователя:</p>
+<pre class="screen">mysql&gt; update floating_ips set project_id = NULL where
+       fixed_ip_id = '&lt;fixed_ip_id&gt;';</pre>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="debug_dhcp_issues"> </a>Отладка проблем DHCP с применением nova-network</h2>
+</div></div></div>
+<p>Одна из распространенных проблем сети заключается в том, что экземпляр успешно стартует, 
+но не доступен, потому что не удается получить IP-адрес от 
+dnsmasq, который является сервером DHCP, запускаемым службой 
+<code class="literal">nova-network</code>.
+<a id="d9e5559" class="indexterm"/>
+<a id="d9e5562" class="indexterm"/></p>
+<p>Самый простой способ выяснить, что эта проблема связана с вашим 
+экземпляром, заключается в просмотре вывода консоли вашего экземпляра. Если отказал 
+DHCP, вы можете получить журнал консоли, выполнив:</p>
+<pre class="screen">$ nova console-log &lt;instance name or uuid&gt;</pre>
+<p>Если ваш экземпляр не получил IP через DHCP, в консоли должны появиться какие-то сообщения. 
+Например, для образа Cirros вы увидите вывод результатов, выглядящий следующим образом:</p>
+<pre class="screen">udhcpc (v1.17.2) started
+Sending discover...
+Sending discover...
+Sending discover...
+No lease, forking to background
+starting DHCP forEthernet interface eth0 [ [1;32mOK[0;39m ]
+cloud-setup: checking http://169.254.169.254/2009-04-04/meta-data/instance-id
+wget: can't connect to remote host (169.254.169.254): Network is
+unreachable</pre>
+<p>После того, как вы установите, что экземпляр загрузился правильно, задача состоит 
+в том, чтобы выяснить, где происходит отказ.</p>
+<p>Проблема DHCP может быть вызвана некорректно работающим процессом dnsmasq. 
+Во-первых, выполните отладку, проверив журналы и перезагрузите процессы dnsmasq только 
+для этого проекта (владельца, tenant). В режиме VLAN существует по процессу dnsmasq для 
+каждого владельца. После перезагрузки целевых процессов dnsmasq, 
+самый простой способ исключить причины dnsmasq, состоит в том, чтобы уничтожить все dnsmasq 
+процессы на машине, и перезапустить <code class="literal">nova-network</code>. 
+В крайнем случае, выполните это с правами root:</p>
+<pre class="screen"># killall dnsmasq
+# restart nova-network</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Используйте <code class="literal">openstack-nova-network</code> в
+ RHEL/CentOS/Fedora, или <code class="literal">nova-network</code> 
+ в Ubuntu/Debian.</p></td></tr></table></div>
+ <p>Спустя несколько минут после того, как <code class="literal">nova-network</code> запущена повторно, 
+ вы должны увидеть новое выполнение процессов dnsmasq:</p>
+<pre class="screen"># ps aux | grep dnsmasq</pre>
+<pre class="screen">nobody 3735 0.0 0.0 27540 1044 ? S 15:40 0:00 /usr/sbin/dnsmasq --strict-order \
+    --bind-interfaces --conf-file= \
+    --domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid \
+    --listen-address=192.168.100.1 --except-interface=lo \
+    --dhcp-range=set:'novanetwork',192.168.100.2,static,120s \
+    --dhcp-lease-max=256 \
+    --dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf \
+    --dhcp-script=/usr/bin/nova-dhcpbridge --leasefile-ro
+root 3736 0.0 0.0 27512 444 ? S 15:40 0:00 /usr/sbin/dnsmasq --strict-order \
+     --bind-interfaces --conf-file= \
+     --domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid \
+     --listen-address=192.168.100.1 --except-interface=lo \
+     --dhcp-range=set:'novanetwork',192.168.100.2,static,120s \
+     --dhcp-lease-max=256
+     --dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf
+     --dhcp-script=/usr/bin/nova-dhcpbridge --leasefile-ro</pre>
+ <p>Если ваши экземпляры все еще не в состоянии получить IP-адреса, 
+ следующая задача заключается в проверке того, видны ли запросы DHCP dnsmasq из 
+ экземпляра. На машине, на которой выполняется процесс dnsmasq и которая является 
+ вычислительным хоcтом при работе в режиме с многими хостами, найдите 
+ <code class="literal">/var/log/syslog</code>, чтобы увидеть вывод результатов dnsmasq. Если dnsmasq 
+ видит запросы правильно и раздает IP, результат выглядит таким обазом:</p>
+<pre class="screen">Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPDISCOVER(br100) fa:16:3e:56:0b:6f
+Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPOFFER(br100) 192.168.100.3
+                                           fa:16:3e:56:0b:6f
+Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPREQUEST(br100) 192.168.100.3
+                                           fa:16:3e:56:0b:6f
+Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPACK(br100) 192.168.100.3
+fa:16:3e:56:0b:6f test</pre>
+ <p>Если вы не видите <code class="literal">DHCPDISCOVER</code>, существует 
+ проблема с получением пакетов от экземпляра к машине с запущенным 
+ dnsmasq. Если вы видите все приводимые выше выводы, а экземплярам 
+ до сих пор не удалось получить IP-адреса, то пакеты доходят от экземпляра к хосту 
+ с запущенным dnsmasq, но они не в состоянии выполнить обратный путь.</p>
+ <p>Вы также должны видеть сообщение, подобное такому:</p>
+<pre class="screen">Feb 27 22:01:36 mynode dnsmasq-dhcp[25435]: DHCPDISCOVER(br100)
+            fa:16:3e:78:44:84 no address available</pre>
+ <p>Это может быть проблема, вызванная Dnsmasq и / или <code class="literal">nova-network</code>. 
+ (Для предыдущего примера, если бы случилась проблема, что dnsmasq не имеет больше 
+ IP-адресов для выдачи, поскольку больше нет фиксированных IP-адресов в базе данных в
+ вычислительной среде OpenStack).</p>
+ <p>Если есть подозрительные сообщения журнала dnsmasq, взгляните на 
+ аргументы командной строки для процессов dnsmasq чтобы убедиться, 
+ что они выглядят правильно:</p>
+<pre class="screen">$ ps aux | grep dnsmasq</pre>
+ <p>Вывод результатов выглядит примерно следующим образом:</p>
+<pre class="screen">108 1695 0.0 0.0 25972 1000 ? S Feb26 0:00 /usr/sbin/dnsmasq
+-u libvirt-dnsmasq \
+--strict-order --bind-interfaces
+ --pid-file=/var/run/libvirt/network/default.pid --conf-file=
+ --except-interface lo --listen-address 192.168.122.1
+ --dhcp-range 192.168.122.2,192.168.122.254
+ --dhcp-leasefile=/var/lib/libvirt/dnsmasq/default.leases
+ --dhcp-lease-max=253 --dhcp-no-override
+nobody 2438 0.0 0.0 27540 1096 ? S Feb26 0:00 /usr/sbin/dnsmasq --strict-order
+--bind-interfaces --conf-file=
+ --domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid
+ --listen-address=192.168.100.1
+ --except-interface=lo \
+ --dhcp-range=set:'novanetwork',192.168.100.2,static,120s
+ --dhcp-lease-max=256
+ --dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf
+ --dhcp-script=/usr/bin/nova-dhcpbridge --leasefile-ro
+  root 2439 0.0 0.0 27512 472 ? S Feb26 0:00 /usr/sbin/dnsmasq --strict-order
+--bind-interfaces --conf-file=
+ --domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid
+ --listen-address=192.168.100.1
+ --except-interface=lo
+ --dhcp-range=set:'novanetwork',192.168.100.2,static,120s
+ --dhcp-lease-max=256
+ --dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf
+ --dhcp-script=/usr/bin/nova-dhcpbridge --leasefile-ro</pre>
+ <p>Вывод результатов показывает три различных процесса dnsmasq. Процесс dnsmasq,
+ который имеет диапазон подсети DHCP 192.168.122.0, относящийся к libvirt
+ и может быть проигнорирован. Другие два процесса dnsmasq принадлежат
+ <code class="literal">nova-network</code>. Эти два процесса на самом деле 
+ связаны — один просто является порождающим процессом второго. Аргументы
+ процессов dnsmasq должны соответствовать реквизитам, с которыми вы настроили 
+ <code class="literal">nova-network</code>.</p>
+ <p>Если проблема не кажется связанной с самим dnsmasq, в данном 
+ месте используйте <code class="code">tcpdump</code> в интерфейсах для определения точки, 
+ в которой теряются пакеты.</p>
+ <p>DHCP трафик использует UDP. Клиент отправляет пакеты из порта 68 в порт 67 на 
+ сервере. Попробуйте загрузить новый экземпляр, а затем систематически прослушивать 
+ сетевой адаптер, пока вы не идентифицируете тот, который не видит трафик. Чтобы 
+ использовать <code class="code">tcpdump</code> для прослушивания портов 67 и 68 на br100, вы могли 
+ бы выполнить:</p>
+ <pre class="screen"># tcpdump -i br100 -n port 67 or port 68</pre>
+ <p>Вы должны выполнять проверку готовности к работе интерфейсов, 
+ например, с помощью команд, подобных <code class="code">ip a</code> и 
+ <code class="code">brctl show</code> для того, чтобы убедиться, что 
+ интерфейсы действительно работают и настроены таким образом, что вы полагаете, что они 
+ существуют.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="debugging_dns_issues"> </a>Проблемы отладки DNS</h2>
+</div></div></div>
+<p>Если вы в состоянии пробросить ssh к экземпляру, но получение приглашения 
+занимает очень много времени (порядка минуты), то, возможно, у вас проблемы 
+с DNS. Причина проблемы с DNS может быть вызвана тем, что 
+сервер ssh не осуществляет обратный DNS поиск IP-адреса, с которого 
+вы подключаетесь. Если поиск DNS не работает на вашем экземпляре, то вы 
+должны ожидать выполнение тайм-аута обратного просмотра DNS для выполнения 
+процесса авторизации ssh.
+<a id="d9e5608" class="indexterm"/>
+<a id="d9e5611" class="indexterm"/></p>
+<p>При отладке проблем DNS, начните с удостоверения того, что хост, на 
+котором работает процесс dnsmasq для этого экземпляра способен правильно разрешать адреса. 
+Если хост не может разрешать адреса, тогда и экземпляры не смогут 
+выполнять это.</p>
+<p>Быстрый способ проверить, работает ли DNS заключается в разрешении имени хоста 
+внутри вашего экземпляра с использованием команды <code class="code">host</code>. Если DNS 
+работает, вы должны увидеть:</p>
+<pre class="screen">$ host openstack.org
+openstack.org has address 174.143.194.225
+openstack.org mail is handled by 10 mx1.emailsrvr.com.
+openstack.org mail is handled by 20 mx2.emailsrvr.com.</pre>
+<p>Если вы работаете с образом Cirros, он не имеет установленной программы &quot;host&quot;, 
+в этом случае вы можете использовать ping, чтобы попытаться получить доступ 
+к машине по имени хоста и чтобы убедиться в способности разрешать имена. Если DNS работает, 
+первая строка ping будет::</p>
+<pre class="screen">$ ping openstack.org
+PING openstack.org (174.143.194.225): 56 data bytes</pre>
+<p>Если экземпляр не может разрешить имя хоста, у вас имеется проблема 
+с DNS. Например:</p>
+<pre class="screen">$ ping openstack.org
+ping: bad address 'openstack.org'</pre>
+<p>В облаке OpenStack, процесс dnsmasq выступает в качестве DNS- сервера 
+для экземпляров в дополнение к работе в качестве DHCP-сервера. Некорректно 
+работающий процесс dnsmasq может быть источником проблем, связанных с DNS внутри 
+экземпляра. Как уже упоминалось в предыдущем разделе, самый простой способ исключения 
+плохого поведения процесса dnsmasq, заключается в уничтожении (kill) всех dnsmasq процессов на 
+машине, и перезапуске <code class="literal">nova-network</code>. Однако следует помнить, 
+что эта команда влияет на все работающие на данном узле экземпляры, 
+в том числе на процессы владельцев (tenant), которые не испытывают данной проблемы. В крайнем случае, 
+выполните с правами root:</p>
+<pre class="screen"># killall dnsmasq
+# restart nova-network</pre>
+<p>После того, как dnsmasq снова стартует, убедитесь что DNS работает.</p>
+<p>Если перезапуск процесса dnsmasq не решил проблему, вам, возможно, 
+потребуется использовать <code class="code">tcpdump</code> для просмотра пакетов, чтобы проследить, где 
+они теряются. Сервер DNS прослушивает UDP порт 53. Вы должны увидеть запрос DNS 
+в мосте (например, br100) вашего вычислительного узла. Если вы 
+запустили прослушивание <code class="code">tcpdump</code> на вычислительном узле:</p>
+<pre class="screen"># tcpdump -i br100 -n -v udp port 53
+tcpdump: listening on br100, link-type EN10MB (Ethernet), capture size 65535
+bytes</pre>
+<p>Тогда, если вы прокинете ssh в экземпляр и попытаетесь выполнить 
+<code class="code">ping openstack.org</code>, вы должны увидеть нечто вроде:</p>
+<pre class="screen">16:36:18.807518 IP (tos 0x0, ttl 64, id 56057, offset 0, flags [DF],
+proto UDP (17), length 59)
+ 192.168.100.4.54244 &gt; 192.168.100.1.53: 2+ A? openstack.org. (31)
+16:36:18.808285 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF],
+proto UDP (17), length 75)
+ 192.168.100.1.53 &gt; 192.168.100.4.54244: 2 1/0/0 openstack.org. A
+ 174.143.194.225 (47)</pre>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="trouble_shooting_ovs"> </a>Поиск неисправностей Open vSwitch</h2>
+</div></div></div>
+<p>Использовавшийся в предыдущих примерах сетевых служб OpenStack Open vSwitch 
+является многоуровневым виртуальным коммутатором с полным набором характеристик,
+лицензируемый согласно лиценизии Apache 2.0 для систем с открытым кодом. 
+Полная документация может быть найдена на 
+<a class="link" href="http://openvswitch.org/" target="_top">веб-сайте проекта</a>. 
+На практике, после выполнения предыдущих настроек, наиболее общие проблемы связаны с тем, 
+существуют ли необходимые мосты (<code class="code">br-int</code>,
+<code class="code">br-tun</code>, <code class="code">br-ex</code> и т.п.) 
+и подключены ли к ним соответствующие порты.
+<a id="d9e5640" class="indexterm"/>
+<a id="d9e5643" class="indexterm"/></p>
+<p>Драйвер Open vSwitch должен это выполнять автоматически, и обычно так и происходит,
+однако полезно знать как это сделатьвручнуюс помощью команды
+<code class="literal">ovs-vsctl</code>. Эта команда имеет большое
+количество подмножеств команд, которые мы будем использовать здесь; 
+изучите оперативные страницы руководства (man page) или воспользуйтесь
+<code class="literal">ovs-vsctl --help</code> для получения полного списка.</p>
+<p>Для получения пеоечня мостов в системе воспользуйтесь
+<code class="literal">ovs-vsctl list-br</code>. Данный пример показывает
+вычислительные узлы, которые имеют внутренние мосты и мосту туннелей.
+Сети VLAN собираются в магистраль (trunked) через сетевой интерфейс
+<code class="code">eth1</code>:</p>
+<pre class="screen"># ovs-vsctl list-br
+br-int
+br-tun
+eth1-br
+      </pre>
+<p>Оперируя изнутри физических интерфейсов, мы можемувидеть цепочку 
+портов и мостов. Во-первых, мост <code class="code">eth1-br</code>, 
+который содержит физический сетевой интерфейс <code class="literal">eth1</code> 
+и виртуальный интерфейс <code class="code">phy-eth1-br</code>:</p>
+<pre class="screen"># ovs-vsctl list-ports eth1-br
+eth1
+phy-eth1-br
+      </pre>
+<p>Далее, внутренний мост, <code class="code">br-int</code>, содержащий
+<code class="code">int-eth1-br</code>, который идет в паре с <code class="code">phy-eth1-br</code> 
+для присоединения к физической сети, показанной в предыдущем мосте, 
+<code class="code">patch-tun</code>, который используется для соединения 
+моста туннеля GRE и устройства тест-порта (TAP), который присоединяет к
+экземпляру, работающему в настоящее время в системе:</p>
+<pre class="screen"># ovs-vsctl list-ports br-int
+int-eth1-br
+patch-tun
+tap2d782834-d1
+tap690466bc-92
+tap8a864970-2d
+      </pre>
+<p>Мост туннеля, <code class="code">br-tun</code>, содержит интерфейс
+<code class="code">patch-int</code> и интерфейс <code class="code">gre-&lt;N&gt;</code> 
+для каждого одорангового участника, к которому он подключается через GRE, 
+причем,по одному для каждого вычислительного и сетевого узла в вашем кластере:</p>
+<pre class="screen"># ovs-vsctl list-ports br-tun
+patch-int
+gre-1
+.
+.
+.
+gre-&lt;N&gt;
+      </pre>
+<p>Если какое- либо из этихсоединений пропущено или некорректно, 
+это означает ошибку настройки. Мосты могут добавляться при помощи 
+<code class="literal">ovs-vsctl add-br</code>, а порты могут добавляться к 
+мостам с использованием <code class="literal">ovs-vsctl add-port</code>. 
+При ручном запуске полезно будет воспользоваться отладкой, 
+важно, чтобы изменения, внесенные вручную и которые вы собираетесь сохранить
+были отражены в ваших файлах настройки.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="dealing_with_netns"> </a>Операции с сетевым пространством имен</h2>
+</div></div></div>
+<p>Сетевые пространства имен Linux являются функцией ядра, которую 
+сетевые службы используют для поддержки множественных изолированных
+сетей уровня 2 с перекрывающимися диапазонами алресов. 
+Поддержкаможет быть запрещена, однако по умолчанию она присутствует.
+Если она разрешена в вашей среде, ваши сетвые узлы будут выполнять своих
+агентов dhcp и агентов 3 уровня в изолированных пространствах имен. 
+Сетевые интерфейсы и обмен в этих интерфейсах будут не видны в пространстве
+имен по умолчанию.
+<a id="d9e5675" class="indexterm"/>
+<a id="d9e5677" class="indexterm"/>
+<a id="d9e5679" class="indexterm"/></p>
+<p>Для просмотра того,используете ли вы пространство имен, выполните 
+<code class="literal">ip netns</code>:</p>
+<pre class="screen"># ip netns
+qdhcp-e521f9d0-a1bd-4ff4-bc81-78a60dd88fe5
+qdhcp-a4d00c60-f005-400e-a24c-1bf8b8308f98
+qdhcp-fe178706-9942-4600-9224-b2ae7c61db71
+qdhcp-0a1d0a27-cffa-4de3-92c5-9d3fd3f2e74d
+qrouter-8a4ce760-ab55-4f2f-8ec5-a2e858ce0d39
+      </pre>
+<p>Пространство имен маршрутизатора агента 3 уровня именуется
+<code class="literal">qrouter-<em class="replaceable"><code>&lt;router_uuid&gt;</code></em></code>,
+а пространство имен агента dhcp именуется 
+<code class="literal">qdhcp-</code><code class="literal"><em class="replaceable"><code>&lt;net_uuid&gt;</code></em></code>.
+Данный вывод результатов показывает сетевые узлы с четырьмя сетями, выполняющими агентов dhcp,
+один из которых такжевыполняет маршрутизацию агента 3 уровня. 
+Важно знать, с какой сетью вы должны работать. Список существующих сетей, а 
+также их UUID могут быть получены выполнением 
+<code class="literal">neutron net-list</code> 
+с полномочиями администратора.</p>
+<p>Когда вы определите, вкаком пространстве имен вам необходимо работать, 
+выможете использовать любое средство отладки, обсуждавшееся ранее, предваряемое 
+префиксом команды с <code class="literal">ip netns exec &lt;namespace&gt;</code>. 
+Например, для просмотра того, какие сетевые интерфейсы существуют в первом
+пространстве имен qdhcp namespace, возвращавшемся ранее, выполните следующее:</p>
+<pre class="screen"># ip netns exec qdhcp-e521f9d0-a1bd-4ff4-bc81-78a60dd88fe5 ip a
+10: tape6256f7d-31: &lt;BROADCAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UNKNOWN
+    link/ether fa:16:3e:aa:f7:a1 brd ff:ff:ff:ff:ff:ff
+    inet 10.0.1.100/24 brd 10.0.1.255 scope global tape6256f7d-31
+    inet 169.254.169.254/16 brd 169.254.255.255 scope global tape6256f7d-31
+    inet6 fe80::f816:3eff:feaa:f7a1/64 scope link
+       valid_lft forever preferred_lft forever
+28: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 16436 qdisc noqueue state UNKNOWN
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+      </pre>
+<p>Отсюда вы видите что сервер DHCP в данной сети использует устройство tape6256f7d-31 
+и имеет IP адрес 10.0.1.100. Просмотрев адрес 169.254.169.254, вы также 
+можете увидеть, что агент dhcp выполняет службу прокси метаданных. 
+Люьые упоминавшиеся ранее в ланной главе команды могут быть выполнены аналогично.
+Также возможно запустить оболочку, например, такую как <code class="literal">bash</code>, 
+и получить интерактивный сеанс в рамках заданного пространства имен. 
+В последнем случае, существующая оболочка вернет вас в пространство имен верхнего
+уровня,заданное по умолчанию.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops-network-troubleshooting-summary"> </a>Резюме</h2>
+</div></div></div>
+<p>Авторы затратили очень много времени на просмотр дампов пакетов с целью
+извлечения приведенной информации вам. Мы верим, что следуя приведенным в данной главе методам,
+вы легко проведете время! 
+Отклоняясь в сторону от работы с приведенными выше инструментами и рекомендованными этапами,
+не забывайте, что иногда дополнительная пара глаз пройдет длинный путь помощи.</p>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

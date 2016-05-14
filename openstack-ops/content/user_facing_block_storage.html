@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Блочные хранилища - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="user_facing_operations.html" title="Глава 10. Операции стороны пользователя"/>
+<link rel="prev" href="security_groups.html" title="Группы безопасности"/>
+<link rel="next" href="instances.html" title="Экземпляры"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:04+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//user_facing_block_storage.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Блочные хранилища';
+PrevRef = 'security_groups.html';
+UpRef = 'user_facing_operations.html';
+NextRef = 'instances.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+  <a id="user_facing_block_storage"> </a>Блочные хранилища</h2>
+ </div></div></div>
+ <div class="toc"><dl><dt><span class="section">
+  <a href="user_facing_block_storage.html#block_storage_creation_failures">Отказы создания блочных хранилищ</a></span></dt></dl>
+ </div>
+ <p>Тома OpenStack являются устройствами постоянного хранения при блочном доступе, 
+ которые могут быть присоединены и отсоединены к экземплярам, однако могут быть присоединены только к одному 
+ экземпляру одновременно. По аналогии с внешним жестким диском они на практике 
+ не являются совместно используемым хранилищем тем же образом, как это делают сетевая файловая 
+ система или хранилище объектов. Они оставляют операционной системе экземпляра выбор: 
+ помещать файловую систему на блочное устройство и монтировать его - или нет.
+ <a id="d9e4212" class="indexterm"/>
+ <a id="d9e4214" class="indexterm"/><a id="d9e4217" class="indexterm"/></p>
+ <p>По аналогии с другими съемными дисковыми технологиями, важно, чтобы 
+ операционная система не пыталась использовать диск перед его удалением. 
+ В экземплярах Linux процесс обычно включает размонтирование всех файловых систем, 
+ смонтированных с тома. Служба тома OpenStack не может сообщить является ли 
+ удаление томов безопасным, поэтому она выполняет то, о чем ее просят. 
+ Если пользователь просит службу томов отсоединить тома от экземпляра 
+ во время записи на них, вы можете ожидать некоторый уровень разрушений файловой системы 
+ одновременно со сбоем в любом процессе экземпляра, 
+ который использует данное устройство.</p>
+ <p>Не существует ничего специфичного для OpenStack в понимании шагов, 
+ необходимых операционной системе экземпляра для доступа к блочному устройству: 
+ потенциально необходимое форматирование устройства перед его первым использованием 
+ и предосторожности при его удалении. Вот что действительно специфично, 
+ так это процесс создания нового тома, а также присоединение и отключение его от 
+ экземпляров. Все эти операции могут быть выполнены на странице 
+ <span class="guilabel"><strong>Volumes</strong></span> инструментальной 
+ панели (Dashboard) или с использованием клиента командной строки.</p>
+ <p>Для добавления новых томов вам потребуется только имя и размер тома в 
+ гигабайтах. Либо поместите их в веб-форму 
+ <span class="guilabel"><strong>create volume</strong></span> (создать том), 
+ либо с помощью командной строки:</p>
+ <pre class="screen">$ cinder create --display-name test-volume 10</pre>
+ <p>Данная команда создает том объемом 10ГБ с названием <code class="literal">test-volume</code>. 
+ Чтобы вывести список томов и экземпляров, к которым они присоединены, если присоединение выполнялось:</p>
+ <pre class="screen">$ cinder list
++------------+---------+--------------------+------+-------------+-------------+
+|     ID     | Status  |    Display Name    | Size | Volume Type | Attached to |
++------------+---------+--------------------+------+-------------+-------------+
+| 0821...19f |  active |    test-volume     |  10  |     None    |             |
++------------+---------+--------------------+------+-------------+-------------+</pre>
+ <p>Служба блочных хранилищ также позволяет создавать моментальные снимки 
+ томов. Помните, что это моментальные снимки выполняются именно на блочном уровне, который является 
+ чувствительным к согласованности при сбоях, так что лучше, если том не подключен к экземпляру 
+ при создании моментального снимка и, если он все-таки присоединен: лучше будет, 
+ если том не будет использоваться экземпляром к которому он присоединен. Если том интенсивно 
+ используется, то моментальный снимок может иметь не согласованную файловую систему. На самом деле, 
+ по умолчанию служба тома не выполняет создание моментального снимка присоединенного к экземпляру тома, 
+ хотя это и может быть выполнено принудительно. Для получения моментального снимка тома либо 
+ выберите на странице тома (volume) инструментальной панели 
+ <span class="guilabel"><strong>Create Snapshot</strong></span> (Создать снимок) в столбце действия (action), 
+ следующем за именем тома, или выполните в командной строке:</p>
+ <pre class="programlisting">usage: cinder snapshot-create [--force &lt;True|False&gt;]
+[--display-name &lt;display-name&gt;]
+[--display-description &lt;display-description&gt;]
+&lt;volume-id&gt;
+Add a new snapshot.
+Positional arguments:  &lt;volume-id&gt;         ID of the volume to snapshot
+Optional arguments:  --force &lt;True|False&gt;  Optional flag to indicate whether to
+                                           snapshot a volume even if its
+                                           attached to an instance.
+                                           (Default=False)
+--display-name &lt;display-name&gt;              Optional snapshot name.
+                                           (Default=None)
+--display-description &lt;display-description&gt;
+Optional snapshot description. (Default=None)</pre>
+<p><em>Перевод на русский язык:</p><pre>
+Добавить новый снимок. 
+Позиционные аргументы:
+&lt;volume-id&gt; ID тома для моментального снимка
+Дополнительные аргументы:
+--force &lt;True|False&gt; опциональный флаг, указывающий на необходимость создания моментального 
+снимка тома, даже если он подключен к экземпляру (по умолчанию =False).
+--display-name &lt;display-name&gt; опциональное имя моментального снимка (по умолчанию =None).
+--display-description &lt;display-description&gt; опциональное описание моментального снимка 
+(по умолчанию =None).</pre>
+ <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Для дополнительной информации об обновлении томов блочных хранилищ (например, изменение
+ размера или перемещение), обратитесь к 
+ <a class="link" href="http://docs.openstack.org/user-guide/content/" target="_top">
+ Руководству по OpenStack конечного пользователяё</a>.</p></td></tr></table>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="block_storage_creation_failures"> </a>Отказы создания блочных хранилищ</h3>
+</div></div></div>
+ <p>Если пользователь пытается создать объем и сразу переходит в 
+ состояние ошибки, лучшим способ для устранения проблемы является вычленение из файла 
+ журналов cinder утилитой grep строк, содержащих UUID тома. Сначала проверьте файлы журналов 
+ в контроллере облака, а затем попробуйте на узле хранилища, на котором выполнялась 
+ попытка создания тома:</p>
+ <pre class="screen"># grep  903b85d0-bacc-4855-a261-10843fc2d65b /var/log/cinder/*.log</pre>
+</div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

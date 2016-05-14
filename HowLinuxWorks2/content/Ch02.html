@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 2. Основные команды и иерархия каталогов - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch02.html" title="Глава 1. Большая картинка"/>
+<link rel="next" href="Ch04.html" title="Глава 3. Устройства"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 2. Основные команды и иерархия каталогов';
+PrevRef = 'Ch01.html';
+UpRef = 'index.html';
+NextRef = 'Ch03.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 2. Основные команды и иерархия каталогов</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch02.html">2. Основные команды и иерархия каталогов</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch02.html#02.1">2.1 Оболочка Bourne: /bin/sh</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.2">2.2 Применение оболочки</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.2.1">2.2.1 Окно оболочки</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.2.2">2.2.2 cat</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.2.3">2.2.3 Стандартные ввод и вывод</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.3">2.3 Основные команды</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.3.1">2.3.1 ls</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.3.2">2.3.2 cp</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.3.3">2.3.3 mv</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.3.4">2.3.4 touch</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.3.5">2.3.5 rm</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.3.6">2.3.6 echo</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.4">2.4 Навигация каталогов</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.4.1">2.4.1 cd</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.4.2">2.4.2 mkdir</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.4.3">2.4.3 rmdir</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.4.4">2.4.4 Подстановки в оболочке (групповые символы)</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.5">2.5 Вспомогательные команды</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.5.1">2.5.1 grep</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.5.2">2.5.2 less</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.5.3">2.5.3 pwd</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.5.4">2.5.4 diff</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.5.5">2.5.5 file</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.5.6">2.5.6 find и locate</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.5.7">2.5.7 head и tail</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.5.8">2.5.8 sort</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.6">2.6 Изменение вашего пароля и оболочки</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.7">2.7 Файлы точка</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.8">2.8 Переменные среды и оболочки</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.9">2.9 Путь командной строки</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.10">2.10 Специальные символы</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.11">2.11 Редактирование командной строки</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.12">2.12 Текстовые редакторы</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.13">2.13 Получение справки в реальном времени</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.14">2.14 Ввод и вывод оболочки</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.14.1">2.14.1 Стандартная ошибка</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.14.2">2.14.2 Переназначение стандартного ввода</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.15">2.15 Понимание сообщений об ошибках</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.15.1">2.15.1 Анатомия стандартных ошибок UNIX</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.15.2">2.15.2 Общие ошибки</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.16">2.16 Отображение списков процессов и работа с ними</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.16.1">2.16.1 Опции командной строки</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.16.2">2.16.2 Уничтожение процессов</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.16.3">2.16.3 Управление заданиями</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.16.4">2.16.4 Фоновые процессы</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.17">2.17 Режимы файлов и параметры допуска</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.17.1">2.17.1 Изменение параметров допуска</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.17.2">2.17.2 Символические ссылки</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.17.3">2.17.3 Создание символических ссылок</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.18">2.18 Файлы архивирования и сжатия</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.18.1">2.18.1 gzip</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.18.2">2.18.2 tar</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.18.3">2.18.3 Сжатые архивы (.tar.gz)</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.18.4">2.18.4 zcat</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.18.5">2.18.5 Прочие утилиты сжатия</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.19">2.19 Основы иерархии каталогов Linux</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.19.1">2.19.1 Прочие подкаталоги корневого каталога</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.19.2">2.19.2 Каталог /usr</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.19.3">2.19.3 Местоположение ядра</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.20">2.20 Выполнение команд с правами Superuser</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02.20.1">2.20.1 sudo</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#02.20.2">2.20.2 /etc/sudoers</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.21">2.21 Взгляд в будущее</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p></p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.1"> </a>2.1 Оболочка Bourne: /bin/sh</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.2"> </a>2.2 Применение оболочки</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.2.1 Окно оболочки</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.2.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.2.2 cat</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.2.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.2.3 Стандартные ввод и вывод</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3"> </a>2.3 Основные команды</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.3.1 ls</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.3.2 cp</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.3.3 mv</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.3.4 touch</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.3.5 rm</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.3.6 echo</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.4"> </a>2.4 Навигация каталогов</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.4.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.4.1 cd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.4.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.4.2 mkdir</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.4.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.4.3 rmdir</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.4.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.4.4 Подстановки в оболочке (групповые символы)</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.5"> </a>2.5 udev</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.5.1 devtmpfs</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.5.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.5.2 Работа и настройка udevd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.5.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.5.3 udevadm</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.5.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.5.4 Наблюдение за устройствами</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.6"> </a>2.6 Изменение вашего пароля и оболочки</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.7"> </a>2.7 Файлы точка</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.8"> </a>2.8 Переменные среды и оболочки</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.9"> </a>2.9 Путь командной строки</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.10"> </a>2.10 Специальные символы</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.11"> </a>2.11 Редактирование командной строки</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.12"> </a>2.12 Текстовые редакторы</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.13"> </a>2.13 Получение справки в реальном времени</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.14"> </a>2.14 Ввод и вывод оболочки</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.14.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.14.1 Стандартная ошибка</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.14.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.14.2 Переназначение стандартного ввода</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.15"> </a>2.15 Понимание сообщений об ошибках</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.15.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.15.1 Анатомия стандартных ошибок UNIX</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.15.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.15.2 Общие ошибки</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.16"> </a>2.16 Отображение списков процессов и работа с ними</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.16.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.16.1 Опции командной строки</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.16.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.16.2 Уничтожение процессов</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.16.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.16.3 Управление заданиями</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.16.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.16.4 Фоновые процессы</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.17"> </a>2.17 Режимы файлов и параметры допуска</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.17.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.17.1 Изменение параметров допуска</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.17.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.17.2 Символические ссылки</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.17.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.17.3 Создание символических ссылок</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.18"> </a>2.18 Файлы архивирования и сжатия</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.18.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.18.1 gzip</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.18.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.18.2 tar</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.18.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.18.3 Сжатые архивы (.tar.gz)</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.18.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.18.4 zcat</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.18.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.18.5 Прочие утилиты сжатия</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.19"> </a>2.19 Основы иерархии каталогов Linux</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.19.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.19.1 Прочие подкаталоги корневого каталога</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.19.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.19.2 Каталог /usr</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.19.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.19.3 Местоположение ядра</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.20"> </a>2.20 Выполнение команд с правами Superuser</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.20.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.20.1 sudo</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.20.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">2.20.2 /etc/sudoers</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.21"> </a>2.21 Взгляд в будущее</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

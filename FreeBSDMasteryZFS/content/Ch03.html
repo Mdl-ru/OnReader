@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 3. Пулы - Мастерство FreeBSD: ZFS</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="prev" href="Ch02.html" title="Глава 2. Виртуальные устройства"/>
+<link rel="next" href="Ch04.html" title="Глава 4. Наборы данных ZFS"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 3. Пулы';
+PrevRef = 'Ch02.html';
+UpRef = 'index.html';
+NextRef = 'Ch04.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 3. Пулы</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch03.html">3. Пулы</dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch03.html#ZFS_Blocks">Блоки ZFS</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#StripesRAIDandPools">Чередование, RAID и пулы</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#Viewing_Pools">Просмотр пулов</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#Multiple_VDEVs">Множество VDEV</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#Removing_VDEVs">Удаление VDEV</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#Pools_Alignment">Выравнивание пулов и размер сектора диска</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#Partition_Alignment">Выравнивание раздела</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#ZFS_Sector_Size">Размер сектора ZFS</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#FreeBSD10.1">Ashift во FreeBSD 10.1 и новее</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#Older_FreeBSD">Ashift более ранних FreeBSD</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#CreatingPoolsAndVDEVs">Создание пулов и VDEV</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#SampleDrives">Простые устройства</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#StripedPools">Пулы чередования</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#MirroredPools">Пулы зеркал</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#RAID-ZPools">Пулы RAID-Z</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#Multi-VDEVPools">Пулы множественных VDEV</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#UsingLogDrives">Использование устройств журналов</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#MismatchedVDEVs">Несогласованные VDEV</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#ReusingProviders">Повторное использование поставщиков</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#Pool_Integrity">Целостность пула</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#ZFS_Integrity">Целостность ZFS</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#Scrubbing_ZFS">Очистка ZFS</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#Scrub_Frequency">Частота очисток</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#PoolProperties">Свойства пула</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#ViewingPoolProperties">Просмотр свойств пула</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#ChangingPoolProperties">Изменение свойств пула</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#PoolHistory">История пула</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#ZpoolMaintenanceAutomation">Автоматизация эксплуатации Zpool</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#RemovingPools">Удаление пулов</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#ZpoolFeatureFlags">Флаги функциональности пула</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#ViewingFeatureFlags">Просмотр флагов функциональности</a></span></dt>
+	 </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Пулы ZFS, или <span class="term"><strong class="userinput"><code>zpools</code></strong></span> образуют середину стека ZFS, 
+  связывая нижний уровень виртуальных устройств с видимой пользователю файловой системой. Пулы являются тем местом, где
+  возникают многие задачи уровня файловой системы, такие как выделение блоков хранения. На уровне пула ZFS вы можете увеличить 
+  размер пространства, доступный вашему набору данных или добавить специальные виртуальные устройства для улучшения 
+  производительности чтения или записи.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Blocks"> </a>Блоки ZFS</h3>
+   </div></div></div>
+   <p>Традиционные файловые системы, такие как UFS и extfs помещают данные на диск в блоки фиксированного размера. Файловая система 
+   имеет специальные блоки, называемые индексными дескрипторами (<span class="term"><strong 
+   class="userinput"><code>inode</code></strong></span>), которые служат указателем того какой подлежащий блок принадлежит какому файлу.
+   Даже не Unix файловые системы, подобные NTFS и FAT применяют аналогичные структуры. Это является стандартом во всей индустрии.</p>
+   <p>ZFS не выполняет предварительную настройку специальных индексных блоков. Она использует только блоки хранения, также называемые 
+   областями чередования (полосами, <span class="userinput"><code>stripe</code></strong></span>). Каждый блок содержит указательную информацию для связи этого 
+   блока с другим блоком в дереве диска {<span class="emphasis"><em>Прим. пер.: см. схему на <a class="link" 
+   href="http://onreader.mdl.ru/DesignAndImplementationFreeBSD/content/Ch10.html#Fig1005" target="_top">Рисунке 10.5. Структура 
+   ZFS</a> в нашем переводе <a class="link" href="http://onreader.mdl.ru/DesignAndImplementationFreeBSD/content/Ch10.html" 
+   target="_top">Главы 10. ZFS: Зеттабайт файловая система</a> 2й редакции книги Маршала Кирка МакКузика, Джорджа В. Невил-Нейла 
+   и Роберта Н.М. Ватсона &quot;Архитектура и реализация операционной системы FreeBSD&quot; (ISBN-13: <a class="link" 
+   href="http://www.informit.com/store/design-and-implementation-of-the-freebsd-operating-9780321968975" 
+   target="_top">978-0-321-96897-5</a>).</em></span>} ZFS вычисляет хэши всей информации в блоке и сохраняет эту информацию в 
+   самом блоке и в родительском блоке. {<span class="emphasis"><em>Прим. пер.: подробнее  о структуре блочных указателей см. схему 
+   на <a class="link"    href="http://onreader.mdl.ru/DesignAndImplementationFreeBSD/content/Ch10.html#Fig1004" target="_top">Рисунке 
+   10.4. Описание указателя на блок</a> в том же нашем переводе.</em></span>} Каждый блок является завершенной единицей сам по себе. 
+   Файл может быть частично утрачен, но, то что осталось, будет согласовано.</p>
+   <p>Отсутствие специальных индексных блоков звучит здорово, но, безусловно, ZFS должен где-нибудь начинаться! Каждое дерево данных 
+   нуждается в корне. ZFS использует специальный блок называемый <span class="term"><strong class="userinput"><code>uberblock</code></strong></span> 
+   для хранения указателя на корень файловой системы. ZFS никогда не изменяет данные на диске - даже когда блок изменяется, записывается 
+   новая копия блока целиком вместе с измененными данными. (Мы обсудим эту функциональность копирования-при-записи более глубоко в 
+   <a class="link" href="Ch06.html" target="_top">Главе 6</a>.) Пул данных резервирует 128 блоков под 
+   <span class="term"><strong class="userinput"><code>uberblock</code></strong></span>, используемые последовательно по мере изменений 
+   в их пуле. Когда используется последний <span class="term"><strong class="userinput"><code>uberblock</code></strong></span>, 
+   ZFS возвращается назад к началу.</p>
+   <p><span class="term"><strong class="userinput"><code>uberblock</code></strong></span> не являются единственными критичными блоками.
+   ZFS копирует блоки,содержащие жизненно важную информацию, такую как метаданные файловой системы и данные пула в несколько 
+   повторный блоков <span class="term"><strong class="userinput"><code>ditto block</code></strong></span>. Если главный блок разрушен, 
+   ZFS проверяет повторный блок на наличие резервной копии. Повторные блоки сохраняются на максимально возможном удалении друг от друга,
+   либо на отдельных дисках, либо в разных разделах одного диска (ZFS не имеет специальной способности видеть схему расположения дисков,
+   но она делает смелые предположения).</p>
+   <p>ZFS фиксирует свои изменения на носителе хранилища в группах транзакций, или 
+   <span class="term"><strong class="userinput"><code>txg</code></strong></span> (transaction group). Группы транзакций содержат 
+   несколько пакетных изменений и имеют инкрементальный 64- битный номер. Каждая группа транзакций использует последующий  
+   <span class="term"><strong class="userinput"><code>uberblock</code></strong></span> в очереди. ZFS определяет самый 
+   последний <span class="term"><strong class="userinput"><code>uberblock</code></strong></span> из группы со 128 членами находя 
+   <span class="term"><strong class="userinput"><code>uberblock</code></strong></span> с наибольшим номером группы транзакций.</p>
+   <p>ZFS на самом деле использует некоторые блоки для индексацииЮ однако эти 
+   <span class="term"><strong class="userinput"><code>znode</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>dnode</code></strong></span> могут использовать любой блок хранения в пуле.
+   Они не похожи на индексные записи UFS2 и extfs, определяемые при создании файловой системы.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="StripesRAIDandPools"> </a>Чередование, RAID и пулы</h3>
+   </div></div></div>
+   <p>Вы наверняка слышали словосочетание область чередования (полоса, stripe) в связи с хранением, вероятно много раз. Пул ZFS &quot;чередует&quot; 
+   данные по виртуальным устройствам. Традиционный RAID &quot;чередует&quot; данные по физическим устройствам. Что такое область 
+   чередования (полоса), и, как она участвует в пуле?</p>
+   <p>Область чередования (полоса) является фрагментом данных, который записывается на отдельное устройство. Большинство традиционных RAID использует 
+   размер блока 128 кБ. Когда вы пишете файл на традиционное устройство RAID, программное обеспечение RAID записывает на каждый диск 
+   фрагмент в 128 кБ, причем обычно одновременно. Аналогично, чтение с традиционного массива RAID происходит инкрементально по 
+   размеру области чередования. Хотя вы можете настроить размер области чередования для соответствия нагрузке сервера, емкость оборудования и пределы 
+   программного обеспечения в значительной степени ограничивают размер области чередования.</p>
+   <p>Чередование не предоставляют никакой избыточности. Традиционные RAID получают избыточность путем избыточного кодирования и / или 
+   зеркалирования. Пулы ZFS получает любое резервирование от лежащих в их основе VDEV.</p>
+   <p>ZFS размещает чередование на движимые реактивной тягой роликовых коньки. Набор данных ZFS использует размер блока по умолчанию 128 кБ, 
+   но ZFS достаточно умен, чтобы динамически изменять этот размер области чередования (полосы), чтобы соответствовать оборудованию и рабочей нагрузке. 
+   Если размер полосы 32 кБ имеет смысл для определенного пакета данных, а 64 кБ подходит для другой части данных, то ZFS применит 
+   соответствующий размер для каждого из них. Разработчики ZFS завершили поддержку полосы размером до 1 Мб. Эта функция уже доступна 
+   в FreeBSD-CURRENT, и, как ожидается, будет включена в FreeBSD 10.2 и более поздние версии.</p>
+   <p>Пул ZFS имеет гораздо большие возможности, чем традиционные RAID. Традиционный RAID имеет фиксированную и негибкую структуру 
+   данных (хотя некоторые производители аппаратного обеспечения имеют свои собственные системы RAID с большей гибкостью). Программное 
+   обеспечение RAID записывает на каждый диску в предопределенном порядке. ZFS обладает большей гибкостью. Если у вас есть 
+   традиционный RAID массив с пятью дисками, этот массив всегда будет иметь пять дисков. Вы не можете изменить массив путем 
+   добавления дисков. Хотя вы могли бы заменять диски на диски большего размера, выполнение такой замены не будет изменять размер 
+   массива. Создание RAID устройства цементирует основные характеристики массива.</p>
+   <p>Пулы ZFS не только допускают изменения, но они также предназначены для легкой адаптации добавлений. Если у вас есть пул ZFS 
+   с пятью VDEV, а вы хотите добавить шестое, это нормально. ZFS принимает эти VDEV и начинает чередовать данных и на это устройство, 
+   даже не мигнув. Вы не можете добавлять хранилища в RAID-Z VDEV, добавление возможно только в пулы VDEV. Число поставщиков в 
+   VDEV RAID-Z фиксируется в момент создания.</p>
+   <p>В ZFS, однако, такое виртуальное устройство может быть любого поддерживаемого ZFS типа VDEV. Возьмите два VDEV, которые 
+   являются зеркалированной парой. Поместите их в отдельный zpool. ZFS будет создавать в них чередование данных. В традиционном RAID, 
+   чередование поверх зеркала можно было бы назвать RAID-10. В большинстве случаев использование RAID-10 является RAID 
+   с самой высокой производительностью, которую вы можете получить. Тогда как традиционные RAID-10 имеют фиксированный размер, 
+   вы, однако, можете добавлять дополнительные VDEV в пул. Расширение вашего RAID-10 означает резервное копирование данных, 
+   добавления дисков в массив RAID с последующим восстановлением данных. Расширение вашего zpool означает добавление большего числа 
+   VDEV в пул RAID-10, к тому же, допускает толщину до двух дисков, в то время как ZFS допускает глубину до 2<sup>64</sup>.</p>
+   <p>Отметим, однако, что пулы не предоставляют никакой избыточности. Все резервирование ZFS поступает от лежащих в основе VDEV.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Viewing_Pools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр пулов</span></h4>
+    </div></div></div>
+    <p>Для просмотра всех пулов в вашей системе выполните <span class="term"><code>zpool list</code></span>.</p>
+	   <pre class="screen">
+# zpool list
+NAME   SIZE  ALLOC  FREE  EXPANDSZ  FRAG  CAP  DEDUP  HEALTH  ALTROOT
+db    2.72T  1.16G  2.72T       -     0%   0%  1.00x  ONLINE  -
+zroot  920G  17.3G  903G        -     2%   1%  1.00x  ONLINE  -
+	   </pre>
+    <p>Первая колонка дает имя пула. Данная система имеет два пула <span class="term"><code>db</code></span><span class="term"> 
+	и <code>zroot</code></span>.</p>
+    <p>Следующие три колонки сообщают информацию о размере и использовании каждого пула. Вы получите размер, объем используемого 
+	пространства и количество свободного пространства.</p>
+    <p>Колонка EXPANDSZ показывается если лежащий в основе производитель хранения имеет какое-то свободное пространство. Вы можете
+	иметь возможность расширить объем пространства в этом пуле, как обсуждается в <a class="link" href="Ch05.html" 
+	target="_top">Главе 5.</a> Это пространство включает блоки, которые пойдут под информацию контрольных сумм, следовательно расширение 
+	пула не даст вам так много пространства для использования.</p>
+    <p>Под FRAG вы увидите количество фрагментаций в данном пуле. Фрагментация вызывает деградацию производительности системы.</p>
+    <p>Клонка CAP показывает какой процент доступного пространства используется.</p>
+    <p>Элемент DEDUP отображает количество случившихся в файловой системе дедупликаций. Дедупликации охватывает <a class="link" 
+	href="Ch06.html" target="_top">Глава 6.</a></p>
+    <p>Колонка HEALTH пула отражает состояние лежащих в основе VDEV. Если поставщик хранения отказал, первым намеком вам будет любое отличное 
+	от ONLINE состояние. <a class="link" href="Ch05.html" target="_top">Глава 5</a> обсуждает работоспособность пула.</p>
+    <p>Наконец, ALTROOT показывает где смонтирован данный пул или его &quot;альтернативный корень&quot;. <a class="link" href="Ch04.html" 
+	target="_top">Глава 4</a> охватывает альтернативные корни. {<span class="emphasis"><em>Прим. пер.: так в оригинале, на самом деле 
+	обсуждение свойства <span class="term"><strong class="userinput"><code>altroot</code></strong></span> идет только в разделе 
+	<a class="link" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch05.html#RenamingImportedPools" target="_top">Переименование 
+	импортированных пулов</a> в <a class="link" href="Ch05.html" target="_top">Главе 5</a>.</em></span>}</p>
+    <p>Если вы хотите узнать информацию об определенном пуле или пулах, приведите список пулов после <span class="term"><code>zpool list</code></span>.
+	prod</code></span> и <span class="term"><code>test</code></span></p>
+	   <pre class="screen">
+# zpool list prod test
+	   </pre>
+    <p>Если вы хотите более подробную информацию по вашим пулам, включающую использование лежащих в основе дисков, 
+	добаьте параметр <span class="term"><code>-v</code></span>. Вы должны определить параметр до имени пула.</p>
+	   <pre class="screen">
+# zpool list - v zroot
+	   </pre>
+    <p>Флаг <span class="term"><code>-p</code></span> печатает числа в байтах вместо более дружественного пользователю формата, а
+	<span class="term"><code>-H</code></span> прекращает выводить заголовки колонок. Эти параметры полезны для автоматизации и 
+	сценариев управления.</p>
+    <p>Для более подробного просмотра пулов, включающего разметку лежащих в основе VDEV воспользуйтесь 
+	<span class="term"><code>zpool status</code></span>. Мы увидим много примеров <span class="term"><code>zpool status</code></span>
+	когда мы создаем пулы.</p>
+    <p>Чтобы кратко проверить ваш пул, выполните  <span class="term"><code>zpool status -x</code></span>.</p>
+	   <pre class="screen">
+# zpool status - x
+all pools are healthy
+	   </pre>
+    <p>Порой это все, что вам нужно.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Multiple_VDEVs"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Множество VDEV</span></h4>
+    </div></div></div>
+    <p>Пул может содержать множество VDEV. Добавление VDEV не только увеличивает доступное в пуле пространство, но также увеличивает 
+	производительность. Пул разделяет записи между VDEV. Небольшой файл может потребовать только одну область чередования, которая уйдет только на одно 
+	VDEV, однако если вы записываете целый пакет малых файлов, ZFS делит записи между вашими VDEV.</p>
+    <p><a class="link" href="Ch02.html" target="_top">Глава 2</a> рассказывает о производительности различных типов VDEV. Эта 
+	производительность проникает вверх на уровень пула. Если вы читаете большой файл с множества VDEV, чтение файла завершится когда 
+	последний (обычно самый медленный) диск закончит вызов своей части общих данных. Если ваш пул, однако, включает в себя множество 
+	VDEV, такой самый медленный диск содержит только фрагмент файла, несколько снижая время, необходимое для доступа к нему. Помните, 
+	что самая медленная часть данных, считываемая с поставщика хранения выставляет головку в правильное место диска для вызова этих 
+	данных оттуда, следовательно это будет не простое деление времени на число VDEV - однако дополнительные VDEV в пуле улучшают 
+	производительность.</p>
+    <p>Лучшая практика требует использовать только идентичные VDEV хранения в пуле. Если у вас в пуле находится куча зеркалированных
+	VDEV, не добавляйте в него устройство RAID-Z3. Смешение VDEV хранения страшно запутывает производительность пула и делает работу 
+	ZFS более тяжелой, поскольку она оптимально распространяет данные между устройствами. Вы <span class="emphasis"><em>можете</em></span> 
+	сделать это, но вы не должны этого делать! (ZFS следует традиции Unix, не запрещающей делать глупые вещи, поскольку это также
+	могло бывам помешать делать умные вещи.)</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Removing_VDEVs"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Удаление VDEV</span></h4>
+    </div></div></div>
+    <p>В настоящее время вы не можете удалить VDEV из пула. Каждое VDEV имеет записанные на нем данные. Вы можете удалять диски из 
+	VDEV определенного типа, Однако VDEV как целое имеет записанные на нем критические данные пула. Например, вы можете удалить диск из 
+	зеркалированного VDEV, однако вы не можете удалить все VDEV из пула. Обычно вы удаляете диск из VDEV только когда он отказывает. 
+	Принудительное удаление VDEV из пула - скажем, путем выдергивания поставщика хранения - разрушит пул. Возможность удаления VDEV из 
+	массива с чередованием  или зеркала, как ожидается, появится в конце 2015, но она пока еще не возможна. Поддержка для удаления RAID-Z устройств 
+	нанесена в дорожную карту, но работа над ней еще не начата.</p>
+    <p>Это означает, что вы не можете сжимать пул. Если вы хотите сделать пул меньше, вы должны переместить данные в новый пул меньшего 
+	размера, а затем утилизировать диски из первоначального пула.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Pools_Alignment"> </a>Выравнивание пулов и размер сектора диска</h3>
+   </div></div></div>
+   <p>ZFS ожидает наличие глубоких знаний о носителе информации, включающих размер сектора лежащего в основе поставщика. Если ваши 
+   пулы не применяют правильный размер сектора, или если секторы ZFS не совпадают по размеру с физическими секторами на вашем 
+   диске, производительность вашего хранилища упадет наполовину или более. Это ортогональные проблемы, но исключение при планировании
+   хотя бы одной приведет к краху вашей системы. {<span class="emphasis"><em>Прим. пер.: см. перевод статьи Ильи Крутова (IBM) <a class="link" 
+   href="http://support.mdl.ru/GPFS.IBM/redp5119.html" target="_top">Обзор технологии Расширенного формата жестких дисков</a> 
+   с обсуждением данных проблем на уровне дисковых форматов.</em></span>}</p>
+   <p>Мы обсудим выравнивание раздела и размер сектора ZFS раздельно.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Partition_Alignment"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Выравнивание раздела</span></h4>
+    </div></div></div>
+    <p>Диск сообщает свой размер сектора, следовательно это не проблема - за исключением тех случаев, когда она есть. Многие диски 
+	сообщают, что они имеют сектора с 512 байтами, однако на самом деле они имеют сектора 4096 байт (4К). 
+	<a class="link" href="https://www.tiltedwindmillpress.com/?product=freebsd-mastery-storage-essentials" target="_top">FreeBSD 
+	Mastery: Storage Essentials</a> обсуждает это достаточно глубоко, поэтому мы не будем проходить через эти болезненные подробности здесь. 
+	{<span class="emphasis"><em>Прим. пер.: см. перевод статьи Ильи Крутова (IBM) <a class="link" 
+	href="http://support.mdl.ru/GPFS.IBM/redp5119.html" target="_top">Обзор технологии Расширенного формата жестких дисков</a> с 
+	обсуждением данных проблем на уровне дисковых форматов.</em></span>}</p>
+    <p>Старые схемы управления разделами, подобные почтенной (MBR, Master Boot Record), содержащей все возможные виды непостижимой 
+	математики для того,чтобы убедиться, что разделы диска соответствуют физическим характеристикам своего диска. Современные 
+	схемы разделов, подобные GPT (GUID Partition Tables) знают, что физические диски разговаривают с раздвоенным языком и что эти 
+	старые ограничения на основе MBR полностью фиктивные и требуют только того, чтобы разделы заполняли все секторы.</p>
+    <p>Однако когда диск лжет о своем размере сектора, <span class="term"><code>gpart(8)</code></span> позволяет создавать 
+	разделы, которые могут могут начинаться или заканчиваться в посредине физического сектора. Каждые чтение и запись на диске будут 
+	задевать два физических сектора. Это будет приводить к разрушению производительности.</p>
+    <p>Некоторые SSD также ожидают выравнивания разделов на границы кратные 128 кБ или 1 МБ</p>
+    <p>Самый простой способ избежать проблемы с выравниванием состоит в том, чтобы сделать все начала и окончания разделов GPT 
+	выровненными на границы кратные 1 МБ. Добавьте аргумент <span class="term"><code>-a 1m</code></span> в ваши команды присоединения 
+	gpart.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Sector_Size"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Размер сектора ZFS</span></h4>
+    </div></div></div>
+    <p>ZFS по умолчанию предполагает размер сектора 512 байт. Применение сектора файловой системы на диске с физическими 512- байтовыми 
+	секторами это прекрасно. Применением файлового сектора в 512 байт на диске с 4K секторами делает работу несколько более сложной.
+	Предположим, вы хотите записать на такой диск 4 кБ данных. Вместо того, чтобы попросить жесткий диск записать один физический 
+	сектор, жесткому диску вначале поступает просьба изменить первую одну восьмую сектора, затем вторую восьмую часть, потом третью и 
+	так далее. Выполнение записи 512 байт в сектор 4 кБ означает чтение всего сектора 4 кБ, изменение его небольшого раздела, и 
+	запись его назад. Это намного медленнее чем простое переписывание всего сектора. Ваша производительность резко падает. Если 
+	ZFS использует сектора размера 4К на диске с секторами 512- байтовыми секторами, аппаратные средства диска будут разбивать 
+	в соответствии с размером секторов диска с очень маленькой стоимостью понижения производительности.</p>
+    <p>Хотя использование секторов бОльшего размера не влияет на производительность, это уменьшает эффективность использования 
+	пространства при сохранении множества файлов маленького размера. Если вы имеете целую пачку файлов размером в 1кБ, каждый из 
+	них займет по отдельному сектору.</p>
+    <p>Размер сектора ZFS является параметром каждого виртуального устройства в пуле. Вы не можете изменить размер сектора 
+	виртуального устройства, даже когда экспортируете пул или замещаете отказавший диск.</p>
+    <p>В их комбинации, эти два факта говорят, что почти всегда предпочтительно принудительно применять в ZFS сектора 4К, вне 
+	зависимости от того какой размер сектора сообщается лежащим в основе диском. Применение бОлшего размера сектора не нанесет серьезного 
+	урона производительности за исключением определенных специфичных для баз данных операций, причем даже в случае, когда вы на самом
+	деле используете диски с реальными секторами 512 байт.</p>
+    <p>ZFS использует размер сектора устройства, которое сообщает о максимальном размере сектора. Если все ваши устройства заявляют 
+	об использовании 512- байтовых секторов, а вы не установите бОльший размер сектора, виртуальные диски, построенные на таких 
+	устройствах будут использовать сектора с размером 512байт. Включение в ваше VDEV хотя бы одного устройства с секторами 4096- байт 
+	принудит ZFS использовать 4096- байтовые сектора.</p>
+    <p>Не доверяйте тому, что ваши диски с секторами 4К сообщают о своем размере сектора. Сообщайте ZFS о том, чтобы она всегда 
+	принудительно применяла сектора 4К.</p>
+    <p>Переменная пула с именем <span class="term"><strong class="userinput"><code>ashift</code></strong></span> управляет размером 
+	сектора. Переменная 9 сообщает ZFS о необходимости использовать 512- байтовые сектора, <span class="term"><strong 
+	class="userinput"><code>ashift</code></strong></span> равная 12 сообщает ZFS о необходимости применять 4096- байтовые сектора. 
+	(Почему 9 и 12? 2<sup>9</sup> равно 512, а 2<sup>12</sup> это 4096, - потому что <span class="emphasis"><em>каждый</em></span> 
+	видящий &quot;9&quot; и понимает: 2<sup>9</sup>, разве не так?). Способ, которым вы устанавливаете 
+	<span class="term"><strong class="userinput"><code>ashift</code></strong></span> зависит от выпуска вашей FreeBSD.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FreeBSD10.1"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ashift во FreeBSD 10.1 и новее</span></h4>
+    </div></div></div>
+    <p>Установите значение <span class="term"><strong class="userinput"><code>ashift</code></strong></span> в системе по 
+	умолчанию при помощи <span class="term"><code>sysctl vfs.zfs.min_auto_ashift</code></span> либо через 
+	<span class="term"><code>/etc/sysctl.conf </code></span>, либо в командной строке.</p>
+	   <pre class="screen">
+# sysctl vfs. zfs. min_auto_ashift=12
+	   </pre>
+    <p>Воспользуйтесь командной строкой при установке, однако дополнительно установите навсегда <span class="term"><code>sysctl 
+	vfs.zfs.min_auto_ashift</code></span>, чтобы вы не забыли об этом при создании нового пула.</p>
+    <p>Данная книга предполагает, что вы применяете FreeBSD 10.1 или новее. Для более старых версий FreeBSD вам придется устанавливать
+	<span class="term"><strong class="userinput"><code>ashift</code></strong></span> всякий раз вместо установки 
+	<span class="term"><code>sysctl</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Older_FreeBSD"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ashift более ранних FreeBSD</span></h4>
+    </div></div></div>
+    <p>FreeBSD версий старше 10.1 не получает <span class="term"><strong class="userinput"><code>ashift sysctl</code></strong></span> 
+	новых версий FreeBSD, так что вам придется полагаться на внутренний код ZFS обнаружения размера сектора. Этот код считывает 
+	размер сектора с лежащего в основе устройства хранения среднего, а именно, от поставщика хранения.</p>
+	<p>Этот случай подчеркивает критическую разницу между поставщиком и диском. FreeBSD позволяет создать сквозное устройство 
+	посредством модуля GEOM <span class="term"><strong class="userinput"><code>gnop(8)</code></strong></span>. 
+	<span class="term"><strong class="userinput"><code>gnop</code></strong></span> модуль позволяет вставлять произвольные данные 
+	между вашими устройствами хранения - в данном случае, обеспечивая размер сектора. Вы можете создать 
+	<span class="term"><strong class="userinput"><code>gnop</code></strong></span> устройство, которое говорит, &quot;Пропустите все 
+	прозрачно, но настаивайте на размере сектора 4096 байт.&quot; Используйте это устройство для создания 
+	<span class="term"><strong class="userinput"><code>zpool</code></strong></span>. В нашем случае мы добавляем  устройство <span 
+	class="term"><strong class="userinput"><code>gnop</code></strong></span> для раздела с меткой 
+	<span class="term"><code>/dev/gpt/zfs0</code></span>.</p>
+	   <pre class="screen">
+# gnop create - S 4096 /dev/gpt/zfs0
+	   </pre>
+    <p>Это создаст устройство <span class="term"><code>/dev/gpt/zfs0.nop</code></span>. Примените данного поставщика в качестве 
+	члена вашего VDEV и ZFS подхватит размер сектора для этого VDEV. Оставшаяся часть данной главы обсуждает создание различных 
+	пулов ZFS, однако, приведем пример использования этого устройства при создании зеркалированного пула.</p>
+	   <pre class="screen">
+# zpool create compost mirror gpt/zfs0.nop gpt/zfs1
+	   </pre>
+    <p>Созданные при помощи <span class="term"><strong class="userinput"><code>gnop(8)</code></strong></span> поставщики являются 
+	временными, скрытыми при перезагрузке. Как только <span class="term"><strong class="userinput"><code>gnop(8)</code></strong></span> 
+	пропустит все в устройство, несмотря ни на что, ZFS обнаружит метаданные на лежащем в основе устройстве. ZFS больше не будет 
+	пытаться определять размер сектора диска, поскольку она уже установила размер сектора диска.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CreatingPoolsAndVDEVs"> </a>Создание пулов и VDEV</h3>
+   </div></div></div>
+   <p>Создавайте пулы и виртуальные устройства одновременно при помощи <span class="term"><code>zpool(8)</code></span>. 
+   Вы также можете применять <span class="term"><code>zpool(8)</code></span> для добавления VDEV в существующий пул, 
+   а также для замены отказавших устройств, но мы обсудим все это в <a class="link" href="Ch05.html" target="_top">Главе 
+   5</a>. Здесь мы будем создавать пулы чередования, зеркал и пулы для каждого типа устройств RAID-Z. <a class="link" href="Ch02.html" 
+   target="_top">Глава 2</a> обсуждает каждый тип VDEV.</p>
+    <p>Вам нужно установить <span class="term"><strong class="userinput"><code>ashift</code></strong></span> только 
+	один раз перед созданием необходимого вам числа пулов. Вы не должны повторно его устанавливать при каждой новой установке 
+	пула. Мы ожидаем, что большинство читателей пролистают эту книгу пока не найдут запись по тому типу пула, который они 
+	создают, поэтому мы перечисляем во всех этих записях &quot;<span class="term"><strong class="userinput"><code>set 
+	ashift</code></strong></span>&quot;</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SampleDrives"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Простые устройства</span></h4>
+    </div></div></div>
+    <p><a class="link" href="Ch00.html" target="_top">Глава 0</a> рекомендует помечать метками диски в соответствии с их 
+	физическим расположением и номером в последовательности, чтобы вы могли легко обнаружить вышедшее из строя оборудование.
+	На практике это очень полезно. Для книги, однако, длинные имена устройств делают восприятие материала более сложным. 
+	Наши примеры используют метки GPT из <span class="term"><code>zfs</code></span> и номера. Данная глава использует 
+	6 дисков 1ТБ, причем каждый с разделом подкачки в 1 ГБ и большим разделом ZFS, создаваемыми <span 
+	class="term"><code>gpart(8)</code></span>.</p>
+	   <pre class="screen">
+# gpart create - s gpt da0
+# gpart add - a 1m - s1g - l sw0 - t freebsd- swap da0
+# gpart add - a 1m - l zfs0 - t freebsd- zfs da0
+	   </pre>
+    <p>Получившийся диск имеет следующие разделы.</p>
+	   <pre class="screen">
+# gpart show - l da0
+=>      40  1953525088  da0  GPT  (932G)
+        40        2008    -  free  -  ( 1. 0M)
+      2048     2097152    1  sw0  (1. 0G)
+   2099200  1951424512    2  zfs0  (931G)
+1953523712        1416    -  free  -  (708K)
+	   </pre>
+    <p>Мы управляем пулами ZFS при помощи меток GPT, следовательно примеры ссылаются на <span 
+	class="term"><code>gpt/zfs0</code></span> и далее до <span class="term"><code>gpt/zfs5</code></span>. На практике пользуйтесь 
+	осмысленными метками которые соответствуют физическому расположению.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="StripedPools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пулы чередования</span></h4>
+    </div></div></div>
+    <p>Некоторым пулам не требуется резервирование, а вместо этого им нужно очень много места. Разделы рабочих областей для 
+	инженерных или физических расчетов являются обычным случаем применения для такого типа хранилищ. Воспользуйтесь
+	<span class="term"><code>zpool create</code></span>, именем пула и списком устройств в таком пуле. Не забудьте установить 
+	<span class="term"><strong class="userinput"><code>ashift</code></strong></span> перед созданием данного пула.</p>
+    <p>Здесь мы создаем пул из пяти поставщиков хранения.</p>
+	   <pre class="screen">
+# sysctl vfs.zfs.min_auto_ashift=12
+# zpool create compost gpt/zfs0 gpt/zfs1 gpt/zfs2 gpt/zfs3 gpt/zfs4
+	   </pre>
+    <p>Если ваши команды выполнились успешно, вы не получите никакого вывода. Убедитесь что пулы существуют при помощи 
+	<span class="term"><code>zpool status</code></span></p>
+	   <pre class="screen">
+# zpool status
+  pool: compost
+ state: ONLINE
+  scan: none requested
+config:
+
+NAME      STATE  READ  WRITE  CKSUM
+compost   ONLINE    0      0      0
+gpt/zfs0  ONLINE    0      0      0
+gpt/zfs1  ONLINE    0      0      0
+gpt/zfs2  ONLINE    0      0      0
+gpt/zfs3  ONLINE    0      0      0
+gpt/zfs4  ONLINE    0      0      0
+	   </pre>
+    <p>В наличии все пять поставщиков. Каждый поставщик со своим собственным VDEV. Это большой пул для системы такого размера.</p>
+    <p>Такой пул чередует данные по всем VDEV участников, однако VDEV не имеют никакой избыточности. Большинство приложений из 
+	реального мира требуют избыточность. Простейшим видом резервирования является зеркалирование.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MirroredPools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пулы зеркал</span></h4>
+    </div></div></div>
+    <p>Устройства зеркала копируют все данные на множество поставщиков хранения. Если один из поставщиков в зеркале отказывает, 
+	пул все еще имеет другую копию данных. Обычные зеркала имеют два диска, хотя, несомненно, можно использовать и больше.
+	Воспользуйтесь <span class="term"><code>zpool create</code></span> и именем пула. Перед списком устройств хранения 
+	примените ключевое слово <span class="term"><code>mirror</code></span>. Установите <span class="term"><strong 
+	class="userinput"><code>ashift</code></strong></span> перед созданием данного пула.</p>
+	   <pre class="screen">
+# sysctl vfs.zfs.min_auto_ashift=12
+# zpool create reflect mirror gpt/zfs0 gpt/zfs1
+	   </pre>
+    <p>Проверьте настройки пула при помощи <span class="term"><code>zpool status</code></span>.</p>
+	   <pre class="screen">
+# zpool status
+  pool: reflect
+ state: ONLINE
+  scan: none requested
+config:
+
+NAME        STATE  READ  WRITE  CKSUM
+reflect     ONLINE    0      0      0
+ mirror-0   ONLINE    0      0      0
+  gpt/zfs0  ONLINE    0      0      0
+  gpt/zfs1  ONLINE    0      0      0
+
+errors: No known data errors
+	   </pre>
+    <p>Команда <span class="term"><code>zpool</code></span> создает здесь новый уровень, иногда называемый <span class="term"><strong 
+	class="userinput"><code>mirror-0</code></strong></span>. Уровень <span class="term"><strong 
+	class="userinput"><code>mirror-0</code></strong></span> является VDEV. Данный VDEV содержит два устройства, 
+	<span class="term"><code>gpt/zfs0</code></span> и <span class="term"><code>gpt/zfs1</code></span>.</p>
+    <p>Конечно, вы можете получить зеркало со многими дисками, если это отвечает вашим потребностям. Слишком много копий точно лучше, 
+	чем недостаточно.</p>
+	   <pre class="screen">
+# zpool create reflect mirror gpt/zfs0 gpt/zfs1 gpt/zfs2 gpt/zfs3
+	   </pre>
+    <p>Однако, это может быть слишком далеко заходящим примером (хотя мы обсудим разделение зеркала в несколько пулов в 
+	Мастерство FreeBSD : Расширенный ZFS).</p>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RAID-ZPools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пулы RAID-Z</span></h4>
+    </div></div></div>
+    <p>Избыточность, которую вы получаете в зеркалах, быстрая и надежная но не очень сложная или увлекающая. RAID-Z предлагает
+	большую гибкость за счет повышения сложности, что делает его более увлекательным (<span class="emphasis"><em>Увлекательный</em></span> 
+	- плохое слово для системного администрирования). Создание пула RAID-Z во многом похоже на создание других zpool: выполните
+	<span class="term"><code>zpool create</code></span> и сообщите имя пула, тип и устройства хранения. Здесь мы создаем пул
+	RAID-Z (или RAID-Z1).</p>
+	   <pre class="screen">
+# sysctl vfs.zfs.min_auto_ashift=12
+# zpool create raidz1 gpt/zfs0 gpt/zfs1 gpt/zfs2
+	   </pre>
+    <p>Состояние нового пула отображает новое VDEV с именем <span class="term"><strong class="userinput"><code>RAIDZ1-0</code></strong></span>
+	с тремя поставщиками.</p>
+	   <pre class="screen">
+# zpool status  bucket
+  pool: bucket
+ state: ONLINE
+  scan: none  requested
+config:
+
+NAME        STATE  READ  WRITE CKSUM
+bucket      ONLINE    0      0     0
+ raidz1-0   ONLINE    0      0     0
+  gpt/zfs0  ONLINE    0      0     0
+  gpt/zfs1  ONLINE    0      0     0
+  gpt/zfs2  ONLINE    0      0     0
+	   </pre>
+    <p>Если откажет любой из дисков пула (один), данные останутся незатронутыми. Последующие уровни RAID-Z имеют еще большую 
+	избыточность. Здесь мы собираем в пул шесть поставщиков в RAIDZ-3. Единственная разница в создании RAID-Z3 и RAID-Z1 заключается 
+	в применении <span class="term"><code>raidz3</code></span> и необходимости дополнительного устройства.</p>
+	   <pre class="screen">
+# zpool create bucket raidz3 gpt/zfs0 gpt/zfs1 gpt/zfs2 gpt/zfs3 gpt/zfs4 gpt/zfs5
+	   </pre>
+    <p>Как вы могли догадаться на текущий момент, состояние пула отобразит новое устройство с именем 
+	<span class="term"><strong class="userinput"><code>RAIDZ1-0</code></strong></span>.</p>
+	   <pre class="screen">
+# zpool  status
+  pool:  bucket
+ state:  ONLINE
+  scan:  none requested
+config:
+NAME        STATE  READ  WRITE CKSUM
+bucket      ONLINE    0      0     0
+ raidz3-0   ONLINE    0      0     0
+  gpt/zfs0  ONLINE    0      0     0
+  gpt/zfs1  ONLINE    0      0     0
+...
+	   </pre>
+    <p>Все эти пулы имеют одно VDEV. Однако, что если мы захотим множество VDEV?</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Multi-VDEVPools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пулы множественных VDEV</span></h4>
+    </div></div></div>
+    <p>Вы можете создать пул со многими VDEV. Все ключевые слова <span class="term"><code>mirror</code></span>,
+	<span class="term"><code>raidz</code></span>, <span class="term"><code>raidz2</code></span>,
+	<span class="term"><code>raidz3</code></span> просят <span class="term"><code>zpool(8)</code></span> создать 
+	VDEV. Все перечисленные после этих ключевых слов поставщики хранения идут на создание нового экземпляра этого VDEV.
+	При возникновении нового ключевого слова из перечисленных, <span class="term"><code>zpool(8)</code></span> начинает
+	новое VDEV.</p>
+    <p>Начало данной главы обсуждало чередование по множеству зеркал, имитирующее традиционные RAID-10. Именно это 
+	мы здесь и делаем.</p>
+	   <pre class="screen">
+# sysctl vfs.zfs.min_auto_ashift=12
+# zpool create barrel mirror gpt/zfs0 gpt/zfs1 mirror gpt/zfs2 gpt/zfs3
+	   </pre>
+    <p>Первые три слова <span class="term"><code>zpool create barrel</code></span> предписывают 
+	<span class="term"><code>zpool(8)</code></span> создать новый экземпляр пула с именем
+	<span class="term"><strong class="userinput"><code>barrel</code></strong></span>. Ключевое слово 
+	<span class="term"><strong class="userinput"><code>mirror</code></strong></span> предписывает &quot;создать зеркало&quot;.
+	Далее у нас есть два поставщика хранения, <span class="term"><code>gpt/zfs0</code></span> и
+	<span class="term"><code>gpt/zfs1</code></span>. Эти поставщики хранения идут в первое зеркало. Повторное появление
+	<span class="term"><code>mirror</code></span> сообщает <span class="term"><code>zpool(8)</code></span>, что предыдущее
+	VDEV завершено и мы начинаем новое VDEV. Второе VDEV также имеет двух поставщиков хранения, 
+	<span class="term"><code>gpt/zfs2</code></span> и <span class="term"><code>gpt/zfs3</code></span>. Состояние данного пула 
+	выглядит другим образом по сравнению со всем, что мы наблюдали до сих пор.</p>
+	   <pre class="screen">
+# zpool status barrel
+  pool: barrel
+ state: ONLINE
+  scan: none requested
+config:
+
+NAME        STATE  READ WRITE CKSUM
+barrel      ONLINE    0     0     0
+ mirror-0   ONLINE    0     0     0
+  gpt/zfs0  ONLINE    0     0     0
+  gpt/zfs1  ONLINE    0     0     0
+ mirror-1   ONLINE    0     0     0
+  gpt/zfs2  ONLINE    0     0     0
+  gpt/zfs3  ONLINE    0     0     0
+	   </pre>
+    <p>Пул имеет два VDEVs, <span class="term"><code>mirror-0</code></span> и <span class="term"><code>mirror-1</code></span>, причем
+	каждое VDEV содержит два устройства хранения. Мы знаем, что ZFS чередует данные между всеми VDEV. Чередование по зеркалам
+	является RAID-10.</p>
+    <p>Вы также можете организовывать пулы со многими VDEV, которые не имеют прямых аналогов RAID. В то время как RAID системы 
+	на основе программного обеспечения, подобные некоторым классам GEOM в FreeBSD позволяют строить вам подобные RAID, вы не 
+	сможете найти их в аппаратных платах RAID. Вот мы создаем пул, который чередует данные между двумя RAID-Z1 VDEV.</p>
+	   <pre class="screen">
+# zpool create vat raidz1 gpt/zfs0 gpt/zfs1 gpt/zfs2 raidz1 gpt/zfs3 gpt/zfs4 gpt/zfs5
+	   </pre>
+    <p>Первое RAID-Z1 VDEV содержит три поставщика хранения, <span class="term"><code>gpt/zfs0</code></span>,
+	<span class="term"><code>gpt/zfs1</code></span> и <span class="term"><code>gpt/zfs2</code></span>. Второе включает
+	<span class="term"><code>gpt/zfs3</code></span>, <span class="term"><code>gpt/zfs4</code></span> и 
+	<span class="term"><code>gpt/zfs5</code></span>. <span class="term"><strong class="userinput"><code>zpool</code></strong></span> 
+	<span class="term"><code>vat</code></span> чередует данные по двум поставщикам. Это создает пул, который содержит два устройства
+	RAID-Z.</p>
+	   <pre class="screen">
+# zpool status vat
+...
+config:
+
+NAME        STATE  READ WRITE CKSUM
+vat         ONLINE    0     0     0
+ raidz1-0   ONLINE    0     0     0
+  gpt/zfs0  ONLINE    0     0     0
+  gpt/zfs1  ONLINE    0     0     0
+  gpt/zfs2  ONLINE    0     0     0
+ raidz1-1   ONLINE    0     0     0
+  gpt/zfs3  ONLINE    0     0     0
+  gpt/zfs4  ONLINE    0     0     0
+  gpt/zfs5  ONLINE    0     0     0
+	   </pre>
+    <p>Каждое VDEV имеет свое собственное резервирование.</p>
+    <p>Хотя зеркала и быстрее RAIDZ, вы можете обнаружить, что добавленная скорость привнесенная множественными VDEV делает
+	такие пулы на основе RAIDZ достаточно быстрыми для вашей рабочей нагрузки при выделении вам значительно большего пространства.
+	Единственный способ убедиться в этом- создать пул и протестировать его на рабочих нагрузках.</p>
+    <p>Запомните, что пул разделяет все запросы на запись между VDEV в пуле. Отдельный файл небольшого размера может целиком попасть 
+	на одно VDEV, однако в совокупности, записи разделяются между VDEV. Применение множества VDEV увеличивает IOPS и полосу 
+	пропускной способности.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="UsingLogDrives"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Использование устройств журналов</span></h4>
+    </div></div></div>
+    <p>Как это уже обсуждалось в <a class="link" href="Ch02.html" target="_top">Глава 2</a>, ZFS может увеличить производительность 
+	с применением выделенных устройств кэша записи и/ или выделенных устройств кэша чтения. Такими выделенными устройствами обычно 
+	являются очень быстрые SSD с большим ресурсом перезаписи {eMLC}. Команда <span class="term"><code>zpool(8)</code></span> 
+	именует кэш записи <span class="term"><strong class="userinput"><code>log</code></strong></span> {журнал записей}, а 
+	кэш чтения {просто} <span class="term"><strong class="userinput"><code>cache</code></strong></span>.</p>
+    <p>Применяйте ключевые слова <span class="term"><strong class="userinput"><code>log</code></strong></span> и 
+	<span class="term"><strong class="userinput"><code>cache</code></strong></span> для определении таких устройств при 
+	создании вашего пула. Здесь мы создаем пул чередования с именем <span class="term"><code>scratch</code></span> с кэшами и 
+	для чтения, и для записи.</p>
+	   <pre class="screen">
+# zpool create scratch gpt/zfs0 log gpt/zlog0 cache gpt/zcache1
+	   </pre>
+    <p>Устройства протокола {и кэша} отображаются в состоянии пула.</p>
+	   <pre class="screen">
+# zpool status scratch
+...
+config:
+
+NAME STATE READ WRITE CKSUM
+scratch ONLINE 0 0 0
+ gpt/zfs0 ONLINE 0 0 0
+logs
+ gpt/zlog0 ONLINE 0 0 0
+cache
+ gpt/zcache1  ONLINE 0 0 0
+	   </pre>
+    <p>В системах, которым требуется высокая доступность, вы можете строить такие кэши записи в зеркало. Зеркалированный кэш чтения не 
+	имеет смысла - если вы потеряете кэш чтения, ZFS вернется назад к чтению из реального пула. Потеря журнал записи ZIL может привести 
+	к потере данных, поэтому такое зеркалирование имеет смысл. Здесь мы создаем чередование из двух зеркал с использованием устройств с 
+	<span class="term"><code>gpt/zfs0</code></span> по <span class="term"><code>gpt/zfs3</code></span>, с зеркалированными устройствами 
+	протоколирования <span class="term"><code>gpt/zfs0</code></span> и <span class="term"><code>gpt/zfs1</code></span>.</p>
+	   <pre class="screen">
+# zpool create db mirror gpt/zfs0 gpt/zfs1 mirror gpt/zfs2 gpt/zfs3 log mirror gpt/zlog0 gpt/zlog1
+	   </pre>
+    <p>Вы можете намеренно добавлять устройства кэширования протоколирования и чтения в некий существующий пул или удалять их из него.
+	Если вы не уверены в необходимости повышения производительности этих устройств, попытайтесь запустить пул без них. Однако, убедитесь,
+	что ваше оборудование имеет свободное место для добавления устройств хранения SSD позже!</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MismatchedVDEVs"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Несогласованные VDEV</span></h4>
+    </div></div></div>
+    <p>Не рекомендуется применение VDEV различных типов в пределах одного пула. и <span class="term"><code>zpool(8)</code></span> 
+	попытается предостеречь вас от подобного несчастья.</p>
+	   <pre class="screen">
+# zpool create daftie raidz gpt/zfs0 gpt/zfs1 gpt/zfs2 mirror gpt/zfs3 gpt/zfs4 gpt/zfs5
+invalid vdev specification
+use '-f' to override the following errors:
+mismatched replication level: both raidz and mirror vdevs are present
+{неверное описание vdev
+применяйте '-f' для пренебрежения следующими ошибками:
+несогласованный уровень репликаций: присутствуют и raidz, и mirror}
+	   </pre>
+    <p>Команда <span class="term"><code>zpool(8)</code></span> укажет на недоразумение и затем спросит, настаиваете ли вы.
+	Обычно мы воспринимает такие виды ошибок как способ сообщить нашему системному администратору о необходимости принять больше 
+	кофеина, но,возможно, вы делаете это намеренно. Выполнение <span class="term"><code>zpool create -f</code></span> с описанными 
+	типами VDEV и поставщиками хранения сообщает ZFS, что да, вы полностью осознаете намерение создания несогласованного пула. 
+	Эй, это ваша система и вы управляете ей!</p>
+    <p>Если ZFS не советует вам что-то делать, вероятно, вы не должны это делать. Когда вы применяете 
+	<span class="term"><code>-f</code></span>, вы создаете нечто, для чего ZFS не приспособлена. Вы легко можете создать пул, 
+	который не будет работать надлежащим образом и <span class="emphasis"><em>не может</em></span> быть восстановлен.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ReusingProviders"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Повторное использование поставщиков</span></h4>
+    </div></div></div>
+    <p>Иногда мы создаем и уничтожаем пул более одного раза, чтобы получить правильное решение. Мы можем вынимать диски из одной 
+	машины и монтировать их в другой. Иногда мы сталкиваемся с дисками, уже использовавшимися до этого.</p>
+	   <pre class="screen">
+# zpool create db gpt/zfs1 gpt/zfs2 gpt/zfs3 gpt/zfs4
+invalid vdev specification
+use '-f' to override the following errors:
+/dev/gpt/zfs3 is part of exported pool 'db'
+{неверное описание vdev
+применяйте '-f' для пренебрежения следующими ошибками:
+/dev/gpt/zfs3 является частью экспортированного пула 'db'}
+	   </pre>
+    <p>Мы использовали данный диск в пуле, который мы позже экспортировали (см. <a class="link" href="Ch05.html" target="_top">Главу 
+    5</a>) Проблемный диск применялся в этом пуле и на этом диске осталась метка ZFS. Хотя мы удалили таблицу разделов и создали ее
+	заново, бывает, что новая таблица разделов в точности совпадает с предыдущей. В этом случае ZFS легко обнаруживает старые 
+	метаданные.</p>
+    <p>Если вы уверены, что на данном поставщике нет ничего важного, следуйте инструкциям и принудительно создайте новый пул с 
+	<span class="term"><code>-f</code></span>.</p>
+	   <pre class="screen">
+# zpool create -f db gpt/zfs1 gpt/zfs2 gpt/zfs3 gpt/zfs4
+	   </pre>
+    <p>Программы ZFS могут быть очень придирчивы к тому, где расположены ваши флаги, поэтому убедитесь, что 
+	<span class="term"><code>-f</code></span> следует непосредственно за <span class="term"><code>create</code></span>.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Pool_Integrity"> </a>Целостность пула</h3>
+   </div></div></div>
+   <p>Одна из самых распространенных жалоб на ZFS заключается в том, что она не имеет никаких средств проверки файловой системы подобных 
+   <span class="term"><code>fsck(8)</code></span>. Автономная проверка файлов не улучшит ZFS, поскольку проверка целостности в реальном 
+   режиме времени прверяет все, что выполняет <span class="term"><code>fsck(8)</code></span> и даже более того. Проверка в реальном времени, 
+   к тому же, более эффективна, чем это делала бы традиционная файловая система, если бы существовал <span class="term"><code>fsck(8)</code></span>.
+   Давайте обсудим, как ZFS обеспечивает целостность файла, а затем как очистка пула помогает поддерживать целостность.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Integrity"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Целостность ZFS</span></h4>
+    </div></div></div>
+    <p>Устройства хранения данных портятся. Если у вас есть триллионы секторов на каком-то диске, шансы того, что шальной космический луч 
+	ударет в один из них достаточно сильно, чтобы тот зашатался как пьяный - также как и шансы ошибки записи, или отказа питания, или 
+	замыкания в неисправном кабеле, или множество других возможных проблем. Никакая файловая система не может предотвратить ошибки 
+	в лежащем в ее основе оборудовании.</p>
+    <p>ZFS применяет <span class="term"><strong class="userinput"><code>хэширование</code></strong></span> почти повсеместно. Хэш является 
+	математическим алгоритмом, который берет порцию данных и вычисляет из них строку фиксированной длины. Интересным фактом хэша является то, 
+	что незначительные изменения в первоначальных данных драматически изменяют хэш этих данных. Каждый блок хранения содержит хэш родительского 
+	блока, в то время как родительский блок содержит хэши всех своих дочерних блоков.</p>
+    <p>Несмотря на то, что ZFS не может предотвратить ошибок поставщика хранения, он применяет подобные хэши для их определения. При каждой 
+	выборке данных система проверяет контрольные суммы. ZFS использует резервирование для устранения ошибок перед выдачей правильного файла 
+	операционной системе. Это называется <span class="term"><strong class="userinput"><code>самовосстановлением</code></strong></span>.</p>
+    <p>Если лежащие в основе VDEV имеют избыточность, ZFS либо реконструирует разрушенный блок из RAID-Z или захватывает нетронутую копию из 
+	зеркала. Если обе стороны зеркала имеют ошибки, ZFS может продолжать восстановление до тех пор, пока одни и те же данные не являются 
+	ошибочными на обоих дисках. Если VDEV не имеет резервирования, но набор данных имеет дополнительные копии этих данных, (см. 
+	<a class="link" href="Ch04.html" target="_top">Главу 4</a>), ZFS вместо этого применяет такие дополнительные копии. Если лежащие в основе 
+	VDEV не имеют резервирования и набор данных не держит дополнительные копии, пул делает пометку,что файл поврежден и возвращает ошибку 
+	вместо возврата неверных данных. Вы можете восстановить файл из резервной копии или отбросить его.</p>
+    <p>Одновременно с проверкой целостности файлов, ZFS выполняет связи между блоками хранения. Именно эту задачу выполняет 
+	<span class="term"><code>fsck(8)</code></span> в традиционных файловых системах. Это небольшая часть проверки достоверности данных, и 
+	ZFS выполняет эту задачу непрерывно как часть своей обычной работы. ZVS также имеет дополнительное преимущество над 
+	<span class="term"><code>fsck(8)</code></span> втом, что она проверяет только действительно существующие блоки, вместо используемых и 
+	не используемых индексных дескрипторов. Если вы хотите выполнить полную проверку целостности для всех данных в пуле, выполните очистку
+	{scrub}.</p>
+    <p>Хороший факт о проверке целостности на основе хэшей состоит в том, что она улавливает все виды ошибок, даже неожиданные. Помните,
+	все счастливые файловые системы похожи друг на друга, каждая несчастливая файловая система несчастлива по-своему {<span 
+	class="emphasis"><em>Прим. пер.: <a class="link" href="https://vk.com/video1721355_170911266" target="_top">
+	&quot;Анна Каренина&quot;, Часть I, Гл. I</a></em></span>}.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Scrubbing_ZFS"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Очистка ZFS</span></h4>
+    </div></div></div>
+    <p>Очистка (<span class="term"><strong class="userinput"><code>scrub</code></strong></span>) пула ZFS проверяет все криптографические хэши
+	каждого блока данных в пуле. Если очистка обнаруживает ошибку, она восстанавливает ее, если существует достаточная способность к их устранению. 
+	Очистка производится при работающем и используемом пуле.</p>
+    <p>Если очистка обнаружила какую- то ошибку, она будет отображена в состоянии zpool. Если вы только что выполнили очистку, вы также увидите 
+	эту информацию в строке сканирования.</p>
+	   <pre class="screen">
+...
+scan: scrub repaired 0 in 15h57m with 0 errors on Sun Feb 8 15:57:55 2015
+…errors: No known data errors
+...
+	   </pre>
+    <p>Данный пул не встретил никаких ошибок в данных, к которым он обращался. Если бы он обнаружил ошибки, он устранил бы их. Пул не должен 
+	проверять все данные на наличие ошибок, однако - он проверяет только те данные, о которых его попросили. Для методичного просмотра всего 
+	пула на предмет ошибок используйте <span class="term"><strong class="userinput"><code>scrub</code></strong></span>. Выполните 
+	<span class="term"><code>zpool scrub</code></span> с именем нужного вам пула.</p>
+	   <pre class="screen">
+# zpool scrub zroot
+	   </pre>
+    <p>Очистки работают в фоновом режиме. Вы можете отслеживать их работу выполнив <span class="term"><code>zpool status</code></span>.</p>
+	   <pre class="screen">
+# zpool status
+...
+scan: scrub in progress since Tue Feb 24 11:52:23 2015
+12.8G scanned out of 17.3G at 23.0M/s, 0h3m to go
+0 repaired, 74.08% done
+...
+	   </pre>
+    <p>При очистке пула ZFS его хранилище работает намного медленнее, чем обычно. Если ваша система уже достигла своих пределов 
+	производительности, очищайте пулы только вне пределов пиковых нагрузок. Если необходимо прервать выполняющуюся очистку, исполните 
+	<span class="term"><code>zpool scrub -s</code></span>.</p>
+	   <pre class="screen">
+# zpool scrub -s zroot
+	   </pre>
+    <p>Не забудьте вернуться и заставить систему завершить ее очистку как можно быстрее.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Scrub_Frequency"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Частота очисток</span></h4>
+    </div></div></div>
+    <p>Встроенная в ZFS проверка целостности и устойчивость к ошибкам означают, что большинство ошибок исправимо, только если они обнаружены 
+	достаточно рано, чтобы устойчивость к ошибкам вышибла ее. Это означает, что качество вашего оборудования диктует как часто вы должны 
+	выполнять очистку пулов хоста. Если ваше оборудование достаточно надежное, подобное так называемому оборудованию &quot;серверного 
+	уровня&quot;, должно хватать ежеквартальной очистки. Если вы злоупотребляете недорогим оборудованием, вы должны выполнять очистку 
+	ежемесячно или около того.</p>
+    <p>FreeBSD может выполнять для вас регулярные очистки, как это обсуждается в &quot;<a class="link" href="#ZpoolMaintenanceAutomation" 
+	target="_top">Автоматизация эксплуатации Zpool</a>&quot; позже в данной главе.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PoolProperties"> </a>Свойства пула</h3>
+   </div></div></div>
+   <p>ZFS применяет свойства для выражения характеристик пула. Хотя свойства zpool выглядят и работают во многом аналогично свойствам 
+   наборов данных, и к тому же многие свойства выглядят перекрывающимися вежду этими двумя категориями, свойства набора данных не имеют 
+   никакого отношения к свойствам пула. Свойства пула включают в себя такие явления как работоспособность пула, размер, емкость и 
+   функциональность на уровне пула.</p>
+   <p>Свойства пула воздействуют на весь пул. Если вы хотите установить свойство только для части пула, проверьте свойства каждого набора 
+   данных, который удовлетворяет вашим условиям.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingPoolProperties"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр свойств пула</span></h4>
+    </div></div></div>
+    <p>Чтобы просмотреть все свойства всех пулов в вашей системе, выполните <span class="term"><code>zpool get all</code></span>. Вы 
+	можете добавить в конце имя пула, если вы хотите увидеть свойства только определенного пула. Здесь мы взглянем на свойства пула
+	<span class="term"><code>zroot</code></span>.</p>
+	   <pre class="screen">
+# zpool get all zroot
+NAME   PROPERTY  VALUE   SOURCE
+zroot  size      920G    -
+zroot  capacity  1%      -
+zroot  altroot   -       default
+zroot  health    ONLINE  -
+...
+	   </pre>
+    <p>Первые две колонки дают имя пула и имя его свойства.</p>
+    <p>Третья колонка перечисляет значения свойства. Это может быть что-то типа <span class="term"><code>enabled</code></span> 
+	или <span class="term"><code>disabled</code></span>, <span class="term"><code>on</code></span> или 
+	<span class="term"><code>off</code></span>, <span class="term"><code>active</code></span> или 
+	<span class="term"><code>inactive</code></span> или же это может быть значение. Данное свойство пула
+	<span class="term"><strong class="userinput"><code>size</code></strong></span> равно 920G - этот пул имеет пространство 920ГБ.</p>
+    <p>Колонка SOURCE показывает где установлено свойство. Это может быть одиночное тире, а также слова <span 
+	class="term"><code>default</code></span> или <span class="term"><code>local</code></span>. Прочерк означает, что свойство не 
+	установлено как таковое, а, скорее всего, каким-то образом считывается из пула. Вы не установите значение для размера пула или 
+	как много из его пространства используется. FreeBSD вычисляет эти значения из пула. Значение <span 
+	class="term"><code>default</code></span> SOURCE указывает, что это свойство установлено в свое значение по умолчанию, в то время как 
+	<span class="term"><code>local</code></span> означает, что это свойство специфично установлено для данного пула.</p>
+    <p>Чтобы получить отдельное свойство, выполните <span class="term"><code>zpool get</code></span> с именем этого совйства.</p>
+	   <pre class="screen">
+# zpool get size
+NAME   PROPERTY  VALUE  SOURCE
+db     size      2.72T  -
+zroot  size      920G   -
+	   </pre>
+    <p>Ограничивайте этот вывод заданием имени пула в конце.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ChangingPoolProperties"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Изменение свойств пула</span></h4>
+    </div></div></div>
+    <p>На протяжении данной книги мы будем устанавливать свойства для изменения поведения пула. Измените свойства пула, воспользовавшись командой
+	<span class="term"><code>zpool set</code></span>. Здесь мы устанавливаем свойство <span class="term"><strong 
+	class="userinput"><code>comment</code></strong></span> пула.</p>
+	   <pre class="screen">
+# zpool set comment=&quot;Main OS files&quot; zroot
+	   </pre>
+    <p>Теперь в рамках списка свойств появятся этот комментарий.</p>
+	   <pre class="screen">
+# zpool get comment
+NAME   PROPERTY  VALUE          SOURCE
+db     comment   -              default
+zroot  comment   Main OS files  local
+	   </pre>
+    <p>Отметим здесь колонку SOURCE. По умолчанию пул не имеет комментариев. Теперь, как только я установил комментарий, тем не менее, источник
+	SOURCE на <span class="term"><code>local</code></span>. Если свойство хотя бы раз изменено с <span class="term"><code>default</code></span>
+	на <span class="term"><code>local</code></span>, оно навсегда остается <span class="term"><code>local</code></span>. Даже установка свойства 
+	в значение по умолчанию не изменяет SOURCE.</p>
+	   <pre class="screen">
+# zpool set comment=&quot;-&quot; zroot
+# zpool get comment
+NAME   PROPERTY  VALUE  SOURCE
+db     comment   -      default
+zroot  comment   -      local
+	   </pre>
+    <p>Мы локально установили комментарий в значение по умолчанию, следовательно SOURCE остается span class="term"><code>local</code></span>.</p>
+    <p>Вы можете установить свойства пула во время его создания с параметром <span class="term"><code>-o</code></span>. Вы можете установить 
+	свойство для корневого набора данных в этом пуле при помощи <span class="term"><code>-O</code></span>.</p>
+	   <pre class="screen">
+# zpool create -o altroot=/mnt -O canmount=off -m none zroot /dev/gpt/disk0
+	   </pre>
+    <p>Пул имеет свое свойство <span class="term"><strong class="userinput"><code>altroot</code></strong></span> установленным в
+	<span class="term"><code>/mnt</code></span>, а корневой набор данных в этом пуле имеет свойство 
+	<span class="term"><strong class="userinput"><code>canmount</code></strong></span> установленное в <span class="term"><code>off</code></span>.
+	Если свойство изменяет способ записи данных, это влияет только на данные, записываемые после изменения свойства. ZFS не осуществляет 
+	перезапись существующих данных для соответствия с установленным свойством.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PoolHistory"> </a>История пула</h3>
+   </div></div></div>
+   <p>Каждый zpool содержит копии всех изменений, произведенных с этим пулом, причем все в обратном порядке к созданию пула. Данная история 
+   не содержит событий создания. Эта история не содержит событий типа включения и выключения питания системы, однако она включает в себя
+   установку свойств, обновления пула и создание набора данных.</p>
+   <p>Чтобы получить доступ к истории пула, запустите <span class="term"><code>zpool history</code></span> и присвойте имя пула.</p>
+	   <pre class="screen">
+# zpool history zroot
+History for 'zroot':
+2014-01-07.04:12:05 zpool create -o altroot=/mnt -O canmount=off -m none zroot mirror /dev/gpt/disk0.nop /dev/gpt/disk1.nop
+2014-01-07.04:12:50 zfs set checksum=fletcher4 zroot
+2014-01-07.04:13:00 zfs set atime=off zroot
+...
+	   </pre>
+   <p>Искушенные в FreeBSD руки, вероятно, распознали это по любому количеству руководств ZFS в документации FreeBSD и форумах.</p>
+   <p>История завершается с:</p>
+	   <pre class="screen">
+...
+2015-03-12.14:36:35 zpool set comment=Main OS files zroot
+2015-03-12.14:43:45 zpool set comment=- zroot
+	   </pre>
+   <p>Мы изменили свойство <span class="term"><strong class="userinput"><code>comment</code></strong></span>, поэтому оно в истории.
+   Навсегда.</p>
+   <p>К сожалению, история пула не отслеживает кто сделал каждое изменение, но наличие постоянной регистрации изменений помогает 
+   с анализом проблем.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZpoolMaintenanceAutomation"> </a>Автоматизация эксплуатации Zpool</h3>
+   </div></div></div>
+   <p>FreeBSD проверяет каждую файловую систему в системе в качестве части работы по сопровождению, выполняемой <span 
+   class="term"><code>periodic(8)</code></span>. Вы можете добавлять информацию в эти проверки, тем самым вы получите информацию о 
+   работоспособности пула. Параметр <span class="term"><code>periodic.conf</code></span> daily_status_zfs_enable разрешает проверки пула.</p>
+	   <pre class="screen">
+daily_status_zfs_enable=&quot;YES&quot;
+	   </pre>
+   <p>Ежедневный вывод <span class="term"><code>periodic(8)</code></span> теперь содержит вывод <span class="term"><code>zpool 
+   status -x</code></span>, который обычно является одной строчкой &quot;<span class="term"><code>all pools are healthy</code></span>&quot;.</p>
+   <p>Если вам требуется более подробная информация о вашем пуле, ежедневный отчет также может содержать вывод 
+   <span class="term"><code>zpool list</code></span>. Установите daily_status_zfs_zpool_list в <span class="term"><code>YES</code></span>
+   для получения этого списка. Если вы хотите усекать этот вывод, отображая только состояние определенных пулов, перечислите нужные вам пулы 
+   в переменной <span class="term"><code>periodic.conf</code></span> daily_status_zpool.</p>
+   <p>Вы также можете заставить ZFS выполнять очистки вашего пула. При установленных параметрах очистки FreeBSD выполняет ежедневную проверку 
+   для просмотра того, нуждается ли пул в очистке, однако выполняет очистку только в установленные интервалы. Для автоматической очистки всех 
+   пулов каждые 35 дней, установите в <span class="term"><code>periodic.conf</code></span> daily_scrub_zfs_enable в 
+   <span class="term"><code>YES</code></span>.</p>
+	   <pre class="screen">
+daily_scrub_zfs_enable=&quot;YES&quot;
+	   </pre>
+   <p>FreeBSD по умолчанию должен делать очистку всех пулов. Вы не можете в явном виде исключить определенные пулы из ежедневной проверки 
+   очистки. Однако, вы можете в явном виде перечислить пулы, которые вы хотите проверять в daily_scrub_zfs_pools. Все не перечисленные пулы
+   неочищаются.</p>
+	   <pre class="screen">
+daily_scrub_zfs_pools=&quot;zroot prod test&quot;
+	   </pre>
+   <p>Для изменения количества дней между очистками установите daily_scrub_zfs_default_threshold на нужное вам количество дней.</p>
+	   <pre class="screen">
+daily_scrub_zfs_default_threshold=&quot;10&quot;
+	   </pre>
+   <p>Если мы хотим очищать определенный пул по определенному расписанию, установите daily_scrub_zfs_${poolname}_threshold на требуемое 
+   число дней. Здесь мы очищаем пул <span class="term"><code>prod</code></span> каждые 7 дней.</p>
+	   <pre class="screen">
+daily_scrub_zfs_prod_threshold=&quot;7&quot;
+	   </pre>
+   <p>Все пулы с неустановленными собственными персональными порогами применяют пороговые значения, установленные по умолчанию.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RemovingPools"> </a>Удаление пулов</h3>
+   </div></div></div>
+   <p>Чтобы освободится от пула воспользуйтесь командой <span class="term"><code>zpool destroy</code></span> и именем пула.</p>
+	   <pre class="screen">
+# zpool destroy test
+	   </pre>
+   <p>Уничтожение помечает лежащих в основе пула поставщиков как часть разрушенного пула. Это не удаляет диск, и всякий, кто прочитал 
+   <a class="link" href="Ch05.html" target="_top">Главу 5</a> сможет восстановить пул и доступ к данным.</p>
+   <p>Если вы должны безопасно удалить или переписать данные в поставщике, вам понадобится перезаписи диска или программе шрединга.</p>
+  </div>   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZpoolFeatureFlags"> </a>Флаги функциональности пула</h3>
+   </div></div></div>
+   <p>ZFS и пулы изначально пришли с номером версии, указывающим поддерживаемую пулом функциональность. Система может взглянуть на 
+   незнакомого поставщика хранения и сказать: &quot;О, это пул ZFS версии 20, так что он не поддерживает дедупликацию или 
+   естественное шифрование&quot;. Вы могли обновлять пул до последней поддерживаемой вашим выпуском версии - или нет.</p>
+   <p>Затем Oracle закрыл исходные коды ZFS, оставив различных людей с возможностью брать последний выпуск ZFS с открытым 
+   исходным кодом и поддерживать его самостоятельно.</p>
+   <p>Окончательной версией с открытым исходным кодом Oracle ZFS была версия 28. Поскольку различные группы реализовывали свою 
+   собственную функциональность, номера версий от различных групп угрожали стать несовместимыми. Различные команды ZFS могли 
+   реализовывать любую новую функциональность по своему выбору, а это означает, что, скажем, FooZFS версии 30 будет несовместима 
+   с BarZFS версии 30. Одной из основных целей ZFS является совместимость.</p>
+   <p>Команда OpenZFS  решила, что лучшим путем вперед будет оторваться от отслеживания возможностей по номерам версий. Они 
+   загнули версию OpenZFS до 5000, оставив Oracle достаточно места для добавления новых версий. Чтобы приспособить всех различных 
+   разработчиков OpenZFS ко всем различным платформам, разработчики решили эффективно заменить номера версий флагами 
+   функциональности.</p>
+   <p>Изменение функциональности обычно каким-то образом изменяет формат на диске. Добавление поддержки снимков, например, 
+   означает добавление новых полей и метаданных чтобы сказать &quot;это снимок&quot;. Система, которая не поддерживает данную 
+   функциональность взглянет на этот пул и пойдет &quot;вот, жесть, я не распознаю эту структуру данных, я не трогаю это!&quot; 
+   Если вы регулярно меняете диски между системами, вы захотите тщательно проверять флаги функциональности, поддерживаемые 
+   различными хостами перед обновлениями или разрешением новых флагов функциональности.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingFeatureFlags"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр флагов функциональности</span></h4>
+    </div></div></div>
+    <p>Чтобы посмотреть флаг функциональности, поддерживаемый пулом, а также его установки, просмотрите свойства пула, которые 
+	содержат слово &quot;feature&quot;.</p>
+	   <pre class="screen">
+# zpool get all zroot | grep feature
+zroot  feature@async_destroy  enabled local
+zroot  feature@empty_bpobj    active  local
+zroot  feature@lz4_compress   active  local
+...
+	   </pre>
+    <p>Разрешенные (<span class="term"><code>enabled</code></span>) свойства пула доступны для применения, но в действительности не 
+	задействованы. Ваша система может поддерживать новый тип сжатия, но на самом деле не записывать никакие данные на диск с 
+	применением нового алгоритма. Этот пул может быть импортирован в систему, которая не поддерживает данную функциональность, 
+	поскольку формат диска не изменился для приспособления к данной функциональности. Новый хост не увидит ничего, что привело 
+	бы его в возбуждение.</p>
+    <p>Запрещенная (<span class="term"><code>disabled</code></span>) функциональность пула доступна в данной операционной системе, 
+	но не разрешена. Ничто в пуле не говорит, что эта функциональность доступна - наличие запрещенной функциональности означает, 
+	что она доступна в операционной системе. Такой пул, безусловно можно применять в хосте, который не поддерживает эту 
+	функциональность.</p>
+    <p>Если функциональность активна (<span class="term"><code>active</code></span>), то формат на диске изменился, поскольку 
+	функция применяется. Чаще всего это пул не может быть импортирован в систему, не поддерживающую данную функциональность. 
+	Если функция активна, но все наборы данных, использующие эту функциональность удалены, пул возвращает установку функциональности 
+	в разрешенную (<span class="term"><code>enabled</code></span>).</p>
+    <p>Ряд функций имеет совместимость только на чтение (<span class="term"><code>read-only compatible</code></span>). 
+	Если такая функциональность находится в активном применении, пул может быть частично импортирован в систему, которая не 
+	поддерживает данную функциональность. Новый хост может не видеть некоторые наборы данных в пуле и он не может записывать данные 
+	в этот пул, однако он может выделять некоторые данные из наборов данных.</p>
+    <p>Создание пула делает доступными (<span class="term"><code>enabled</code></span>) все функции, поддерживаемые данной 
+	реализацией ZFS операционной системы. Вы можете применить флаг <span class="term"><code>-d</code></span> с 
+	<span class="term"><code>zpool create</code></span> для запрещения всех функций в новом пуле, а затем избирательно разрешать
+	функциональность.</p>
+    <p>Теперь, когда вы понимаете как работает пул, давайте поместим в него некие реальные данные.</p>
+   </div>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

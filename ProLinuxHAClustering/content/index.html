@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="OCFS2, cLVM2, LVM2, Logical Volume Manager, GFS2, Libvirt, STONITH, Shoot Th Other Node In Th Head, fencing, pengine, luci and ricci,CIFS, DLM, DRBD, Distributed replicated block device, Heartbeat, HAProxy, Open Cluster Framework, CIB, Cluster information base, APC PDU, iDRAC, Pacemaker, corosync, cibadmin">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Построение кластеров высокой доступности Linux для профи.</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="ProLinuxHAClustering"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Linux кластеры высокой доступности необходимы для обеспечения доступности критически важных ресурсов. Узнайте как внедрить эти фундаментальные дополнения Linux в вашей практике."/>
+<link rel="home" href="index.html" title="Построение кластеров высокой доступности Linux для профи"/>
+<link rel="next" href="Ch01.html" title="Глава 1. Построение кластера высокой доступности и его архитектура"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Построение кластеров высокой доступности Linux для профи.';
+PrevRef = 'Ix01.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="openstack-operations-guide"/>Построение кластеров высокой доступности Linux для профи.</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Сандер ван Вугт</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2014 Sander van Vugt</p>
+  <p>Первая публикация на английском языке: июль 2014</p>
+<p>Данная работа является предметом авторского права. Все права защищены Издателем, относится ли это ко всему материалу или его части, 
+в частности права на перевод, перепечатку, повторное использование иллюстраций, повторное цитирование, ретрансляцию, воспроизведение на 
+микрофильмах или любым другим физическим способом, а также передачу или хранение информации, поиск, электронную адаптацию, программное 
+обеспечение или же другие методологии, известные на данный момент или разработанные в будущем. Освобождаются от данного юридического 
+ограждения краткие выдержки в связи с обзорами или научным анализом, или материалы, поставляемые специально для целей, подлежащих 
+вводу и выполнению в компьютерных системах для исключительного применения покупателем работы. Дублирование данной публикации или ее частей 
+допускается только в соответствии с положениями закона об авторском праве места нахождения издателя, в текущей версии, а разрешение на 
+использование всегда должно быть получено от Springer. Разрешения на применение может быть получено через RightsLink в 
+Copyright Clearance Center.</p>
+<p>ISBN-13 (pbk): 978-1-4842-0080-3</p>
+<p>ISBN-13 (electronic): 978-1-4842-0079-7</p>
+<p>Названия торговых марок, логотипы и изображения могут появляться в этой книге. Вместо того чтобы использовать символ торговой марки 
+при каждом появлении торговой марки, логотипа или изображения, мы используем имена, логотипы и изображения только в редакционном режиме 
+и в интересах владельца торговой марки, без намерения нарушения товарного знака.</p>
+<p>Использование в данной публикации торговых названий, товарных знаков, знаков обслуживания и других подобных условиях, 
+даже если они не определены в качестве таковых, не должны рассматриваться как выражение мнения по поводу того, являются ли они предметом 
+имущественных прав.</p>
+<p>Хотя соображения и информация в этой книге предполагается правдивой и точной на момент публикации, ни автор, ни редакция, ни издатель 
+не могут принять никакой юридической ответственности за любые ошибки или упущения, которые могут быть сделаны.
+Издатель не дает никаких явных или подразумеваемых гарантий в отношении содержащихся в данном документе материалов.</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2015 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.packtpub.com/books/info/packt/terms-and-conditions" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     <img src="../favicon.ico" align="middle"/>
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2015-11-15</p>
+</div>
+<div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p class="title"><strong>Аннотация</strong></p>
+  <p>Более 60 практических рецептов для выполнения виртуализации серверов и управления виртуализированными 
+  серверными решениями на Proxmox.</p>
+ </div>
+</div></div><hr/></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Credits"> </a>Состав исполнителей</h3>
+   Первого издания на английском языке
+ </div></div></div>
+ <dl><dt><strong>Автор</strong></dt>
+  <dd><dl>
+   <dt>Сандер ван Вугт</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Издатель</strong></dt>
+  <dd><dl>
+   <dt>Хайнц Вайнхеймер</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Ведущий редактор</strong></dt>
+  <dd><dl>
+   <dt>Луиза Корриган</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Технические рецензенты</strong></dt>
+  <dd><dl>
+   <dt>Менно ван Саагсвельт</dt>
+   <dt>Ларс Маровски-Брие</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редакционная коллегия</strong></dt>
+  <dd><dl>
+   <dt>Стив Энглин</dt>  
+   <dt>Марк Бекнер</dt>  
+   <dt>Эван Букингем</dt>  
+   <dt>Гэри Корнелл</dt>  
+   <dt>Луиза Корриган</dt>  
+   <dt>Джим ДеВольф</dt>  
+   <dt>Джонатан Генник</dt>  
+   <dt>Джонатан Хассель</dt>  
+   <dt>Роберт Хатчинсон</dt>  
+   <dt>Мишель Лоумен</dt>  
+   <dt>Джеймс Маркхэм</dt>  
+   <dt>Мэтью Муди</dt>  
+   <dt>Джеф Олсон</dt>  
+   <dt>Джеффи Пепер</dt>  
+   <dt>Дуглас Пандик</dt>  
+   <dt>Бен Рену-Кларк</dt>  
+   <dt>Доминик Снейкшафт</dt>  
+   <dt>Гвенан Спиринг</dt>  
+   <dt>Мэтт Уэйд</dt>  
+   <dt>Стив Вайс</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координирующий редактор</strong></dt>
+  <dd><dl>
+   <dt>Кристина Рикеттс</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Литературный редактор</strong></dt>
+  <dd><dl>
+   <dt>Майкл Дж Ларак</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Наборщик</strong></dt>
+  <dd><dl>
+   <dt>SPi Global</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Составитель указателя</strong></dt>
+  <dd><dl>
+   <dt>SPi Global</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Художник</strong></dt>
+  <dd><dl>
+   <dt>SPi Global</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Изготовитель переплета</strong></dt>
+  <dd><dl>
+   <dt>Анна Ищенко</dt>  
+  </dl></dd>
+ </dl>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Об авторе</h3>
+ </div></div></div>
+ <p><strong>Сандер ван Вугт</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reviewers"> </a>О технических рецензентах</h3>
+ </div></div></div>
+ <p><strong>Менно ван Саагсвельт</strong>
+ </p>
+ <p><strong>Ларс Маровски-Брие</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Acknowledgments"> </a>Благодарности</h3>
+ </div></div></div>
+</div>
+
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Reviewers">О технических рецензентах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Acknowledgments">Благодарности</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+	<dt><span class="section"><a href="index.html#Introduction">Введение</a></span></dt>
+  </dl></dd>
+ </dl>
+ <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Построение кластера высокой доступности и его архитектура</a></span></dt>
+    <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#DifferentClustering">Различные виды кластеров</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch01.html#HPC">Высокопроизводительные кластеры</a></span></dt>
+      <dt><span class="section"><a href="Ch01.html#LBC">Кластеры балансировки нагрузки</a></span></dt>
+      <dt><span class="section"><a href="Ch01.html#HAC">Кластеры высокой доступности</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#WhatExpect">Чего ожидать от кластеров высокой доступности</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch01.html#Heartbeat_and_RHCS">Heartbeat 2.0 и Red Hat Cluster Suit</a></span></dt>
+      <dt><span class="section"><a href="Ch01.html#CM_and_RM">Участник кластера и управление ресурсами</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#Components">Компоненты, которые образуют кластер высокой доступности</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch01.html#Storage">Совместно используемое хранилище</a></span></dt>
+      <dt><span class="section"><a href="Ch01.html#Networks">Различные сети</a></span></dt>
+      <dt><span class="section"><a href="Ch01.html#Bonded">Связанные сетевые устройства</a></span></dt>
+      <dt><span class="section"><a href="Ch01.html#Multipathing">Многоканальность</a></span></dt>
+      <dt><span class="section"><a href="Ch01.html#Fencing">Устройства ограждения/ STONITH и кворум</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#Summary">Выводы</a></span></dt>
+    </dl></dd>
+    <dt><span class="chapter"><a href="Ch02.html">2. Настройка хранилища</a></span></dt>
+    <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#WhyShared">Зачем большинству кластеров необходимо совместно используемое хранилище</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#NASorSAN">NAS или SAN?</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#NAS">NAS</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#SAN">SAN</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#iSCSIorFC">iSCSI или Fibre Channel</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#iSCSI">Понимание iSCSI</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#Config_LIOiSCSI_Target">Настройка получателя LIO iSCSI</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#Connect_iSCSI_SAN">Соединение с iSCSI SAN</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#discoveryMode">Шаг 1: Режим обнаружения</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#nodeMode">Шаг 2: Режим узла</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#managing_iSCSI">Шаг 3: Управление соединением iSCSI</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#disconnect_iSCSI">Отключение сеанса iSCSI</a></span></dt>
+		</dl></dd>
+	<dt><span class="section"><a href="Ch02.html#SetMultipath">Настройка многоканальности</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#multipath.conf">/etc/multipath.conf</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#SpecificUse">Особенные варианты применения многоканальности</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch03.html">3. Настройка уровня принадлежности</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#ConfigNetwork">Настройка сети</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#BondingModes">Режимы связывания сети</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#ConfigBond">Настройка агрегированного интерфейса</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#Multicast">Операции с групповой передачей</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#corosync_cman">corosync или cman?</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Config_corosync">Настройка corosync</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#corosync.conf">Понимание установок corosync.conf</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#Without_Multicast">Сетевая среда без поддержки групповой	передачи</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#Config_cman">Настройка cman</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch04.html">4. Понимание архитектуры и управления Pacemaker</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch04.html#PacemakerRelations">Зависимости Pacemaker с другими частями кластера</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#ResourceAgents">Агенты ресурса</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#corosync_cman">corosync/cman</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#StorageLayer">Уровнь хранилища</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#PacemakerInternals">Внутренние компоненты Pacemaker</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#Information_Base">Информационная база кластера</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#crmd">crmd</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#pengine">pengine</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#lrmd">lrmd</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#stonithid_fenced">stonithid/fenced</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#ManagementTools">Инструменты управления кластером</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#crm_shell">crm shell</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#Hawk">Hawk</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#OtherTools">Другие средства</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#Conga">Conga: Luci и Ricci</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch05.html">5. Настройка существенных параметров кластера</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#Default">Описание установок кластера по умолчанию</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#no-quorum-policy">no-quorum-policy</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#default-resource-stickiness">default-resource-stickiness</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#stonith-action">stonith-action</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#STONITH">Наладка STONITH</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#Solutions">Различные решения</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#libvirt_STONITH">Наладка STONITH на основе гипервизора libvirt</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Hardware_STONITH">Наладка STONITH на основе аппаратных средств: Главный коммутатор электропитания APC</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#DRAC_STONITH">Наладка STONITH для Dell DRAC и других плат управления сервером подобных HP ILO</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#IPMI and Other">IPMI и другие платы управления</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#SharedDisk_STONITH">Наладка STONITH на основе совместно используемого диска</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#Fencing_RHC">Применение ограждения в кластерах Red Hat</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch06.html">6. Ресурсы построения кластера</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#WhatMakesDifferent">Что делает ресурсы построения кластера различными</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#ApacheFS">Построение кластера файловой системы Apache</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#CreatingResources">Создание ресурсов</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#GroupingResources">Группировка ресурсов</a></span></dt>
+    <dt><span class="section"><a href="Ch06.html#Constraints">Работа с ограничениями</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#ConstraintTypes">Типы ограничений</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#Scores">Понимание множеств</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#TestConfig">Тестирование настроек</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#RAS">Понимание сценариев агента ресурсов</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch07.html">7. Построение кластера хранилища</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch07.html#ClusterFS">Применение файловой системы кластера</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#OCFS2">Настройка файловой системы OCFS2</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#CloneResources">Понимание ресурсов- клонов</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#LVM2">LVM2 в средах кластеров</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#OCFS2_on_cLVM2">OCFS2 поверх cLVM2</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#GFS2_w_Pacemaker">Применение GFS2 с Pacemaker</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch08.html">8. Выполнение ежедневных задач управления кластером</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch08.html#Starting_and_Stopping">Запуск и останов ресурсов</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Monitoring">Наблюдение за состоянием ресурса</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Migration">Миграция ресурса</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Cleanup">Применение очистки ресурса</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Maintenance">Применение неуправляемого режима и режима обслуживания для сопровождения</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Log_Files">Понимание файлов журналов</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#BackupRestoreConfig">Сохранение и восстановление настроек кластера</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#WipeAndStart">Стереть все и начать заново</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch09.html">9. Создание SAN с открытым исходным кодом</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch09.html#PacemakerCreating">Создание SAN с открытым исходным кодом при помощи Pacemaker</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#RAID1_withDRBD">Создание RAID 1 в сетевой среде при помощи DRBD</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch09.html#PrecautionaryMeasures">Меры предосторожности</a></span></dt>
+      <dt><span class="section"><a href="Ch09.html#CreatingConfig">Создание настройки</a></span></dt>
+      <dt><span class="section"><a href="Ch09.html#DRBD">Работа с DRBD</a></span></dt>
+      <dt><span class="section"><a href="Ch09.html#TroubleshootingDisconnect">Трудности состояния отсоединения</a></span></dt>
+      <dt><span class="section"><a href="Ch09.html#DualPrimaryMode ">Работа с режимом двойственного ведущего</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch09.html#Integrating DRBD">Интегрирование DRBD в кластеры Pacemaker</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch09.html#Testing">Тестирование</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch09.html#Adding_iSCSI_Target">Добавление получателя iSCSI в SAN с открытым исходным кодом</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch09.html#Creating_withLVM">Создание SAN при помощи LVM</a></span></dt>
+      <dt><span class="section"><a href="Ch09.html#SetUp_iSCSI_Target">Наладка получателя iSCSI в кластере</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch09.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch10.html">10. Вариант применения: Создание решения для высокой доступности Xen/KVM</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch10.html#OverviewVirtualization ">Введение: обзор решений виртуализации с открытым исходным кодом</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#Xen">Xen</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#KVM">KVM</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#Requirements">Требования для наладки решений с высокой доступностью для виртуальных машин</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#Example">Пример виртуальной машины кластера с высокой доступностью</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#CreatingKVM_HA ">Создание кластера KVM с высокой доступностью</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#CreatingBase">Создание базового кластера</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#ConfigSAN">Настройка SAN для совместно используемого хранилища</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#InstallKVM">Установка виртуальной машины KVM</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#SetUpResources">Наладка ресурсов кластера для виртуальной машины KVM</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#Summary">Выводы</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch11.html">11. Вариант применения: Настройка балансировки нагрузки пользовательского интерфейса почты на основе внутреннего интерфейса базы данных</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch11.html#CustomerSituation">Состояние потребителя</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#Database">Серверная часть базы данных</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#Mail">Пользовательский интерфейс почты</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#OneBig_or_ManyLittle">Один большой или много маленьких кластеров?</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#Summary">Выводы</a></span></dt>
+		
+	</dl></dd>
+ </dl>
+	<dt><span class="index"><a href="ix01.html">Указатель</a></span></dt>
+
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+ </div></div></div>
+ <p>.</p>
+</div>
+ 
+<script src="http://t1.extreme-dm.com/f.js" id="eXF-haclustr-0" async defer></script>
+	
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

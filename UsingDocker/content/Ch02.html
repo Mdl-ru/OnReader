@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 2. Установка - Использование Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="UsingDocker"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Использование Docker"/>
+<link rel="up" href="index.html" title="Использование Docker"/>
+<link rel="prev" href="Ch02.html" title="Глава 1. Что и почему контейнеров"/>
+<link rel="next" href="Ch02.html" title="Глава 3. Первые шаги"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-using-docker";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/UsingDocker/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 2. Установка';
+PrevRef = 'Ch01.html';
+UpRef = 'index.html';
+NextRef = 'Ch03.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Часть 1. Предпосылки и основы</h1>
+  </div></div></div>
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 2. Установка</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch02.html">2. Установка</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch02.html#02.1">Установка Docker в Linux</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch02.html#02.1.1">Выполнение SELinux в разрешающем режиме</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#02.1.2">Выполнение без sudo</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.2">Установка Docker на Mac OS или Windows</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.3">Быстрая проверка</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Данная глава коротко охватывает шаги, требующиеся для установки Docker. Существует ряд ляпов, зависящих от того, какой операционной 
+  системой вы пользуетесь; однако при некоторой удаче, она должна быть простой и безболезненной. Если у вас уже есть установленная 
+  последняя версия Docker (скажем, 1.8 или новее {<span class="emphasis"><em>Прим. пер.: на момент перевода 1.10</em></span>}), вы 
+  можете благополучно перейти к к следующей главе.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.1"> </a>Установка Docker в Linux</h3>
+   </div></div></div>
+   <p>Общепризнанно, что самый лучший способ установки Docker в Linux состоит в работе со сценарием установки предоставляемым Docker.
+   Хотя большинство дистрибутивов Linux имеют свои собственные пакеты, они имеют тенденцию отставать от редакций Docker, что является серьёзной 
+   проблемой, учитывая темпы развития Docker.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerRequirements"> </a>
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Требования Docker</th></tr><tr><td align="left" valign="top">
+	  <p>У Docker не так много требований, но вам нужно работать с достаточно современным ядром (на мамент написания версия 3.10 или 
+	  выше {<span class="emphasis"><em>Прим. пер.: то же на момент перевода, 3.10 или выше</em></span>}). Вы можете проверить это 
+	  выполнив <span class="term"><code>uname -r</code></span>. Если вы используете RHEL или CentOS, вам нужна версия 7 или выше. 
+	  {<span class="emphasis"><em>Прим. пер.: на момент перевода Docker поддерживает следующие версии Ubuntu: 12.04, 14.04, 
+	  15.10</em></span>}.</p>
+      <p>Также отметим, что вам понадобится 64- битная архитектура. Вы можете проверить её выполнив <span class="term"><code>uname 
+	  -m</code></span>; результатом должно быть <span class="term"><code>x86_64</code></span>.</p></td></tr></table>
+     </div>
+   <p>Для автоматической установки Docker вам следует иметь возможность воспользоваться сценарием предлагаемым на 
+   <a class="link" href="https://get.docker.com" target="_top">https://get.docker.com</a>. Официальные инструкции предписывают вам 
+   просто выполнить <span class="term"><code>curl -sSL | sh or wget -qO- | sh</code></span>, и вы можете так и поступить, но я рекомендую вам 
+   проверить сценарий перед его запуском и удостовериться, что вы удовлетворитесь изменениями, которые он сделает в вашей системе: </p>
+	   <pre class="screen">
+$ curl https://get.docker.com &gt; /tmp/install.sh
+$ cat /tmp/install.sh
+...
+$ chmod +x /tmp/install.sh
+$ /tmp/install.sh
+...
+	   </pre>
+   <p>Сценарий выполнит ряд проверок, затем установит Docker с применением соответствующего пакета для вашей системы. Он также установит 
+   ряд зависимостей для безопасности и свойств файловой системы, если они пропущены.</p>
+   <p>Если вы просто не хотите пользоваться установщиком, или вы хотите использовать другую версию Docker, чем предоставляется установщиком, 
+   вы также можете загрузить двоичные коды с веб- сайта Docker. Недостатком этого подхода будет отсутствие проверок зависимостей и к тому же
+   вам придется устанавливать обновления вручную. За дополнительной информацией и ссылок на двоичные коды отсылаем вас к 
+   <a class="link" href="https://docs.docker.com/engine/installation/binaries/" target="_top">Docker Binary page</a>.</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="TestedWithDocker1.8"> </a>
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Протестировано с Docker 1.8</th></tr><tr><td align="left" valign="top">
+			<p>На момент написания книги, Docker находился на уровне версии 1.8. Все команды были проверены для данной версии.
+			{<span class="emphasis"><em>Прим. пер.: на момент перевода действует 1.10, мы пока не выполнили тестирование в полном 
+			объёме.</em></span>}</p></td></tr></table>
+		  </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.1.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Выполнение SELinux в разрешающем режиме</span></h4>
+    </div></div></div>
+   <p>Если вы работаете с дистрибутивом на основе Red Hat из перечня RHEL, CentOS, Fedora, вы, скорее всего, имеете установленным модуль 
+   безопасности SELinux.</p>
+   <p>При начале работы с Docker я рекомендую вам выполнять SELinux в разрешающем (<span class="emphasis"><em>permissive</em></span>) 
+   режиме, который будет регистрировать ошибки, а не исключать их принудительно. Если вы исполняете SELinux в принудительном 
+   (<span class="emphasis"><em>enforcing</em></span>) режиме, вы, скорее всего увидите различные загадочные ошибки запрещения 
+   полномочий (&quot;Permission Denied&quot;) при выполнении примеров из данной книги.</p>
+   <p>Чтобы проверить ваш режим SELinux, выполните <span class="term"><code>sestatus</code></span> и проверьте вывод. Например:</p>
+	   <pre class="screen">
+$ sestatus
+SELinux status:                enabled
+SELinuxfs mount:               /sys/fs/selinux
+SELinux root directory:        /etc/selinux
+Loaded policy name:            targeted
+Current mode:                  enforcing<sup><strong>1</strong></sup>
+Mode from config file:         error (Success)
+Policy MLS status:             enabled
+Policy deny_unknown status:    allowed
+Max kernel policy version:     28
+	   </pre>
+		<div class="variablelist"><dl>
+		<dt><sup><strong>1</strong></sup>
+		<dd><p>Если вы увидели здесь &quot;enforcing&quot;, SELinux разрешён и правила принуждающие.
+		</dl></div>
+   <p>Чтобы изменить SELinux в разрешающий режим, просто выполните <span class="term"><code>sudo setenforce 0</code></span>.</p>
+   <p>За дополнительной информацией по SELinux и зачем вам следует рассматривать его разрешённым раз уж вы доверяете Docker, отсылаем к 
+   разделу &quot;<a class="link" href="Ch13.html#13.9.1" target="_top">SELinux</a>&quot;.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.1.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Выполнение без sudo</span></h4>
+    </div></div></div>
+   <p>Поскольку Docker  является двоичным файлом с полномочиями, по умолчанию нам необходимо предворять команды префиксом 
+   <span class="term"><code>sudo</code></span> для их исполнения. Это быстро начинает докучать. Мы можем избавиться от этого добавив нашего 
+   пользователя в группу docker. В Ubuntu вам надлежит выполнить следующее:</p>
+	   <pre class="screen">
+$ sudo usermod -aG docker
+	   </pre>
+   <p>что создаст группу docker, если она ещё не существует и добавить в неё текущего пользователя. Затем вам следует выйти из системы и 
+   зарегистрироваться в ней вновь. В прочих дистрибутивах Linux действия должны быть похожими.</p>
+   <p>Вам также следует перезапустить службу Docker что зависит от дистрибутива. В Ubuntu это выглядит следующим образом:</p>
+	   <pre class="screen">
+$ sudo service docker restart
+	   </pre>
+   <p>Для краткости данная книга опускает <span class="term"><code>sudo</code></span> в командах Docker.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerRequirements"> </a>
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+	  <p>Добавление пользователя в группу docker эквивалентно наделению этого пользователя полномочиями root. Раз уж так, 
+	  это оказывает влияние на безопасность, о котором вы должны быть осведомлены, в особенности, если вы совместно используете машину.
+	  За дополнительной информацией отсылаем вас к <a class="link" href="https://docs.docker.com/engine/security/security/" target="_top">Docker 
+	  security page</a>.</p></td></tr></table>
+     </div>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.2"> </a>Установка Docker на Mac OS или Windows</h3>
+   </div></div></div>
+   <p>Если вы хотите использовать Windows или Mac OS, вам понадобится некий вид виртуализации для выполнения Docker (Windows {Microsoft} и Docker 
+   объявили об совместной инициативе по поддержке Docker на Windows Server. Это позволит пользователям Windows Server запускать 
+   образы на основе Windows без виртуализации). Вы можете загрузить полное решение ВМ и следовать инструкциям Linux для установки Docker или 
+   установить <a class="link" href="https://www.docker.com/products/docker-toolbox" target="_top">Docker Toolbox</a>, который содержит 
+   минимальную ВМ <span class="term"><code>boot2docker</code></span> а также прочий инструментарий Docker, который мы будем применять на 
+   протяжении этой книги, например, Compose и Swarm. Если вы используете Homebrew для установки приложений на своём MAC, существует 
+   <span class="term"><code>brew recipe</code></span>, доступный для <span class="term"><code>boot2docker</code></span>, однако обычно я 
+   рекомендую применять официальную установку Toolbox во избежание проблем.</p>
+   <p>После того, как Toolbox установлен, вы можете получить доступ к Docker открыв терминал быстрого запуска Docker (Docker Toolbox также 
+   содержит Kitematic, графический интерфейс для работы с контейнерами Docker. Мы не будем описывать Kitematic в данной книге, но это, 
+   несомненно, ценное приобретение, особенно при начале работы с Docker). В противном случае вы можете настроить существующий терминал 
+   введя следующие команды:</p>
+	   <pre class="screen">
+$ docker-machine start default
+Starting VM...
+Started machines may have new IP addresses. You may need to rerun the
+`docker-machine env` command.
+$ eval $(docker-machine env default)
+	   </pre>
+   <p>которые настроят вашу среду установками, необходимыми для доступа Docker Engine, работающего в вашей ВМ.</p>
+   <p>При использовании Docker Toolbox избегайте следующего:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>В примерах в данной книге я полагаю, что Docker работает на вашей машине хоста. Если вы применяете Docker Toolbox, 
+	 это будет не тот случай. В частности, вам придется изменять ссылки на <span class="term"><code>localhost</code></span> на 
+	 IP адреса вашей ВМ. Например:</p>
+	   <pre class="screen">
+$ curl localhost:5000
+	   </pre>
+	 <p>превратится в нечто типа:</p>
+	   <pre class="screen">
+$ curl 192.168.59.103:5000
+	   </pre>
+	 <p>Вы можете легко обнаружить IP вашей ВМ выполнив <span class="term"><code>docker-machine ip default</code></span>, 
+	 что делает возможной некую автоматизацию:</p>
+	   <pre class="screen">
+$ curl $(docker-machine ip default):5000
+	   </pre>
+	 </li>
+	 <li class="listitem">
+	 <p>Соответствующие тома между вашей локальной ОС и контейнером Docker должны быть перекрестно смонтированы внутри ВМ. 
+	 Docker Toolbox автоматизирует это до некоторой степени, однако убедитесь что это произошло если вы испытываете проблемы при 
+	 использовании томов Docker.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Вам может потребоваться изменить настройки внутри ВМ если у вас имеются специальные требования. Файл 
+	 <span class="emphasis"><em>/var/lib/boot2docker/profile</em></span> внутри ВМ <span class="term"><code>boot2docker</code></span> 
+	 имеет разнообразные установки, включая настройки Docker Engine. Вы можете также выполнить свой собственный сценарий после 
+	 инициализации ВМ, изменив файл <span class="emphasis"><em>/var/lib/boot2docker/bootlocal.sh</em></span>. За дополнительными 
+	 подробностями отсылаем к <a class="link" href="https://github.com/boot2docker/boot2docker" target="_top">boot2docker GitHub repository</a>.</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Если у вас возникнут какие-либо проблемы в последующих примерах в данной книге, попробуйте зарегистрироваться напрямую в ВМ с 
+   <span class="term"><code>docker-machine ssh default</code></span> и выполнить команду там.</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerExperimentalChannel"> </a>
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Экспериментальный канал Docker</th></tr><tr><td align="left" valign="top">
+			<p>Помимо обычной, стабильной сборки, Docker поддерживает <span class="emphasis"><em>экспериментальную</em></span> сборку, которая 
+			содержит новый функционал для целей тестирования. Поскольку эти функции всё ещё обсуждаются и разрабатываются, они скорее всего 
+			значительно изменятся прежде чем войдут в стабильную сборку. Экспериментальная сборка должна применяться исключительно для 
+			исследования новых возможностей перед их официальным выпуском и никогда не должны применяться в промышленной эксплуатации.</p>
+			<p>Экспериментальная сборка может быть установлена в Linux с применением следующего сценария:</p>
+	   <pre class="screen">
+$ curl -sSL https://experimental.docker.com/ | sh
+	   </pre>
+			<p>или путём загрузки версии двоичного кода с <a class="link" href="https://www.docker.com/" 
+			target="_top">веб- сайта Docker</a>. Отметим, что эта сборка обновляется по ночам, а для верификации загрузок доступны хэши./p>
+			</td></tr></table>
+		  </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02.3"> </a>Быстрая проверка</h3>
+   </div></div></div>
+   <p>Просто для того, чтобы убедиться что всё установлено корректно и работает, попробуйте выполнить команду 
+   <span class="term"><code>docker version</code></span>. Вы должны увидеть что-то вроде:</p>
+	   <pre class="screen">
+$ docker version
+Client:
+Version:       1.8.1
+API version:   1.20
+Go version:    go1.4.2
+Git commit:    d12ea79
+Built:         Thu Aug 13 02:35:49 UTC 2015
+OS/Arch:       linux/amd64
+
+Server:
+Version:       1.8.1
+API version:   1.20
+Go version:    go1.4.2
+Git commit:    d12ea79
+Built:         Thu Aug 13 02:35:49 UTC 2015
+OS/Arch:       linux/amd64
+	   </pre>
+   <p>Если так, вы всё установили и готовы к следующей главе. Если вместо этого вы получили что-то типа:</p>
+	   <pre class="screen">
+$ docker version
+Client:
+Version:       1.8.1
+API version:   1.20
+Go version:    go1.4.2
+Git commit:    d12ea79
+Built:         Thu Aug 13 02:35:49 UTC 2015
+OS/Arch:       linux/amd64
+Get http:///var/run/docker.sock/v1.20/version: dial unix /var/run/docker.sock:
+no such file or directory.
+* Are you trying to connect to a TLS-enabled daemon without TLS?
+* Is your docker daemon up and running?
+	   </pre>
+   <p>это означает, что демон Docker не работает (или клиент не может получить к нему доступ). Чтобы исследовать проблему, попытайтесь 
+   запустить демон Docker вручную выполнив <span class="term"><code>sudo docker daemon</code></span> - это должно снабдить вас некоторой 
+   информацией о том, что идёт не так и помочь в поиске ответа. (Отметим, что это работает только на хосте Linux. Если вы применяете 
+   Docker Toolbox или нечто аналогичное, вам следует свериться с документацией для дополнительных подсказок.)</p>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

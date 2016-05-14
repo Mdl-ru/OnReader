@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Работа с файловой системой Ceph - Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Работа с хранилищем объектов Ceph"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Мониторинг кластеров Ceph с применением Calamari"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Работа с файловой системой Ceph';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Работа с файловой системой Ceph</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Понимание файловой системы Ceph и MDS</p>
+	 </li><li class="listitem">
+	 <p>Развёртывание MDS Ceph</p>
+	 </li><li class="listitem">
+	 <p>Доступ к CephFS через драйвер ядра</p>
+	 </li><li class="listitem">
+	 <p>Доступ к CephFS через клиента FUSE</p>
+	 </li><li class="listitem">
+	 <p>Экспорт файловой системы Ceph в качестве NFS</p>
+	 </li><li class="listitem">
+	 <p>ceph-dokan – CephFS для клиентов Windows</p>
+	 </li><li class="listitem">
+	 <p>CephFS вклинивающаяся замена HDFS</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch04.html">4. Работа с файловой системой Ceph</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch04.html#0401">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0402">Понимание файловой системы Ceph и MDS</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0403">Развёртывание MDS Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0404">Доступ к CephFS через драйвер ядра</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0405">Доступ к CephFS через клиента FUSE</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0406">Экспорт файловой системы Ceph в качестве NFS</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0407">ceph-dokan – CephFS для клиентов Windows</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#0408">CephFS вклинивающаяся замена HDFS</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0401"> </a>Введение</h3>
+   </div></div></div>
+   <p>Файловая система Ceph, также называемая CephFS, является совместимой с POSIX файловой системой, которая применяет кластер хранения Ceph 
+   для хранения данных пользователя. CephFS пооддерживает внутренний драйвер ядра Linux, что делает CephFS высоко адаптивной для ОС Linux 
+   на любой вкус. В этой главе мы обсудим в деталях  файловую систему Ceph, включая её развёртывание, понимание драйвера ядра и FUSE, а также 
+   клиентов CephFS для Windows.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0402"> </a>Понимание файловой системы Ceph и MDS</h3>
+   </div></div></div>
+   <p>Файловая система Ceph предлагает POSIX- совместимую распределённую файловую систему любого размера, которая применяет для хранения 
+   своих данных Ceph RADOS. Для реализации файловой системы Ceph вамнужен работающий кластер хранения Ceph и по крайней мере один 
+   сервер метаданных Ceph (<span class="term"><strong class="userinput">MDS, Metadata Serer</strong></span>) для управления его 
+   метаданными и их хранения в отдельности от данных, что помогает уменьшить сложность и улучшить надёжность. Следующая схема 
+   изображает взгляд на архитектуру CephFS и ее интерфейсы</p>
+   <div class="figure"><a id="Fig0401"> </a>
+    <p class="title"><strong>Рисунок 4.1. Архитектура CephFS и ее интерфейсы</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0401.jpg" width="380" height="314"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Библиотеки <span class="term"><code>libcephfs</code></span> играют важную роль в поддержке её реализаций множественности клиентов.
+   Она имеет внутреннюю поддержку драйвера ядра Linux и таким образом клиенты могут использовать естественное монтирование файловой системы, 
+   например, с помощью команды <span class="term"><code>mount</code></span>. Она имеет тесную интеграцию с SAMBA и поддержку для CIFS и SMB.
+   CephFS расширяет свою поддержку на файловую систему в пространстве пользователя (<span class="term"><strong class="userinput">FUSE, 
+   Filesystem in USErspace</strong></span>) применяя модули <span class="term"><code>cephfuse</code></span>. Она также делает возможной 
+   прямой доступ из приложений в кластер RADOS с помощью библиотек <span class="term"><code>libcephfs</code></span>. CephFS приобретает 
+   популярность в качестве замены для Hadoop HDFS. Предыдущие версии HDFS поддерживали только единственный узел имён, что оказывало влияние 
+   на масштабируемость и создавало единую точку отказа; однако, это было изменено в современной версией HDFS. В отличие от HDFS, CephFS может 
+   быть реализована поверх множества MDS в состоянии активный-активный, предоставляя тем самым высочайшую масштабируемость, высокую 
+   производительность и отсутствие единой точки отказа.</p>
+   <p>Ceph MDS ставится для сервера метаданных и нужна только для файловой системы Ceph (CephFS); прочие методы блочного и объектового 
+   хранения не нуждаются в службах MDS. MDS Ceph работает в качестве демона, что позволяет клиенту монтировать файловую систему любого 
+   размера. MDS не передаёт никакие данные вашему клиенту напрямую; предоставление данных выполняется только OSD. MDS предоставляет 
+   совместно используемую когерентную файловую систему с уровнем интеллектуального кэширования, следовательно радикально уменьшая 
+   чтения и записи. Он расширяет свои преимущества на динамичное разделение поддеревьев и отдельных MDS для частей метаданных. Он динамичен 
+   по своей природе; демоны могут присоединяться и уходить, а также быстро захватывать отказавшие узлы.</p>
+   <p>MDS не хранит локальные данные, что чрезвычайно полезно при определённых сценариях. Если демон MDS прекращает 
+   существование, мы можем запустить его вновь на любой имеющейся в кластере системе. Демоны серверов метаданных настраиваются 
+   в качестве активных или пассивных. Первичный MDS становится активным, а остальные переходят в &quot;резерв&quot; (standby).
+   В случае отказа первичного MDS берётся второй узел и переводится в активное состояние. Для ещё более быстрого восстановления 
+   вы можете предписать, что резервный узел должен перемещаться на ваши активные узлы, что сохранит те же данные в памяти предварительно 
+   размещёнными в кэше.</p>
+   <p>CephFS на текущий момент не готов к промышленной эксплуатации, поскольку ему не хватает надёжных функций проверки/ восстановления
+   <span class="term"><strong class="userinput"><code>fsck</code></strong></span>, множества активных MDS, а также снимков. Его развитие 
+   идёт очень быстро и мы можем ожидать, что он будет готов для промышленной эксплуатации начиная с Ceph <a class="link" 
+   href="http://docs.ceph.com/docs/master/releases/?highlight=ceph%20jewel" target="_top">Jewel</a>. {<span class="emphasis"><em>Прим. 
+   пер.: на момент перевода (10 марта 2016) надёжный fsck пока недоступен, следите за <a class="link" 
+   href="http://docs.ceph.com/docs/master/cephfs/early-adopters/" target="_top">CephFS for early adopters</a>.</em></span>}
+   Для ваших не очень критически важных рабочих нагрузок рассмотрите возможность применения CephFS с единственным MDS без каких- либо 
+   снимков.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0403"> </a>Развёртывание MDS Ceph</h3>
+   </div></div></div>
+   <p>Чтобы настроить сервер метаданных для файловой системы Ceph вам следует иметь работающий кластер Ceph. В предыдущих главах мы 
+   изучили развёртывание кластера хранеия Ceph, для размещения MDS мы воспользуемся тем же самым кластером.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>На <span class="term"><code>ceph-node1</code></span> примените <span class="term"><code>ceph-deploy</code></span> для 
+	 настройки MDS на <span class="term"><code>ceph-node2</code></span>:</p>
+	   <pre class="screen">
+# ceph-deploy --overwrite-conf mds create ceph-node2
+
+	[root@ceph-node1 ceph]# ceph-deploy --overwrite-conf mds create ceph-node2 
+	[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf 
+	[ceph_deploy.cli][INFO ] Invoked (1.5.22): /usr/bin/ceph-deploy --overwrite-conf mds create ceph-node2 
+	[ceph_deploy.mds][DEBUG ] Deploying mds, cluster ceph hosts ceph-node2:ceph-node2 
+	[ceph-node2][DEBUG ] connected to host: ceph-node2 
+	[ceph-node2][DEBUG ] detect platform information from remote host 
+	[ceph-node2][DEBUG ] detect machine type 
+	[ceph_deploy.mds][INFO ] Distro info: centOS Linux 7.0.1406 Core 
+	[ceph_deploy.mds][DEBUG ] remote host will use sysvinit 
+	[ceph_deploy.mds][DEBUG ] deploying mds bootstrap to ceph-node2 
+	[ceph-node2][DEBUG ] write cluster configuration to /etc/ceph/{cluster}.conf 
+	[ceph-node2][DEBUG ] create path if it doesn't exist 
+	[ceph-node2][INFO ] Running command: ceph --cluster ceph --name client.bootstrap-mds --keyring /var/lib/c eph/bootstrap-mds/ceph.keyring auth get-or-create mds.ceph-node2 osd allow rwx mds allow mon allow profile mds -o /var/lib/ceph/mds/ceph-ceph-node2/keyring 
+	[ceph-node2][INF0 ] Running command: service ceph start mds.ceph-node2 
+	[ceph-node2][DEBUG ] === mds.ceph-node2 === 
+	[ceph-node2][DEBUG ] Starting Ceph mds.ceph-node2 on ceph-node2... 
+	[ceph-node2][WARNIN] Running as unit run-4697.service. 
+	[ceph-node2][INF0 ] Running command: systemctl enable ceph 
+	[ceph-node2][WARNIN] ceph.service is not a native service, redirecting to /sbin/chkconfig. 
+	[ceph-node2][WARNIN] Executing /sbin/chkconfig ceph on 
+	[ceph-node2][WARNIN] The unit files have no [Install] section. They are not meant to be enabled 
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Эта команда должна развернуть ваш MDS и запустить его демон на <span class="term"><code>ceph-node2</code></span>; 
+	 однако нам потребуется выполнить ещё несколько шагов чтобы сделать CephFS доступным:</p>
+	   <pre class="screen">
+# ssh ceph-node2 service ceph status mds
+
+	[root@ceph-node1 ceph]# ssh ceph-node2 service ceph status mds 
+	=== mds.ceph-node2 === 
+	mds.ceph-node2: running {&quot;version&quot;:&quot;0.87.1&quot;} 
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте пулы данных и метаданных для файловой системы Ceph:</p>
+	   <pre class="screen">
+# ceph osd pool create cephfs_data 64 64
+# ceph osd pool create cephfs_metadata 64 64
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Наконец, создайте файловую систему Ceph; после выполнения этой команды MDS должен получить активное состояние, а CephFS 
+	 должна быть готова к применению:</p>
+	   <pre class="screen">
+# ceph fs new cephfs cephfs_metadata cephfs_data
+
+	[root@ceph-node1 ceph]# ceph osd pool create cephfs_data 64 64 
+	pool 'cephfs data' created 
+	[root@ceph-node1 ceph]# ceph osd pool create cephfs_metadata 64 64 
+	pool 'cephfs_metadata' created
+	[root@ceph-node1 ceph]# 
+	[root@ceph-node1 ceph]# ceph fs new cephfs cephfs_metadata cephfs_data 
+	new fs with metadata pool 44 and data pool 43 
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Чтобы проверить состояние CephFS и MDS примените следующие команды:</p>
+	   <pre class="screen">
+# ceph mds stat
+# ceph fs ls
+
+	[root@ceph-node1 ceph]# ceph mds stat 
+	e10: 1/1/1 up {0=ceph-node2=up:active} 
+	[root@ceph-node1 ceph]# ceph fs ls 
+	name: cephfs, metadata pool: cephfs_metadata, data pools: [cephfs_data ] 
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Не рекомендуется использовать кольцо ключей пользователя <span class="term"><code>client.admin</code></span> совместно с 
+	 клиентами Ceph, поэтому мы создадим пользователя <span class="term"><code>client.cephfs</code></span> в вашем кластере Ceph и 
+	 позволим этому пользователю осуществлять доступ к пулу CephFS:</p>
+	   <pre class="screen">
+# ceph auth get-or-create client.cephfs mon 'allow r' osd 'allow rwx pool=cephfs_metadata,allow rwx pool=cephfs_data' -o /etc/ceph/client.cephfs.keyring
+# ceph-authtool -p -n client.cephfs /etc/ceph/client.cephfs.keyring &gt; /etc/ceph/client.cephfs
+# cat /etc/ceph/client.cephfs
+
+	[root@ceph-node1 ~]# ceph auth get-or-create client.cephfs mon 'allow r' osd 'allow rwx pool=cephfs_metadata,allow rwx pool=cephfs_data' -o /etc/ceph/client.cephfs.keyring 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ceph-authtool -p -n client.cephfs /etc/ceph/client.cephfs.keyring &gt; /etc/ceph/client.cephfs 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# cat /etc/ceph/client.cephfs AQAGSF5VMIDWHhAAox9s/oHg/6FPzf4xRQV73Q==
+	[root@ceph-node1 ~]# 
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0404"> </a>Доступ к CephFS через драйвер ядра</h3>
+   </div></div></div>
+   <p>В ядро Linux 2.6.34 и более поздние версии была добавлена внутренняя поддержка для Ceph. В данном рецепте мы продемонстрируем то, как 
+   получить доступ к CephFS через драйвер ядра Linux на <span class="term"><code>ceph-client1</code></span></p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Проверьте версию ядра Linux вашего клиента:</p>
+	   <pre class="screen">
+# uname -r
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте точку монтирования каталога:</p>
+	   <pre class="screen">
+# mkdir /mnt/cephfs
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Получите ключи для пользователя <span class="term"><code>client-cephfs</code></span>, которого мы создали в предыдущем разделе.
+	 С вашего узла монитора Ceph выполните следующую команду для получения ключей пользователя:</p>
+	   <pre class="screen">
+# ceph auth get-key client.cephfs
+ 	   </pre>
+	 </li><li class="listitem">
+	   <pre class="screen">
+     <p>Смонтируйте CephFS применив внутренний вызов Linux mount со следующим синтаксисом::</p>
+	 <p><span class="term"><strong class="userinput"><code>Синтаксис:</code></strong></span>
+	 <span class="term"><code>mount -t ceph &lt;Monitor_IP&gt;:&lt;Monitor_port&gt;:/ &lt;mount_point_name&gt; -o name=admin,secret=&lt;admin_user_key&gt;</code></span></p>
+# mount -t ceph ceph-node1:6789:/ /mnt/cephfs -o name=cephfs,secret=AQAGSF5VMIDWHhAAox9s/oHg/6FPzf4xRQV73Q==
+
+	root@client-node1:/etc/ceph# mount -t ceph ceph-node1:6789:/ /mnt/cephfs -o name=cephfs,secret= AQAGSF5VMIDWHhAAox9s/oHg/6FPzf4xRQV73Q== 
+	root@client-node1:/etc/ceph# df -h /mnt/cephfs 
+	Filesystem             Size Used Avail Use% Mounted on 
+	192.168.1.101:6789:/   135G 7.3G 128G    6% /mnt/cephfs 
+	root@client-node1:/etc/ceph# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Чтобы смонтировать CephFS более безопасно, избегайте видимости ключа администратора в вашей истории команд, сохраняйте свой 
+	 ключ администратора как обычный текст в отдельном файле и используйте этот файл в качестве параметра монтирования для 
+	 <span class="term"><code>secretkey</code></span>:</p>
+	   <pre class="screen">
+# echo AQAGSF5VMIDWHhAAox9s/oHg/6FPzf4xRQV73Q== &gt; /etc/ceph/cephfskey
+# mount -t ceph ceph-node1:6789:/ /mnt/cephfs -o name=cephfs,secretfile=/etc/ceph/cephfskey
+
+	root@client-node1:/etc/ceph# echo AQAGSF5VMIDWHhAAox9s/oHg/6FPzf4xRQV73Q== &gt; /etc/ceph/cephfskey 
+	root@client-node1:/etc/ceph# umount /mnt/cephfs 
+	root@client-node1:/etc/ceph# mount -t ceph ceph-node1:6789:/ /mnt/cephfs -o name=cephfs,secretfile= /etc/ceph/cephfskey 
+	rootgclient-node1:/etc/ceph# df -h /mnt/cephfs 
+	Filesystem            Size  Used Avail Use% Mounted on 
+	192.168.1.101:6789:/  135G  7.3G  128G   6% /mnt/cephfs 
+	root@client-node1:/etc/ceph# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Чтобы сделать возможным монтирование CephFS во время запуска ОС, добавьте следующие строки в ваш файл 
+	 <span class="term"><code>/etc/fstab</code></span> на <span class="term"><code>ceph-client1</code></span>:</p>
+	 <p><span class="term"><strong class="userinput"><code>Синтаксис:</code></strong></span>
+	 <span class="term"><code>&lt;Mon_ipaddress&gt;:&lt;monitor_port&gt;:/ &lt;mount_point&gt; &lt;filesystem-name&gt; [name=username,secret=secretkey|secretfile=/path/to/secretfile],[{mount.options}]</code></span></p>
+	   <pre class="screen">
+# echo &quot;ceph-node1:6789:/ /mnt/cephfs cephname=cephfs,secretfile=/etc/ceph/cephfskey,noatime 02&quot; &gt;&gt; /etc/fstab
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Размонтируйте CephFS и смонтируйте заново:</p>
+	   <pre class="screen">
+# umount /mnt/cephfs
+# mount /mnt/cephfs
+
+	root@client-node1:/etc/ceph# echo &quot;ceph-node1:6789:/ /mnt/cephfs ceph name=cephfs,secretfile =/etc/ceph/cephfskey,noatime 02&quot; &gt;&gt; /etc/fstab 
+	root@client-node1:/etc/ceph# cat /etc/fstab 1 grep cephfs 
+	ceph-node1:6789:/ /mnt/<strong>cephfs</strong> ceph name=<strong>cephfs</strong>,secretfile=/etc/ceph/<strong>cephfs</strong>key,noatime 02 
+	root@client-node1:/etc/ceph# umount /mnt/cephfs 
+	root@client-node1:/etc/ceph# mount /mnt/cephfs 
+	root@client-node1:/etc/ceph# df -h /mnt/cephfs 
+	Filesystem            Size  Used Avail Use% Mounted on 
+	192.168.1.101:6789:/  135G  7.3G  128G   6% /mnt/cephfs 
+	root@client-node1:/etc/ceph# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Выполните какие- нибудь операции ввода/ вывода в вашей файловой системе Ceph, а затем размонтируйте её:</p>
+	   <pre class="screen">
+# dd if=/dev/zero of=/mnt/cephfs/file1 bs=1M count=1024
+# umount /mnt/cephfs
+
+	root@client-node1:~# dd if=/dev/zero of=/mnt/cephfs/file1 bs=1M count=1024 
+	1024+0 records in 
+	1024+0 records out 
+	1073741824 bytes (1.1 GB) copied, 58.9853 s, 18.2 MB/s 
+	root@client-node1:~# 
+	root@client-node1:~# ls -1 /mnt/cephfs/file1 
+	-rw-r--r-- 1 root root 1073741824 May 20 21:15 /mnt/cephfs/file1 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0405"> </a>Доступ к CephFS через клиента FUSE</h3>
+   </div></div></div>
+   <p>Файловая система Ceph внутренне поддерживается ядром Linux; однако, если ваш хост работает с более ранними версиями ядра, или у вас 
+   существует зависимость от каких- то приложений, то вы всегда можете воспользоваться клиентом FUSE (Filesystem User Space) для Ceph 
+   чтобы смонтировать CephFS.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+	 <p>Установите пакет Ceph FUSE на своей машине <span class="term"><code>client-node1</code></span>:</p>
+	   <pre class="screen">
+# uname -r
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте файл кольца ключей своей CephFS, <span class="term"><code>/etc/ceph/client.cephfs.keyring</code></span> 
+	 со следующим содержимым:</p>
+	   <pre class="screen">
+[client.cephfs]
+key = AQAGSF5VMIDWHhAAox9s/oHg/6FPzf4xRQV73Q==
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Смонтируйте CephFS используя своего клиентаCeph FUSE :</p>
+	   <pre class="screen">
+# ceph-fuse --keyring /etc/ceph/client.cephfs.keyring --name client.cephfs -m ceph-node1:6789 /mnt/cephfs
+
+	root@client-node1:/etc/ceph# ceph-fuse --keyring /etc/ceph/client.cephfs.keyring --name client.cephfs 
+	-m ceph-node1:6789 /mnt/cephfs 
+	ceph-fuse[3356]: starting ceph client 
+	2015-05-21 21:46:05.599027 7fc80ea017c0 -1 init, newargv = 0x45663a0 newargc=11 
+	ceph-fuse[3356]: starting fuse 
+	root@client-node1:/etc/ceph# 
+	root@client-node1:/etc/ceph# df -h /mnt/cephfs 
+	Filesystem      Size  Used Avail Use% Mounted on 
+	ceph-fuse       135G  7.3G 128G    6% /mnt/cephfs 
+	root@client-node1:/etc/ceph# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Чтобы монтировать CephFS при загрузке ОС, добавьте следующие строки в свой файл <span class="term"><code>/etc/fstab</code></span>
+	 на <span class="term"><code>client-node1</code></span>:</p>
+	   <pre class="screen">
+id=cephfs,keyring=client.cephfs.keyring        /mnt/cephfs fuse.ceph defaults 00
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Размонтируйте CephFS и смонтируйте заново:</p>
+	   <pre class="screen">
+# umount /mnt/cephfs
+# mount /mnt/cephfs
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0406"> </a>Экспорт файловой системы Ceph в качестве NFS</h3>
+   </div></div></div>
+   <p><span class="term"><strong class="userinput"><code>Network Filesystem (NFS)</code></strong></span> является одним из самых популярных 
+   протоколов совместно используемых файловых систем, который может применяться в любой системе на базе Unix. Клиенты на основе Unix, которые не 
+   понимают вашу CephFSмогут всё же получить доступ к файловой системе Ceph применяя NFS. Для этого нам понадобится сервер NFS в 
+   месте, которое может реэкспортировать CephFS в качестве разделяемого ресурса NFS. NFS-Ganesha является сервером NFS, который 
+   работает в пользовательском пространстве и поддерживает CephFS <span class="term"><strong class="userinput"><code>FSAL</code></strong></span> 
+   (<span class="term"><strong class="userinput"><code>File System Abstraction Layer, уровень абстракции файловой системы</code></strong></span>) 
+   пр помощи <span class="term"><code>libcephfs</code></span>.</p>
+   <p>В данном рецепте мы продемонстрируем создание <span class="term"><code>ceph-node1</code></span> в качестве сервера NFS-Ganesha
+   и экспорт CephFS в виде NFS, а также её монтирование на <span class="term"><code>client-node1</code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>На <span class="term"><code>ceph-node1</code></span> установите необходимые <span class="term"><code>nfs-Ganesha</code></span>
+	 пакеты:</p>
+	   <pre class="screen">
+# yum install -y nfs-utils nfs-ganesha nfs-ganesha-fsal-ceph
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Поскольку это тестовая сборка, запретите межсетевой экран. Для ваших промышленных установок вы должны рассмотреть разрешение 
+	 необходимых вам портов в межсетевом экране, обычно это <span class="term"><code>2049</code></span>:</p>
+	   <pre class="screen">
+# systemctl stop firewalld; systemctl disable firewalld
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Сделайте доступными необходимые NFS службы <span class="term"><code>rpc</code></span>:</p>
+	   <pre class="screen">
+# systemctl start rpcbind; systemctl enable rpcbind
+# systemctl start rpc-statd.service
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте свой файл настроек NFS-Ganesha, <span class="term"><code>/etc/ganesha.conf</code></span>, со следующим содержимым:</p>
+	   <pre class="screen">
+EXPORT
+{
+	Export_ID = 1;
+	Path = &quot;/&quot;;
+	Pseudo = &quot;/&quot;;
+	Access_Type = RW;
+	NFS_Protocols = &quot;3&quot;;
+	Squash = No_Root_Squash;
+	Transport_Protocols = TCP;
+	SecType = &quot;none&quot;;
+	FSAL {
+		Name = CEPH;
+	}
+}
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Наконец, запустите демон <span class="term"><code>ganesha nfs</code></span> снабдив его файлом 
+	 <span class="term"><code>ganesha.conf</code></span>, который мы создали на нашем последнем шаге. Вы можете проверить экспортированные 
+	 совместные ресурсы NFS применив команду <span class="term"><code>showmount</code></span>:</p>
+	   <pre class="screen">
+# ganesha.nfsd -f /etc/ganesha.conf -L /var/log/ganesha.log -N NIV_DEBUG -d
+# showmount -e
+
+	[root@ceph-node1 ~]# ganesha.nfsd -f /etc/ganesha.conf -L /var/log/ganesha.log -N NIVDEBUG -d 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ps -ef | grep nfs 
+	root      7975     1  0 00:55 ?     00:00:00 ganesha.<strong style="color:#cc0000;">nfs</strong>d -f /etc/ganesha.conf -L /var/log/ganesha.log -N NIVJEBUG -d 
+	root      8023  5901  0 00:56 pts/O 00:00:00 grep --color=auto -i <strong style="color:#cc0000;">nfs</strong> 
+	[root@ceph-node1 ~]#
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+   <p>Давайте повторим те шаги, которые мы только что проделали: <span class="term"><code>ceph-node2</code></span> был настроен в качестве 
+   Ceph MDS, а <span class="term"><code>ceph-node1</code></span> был настроен в качестве сервера NFS-Ganesha.</p>
+   <p>Далее, чтобы смонтировать совместно используемые ресурсы NFS на машинах клиентов, нам нужно просто установить пакеты клиентов NFS и 
+   смонтировать наши разделяемые ресурсы экспортируемые <span class="term"><code>ceph-node1</code></span> как показано далее:</p>
+   <p>Установите пакеты своего клиента <span class="term"><code>nfs</code></span> на <span class="term"><code>ceph-node1</code></span> и
+   выполните <span class="term"><code>mount</code></span>:</p>
+	   <pre class="screen">
+# apt-get install nfs-common
+# mkdir /mnt/cephfs
+# mount -o rw,noatime 192.168.1.101:/ /mnt/cephfs
+
+	root@client-node1:~# mount -o rw,noatime 192.168.1.101:/ /mnt/cephfs 
+	root@client-node1:~# df -h 
+	Filesystem       Size  Used Avail Use% Mounted on 
+	/dev/sdal         40G  1.1G   37G   3% / 
+	none             4.0K     0  4.0K   0% /sys/fs/cgroup 
+	udev             241M   12K  241M   1% /dev 
+	tmpfs             49M  356K   49M   1% /run 
+	none             5.0M     0  5.0M   0% /run/lock 
+	none             245M     0  245M   0% /run/shm 
+	none             100M     0  100M   0% /run/user 
+	192.168.1.101:/  135G  7.3G  128G   6% /mnt/cephfs 
+	root@client-node1:~#
+ 	   </pre>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0407"> </a>ceph-dokan – CephFS для клиентов Windows</h3>
+   </div></div></div>
+   <p>До текущего момента мы изучали различные методы доступа к CephFS,такие как Ceph FUSE, драйвер Ceph ядра и NFS Ganesha; однако, 
+   эти методы могут применяться только в системах на базе Linux и их работа не поддерживается на машинах клиентов на основе 
+   Windows.</p>
+   <p>Проекты с открытым исходным кодом наподобие Ceph имеют свои собственные преимущества; Ceph развил вокруг себя благоденствующее 
+   сообщество. <span class="term"><code>ceph-dokan</code></span> является внутренним клиентом Windows Ceph, разработанным Менг Шенджи 
+   (Meng Shengzhi), работающим главным инженером по системам хранения в UnitedStack. Помимо разработок OpenStack и Ceph, Менг управляет 
+   проектом <span class="term"><code>ceph-dokan</code></span>.</p>
+   <p><span class="term"><code>ceph-dokan</code></span> позволяет доступ к CephFS с платформы Windows. Для этого 
+   <span class="term"><code>ceph-dokan</code></span> применяет два ключевых компонента: <span class="term"><code>libcephfs.dll</code></span>, 
+   который является приложением для доступа к CephFS и <span class="term"><code>ceph-dokan.exe</code></span>, который основан на проекте Dokan 
+   по предоставлению службы файловой системы, подобной FUSE, на платформе Windows, что помогает в монтировании CephFS в качестве 
+   локального диска в системах Windows. В своей основе <span class="term"><code>ceph-dokan.exe</code></span> использует 
+   <span class="term"><code>dokan.dll</code></span> и <span class="term"><code>libcephfs.dll</code></span> для реализации вашего 
+   пользовательского пространства файловой системы win32. Как и Ceph, <span class="term"><code>ceph-dokan</code></span> также является проектом 
+   с открытым исходным кодом и доступен на GitHub по адресу <a class="link" href="https://github.com/ceph/ceph-dokan" 
+   target="_top">https://github.com/ceph/ceph-dokan</a>. Запросы на помощь для этого проекта могут посылаться в любое время. Вы можете 
+   построить <span class="term"><code>ceph-dokan</code></span> из исходного кода доступного на GiHub; однако для простоты вы можете 
+   воспользоваться <span class="term"><code>ceph-dokan.exe</code></span>, который может быть найден в каталоге 
+   <span class="term"><code>ceph-dokan</code></span> репозитория GitHub <span class="term"><code>ceph-cookbook</code></span>, который вы 
+   уже клонировали в предыдущей главе.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="040601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Настройте машину Windows 7 или 8 иподключите ее в своюсеть, ту же гда находится ваш кластер Ceph
+	 (<span class="term"><code>192.168.1.0/24</code></span>).</p>
+	 </li><li class="listitem">
+     <p>Убедитесь, что вы можете связаться с узлами монитора Ceph проверив доступ с применением команды 
+	 <span class="term"><code>telnet</code></span> из командной строки:</p>
+	   <pre class="screen">
+telnet 192.168.1.101 6789
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Когда вы убедились, что имеете возможность доступа к кластеру Ceph, загрузите <span class="term"><code>ceph-dokan.exe</code></span> 
+	 и <span class="term"><code>DokanInstall_0.6.0.exe</code></span> с <a class="link" 
+	 href="https://github.com/ksingh7/cephcookbook/tree/master/ceph-dokan" target="_top">https://github.com/ksingh7/cephcookbook/tree/master/ceph-dokan</a>
+	 на свой клиент Windows.</p>
+	 </li><li class="listitem">
+     <p>Установите <span class="term"><code>DokanInstall_0.6.0.exe</code></span>; если вы используете ОС Windows 8, вы должны установить 
+	 его в режим совместимости.</p>
+     <div class="figure"><a id="Fig0402"> </a>
+      <p class="title"><strong>Рисунок 4.2. Установка библиотеки Dokan</strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0402.jpg" width="774" height="546"/><br />
+       <span></span>
+      </div></div>
+     </div><br class="figure-break"/>
+	 </li><li class="listitem">
+     <p>Откройте командную строку Windows и смените каталог на абсолютный путь в каталог с установленным 
+	 <span class="term"><code>ceph-dokan.exe</code></span>.</p>
+	 </li><li class="listitem">
+     <p>В клиенте Windows cоздайте файл <span class="term"><code>ceph.conf</code></span> со следующим содержимым, которое известит
+	 <span class="term"><code>ceph-dokan</code></span> о ваших мониторах кластера Ceph:</p>
+	   <pre class="screen">
+[global]
+auth client required = none
+log_file = dokan.log
+mon_initial_members = ceph-node1
+mon_host = 192.168.1.101
+[mon]
+[mon.ceph-node1]
+mon addr = 192.168.1.101:6789
+ 	   </pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Так как <span class="term"><code>ceph-dokan</code></span> может читать <span class="term"><code>ceph.conf </code></span> только 
+		 если он записан в формате Unix, вам следует преобразовать <span class="term"><code>ceph.conf</code></span> в формат 
+		 Unix с помощью утилиты <span class="term"><strong class="userinput"><code>dos2unix</code></strong></span>. 
+		 {<span class="emphasis"><em>Прим. пер.: Или воспользоваться в своём редакторе режимом Unix для сохранения файлов (символ конца
+		 строки #0A, вместо #0D#0A для Windows)</em></span>}. За дополнительной информацией по утилите обратитесь к
+		 <a class="link" href="http://sourceforge.net/projects/dos2unix/" target="_top">http://sourceforge.net/projects/dos2unix/</a>.</p></td></tr></table>
+       </div>
+	 </li><li class="listitem">
+     <p>В настоящее время <span class="term"><code>ceph-dokan</code></span> не поддерживает аутентификацию 
+	 <span class="term"><strong class="userinput"><code>cephx</code></strong></span>. Поэтому, для применения 
+	 <span class="term"><code>nfs-Ganesha</code></span> вам понадобится запретить <span class="term"><code>cephx</code></span> на всех 
+	 ваших машинах монитора кластера Ceph.</p>
+	 </li><li class="listitem">
+     <p>Чтобы запретить <span class="term"><code>cephx</code></span> в кластере Ceph измените свой файл  
+	 <span class="term"><code>/etc/ceph/ceph.conf</code></span> в элементах, связанных с аутентификацией на 
+	 <span class="term"><code>none</code></span>:</p>
+	   <pre class="screen">
+auth_cluster_required = none
+auth_service_required = none
+auth_client_required = none
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>После изменения <span class="term"><code>ceph.conf</code></span>, перезапустите службы ceph на всех своих узлах мониторов:</p>
+	   <pre class="screen">
+# service ceph restart
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Убедитесь, что <span class="term"><code>cephx</code></span> запрещён:</p>
+	   <pre class="screen">
+# ceph --admin-daemon /var/run/ceph/ceph-osd.0.asok config show | grep -i auth | grep -i none
+
+	[root@ceph-node1 ceph]# ceph --admin-daemon /var/run/ceph/ceph-osd.O.asok config show | grep auth | grep -i none 
+	  &quot;auth_cluster_required&quot;: &quot;<strong>none</strong>&quot;, 
+	  &quot;auth_service_required&quot;: &quot;<strong>none</strong>&quot;, 
+	  &quot;auth_client_required&quot;: &quot;<strong>none</strong>&quot;, 
+	  [root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Наконец, в клиенте Windows выполните <span class="term"><code>ceph-dokan.exe</code></span> для монтирования CephFS в качестве 
+	 диска. В командной строке выполните:</p>
+	   <pre class="screen">
+ceph-dokan.exe -c ceph.conf -l m
+
+	[root@ceph-node1 ~]# ganesha.nfsd -f /etc/ganesha.conf -L /var/log/ganesha.log -N NIV_DEBUG -d 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ps -ef | grep -i nfs 
+	root      7975     1  0 00:55 ?         00:00:00 ganesha.<strong>nfs</strong>d -f /etc/ganesha.conf -L /var/log/ganesha.log -N NIV_DEBUG -d 
+	root      8023  5901  0 00:56 pts/0     00:00:00 grep --color.auto <strong>nfs</strong> 
+	[root@ceph-node1 ~]# 
+ 	   </pre>
+     <p>Эта команда должна смонтировать CephFS как локальный диск в вашем клиенте Windows.</p>
+     <div class="figure"><a id="Fig0403"> </a>
+      <p class="title"><strong>Рисунок 4.3. CephFS в качестве локального диска</strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0403.jpg" width="1054" height="263"/><br />
+       <span></span>
+      </div></div>
+     </div><br class="figure-break"/>
+	 </li>
+   </ol>
+   </div>
+   <p>И CephFS, и <span class="term"><code>ceph-dokan</code></span> требуют дополнительного участия и развития для достижения достаточной 
+   зрелости в поддержке рабочих нагрузок с промышленным применением. Однако, они являются хорошими претендентами на тестирование и на 
+   присутствие в роли концептуального прототипа (PoC).</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0408"> </a>CephFS вклинивающаяся замена HDFS</h3>
+   </div></div></div>
+   <p>Hadoop является программной инфраструктурой которая поддерживает обработку и хранение больших наборов данных в распределённых 
+   вычислительных средах. Ядро Hadoop содержит механизм аналитики Map-Reduce и распределённую файловую систему, называемую HDFS 
+   ((Hadoop Distributed File System), которая имеет ряд слабых мест, перечисленных здесь:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Она имеет единую точку отказа, за исключением только что вышедшей версии HDFS</p>
+	 </li><li class="listitem">
+	 <p>Она не является POSIX совместимой</p>
+	 </li><li class="listitem">
+	 <p>Она хранит по крайней мере 3 копии данных</p>
+	 </li><li class="listitem">
+	 <p>Она имеет централизованный сервер имён, делающий проблематичным в результате её масштабирование</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Проект Apache Hadoop и прочие производители программного обеспечения независимо работают над заполнением этих пробелов в HDFS.</p>
+   <p>Сообщество Ceph выполнило некоторые разработки в этом пространстве и оно имеет встраиваемый системный модуль (plugin) для 
+   Hadoop который возможно преодолеет ограничения HDFS и может быть использован как вклинивающаяся замена для этого проекта. Существуют 
+   три требования для использования CephFS с Hadoopж; это:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Работа вашего кластера Ceph</p>
+	 </li><li class="listitem">
+	 <p>Работа кластера Hadoop</p>
+	 </li><li class="listitem">
+	 <p>Установка встраиваемого модуля (plugin) CephFS Hadoop</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Реализация Hadoop и HDFS выходят за рамки данной книги, однако в этом разделе мы поверхностно обсудим как CephFS может быть 
+   использована совместно с HDFS. Клиенты Hadoop могут получать доступ к CephFS через встраиваемый модуль (plugin) на основе java 
+   с именем <span class="term"><code>hadoop-cephfs.jar</code></span>. Для поддержки связи Hadoop с CepfFS необходимы два приводимых 
+   ниже класса java.</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>libcephfs.jar</code></span>: Этот файл должен быть помещён в <span class="term"><code>/usr/share/java/</code></span>,
+	 а его путь должен быть добавлен в <span class="term"><code>HADOOP_CLASSPATH</code></span> в файле 
+	 <span class="term"><code>Hadoop_env.sh</code></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>libcephfs_jni.so</code></span>: Этот файл должен быть добавлен в ваш параметр окружения 
+	 <span class="term"><code>LD_LIBRARY_PATH</code></span> и помещён в <span class="term"><code>/usr/lib/hadoop/lib</code></span>.
+	 Вам следует также программно привязать (soft link) его в 
+	 <span class="term"><code>/usr/lib/hadoop/lib/native/Linux-amd64-64/libcephfs_jni.so</code></span>.</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Кроме того, встроенный клиент CephFS должен быть установлен на каждом узле кластера Hadoop. Для дополнительной и самой последней 
+   информацмм использования CephFS для Hadoop, пожалуйста, обращайтесь к официальной документации Ceph на 
+   <a class="link" href="http://ceph.com/docs/master/cephfs/hadoop" target="_top">http://ceph.com/docs/master/cephfs/hadoop</a> и к 
+   GitHub Ceph на странице 
+   <a class="link" href="https://github.com/ceph/cephfs-hadoop" target="_top">https://github.com/ceph/cephfs-hadoop</a>.</p>
+  </div>
+
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

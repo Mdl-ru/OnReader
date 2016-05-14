@@ -1,0 +1,201 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Руководство по эксплуатации OpenStack</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing, OpenStack Operations Guide, 1491946954">
+   <meta name="Description" content="Руководство по эксплуатации OpenStack">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+<script language="javascript" src="/js/common.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="800" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="500" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="index.htm">Руководство по эксплуатации OpenStack</a></td>
+</tr>
+</table>
+<br />
+<h2 align="right">РУКОВОДСТВО ПО ЭКСПЛУАТАЦИИ OPENSTACK.<br /> Установка вашего облака и управление им.<br />Фифилд Т., Флеминг Д., Гентл А., Ночстайн Л., Пру Дж., Тойюс Э. и Тоджиан Дж.<br />Copyright © 2014 OpenStack Foundation. All rights reserved.</h1>
+<div align="right">Перевод <a href="http://www.amazon.com/OpenStack-Operations-Guide-Tom-Fifield/dp/1491946954/">978-1491946954</a>: <a href="http://www.mdl.ru/"><img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;" /></a> Copyright © 2014, ссылки обязательны</div>
+<hr />
+<h1 id="ToC" align="right">Оглавление</h1>
+
+<dl>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="index.htm">Оглавление</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="Acknowledgments.htm">Благодарности</a>
+  <dt>&nbsp;&nbsp;&nbsp; <a href="Acknowledgments.htm">Предисловие</a>
+  <dt>&nbsp; 1.<a href="Ch01ru.htm">Инициализация и развертывание</a>
+   <ul>
+      <li><a href="Ch01ru.htm#Ch0101">Автоматизированное развертывание</a>
+         <ul>
+           <li><a href="Ch01ru.htm#Ch010101">Создание дисковых разделов и RAID</a>
+           <li><a href="Ch01ru.htm#Ch010102">Настройка сети</a>
+         </ul>
+      <li><a href="Ch01ru.htm#Ch0102">Автоматизация настройки</a>
+      <li><a href="Ch01ru.htm#Ch0103">Удаленное управление</a>
+   </ul>
+  <dt>&nbsp; 2.<a href="Ch02ru.htm">Схема контроллера облака</a>
+   <ul>
+      <li><a href="Ch02ru.htm#Ch0201">Анализ аппаратных средств</a>
+      <li><a href="Ch02ru.htm#Ch0202">Разделение служб</a>
+      <li><a href="Ch02ru.htm#Ch0203">Базы данных</a>
+      <li><a href="Ch02ru.htm#Ch0204">Очередь сообщений</a>
+      <li><a href="Ch02ru.htm#Ch0205">Интерфейс прикладного программирования (API)</a>
+      <li><a href="Ch02ru.htm#Ch0206">Расширения</a>
+      <li><a href="Ch02ru.htm#Ch0207">Планировщик</a>
+      <li><a href="Ch02ru.htm#Ch0208">Образы</a>
+      <li><a href="Ch02ru.htm#Ch0209">Инструментальная доска</a>
+      <li><a href="Ch02ru.htm#Ch0210">Аутентификация и авторизация</a>
+      <li><a href="Ch02ru.htm#Ch0211">Анализ сети</a>
+   </ul>
+  <dt>&nbsp; 3.<a href="Ch03ru.htm">Масштабирование</a>
+   <ul>
+      <li><a href="Ch03ru.htm#Ch0301">Отправной пункт</a>
+      <li><a href="Ch03ru.htm#Ch0302">Добавление узлов контроллера</a>
+      <li><a href="Ch03ru.htm#Ch0303">Разделение ваших облаков</a>
+         <ul>
+           <li><a href="Ch03ru.htm#Ch030302">Ячейки и области</a>
+           <li><a href="Ch03ru.htm#Ch030303">Зоны доступности и объединения хостов</a>
+         </ul>
+      <li><a href="Ch03ru.htm#Ch0304">Масштабируемое оборудование</a>
+         <ul>
+           <li><a href="Ch03ru.htm#Ch030401">Закупка оборудования</a>
+           <li><a href="Ch03ru.htm#Ch030402">Планирование емкости</a>
+           <li><a href="Ch03ru.htm#Ch030403">Нагрузочные испытания</a>
+         </ul>
+    </ul>
+  <dt>&nbsp; 4.<a href="Ch04ru.htm">Вычислительные узлы</a>
+   <ul>
+      <li><a href="Ch04ru.htm#Ch0401">Выбор процессора</a>
+      <li><a href="Ch04ru.htm#Ch0402">Выбор гипервизора</a>
+      <li><a href="Ch04ru.htm#Ch0403">Решения хранилищ экземпляра</a>
+         <ul>
+           <li><a href="Ch04ru.htm#Ch040301">Система хранения вне вычислительного узла – совместно используемая файловая система</a>
+           <li><a href="Ch04ru.htm#Ch040302">Система хранения на вычислительном узле – совместно используемая файловая система</a>
+           <li><a href="Ch04ru.htm#Ch040303">Система хранения на вычислительном узле – не разделяемая файловая система</a>
+           <li><a href="Ch04ru.htm#Ch040304">Проблемы миграции в реальном масштабе времени</a>
+           <li><a href="Ch04ru.htm#Ch040305">Выбор файловой системы</a>
+         </ul>
+      <li><a href="Ch04ru.htm#Ch0404">Перегруженное выделение</a>
+      <li><a href="Ch04ru.htm#Ch0405">Ведение журнала</a>
+      <li><a href="Ch04ru.htm#Ch0406">Сетевое обеспечение</a>
+    </ul>
+  <dt>&nbsp; 5.<a href="Ch05ru.htm">Решения систем хранения</a>
+   <ul>
+      <li><a href="Ch05ru.htm#Ch0501">Концепции хранилища OpenStack</a>
+         <ul>
+           <li><a href="Ch05ru.htm#Ch050102">Хранилища объектов</a>
+           <li><a href="Ch05ru.htm#Ch050103">Блочные хранилища</a>
+           <li><a href="Ch05ru.htm#Ch050104">Хранилища файлового уровня</a>
+         </ul>
+      <li><a href="Ch05ru.htm#Ch0502">Выбор сервера хранения</a>
+         <ul>
+           <li><a href="Ch05ru.htm#Ch050202">Технологии серийно выпускаемых серверов хранения</a>
+         </ul>
+      <li><a href="Ch05ru.htm#Ch0503">Замечания по OpenStack Object Storage</a>
+    </ul>
+  <dt>&nbsp; 6.<a href="Ch06ru.htm">Проектирование сети</a>
+   <ul>
+      <li><a href="Ch06ru.htm#Ch0601">Управляющая сеть</a>
+      <li><a href="Ch06ru.htm#Ch0602">Опции адресации из адресного пространства интернет</a>
+      <li><a href="Ch06ru.htm#Ch0603">Планирование IP адресов</a>
+      <li><a href="Ch06ru.htm#Ch0604">Топология сети</a>
+         <ul>
+           <li><a href="Ch06ru.htm#Ch060402">VLAN-ы</a>
+           <li><a href="Ch06ru.htm#Ch060403">Множественные NIC</a>
+           <li><a href="Ch06ru.htm#Ch060404">Работа в сети с многими хостами и с одним хостом</a>
+         </ul>
+      <li><a href="Ch06ru.htm#Ch0605">Службы для функционирования сети</a>
+         <ul>
+           <li><a href="Ch06ru.htm#Ch060501">NTP</a>
+           <li><a href="Ch06ru.htm#Ch060502">DNS</a>
+         </ul>
+    </ul>
+  <dt>&nbsp; 7.<a href="Ch07ru.htm">Пример построения</a>
+   <ul>
+      <li><a href="Ch07ru.htm#Ch0701">Обзор</a>
+      <li><a href="Ch07ru.htm#Ch0702">Обоснование</a>
+         <ul>
+           <li><a href="Ch07ru.htm#Ch070202">Почему бы не воспользоваться сетевой службой OpenStack (quantum)?</a>
+           <li><a href="Ch07ru.htm#Ch070203">Зачем использовать мульти-хостовые сети?</a>
+         </ul>
+      <li><a href="Ch07ru.htm#Ch0703">Подробное описание</a>
+      <li><a href="Ch07ru.htm#Ch0704">Дополнительные расширения</a>
+    </ul>
+  <dt>&nbsp; 8.<a href="Ch08ru.htm">Что к чему</a>
+   <ul>
+      <li><a href="Ch08ru.htm#Ch0801">Инструменты командной строки клиента</a>
+         <ul>
+           <li><a href="Ch08ru.htm#Ch080102">Инструменты установки</a>
+           <li><a href="Ch08ru.htm#Ch080103">Инструменты коммандной строки для администрирования</a>
+           <li><a href="Ch08ru.htm#Ch080104">Получение учетных данных</a>
+           <li><a href="Ch08ru.htm#Ch080105">Трюки и капканы командной строки</a>
+             <ul>
+               <li><a href="Ch08ru.htm#Ch08010502">cURL</a>
+             </ul>
+           <li><a href="Ch08ru.htm#Ch080106">Серверы и службы</a>
+           <li><a href="Ch08ru.htm#Ch080107">Диагностика ваших вычислительных узлов</a>
+         </ul>
+      <li><a href="Ch08ru.htm#Ch0802">Сеть</a>
+      <li><a href="Ch08ru.htm#Ch0803">Пользователи и проекты</a>
+      <li><a href="Ch08ru.htm#Ch0804">Выполнение экземпляров</a>
+    </ul>
+  <dt>&nbsp; 9.<a href="Ch09ru.htm">Управление проектами и пользователями</a>
+  <dt>10.<a href="Ch10ru.htm">Операции стороны пользователя</a>
+  <dt>11.<a href="Ch11ru.htm">Обслуживание, сбои и отладка</a>
+  <dt>12.<a href="Ch12ru.htm">Устранение неполадок сети</a>
+  <dt>13.<a href="Ch13ru.htm">Ведение журналов и мониторинг</a>
+  <dt>14.<a href="Ch14ru.htm">Резервное копирование и восстановление</a>
+  <dt>15.<a href="Ch15ru.htm">Настройка</a>
+  <dt>16.<a href="Ch16ru.htm">Восходящий поток OpenStack</a>
+  <dt>17.<a href="Ch17ru.htm">Расширенное конфигурирование</a>
+  <dt>&nbsp; A.<a href="ApAru.htm">Варианты использования</a>
+  <dt>&nbsp; B.<a href="ChBru.htm">Байки из зашиф^H^H^H^H облака</a>
+  <dt>&nbsp; C.<a href="ChCru.htm">Ресурсы</a>
+  <dt>&nbsp;&nbsp; &nbsp;<a href="Glossary.htm">Словарь</a>
+</dl>
+
+
+<div id="eXTReMe"><a href="http://extremetracking.com/open?login=ostogmdl">
+<img src="http://t1.extreme-dm.com/i.gif" style="border: 0;"
+height="38" width="41" id="EXim" alt="eXTReMe Tracker" /></a>
+<script type="text/javascript"><!--
+EXref="";top.document.referrer?EXref=top.document.referrer:EXref=document.referrer;//-->
+</script><script type="text/javascript"><!--
+var EXlogin='ostogmdl' // Login
+var EXvsrv='s9' // VServer
+EXs=screen;EXw=EXs.width;navigator.appName!="Netscape"?
+EXb=EXs.colorDepth:EXb=EXs.pixelDepth;EXsrc="src";
+navigator.javaEnabled()==1?EXjv="y":EXjv="n";
+EXd=document;EXw?"":EXw="na";EXb?"":EXb="na";
+EXref?EXref=EXref:EXref=EXd.referrer;
+EXd.write("<img "+EXsrc+"=http://e0.extreme-dm.com",
+"/"+EXvsrv+".g?login="+EXlogin+"&amp;",
+"jv="+EXjv+"&amp;j=y&amp;srw="+EXw+"&amp;srb="+EXb+"&amp;",
+"l="+escape(EXref)+" height=1 width=1>");//-->
+</script><noscript><div id="neXTReMe"><img height="1" width="1" alt=""
+src="http://e0.extreme-dm.com/s9.g?login=ostogmdl&amp;j=n&amp;jv=n" />
+</div></noscript></div>
+
+</tbody></table>
+</body>
+</html>

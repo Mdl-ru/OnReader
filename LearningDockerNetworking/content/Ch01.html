@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 1. Букварь построения сети Docker - Изучение построения сетей Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningDockerNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="up" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="prev" href="Ix01.html" title="Указатель"/>
+<link rel="next" href="Ch02.html" title="Глава 2. Построение сети Docker взгляд вовнутрь"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-docker-networking";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningDockerNetworking/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 1. Букварь построения сети Docker';
+PrevRef = 'Ix01.html';
+UpRef = 'index.html';
+NextRef = 'Ch02.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 1. Букварь построения сети Docker</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+   <p><span class="term"><strong class="userinput">Docker</strong></span> является технологией обладающих малым весом контейнеров, которая в 
+   последние годы привлекает пристальное внимание. Она аккуратно связывает различные свойства и функции ядра Linux, такие как 
+   имена пространств, cgroup, SELinux и профили AppAromor поверх совокупности файловых систем, таких как AUFS и BTFFS для того чтобы делать 
+   образы модулей. Такие образы обеспечивают среду виртуализации с высокой степенью настройки для приложений, которая следует в потоке 
+   <span class="term"><strong class="userinput">написанное единожды работает везде</strong></span>. Приложение может состоять из одного 
+   работающего в своём собственном контейнере процесса или может быть выполнено из множества процессов, работающих в своих собственных 
+   контейнерах, которые способны реплицироваться по мере роста нагрузки. Более того, существует потребность в мощных элементах сетевой среды, 
+   которые могут поддерживать различные сложные варианты применения.</p>
+   <p>В этой главе мы изучим существенные компоненты построения сети Docker и того как строить и выполнять простые примеры контейнеров.</p>
+   <p>Данная глава охватит следующие темы:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Построение сетевой среды и Docker</p>
+		 </li><li class="listitem">
+		 <p>Построение сетевого моста <span class="term"><code>docker0</code></span></p>
+		 </li><li class="listitem">
+		 <p>Построение сетевой среды Docker OVS </p>
+		 </li><li class="listitem">
+		 <p>Домены сетей Unix</p>
+		 </li><li class="listitem">
+		 <p>Связывание контейнеров Docker</p>
+		 </li><li class="listitem">
+		 <p>Что нового в построении сетей Docker</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Docker получает в промышленности мощную тягу благодаря своей разумной производительности и воспроизводимости архитектуры, обеспечивая при 
+   этом четыре краеугольных основы современного развития:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Автономность</p>
+		 </li><li class="listitem">
+		 <p>Децентрализацию</p>
+		 </li><li class="listitem">
+		 <p>Параллелизм</p>
+		 </li><li class="listitem">
+		 <p>Изолированность</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Более того, широкомасштабное внедрение архитектуры микрослужб <a class="link" href="https://en.wikipedia.org/wiki/ThoughtWorks" 
+   target="_top">ThoughtWorks</a>, или <span class="term"><strong class="userinput">LOSA <a class="link" 
+   href="http://tech.gilt.com/2012/11/14/how-gilt-com-give-came-to-be" target="_top">Lots of Small Applications</a></strong></span>, 
+   продолжает привносить потенциал в технологию Docker. В результате, крупные компании наподобие Google, VMWare и Microsoft уже портировали 
+   Docker в свою инфраструктуру, а импульс продолжается запуском бесчисленных стартапов Docker, а именно Tutum, Flocker, Giantswarm и 
+   тому подобных.</p>
+   <p>Поскольку Docker повсеместно воспроизводит своё поведение в любом месте, будь то ваша машина разработки, сервер с голым железом, 
+   виртуальная машина или центр обработки данных, разработчики приложений могут сосредоточить своё внимание на развитии, в то время как 
+   семантика выполнения остаётся за <a class="link" href="https://ru.wikipedia.org/wiki/DevOps" target="_top">DevOps</a>. Это делает 
+   команду рабочего потока модульной, эффективной и продуктивной. Docker не следует путать с <span class="term"><strong 
+   class="userinput">Виртуальной машиной</strong></span> (<span class="term"><strong class="userinput">ВМ</strong></span>, VM), несмотря на 
+   то, что обе являются технологиями виртуализации. В то время как Docker совместно использует OS обеспечивая достаточный уровень 
+   изоляции и безопасности работающим в контейнере приложениям, он далее полностью абстрагируется от ОС предоставляя сильную изоляцию и 
+   гарантии безопасности. Однако, отпечатки ресурса Docker очень незначительны по сравнению с ВМ и, следовательно, предпочтительнее с точки 
+   зрения экономичности и производительности. Тем не менее, он не может полностью заменить ВМ и поэтому они являются дополняющими друг друга 
+   технологиями. Следующая схема отображает архитектуру ВМ и Docker:</p>
+   <div class="figure"><a id="Fig0101"> </a>
+    <p class="title"><strong>Рисунок 1.1. Архитектура ВМ и Docker</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0101.jpg" width="642" height="226"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Букварь построения сети Docker</a></span></dt>
+    <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#0101">Построение сетей и Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010101">Мосты Linux</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010102">Open vSwitch</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010103">NAT</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010104">IPtables</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010105">AppArmor/SELinux</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0102">Мост docker0</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010201">Режим --net default</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010202">Режим --net=none</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010203">Режим --net=container:$container2</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010204">Режим --net=host</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch01.html#01020401">Соответствие порта в контейнере Docker</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0103">Docker OVS</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0104">Сокет домена Unix</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0105">Связывание контейнеров Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010501">Соединения</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0106">Что нового в построении сетей Docker?</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010601">Песочница</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010602">Терминал</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010603">Сетевая среда</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0107">Модель Docker CNM</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0108">Заключение</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0101"> </a>Построение сетей и Docker</h3>
+   </div></div></div>
+   <p>Каждый контейнер Docker имеет свой собственный сетевой стек, причём это происходит благодаря пространству имён <span 
+   class="term"><code>NET</code></span> ядра Linux, в котором для каждого контейнера конретизируется новое пространство имён 
+   <span class="term"><code>NET</code></span> и оно не может быть доступно снаружи контейнера или из других контейнеров.</p>
+   <p>Построение сетей Docker получает свою мощность от следующих сетевых компонентов и служб.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Мосты Linux </span></h4>
+   </div></div></div>
+   <p>Это встроенный в ядро обучаемые коммутаторы L2/MAC, причём они должны применяться для переадресации.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010102"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Open vSwitch </span></h4>
+   </div></div></div>
+   <p>Это усовершенствованный мост, который является программируемым и поддерживает туннелирование.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010103"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">NAT </span></h4>
+   </div></div></div>
+   <p>Конверторы сетевых адресов являются непосредственными объектами, выполняющими трансляцию IP адресов и портов (SNAT, DNAT и тому подобное).</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010104"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">IPtables </span></h4>
+   </div></div></div>
+   <p>Это механизм политик в вашем ядре, применяемый для управления пересылкой пакетов, межсетевого экранирования, а также функциональности NAT.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010105"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">AppArmor/SELinux </span></h4>
+   </div></div></div>
+   <p>Здесь могут быть определены политики межсетевого экранирования для каждого приложения.</p>
+   <p>Для работы с Docker могут применяться различные сетевые компоненты, предоставляющие новые способы для доступа и использования служб на 
+   основе Docker. Как результат, мы видим большое число библиотек, которые следуют различным подходам построения сетей. Некоторыми из достойных 
+   упоминания являются Docker Compose, Weave, Kubernetes, Pipework, libnetwork и тому подобные. Следующий рисунок описывает ключевые идеи 
+   построения сети Docker:</p>
+   <div class="figure"><a id="Fig0102"> </a>
+    <p class="title"><strong>Рисунок 1.2. Основные элементы построения сетей Docker</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0102.jpg" width="585" height="308"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0102"> </a>Мост docker0</h3>
+   </div></div></div>
+   <p>Мост <span class="term"><code>docker0</code></span> является сердцем построения сети по умолчанию. При запуске службы Docker, на машине 
+   хоста создаётся мост Linux. Интерфейсы контейнера общаются с этим мостом, а сам мост выступает в качестве прокси внешнего мира. Множество 
+   контейнеров на одном и том же хосте могут взаимодействовать друг с другом через этот мост Linux.</p>
+   <p>Обычно, <span class="term"><code>docker0</code></span> может быть настроен флагами <span class="term"><code>--net</code></span> в 
+   четырёх режимах:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p><span class="term"><code>--net default</code></span></p>
+		 </li><li class="listitem">
+		 <p><span class="term"><code>--net=none</code></span></p>
+		 </li><li class="listitem">
+		 <p><span class="term"><code>--net=container:$container2</code></span></p>
+		 </li><li class="listitem">
+		 <p><span class="term"><code>--net=host</code></span></p>
+		 </li>
+		</ul>
+		</div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режим --net default </span></h4>
+   </div></div></div>
+   <p>В данном режиме мост по умолчанию применяется мостом для соединения контейнеров друг с другом.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010202"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режим --net=none </span></h4>
+   </div></div></div>
+   <p>В этом режиме созданные контейнеры полностью изолированы и не могут соединяться с сетевой средой.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010203"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режим --net=container:$container2 </span></h4>
+   </div></div></div>
+   <p>При помощи данного флага данный контейнер создаёт в пространстве имён сети совместный ресурс с контейнером, именуемым 
+   <span class="term"><code>$container2</code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010204"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режим --net=host </span></h4>
+   </div></div></div>
+   <p>При данном режиме контейнер создаёт совместные ресурсы своего сетевого пространства имён с хостом.</p>
+
+	<a id="01020401"> </a>
+    <p class="title"><strong>Соответствие порта в контейнере Docker</strong></p>
+    <p>В этом разделе мы увидим как порты контейнера приводятся в соответствие портам хоста. Такое соответствие может выполняться неявно 
+	механизмом Docker или может определяться в явном виде.</p>
+    <p>Мы создадим два контейнера с именами <span class="term"><strong class="userinput"><code>Container1</code></strong></span> и 
+	<span class="term"><strong class="userinput"><code>Container2</code></strong></span>, причём оба назначим на IP адрес из частного адресного 
+	пространства IP и к тому же соединённых с мостом <span class="term"><strong class="userinput"><code>docker0</code></strong></span>, 
+	как показано на следующей иллюстрации:</p>
+   <div class="figure"><a id="Fig0103"> </a>
+    <p class="title"><strong>Рисунок 1.3. Соединение двух контейнеров в режиме --net=host</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0103.jpg" width="618" height="261"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+    <p>Оба рассматриваемых контейнера способны выполнять ping друг к другу а также выходить во внешний мир.</p>
+    <p>Для внешнего доступа их порт должен соответствовать порту хоста.</p>
+    <p>Как уже упоминалось в предыдущем разделе, контейнеры используют сетевые пространства имён. Когда создаётся первый контейнер, для этого 
+	контейнера создаётся новое сетевое пространство имён. Между каждым контейнером и мостом Linux создаётся соединение (link) vEthernet. 
+	Исходящий из <span class="term"><code>eth0</code></span> трафик достигает моста хоста через интерфейс vEthernet и после этого выполняется 
+	коммутация. Для отображения списка мостов Linux можно применить следующий код:</p>
+	   <pre class="screen"><code>
+# show linux bridges
+$ sudo brctl show
+	   </code></pre>
+    <p>Вывод будет аналогичен приводимому ниже, причём будет приведено соответствие имени моста и интерфейсов <span class="term"><code>veth</code></span> 
+	ваших контейнеров:</p>
+	   <pre class="screen"><code>
+bridge name        bridge id        STP enabled    interfaces
+docker0        8000.56847afe9799        no         veth44cb727
+                                                   veth98c3700
+	   </code></pre>
+    <p>Как получить доступ к контейнеру из внешнего мира? </p>
+    <p>Опять же, с помощью параметра <span class="term"><code>iptables nat</code></span> на машине хоста устанавливается соответствие порта.</p>
+   <div class="figure"><a id="Fig0104"> </a>
+    <p class="title"><strong>Рисунок 1.4. Организация доступа к контейнеру извне</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0104.jpg" width="491" height="214"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0103"> </a>Docker OVS</h3>
+   </div></div></div>
+   <p>Open vSwitch является мощной абстракцией сетевой среды. Следующая иллюстрация показывает как OVS взаимодействует с
+   <span class="term"><strong class="userinput">ВМ</strong></span>, <span class="term"><strong class="userinput">Гипервизором</strong></span>
+   и <span class="term"><strong class="userinput">Физическим Коммутатором</strong></span>. Каждая <span class="term"><strong class="userinput">ВМ</strong></span>
+   имеет связанную с ней <span class="term"><strong class="userinput">vNIC</strong></span>. Каждый 
+   <span class="term"><strong class="userinput">vNIC</strong></span> соединяется через 
+   <span class="term"><strong class="userinput">VIF</strong></span> (также называемый виртуальным интерфейсом, 
+   <span class="term"><strong class="userinput">virtual interface</strong></span>) со своим 
+   <span class="term"><strong class="userinput">Виртуальным Коммутатором</strong></span>:</p>
+   <div class="figure"><a id="Fig0105"> </a>
+    <p class="title"><strong>Рисунок 1.5. Организация доступа к контейнеру извне</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0105.jpg" width="596" height="309"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>OVS применяет механизм туннелирования, например <a class="link" href="https://ru.wikipedia.org/wiki/GRE_(протокол)" target="_top">GRE</a>, 
+   <a class="link" href="https://ru.wikipedia.org/wiki/Virtual_Extensible_LAN" target="_top">VXLAN</a> или 
+   <a class="link" href="http://www.cisco.com/c/en/us/products/collateral/switches/nexus-9000-series-switches/white-paper-c11-730116.pdf" 
+   target="_top">STT</a> для создания виртуальных оверлеев вместо применения физического построения 
+   топологий и компонентов Ethernet. Следующий рисунок отображает то, как OVS может быть настроен для того, чтобы контейнеры могли 
+   взаимодействовать между множеством хостов с применением туннелей GRE:</p>
+   <div class="figure"><a id="Fig0106"> </a>
+    <p class="title"><strong>Рисунок 1.6. Организация доступа к контейнеру извне</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0106.jpg" width="545" height="372"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0104"> </a>Сокет домена Unix</h3>
+   </div></div></div>
+   <p>В пределах одного хоста для взаимодействия между контейнерами также можно применять UNIX IPC механизм, в особенности сокеты домена UNIX 
+   или конвейеры (pipe):</p>
+	   <pre class="screen"><code>
+$ docker run --name c1 –v /var/run/foo:/var/run/foo –d –I –t base /bin/bash
+$ docker run --name c2 –v /var/run/foo:/var/run/foo –d –I –t base /bin/bash
+	   </code></pre>
+   <p>Приложения в <span class="term"><code>c1</code></span> и <span class="term"><code>c2</code></span> могут взаимодействовать через следующие 
+   адреса сокетов Unix:</p>
+	   <pre class="screen"><code>
+struct  sockaddr_un address;
+address.sun_family = AF_UNIX;
+snprintf(address.sun_path, UNIX_PATH_MAX, &quot;/var/run/foo/bar&quot; );
+	   </code></pre>
+        <table rules="all" width="650" style="text-align:left" id="add_fs_options">
+        <caption></caption><col width="50%"/><col width="50%"/><thead><tr valign="top">
+          <th><p><span class="term"><strong class="userinput"><code>C1: Server.c</code></strong></span></p></th>
+          <th><p><span class="term"><strong class="userinput"><code>C2: Client.c</code></strong></span></p></th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><pre class="screen"><code>
+bind(socket_fd, (struct sockaddr *) &address, sizeof(struct sockaddr_un));
+listen(socket_fd, 5);
+while((connection_fd = accept(socket_fd, (struct sockaddr *)
+&amp;address, &amp;address_length)) &gt; -1)
+nbytes = read(connection_fd, buffer, 256);
+			</code></pre></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><pre class="screen"><code>
+connect(socket_fd, (struct sockaddr *) &address,
+sizeof(struct sockaddr_un));
+write(socket_fd, buffer, nbytes);
+			</code></pre></strong></span></p></td>
+        </tr></tbody></table>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0105"> </a>Связывание контейнеров Docker</h3>
+   </div></div></div>
+   <p>В этом разделе мы введём понятие связывания двух контейнеров. Docker создаёт туннель между вашими контейнерами, который требуется для 
+   видимости всех портов внутри данного контейнера. Он применяет переменные среды как один из механизмов для передачи информации от вашего 
+   родительского контейнера к его дочернему контейнеру.</p>
+   <p>Помимо переменной окружения <span class="term"><code>env</code></span>, Docker также добавляет запись хоста для контейнера источника 
+   в файл <span class="term"><code>/etc/hosts</code></span>. Далее приводится пример такого файла хостов:</p>
+	   <pre class="screen"><code>
+$ docker run -t -i --name c2 --rm --link c1:c1alias training/webapp /bin/bash
+root@&lt;container_id&gt;:/opt/webapp# cat /etc/hosts
+172.17.0.1 aed84ee21bde
+...
+172.17.0.2 c1alaias 6e5cdeb2d300 c1
+	   </code></pre>
+   <p>Присутствуют две записи:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>первая является записью для вашего контейнера <span class="term"><code>c2</code></span>, которая применяет идентификатор 
+		 контейнера Docker в качестве имени хоста.</p>
+		 </li><li class="listitem">
+		 <p>Вторая записиь, <span class="term"><code>172.17.0.2 c1alaias 6e5cdeb2d300 c1</code></span> использует 
+		 псевдоним связи для ссылки на IP адрес вашего контейнера <span class="term"><code>c1</code></span>.</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Следующий рисунок показывает два контейнера, <span class="term"><strong class="userinput">Container1</strong></span> и 
+   <span class="term"><strong class="userinput">Container2</strong></span>, соединённые с использованием пар veth с мостом 
+   <span class="term"><code>docker0</code></span> с <span class="term"><code>--icc=true</code></span>. Это означает, что два данные контейнера 
+   могут осуществлять доступ друг к другу через этот мост:
+   </p>
+   <div class="figure"><a id="Fig0107"> </a>
+    <p class="title"><strong>Рисунок 1.7.Взаимодействие контейнеров через мост хоста</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0107.jpg" width="402" height="172"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Соединения </span></h4>
+   </div></div></div>
+   <p>Соединения (link) обеспечивают службу обнаружения для Docker. Они позволяют контейнерам обнаруживать друг друга и безопасно 
+   взаимодействовать с применением флага <span class="term"><code>-link name:alias</code></span>. При помощи этого флага, установленного в 
+   значение <span class="term"><code>false</code></span>, <span class="term"><strong class="userinput">Container1</strong></span> не 
+   может получить доступ к <span class="term"><strong class="userinput">Container2</strong></span> пока он не будет дозволен в явном 
+   виде через соединение. Это громадное преимущество для безопасности ваших контейнеров. Когда два контейнера соединены вместе, Docker создаёт 
+   между ними взаимосвязь родитель- ребёнок, как продемонстрировано на следующей схеме:</p>
+   <div class="figure"><a id="Fig0108"> </a>
+    <p class="title"><strong>Рисунок 1.8. Организация безопасного взаимодействия между контейнерами</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0108.jpg" width="401" height="190"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Извне это выглядит следующим образом:</p>
+	   <pre class="screen"><code>
+# start the database
+$ sudo docker run -dp 3306:3306 --name todomvcdb \
+-v /data/mysql:/var/lib/mysql cpswan/todomvc.mysql
+
+# start the app server
+$ sudo docker run -dp 4567:4567 --name todomvcapp \
+--link todomvcdb:db cpswan/todomvc.sinatra
+	   </code></pre>
+   <p>Изнутри это выглядит так:</p>
+	   <pre class="screen"><code>
+$ dburl = ''mysql://root:pa55Word@'' + \ ENV[''DB_PORT_3306_TCP_ADDR''] +
+''/todomvc''
+$ DataMapper.setup(:default, dburl)
+	   </code></pre>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0106"> </a>Что нового в построении сетей Docker?</h3>
+   </div></div></div>
+   <p>Построение сетей Docker находится на ранней стадии зарождения и существует множество интересных вкладов из сообщества разработчиков, 
+   например, Pipework, Weave, Clocker и Kubernetes. Каждый из них отражает отличный аспект построения сетей Docker. Мы познакомимся с ними 
+   в последующих главах. Помимо этого, Docker, Inc. объявило новый проект, в котором построение сетей приводится к стандарту. 
+   Он называется <span class="term"><strong class="userinput"><code>libnetwork</code></strong></span></p>
+   <p>libnetwork реализует <span class="term"><strong class="userinput">модель сетевого контейнера</strong></span> (<span class="term"><strong 
+   class="userinput">CNM</strong></span>, container network model), которая формализует этапы, необходимые для обеспечения построения сетей 
+   контейнеров путём предоставления абстракций, которые могут применяться для поддержки многих сетевых драйверов. CNM строится из трёх основных 
+   компонентов - песочницы (sandbox), терминала (endpoint) и сетевой среды (network).</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Песочница </span></h4>
+   </div></div></div>
+   <p>Песочница (sandbox) содержит настройки сетевого стека контейнера. Они содержат управление интерфейсами контейнера, таблицу маршрутизации 
+   и установки DNS. Реализацией песочницы может быть сетевое пространство имён Linux, клета (jail) FreeBSD, либо другое аналогичное понятие. 
+   Песочница может содержать множество терминалов из многих сетевых сред.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010602"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Терминал </span></h4>
+   </div></div></div>
+   <p>Терминал (endpoint) соединяет песочницу с сетевой средой. Реализацией терминала может быть пара veth или внутренний порт Open vSwitch, 
+   или нечто подобное. Терминал может относиться только к одной сетевой среде, и при этом может относиться только к одной песочнице.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="010603"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сетевая среда </span></h4>
+   </div></div></div>
+   <p>Сетевая среда является группой терминалов, которые способны напрямую взаимодействовать друг с другом. Реализацией сетевой среды может 
+   быть мост Linux, VLAN и тому подобное. Сетевая среда состоит из множества терминалов, как показано на следующей схеме:</p>
+   <div class="figure"><a id="Fig0109"> </a>
+    <p class="title"><strong>Рисунок 1.9. Пример сетевой среды</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0109.jpg" width="600" height="255"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0107"> </a>Модель Docker CNM</h3>
+   </div></div></div>
+   <p>CNM обеспечивает следующее соглашение между сетевыми средами и контейнерами:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Все контейнеры в одной и той же сетевой среде могут свободно взаимодействовать друг с другом</p>
+		 </li><li class="listitem">
+		 <p>Множество сетевых сред является способом сегментации обмена между контейнерами и оно должно поддерживаться всеми драйверами</p>
+		 </li><li class="listitem">
+		 <p>Множество терминалов на контейнер является способом объединения контейнеров во множество сетевых сред</p>
+		 </li><li class="listitem">
+		 <p>Для обеспечения песочниц сетевой среды сетевой связностью добавляются терминалы</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Мы обсудим подробности того, как реализуется CNM в <a class="link" href="Ch06.html" target="_top">Главе 6. 
+   ледующее поколение сетевого стека для Docker: libnetwork</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0108"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В этой главе мы изучили существенные компоненты построения сетей Docker, которые развиваются из сочетания простых абстракций Docker и мощных 
+   сетевых компонентов, таких как мосты Linux и Open vSwitch.</p>
+   <p>Мы узнали как контейнеры Docker могут быть созданы в различных режимах. В режиме по умолчанию соответствие портов осуществляется при помощи 
+   применения правил NAT iptable, делая возможным возникающий в хосте обмен доставлять контейнерам. Позже в этой главе мы охватили основы 
+   связывания контейнеров. Мы также обсудили следующее поколение построения сетей Docker, называемое libnetwork.</p>
+  </div>
+   
+ 
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

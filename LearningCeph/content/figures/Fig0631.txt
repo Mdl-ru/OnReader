@@ -1,0 +1,10 @@
+﻿[root@ceph-node1 ~]# ceph-authtool -—create-keyring/etc/ceph/ceph.client.radosgw.keyring
+creating /etc/ceph/ceph.client.radosgw.keyring
+[root@ceph-node1 ~]# chmod +r /etc/ceph/ceph.client.radosgw.keyring
+[root@ceph-node1 ~]# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.gateway --gen-key
+[root@ceph-node1 ~]# ceph-authtool -n client.radosgw.gateway --cap osd 'allow rwx' --cap mon 'allow rw' /etc/ceph/ceph.client.radosgw.keyring
+[root@ceph-node1 ~]# ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.gateway -i /etc/ceph/ceph.client.radosgw.keyring
+added key for client.radosgw.gateway
+[root@ceph-node1 ~]# scp /etc/ceph/ceph.client.radosgw.keyring ceph-rgw:/etc/ceph/ceph.client.radosgw.keyring
+ceph.client.radosgw.keyring                                                                                  100%  120     0.1KB/s   00:00
+[root@ceph-node1 ~]#

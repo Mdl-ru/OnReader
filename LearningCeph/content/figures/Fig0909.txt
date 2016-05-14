@@ -1,0 +1,13 @@
+﻿[root@os-node1 ceph]# uuidgen
+63b033bb-3305-479d-854b-cf3d0cb6a50c
+[root@os-node1 ceph]#
+[root@os-node1 ceph]# cat > secret.xml «EOF
+> <secret ephemeral='no' private='no'>
+>   <uuid>63b033bb-3305-479d-854b-cf3d0cb6a50c</uuid>
+>   <usage type='ceph'>
+>     <name>client.cinder secret</name>
+>   </usage>
+> </secret>
+> EOF
+[root@os-node1 ceph]# virsh secret-define -—file secret.xml
+Secret 63b033bb-3305-479d-854b-cf3d0cb6a50c created

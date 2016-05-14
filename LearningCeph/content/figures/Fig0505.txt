@@ -1,0 +1,10 @@
+﻿[root@ceph-node1 ceph]# ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key n mon. --cap mon 'allow *'
+creating /tmp/ceph.mon.keyring
+[root@ceph-node1 ceph]#
+[root@ceph-node1 ceph]# ceph-authtool --create-keyring /etc/ceph/ceph.client.admin.keyring --gen-key -n client.admi
+n --set-uid=0 -cap mon 'allow *' --cap osd 'allow *' --cap mds 'allow'
+creating /etc/ceph/ceph.client.admin.keyring
+[root@ceph-node1 ceph]#
+[root@ceph-node1 ceph]# ceph-authtool /tmp/ceph.mon.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring
+importing contents of /etc/ceph/ceph.client.admin.keyring into /tmp/ceph.mon.keyring
+[root@ceph-node1 ceph]#

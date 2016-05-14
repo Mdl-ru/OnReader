@@ -1,0 +1,852 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="wf-ptsans-n4-active wf-ptsans-i4-active wf-sourcecodepro-n4-active wf-ptsans-n7-active wf-sourcecodepro-n7-active wf-active" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" dir="" itemscope="" itemtype="http://schema.org/Article" lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <meta name="csrf-token" content="3c10b66e8edf955db3753f9755f69f87"><meta name="robots" content="index,follow"><meta name="generator" content="MindTouch 4 15.4.23.1018"><link rel="search" type="application/opensearchdescription+xml" title="Ceph Wiki Search" href="https://wiki.ceph.com/@api/deki/site/opensearch/description"><link rel="apple-touch-icon" href="https://a.mtstatic.com/skins/common/logo/apple-touch-icon.png?_=472f77b4:site_4517"><link rel="shortcut icon" href="https://a.mtstatic.com/skins/common/logo/favicon.ico?_=472f77b4:site_4517">
+
+        <title>Lazy Means Smart</title>
+
+        <style type="text/css">body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:400;}ol,ul{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:400;}q:before,q:after{content:'';}caption{margin-bottom:.5em;text-align:center;}fieldset,img,abbr,acronym{border:0;}</style>
+
+    
+
+        <link media="screen" type="text/css" rel="stylesheet" href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/anonymous.css" id="mt-screen-css">
+
+    
+        <link media="print" type="text/css" rel="stylesheet" href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/print.css" id="mt-print-css">
+
+        <!--[if IE 8]><link type="text/css" rel="stylesheet" href="https://a.mtstatic.com/skins/styles/cedar/out/ie8.min.css?_=472f77b4:site_4517"/><![endif]-->
+        <!--[if IE 9]><link type="text/css" rel="stylesheet" href="https://a.mtstatic.com/skins/styles/cedar/out/ie9.min.css?_=472f77b4:site_4517"/><![endif]-->
+
+    <script async="" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/rollbar.js"></script><script type="text/javascript">
+    var _rollbarConfig = {"accessToken":"4b9f4143765a4ba1a3caf2a826c145ab","captureUncaught":false,"verbose":false,"payload":{"environment":"production","person":{"id":"site_4517:2"},"client":{"javascript":{"source_map_enabled":true,"guess_uncaught_frames":true,"code_version":"472f77b4"}},"server":{"branch":"release_20150423","host":"app-production-release_20150423-54_162_2_48"}},"scrubFields":["accountpassword","password","authpassword","apikey","authtoken","csrf_token"]};
+    _rollbarConfig.transform = function(payload) {
+        var trace = payload.data.body.trace;
+        if(trace && trace.frames) {
+            for(var i = 0; i < trace.frames.length; i++) {
+                var filename = trace.frames[i].filename;
+                if(filename) {
+                    var url = document.createElement('a');
+                    url.href = filename;
+                    if((url.hostname === 'wiki.ceph.com' || ('a.mtstatic.com' !== '' && url.hostname === 'a.mtstatic.com')) && filename.indexOf('.js', filename.length - 3) !== -1) {
+                        url.hostname = 'mindtouch.sourcemap'
+                        trace.frames[i].filename = url.href;
+                    }
+                }
+            }
+        }
+    };
+</script><script type="text/javascript">!function(a,b){function c(b){this.shimId=++h,this.notifier=null,this.parentShim=b,this.logger=function(){},a.console&&void 0===a.console.shimId&&(this.logger=a.console.log)}function d(b,c,d){a._rollbarWrappedError&&(d[4]||(d[4]=a._rollbarWrappedError),d[5]||(d[5]=a._rollbarWrappedError._rollbarContext),a._rollbarWrappedError=null),b.uncaughtError.apply(b,d),c&&c.apply(a,d)}function e(b){var d=c;return g(function(){if(this.notifier)return this.notifier[b].apply(this.notifier,arguments);var c=this,e="scope"===b;e&&(c=new d(this));var f=Array.prototype.slice.call(arguments,0),g={shim:c,method:b,args:f,ts:new Date};return a._rollbarShimQueue.push(g),e?c:void 0})}function f(a,b){if(b.hasOwnProperty&&b.hasOwnProperty("addEventListener")){var c=b.addEventListener;b.addEventListener=function(b,d,e){c.call(this,b,a.wrap(d),e)};var d=b.removeEventListener;b.removeEventListener=function(a,b,c){d.call(this,a,b&&b._wrapped?b._wrapped:b,c)}}}function g(a,b){return b=b||this.logger,function(){try{return a.apply(this,arguments)}catch(c){b("Rollbar internal error:",c)}}}var h=0;c.init=function(a,b){var e=b.globalAlias||"Rollbar";if("object"==typeof a[e])return a[e];a._rollbarShimQueue=[],a._rollbarWrappedError=null,b=b||{};var h=new c;return g(function(){if(h.configure(b),b.captureUncaught){var c=a.onerror;a.onerror=function(){var a=Array.prototype.slice.call(arguments,0);d(h,c,a)};var g,i,j="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(g=0;g<j.length;++g)i=j[g],a[i]&&a[i].prototype&&f(h,a[i].prototype)}return a[e]=h,h},h.logger)()},c.prototype.loadFull=function(a,b,c,d,e){var f=g(function(){var a=b.createElement("script"),e=b.getElementsByTagName("script")[0];a.src=d.rollbarJsUrl,a.async=!c,a.onload=h,e.parentNode.insertBefore(a,e)},this.logger),h=g(function(){var b;if(void 0===a._rollbarPayloadQueue){var c,d,f,g;for(b=new Error("rollbar.js did not load");c=a._rollbarShimQueue.shift();)for(f=c.args,g=0;g<f.length;++g)if(d=f[g],"function"==typeof d){d(b);break}}"function"==typeof e&&e(b)},this.logger);g(function(){c?f():a.addEventListener?a.addEventListener("load",f,!1):a.attachEvent("onload",f)},this.logger)()},c.prototype.wrap=function(b,c){try{var d;if(d="function"==typeof c?c:function(){return c||{}},"function"!=typeof b)return b;if(b._isWrap)return b;if(!b._wrapped){b._wrapped=function(){try{return b.apply(this,arguments)}catch(c){throw c._rollbarContext=d(),c._rollbarContext._wrappedSource=b.toString(),a._rollbarWrappedError=c,c}},b._wrapped._isWrap=!0;for(var e in b)b.hasOwnProperty(e)&&(b._wrapped[e]=b[e])}return b._wrapped}catch(f){return b}};for(var i="log,debug,info,warn,warning,error,critical,global,configure,scope,uncaughtError".split(","),j=0;j<i.length;++j)c.prototype[i[j]]=e(i[j]);var k="//d37gvrvc0wt4s1.cloudfront.net/js/v1.1/rollbar.min.js";_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||k;var l=c.init(a,_rollbarConfig);l.loadFull(a,b,!1,_rollbarConfig)}(window,document);</script><script type="text/javascript">var Deki = {"BaseHref":"https:\/\/wiki.ceph.com","PageId":781,"PageTitle":"Planning\/Blueprints\/Hammer\/Shingled Erasure Code (SHEC)","PageName":"Shingled Erasure Code (SHEC)","PageIsRedirect":false,"PageLanguageCode":"en-US","FollowRedirects":1,"PathSkin":"\/skins\/styles\/cedar","PathCommon":"\/skins\/common","UserName":"Anonymous","UserSystemName":"Anonymous","UserIsAnonymous":true,"UserPermissions":["LOGIN","BROWSE","READ","SUBSCRIBE"],"PageEditable":false,"PageNamespace":"","CDNHostname":"a.mtstatic.com","CacheFingerprint":"472f77b4:site_4517","WebFontConfig":{"google":{"families":["PT Sans:r,b,i","Source Code Pro:r,b"]}},"isF1Request":false};</script><script type="text/javascript">if(!window.matchMedia){document.write('<script type="text/javascript" src="https://a.mtstatic.com/deki/javascript/out/matchMedia.min.js?_=472f77b4:site_4517"><\/script><script type="text/javascript" src="https://a.mtstatic.com/deki/javascript/out/matchMedia.addListener.min.js?_=472f77b4:site_4517"><\/script>');}</script><script type="text/javascript" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/community.js"></script><style type="text/css"></style><script type="text/javascript">if(typeof Deki.jsLibLoaded === "undefined"){document.write('<script type="text/javascript" src="/deki/javascript/out/community.min.js"><\/script>');!function(){"use strict";Deki._disableCdn=function(e){if(Deki.CDNHostname){var t=e.indexOf(Deki.CDNHostname);if(-1!==t)return e.substr(t+Deki.CDNHostname.length)}return e};var e=function(e){var t=e.getAttribute("href");t&&e.setAttribute("href",Deki._disableCdn(t))},t=document.getElementById("mt-screen-css");t&&e(t);var n=document.getElementById("mt-print-css");n&&e(n)}();}</script><script type="text/javascript">!function(e){"use strict";e(function(){var t=function(){var t=e(".trayframe"),i=e(".traybody"),a=e(".mt-content-container").height(),s=t.height()+30;if(s>a){var n=a-10+"px";i.css({"max-height":n,"overflow-y":"auto"}),i.addClass("traybody-wider"),t.addClass("trayframe-wider")}else i.removeClass("traybody-wider"),t.removeClass("trayframe-wider")};t();var i=function(){e("#login-link").hide(),e("#forgot-password-link").css("display","inline-block"),e(".mt-user-nav form").fadeIn(function(){e("#username").focus()})},a="placeholder"in document.createElement("input");a||e(".login-form-label").css("display","block"),e("[resetval]").each(function(){var t=e(this).val(),i=e(this).attr("resetval");""===t&&e(this).val(i)}).focus(function(){var t=e(this).attr("resetval"),i=e(this).val();i===t&&e(this).val("")}).blur(function(){var t=e(this).attr("resetval"),i=e(this).val();(i===t||""===i)&&e(this).val(t)});var s=e("#pageText");s.find("img").css("max-width",s.width()),e("body").click(function(t){e(t.target).hasClass("drop-link")||e(".dropdown").hide()}),e(".drop-link").click(function(t){t.preventDefault(),e(".dropdown").hide(),e(this).next(".dropdown").show()}),e(".content-rate-up, .content-rate-down").addClass("ui-button"),e(".page a.disabled").parent().hide(),e(document).on("click",".in-page-sign-in",function(t){t.preventDefault(),i(),e("html, body").animate({scrollTop:0},"fast")});var n=e("#widget-comments");n.on("click",function(){e(".widget-comments").show(),e(".widget-tabs > ul > li").removeClass("active"),e(this).parent("li").addClass("active"),e(".widget-files").hide()});var l=e("#widget-files");l.on("click",function(){e(".widget-files").show(),e(".widget-tabs > ul > li").removeClass("active"),e(this).parent("li").addClass("active"),e(".widget-comments").hide()}),e("#tab-files").hasClass("active")&&e(".widget-files").show(),"#widget-comments"===window.location.hash?n.trigger("click"):"#widget-files"===window.location.hash&&l.trigger("click"),e(".file-link a").each(function(){var t=e(this);t.text().length>25&&t.text(t.text().slice(0,25)).append("...")}),e("#live-tag-normal-tags").bind(Deki.Ui.Events.Tags.TagAdded,function(){t()}).bind(Deki.Ui.Events.Tags.TagRemoved,function(){t()});var o=e(".nav-icon:visible");if(o.length||e("#site-hierarchy").hasClass("show")){o.find("a").addClass("active");var r=new Deki.Site;r._sitePlug.at("nav",Deki.PageId,"full").get(function(t){var i=e('<div id="siteNavTree"></div>').html(JSON.parse(t.responseText));e("#site-hierarchy").append(i).show()})}e(".nav-icon a").click(function(t){t.preventDefault(),e(this).toggleClass("active"),e("#site-hierarchy").toggle()}),e(".systemmsg:visible")&&e(".systemmsg:first-of-type").find(".delete-msg").focus()})}(jQuery);</script><script type="text/javascript">var aLt=_.extend(aLt||[], {"adding-tags":"Adding Tags...","advanced-search":"Advanced Search","attach-no-description":"No description","cancel":"Cancel","close":"Close","comment-delete":"Are you sure you want to delete this comment?","error":"Error","error-permission-denied":"Permission denied","error-permission-details":"Your account does not have sufficient permissions to perform that action.","file-moved":"Your file was successfully moved.","gallery-close":"close","gallery-next":"next","gallery-prev":"prev","grant-type-group":"(Group)","internal-error":"Sorry, but there was an internal problem - please try again soon.","js-label_cancel":"Cancel","js-label_save":"Save","js-tooltip_cancel":"Exit Without Saving Changes","js-tooltip_save":"Save and Exit (Alt+S)","ldap-provide-credentials":"Please provide external service sign in credentials.","loading":"Loading...","menu-confirm-delete":"Are you sure you want to delete this file?","menu-delete-file":"Delete","menu-edit-description":"Edit description","menu-move-file":"Move","menu-previous-versions":"Previous versions","menu-view-original":"View original","ready":"Ready","remove-tag":"Remove tag","restore-tag":"Restore tag","save":"Save","standard-search":"Standard Search","submit":"Submit","wikibits-attach-another":"Attach another file","wikibits-attach-file":"Attach File","wikibits-cant-attach-editing":"Sorry, you can\\'t attach files while editing a page. Please close the editor first.","wikibits-edit-section":"Edit section","wikibits-remove-file":"Remove file","login-required":"You must be <a href=\"https:\/\/wiki.ceph.com\/?title=Special%3AUserLogin&returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29\" class=\"in-page-sign-in \" rel=\"nofollow\" tabindex=\"1\">signed in<\/a> to perform that action"});var wfMsg=function(){Deki.Logger.deprecatedFunction('wfMsg()');return Deki.loc.apply(null,arguments);};</script><link href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/css.css" rel="stylesheet">
+
+    
+
+</head><body class="yui-skin-sam action-view">
+<noscript><div class="noscript">This application requires Javascript to be enabled.</div></noscript>
+<!-- START Unseated user navigation -->
+<div class="mt-wrapper mt-header">
+	<div class="mt-user-nav">
+		<ul class="mt-login-links">
+		<!-- START Logged out user nav -->
+												<li id="login-link" class="last">
+												<a href="https://wiki.ceph.com/?title=Special%3AUserLogin&amp;returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" class="in-page-sign-in login-link" rel="nofollow" tabindex="1">Sign In</a>					</li>
+					<li id="forgot-password-link" class="last"><a title="Forgot Password" class="" href="https://wiki.ceph.com/Special:UserLogin#?tab=password" rel="nofollow" tabindex="6">Forgot Password</a>
+</li>
+									<!-- END Logged out user nav -->
+
+		<!-- START Logged in user nav -->
+					<!-- END Logged in user nav -->
+		</ul>
+
+		<!-- START Login form -->
+		<form action="https://wiki.ceph.com/?title=Special%3AUserLogin&amp;returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" method="POST" id="quick-login">
+	<div class="row">
+            <span class="col">
+                <input autocomplete="off" name="username" class="reset" tabindex="3" placeholder="username" id="username" type="text">
+                <label class="title login-form-label" for="username">
+                    username
+                </label>
+            </span>
+            <span class="col">
+            <input name="password" autocomplete="off" id="password" tabindex="4" placeholder="password" type="password">
+                <label class="title login-form-label" for="password">
+                    password
+                </label>
+            </span>
+		<span class="col col-btn">
+            <input tabindex="5" value="Sign In" class="primary btn" type="submit">
+		</span>
+	</div>
+</form>
+		<!-- END Login form -->
+	</div>
+</div>
+<!-- END Unseated user navigation -->
+
+<div class="mt-wrapper">
+	<div class="mt-logo"><a class="logo-anonymous" href="https://wiki.ceph.com/" title="Ceph Wiki">
+    <img class="mt-cdn" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/logo.png" alt="Ceph Wiki" title="Ceph Wiki">
+</a></div>
+    <div class="mt-content">
+
+    <!-- START Site navigation -->
+	<div class="mt-site-nav">
+        		    <!-- START Content navigation -->
+		    <ul><li class="home"><a class="help-center" title="Home" rel="internal" href="https://wiki.ceph.com/"></a></li><li><div class="product-menu quick-more" title="Planning"><a class="drop-link" href="#" title="Planning">Planning</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Clustering_a_few_NAS_into_a_Ceph_cluster">Clustering a few NAS into a Ceph cluster</a></li><li><a rel="custom" href="https://wiki.ceph.com/Community">Community</a></li><li><a rel="custom" href="https://wiki.ceph.com/Development">Development</a></li><li><a rel="custom" href="https://wiki.ceph.com/FAQs">FAQs</a></li><li><a rel="custom" href="https://wiki.ceph.com/Guides">Guides</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning">Planning</a></li></ul></div></li><li><div class="article-menu quick-more" title="Blueprints"><a class="drop-link" href="#" title="Blueprints">Blueprints</a><ul style="display: none;" class="dropdown"><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints">Blueprints</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/CDS">Ceph Developer Summit</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Roadmap">Roadmap</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Sideboard">Sideboard</a></li></ul></div></li><li class="divider"><div class="article-menu quick-more" title="Hammer"><a class="drop-link" href="#" title="Hammer">Hammer</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/%3CSIDEBOARD%3E">&lt;SIDEBOARD&gt;</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Dumpling">Dumpling</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Emperor">Emperor</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Firefly">Firefly</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Giant">Giant</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer">Hammer</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Infernalis">Infernalis</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Submissions">Submissions</a></li></ul></div></li><li class="divider"><div class="article-menu quick-more" title="Shingled Erasure Code (SHEC)"><a class="drop-link" href="#" title="Shingled Erasure Code (SHEC)">Shingled Erasure Code (SHEC)</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Accelio_RDMA_Messenger">Accelio RDMA Messenger</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Calamari_localization">Calamari localization</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Calamari_RESTful_API">Calamari RESTful API</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS%3A_Forward_Scrub">CephFS: Forward Scrub</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS%3A_Hadoop_Support">CephFS: Hadoop Support</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS_quota_support_discussion">CephFS quota support discussion</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Ceph_Security_hardening">Ceph Security hardening</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Clustered_SCSI_target_using_RBD">Clustered SCSI target using RBD</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Diff%3A_integrity___local_import">Diff: integrity   local import</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Fixed_memory_layout_for_Message%2F%2FOp_passing">Fixed memory layout for Message/Op passing</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/How_to_make_Ceph_enterprise_ready">How to make Ceph enterprise ready</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/kerberos_authn%2C_AD_authn%2F%2Fauthz">kerberos authn, AD authn/authz</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librados%3A_expose_checksums">librados: expose checksums</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librados%3A_support_parallel_reads">librados: support parallel reads</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librbd%3A_shared_flag%2C_object_map">librbd: shared flag, object map</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/monitor%3A_reweight_near_full_osd_autonomicly">monitor: reweight near full osd autonomicly</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/OSD%3A_add_flexible_cache_control_of_object_data">OSD: add flexible cache control of object data</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_opportunistic_whole-object_checksums">osd: opportunistic whole-object checksums</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_prepopulate_pg_temp">osd: prepopulate pg temp</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_Scrub%2F%2FSnapTrim_IO_prioritization">osd: Scrub/SnapTrim IO prioritization</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_tiering%3A_fine-grained_promotion_unit">osd: tiering: fine-grained promotion unit</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_tiering%3A_reduce_read%2F%2Fwrite_latencies_on_cache_tier_miss">osd: tiering: reduce read/write latencies on cache tier miss</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_update_Transaction_encoding">osd: update Transaction encoding</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/quotas_vs_subtrees">quotas vs subtrees</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rados%3A_improve_ex-%2F%2Fimport_functionality">rados: improve ex-/import functionality</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rbd%3A_Copy-on-read_for_clones_in_kernel_rbd_client">rbd: Copy-on-read for clones in kernel rbd client</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/RBD%3A_Mirroring">RBD: Mirroring</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_bucket_index_scalability">rgw: bucket index scalability</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_object_versioning">rgw: object versioning</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_Snapshots">rgw: Snapshots</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29">Shingled Erasure Code (SHEC)</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Towards_Ceph_Cold_Storage">Towards Ceph Cold Storage</a></li></ul></div></li></ul>		    <!-- END Content navigation -->
+        	</div>
+	<!-- END Site navigation -->
+
+	    <!-- START Page Content -->
+	<div class="mt-content-container">
+		<div id="flash-messages"><div class="dekiFlash"></div></div>		<span class="product-portfolio-hidden"><span class="dw-hierarchy"><a href="https://wiki.ceph.com/" class="deki-ns">Home</a> &gt; <a href="https://wiki.ceph.com/Planning" class="deki-ns">Planning</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints" class="deki-ns">Blueprints</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints/Hammer" class="deki-ns">Hammer</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29" class="deki-ns current">Shingled Erasure Code (SHEC)</a></span></span>                            <script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['MindTouch.IDF3.help-link-page-settings'] = 'Learn more about the "Page Settings" controls';aLt['MindTouch.IDF3.label.image.placeholder'] = 'Add page thumbnail';aLt['MindTouch.IDF3.label.overview.edit'] = 'Edit overview';aLt['MindTouch.IDF3.label.overview.placeholder'] = 'Add page summary';aLt['MindTouch.IDF3.label.summary.toggle'] = 'Page Settings';aLt['MindTouch.IDF3.label.thumbnail.delete'] = 'Delete thumbnail';aLt['MindTouch.IDF3.label.thumbnail.edit'] = 'Edit thumbnail';aLt['MindTouch.IDF3.label.overview.max.count'] = '{0} characters remaining.';aLt['MindTouch.IDF3.label.overview.max.count.over'] = 'Warning.  {0} characters will be truncated.';aLt['MindTouch.IDF3.message.overview.changed'] = 'Change has been saved, page may need to be <a href="{0}">refreshed</a> to see updated overview.';aLt['MindTouch.IDF3.message.overview.unsaved'] = 'This page summary is leveraged by search and LightSpeed Framework to show a preview of an article.  Previously, overviews were used to perform this function.  Once you\'ve modified this summary, you can not go back to the old format.';aLt['MindTouch.IDF3.message.overview.unsaved.link'] = 'Learn more about Page Settings';aLt['MindTouch.IDF3.message.overview.unsaved.button'] = 'Update summary';aLt['MindTouch.IDF3.message.thumbnail.delete.title'] = 'Delete page thumbnail?';aLt['MindTouch.IDF3.message.thumbnail.delete.message'] = 'This will delete this page\'s thumbnail image. Are you sure you wish to proceed?';aLt['MindTouch.IDF3.message.thumbnail.delete.submit'] = 'Yes';aLt['MindTouch.IDF3.message.thumbnail.delete.cancel'] = 'Cancel';/*]]>*/</script><script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Dialog.Attach.max-size'] = 'Maximum upload file size: {0}';/*]]>*/</script><script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Article.Attach.file.upload.notAllowed'] = 'The selected file can not be uploaded because you do not have permission to upload files of that type.';aLt['Article.Attach.file.upload.fileExtension'] = 'You picked a file with an unsupported extension.  Please try again with a valid file.';/*]]>*/</script>        		<h1 style="visibility: visible;" id="title">
+    <div id="deki-page-title">
+        <div class="state-view">
+            <span class="title">Lazy Means Smart</span>
+        </div>
+    </div>
+</h1>
+		<div id="page-top">
+    <div id="topic">
+        <div id="pageText">
+                 
+  <div id="section_6"> <div id="section_6" class="mt-page-section"><span id="Work_items"></span>
+  <h3 style="visibility: visible;" class="editable">Интеллектуальные отложенные средства: уменьшение стоимости пропускной способности 
+  восстановления в распределенных хранилищах с кодом затирания.</h3> 
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Перевод Lazy Means Smart: Reducing Repair Bandwidth Costs in
+  Erasure-coded Distributed Storage</p>
+  <p style="visibility: visible;">Mark Silberstein<sup>1</sup>, Lakshmi Ganesh<sup>2</sup>, Yang Wang<sup>3</sup>, 
+  Lorenzo Alvisi<sup>3</sup>, Mike Dahlin<sup>3,4</sup></p>
+  <p style="visibility: visible;"><sup>1</sup>Technion, <sup>2</sup>Facebook, <sup>3</sup>The University of Texas at Austin, 
+  <sup>4</sup>Gooogle</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <h4 style="visibility: visible;" class="editable">Аннотация</h4>
+  <p style="visibility: visible;">Схемы кодирования затирания обеспечивают более высокую надежность при более низкой стоимости 
+  хранения и, таким образом, представляют собой привлекательную альтернативу репликациям в распределенных системах хранения, 
+  в частности, для хранения к &quot;холодным&quot; данным с редким доступом. Такие схемы, однако, требуют на порядок более 
+  высокой пропускной способности восстановления для поддержания постоянного уровня надежности перед лицом отказов узлов.
+  В данной статье мы предлагаем <em>отложенное восстановление</em> (lazy recovery), технику для уменьшения потребности в 
+  пропускной способности восстановления до уровня хранилища с репликациями. Ключевая догадка состоит в том, что аккуратная 
+  настройка скорости восстановления существенно снижает пропускную способность восстановления, сохраняя влияние на низкие
+  производительность чтения и надежность данных. Мы покажем преимущества отложенного восстановления с помощью подробного 
+  моделирования с использованием правдоподобной распределенной конфигурации системы хранения и опубликованных параметров 
+  отказов компонентов. Например, когда отложенное восстановление применяется к наиболее часто применяемому кодированию 
+  RS(14,10), оно уменьшает пропускную способность на значение до 76%, даже ниже чем при репликациях, одновременно увеличивая 
+  количество деградирующих полос на 0.1 процентных пунктов. Отложенное восстановление хорошо работает с различными схемами 
+  кодирования затирания, в том числе с недавно предложенными кодами с эффективной пропускной способностью, достигая 
+  двукратного прироста множителя дополнительной экономии пропускной способности.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">1. Введение</h4>
+  <p style="visibility: visible;">Схемы с кодированием затирания, например коды Рида- Соломона (RS), являются привлекательной 
+  альтернативой репликациям в распределенных системах хранения (DSS, distributed storage systems), поскольку они делают возможным 
+  оптимальный баланс между стоимостью хранения и надежностью данных. Они рассматриваются как относительно хорошо подогнанные под 
+  хранение относительно редко используемые &quot;холодные&quot; данные [3,15]. которые представляют все большую часть в 
+  крупномасштабных системах хранения [21,24].</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Тем не менее, широкому внедрению кодов затирания в DSS с холодными данными препятствуют 
+  их чрезмерные требования к сетевой среде при восстановлении данных после сбоев – хорошо известная <em>проблема пропускной 
+  способности восстановления</em> [25, 18, 27, 26]. А именно, когда узел хранения испытывает отказ. например, из- за сбоя оборудования, 
+  его содержание должно быть оперативно восстановлено на другом узле во избежание утраты данных. Восстановление одного блока 
+  данных в системе хранения с кодированием затирания RS(n,k) влечет за собой передачу <em>k</em> блоков от <em>k</em> 
+  продолжающих работу узлов в сети. Для сравнения, в системах на основе репликаций передается только один блок для восстановления 
+  одного утраченного блока. Такое кратное <em>k</em> увеличение в обмене при восстановлении имеет результатом резкое 
+  увеличение нагрузки на сеть на фоне установившегося значения, в особенности, в крупных центрах обработки данных, где 
+  интенсивность отказов высока. Например, в режиме реальном Facebook DSS до 3% от общего числа узлов хранения отказывают 
+  каждый день [27]. Использование хранилища с кодированием RS(14,10) в этой системе имеет в результате сотни Терабайт обмена 
+  для восстановления сквозь коммутаторы поверх стоек (TOR, Top-Of-Rack) [26]. Таким образом сеть занята, даже если сам DSS 
+  простаивает и не обслуживает никаких внешних пользователей (как это обычно и бывает для системы холодного хранения), что 
+  увеличивает потребление электроэнергии и не дает узлам переходить в спящий режим. Кроме того, такой трафик составляет 
+  значительную часть от общего объема сетевой среды и растет совместно с масштабами системы и емкостью жестких дисков. Все 
+  эти факторы препятствуют принятию стандартных кодов затирания.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Общая практика для того, чтобы справиться с растущим сетевым обменом, заключается в 
+  регулировании пропускной способности сети, доступной для задач восстановления. Это, однако, увеличивает число 
+  деградировавших полос неуправляемым образом(полосы с одним или более утраченными или отключенными блоками), которые, в 
+  свою очередь, сильно влияют на производительность чтения и надежность данных. Широко распространенная политика сглаживания 
+  такого негативного эффекта заключается в выставлении приоритетов восстановления полос с бОльшим числом отказавших узлов [9,26], 
+  тем самым более эффективно используя имеющуюся ограниченную полосу пропускания. Однако в общем случае регулирование расхода 
+  не эффективно понижает общий обмен восстановления после отказа, поскольку подавляющее большинство отказов получает 
+  восстановление сразу – было установлено, что 98% деградировавших полос в DSS Facebook имело только один отказавший блок [26].</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В данной статье мы предлагаем <em>отложенное восстановление</em> (lazy recovery), технику 
+  уменьшения объема сетевого обмена для восстановления в кодированном затиранием DSS до уровня трех репликаций, но без потери 
+  надежности первой. Идея проста: восстановление деградировавших полос может быть отложено до тех пор, пока риск потери данных 
+  остается терпимым, таким образом используя нелинейный компромисс между пропускной способностью восстановления и вероятностью 
+  потери данных. Ключевой задачей, однако, является поиск практического механизма помещения системы в требуемую рабочую точку 
+  на кривой компромисса. Например, откладывание восстановления до тех пор, пока число остающихся работающими узлов не падает ниже 
+  определенного порога восстановления, как это было впервые предложено в одноранговой системе хранения TotalRecall [2], не 
+  является в крупномасштабных сценариях DSS. Мы предлагаем новую схему отложенного восстановления, которая делает возможным 
+  управление мелкого уровня поведением системы и достигает значительного снижения пропускной способности за счет относительно 
+  небольшого снижения в надежности и доступности данных.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Реалистичная оценка нашей схемы требует оценку его воздействия на надежность, доступность и 
+  пропускную способность в DSS масштаба Петабайт на протяжении нескольких лет работы. Осуществление такой оценки в реальной системе 
+  невозможно. Таким образом мы реализовали подробную распределенную модель хранения — <em>ds-sim</em>  (detailed distributed storage 
+  simulator, доступен для загрузки по адресу <a href="https://code.google.com/p/ds-sim">https://code.google.com/p/ds-sim</a>), 
+  которая имитирует долгосрочное поведение стационарной DSS. Модель принимает в качестве входных данных настройку системы и 
+  кодирование данных, а также схему восстановления и дальше работает моделируя сбои в основных областях отказов 
+  (диск, машина, стойка) скрытых отказов блоков, замены машины, а также приводит в действие глобальные ограничения сети.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Мы смоделировали 3ПБ систему используя распределения отказов и восстановлений из реальных 
+  трассировок отказов крупномасштабных вычислительных кластеров [30], а также из публикаций, характеризующих промышленные 
+  среды [7, 9, 30, 31, 23]. Мы оценили различные популярные схемы кодирования затирания и показали, что наши механизмы отложенного 
+  восстановления способны значительно снизить полосу пропускания восстановления. Например, полоса пропускания восстановления 
+  кодов RS(14,10) уменьшается в 4 раза, даже ниже уровня методов с тремя репликациями. Кроме того, отложенное восстановление 
+  хорошо работает в сочетании с недавно предложенными кодами локального восстановления (LRC, locally-repairable codes) [25, 18], 
+  еще больше понижая их полосу пропускания до половины значения.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Основной вклад данной статьи состоит в :</p>
+  <ul style="visibility: visible;"><li>
+   Новом механизме, который позволяет значительно уменьшать полосу пропускания восстановления в хранилищах с кодом затирания 
+   и разработан для крупномасштабных DSS.<li>
+   Подробной модели DSS <em>ds-sim</em>  для оценки долгосрочных требований к надежности, доступности и полосы пропускания восстановления 
+   для различных схем хранения. <em>ds-sim</em>  моделирует правдоподобные сценарии отказов, такие как коррелированные поломки, скрытые 
+   отказы дисковых блоков и замена оборудования.<li>
+   Оценкe потребностей в полосе пропускания различных систем хранения с применением собранных в течение длительных периодов 
+   трассировок и распределений отказов в промышленных крупномасштабных системах хранения.
+  </ul>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Оставшаяся часть данной статьи организована следующим образом. В следующем разделе мы приводим 
+  обзор кодирования затирания и связанных с этим проблем пропускной способности восстановления. Мы детально описываем схему 
+  отложенного восстановления в разделе 3, представляем нашу модель распределенного хранилища в разделе 4, а оценку отложенного 
+  восстановления в разделе 5. Раздел 6 описывает связанные работы, а раздел 7 содержит выводы.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">2. Коды затирания и проблема пропускной способности восстановления</h4>
+  <p style="visibility: visible;">В данном разделе мы вкратце объясним использование кодов затирания в DSS на примере кодов 
+  Рида- Соломона, а затем объясним проблему полосы пропускания восстановления. В системе хранения RS(n,k) каждое множество 
+  <em>k</em> блоков данных размера <em>b</em> кодируется в <em>n</em> блоков размера <em>b</em>, создавая отдельную полосу 
+  (stripe) данных. Каждая полоса содержит <em>k систематических</em> блоков, которые хранят начальные данные содержимого и <em>n-k</em> 
+  дополнительных блоков соответствия по модулю. О методе хранения с тремя репликациями можно говорить как о тривиальной 
+  форме RS кодирования с <em>k</em> = 1 и <em>n</em> = 3. {<em>Прим.пер.: в <a href="SHEC.htm#def">Драночном коде затирания</a> 
+  SHEC(k<sub>1</sub>,m,l) каждый блок из множества <strong>k</strong> систематических блоков разбивается на <strong>k<sub>1</sub></strong>
+  порций данных размера <strong>b/k<sub>1</sub></strong> и кодируется <strong>m</strong> порциями соответствий по модулю размера 
+  <strong>l*b/k<sub>1</sub></strong>, сдвигающимися друг относительно друга подобно гонтовым пластинам на драночной крыше, 
+  также создавая отдельную полосу данных, в рамках которой может осуществляться восстановление.</em>} Блоки из каждой полосы 
+  распределяются по <em>n</em> различным узлам хранения для обеспечения максимальной устойчивости к отказам. При отсутствии сбоев 
+  начальные данные могут получаться <em>без</em> дополнительного декодирования посредством чтения содержимого соответствующих 
+  систематических блоков. Однако, если один или более систематических блоков недоступен, полоса называется <em>деградировавшей</em>. 
+  Содержимое утраченных блоков может быть восстановлено из любых <em>k</em> блоков полосы с продолжающих работу узлов.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Как и в системах хранения с репликациями, содержание отказавших узлов должно быть восстановлено 
+  во избежание возможной потери данных. Процесс восстановление предъявляет значительные требования к пропускной способности 
+  сети и может создавать значительную нагрузку даже при отсутствии внешних запросов ввода/ вывода. Реконструкция одного блока 
+  данных требует чтения значений всей полосы данных (<em>k</em> блоков). Это приводит к кратному <em>k</em> раздуванию полосы 
+  пропускания, т.е. восстановление <em>b</em> байт требует передачи <em>b * k</em> байт данных. Сравните это с репликациями: 
+  восстановление утраченного блока (реплики) требует чтения только одного блока. <em>Наша цель заключается в создании стационарных 
+  требований к полосе пропускания хранилищ с кодированием затирания соразмерную с полосой, необходимой хранилищам с репликациями 
+  при сохранении преимуществ отказоустойчивости кодирования затирания.</em></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В оставшейся части статьи мы определим полосу как <em>надежную</em> если достаточное число 
+  ее блоков остается в рабочем состоянии (даже если они автономны) так, что данных в полосе могут быть восстановлены. С другой 
+  стороны полоса считается <em>доступной</em>, если все ее систематические блоки подключены так, что для чтения полосы не 
+  требуется никакая реконструкция.</p>  
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В следующем разделе мы покажем как отложенное восстановление ограничивает полосу пропускания 
+  процесса восстановления при сохранении высокой надежности и доступности хранилища с кодированием затирания.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">3. Отложенное восстановление</h4>
+  <p style="visibility: visible;">Основная идея, лежащая в основе схемы отложенного восстановления, заключается в уменьшении 
+  скорости восстановления, тем самым снижая необходимую для этого пропускную способность сети, но без существенного влияния на 
+  надежность. Рисунок 1 предоставляет интуитивное понимание, стоящее за этим подходом. График показывает вероятность одного блока 
+  данных на протяжении 10 лет — количественной меры надежности данных, хранящихся в DSS — как функции скорости восстановления 
+  данных для схемы кодирования RS(14,10). Мы используем схему цепей Маркова, как и в работе [12], для получения графика. Хотя и 
+  хорошо известно, что Марковские модели раздувают значения среднего времени потери данных (MTTDL, Mean-Time-To-Data Loss), они 
+  все-таки полезны для качественного анализа поведения системы [12]. Этот простой эксперимент подчеркивает убывающую отдачу от 
+  возрастающей скорости восстановления по мере того, как система становится более надежной: вероятность потери одного блока 
+  10<sup>-19</sup> в течение 10 лет, действительно, в 10 раз выше 10<sup>-20</sup>, однако это может сохранить половину сетевого 
+  обмена восстановления все же остающегося достаточным для практических целей.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure1lr.jpg" class="internal default" style="width: 424px; height: 237px; max-width: 748px;" src="figures/Figure1lr.jpg" height="424px" width="237px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 1 &nbsp;Теоретический компромисс между надежностью и скоростью восстановления</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Основная задача, однако, заключается в <em>разработке практического механизма для использования 
+  этого компромисса в реальной системе</em>.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <h6 style="visibility: visible;" class="editable"><em>Схема I. Отложенное восстановление для всех.</em></h6>
+  <p style="visibility: visible;">Одно из возможных решений вдохновлено работой, выполненной в контексте одноранговых (P2P) 
+  сетей хранения [22,2], заключается в откладывании восстановления отказавших блоков до тех пор, пока число доступных блоков 
+  не достигнет заданного порога восстановления <em>r</em>. Например, для RS(15,10) и <em>r</em> = 13 система будет ожидать 
+  двух откахавших блоков в полосе до переключения на восстановление полосы. Интуитивно есть ощущение, что вероятность 
+  безвозвратной потери данных с применением отложенного восстановления, использующего кодирование RS(15,10) должна быть 
+  примерно равна вероятности начального RS(14,10) с энергичным восстановлением, поскольку обе схемы восстановления включаются 
+  когда остаются рабочими 13 блоков.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Отсрочка восстановления дает два преимущества: во- первых мы можем восстановить два блока почти 
+  по той же стоимости сетевых ресурсов, что и при восстановлении одного — для восстановления одного блока следует считать десять 
+  и записать один (итого 11× полоса пропускания для восстановления), в то время как для восстановления двух блоков все еще 
+  необходимо читать 10, а записать два (итого 12× полоса пропускания, или 6× амортизированная полоса пропускания на восстановление); 
+  во- вторых, если блок недоступен из-за временного события, например, отказа сети, задержка в его восстановлении дает этому событию 
+  больше времени для прихода в себя (т.е. пока не восстановится подключение к сети) и, таким образом, избежать избыточных 
+  ремонтных работ.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Базовая схема отложенного восстановления может показаться аналогичной стандартной практике 
+  задержки восстановления вышедших из строя узлов на фиксированный промежуток времени (обычно 15 минут [9]), чтобы избежать 
+  не нужного ремонта коротких временных отказов. Основная разница, однако, что схема с отсрочкой не передает никаких данных 
+  пока не понадобится восстановление, вне зависимости от того, сколько времени прошло после отказа, а затем восстанавливает 
+  несколько блоков в пакете, тем самым заведомо передавая меньше блоков по сравнению со стандартной схемой задержки восстановления.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure2lr.jpg" class="internal default" style="width: 458px; height: 238px; max-width: 748px;" src="figures/Figure2lr.jpg" height="458px" width="238px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 2 &nbsp;Влияние отложенного восстановления на среднее количество деградировавших порций для RS(15,12).
+  Выделенные точки обозначают случаи, в которых включается восстановление после <em>r</em> отказов (простое откладывание) 
+  и когда непрерывно возникающие отказы всегда имеют более высокий приоритет (откладывание с приоритетом).</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Отложенное восстановление было первоначально предложено в контексте одноранговой системы 
+  хранения TotalRecall, однако оказался недостаточно эффективным для DSS. Наше моделирование показывает (Рисунок 2), что 
+  снижение порогра восстановления на единицу может резко увеличить количество деградировавших полос. Например, для схемы RS(15,10), 
+  установка порога восстановления <em>r</em> = 12 дает в результате то, что примерно 30% от всех полос хранения должны 
+  всегда деградировать. С другой стороны, увеличение порога до <em>r</em> = 13 помогает понизить число деградировавших полос 
+  но перемещает систему непосредственно в другую крайность функции компромисса (Рисунок 2), теряя все свои запасы пропускной 
+  способности.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Схема II. Отложенное восстановление только для временных отказов.</em></h6>
+  <p style="visibility: visible;">Неэффективность Схемы I связана с тем, что деградировавшие в результате окончательных отказов 
+  полосы остаются деградировавшими без ремонта слишком долго (поскольку разрушившийся жесткий диск никогда не будет восстанавливаться 
+  самостоятельно, в то время как временные отказы в конечном итоге восстановятся даже без явного процесса восстановления). 
+  Следовательно, мы должны улучшить нашу схему с тем, чтобы она различала окончательные отказы диска от временных отказов машин: 
+  в случае окончательного отказа запускается процесс восстановления, как только он обнаружен, в то время как временный отказ 
+  обслуживается с отсрочкой. В управляемой среде, такой как центр обработки данных, существует достаточно информации чтобы 
+  отличать постоянные события подобные замене оборудования от временных событий, таких как аварийный отказ машины, перезапуск или 
+  обновление программного обеспечения.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Разделение политик восстановления на окончательные и временные отказы улучшает эффективность 
+  начального подхода отсрочки. Однако, как мы видим на Рисунке 2, эта схема до сих пор не способна обеспечить точное управление 
+  выбором рабочей точки функции компромисса.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Схема III. Порог динамичного восстановления.</em></h6>
+  <p style="visibility: visible;">Схема II может быть улучшена путем динамической регулировки политики восстановления в зависимости от 
+  состояния системы в целом. Мы введем лимит по всей системе на число деградировавших полос с окончательно потерянными блоками. 
+  Всякий раз, когда число окончательных отказов превышает установленный предел, мы временно повышаем порог восстановления на всю 
+  систему до тех пор, пока не уменьшится число таких полос. Заметим, что обеспечение общесистемных пределов применение глобальных 
+  изменений политик подобное используемым в данной схеме может быть эффективно осуществлено в централизованно управляемой, хорошо 
+  обслуживаемой DSS, однако может оказаться не реализуемым в гораздо менее управляемой одноранговой среде хранения.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В дальнейшем мы вначале опишем свою методологию оценки, а затем представим результаты, 
+  демонстрирующие эффективность этой улучшенной схемы с отложенным восстановлением.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">4. Методология оценки</h4>
+  <p style="visibility: visible;">Оценка эффективности отложенного восстановления в отношении снижения полосы пропускания 
+  восстановления и его причастности к доступности и надежности представляет собой большую проблему. Неразумно запускать 
+  прототип и замерять его показатели, поскольку потребуется большое число машин для работы на протяжении многих лет для 
+  получения статистически значимого результата.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Как это принято при исследовании других систем хранения, [20, 9, 25], мы применяем комбинацию 
+  симуляции и моделирования с одной стороны,мы строим симулятор <em>ds-sim</em> для оценки того, как полоса пропускания 
+  восстановления и доступность зависят от комбинации событий отказов, настройки аппаратных средств, схемы кодирования и 
+  стратегии восстановления. С другой стороны, чтобы перехватывать неустранимые события потери данных, которые являются крайне 
+  редкими, в особенности для кодов затирания, мы используем модель Марковской цепи для сравнения надежности различных схем 
+  кодирования.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h5 style="visibility: visible;" class="editable">4.1. Моделирование для оценки полосы пропускания и доступности</h5>
+  <p style="visibility: visible;"><em>ds-sim</em> имитирует поведение системы в течение нескольких лет. Например, в нашем 
+  моделировании мы воспользовались одним десятилетием. Входные данные содержат спецификации конфигурации аппаратуры, 
+  такие как размеры дисков и емкость общей сетевой среды, статистические свойства отказов и восстановления размещенных 
+  компонентов исследуемой системы хранения, а также схему кодирования данных. Симулятор возвращает стационарные и 
+  мгновенные значения использования полосы пропускания сети, число деградировавших полос, количество окончательно утраченных 
+  блоков, а также различные другие свойства динамической системы.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure3lr.jpg" class="internal default" style="width: 324px; height: 204px; max-width: 748px;" src="figures/Figure3lr.jpg" height="324px" width="204px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 3 &nbsp;Модель распределенной системы хранения</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><em>ds-sim</em> состоит из четырех основных строительных блоков (Рисунок 3):</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Конфигурация системы хранения.</em></h6>
+  <p style="visibility: visible;"><em>ds-sim</em> имитирует обычно используемую трех-уровневую древовидную структуру компонентов 
+  системы хранения, содержащую <em>стойки</em>, <em>машины</em> и <em>диски</em>. Каждый компонент верхнего уровня может иметь 
+  множество компонентов нижнего уровня в качестве потомков. Если отказывает родительский компонент, все его потомки помечаются 
+  как недоступные, эффективно имитируя отказы в отдельной области сбоя.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Имитация схемы хранения.</em></h6>
+  <p style="visibility: visible;">Как и в реальной системе, данные хранятся в <em>блоках</em> [10, 28, 3]. Множество блоков 
+  формирует <em>полосу</em> (stripe). Данные внутри каждой полосы либо реплицируются, либо кодируются затиранием: для <em>n-</em> 
+  репликаций полоса охватывает все реплики блока; для RS(<em>n,k</em>) схемы кодирования полоса охватывает <em>k</em> начальных 
+  блоков и <em>n-k</em> блоков соответствия по модулю. <em>ds-sim</em> случайным образом выбирает <em>n</em> стоек для хранения 
+  <em>n</em> блоков полосы в различных областях отказа, следуя обычной практике в промышленных установках [9].</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Генерация событий отказов.</em></h6>
+  <p style="visibility: visible;"><em>ds-sim</em> создает события отказов и восстановления для каждого компонента аппаратуры 
+  используя либо синтетическое распределение вероятности, либо трассировку отказов. Некоторые события, например отказы машин, 
+  создаются автономно до начала моделирования, однако другие, например, события отложенного восстановления, зависят от 
+  динамического поведения системы и создаются во время осуществления имитации. Мы подключаем отдельные распределения 
+  отказов и восстановлений для каждого компонента хранилища: диска, машины и стойки.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <ul style="visibility: visible;"><li>
+   <em>Отказы диска:</em> Включают в себя как скрытые отказы так и окончательный выход из строя дисков. Скрытые отказы 
+   повреждают сектор диска случайным образом, оказывая воздействие на отдельный блок данных. Они могут быть обнаружены и 
+   восстановлены в течение периодических чтений всего содержимого диска, техника, называющаяся очищающей (scrubbing) [7, 9]. 
+   Окончательные отказы диска предполагаются невосстановимыми, окончательно разрушающими все блоки на диске.<li>
+   <em>Отказы машины:</em> Содержат временные отказы (которые не разрушают дисковые компоненты) и окончательные отказы (которые 
+   также выводят изстроя дисковые компоненты). Временные отказы обычно приписываются замедлению сети или обслуживанию.
+   Окончательные поломки представляют собой обновление оборудования сервера, которое, в соответствии с отчетами, происходит 
+   один раз в три года [8]. Поэтому восстановление после окончательной поломки машины  предполагается начать сразу после 
+   отказа. В то время как восстановление после временного сбоя машины начинается после наперед заданной временной задержки, 
+   например, 15 минут [9], если так диктует политика отложенного восстановления.<li>
+   <em>Отказы стойки:</em> Считаются временными (т.е. они не разрушают компоненты серверов).  
+  </ul>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Хотя мы и не имитируем в явном виде коррелированные отказы для каждого компонента в отдельности, 
+  основные области отказов моделируются с использованием компонентов верхнего уровня, вызывающе сбои всех содержащихся в них 
+  компонентов.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Обратите внимание, что <em>ds-sim</em> позволяет пользователям определять различные модели или 
+  параметры различным группам компонентов. Например, одна группа дисков может быть настроена как двухлетняя, в то время как 
+  другая группа может быть настроена как новая, следовательно, они могут иметь разные частоты отказов.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Моделирование выполнения.</em></h6>
+  <p style="visibility: visible;">Наконец, путем комбинирования всей перечисленной выше информации, <em>ds-sim</em> выполняет 
+  имитацию работы, записывая все мгновенные свойства системы, содержащие полосу пропускания и число деградировавший полос.
+  Обратите внимание, что <em>ds-sim</em> не предназначен для оценки производительности чтения или записи системы. Симулятор 
+  отслеживает каждыйблок в системе. Полоса, к которой принадлежит блок помечается как доступная, недоступная, деградировавшая 
+  или утраченная, в зависимости от состояния ее соответствующих блоков и моделируемой системы хранения. Для схем с <em>n</em>- 
+  репликациями деградировавшее состояние не имеет значения, поскольку полоса либо доступна пока хотя бы один блок подключен, 
+  либо недоступна в противоположном сучае. Для для схемы с кодом затирания RS(<em>n,k</em>) полоса помечается как 
+  деградировавшая, если существует меньше чем <em>n</em> блоков и недоступной или утраченной, если существует меньше <em>k</em> 
+  блоков.</p>
+
+  <h5 style="visibility: visible;" class="editable">4.1. Марковская модель для оценки надежности</h5>
+  <p style="visibility: visible;"><em>ds-sim</em> может быть использована для оценки надежности исследуемой системы. Однако, было 
+  обнаружено [12], что события потери надежности для схем кодирования затирания происходят настолько редко, что моделирование 
+  требует очень большого числа итераций для получения статистически значимого результата. Таким образом для получения результатов 
+  надежности мы обращаемся к Марковской модели [13]. По сравнению с моделированием, Марковские модели известны как раздувающие 
+  абсолютные значения надежности, однако они полезны для целей сравнения [14].</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Вы воспользуемся стандартной параллельной моделью восстановления для репликаций и кодов 
+  затирания [12]. Отложенное восстановление моделируется удалением переходов восстановления из состояний, которые имеют 
+  больше доступных порции восстановления, чем установленное для порога восстановления значение. Рисунок 4 представляет схему 
+  отложенного восстановления с четырьмя узлами соответствия по модулю и задержкой восстановления до отказа трех узлов. Метки 
+  состояний представляют число отказавших узлов. Обратите внимание, что такой подход не учитывает динамичный рост порога 
+  восстановления в нашей реальной схеме.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure4lr.jpg" class="internal default" style="width: 364px; height: 142px; max-width: 748px;" src="figures/Figure4lr.jpg" height="364px" width="142px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 4 &nbsp;Марковская модель для оценки надежности отложенного восстановления, допускает три 
+  не восстановленных отказа.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Вооружившись <em>ds-sim</em> и Марковской моделью мы теперь выполним оценку эффективности 
+  нашей схемы отложенного восстановления.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">5. Результаты</h4>
+  <p style="visibility: visible;">Мы выполнили имитацию хранилища 3ПБайт данных работающего на протяжении десятилетия.
+  Рисунок 6 описывает все смоделированные нами отказы и списки наших выборов параметра модели отказа, а также их источники. 
+  <em>W(γ, λ, β)</em> обозначает <a href="http://www.aup.ru/books/m155/4_15.htm">распределение Вейбулла</a>, а
+  <em>Exp(λ)</em> Обозначает экспоненциальное распределение. Рисунок 5 приводит перечень используемых нами параметров системы 
+  хранения. Мы задаем следующий вопрос:<em>Насколько эффективной является наша схема отложенного восстановления в управляемой
+  полосе пропускания процесса восстановления? и каково ее влияние на доступность и долговечность данных?</em> </p>
+  <p style="visibility: visible;">&nbsp;</p>
+   <table style="border: thin solid; align=center;" align="center" cellspacing="0" cellpadding="0" width="500"><tbody>
+  <tr>
+   <td width="60%" style="border: thin solid; align=center;"><strong>Параметр</strong>
+   <td width="40%" style="border: thin solid; align=center;"><strong>Значение</strong>
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Общий объем данных
+   <td style="border: thin solid; align=center;">3 ПБайт
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Емкость диска
+   <td style="border: thin solid; align=center;">750 ГБайт
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Дисков в машине
+   <td style="border: thin solid; align=center;">20
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Машин в стойке
+   <td style="border: thin solid; align=center;">11
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Доступная для восстановления <br />полоса пропускания
+   <td style="border: thin solid; align=center;">650 ТБайт/ день [5]
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Длительность
+   <td style="border: thin solid; align=center;">10 лет
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Число итераций
+   <td style="border: thin solid; align=center;">25 000
+  </tr></tbody></table>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 5 &nbsp;Параметры моделирования.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <table style="border: thin solid; align=center;" align="center" cellspacing="0" cellpadding="0" width="700"><tbody>
+  <tr>
+   <td width="20%" style="border: thin solid; align=center;"><strong>Тип отказа</strong>
+   <td width="20%" style="border: thin solid; align=center;"><strong>Следствие</strong>
+   <td width="30%" style="border: thin solid; align=center;"><strong>MTBF</strong>
+   <td width="30%" style="border: thin solid; align=center;"><strong>MTTR</strong>
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Скрытая ошибка
+   <td style="border: thin solid; align=center;">Разрушенная порций
+   <td style="border: thin solid; align=center;">Exp(1/1год) [7]
+   <td style="border: thin solid; align=center;">W(6, 1000, 3) [7] (очистки)
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Отказ диска
+   <td style="border: thin solid; align=center;">Потеря порций
+   <td style="border: thin solid; align=center;">W(0, 52лет, 1.12) [7]
+   <td style="border: thin solid; align=center;">W(36s, 108s, 3) [31]
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Отказ машины
+   <td style="border: thin solid; align=center;">Недоступность порций
+   <td style="border: thin solid; align=center;">Exp( 1/ 0.331года ) [9], трассировки [30]
+   <td style="border: thin solid; align=center;">GFS traces [23]
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Потеря машины
+   <td style="border: thin solid; align=center;">Потеря порций
+   <td style="border: thin solid; align=center;">0.008%/месяц [31]
+   <td style="border: thin solid; align=center;">Основано на потоке запасных частей
+  </tr><tr>
+   <td style="border: thin solid; align=center;">Отказ стойки
+   <td style="border: thin solid; align=center;">Недоступность порций
+   <td style="border: thin solid; align=center;">Exp(1/10лет) [9]
+   <td style="border: thin solid; align=center;">W(10часов, 24часов, 1) [23]
+  </tr></tbody></table>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 6 &nbsp;Модели отказов компонентов системы хранения.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Рисунки 7 и 8 отвечают на оба вопроса. Они сравнивают некоторые представительные схемы систем 
+  хранения по представляющим интерес параметрам. Метки для отложенных схем строятся как <em>n-k-r</em>, где <em>(n, k)</em> определяет 
+  схему кодирования, а <em>r</em> порог восстановления. Рассматриваемыми нами схемами- соискателями являются: схема с тремя 
+  репликациями, оригинальная RS(14,10), RS(14,10) с отложенным восстановлением (<em>14-10-12</em>), а также RS(15,10) с отложенным 
+  восстановлением (<em>15-10-12</em>).</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Мы также сравниваем отложенное восстановление с двумя недавно предложенными схемами кодирования 
+  затирания с эффективным восстановлением: <em>Xorbas(16,10,12)</em> [27] и <em>Azure(16,12,14)</em> [18]. Наконец, мы скомбинируем 
+  эти кодыэффективного восстановления с отложенным восстановлением (Xorbas+LAZY), (Azure+LAZY), установив порог восстановления 
+  взначения 12 и 14 соответственно.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Все результаты нормализованы по отношению к схеме с тремя репликациями. Значение, помечающее 
+  каждую вершину группы столбиковых диаграмм показывает действительное значение схемы с репликациями.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  
+  <p style="visibility: visible;"><img alt="figure7lr.jpg" class="internal default" style="width: 514px; height: 371px; max-width: 748px;" src="figures/Figure7lr.jpg" height="514px" width="371px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 7 &nbsp;Требования хранилища и полоса пропускания отложенного восстановления в сравнении с 
+  схемами без задержек.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Из Рисунка 7 мы видим, что схемы отложенного восстановления дают 4x уменьшение в полосе 
+  пропускания восстановления в сравнении с базовым кодом затирания, причем 70% этого сохранения приходят от маскирования временных 
+  отказов, в то время как оставшиеся 30% из амортизации восстановления блоков (это разделение не показано на рисунке). В этом 
+  отношении мы превосходим схемы кодирования эффективного восстановления Azure и Xorbas более чем в два раза. На самом деле мы 
+  даже превосходим схему с полными репликациями, которая, будучи менее надежной (и не допускающей задержек) испытывает болшее 
+  число событий восстановления. Отметим, что вычисленная средняя пропускная способность восстановления примерно в 4 раза ниже, 
+  чем сообщает Facebook [26], в частности, по той причине, что размер DSS Facebook примерно на 50% больше размера моделируемой 
+  DSS. Однако точный размер в статье не указан и мы делаем его оценку с применением других публикаций о DSS Facebook [27].</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Воздействие отложенного восстановления на надежность и доступность показано на Рисунке 8. 
+  Во- первых, мы сравним часть деградировавших данных в каждой из схем- претендентов. Мы видим, что отложенное восстановление 
+  увеличивает эту часть более чем на два порядка в сравнении со схемой с тремя репликациями. Однако, когда мы сравниваем эту 
+  часть с RS(14,10), мы видим увеличение только в 2 раза, с 0.1% до 0.2%. Вполне возможно, что незначительные потери доступности 
+  должны привести к деградации 0.2% холодных данных. В отношении вероятности потери данных мы наблюдаем более существенное 
+  влияние. Тем не менее, они по- прежнему на два порядка лучше чем в системах хранения с репликациями. Кроме того, фактическое 
+  изменение надежности также зависит от схемы кодирования. Например, для Xorbas+LAZY вероятность потери данных только в 6 × выше 
+  чем в оригинальной схеме Xorbas.</p>
+
+  <p style="visibility: visible;"><img alt="figure8lr.jpg" class="internal default" style="width: 517px; height: 371px; max-width: 748px;" src="figures/Figure8lr.jpg" height="517px" width="371px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 8 &nbsp;Вероятность потери данных, недоступности данных и части деградировавших полос отложенного 
+  восстановления в сопоставлении со схемами без задержек.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <p style="visibility: visible;">Рисунок 9 показывает, что сохранение полосы пропускания, которое мы предсказываем с применением 
+  нашей модели отказов даже более скромное, чем мы получаем с применением реальных данных трассировок [30]. Мы применяем 
+  трассировку 19 и 20 из репозитория CFDR  для наполнения генератора событий отказов <em>ds-sim</em>. Каждая строка на рисунке 
+  представляет одну трассировку. Как мы можем видеть, здесь отложенное восстановление достигает значительной экономии полосы 
+  пропускания восстановления, до 20 × для схемы (15-10-12), при всего двукратном увеличении количества деградировавших полос.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <table style="border: thin solid; align=center;" align="center" cellspacing="0" cellpadding="0" width="700"><tbody>
+  <tr>
+   <td width="30%" style="border: thin solid; align=center;"><strong>&nbsp;</strong>
+   <td width="20%" style="border: thin solid; align=center;"><strong>14-10-13</strong>
+   <td width="25%" style="border: thin solid; align=center;"><strong>14-10-12</strong>
+   <td width="25%" style="border: thin solid; align=center;"><strong>15-10-12</strong>
+  </tr><tr>
+   <td style="border: thin solid; align=center;"><strong>P (деградировавших)</strong>
+   <td style="border: thin solid; align=center;">0.006<br />0.006
+   <td style="border: thin solid; align=center;">0.011 (x1.6)<br />0.010 (x1.9)
+   <td style="border: thin solid; align=center;">0.012 (x1.8)<br />0.012 (x1.8)
+  </tr><tr>
+   <td style="border: thin solid; align=center;"><strong>Полоса пропускания восстановления<br />ТБайт/день</strong>
+   <td style="border: thin solid; align=center;">51<br />43
+   <td style="border: thin solid; align=center;">4.1 (x12)<br />3.2 (x13)
+   <td style="border: thin solid; align=center;">2.5 (x20)<br />2.3 (x18)
+  </tr></tbody></table>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 9 &nbsp;Оценка отложенного восстановления с применением трассировки. Значение в скобках является 
+  улучшением по сравнению с RS(14,10)</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+ 
+  <h4 style="visibility: visible;" class="editable">6. Связанные работы</h4>
+  <p style="visibility: visible;">Кодирование затирания в целом и оптимизация полосы пропускания в частности имеют богатый 
+  список литературы; мы представляем здесь краткий обзор каждого раздела и объясняем какнаше решение вписывается в их контекст. 
+  Затем мы закрываем данный раздел описанием предыдущих применений отложенного восстановления в системах хранения.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Кодирование затирания в системах хранения..</em></h6>
+  <p style="visibility: visible;">Схемы с кодированием затиранием были приняты как для промышленных, так и для исследовательских 
+  систем хранения [23, 18, 17, 22, 2, 16, 1] благодаря их доказанному компромиссу оптимальное хранение — надежность. Из них 
+  наиболее широко используются коды Рида- Соломона; однако, при наличии отказавших узлов, они требуют на порядок бОльшую полосу 
+  пропускания по сравнению со схемами восстановления с репликациями. Чтобы решить эту проблему последние системы [5, 18, 26] 
+  повернулись лицом к эффективным в отношении полосы пропускания кодам затирания, как мы опишем далее.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Эффективные в отношении полосы пропускания коды затирания..</em></h6>
+  <p style="visibility: visible;">Для оптимизации полосы пропускания процесса восстановления были предложены новые коды 
+  затирания: коды регенерации [6] достигают теоретически оптимальной полосы пропускания восстановления для зоны охвата заданного 
+  хранилища, однако в настоящее время они непрактичны, поскольку требуют расщепления данных на экспоненциальное количество 
+  порций [29]. Последняя работа [19] описывает применение кодов с эффективной полосой пропускания для распределенного хранилища, 
+  однако она требует вдвое бОльшего хранилища при уменьшении полосы пропускания наполовину. Другой набор кодов, примененный в 
+  Facebook Xorbas [5, 27], снижает требования к полосе пропускания в два раза для первого отказа с примерно 15% дополнительной 
+  стоимостью хранения. Коды локального восстановления (LRC, Local Reconstruction Codes) [18] в системе хранения Windows Azure 
+  используют дополнительные блоки соответствия по модулю, построенные с применением подмножества систематических блоков, что 
+  делает возможным в среднем выполнение восстановления с меньшим числом чтений. Коды Piggiback [26] предлагают элегантную схему, 
+  которая уменьшает полосу пропускания восстановления на 25%.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Вместо разработки новых схем кодирования наша работа направлена на уменьшение полосы пропускания 
+  процесса восстановления путем откладывания восстановления до того момента времени, когда оно действительно необходимо. Мы 
+  полагаем, что такой подход является ортогональным к выбору схемы кодирования и может быть объединен с любой схемой для 
+  обеспечения лучшего использования полосы пропускания. Например, как мы уже показали в оценке, это эффективно как для кодов 
+  Рида- Соломона так и для кодов с эффективной полосой пропускания, подобным кодам Xorbas(16,10) и Azure(16,12).</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Еще одна идея дополняющая нашу работу заключается в оптимизации восстановления путем сведения 
+  к минимуму количества избыточной информации, считываемой с разных узлов [20].</p>
+
+  <h6 style="visibility: visible;" class="editable"><em>Отложенное восстановление в системах хранения.</em></h6>
+  <p style="visibility: visible;">Отложенное восстановление не является новой идеей в системах хранения данных. TotalRecall [2] 
+  представило идею об отложенном восстановлении в одноранговых хранилищах. Giroire и др. [11] показали как настроить 
+  частоту восстановления данных для одноранговых систем хранения.  Чун и др. [4] показали эффективность настройки скорости 
+  восстановления в системах хранения с репликациями в широкой области сетевых настроек. Насколько нам известно, наша работа 
+  впервые применила эту идею к схемам кодирования затирания в центрах обработки данных и выполнила ее оценку с правдоподобными 
+  моделями отказа для этих установок.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">7. Выводы</h4>
+  <p style="visibility: visible;">В данной статье мы показали, что наш изящное отложенное восстановление помогает амортизировать 
+  стоимсоть пропускной способности процесса восстановления, делая кодирование затирания жизнеспособной альтернативой для хранения 
+  холодных данных. Кроме того, мы продемонстрировали нелинейную по своей сути взаимосвязь между потребностями полосы пропускания 
+  восстановления и числом деградировавших полос и показали, что эта кривая требует аккуратного двойственного подхода для 
+  достижения желаемого снижения затрат на полосу пропускания при сохранении контроля над деградирующими полосами (и,следовательно, 
+  надежностью данных). Наша схема отложенного восстановления достигает этого путем динамической регулировки порогов восстановления 
+  для окончательных отказов в зависимости от состояния системы в целом при выполнении отложенного восстановления для временных 
+  отказов. Применив моделирование, мы показали, что эта схема снижает полосу пропускания восстановления в 4 раза для популярного 
+  кодирования Рида- Соломона 10 из 14 — сделав его совместимым с затратами схемы стремя репликациями — при сохранении высокого 
+  уровня надежности и доступности.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">6. Ссылки</h4>
+  <p style="visibility: visible;">&nbsp;[1] &nbsp; &nbsp; M. Abd-El-Malek, W. V. C. II, C. Cranor, G. R. Ganger, J. Hendricks, 
+  A. J. Klosterman, M. Mesnier, M. Prasad, B. Salmon, R. R. Sambasivan,S. Sinnamohideen, J. D. Strunk, E. Thereska, M. Wachs, 
+  and J. J. Wylie. Ursa minor: Versatile cluster-based storage. In <em>FAST</em>, 2005.</p>
+  <p style="visibility: visible;">&nbsp;[2] &nbsp; &nbsp; R. Bhagwan, K. Tati, Y.-C. Cheng, S. Savage, and G. M. Voelker. 
+  Total recall: System support for automated availability management. In <em>NSDI</em>, volume 4, pages 25–25, 2004.</p>
+  <p style="visibility: visible;">&nbsp;[3] &nbsp; &nbsp; B. Calder, J. Wang, A. Ogus, N. Nilakantan, A. Skjolsvold, S. McKelvie, 
+  Y. Xu, S. Srivastav, J. Wu, H. Simitci, J. Haridas, C. Uddaraju, H. Khatri, A. Edwards, V. Bedekar, S. Mainali, R. Abbasi, 
+  A. Agarwal, M. F. u. Haq, M. I. u. Haq, D. Bhardwaj, S. Dayanand, A. Adusumilli, M. McNett, S. Sankaran, K. Manivannan, 
+  and L. Rigas. Windows azure storage: a highly available cloud storage service with strong consistency. In <em>Proceedings 
+  of the Twenty-Third ACM Symposium on Operating Systems Principles</em>, SOSP’11, pages 143–157, New York, NY, USA, 2011. ACM.</p>
+  <p style="visibility: visible;">&nbsp;[4] &nbsp; &nbsp; B.-G. Chun, F. Dabek, A. Haeberlen, E. Sit, H. Weatherspoon, 
+  M. F. Kaashoek, J. Kubiatowicz, and R. Morris. Efficient replica maintenance for distributed storage systems. In 
+  <em>NSDI</em>, 2006.</p>
+  <p style="visibility: visible;">&nbsp;[5] &nbsp; &nbsp; A. Dimakis. Technical talk. 
+  <a href="http://ita.ucsd.edu/workshop/12/files/abstract/abstract_764.txt">http://ita.ucsd.edu/workshop/12/files/abstract/abstract_764.txt</a>.</p>
+  <p style="visibility: visible;">&nbsp;[6] &nbsp; &nbsp; A. G. Dimakis, P. B. Godfrey, Y. Wu, M. J. Wainwright, and 
+  K. Ramchandran. Network coding for distributed storage systems. <em>IEEE Trans. Inf. Theor.</em>, 56(9):4539–4551, Sept. 2010.</p>
+  <p style="visibility: visible;">&nbsp;[7] &nbsp; &nbsp; J. Elerath and M. Pecht. A highly accurate method for assessing 
+  reliability of redundant arrays of inexpensive disks (raid). </em>Computers, IEEE Transactions on</em>, 58(3):289 –299, march 2009.</p>
+  <p style="visibility: visible;">&nbsp;[8] &nbsp; &nbsp; Erasure Coding for Distributed Storage Wiki. 
+  <a href="http://csi.usc.edu/~dimakis/StorageWiki/doku.php">http://csi.usc.edu/~dimakis/StorageWiki/doku.php</a>.</p>
+  <p style="visibility: visible;">&nbsp;[9] &nbsp; &nbsp; D. Ford, F. Labelle, F. I. Popovici, M. Stokely, V.-A. Truong, 
+  L. Barroso, C. Grimes, and S. Quinlan. Availability in globally distributed storage systems. In <em>OSDI</em>, pages 61–74, 2010.</p>
+  <p style="visibility: visible;">[10] &nbsp; &nbsp; S. Ghemawat, H. Gobioff, and S.-T. Leung. The google file system. In 
+  <em>Proceedings of the nineteenth ACM symposium on Operating systems principles</em>, SOSP’03, pages 29–43, 
+  New York, NY, USA, 2003. ACM.</p>
+  <p style="visibility: visible;">[11] &nbsp; &nbsp; F. Giroire, J. Monteiro, and S. Perennes. Peer-to-peer storage systems: 
+  a practical guideline to be lazy. In <em>GlobeCom</em>, 2010.</p>
+  <p style="visibility: visible;">[12] &nbsp; &nbsp; K. Greenan. Reliability and power-efficiency in erasure-coded storage systems. 
+  <em>PhD thesis, UCSC</em>, 2009.</p>
+  <p style="visibility: visible;">[13] &nbsp; &nbsp; K. Greenan, E. L. Miller, and J. Wylie. Reliability of xor-based erasure 
+  codes on heterogeneous devices. In <em>Proceedings of the 38th Annual IEEE/IFIP International Conference on Dependable Systems and 
+  Networks (DSN 2008)</em>, pages 147–156, June 2008.</p>
+  <p style="visibility: visible;">[14] &nbsp; &nbsp; K. M. Greenan, J. S. Plank, and J. J. Wylie. Mean time to meaningless: 
+  Mttdl, markov models, and storage system reliability. In <em>Proceedings of the 2nd USENIX conference on Hot topics in storage 
+  and file systems</em>, HotStorage’10, pages 5–5, Berkeley, CA, USA, 2010. USENIX Association.</p>
+  <p style="visibility: visible;">[15] &nbsp; &nbsp; Hadoop Scalability at Facebook. 
+  <a href="http://download.yandex.ru/company/experience/yac/Molkov.pdf">http://download.yandex.ru/company/experience/yac/Molkov.pdf</a>.</p>
+  <p style="visibility: visible;">[16] &nbsp; &nbsp; A. Haeberlen, A. Mislove, and P. Druschel. Glacier: Highly durable, 
+  decentralized storage despite massive correlated failures. In <em>Proceedings of the USENIX Symposium on Networked Systems Design 
+  and Implementation (NSDI)</em>, 2005.</p>
+  <p style="visibility: visible;">[17] &nbsp; &nbsp; HDFS RAID .
+  <a href="http://wiki.apache.org/hadoop/HDFS-RAID">http://wiki.apache.org/hadoop/HDFS-RAID</a></p>
+  <p style="visibility: visible;">[18] &nbsp; &nbsp; C. Huang, H. Simitci, Y. Xu, A. Ogus, B. Calder, P. Gopalan, J. Li, 
+  and S. Yekhanin. Erasure coding in windows azure storage. In <em>USENIX ATC</em>, 2012.</p>
+  <p style="visibility: visible;">[19] &nbsp; &nbsp; Y. HuâĂă, H. C. H. Chenâ Ăă, P. P. C. Lee, and Y. Tang. 
+  Nccloud: Applying network coding for the storage repair in a cloud-of-clouds. In <em>FAST</em>, 2012.</p>
+  <p style="visibility: visible;">[20] &nbsp; &nbsp; Y. HuâĂă, H. C. H. Chenâ Ăă, P. P. C. Lee, and Y. Tang. Rethinking 
+  erasure codes for cloud file systems: Minimizing i/o for recovery and degraded reads. In <em>FAST</em>, 201.</p>
+  <p style="visibility: visible;">[21] &nbsp; &nbsp; R. T. Kaushik and M. Bhandarkar. Greenhdfs: towards an energy-conserving, 
+  storage-efficient, hybrid hadoop compute cluster. In <em>Proceedings of the 2010 international conference on Power aware computing 
+  and systems</em>, HotPower’10, pages 1–9, Berkeley, CA, USA, 2010. USENIX Association.</p>
+  <p style="visibility: visible;">[22] &nbsp; &nbsp; J. Kubiatowicz, D. Bindel, Y. Chen, S. Czerwinski, P. Eaton, D. Geels, 
+  R. Gummadi, S. Rhea, H. Weatherspoon, W. Weimer, C. Wells, and B. Zhao. OceanStore: An Architecture for Global-Scale Persistent 
+  Storage. In <em>Proceedings of the International Conference on Architectural Support for Programming Languages and Operating 
+  Systems (ASPLOS)</em>, 2000.</p>
+  <p style="visibility: visible;">[23] &nbsp; &nbsp; Large-Scale Distributed Systems at Google: Current Systems and Future  Directions. 
+  <a href="http://www.cs.cornell.edu/projects/ladis2009/talks/dean-keynote-ladis2009.pdf">http://www.cs.cornell.edu/projects/ladis2009/talks/dean-keynote-ladis2009.pdf</a>.</p>
+  <p style="visibility: visible;">[24] &nbsp; &nbsp; A. W. Leung, S. Pasupathy, G. Goodson, and E. L. Miller. Measurement and 
+  analysis of large-scale network file system workloads. In <em>USENIX 2008 Annual Technical Conference on Annual Technical 
+  Conference</em>, ATC’08, pages 213–226, Berkeley, CA, USA, 2008. USENIX Association.</p>
+  <p style="visibility: visible;">[25] &nbsp; &nbsp; D. S. Papailiopoulos, J. Luo, A. G. Dimakis, C. Huang, and J. Li. Simple 
+  regenerating codes: Network coding for cloud storage. <em>CoRR</em>, abs/1109.0264, 2011.</p>
+  <p style="visibility: visible;">[26] &nbsp; &nbsp; K. Rashmi, N. B. Shah, D. Gu, H. Kuang, D. Borthakur, and K. Ramchandran. 
+  A solution to the network challenges of data recovery in erasure-coded distributed storage systems: A study on the facebook 
+  warehouse cluster. In <em>USENIX HotStorage 2013</em>, 2013.</p>
+  <p style="visibility: visible;">[27] &nbsp; &nbsp; M. Sathiamoorthy, M. Asteris, D. Papailiopoulos, A. G. Dimakis, R. Vadali, 
+  S. Chen, and D. Borthakur. Xoring elephants: Novel erasure codes for big data. <em>Proceedings of the VLDB Endowment 
+  (to appear)</em>, 2013.</p>
+  <p style="visibility: visible;">[28] &nbsp; &nbsp; K. Shvachko, H. Kuang, S. Radia, and R. Chansler. The Hadoop Distributed 
+  File System. In <em>MSST</em>, 2010.</p>
+  <p style="visibility: visible;">[29] &nbsp; &nbsp; I. Tamo, Z. Wang, and J. Bruck. Mds array codes with optimal rebuilding. 
+  In <em>ISIT</em>, pages 1240–1244, 2011.</p>
+  <p style="visibility: visible;">[30] &nbsp; &nbsp; The computer failure data repository.
+  <a href="http://cfdr.usenix.org">http://cfdr.usenix.org</a>.</p>
+  <p style="visibility: visible;">[31] &nbsp; &nbsp; The Hadoop Distributed File System. 
+  <a href="http://www.aosabook.org/en/hdfs.html">http://www.aosabook.org/en/hdfs.html</a>.</p>
+  </div></div>
+    </div>
+    </div>
+</div>
+
+			<ul class="mt-pagination">
+			<li><a title="Previous" class="prev  " href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_Snapshots" onclick="">Previous</a>
+</li>
+			<li><a title="Next" class="next  " href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Towards_Ceph_Cold_Storage" onclick="">Next</a>
+</li>
+		</ul>
+    </div>
+	</div>
+    <!-- END Page Content -->
+
+	<!--START Right Tray -->
+	<div class="tray" id="tray">
+	<div class="trayframe">
+		<div class="mt-tray-header">
+			<!-- START Search field -->
+			<div class="mt-site-search">
+			    <form action="https://wiki.ceph.com/Special:Search">
+        <input name="search" placeholder="Search" class="search-field" type="text">
+        <input name="qid" id="mt-qid-skin" value="" type="hidden">
+        <input name="path" id="mt-search-path" value="" type="hidden">
+        <input name="fpid" id="mt-search-filter-id" value="781" type="hidden">
+        <input name="fpth" id="mt-search-filter-path" value="" type="hidden">
+        <input class="search-button" value="Search" type="submit">
+            </form>
+    			</div>
+			<!-- END Search field -->
+		</div>
+		<div class="traybody">
+						
+			<!-- START Page controls -->
+			<div class="section no-line" id="controls">
+				<ul class="page-controls">
+					<li class="nav-icon hide"><a title="" class="" href="#"></a>
+</li>
+            								<li class="pdf"><a title="Save as PDF" class=" page-pdf-export-launcher" href="https://wiki.ceph.com/@api/deki/pages/781/pdf/Shingled%2bErasure%2bCode%2b%28SHEC%29.pdf" onclick="" rel="nofollow">Save as PDF</a>
+</li>
+					<li class="email"><a title="Email page" class=" " href="mailto:?subject=Anonymous%20wants%20to%20share%20a%20link%20%7C%20Ceph%20Wiki&amp;body=Anonymous%20wants%20to%20share%20a%20link%20on%20Ceph%20Wiki%3A%20https%3A%2F%2Fwiki.ceph.com%2FPlanning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" onclick="">Email page</a>
+</li>
+				</ul>
+			</div>
+			<!-- END Page controls -->
+
+			<!-- START Social sharing -->
+						<!-- END Social sharing -->
+
+			<!-- START Page history -->
+			<div class="section" id="page-version-tags">
+				<div class="updated-label">Last modified</div> <div class="modified">03:22, 17 Feb 2015</div>			</div>
+			<!-- END Page history -->
+
+			<!-- START Home content -->
+						<!-- END Home content -->
+
+			
+			<!-- START Related articles -->
+			<div class="section" id="related">
+				<h2 style="visibility: visible;">Related Articles</h2>
+				<div class="noindex"><div class="mt-related-pages"><ul><li><a rel="internal" href="https://wiki.ceph.com/Planning/Blueprints/Hammer" title="Planning/Blueprints/Hammer">Hammer</a></li></ul></div></div>			</div>
+			<!-- END Related Articles-->
+			
+			 				<div class="section hide" id="site-hierarchy">
+					<!-- dynamically injected -->
+				</div>
+			
+			<!-- START Tags -->
+			<div class="tags section" id="anchor-tags">
+				<h2 style="visibility: visible;">Tags</h2>
+				<div id="live-tags-edit-area">
+					<script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Page.LiveTags.error.custom'] = 'Tag not found';aLt['Page.LiveTags.error.custom.detail'] = 'The tag you entered is not valid for the "{0}" tag type';aLt['Page.LiveTags.error.updating'] = 'Could not update tags for the following pages (check permissions):';aLt['Page.LiveTags.error.updating-failed'] = 'There was an error updating tags:';aLt['Page.LiveTags.error.skipped-showall'] = 'Show all';/*]]>*/</script><div class="live-tag-section" id="live-tag-normal-tags"><div id="live-tag-entries"><span class="live-tag-message">This page has no custom tags.</span></div></div>					<div class="br"></div>
+				</div>
+            </div>
+            <!-- END Tags -->
+
+            <!-- START Classifications -->
+            <div class="classifications section" id="classifications">
+                <h2 style="visibility: visible;">Classifications</h2>
+				<span class="live-tag-message">This page has no classifications.</span>            </div>
+            <!-- END Classifications -->
+
+		            <div class="custom-tray">
+                            </div>
+		</div>
+	</div>
+    </div>
+    <!--END Right Tray -->
+
+	<!--START Footer -->
+	<div class="mt-foot">
+	<ul class="mt-site-info">
+		<li class="last">© Copyright 2015 Ceph Wiki, Module-Project Ltd (перевод)</li>
+	</ul>
+	<div class="poweredBy"><a href="http://www.mindtouch.com/" class="mt-poweredby product " title="MindTouch 4 v.15.4" target="_blank">Powered by MindTouch <span class="mt-registered">®</span></a></div>	</div>
+
+	<script src="http://t1.extreme-dm.com/f.js" id="eXF-mdllazyr-0" async defer></script>
+	<!--END Footer -->
+</div>
+
+<script type="text/javascript">$(function(){$.getScript("https://cdn.mindtouch.us/f1.js",function(){});});</script>
+<div id="menuFiller"></div><div id="bodyHeight"></div>
+<script type="text/javascript">
+	(function($) {
+		$(function() {
+			if(Deki.Fonts.getFontElements().length <= 0) {
+				Deki.Fonts.setFontElements([ ".product-links .title a", "p", "h1", "h2", "h3", "h4", "h5", "h6", ".sub-guides .title", "pre.script-css", ".code", ".pre", "fieldset legend" ]);
+			}
+		});
+	})(jQuery);
+</script>
+<script type="text/javascript">/*<![CDATA[*/new Deki.Page(Deki.PageId).logPageView();/*]]>*/</script><script type="text/javascript">$(function(){Deki.Fonts.loadFonts();});</script><script type="text/javascript">Deki.CssPreview.getCustomCss('anonymous:custom-css-preview', 'CSS PREVIEW MODE', 'The CSS preview link is either invalid or has expired. Please close this browser window.');</script><script type="text/javascript">Deki.Stats={"stats":{"totals":{"api":"288.68","cache":"1.21","other":"77.01","elapsed":"366.89"},"requests":{"api":{"0":{"verb":"GET","path":"\/@api\/deki\/site\/settings?include=anonymous%2Clicense%2Cproperties&names=urn%3Aui.deki.mindtouch.com%23%2A%2Cmindtouch.prince.stylesheet%23%2A","time":"61.38","stats":"request-time-ms=50; cache-hit=4; cache-ratio=1.00; mysql-queries=3; mysql-time-ms=24.84; permission-hit=1; permission-ratio=1.00; role-hit=1; role-ratio=1.00; user-hit=2; user-ratio=1.00;"},"1":{"verb":"GET","path":"\/@api\/deki\/pages\/=Planning%252FBlueprints%252FHammer%252FShingled%2BErasure%2BCode%2B%2528SHEC%2529?mode=view&redirects=0&exclude=files%2Cinbound%2Coutbound&include=contents%2Cprevnext&Target%3Acedar-related-pages=Template%3AMindTouch%2FControls%2FRelatedPages&Target%3Acedar-tray-tips=Template%3AMindTouch%2FCedar%2FControls%2FTrayTips&Target%3Acedar-content-nav=Template%3AMindTouch%2FCedar%2FControls%2FContentNavigation&Target%3Acedar-page-summary-controls=Template%3AMindTouch%2FControls%2FPageOverviewEditor&Target%3Acedar-feedback-rating=Template%3AMindTouch%2FControls%2FFeedbackRating&Target%3Amt-live-tags=Template%3AMindTouch%2FControls%2FLiveTags&Target%3Acedar-side-tray=Template%3ACustom%2FViews%2FSidetray&Target%3Apagefooter=Template%3ACustom%2FViews%2FFooter&Target%3Apageheader=Template%3ACustom%2FViews%2FHeader","time":"215.14","stats":"request-time-ms=212; cache-hit=116; cache-miss=105; cache-ratio=0.52; hs-queries=25; hs-time-ms=23.20; mysql-queries=84; mysql-time-ms=76.27; page-hit=10; page-miss=34; pagenode-hit=23; pagenode-miss=23; pagenode-ratio=0.50; page-ratio=0.23; permission-hit=36; permission-miss=38; permission-ratio=0.49; ratings-miss=2; ratings-ratio=0.00; request-hit=1; request-miss=4; request-ratio=0.20; role-hit=1; role-ratio=1.00; tag-hit=2; tag-miss=2; tag-ratio=0.50; user-hit=43; user-miss=2; user-ratio=0.96;"},"2":{"verb":"GET","path":"\/@api\/deki\/pages\/781\/comments?sortby=-date.posted&limit=15&redirects=0","time":"12.15","stats":"request-time-ms=10; cache-hit=21; cache-miss=2; cache-ratio=0.91; mysql-queries=3; mysql-time-ms=2.47; page-hit=6; pagenode-hit=7; pagenode-ratio=1.00; page-ratio=1.00; permission-hit=1; permission-ratio=1.00; user-hit=7; user-miss=2; user-ratio=0.78;"}},"_cache":{"0":{"cache":"cache.apc","time":"0.04","hit":0},"1":{"cache":"cache.memcache.content","time":"1.17","hit":0}}}}};</script>
+</body></html>

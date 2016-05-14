@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 10. Ещё о Ceph - Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch09.html" title="Глава 9. Менеджер виртуального хранения Ceph"/>
+<link rel="next" href="Ix01.html" title="Указатель"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 10. Ещё о Ceph';
+PrevRef = 'Ch09.html';
+UpRef = 'index.html';
+NextRef = 'Ix01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 10. Ещё о Ceph</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы обсудим следующие рецепты:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Эталонное тестирование кластера Ceph</p>
+	 </li><li class="listitem">
+	 <p>Базовый уровень производительности дисков</p>
+	 </li><li class="listitem">
+	 <p>Базовый уровень производительности сетевой среды</p>
+	 </li><li class="listitem">
+	 <p>Показатели Ceph RADOS</p>
+	 </li><li class="listitem">
+	 <p>RADOS load-gen</p>
+	 </li><li class="listitem">
+	 <p>Эталонное тестирование блочного устройства Ceph</p>
+	 </li><li class="listitem">
+	 <p>Эталонное тестирование Ceph RBD с применением FIO</p>
+	 </li><li class="listitem">
+	 <p>Применение команды ceph tell</p>
+	 </li><li class="listitem">
+	 <p>Ceph REST API</p>
+	 </li><li class="listitem">
+	 <p>Профилирование памяти Ceph</p>
+	 </li><li class="listitem">
+	 <p>Развёртывание Ceph с применением Ansible</p>
+	 </li><li class="listitem">
+	 <p>Инструментарий ceph-objectstore</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch10.html">10. Ещё о Ceph</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch10.html#1001">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1002">Эталонное тестирование кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1003">Базовый уровень производительности дисков</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1004">Базовый уровень производительности сетевой среды</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1005">Показатели Ceph RADOS</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1006">RADOS load-gen</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1007">Эталонное тестирование блочного устройства Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1008">Эталонное тестирование Ceph RBD с применением FIO</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1009">Разъём администратора Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1010">Применение команды ceph tell</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1011">Ceph REST API</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1012">Профилирование памяти Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1013">Развёртывание Ceph с применением Ansible</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#1014">Инструментарий ceph-objectstore</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1001"> </a>Введение</h3>
+   </div></div></div>
+   <p>В предыдущих главах мы рассматривали различные способы развёртывания, предоставления и администрирования Ceph. В этой главе мы 
+   изучим эталонное тестирование имеющегося кластера Ceph, что является необходимым для выполнения этапом перед перемещением решения 
+   в промышленное применение. Мы также обсудим расширенные методы администрирования и обнаружения неисправностей Ceph с применением 
+   разъёма администратора, REST API и инструментария ceph-objectstore. Наконец мы изучим профилирование памяти Ceph, а также 
+   развёртывание Ceph с применением Ansible, который является очень эффективным способом развёртывания Ceph.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1002"> </a>Эталонное тестирование кластера Ceph</h3>
+   </div></div></div>
+   <p>Настоятельно рекомендуется перед размещением под рабочие нагрузки промышленного применения выполнить эталонное тестирование 
+   вашего кластера Ceph. Эталонное тестирование даст вам приблизительные результаты того, что ваш кластер будет предоставлять в процессе 
+   рабочих нагрузок по чтению, записи, латентности и т.д.</p>
+   <p>Перед выполнением действительного эталонного тестирования неплохо установить отправные точки для ожидаемой максимальной 
+   производительности измерив производительность присоединяемого к кластерному узлу оборудования, например, дисков и элементов 
+   сетевой среды.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1003"> </a>Базовый уровень производительности дисков</h3>
+   </div></div></div>
+   <p>Тестирование базового уровня производительности дисков выполняется в два этапа. Вначале мы измеряем производительность 
+   отдельного диска, а после этого мы измерим производительность всех наших дисков, подключённых к одному узлу OSD при их работе
+   одновременно.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения реалистичных результатов я выполняю эталонное тестирование описанное в данном рецепте не на самом развёрнутом кластере, 
+	   а на физических аппаратных средствах. Мы также можем выполнить это тесты на вашем кластере Ceph, размещающемся на виртуальной машине, но мы 
+	   можем не получить привлекательных результатов.</p>
+	   </td></tr></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Производительность отдельного диска на запись </span></h4>
+   </div></div></div>
+   <p>Для получения производительности дисковых чтения и записи мы воспользуемся командой 
+   <span class="term"><code>dd</code></span> с <span class="term"><code>oflag</code></span> установленным в значение 
+   <span class="term"><code>direct</code></span> для достижения обхода дискового кэша с целью получения реалистичных результатов.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Прекратите кэширование.</p>
+	   <pre class="screen">
+# echo 3 &gt; /proc/sys/vm/drop_caches
+	   </pre>
+	 </li><li class="listitem">
+      <p>Используйте <span class="term"><code>dd</code></span> для записи файла с именем <span class="term"><code>deleteme</code></span>
+	  и размером <span class="term"><code>10ГБ</code></span> заполненным нулями <span class="term"><code>/dev/zero</code></span> в качестве 
+	  входного файла <span class="term"><code>if</code></span> в каталог, в который смонтирован OSD Ceph, т.е. 
+	  <span class="term"><code>/var/lib/ceph/osd/ceph-0/</code></span>.</p>
+	   <pre class="screen">
+# dd if=/dev/zero of=/var/lib/ceph/osd/ceph-0/deleteme bs=10G count=1 oflag=direct
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+   <p>В идеале вы должны повторить шаги 1 и 2 несколько раз и получить среднее значение. В нашем случае среднее значение для операций записи 
+   приближается к 319 МБ/с, как показано на следующем экранном снимке:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# dd if=/dev/zero of=/var/lib/ceph/osd/ceph-0/deleteme bs=10G count=1 oflag=direct 
+	0+1 records in 
+	0+1 records out 
+	2147479552 bytes (2.1 GB) copied, 6.66535 s, 322 MB/s 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# dd if=/dev/zero of=/var/lib/ceph/osd/ceph-0/deleteme bs=10G count=1 oflag=direct 
+	0+1 records in 
+	0+1 records out 
+	2147479552 bytes (2.1 GB) copied, 7.09217 s, 303 MB/s 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# dd if=/dev/zero of4var/lib/ceph/osd/ceph-0/deleteme bs=10G count=1 oflag=direct 
+	0+1 records in 
+	0+1 records out 
+	2147479552 bytes (2.1 GB) copied, 6.45077 s, 333 MB/s 
+	[root@ceph-node1 ~]# 
+	   </pre>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Производительность множества дисков на запись </span></h4>
+   </div></div></div>
+   <p>В качестве следующего шага мы выполним <span class="term"><code>dd</code></span> 
+   на всех ваших дисках OSD используемых Ceph на этом узле, <span class="term"><code>ceph-node1</code></span>, для получения суммарной 
+   производительности дисковой записи предоставляемой отдельным узлом.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100304"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Получите общее число дисков, используемых на вашем OSD Ceph, в моём случае это 25 дисков:</p>
+	   <pre class="screen">
+# mount | grep -i osd | wc -l
+	   </pre>
+	 </li><li class="listitem">
+      <p>Прекратите кэширование.</p>
+	   <pre class="screen">
+# echo 3 &gt; /proc/sys/vm/drop_caches
+	   </pre>
+	 </li><li class="listitem">
+      <p>Следующая команда выполнит команду <span class="term"><code>dd</code></span> на всех дисках OSD Ceph:</p>
+	   <pre class="screen">
+# for i in `mount | grep osd | awk '{print $3}'`; do (dd if=/dev/zero of=$i/deleteme bs=10G count=1 oflag=direct &) ; done
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+   <p>Для получения средней суммарной производительности записи возьмите среднее значение от всех скоростей записи.
+   В моём случае среднее значение достигло 60 МБ/с.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100305"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Производительность отдельного диска на чтение </span></h4>
+   </div></div></div>
+   <p>Для получения производительности дискового чтения отдельного диска мы снова воспользуемся командой 
+   <span class="term"><code>dd</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100306"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Прекратите кэширование.</p>
+	   <pre class="screen">
+# echo 3 &gt; /proc/sys/vm/drop_caches
+	   </pre>
+	 </li><li class="listitem">
+      <p>Используйте <span class="term"><code>dd</code></span> для записи файла с именем <span class="term"><code>deleteme</code></span>, 
+	  который мы создале в процессе тестирования записи. Мы будем читать наш файл <span class="term"><code>deleteme</code></span> 
+	  в <span class="term"><code>/dev/null</code></span> с <span class="term"><code>iflag</code></span> установленным в значение
+	  <span class="term"><code>direct</code></span>:</p>
+	   <pre class="screen">
+# dd if=/var/lib/ceph/osd/ceph-0/deleteme of=/dev/null bs=10G count=1 iflag=direct
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+   <p>В идеале вы должны повторить шаги 1 и 2 несколько раз и получить среднее значение. В нашем случае среднее значение для операций записи 
+   приближается к 178 МБ/с, как показано на следующем экранном снимке:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# echo 3 &gt; /proc/sys/vm/drop_caches 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# dd if=/var/lib/ceph/osd/ceph-0/deleteme of=/dev/null bs=10G count=1 iflag=direct 
+	0+1 records in 
+	0+1 records out 
+	2147479552 bytes (2.1 GB) copied, 12.0557 s, 178 MB/s 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# dd if=/var/lib/ceph/osd/ceph-O/deleteme of=/dev/null bs=10G count=1 iflag=direct 
+	0+1 records in 
+	0+1 records out 
+	2147479552 bytes (2.1 GB) copied, 12.0452 s, 178 MB/s 
+	[root@ceph-node1 ~]# dd if=/var/lib/ceph/osd/ceph-O/deleteme of=/dev/null bs=10G count=1 iflag=direct 
+	0+1 records in 
+	0+1 records out 
+	2147479552 bytes (2.1 GB) copied, 12.0408 s, 178 MB/s 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# 
+	   </pre>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100307"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Производительность множества диска на чтение </span></h4>
+   </div></div></div>
+   <p>Аналогично производительности отдельного диска на чтение мы используем <span class="term"><code>dd</code></span> 
+   для получения суммарной производительности на чтение множества дисков.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100308"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Получите общее число дисков, используемых на вашем OSD Ceph, в моём случае это 25 дисков:</p>
+	   <pre class="screen">
+# mount | grep -i osd | wc -l
+	   </pre>
+	 </li><li class="listitem">
+      <p>Прекратите кэширование.</p>
+	   <pre class="screen">
+# echo 3 &gt; /proc/sys/vm/drop_caches
+	   </pre>
+	 </li><li class="listitem">
+      <p>Следующая команда выполнит команду <span class="term"><code>dd</code></span> на всех ваших дисках Ceph OSD:</p>
+	   <pre class="screen">
+# for i in `mount | grep osd | awk '{print $3}'`; do (dd if=$i/deleteme of=/dev/null bs=10G count=1 iflag=direct &); done
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+   <p>Для получения суммарной производительности дискового чтения возьмите среднее всех ваших скоростей чтения. В моём случае среднее
+   значение приближается к 123 МБ/с.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100309"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Результаты </span></h4>
+   </div></div></div>
+   <p>На основании выполненных нами тестов результаты выглядят следующим образом. Эти результаты очень сильно изменяются от среды к 
+   среде; используемоё вами оборудование и число дисков в вашем узле OSD могут иметь большое значение.</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="35%"/><col width="35%"/><thead><tr valign="top">
+          <th>Операция</th>
+          <th>на диск</th>
+          <th>агрегированная</th>
+        </tr></thead><tr valign="top">
+          <td><p>чтение</td>
+          <td><p>178МБ/с</p></td>
+          <td><p>123МБ/с</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>запсиь</td>
+          <td><p>319МБ/с</p></td>
+          <td><p> 60МБ/с</p></td>
+        </tr></tbody></table>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1004"> </a>Базовый уровень производительности сетевой среды</h3>
+   </div></div></div>
+   <p>В этом разделе мы выполним тесты для исследования базовой производительности сети между узлами OSD Ceph. Для этого мы воспользуемся 
+   утилитой <span class="term"><code>iperf</code></span>. Убедитесь что пакет <span class="term"><code>iperf</code></span> установлен на 
+   ваших узлах. <span class="term"><code>iperf</code></span> является простым средством тестирования полосы пропускания сети точка- точка, 
+   которое работает в модели клиент- сервер.</p>
+   <p>Для запуска эталонного тестирования сети выполните <span class="term"><code>iperf</code></span> с параметром сервера на своём первом 
+   узле, а с параметром клиента на своём втором узле.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>На <span class="term"><code>Ceph-node1</code></span> выполните <span class="term"><code>iperf</code></span> с 
+	  <span class="term"><code>-s</code></span> для вашего сервера и <span class="term"><code>-p</code></span> для прослушивания 
+	  определённого порта:</p>
+	   <pre class="screen">
+# iperf -s -p 6900
+
+	[root@ceph-node1 ~]# iperf -s -p 6900 
+	-----------------------------------------------------------
+	Server listening on TCP port 6900 
+	TCP window size: 85.3 KByte (default) 
+	-----------------------------------------------------------
+	[ 4] local 10.100.1.201 port 6900 connected with 10.100.1.202 port 39630 
+	[ ID] Interval Transfer Bandwidth 
+	[ 4] 0.0-10.0 sec  11.5 GBytes  9.87 Gbits/sec 
+	^C[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# 
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Вы можете опустить параметр <span class="term"><code>-p</code></span> если порт TCP <span class="term"><code>5201</code></span> 
+	   открыт или вы можете любой другой порт который открыт и не используется.</p>
+	   </td></tr></table>
+     </div>
+	 </li><li class="listitem">
+      <p>На <span class="term"><code>Ceph-node2</code></span> выполните <span class="term"><code>iperf</code></span> с параметром клиента,
+	  <span class="term"><code>-c</code></span>:</p>
+	   <pre class="screen">
+# iperf -c ceph-node1 -p 6900
+
+	[root@ceph-node2 ~]# iperf -c ceph-node1 -p 6900 
+	-----------------------------------------------------------
+	Client connecting to 10.100.1.201, TCP port 6900 
+	TCP window size: 95.8 KByte (default) 
+	-----------------------------------------------------------
+	[ 3] local 10.100.1.202 port 39630 connected with 10.100.1.201 port 6900 
+	[ ID] Interval Transfer Bandwidth 
+	[ 3] 0.0-10.0 sec  11.5 GBytes  9.87 Gbits/sec 
+	[root@ceph-node2 ~]# 
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Вы можете также применить параметр <span class="term"><code>-p</code></span> в своей команде <span class="term"><code>iperf</code></span> 
+	   для определения числа параллельных соединений потоков создаваемых с вашим сервером. Это вернёт реалистичные результаты если у вас имеется 
+	   техника связывания каналов, например, LACP.</p>
+	   </td></tr></table>
+     </div>
+	 </li>
+	 </ol>
+   </div>
+   <p>Результаты показывают, что у нас есть привлекательное сетевое соединение с 9.8Gb/s между нашими узлами Ceph. Аналогично мы можем выполнять 
+   проверку пропускной способности сети для всех других узлов в вашем кластере Ceph. Полоса пропускания сетевой среды в реальности зависит от 
+   применяемой вами между узлами Ceph сетевой инфраструктуры.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><a class="link" href="Ch08.html#080303" target="_top">Глава 8. Планирование промышленного применения и настройка производительности Ceph</a>, 
+	 в которой вы найдёте дополнительную информацию связанную с сетевой средой.</p>
+	 </li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1005"> </a>Показатели Ceph RADOS</h3>
+   </div></div></div>
+   <p>Ceph поставляется со встроенным инструментом эталонного тестирования, называемым RADOS bench, который может применяться для измерения 
+   производительности кластера Ceph на уровне пула. Инструмент RADOS bench поддерживает тестирование записи, последовательного чтения и 
+   случайного чтения, а также позволяет очищаться от временных данных эталонного тестирования, что очень аккуратно.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Давайте выполним некоторые тесты при помощи <span class="term"><code>rados</code></span> bench:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Для выполнения 10 секундного теста записи в ваш пул <span class="term"><code>rbd</code></span> без очистки
+	  выполните следующую команду:</p>
+	   <pre class="screen">
+# rados bench -p rbd 10 write --no-cleanup
+	   </pre>
+	 <p>После выполнения данной команды мы получим следующий снимок экрана:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# rados bench -p rbd 10 write --no-cleanup 
+	Maintaining 16 concurrent writes of 4194304 bytes for up to 10 seconds or 0 objects 
+	Object prefix: benchmarkdata_ceph-node1_3124629 
+	  sec Cur ops   started finished  avg MB/s   cur MB/s  last lat   avg lat 
+	    0       0         0        0         0          0         -         0 
+	    1      16       118      102    407.85        408 0.0584212  0.127569 
+	    2      16       207      191   381.895        356   0.20105  0.150813 
+	    3      16       279      263   350.581        288  0.141772  0.168736 
+	    4      16       351      335   334.921        288   0.57108  0.181988 
+	    5      16       420      404    323.13        276 0.0724497   0.19139 
+	    6      16       479      463   308.601        236  0.137025  0.194498 
+	    7      16       547      531   303.367        272  0.253194  0.206116 
+	    8      16       615      599   299.441        272  0.172813  0.208689 
+	    9      16       692      676   300.386        308   0.48298  0.209028 
+	   10      16       747      731   292.345        220  0.123282  0.211807 
+	Total time run:         10.721111 
+   Total writes made:      747 
+   Write size:             4194304 
+   Bandwidth (MB/sec):     278.702 
+   
+   Stddev Bandwidth:       102.44 
+   Max bandwidth (MB/sec): 408 
+   Min bandwidth (MB/sec): 0 
+   Average Latency:        0.227756 
+   Stddev Latency:         0.234691 
+   Max latency:            1.5534 
+   Min latency:            0.041106 
+   [root@ceph-node1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Аналогично, для выполнения 10 секундного теста чтения в вашем пуле <span class="term"><code>rbd</code></span>, выполните следующую команду:</p>
+	   <pre class="screen">
+# rados bench -p rbd 10 seq
+
+	[root@ceph-node1 ~]# rados bench -p rbd 10 seq 
+	   sec Cur ops   started  finished  avg MB/s  cur MB/s  last lat   avg lat 
+	     0       0         0         0         0         0         -         0 
+	     1      16       247       231   923.573       924  0.181625 0.0620505 
+	     2      16       489       473   945.703       968 0.0366547 0.0645318 
+	     3      16       648       632   698.411       636  0.306308 0.0814809 
+	 Total time run:        4.223407 
+	Total reads made:     747 
+	Read size:            4194304 
+	Bandwidth (MB/sec):   707.486
+	
+	Average Latency:      0.0901875 
+	Max latency:          1.03252 
+	Min latency:          0.00977891 
+	[root@ceph-node1 ~]#  
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>В данном случае может оказаться интересным узнать почему тест чтения завершился через несколько секунд или почему он не выполнялся 
+	   предписанные 10 секунд. Это обусловлено тем, что ваша скорость чтения быстрее скорости записи, и <span class="term"><code>rados 
+	   bench</code></span> завершил чтение всех имеющихся данных, сгенерированных в процессе вашего теста записи. Однако подобное поведение 
+	   во многом зависит от вашей инфраструктуры оборудования и программных средств.</p>
+	   </td></tr></table>
+     </div>
+	 </li><li class="listitem">
+      <p>Аналогично выполните тестирование случайного чтения при помощи <span class="term"><code>rados bench</code></span>, исполнив следующую 
+	  команду:</p>
+	   <pre class="screen">
+# rados bench -p rbd 10 rand
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100502"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Синтаксис для <span class="term"><code>rados bench</code></span> таков:</p>
+	   <pre class="screen">
+# rados bench -p &lt;pool_name&gt; &lt;seconds&gt; &lt;write|seq|rand&gt; -b &lt;block size&gt; -t --no-cleanup
+	   </pre>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>-p</code></span> или <span class="term"><code>--pool</code></span>: определяет имя пула</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>&lt;seconds&gt;</code></span>: время тестирования в секундах
+	 </p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>&lt;write|seq|rand&gt;</code></span>: тип тестирования, {а именно}: запись, последовательное чтение 
+	 или случайное чтение
+	 </p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>-b</code></span>: для определения размера блока; по умолчанию он 4M
+	 </p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>-t</code></span>: число параллельных потоков; по умолчанию 16
+	 </p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--no-cleanup</code></span>: Ваши временные данные, которые записываются в указанный пул при помощи 
+	 <span class="term"><code>rados bench</code></span> не должны быть вычищены. Эти данные будут использованы для операций чтения 
+	 когда они используются при последовательных чтениях ил случайных чтениях. Значение по умолчанию установлено в очистку.</p>
+	 </li>
+    </ul>
+    </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Как было определено в последнем рецепте, я выполняю эти тесты на физическом кластере Ceph. Вы конечно можете выполнить эти команды 
+	   на кластере Ceph созданном на виртуальных машинах, однако вы можете не получить удовлетворительных результатов в виртуальной среде.</p>
+	   </td></tr></table>
+     </div>
+   <p><span class="term"><code>rados bench</code></span> является достаточно удобным инструментом для быстрого измерения сырой производительности 
+   вашего кластера Ceph и вы можете творчески проектировать свои собственные тесты на основе профилей записи, чтения и случайного чтения.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1006"> </a>RADOS load-gen</h3>
+   </div></div></div>
+   <p>Слегка похожий на <span class="term"><code>rados bench</code></span>, <span class="term"><code>rados load-gen</code></span> 
+   является другим интересным инструментом, предоставляемым Ceph, который работает сразу после вынимания из коробки. Как подсказывает его 
+   название, инструмент <span class="term"><code>rados load-gen</code></span> может применяться для генерации нагрузки и может оказаться 
+   полезным при симуляции сценариев с высокой нагрузкой.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Давайте попытаемся создать некоторую нагрузку на наш кластер Ceph при помощи следующей команды:</p>
+	   <pre class="screen">
+# rados -p rbd load-gen \
+   --num-objects 50 \
+   --min-object-size 4M \
+   --max-object-size 4M \
+   --max-ops 16 \
+   --min-op-len 4M \
+   --max-op-len 4M \
+   --percent 5 \
+   --target-throughput 2000 \
+   --run-length 60
+	   </pre>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100602"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Синтаксис <span class="term"><code>rados load-gen</code></span> таков:</p>
+	   <pre class="screen">
+# rados -p &lt;pool-name&gt; load-gen
+	   </pre>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>--num-objects</code></span>: общее число объектов</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--min-object-size</code></span>: минимальный размер объекта в байтах</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--max-object-size</code></span>: максимальный размер объекта в байтах</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--min-ops</code></span>: минимальное число операций</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--max-ops</code></span>: максимальное число операций</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--min-op-len</code></span>: минимальная длина операции</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--max-op-len</code></span>: максимальная длина операции</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--max-backlog</code></span>: максимум незавершённых заданий (в МБ)</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--percent</code></span>: процент операций чтения</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--target-throughput</code></span>: пропускная способность получателя (в МБ)</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--run-length</code></span>: общее время работы в секундах</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Эта команда сгенерирует нагрузку на ваш кластер Ceph посредством записи 50 объектов в пул <span class="term"><code>rbd</code></span>.
+   Длина каждого из этих объектов и операций составит в размере 4M с 5% чтения и временем тестирования 60 секунд.</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# rados -p rbd load-gen \
+	&gt; --num-objects 50 \ 
+	&gt; --min-object-size 4M \ 
+	&gt; --max-object-size 4M \ 
+	&gt; --max-ops 16 \ 
+	&gt; --min-op-len 4M \ 
+	&gt; --max-op-len 4M \ 
+	&gt; --percent 5 \ 
+	&gt; --target-throughput 2000 \ 
+	&gt; --run-length 60 
+	run length 60 seconds 
+	preparing 50 objects 
+	load-gen will run 60 seconds 
+	    1: throughput=0MB/sec pending data=0 
+	READ : oid=obj-xtuVtifS5zQ55da off=0 len=4194304 
+	READ : oid=obj-0NvPNB07Lz1rTra off=0 len=4194304 
+	WRITE : oid=obj-UeV2NunBsTSrYUw off=0 len=4194304 
+	op 17 completed, throughput=4MB/sec 
+	READ : oid=obj-fL1p0c_7CgEtjlk off=0 len=4194304 
+	op 18 completed, throughput=8MB/sec 
+	   </pre>
+   <p>Вывод был усечён для краткости мотивации. Когда команда <span class="term"><code>load-gen</code></span> завершится, она вычистит за собой 
+   все объекты, которые она создавала для тестирования и выведет рабочую пропускную способность.</p>
+	   <pre class="screen">
+	op 5519 completed, throughput=373MB/sec 
+	waiting for all operations to complete 
+	cleaning up objects 
+	op 5522 completed, throughput=367MB/sec 
+	op 5521 completed, throughput=367MB/sec 
+	[root@ceph-node1 ~]# 
+	   </pre>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100603"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Также вы можете наблюдать за состоянием вашего кластера на предмет скорости/ операций чтения и записи с помощью команды 
+   <span class="term"><code>watch ceph -s</code></span>, в то время, пока будет работать <span class="term"><code>rados 
+   load-gen</code></span>, просто чтобы смотреть что происходит.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1007"> </a>Эталонное тестирование блочного устройства Ceph</h3>
+   </div></div></div>
+   <p>Описанные в последнем рецепте инструменты <span class="term"><code>rados bench</code></span> и <span class="term"><code>rados 
+   load-gen</code></span> применяются для эталонного тестирования пула вашего кластера Ceph. В данном рецепте мы сосредоточимся на 
+   эталонном тестировании блочного устройства Ceph пи помощи инструмента <span class="term"><code>rbd bench-write</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100701"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ceph rbd bench-write</span></h4>
+   </div></div></div>
+   <p>Интерфейс командной строки <span class="term"><code>ceph rbd</code></span> предоставляет параметр, называемый 
+   <span class="term"><code>bench-write</code></span>, который является инструментом для выполнения операций эталонного тестирования в 
+   ваше блочное устройство RADOS Ceph.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100702"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Чтобы выполнить эталонное тестирование блочного устройства Ceph, нам необходимо создать некое блочное устройство и отобразить 
+   на ваш узел клиента Ceph:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте блочное устройство с именем <span class="term"><code>block-device1</code></span> и размером 1ГБ, а потом отобразите его:</p>
+	   <pre class="screen">
+# rbd create block-device1 --size 10240
+# rbd info --image block-device1
+# rbd map block-device1
+# rbd showmapped
+
+	[root@ceph-client1 ~]# rbd create block-device1 --size 10240 
+	[root@ceph-client1 ~]# rbd info --image block-device1 
+	rbd image 'block-device1': 
+	        size 10240 MB in 2560 objects 
+	        order 22 (4096 kB objects) 
+	        block_name_prefix: rb.0.4cbacc.238e1f29 
+	        format: 1 
+	[root@ceph-client1 ~]# rbd map block-device1 
+	/dev/rbd0 
+	[root@ceph-client1 ~]# rbd showmapped 
+	id pool image         snap device 
+	0  rbd  block-device1 -    /dev/rbd0 
+	[root@ceph-client1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Создайте файловую систему на вашем блочном устройстве и смонтируйте её.</p>
+	   <pre class="screen">
+# mkfs.xfs /dev/rbd0
+# mkdir -p /mnt/ceph-block-device1
+# mount /dev/rbd0 /mnt/ceph-block-device1
+# df -h /mnt/ceph-block-device1
+
+	[root@ceph-client1 ~]# mkfs.xfs /dev/rbd0 
+	log stripe unit (4194304 bytes) is too large (maximum is 256KiB) 
+	log stripe unit adjusted to 32KiB 
+	meta-data=/dev/rbd0              isize=256    agcount=17, agsize=162816 blks 
+	         =                       sectsz=512   attr=2, projid32bit=1 
+	         =                       crc=0        finobt=0 
+	data     =                       bsize=4096   blocks=2621440, imaxpct.25 
+	         =                       sunit=1024   swidth=1024 blks 
+	naming   =version 2              bsize=4096   ascii-ci=0 ftype=0 
+	log      =internal log           bsize=4096   blocks=2560, version=2 
+	         =                       sectsz=512   sunit=8 blks, lazy-count=1 
+	realtime =none                   extsz=4096   blocks=0, rtextents=0 
+	[root@ceph-client1 ~]# mkdir -p /mnt/ceph-block-device1 
+	[root@ceph-client1 ~]# mount /dev/rbd0 /mnt/ceph-block-device1 
+	[root@ceph-client1 ~]# df -h /mnt/ceph-block-device1 
+	Filesystem      Size  Used Avail Use% Mounted on 
+	/dev/rbd0        10G   33M   10G   1% /mnt/ceph-block-device1 
+	[root@ceph-client1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для выполнения эталонного тестирования <span class="term"><code>block-device1</code></span> на запись общей длиной выполните 
+	  следующую команду:</p>
+	   <pre class="screen">
+# rbd bench-write block-device1 --io-total 5368709200
+
+	[root@ceph-client1 ~]# rbd bench-write block-device1 --io-total 5368709200 
+	bench-write  io_size 4096 io_threads 16 bytes 5368709200 pattern seq 
+	  SEC       OPS   OPS/SEC   BYTES/SEC 
+	    1     67285  67304.27  275678272.46 
+	    2    145469  72743.93  297959122.08 
+	    3    224701  74906.90  306818647.61 
+	    4    301802  75427.40  308950632.76 
+	    5    372142  74432.24  304874445.83 
+	    6    444010  75344.90  308612698.37 
+	    7    517287  74363.64  304593457.23 
+	    8    599236  74906.98  306818990.26 
+	    9    672587  74178.98  303837121.67 
+	   10    732910  72153.50  295540718.90 
+	   11    784764  68150.81  279145733.52 
+	   12    852044  66951.41  274232980.96 
+	   13    918326  63817.89  261398064.96 
+	   14    982399  61962.40  253797984.31 
+	   15   1047148  62847.78  257424494.92 
+	   16   1107514  64550.09  264397152.44 
+	   17   1163126  62216.51  254838831.07 
+	   18   1226368  61607.43  252344039.05 
+	   19   1286892  60898.32  249439520.77 
+	elapsed: 51 ops: 1310721 ops/sec: 25221.56 bytes/sec: 103307522.97 
+[root@ceph-client1 ~]# 
+	   </pre>
+      <p>Как вы можете увидеть, вывод результатов <span class="term"><code>rbd bench-write</code></span> хорошо форматирован.</p>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100703"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Синтаксис <span class="term"><code>rbd bench-write</code></span> выглядит следующим образом:</p>
+	   <pre class="screen">
+# rbd bench-write &lt;RBD image name&gt;
+	   </pre>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>--io-size</code></span>: размер записи в байтах; по умолчанию 4М</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--io-threads</code></span>: число потоков; по умолчанию 16</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--io-total</code></span>: общее число байт для записи; по умолчанию 1024M</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>--io-pattern &lt;seq|rand&gt;</code></span>: шаблон записи, по умолчанию установлен <span class="term"><code>seq</code></span></p>
+	 </li>
+    </ul>
+    </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100704"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Для подстройки ваших размера блока, количества потоков и шаблонов ввода/ вывода вы можете применять с
+   <span class="term"><code>rbd bench-write</code></span> различные параметры.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100705"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><a class="link" href="Ch02.html" target="_top">Глава 2. Работа с блочными устройствами Ceph</a> подробно рассматривает создание 
+	 блочного устройства Ceph.</p>
+	 </li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1008"> </a>Эталонное тестирование Ceph RBD с применением FIO</h3>
+   </div></div></div>
+   <p>FIO является аббревиатурой для Flexible I/O; это одно из самых популярных средств для создания рабочей нагрузки ввода/ вывода и 
+   эталонного тестирования. FIO имеет только что добавленную встроенную поддержку RBD. FIO является высоко настраиваемым и может применяться для 
+   эмуляции и эталонного тестирования практически любых видов нагрузок. В данном рецепте мы изучим то, как FIO может применяться для 
+   эталонного тестирования вашего RBD Ceph.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100801"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Чтобы выполнить эталонное тестирование блочного устройства Ceph, нам необходимо создать некое блочное устройство и отобразить 
+   на ваш узел клиента Ceph:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Установите пакет FIO на свой узел, на который вы отобразили свой образ RBD Ceph. В нашем случае это узел 
+	  <span class="term"><code>ceph-client1</code></span>:</p>
+	   <pre class="screen">
+# yum install -y fio
+	   </pre>
+	 </li><li class="listitem">
+      <p>Так как FIO поддерживает RBD IOengine нам не нужно монтировать образ RBD как файловую систему. Для эталонного тестирования RBD нам 
+	  нужно просто предоставить имя вашего образа RBD, пул и пользователя Ceph, которые будут использоваться для соединения с кластером Ceph. 
+	  Создайте профиль FIO со следующим содержанием:</p>
+	   <pre class="screen">
+[write-4M]
+description="write test with block size of 4M"
+ioengine=rbd
+clientname=admin
+pool=rbd
+rbdname=block-device1
+iodepth=32
+runtime=120
+rw=write
+bs=4M
+
+	[root@ceph-client1 ~]# 
+	[root@ceph-client1 ~]# cat write.fio 
+	[write-4m] 
+	description=&quot;write test with block size of 4M&quot; 
+	ioengine=rbd 
+	clientname=admin 
+	pool=rbd 
+	rbdname=block-device1 
+	iodepth=32 
+	runtime=120 
+	rw=write 
+	bs=4M 
+	[root@ceph-client1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для запуска эталонного тестирования FIO, выполните команду FIO, предоставив ей в качестве аргумента файл профиля FIO:</p>
+	   <pre class="screen">
+# fio write.fio
+
+	[root@ceph-client1 ~]#
+	[root@ceph-client1 ~]# fio write.fio 
+	write-4M: (g=0) rw=write, bs=4M-4M/4M-4M/4M-4M, ioengine=rbd, iodepth=32 
+	fio-2.2.8 
+	Starting 1 process 
+	rbd engine: RBD version: 0.1.9 
+	Jobs: 1 (f=0): [w(1)] [100.0% done] [0K8/107.7MB/0K8 /s] [0/26/0 iops] [eta 00m:00s] 
+	write-4m: (groupid=0, jobs=1): err= 0: pid=2146255: Wed Dec 9 00:54:40 2015 
+	  Description : [&quot;write test with block size of 4M&quot;]  
+	  <strong>write: io=010240MB, bw=314736KB/s, ops=76, runt= 33316msec</strong>
+	    slat (usec) : min=129 , max=15181, avg=473.98, stdev=888.02 
+	    clat (msec) : min=102 , max=2949 avg=409.87, stdev=263.06 
+	     lat (msec) : min=102, max=2949 , avg=410.35 , stdev=263.06 
+	    clat percentiles (msec): 
+	     |  1.00th=[  131],  5.00th=[ 155], 10.00th=[ 180], 20.00th=[ 219],
+	     | 30.00th=[  258], 40.00th=[ 310], 50.00th=[ 351], 60.00th=[ 392],
+	     | 70.00th=[  441], 80.00th=[ 545], 90.00th=[ 693], 95.00th=[ 906],
+	     | 99.00th=[ 1369], 99.50th=[1762], 99.90th=[2409], 99.95th=[2474],
+	     | 99.99th=[ 2966]
+	  bw (KB /s): min=74908, max=568888, per=100.00%, avg=327349.43, stdev=99611.29 
+	  lat (msec) 250=27.70%, 500=47.19%, 750=17.42%, 1000=4.30%, 2000=3.20% 
+	  lat (msec) : &gt;=2000=0.20% 
+	cpu          : usr=3.04%, sys=0.59%, ctx=268, majf=0, minf=52854
+	IO depth     : 1=0.3%, 2=1.2%, 4=4.7%, 8=19.4%, 16=68.5%, 32=5.8%, &gt;=64=0.0%
+	   submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.0%
+	   complete  : 0=0.0%, 4=95.9%, 8=0.1%, 16=0.8%, 32=3.3%, 64=0.0%, &gt;=64=0.0%
+	   issued	 : total=r=0/w=2560/d=0, short=r=0/w=0/d=0, dror=r=0/w=0/d=0 
+	   latency   : target=0, window=0, percentile=100.00%, depth=32 
+	
+	Run status group 0 (all jobs):  
+	 <strong>WRITE: io=10240MB, aggrb=314736KB/s,</strong> minb=314736KB/s, maxb=314736K8/s, mint=33316msec, maxt=33316msec
+	Disk stats (read/write): 
+	    dm-0: ios=0/5, merge0/0, ticks=0/10, in_queue=10, util=0.01%, aggrios=56/5, aggrmerge=0/0, aggrticks=0/0, aggrin_gueue=0, aggrutil=0.00% 
+	    mdl: ios=56/5, merge0/0, ticks=0/0, in_queue=0, util=0.00%, aggrios=3/13, aggrmerge=24/0, aggrticks=1/6, aggrinqueue=7, aggrutil=0.01% 
+	sdbi : ios=7/13, merge=49/0, ticks=2/6, in_queue=8, util=0.01% 
+	sdbj : ios=0/13, merge=0/0 , ticks=0/6, in_queue=6, util=0.01% ] 
+	[root@ceph-client1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>По завершению FIO сгенерирует массу полезной информации которую следует тщательно изучить. Однако, на первый взгляд вас может 
+	  заинтересовать IOPS и агрегированная пропускная способность, которые выделены на предыдущем экранном снимке.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="100802"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><a class="link" href="Ch02.html" target="_top">Глава 2. Работа с блочными устройствами Ceph</a> подробно рассматривает создание 
+	 блочного устройства Ceph.</p>
+	 </li><li class="listitem">
+	 <p>Для получения дополнительной информации по FIO посетите 
+	 <a class="link" href="https://github.com/axboe/fio" target="_top">https://github.com/axboe/fio</a>.</p>
+	 </li>
+    </ul>
+    </div>
+  </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1009"> </a>Разъём администратора Ceph</h3>
+   </div></div></div>
+   <p></p>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1010"> </a>Применение команды ceph tell</h3>
+   </div></div></div>
+   <p></p>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1011"> </a>Ceph REST API</h3>
+   </div></div></div>
+   <p></p>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1012"> </a>Профилирование памяти Ceph</h3>
+   </div></div></div>
+   <p></p>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1013"> </a>Развёртывание Ceph с применением Ansible</h3>
+   </div></div></div>
+   <p></p>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="1014"> </a>Инструментарий ceph-objectstore</h3>
+   </div></div></div>
+   <p></p>
+   <p></p>
+  </div>
+
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

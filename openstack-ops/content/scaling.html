@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 5. Масштабирование - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="architecture.html" title="Архитектура"/>
+<link rel="prev" href="compute_nodes.html" title="Глава 4. Вычислительные узлы"/>
+<link rel="next" href="storage_decision.html" title="Глава 6. Решения систем хранения"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:00+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//scaling.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 5. Масштабирование';
+PrevRef = 'compute_nodes.html';
+UpRef = 'architecture.html';
+NextRef = 'storage_decision.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="chapter">
+ <div xmlns="" class="titlepage">
+  <div>
+   <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+    <a id="scaling"> </a>Глава 5. Масштабирование</h2>
+   </div>
+  </div>
+ </div>
+ 
+ <div class="toc"><dl><dt><span class="section">
+ <a href="scaling.html#starting">Отправной пункт</a></span></dt><dt><span class="section">
+ <a href="scaling.html#add_controller_nodes">Добавление узлов контроллера</a></span></dt><dt><span class="section">
+ <a href="scaling.html#segregate_cloud">Разделение ваших облаков</a></span></dt><dt><span class="section">
+ <a href="scaling.html#scalable_hardware">Масштабируемое оборудование</a></span></dt></dl>
+</div>
+
+<p>В то время как традиционные приложения требуют более мощного оборудования для 
+масштабирования (&quot;вертикальное масштабирование&quot;), облачные приложения
+обычно запрашивают дополнительное дискретное оборудование (&quot;горизонтальное 
+масштабирование&quot;). Если ваше облако удачно, в конечном счете вы должны 
+добавлять ресурсы для удовлетворения растущих потребностей.
+ <a id="d9e2026" class="indexterm"/></p>
+ 
+ <p>Для соответствия парадигме облака, OpenStack сам по себе разработан для
+ горизонтального масштабирования. Вместо того чтобы переходить на сервера 
+ бОльшего размера вы просто покупаете бОльше серверов и просто устанавливаете
+ одинаково настроенные службы. В идеале вы масштабируете и балансируете нагрузку 
+ между группами функционально идентичных служб (например, вычислительные узлы или
+ узлы <code class="literal">nova-api</code>), которые взаимодействуют через шину
+ сообщений.</p>
+ <div class="section">
+  <div xmlns="" class="titlepage">
+   <div>
+    <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	 <a id="starting"> </a>Отправной пункт</h2>
+	</div>
+   </div>
+  </div>
+  
+  <p>Определение масштабируемости вашего облака и того, как ее улучшать является 
+  упражнением для балансировки со многими переменными. Ни одно из решений не отвечает 
+  всем целям масштабирования. Тем не менее, было бы полезным отслеживать ряд метрик.
+  Поскольку вы можете определить виртуальные аппаратные шаблоны, называемые в 
+  OpenSatck &quot;предпочтениями&quot; (flavor), вы можете начинать делать масштабируемые
+  решения основанные на предоставляемых вами предпочтениях. Такие шаблоны определяют размеры 
+  для памяти в оперативной памяти, размер корневого диска, объем доступного
+  эфемерного дискового пространства и число ядер для запуска.
+   <a id="d9e2034" class="indexterm"/>
+   <a id="d9e2036" class="indexterm"/>
+   <a id="d9e2039" class="indexterm"/>
+   <a id="d9e2041" class="indexterm"/></p>
+   
+   <p>Предпочтения по умолчанию OpenStack показаны в 
+    <a class="xref" href="scaling.html#os-flavors-table" title="Таблице 5.1. Предпочтения по умолчанию OpenStack">
+    Таблице 5.1, “ Предпочтения по умолчанию OpenStack”</a>.</p>
+	<table rules="all" id="os-flavors-table"><caption>Таблица 5.1.  Предпочтения по умолчанию OpenStack</caption>
+	<col width="20%"/>
+	<col width="20%"/>
+	<col width="20%"/>
+	<col width="20%"/>
+	<col width="20%"/><thead><tr>
+          <th align="left">Название</th>
+          <th align="right">Виртуальные ядра</th>
+          <th align="right">Оперативная память</th>
+          <th align="right">Диск</th>
+          <th align="right">Эфемерное пространство</th>
+        </tr></thead><tbody><tr>
+          <td><p>m1.tiny</p></td>
+          <td align="right"><p>1</p></td>
+          <td align="right"><p>512 МБ</p></td>
+          <td align="right"><p>1 ГБ</p></td>
+          <td align="right"><p>0 ГБ</p></td>
+        </tr><tr>
+          <td><p>m1.small</p></td>
+          <td align="right"><p>1</p></td>
+          <td align="right"><p>2 ГБ</p></td>
+          <td align="right"><p>10 ГБ</p></td>
+          <td align="right"><p>20 ГБ</p></td>
+        </tr><tr>
+          <td><p>m1.medium</p></td>
+          <td align="right"><p>2</p></td>
+          <td align="right"><p>4 ГБ</p></td>
+          <td align="right"><p>10 ГБ</p></td>
+          <td align="right"><p>40 ГБ</p></td>
+        </tr><tr>
+          <td><p>m1.large</p></td>
+          <td align="right"><p>4</p></td>
+          <td align="right"><p>8 ГБ</p></td>
+          <td align="right"><p>10 ГБ</p></td>
+          <td align="right"><p>80 ГБ</p></td>
+        </tr><tr>
+          <td><p>m1.xlarge</p></td>
+          <td align="right"><p>8</p></td>
+          <td align="right"><p>16 ГБ</p></td>
+          <td align="right"><p>10 ГБ</p></td>
+          <td align="right"><p>160 ГБ</p></td>
+        </tr></tbody></table>
+   <p>Основной отправной точкой для большинства приложений является число
+   ядер вашего облака. Применяя некоторые коэффициенты вы можете собрать 
+   информацию о: </p>
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+    <p>Числе виртуальных машин (VMs), которое вы собираетесь запускать,
+          <code class="code">((соотношение перегрузки × число ядер) / виртуальных ядер на экземпляр)</code></p></li><li class="listitem">
+	<p>Как много дисков требуется <code class="code">(предпочтение для размера диска
+            × число экземпляров)</code></p></li></ul>
+   </div>
+   
+   <p>Вы можете использовать эти соотношения, чтобы определить сколько
+   дополнительного оборудования необходимодля поддержания вашего облака.</p>
+   
+   <p>Вот пример использования соотношения для получения информации масштабирования
+   для ожидаемого количества виртуальных машин , а также необходимого дискового
+   пространства. Следующие значения поддерживают (200 / 2) × 16 = 1600 экземпляров
+   виртуальных машин и требуют 80 ТБ дискового пространства для
+   <code class="code">/var/lib/nova/instances</code>:</p>
+   
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   <p>200 физических ядер.</p></li><li class="listitem">
+   <p>БОльшинство экземпляров имеет размер m1.medium (два виртуальных ядра, 50 ГБ дискового пространства).</p></li><li class="listitem">
+   <p>Значение по умолчанию соотношения перегрузки процессора (<code class="code">cpu_allocation_ratio</code>
+    в nova.conf) установлено 16:1.</p></li></ul>
+   </div>
+   
+   <p>Тем не менее, вам необходимо больше данных чем просто число ядер
+   для оценки нагрузки служб API, серверов баз данных и серверов очередей,
+   которые имеют вероятность пересечений. Вы также должны рассмотреть особенности 
+   использования вашего облака.</p>
+   <p>В качестве конкретного примера сравните облако, поддерживающее платформу управляемого 
+   веб- хостинга с облаком, выполняющим тест интеграции для проекта развития, 
+   который создает одну виртуальную машину на каждый код транзакции. В первом случае 
+   тяжелая работа создания виртуальной машины происходит только каждые несколько 
+   месяцев, в то время, как второй размещает постоянную тяжелую нагрузку на 
+   контроллере облака. Вы должны учитывать среднее время жизни ваших виртуальных машин, 
+   поскольку большие значения означают меньшую нагрузку на контроллер облака.
+   <a id="d9e2136" class="indexterm"/></p>
+   <p>Помимо создания и останова виртуальных машин вы должны учитывать 
+   влияние пользователей, подключающихся к услуге — в частности, к 
+   <code class="literal">nova-api</code> и связанной с ним базой данных. Просмотр списка экземпляров 
+   накапливает большое количество информации и, принимая во внимание частоту, с которой 
+   пользователи выполняют эту операцию, облако с большим количеством пользователей может 
+   значительно увеличить нагрузку. Это может произойти даже без их 
+   ведома — оставленная открытой в браузере закладка экземпляра инструментальной панели (Dashboard) 
+   OpenStack обновляет список виртуальных машин каждые 30 секунд.</p>
+   <p>После того, как вы учтете эти факторы, вы можете определить то, как много 
+   ядер потребуется контроллеру облака. Учитывая вышеперечисленные рассуждения, 
+   для стойки вычислительных узлов достаточно обычного сервера с 8ю ядрами и 8 ГБ ОЗУ.</p>
+   <p>Также вы должны проанализировать ключевые характеристики производительности для 
+   пользовательских виртуальных машин, а также вы должны принимать во внимание как бюджет, 
+   так и требования производительности, включающие производительность дисковой системы
+   (шпиндели/ядра), доступность оперативной памяти (ОЗУ/ядра), пропускную способность сети
+   <a id="d9e2143" class="indexterm"/> (Gbps/ядра), а также общую производительность
+   процессоров (ЦПУ/ядра).</p>
+   
+   <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr>
+    <td rowspan="2" align="center" valign="top" width="25"><img alt="[Совет]" src="../common/images/admon/tip.png"/></td>
+	<th align="left">Совет</th></tr><tr><td align="left" valign="top">
+	<p>Для обсуждения отслеживания метрик, включающего в себя воросы того, как получать
+	эти метрики из вашего облака, ознакомьтесь с  
+	<a class="xref" href="logging_monitoring.html" title="Глава 13. Ведение журналов и мониторинг">
+	Главой 13, <em>Ведение журналов и мониторинг</em></a>.</p></td></tr></table>
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="add_controller_nodes"> </a>Добавление узлов контроллера</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <p>Вы можете облегчить горизонтальное расширение вашего облака добавляя 
+   узлы. Добавление вычислительных узлов выполняется легко — они легко подхватывают 
+   существующие установки. Однако, при создании кластера высокой доступности необходимо 
+   учитывать некоторые важные моменты.
+   <a id="d9e2152" class="indexterm"/>
+   <a id="d9e2155" class="indexterm"/>
+   <a id="d9e2157" class="indexterm"/>
+   <a id="d9e2160" class="indexterm"/>
+   <a id="d9e2163" class="indexterm"/></p>
+   
+   <p>Напомним, что узел контроллера облака выполняет несколько различных служб. 
+   Для целей расширения на новом сервере вы можете установить службы, которые 
+   будут взаимодействовать внутри исключительно с использованием очередей сообщений — 
+   <code class="code">nova-scheduler</code> и <code class="code">nova-console</code>. 
+   Тем не менее, другие составные части требуют большего внимания.</p>
+   
+   <p>Вы должны осуществлять баланс нагрузки служб пользователя, таких как инструментальная панель (Dashboard), 
+   <code class="code">nova-api</code> или прокси хранения объектов. Используйте любой стандартный 
+   метод балансировки нагрузки HTTP (круговой [round robin] DNS, аппаратная балансировка нагрузки
+   или программное обеспечение, подобное Pound или HAProxy). Одно предостережение в отношении 
+   инструментально панели (Dashboard) касается прокси VNC, который использует протокол WebSocket — 
+   нечто, с чем может бороться балансировщик нагрузки L7. Ознакомьтесь также с 
+   <a class="link" href="http://docs.openstack.org/developer/horizon/topics/deployment.html#session-storage" title="Хранилище сессий Horizon" target="_top">
+   Horizon session storage</a>.</p>
+	
+   <p>Вы можете настроить некоторые службы, такие как <code class="code">nova-api</code>
+   и <code class="code">glance-api</code> для использования нескольких процессов, изменив флаг в их 
+   файле настройки — позволив тем самым им совместно работать с несколькими ядрами на одном компьютере.</p>
+	
+   <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Совет"><tr>
+    <td rowspan="2" align="center" valign="top" width="25">
+	<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr>
+	<td align="left" valign="top">
+	
+	<p>Существует множество вариантов балансировки нагрузки для MySQL и поддержки
+	агентов AMQP, имеющих встроенную поддержку кластеров. Информацию о том, 
+	как настроить эту и многие другие службы можно найти в разделе 
+	<a class="xref" href="operations.html" tile="Эксплуатация">Эксплуатация</a>.
+	<a id="d9e2178" class="indexterm"/></p></td></tr></table>
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="segregate_cloud"> </a>Разделение ваших облаков</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <div class="toc"><dl><dt><span class="section">
+    <a href="scaling.html#cells_regions">Ячейки и области</a></span></dt><dt><span class="section">
+	<a href="scaling.html#availability_zones">Зоны доступности и объединения хостов</a></span></dt></dl></div>
+	<p>Когда вы хотите предложить пользователям различные регионы для обеспечения прав
+	на хранимые данные, избыточность поверх линий устойчивости землетрясений или
+    для низко-латентных API вызовов, вы разделяете ваше облако. Используйте один 
+    из следующих методов OpenStack для разделения вашего облака:
+    <span class="emphasis"><em>ячейки (cells)</em></span>, 
+	<span class="emphasis"><em>регионы</em></span>,
+    <span class="emphasis"><em>зоны доступности</em></span> или 
+	<span class="emphasis"><em>объединения хостов</em></span>.
+	<a id="d9e2187" class="indexterm"/>
+	<a id="d9e2189" class="indexterm"/></p>
+   
+    <p>Каждый метод обеспечивает отличную функциональность и может быть лучшим разделением
+	на две группы:</p>
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+    <p>Ячейки и регионы, которые разделяют целое облако и имеют результатом работув различных 
+	реализациях вычислительных служб.</p></li><li class="listitem"><p>
+	<a class="gloss" href="#" def="&lt;strong&gt;Availability zones: &lt;/strong&gt; ">Зоны доступности</a> 
+	и объединения хостов, которы просто делят реализацию вычислительной среды.</p></li></ul>
+   </div>
+   
+   <p><a class="xref" href="scaling.html#segragation_methods" title="Таблица 5.2. Методы разделения OpenStack">
+   Таблица 5.2, “Методы разделения OpenStack</a> обеспечивает сравнительный обзор 
+   каждого метода разделения в настоящее время поддерживаемого вычислительной средой OpenStack.
+   <a id="d9e2201" class="indexterm"/></p>
+   <table rules="all" id="segragation_methods">
+   <caption>Таблица 5.2. Методы разделения OpenStack</caption><thead><tr>
+          <th/>
+          <th>Ячейки</th>
+          <th>Регионы</th>
+          <th>Зоны доступности</th>
+          <th>Объединения хостов</th>
+        </tr></thead><tbody><tr>
+          <td><p><span class="bold"><strong>Используйте когда вам необходимо</strong></span>
+          </p></td>
+          <td><p>Единый  <a class="gloss" href="#" def="&lt;strong&gt;API endpoint: 
+		  &lt;/strong&gt; &lt;p&gt;Демон, исполнитель или служба с которой взаимодействует
+		  клиент для получения доступа к API. Терминал (конечная точка) API может обеспечивать любое 
+		  количество служб, таких, как аутентификация, продажаданных, метрики производительности, 
+		  команды виртуальных машин вычислительной среды, данные переписи и тому подобное. &lt;/p&gt;">
+		  терминал API</a> для вычислений или конечная точка API для вычислений, либо
+		  вам потребуется второй уровень планирования.</p></td>
+          <td><p>Дискретные регионы с отдельными терминалами API, а также без
+		  координации между регионами.</p></td>
+          <td><p>Логическое разделение в пределах вашего развертывания nova для 
+		  физической изоляции или отказоустойчивости.</p></td>
+          <td><p>Для управления группой хостов с общими характеристиками.</p></td>
+        </tr><tr>
+          <td><p><span class="bold"><strong>Пример</strong></span> </p></td>
+          <td><p>Облако с множеством сайтов, в котором вы можете планировать ВМ 
+		  &quot;где угодно&quot; или на определенном сайте.</p></td>
+          <td><p>Облако с множеством сайтов, в котором вы управляете ВМ определенного 
+		  сайта и вам требуется общая инфраструктура.</p></td>
+          <td><p>Отдельное облако сайта с оборудованием, запитываемым от отдельных 
+		  источников.</p></td>
+          <td><p>Планирование для хостов с высоконадежной поддержкой аппаратных средств.</p></td>
+        </tr><tr>
+          <td><p><span class="bold"><strong>Накладные расходы</strong></span> </p></td>
+          <td><p>Рассматриваются экспериментально.</p>
+		  <p>Новая служба, nova-cells.</p>
+		  <p>Каждая ячейка имеет полную установку nova, за исключением nova-api.</p></td>
+          <td><p>Различные конечные точки API для каждой области.</p>
+		  <p>Каждая область имеет полную установку nova.</p></td>
+          <td><p>Изменения настроек для <code class="filename">nova.conf</code>.</p></td>
+          <td><p>Изменения настроек для <code class="filename">nova.conf</code>.</p></td>
+        </tr><tr>
+          <td><p><span class="bold"><strong>Совместно используемые службы</strong></span>
+          </p></td>
+          <td><p>Keystone</p><p><code class="code">nova-api</code> </p></td>
+          <td><p>Keystone</p></td>
+          <td><p>Keystone</p><p>Все службы nova</p></td>
+          <td><p>Keystone</p><p>Все службы nova</p></td>
+        </tr></tbody></table>
+   
+  <div class="section"><div xmlns="" class="titlepage">
+   <div>
+    <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	 <a id="cells_regions"> </a>Ячейки и области</h3>
+	</div>
+   </div>
+  </div>
+  
+  <p>Ячейки OpenStack вычислительной среды разработаны для возможности работы облака 
+  в распределенном режиме без необходимости использования более сложных технологий, 
+  или для принуждения использования существующих установок nova. Хосты в облаке 
+  разбиваются на группы, называемые клетками (<span class="emphasis"><em>cells</em></span>). 
+  Клетки настраиваются в дерево. Клетки верхнего уровня (&quot;API cell&quot;) имеют хост, 
+  на котором выполняется служба <code class="code">nova-api</code>, однако отсутствуют службы 
+  <code class="code">nova-compute</code>. Каждая клетка потомка выполняет все другие типичные 
+  службы <code class="code">nova-*</code>, найденные в обычной установке, за исключением службы 
+  <code class="code">nova-api</code>. Каждая клетка имеет свою очередь сообщений и службу 
+  базы данных, а также выполняет <code class="code">nova-cells</code> — который управляет 
+  взаимодействием между API клетки и клетками- потомками.   
+   <a id="d9e2281" class="indexterm"/>
+   <a id="d9e2284" class="indexterm"/>
+   <a id="d9e2287" class="indexterm"/></p>
+   
+   <p>Это позволяет использовать один сервер API для управления 
+   множеством установок облаков. Предоставление второго уровня 
+   управления (в выборе клеток), в дополнение к обычному <code class="code">nova-scheduler</code>
+   выбору хостов обеспечивает большую гибкость управлению выбора 
+   места запуска виртуальной машины.</p>
+   
+   <p>Сравните это с областями. Области имеют отдельную конечную точку API 
+   на одну установку, что допускает более дискретное разделение. Пользователи, желающие 
+   выполнять экземпляры на сайтах, должны выбирать область в явном виде. 
+   Однако при этом не требуется дополнительное усложнение запуска новой службы.</p>
+   
+   <p>Инструментальная панель OpenStack (horizon) может быть настроена на использование
+   множества регионов. Это может быть выполнено с использованием 
+   параметра <code class="option">AVAILABLE_REGIONS</code>.</p>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	  <a id="availability_zones"> </a>Зоны доступности и объединения хостов</h3>
+	 </div>
+	</div>
+   </div>
+   
+   <div class="toc"><dl><dt><span class="section">
+    <a href="scaling.html#az_s3">Зоны доступности</a></span></dt><dt><span class="section">
+	<a href="scaling.html#ha_s3">Зоны объединения хостов</a></span></dt></dl>
+   </div>
+   
+   <p>Вы можете использовать зоны доступности, объединения хостов или и то, 
+   и другое одновременно для разделения установки nova.
+   <a id="d9e2297" class="indexterm"/></p>
+   
+   <p>Зоны доступности реализуются и настраиваются аналогично объединениям хостов.</p>
+   
+   <p>Однако, вы используете их по разным причинам.</p>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	   <a id="az_s3"> </a>Зоны доступности</h4>
+	  </div>
+	 </div>
+	</div>
+	
+	 <p> Позволяет вам организовывать хосты OpenStack Compute в логические 
+	 группы и представляет собой форму физической изоляции и избыточности по 
+	 отношению к другим зонам доступности, которые используют другой источник питания 
+	 или другое сетевое оборудование.
+	 <a id="d9e2305" class="indexterm"/></p>
+	
+	 <p>Вы определяете зону доступности, в которой расположен локально на каждом сервере 
+	 указанный хост вычислений. Зона доступности обычно используется для 
+	 определения набора серверов, имеющих общее свойство. Например, 
+	 если некоторые стойки в вашем центре данных имеют отдельный источник 
+	 питания, вы можете поместить сервера этих стоек в их собственную зону доступности. 
+	 Зона доступности могут также помочь отделять различные классы оборудования.</p>
+	 <p>Когда пользователи запрашивают оборудование, они могут указать из каких 
+	 зон они хотят строить свой экземпляр. Это позволяет снабдить пользователей 
+	 облака возможностью распределения их ресурсов приложений по разным 
+	 компьютерам для достижения высокой доступности при сбоях оборудования.</p>
+	</div>
+	
+	<div class="section">
+	 <div xmlns="" class="titlepage">
+	  <div>
+	   <div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	    <a id="ha_s3"> </a>Зоны объединения хостов</h4>
+	   </div>
+	  </div>
+	 </div>
+	 
+	 <p>Делеает возможным для вас разделять развертывание OpenStack Compute в 
+	 логические группы для балансировки нагрузки и распределения экземпляра. Вы можете 
+	 использовать объединение хостов для дальнейшего разделения на зоны доступности. Например, 
+	 вы можете использовать объединение хостов для разделения зон доступности на 
+	 группы хостов, которые либо имеют общие ресурсы, такие как 
+	 СХД и сетевое оборудование, или имеют особую функциональность, например, 
+	 высоконадежное компьютерное оборудование.
+	 <a id="d9e2312" class="indexterm"/>
+	 <a id="d9e2315" class="indexterm"/></p>
+	 
+	 <p>Широко применяемым использованием объединений хостов является предоставление информации для 
+	 планировщика <code class="literal">nova-scheduler</code>. Например, вы можете 
+	 использовать объединение хостов для объединения нескольких в группу, которая 
+	 совместно использует определенные предпочтения(flavors) или образы.</p>
+	 
+	 <p>Общим случаем для этого является создание пары ключ-значение в совокупности 
+	 метаданных и совпадающие пары ключ-значение в <code class="parameter">extra_specs</code> 
+	 метаданных предпочтений. 
+	 <code class="parameter">AggregateInstanceExtraSpecsFilter</code> в фильтре планировщика
+	 будет применяться, только в экземплярах, которые запланированы только на хостах 
+	 в объединениях, которые определяют тот же ключ для того же значения.</p>
+	 
+	 <p>Расширенное использование этой общей концепции позволяет различным 
+	 типам предпочтений работать в различных соотношениях реализаций ЦПУ и ОЗУ,
+     следовательно нагрузки с высокой интенсивностью вычислений и разработки с низкой интенсивностью,
+	 а также системы тестирования могут использовать совместно одно и то же облако без
+	 недостатка ресурсов для систем с высокой нагрузкой или потери ресурсов при
+	 низкой загруженности систем. Оно работает путем установки <code class="parameter">metadata</code>
+	 в вашем объединении хостов и соответствующих ваших типах предпочтений 
+	 <code class="parameter">extra_specs</code></p>. 
+	 
+	<p>Первым шагом является установка агрегированных значений ключей метаданных 
+    <code class="parameter">cpu_allocation_ratio</code> и
+	<code class="parameter">ram_allocation_ratio</code> для значений с плавающей точкой. 
+	Планировщики фильтра <code class="parameter">AggregateCoreFilter</code> и
+	<code class="parameter">AggregateRamFilter</code> будут использовать эти значения,
+	а не глобальные значения по умолчанию в <code class="filename">nova.conf</code> при
+	планировании хостов в объединении. Важно быть осторожным при использовании этой
+	функции, поскольку каждый узел может находиться в нескольких объединениях, новой
+	при этом должен иметьтолько один коэффициент распределения для каждого ресурса.
+	Это может быть важным для вас не помещать хосты в различные объединения, которые
+	определяют различные значения для одного <span class="keep-together">ресурса</span>.</p>
+	 
+	 <p>Это только первая половина уравнения. Чтобыполучить тип предпочтения, который
+	 обеспечивает определенное отношение, вы должны установить <code class="parameter">extra_specs</code> 
+	 в типе предпочтения (flavor) для пары ключ-значение, которая должна соответствовать 
+	 объединению. Например, если вы определите <code class="parameter">extra_specs</code>
+     <code class="parameter">cpu_allocation_ratio</code> в значение &quot;1.0&quot;, 
+	 то экземпляр этого типа будет работать только в объединениях, где метаданные с ключом
+     <code class="parameter">cpu_allocation_ratio</code> также установлены в &quot;1.0.&quot;
+	 На практике, лучше будет определить дополнительную пару ключ- значение для
+	 объединенных метаданных в соответствии с тем, чему они отвечают непосредственно для 
+	 <code class="parameter">cpu_allocation_ratio</code> или 
+     <code class="parameter">core_allocation_ratio</code>. Это позволяет лучшую абстракцию. 
+	 Напрмиер, путем определения ключа <code class="parameter">overcommit</code> 
+	 и установки значения &quot;high&quot;, &quot;medium&quot; или &quot;low&quot;, 
+	 вы можете затем настраивать численные соотношения в объединениях без необходимости
+	 изменения всех типов предпочтений, относящихся к ним.</p>
+	 
+	 <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	  <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Note]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr>
+	   <td align="left" valign="top">
+	   
+	   <p> Ранее все службы имели зону доступности. В настоящее время 
+	   свою собственную зону доступности имеют только службы <code class="literal">nova-compute</code>. 
+	   Службы, подобные <code class="literal">nova-scheduler</code>, 
+	   <code class="literal">nova-network</code> и <code class="literal">nova-conductor</code> 
+	   всегда распространяются на все зоны доступности.</p>
+	   <p><Когда вы выполняете любую из следующих операций, соответствующие службы 
+	   появляются в их собственных внутренних зонах доступности 
+	   (CONF.internal_service_availability_zone): </p>
+	   
+	   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+	   
+	    <p>nova host-list (os-hosts)</p></li><li class="listitem">
+		<p>euca-describe-availability-zones verbose</p></li><li class="listitem">
+		<p><code class="literal">nova-manage</code> service list</p></li></ul>
+	    </div>
+		
+		<p>Внутренняя зона доступности скрыта в euca-describe-availability_zones (nonverbose).</p>
+		<p>CONF.node_availability_zone была переименована в CONF.default_availability_zone 
+		и используется только в службах <code class="literal">nova-api</code> 
+		и <code class="literal">nova-scheduler</code>.</p>
+		<p>CONF.node_availability_zone все еще работает, но признана устаревшей.</p></td></tr></table>
+	   </div>
+	  </div>
+	 </div>
+	</div>
+	
+	<div class="section">
+	 <div xmlns="" class="titlepage">
+	  <div>
+	   <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	    <a id="scalable_hardware"> </a>Масштабируемое оборудование</h2>
+	   </div>
+	  </div>
+	 </div>
+	 
+	 <div class="toc"><dl><dt><span class="section">
+	  <a href="scaling.html#hardware_procure">Закупка оборудования</a></span></dt><dt><span class="section">
+	  <a href="scaling.html#capacity_planning">Планирование емкости</a></span></dt><dt><span class="section">
+	  <a href="scaling.html#burin_testing">Нагрузочные испытания</a></span></dt></dl>
+	 </div>
+	 
+	 <p>Хотя и существуют различные ресурсы, помогающие вам с развертыванием
+     и установкой OpenStack, очень важно быть уверенным, что ваша реализация 
+	 была спланирована заранее. Данное руководство предполагает, что вы
+	 определили, по крайней мере, одну стойку для облака OpenStack, а также
+	 имеете предположения для того что и когда масштабировать.</p>
+	
+	<div class="section">
+	 <div xmlns="" class="titlepage">
+	  <div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	   <a id="hardware_procure"> </a>Закупка оборудования</h3>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>&quot;Облако&quot; было описано как неустойчивая среда, в которой 
+	серверы могут создаваться и удаляться по желанию. Хотя это может быть правдой, 
+	это совсем не означает, что ваши серверы должны быть нестабильными. Обеспечение вашего 
+	облака надежным и правильно настроенным оборудованием означает, что ваше 
+	облако остается запущенным и работающим. Обычно усилия направлены на 
+	создание надежной среды аппаратных средств, следовательно вы можете предоставлять облако, которое 
+	пользователи могут рассматривать как нестабильное или изменчивое.
+	<a id="d9e2365" class="indexterm"/>
+	<a id="d9e2368" class="indexterm"/>
+	<a id="d9e2371" class="indexterm"/></p>
+	
+	<p>OpenStack может быть развернут на любом оборудовании, поддерживаемом 
+	OpenStack-совместимым дистрибутивом Linuх.</p>
+	  
+	<p>Оборудование не обязано быть неизменным, однако, по крайней мере, 
+	должно иметь один и тот же тип процессора для поддержки миграции экземпляра.</p>
+	  
+	<p>Рекомендуемым обычно оборудованием для использования в OpenStack является 
+	стандартное предложение, стоящее уплаченных за него денег, которое предлагает 
+	большинство производителей аппаратных средств. Необходимо просто разделить ваши 
+	закупки на строительные блоки, такие как &quot;вычислители&quot;, 
+	&quot;хранилища объектов&quot; и &quot;контроллеры облака&quot; и закупать их 
+	столько, сколько необходимо. Возможно вам не потребуется тратить дополнительные средства, 
+	если вы уже имеете серверы, если они отвечают вашим требованиям производительности и 
+	технологии виртуализации, что весьма вероятно, для поддержки OpenStack.</p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	   <a id="capacity_planning"> </a>Планирование емкости</h3>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>OpenStack разработан для увеличения в размерах прямым образом. 
+	Принимая во внимание соображения данной главы — в особенности в отношении размеров контроллера облака 
+	— по мере необходимости, возможно, потребуется приобретение дополнительных узлов для вычислений или 
+	хранения объектов. Новые узлы не обязаны иметь ту же спецификацию, или даже того же производителя, 
+	что и существующие узлы.
+	<a id="d9e2380" class="indexterm"/>
+	<a id="d9e2383" class="indexterm"/>
+	<a id="d9e2385" class="indexterm"/>
+	<a id="d9e2387" class="indexterm"/></p>
+	
+	<p>Для вычислительных узлов, <code class="code">nova-scheduler</code> будет заботиться о 
+	различиях в размерах для соблюдения требований к числу ядер и объему памяти; 
+	однако вы должны проанализировать изменения квалификации пользователей при 
+	различных скоростях процессоров. При добавлении узлов хранения объектов, 
+	должен быть указан 
+	<a class="gloss" href="#" def="&lt;strong&gt;вес: &lt;/strong&gt; &lt;p&gt;
+	Используется устройствами хранилища объектов для определения того, какие устройство хранения доступны для задания.
+	Устройства отранжированы по размеру. &lt;/p&gt;">вес</a> должен быть описан для отображения 
+	<a class="gloss" href="#" def="&lt;strong&gt;емкость: &lt;/strong&gt; &lt;p&gt;
+	Определяет ресурсы для ячейки, включая процессор, диски и сеть.
+    Может применяться к определенным службам в пределах ячейки или ко всей ячейке. &lt;/p&gt;">емкости</a> узла.</p>
+	
+	<p>Мониторинг использования ресурса и роста числа пользователей позволит вам 
+	определить время новой закупки. 
+    <a class="xref" href="logging_monitoring.html" title="Глава 13. Ведение журналов и мониторинг">
+	Глава 13, <em>Ведение журналов и мониторинг</em></a> описывает некоторые полезные метрики.</p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	   <a id="burin_testing"> </a>Нагрузочные испытания</h3>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>Вероятность отказа сервера велика в начале и конце его жизни. 
+	Как результат, можно избежать больших затрат в работе с оборудованием 
+	при его эксплуатации путем проведения надлежащих отбраковочных испытаний 
+	на ранней стадии, чтобы попытаться вызвать отказы. Общий принцип 
+	заключается в нагрузке оборудования до его пределов. Примеры нагрузочных 
+	испытаний включают в себя работу тестов процессоров и дисков на 
+	протяжении нескольких дней.
+	<a id="d9e2399" class="indexterm"/>
+	<a id="d9e2402" class="indexterm"/>
+	<a id="d9e2405" class="indexterm"/>
+	<a id="d9e2407" class="indexterm"/></p>
+   </div>
+  </div>
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

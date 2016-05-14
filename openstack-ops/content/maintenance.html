@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 11. Обслуживание, сбои и отладка - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="operations.html" title="Эксплуатация"/>
+<link rel="prev" href="user-facing-outro.html" title="Удачи!"/>
+<link rel="next" href="network_troubleshooting.html" title="Глава 12. Устранение неполадок сети"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:07+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//maintenance.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 11. Обслуживание, сбои и отладка!';
+PrevRef = 'user-facing-outro.html';
+UpRef = 'operations.html';
+NextRef = 'network_troubleshooting.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="chapter"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="maintenance"> </a>Глава 11. Обслуживание, сбои и отладка</h2>
+</div></div></div><div class="toc"><dl><dt><span class="section">
+<a href="maintenance.html#cloud_controller_storage">Отказы и техническое обслуживание контроллера облака и прокси системы хранения</a></span></dt><dt><span class="section">
+<a href="maintenance.html#compute_node_failures">Отказы вычислительных узлов и их обслуживание</a></span></dt><dt><span class="section">
+<a href="maintenance.html#storage_node_failures">Отказы узлов хранения и их обслуживание</a></span></dt><dt><span class="section">
+<a href="maintenance.html#complete_failure">Обработка полного отказа</a></span></dt><dt><span class="section">
+<a href="maintenance.html#config_mgmt">Управление настройкой</a></span></dt><dt><span class="section">
+<a href="maintenance.html#hardware">Работа с аппаратными средствами</a></span></dt><dt><span class="section">
+<a href="maintenance.html#databases">Базы данных</a></span></dt><dt><span class="section">
+<a href="maintenance.html#hdmy">HDWMY</a></span></dt><dt><span class="section">
+<a href="maintenance.html#broken_component">Выявление неисправных компонентов</a></span></dt><dt><span class="section">
+<a href="maintenance.html#uninstalling">Деинсталляция</a></span></dt></dl>
+</div>
+<p>Простои, вне зависимости от того являются ли они внезапными или запланированными, являются данностью 
+при работе облака. Целью данной главы является предоставление полезной информации для активной 
+или противодействующей обработки таких событий.
+<a id="maindebug" class="indexterm"/></p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="cloud_controller_storage"> </a>Отказы и техническое обслуживание контроллера облака и прокси системы хранения</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="maintenance.html#planned_maintenance">Планирование технического обслуживания</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#reboot_cloud_controller">Перезагрузка контроллера облака или прокси системы хранения</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#after_a_cc_reboot">После перезагрузки контроллера облака или прокси системы хранения</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#cc_failure">Полный отказ контроллера облака</a></span></dt></dl>
+</div>
+<p>Контроллер облака и прокси системы хранения очень похожи друг на друга 
+при возникновении ожидаемых и незапланированных простоев. Обычно в облаке работает по 
+одному серверу каждого типа, что делает их очень заметными при их простоях.</p>
+<p>Хорошей новостью для контроллера облака является то, что если ваше облако использует 
+сетевой режим высокой доступности  с многими хостами(multihost HA) FlatDHCP, то существующие 
+экземпляры и тома продолжают работать при уходе контроллера облака в оф-лайн. 
+Однако для прокси системы хранения невозможны никакие потоки хранимой информации 
+до тех пор, пока он не вернется к работе.</p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="planned_maintenance"> </a>Планирование технического обслуживания</h3>
+</div></div></div>
+<p>Один из способов запланировать обслуживание контроллера облака или прокси системы хранения 
+заключается в том, чтобы просто выполнить это во внерабочее время, например, в час или два ночи. 
+Такая стратегия окажет воздействие на меньшее число пользователей. Если ваш контроллер облака или 
+прокси системы хранения слишком важен и не может быть недоступным в любой момент времени, вы должны 
+рассмотреть вариант высокой доступности.
+<a id="d9e4623" class="indexterm"/>
+<a id="d9e4626" class="indexterm"/></p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="reboot_cloud_controller"> </a>Перезагрузка контроллера облака или прокси системы хранения</h3>
+</div></div></div>
+<p>В общем, просто выполните команду &quot;reboot&quot;. Операционная система 
+аккуратно закрывает службы и затем автоматически перезагружается. Если вы хотите 
+быть очень аккуратным, выполните свои задания резервного копирования непосредственно 
+перед перезагрузкой.
+<a id="d9e4632" class="indexterm"/>
+<a id="d9e4635" class="indexterm"/>
+<a id="d9e4638" class="indexterm"/>
+<a id="d9e4641" class="indexterm"/></p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="after_a_cc_reboot"> </a>После перезагрузки контроллера облака или прокси системы хранения</h3>
+</div></div></div>
+<p>После того, как контроллер облака перезагрузился, проверьте что успешно стартовали все необходимые службы.
+Следующие команды используют  <code class="code">ps</code> и <code class="code">grep</code> 
+для определения того, что nova, glance и keystone в настоящее время выполняются:</p>
+<pre class="programlisting"># ps aux | grep nova-
+# ps aux | grep glance-
+# ps aux | grep keystone
+# ps aux | grep cinder</pre>
+<p>Также проверьте, что все службы функционируют. Следующий набор команд
+устанавливают происхождение файла <code class="code">openrc</code>, 
+затем выполняют некоторые основные команды glance, nova и keystone. 
+Если команды выполняются надлежащим образом, вы можете быть уверены, 
+что эти службы работают надлежащим образом:</p>
+<pre class="programlisting"># source openrc
+# glance index
+# nova list
+# keystone tenant-list</pre>
+<p>Для прокси системы хранения убедитесь, что возобновилась служба системы 
+хранения объектов (Object Storage):</p>
+<pre class="programlisting"># ps aux | grep swift</pre>
+<p>Также проверьте, что она работает:</p>
+<pre class="programlisting"># swift stat</pre>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="cc_failure"> </a>Полный отказ контроллера облака</h3>
+</div></div></div>
+<p>Контроллер облака полностью отказывает, например, если выходит из строя его 
+материнская плата. Пользователи немедленно обнаружат потерю контроллера облака, поскольку
+он обеспечивает основную функциональность вашей облачной среды.
+Если инфраструктура мониторинга не сообщит вам об отказе контроллера,
+ваши пользователи несомненно сделают это.
+К сожалению, это трудная ситуация. Контроллер облака является 
+неотъемлемой частью вашего облака. Если у вас есть только один контроллер, 
+многие службы будут утрачены.
+<a id="d9e4660" class="indexterm"/>
+<a id="d9e4663" class="indexterm"/></p>
+<p>Чтобы избежать подобной ситуации, создайте кластер контроллера облака 
+высокой доступности. Это выходит за рамки данного документа, но вы можете 
+прочитать дополнительные сведения в проекте 
+<a class="link" href="http://docs.openstack.org/high-availability-guide/content/ch-intro.html" target="_top">
+Руководства высокой доступности OpenStack</a>.</p>
+<p>Другой хороший способ заключается в использовании инструмента управления конфигурацией, 
+например, Puppet, для автоматического создания контроллера облака. Это не должно занять 
+более 15 минут, если у вас имеется запасной сервер. После восстановления контроллера 
+восстановите все сделанные резервные копии (см. 
+<a class="xref" href="backup_and_recovery.html" title="Глава 14. Резервное копирование и восстановление">
+Главу 14, <em>Резервное копирование и восстановление</em></a>).</p>
+<p>Кроме того, на практике, службы <code class="literal">nova-compute</code> на 
+вычислительных узлах иногда не аккуратно подключаются к размещенной на контроллере rabbitmq 
+в случае, когда он возвращается после совместной перезагрузки и требуется перезагрузка служб 
+nova на вычислительных узлах.</p>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="compute_node_failures"> </a>Отказы вычислительных узлов и их обслуживание</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+<a href="maintenance.html#planned_maintenance_compute_node">Планирование технического обслуживания</a></span></dt><dt><span class="section">
+<a href="maintenance.html#after_compute_node_reboot">После перезагрузки вычислительного узла</a></span></dt><dt><span class="section">
+<a href="maintenance.html#maintenance_instances">Экземпляры</a></span></dt><dt><span class="section">
+<a href="maintenance.html#inspect_and_recover_failed_instances">Проверка и восстановление данных отказавшего экземпляра</a></span></dt><dt><span class="section">
+<a href="maintenance.html#volumes">Тома</a></span></dt><dt><span class="section">
+<a href="maintenance.html#totle_compute_node_failure">Полный отказ вычислительного узла</a></span></dt><dt><span class="section">
+<a href="maintenance.html#var_lib_nova_instances">/var/lib/nova/instances</a></span></dt></dl>
+</div>
+<p>Иногда вычислительный узел либо неожиданно испытывает сбой, либо требует 
+перезагрузки по причинам технического характера.</p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="planned_maintenance_compute_node"> </a>Планирование технического обслуживания</h3>
+</div></div></div>
+<p>Если вам необходимо перезагрузить вычислительный узел в связи с плановым техническим обслуживанием 
+(например, обновление программного обеспечения или аппаратных компонент), то вначале убедитесь, что все 
+размещенные на нем экземпляры были перемещены с данного узла. Если облако использует 
+общую систему хранения, то используйте команду <code class="code">nova live-migration</code>. Вначале 
+получите список экземпляров, требующих перемещения: 
+<a id="d9e4679" class="indexterm"/>
+<a id="d9e4682" class="indexterm"/></p>
+<pre class="programlisting"># nova list --host c01.example.com --all-tenants</pre>
+<p>Затем переместите их один за другим:</p>
+<pre class="programlisting"># nova live-migration &lt;uuid&gt; c02.example.com</pre>
+<p>Если вы не используете совместную систему хранения, вы можете
+воспользоваться параметром <code class="code">--block-migrate</code>:</p>
+<pre class="programlisting"># nova live-migration --block-migrate &lt;uuid&gt; c02.example.com</pre>
+<p>После переноса всех экземпляров убедитесь, что службы 
+<code class="code">nova-compute</code> были <span class="keep-together">остановлены</span>:</p>
+<pre class="programlisting"># stop nova-compute</pre>
+<p>Если вы используете систему управления настройками, такую как Puppet, которая 
+обеспечивает постоянную работу служб <code class="code">nova-compute</code>, вы можете 
+временно перенести файлы инициализации (<code class="literal">init</code>):</p>
+<pre class="programlisting"># mkdir /root/tmp
+# mv /etc/init/nova-compute.conf /root/tmp
+# mv /etc/init.d/nova-compute /root/tmp</pre>
+<p>Затем закройте свои вычислительные узлы, выполните ваши работы по обслуживанию и 
+включите их снова. Вы можете возобновить службу <code class="code">nova-compute</code>, 
+откатив предыдущие команды:</p>
+<pre class="programlisting"># mv /root/tmp/nova-compute.conf /etc/init
+# mv /root/tmp/nova-compute /etc/init.d/</pre>
+<p>Затем запустите службу <code class="code">nova-compute</code>:</p>
+<pre class="programlisting"># start nova-compute</pre>
+<p>Теперь вы можете по желанию вернуть назад экземпляры на их 
+первоначальные вычислительные узлы.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="after_compute_node_reboot"> </a>После перезагрузки вычислительного узла</h3>
+</div></div></div>
+<p>После перезагрузки вычислительного узла, убедитесь что он успешно загрузился.
+Это включает в себя проверку того, что служба <code class="code">nova-compute</code> работает: 
+<a id="d9e4710" class="indexterm"/>
+<a id="d9e4713" class="indexterm"/></p>
+<pre class="programlisting"># ps aux | grep nova-compute
+# status nova-compute</pre>
+<p>Также убедитесь, что она успешно подключилась к серверу AMQP:</p>
+<pre class="programlisting"># grep AMQP /var/log/nova/nova-compute
+2013-02-26 09:51:31 12427 INFO nova.openstack.common.rpc.common [-] Connected to AMQP server on 199.116.232.36:5672</pre>
+<p>После того, как вычислительный узел успешно заработал, вы должны заняться 
+размещенными на этом вычислительном узле экземплярами, поскольку ни один из них 
+не запущен. В зависимости от вашего SLA у вашего пользователя или клиента, вам, 
+возможно, придется запустить каждый экземпляр и убедиться в том, что он стартовал 
+корректно.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="maintenance_instances"> </a>Экземпляры</h3>
+</div></div></div>
+<p>Вы можете создать список размещенных на вычислительном узле экземпляров, 
+выполнив следующую команду:
+<a id="d9e4723" class="indexterm"/>
+<a id="d9e4726" class="indexterm"/></p>
+<pre class="programlisting"># nova list --host c01.example.com --all-tenants</pre>
+<p>После получения списка,вы можете использовать команду nova для запуска каждого экземпляра:</p>
+<pre class="programlisting"># nova reboot &lt;uuid&gt;</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>После каждого неожиданного останова экземпляра могут возникать проблемы при загрузке. 
+Например, экземпляр может потребовать выполнение <code class="code">fsck</code> в корневом разделе. 
+Если подобное произойдет, пользователь может использовать консоль VNC инструментальной панели (Dashboard) 
+для исправления подобных проблем.</p></td></tr></table>
+</div>
+<p>Если экземпляр не загружается, что означает, что <code class="code">virsh list</code> 
+никогда не показывает экземпляр даже предпринимающим попытку загрузки, выполните следующее 
+на вычислительном узле:</p>
+<pre class="programlisting"># tail -f /var/log/nova/nova-compute.log</pre>
+<p>Попробуйте еще раз выполнение команды <code class="code">nova reboot</code> снова. Вы 
+должны будете увидеть сообщение об ошибке, объясняющее почему экземпляр был не в 
+состоянии загрузиться.</p>
+<p>В большинстве случаев ошибка обусловлена чем-то в файле libvirt XML 
+(<code class="code">/etc/libvirt/qemu/instance-xxxxxxxx.xml</code>), который больше 
+не существует. Вы можете применить восстановление файла XML, а также перезагрузку 
+экземпляра, выполнив следующую команду:</p>
+<pre class="programlisting"># nova reboot --hard &lt;uuid&gt;</pre>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="inspect_and_recover_failed_instances"> </a>Проверка и восстановление данных отказавшего экземпляра</h3>
+</div></div></div>
+<p>При некотором развитии событий экземпляры работают, однако не доступны 
+через SSH и не отвечают ни на какие команды. Консоль VNC может отобразить 
+ошибки загрузки или панические ошибки ядра (kernel panic error messages). 
+Это может быть признаком разрушения файловой системы на самой виртуальной машине. 
+Если вам необходимо восстановить файлы или проверить содержимое экземпляра, 
+для монтирования диска может использоваться qemu-nbd.
+<a id="d9e4746" class="indexterm"/></p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+<p>Если вы осуществляете доступ или просматриваете содержимое и данные пользователя, 
+вначале получите его разрешение!
+<a id="d9e4751" class="indexterm"/></p></td></tr></table>
+</div>
+<p>Для доступа к диску экземпляра 
+(<code class="literal">/var/lib/nova/instances/instance-<em class="replaceable"><code>xxxxxx</code></em>/disk</code>) 
+необходимо следовать следующим этапам:</p>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<p>Временно остановите экземпляр с помощью команды <code class="literal">virsh</code>.</p></li><li class="listitem">
+<p>Подключите к диску устройство qemu-nbd.</p></li><li class="listitem">
+<p>Смонтируйте устройство qemu-nbd.</p></li><li class="listitem">
+<p>Размонтируйте устройство после осмотра.</p></li><li class="listitem">
+<p>Отсоедините устройство qemu-nbd.</p></li><li class="listitem">
+<p>Возобновите экземпляр.</p></li></ol>
+</div>
+<p>Если вы не выполните шаги с 4 по 6, вычислительная среда OpenStack 
+больше не сможет управлять экземпляром. Он не будет отвечать ни на какие 
+выполняемые вычислительной средой OpenStack команды и помечается остановленным.</p>
+<p>После того, как вы смонтируете дисковый файл, вы должны иметь возможность доступа к нему и 
+рассматривать его как обычный каталог с файлами и структурами каталогов. 
+Тем не менее, мы не рекомендуем вам редактировать или брать любые файлы, 
+поскольку это может изменить список управления доступом (ACL) и сделать экземпляр 
+незагружаемым, если этого еще не произошло.
+<a id="d9e4773" class="indexterm"/></p>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<p>Приостановите экземпляр с помощью команды <code class="literal">virsh</code>, 
+принимая во внимание внутренний идентификатор (ID):</p>
+<pre class="programlisting"># virsh list
+Id Name                 State
+----------------------------------
+1 instance-00000981    running
+2 instance-000009f5    running
+30 instance-0000274a    running
+
+# virsh suspend 30
+Domain 30 suspended</pre></li><li class="listitem">
+<p>Присоедините к диску устройство qemu-nbd:</p>
+<pre class="programlisting"># cd /var/lib/nova/instances/instance-0000274a
+# ls -lh
+total 33M
+-rw-rw---- 1 libvirt-qemu kvm  6.3K Oct 15 11:31 console.log
+-rw-r--r-- 1 libvirt-qemu kvm   33M Oct 15 22:06 disk
+-rw-r--r-- 1 libvirt-qemu kvm  384K Oct 15 22:06 disk.local
+-rw-rw-r-- 1 nova         nova 1.7K Oct 15 11:30 libvirt.xml
+# qemu-nbd -c /dev/nbd0 `pwd`/disk</pre></li><li class="listitem">
+<p>Смонтируте устройство qemu-nbd.</p>
+<p>Устройство qemu-nbd попытается экспортировать различные 
+разделы диска экземпляра как отдельные устройства
+Например, если vda диск, а vda1 корневой раздел, qemu-nbd экспортирует устройства как 
+<code class="literal">/dev/nbd0</code> и <code class="literal">/dev/nbd0p1</code> 
+соответственно:</p>
+<pre class="programlisting"># mount /dev/nbd0p1 /mnt/</pre>
+<p>Теперь вы можете осуществлять доступ к содержимому <code class="code">/mnt</code>, 
+которое относится к первому разделу диска экземпляра.</p>
+<p>Для просмотра второго или эфемерного диска используйте альтернативную 
+точку монтирования, если вы хотите иметь в одно и то же время смонтированными и первичный, 
+и вторичный диски:</p>
+<pre class="programlisting"># umount /mnt
+# qemu-nbd -c /dev/nbd1 `pwd`/disk.local
+# mount /dev/nbd1 /mnt/</pre>
+<pre class="programlisting"># ls -lh /mnt/
+total 76K
+lrwxrwxrwx.  1 root root    7 Oct 15 00:44 bin -&gt; usr/bin
+dr-xr-xr-x.  4 root root 4.0K Oct 15 01:07 boot
+drwxr-xr-x.  2 root root 4.0K Oct 15 00:42 dev
+drwxr-xr-x. 70 root root 4.0K Oct 15 11:31 etc
+drwxr-xr-x.  3 root root 4.0K Oct 15 01:07 home
+lrwxrwxrwx.  1 root root    7 Oct 15 00:44 lib -&gt; usr/lib
+lrwxrwxrwx.  1 root root    9 Oct 15 00:44 lib64 -&gt; usr/lib64
+drwx------.  2 root root  16K Oct 15 00:42 lost+found
+drwxr-xr-x.  2 root root 4.0K Feb  3  2012 media
+drwxr-xr-x.  2 root root 4.0K Feb  3  2012 mnt
+drwxr-xr-x.  2 root root 4.0K Feb  3  2012 opt
+drwxr-xr-x.  2 root root 4.0K Oct 15 00:42 proc
+dr-xr-x---.  3 root root 4.0K Oct 15 21:56 root
+drwxr-xr-x. 14 root root 4.0K Oct 15 01:07 run
+lrwxrwxrwx.  1 root root    8 Oct 15 00:44 sbin -&gt; usr/sbin
+drwxr-xr-x.  2 root root 4.0K Feb  3  2012 srv
+drwxr-xr-x.  2 root root 4.0K Oct 15 00:42 sys
+drwxrwxrwt.  9 root root 4.0K Oct 15 16:29 tmp
+drwxr-xr-x. 13 root root 4.0K Oct 15 00:44 usr
+drwxr-xr-x. 17 root root 4.0K Oct 15 00:44 var</pre></li><li class="listitem">
+<p>После того, как вы завершили просмотр, размонтируйте точку монтирования 
+и освободите устройство qemu-nbd:</p>
+<pre class="programlisting"># umount /mnt
+# qemu-nbd -d /dev/nbd0
+/dev/nbd0 disconnected</pre></li><li class="listitem">
+<p>Возобновите экземпляр с помощью <code class="literal">virsh</code>:</p>
+<pre class="programlisting"># virsh list
+Id Name                 State
+----------------------------------
+1 instance-00000981    running
+2 instance-000009f5    running
+30 instance-0000274a    paused
+
+# virsh resume 30
+Domain 30 resumed</pre></li></ol>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="volumes"> </a>Тома</h3>
+</div></div></div>
+<p>Если поврежденные экземляры также имели присоединенные тома, сначала 
+создайте список UUID экземпляров и томов:
+<a id="d9e4804" class="indexterm"/>
+<a id="d9e4807" class="indexterm"/></p>
+<pre class="programlisting">mysql&gt; select nova.instances.uuid as instance_uuid,
+cinder.volumes.id as volume_uuid, cinder.volumes.status,
+cinder.volumes.attach_status, cinder.volumes.mountpoint,
+cinder.volumes.display_name from cinder.volumes
+inner join nova.instances on cinder.volumes.instance_uuid=nova.instances.uuid
+ where nova.instances.host = 'c01.example.com';</pre>
+ <p>Вы должны увидеть результат, подобный приводимому ниже:</p>
+ <pre class="programlisting">
++--------------+------------+-------+--------------+-----------+--------------+
+|instance_uuid |volume_uuid |status |attach_status |mountpoint | display_name |
++--------------+------------+-------+--------------+-----------+--------------+
+|9b969a05      |1f0fbf36    |in-use |attached      |/dev/vdc   | test         |
++--------------+------------+-------+--------------+-----------+--------------+
+1 row in set (0.00 sec)</pre>
+<p>Далее вручную отключите и повторно подключите тома где X - это
+соответствующая точка монтирования:</p>
+<pre class="programlisting"># nova volume-detach &lt;instance_uuid&gt; &lt;volume_uuid&gt;
+# nova volume-attach &lt;instance_uuid&gt; &lt;volume_uuid&gt; /dev/vdX</pre>
+<p>Перед выполнением приведенных выше действий убедитесь, что экземпляр успешно 
+загрузился и находится на окне регистрации (login screen).</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="totle_compute_node_failure"> </a>Полный отказ вычислительного узла</h3>
+</div></div></div>
+<p>Вычислительный узел может отказать аналогично тому, как это может сделать 
+контроллер облака. Поломка материнской платы или некоторый другой тип
+неисправности оборудования могут повлечь отключение вычислительного
+узла целиком. Когда это произойдет, все запущенные на этом вычислительном 
+узле экземпляры будут недоступными. Точно так же, как и в случае отказа
+контроллера облака, если мониторинг вашей инфраструктуры не определит отказ
+вычислительного узла, ваши пользователи сообщат вам об этом, поскольку они потеряют 
+свои экземпляры.
+<a id="d9e4819" class="indexterm"/>
+<a id="d9e4822" class="indexterm"/></p>
+<p>Если вычислительный узел отказал и не может быть восстановлен в течение нескольких часов или более, 
+вы можете возобновить все размещенные на отказавшем узле экземпляры, 
+если вы используете совместно используемую систему хранения для 
+<code class="code">/var/lib/nova/instances</code>.</p>
+<p>Чтобы сделать это, создайте список UUID размещенных на отказавшем 
+узле экземпляров, выполнив следующий запрос к базе данных nova:</p>
+<pre class="programlisting">mysql&gt; select uuid from instances where host = \
+       'c01.example.com' and deleted = 0;</pre>
+<p>Далее сообщите nova, что все экземпляры, которые раньше были размещены на c01.example.com, 
+теперь размещаются на c02.example.com:</p>
+<pre class="programlisting">mysql&gt; update instances set host = 'c02.example.com' where host = \
+       'c01.example.com' and deleted = 0;</pre>
+<p>После этого, используйте команду <code class="literal">nova</code> для перезагрузки всех 
+экземпляров, которые были запущены на на c01.example.com, одновременно повторно генерируя 
+их XML файлы:</p>
+<pre class="programlisting"># nova reboot --hard &lt;uuid&gt;</pre>
+<p>Наконец, вновь присоедините тома, используя метод, аналогичный описанному в 
+разделе <a class="link" href="maintenance.html#volumes" title="Тома">Тома</a>.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="var_lib_nova_instances"> </a>/var/lib/nova/instances</h3>
+</div></div></div>
+<p>Стоит отметить, этот каталог в контексте отказавших вычислительных узлов. 
+Этот каталог содержит образы дисков libvirt KVM на файловой основе для 
+экземпляров, размещенных на этом вычислительном узле. Если вы не 
+работаете со своим облаком в среде совместно используемой системы хранения, этот 
+каталог является уникальным во всех вычислительных узлах.
+<a id="d9e4839" class="indexterm"/>
+<a id="d9e4841" class="indexterm"/></p>
+<p>
+<code class="code">/var/lib/nova/instances</code> содержит два типа каталогов.</p>
+<p>Первый является каталогом <code class="code">_base</code>. Он содержит все 
+кэшированные основные образы из glance для каждого уникального образа, который был 
+запущен на вычислительном узле. Файлы, завершающиеся <code class="code">_20</code> 
+(или другим номером), являются эфемерными базовыми образами.</p>
+<p>Остальные каталоги имеют заглавие <code class="code">instance-xxxxxxxx</code>.
+Эти каталоги соответствуют экземплярам, запущенным на данном вычислительном узле.
+Файлы внутри связаны с одним из файлов в каталоге <code class="code">_base</code>. 
+Они по-существу являются файлами на основе изменений, содержащими только изменения,
+выполненные в начальном каталоге <code class="code">_base</code>.</p>
+<p>Все файлы и каталоги в каталоге <code class="code">/var/lib/nova/instances</code>
+имеют уникальные имена. Файлы в _base уникально озаглавлены для образов glance, на которых
+они основаны, и имена каталогов <code class="code">instance-xxxxxxxx</code>
+дают уникальные заголовки для такого определенного экземпляра. Например, если вы копируете
+все данные из <code class="code">/var/lib/nova/instances</code> с одного вычислительного
+узла на другой, вы не перепишите никакой файл или не вызовите никакого разрушения в образе,
+который имеет то же уникальное имя, поскольку они по-существу один и тот же файл.</p>
+<p>Хотя этот метод не задокументирован и не поддерживается, вы можете использовать 
+его, когда ваш вычислительный узел постоянно отключается, но у вас есть экземпляры 
+локально хранящиеся на нем.</p>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="storage_node_failures"> </a>Отказы узлов хранения и их обслуживание</h2>
+</div></div></div><div class="toc"><dl><dt><span class="section">
+ <a href="maintenance.html#reboot_storage_node">Перезагрузка узлов хранения</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#shut_down_storage_node">Выключение узлов хранения</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#replace_swift_disk">Замена диска Swift</a></span></dt></dl>
+</div>
+<p>В связи с высокой отказоустойчивостью хранилищ объектов, обусловленной тем, что 
+проблемы узлов хранения объектов намного проще, по сравнению с проблемами, с которыми мы сталкиваемся 
+на вычислительных узлах.</p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="reboot_storage_node"> </a>Перезагрузка узлов хранения</h3>
+</div></div></div>
+<p>Если узлу хранения требуется перезагрузка- просто перезагрузите его. Запросы 
+к размещенным на нем данным будут перенаправлены на другие копии до окончания процесса 
+перезагрузки сервера.
+<a id="d9e4864" class="indexterm"/>
+<a id="d9e4866" class="indexterm"/>
+<a id="d9e4869" class="indexterm"/></p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="shut_down_storage_node"> </a>Выключение узлов хранения</h3>
+</div></div></div>
+<p>Если вам нужно выключить узел хранения на длительный период времени 
+(от одних суток и более), рассмотрите возможность удаления узла из кольца 
+системы хранения. Например: 
+<a id="d9e4875" class="indexterm"/></p>
+<pre class="programlisting"># swift-ring-builder account.builder remove &lt;ip address of storage node&gt;
+# swift-ring-builder container.builder remove &lt;ip address of storage node&gt;
+# swift-ring-builder object.builder remove &lt;ip address of storage node&gt;
+# swift-ring-builder account.builder rebalance
+# swift-ring-builder container.builder rebalance
+# swift-ring-builder object.builder rebalance</pre>
+<p>Далее, перераспределите файлы кольца на другие узлы:</p>
+<pre class="programlisting"># for i in s01.example.com s02.example.com s03.example.com
+&gt; do
+&gt; scp *.ring.gz $i:/etc/swift
+&gt; done</pre>
+<p>Данные действия эффективно изымают узел хранения из кластера хранения.</p>
+<p>Когда узел способен присоединиться к кластеру, просто опять добавьте его 
+в кольцо. Точный синтаксис добавления узла в ваш кластер swift с использованием 
+<code class="code">swift-ring-builder</code> сильно зависит от исходных параметров, 
+использовавшихся при первоначальном построении вашего кластера. Обратитесь, 
+пожалуйста, к тем командам.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="replace_swift_disk"> </a>Замена диска Swift</h3>
+</div></div></div>
+<p>В случае выхода из строя диска на узле хранения объектов его замена 
+относительно проста. Она предполагает, что среда вашего хранилища объектов настроена 
+правильно, т.е. хранящиеся на отказавшем диске данные также дублированы 
+на другие диски в среде хранения объектов. 
+<a id="d9e4887" class="indexterm"/>
+<a id="d9e4889" class="indexterm"/></p>
+<p>В данном примере предполагается, что отказал <code class="code">/dev/sdb</code>.</p>
+<p>Во- первых размонтируйте диск:</p>
+<pre class="programlisting"># umount /dev/sdb</pre>
+<p>Далее, физически удалить диск из сервера и замените его на работающий диск.</p>
+<p>Убедитесь, что операционная система распознала новый диск:</p>
+<pre class="programlisting"># dmesg | tail</pre>
+<p>Вы должны увидеть сообщение о <code class="code">/dev/sdb</code>.</p>
+<p>Поскольку рекомендуется не использовать разделы на диске swift, 
+просто отформатируйте диск целиком:</p>
+<pre class="programlisting"># mkfs.xfs /dev/sdb</pre>
+<p>В конце концов, смонтируйте диск:</p>
+<pre class="programlisting"># mount -a</pre>
+<p>Swift должен увидеть новый диск и убедиться, что не существует никаких данных. Затем он 
+начинает репликацию данных на диск с других существующих копий.</p>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="complete_failure"> </a>Обработка полного отказа</h2>
+</div></div></div>
+<p>Обычный способ справиться с восстановлением при полном отказе системы, 
+например, при при отключении электропитания в центре обработки данных, 
+заключается в присвоении каждой службе приоритета с последующим 
+восстановлением по порядку.
+<a class="xref" href="maintenance.html#restor-prior-table" title="Таблица 11.1. Пример списка восстановления приоритетов">
+Таблица 11.1., “Пример списка восстановления приоритетов”</a> демонстрирует пример.
+<a id="d9e4910" class="indexterm"/>
+<a id="d9e4912" class="indexterm"/></p><table rules="all" id="restor-prior-table">
+<caption>Таблица 11.1. Пример списка восстановления приоритетов</caption><thead><tr>
+          <th>Приоритет</th>
+          <th>Службы</th>
+        </tr></thead><tbody><tr>
+          <td><p>1</p></td>
+          <td><p>Внутрисетевое подключение</p></td>
+        </tr><tr>
+          <td><p>2</p></td>
+          <td><p>Службы резервирования систем хранения</p></td>
+        </tr><tr>
+          <td><p>3</p></td>
+          <td><p>Подключение к общедоступной сети для пользователей виртуальных машин</p></td>
+        </tr><tr>
+          <td><p>4</p></td>
+          <td><p>Хосты <code class="literal">nova-compute</code>,
+          <code class="literal">nova-network</code>, cinder</p></td>
+        </tr><tr>
+          <td><p>5</p></td>
+          <td><p>Виртуальные машины пользователей</p></td>
+        </tr><tr>
+          <td><p>10</p></td>
+          <td><p>Службы очередей сообщений и базы данных</p></td>
+        </tr><tr>
+          <td><p>15</p></td>
+          <td><p>Службы Keystone</p></td>
+        </tr><tr>
+          <td><p>20</p></td>
+          <td><p>Планировщик<code class="literal">cinder-scheduler</code></p></td>
+        </tr><tr>
+          <td><p>21</p></td>
+          <td><p>Службы каталога образов и доставки </p></td>
+        </tr><tr>
+          <td><p>22</p></td>
+          <td><p>Службы планировщика <code class="literal">nova-scheduler</code></p></td>
+        </tr><tr>
+          <td><p>98</p></td>
+          <td><p><code class="literal">cinder-api</code></p></td>
+        </tr><tr>
+          <td><p>99</p></td>
+          <td><p>Службы <code class="literal">nova-api</code> services</p></td>
+        </tr><tr>
+          <td><p>100</p></td>
+          <td><p>Узел инструментальной панелиы</p></td>
+        </tr></tbody></table>
+<p>Используйте приведенный пример списка приоритетов, чтобы быть уверенным, что связанные с пользователем службы 
+будут восстановлены как можно быстрее, но не раньше, чем вернется на место 
+стабильная среда. Конечно, несмотря на то, что каждый шаг перечислен как одна строка, 
+он требует значительной работы. Например, сразу после запуска базы данных, 
+вы должны проверить ее целостность, или, после запуска служб nova вы 
+должны убедиться, что гипервизор совпал с базой данных и исправлены все 
+<span class="keep-together">несоответствия</span>.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="config_mgmt"> </a>Управление настройкой</h2>
+</div></div></div>
+<p>Обслуживание облака OpenStack требует чтобы вы управляли множеством 
+физических серверов и их число может расти со временем. Поскольку управление 
+узлами вручную является способствующим появлению ошибок, мы настоятельно рекомендуем вам использовать 
+средства управления конфигурацией. Эти инструменты автоматизируют процесс 
+обеспечения того, чтобы все узлы были настроены правильно и содействуют вам в 
+поддержке информации о конфигурации (такой, как параметры пакетов и 
+конфигурации) в контролируемом версиями хранилище (repository).
+<a id="d9e4998" class="indexterm"/>
+<a id="d9e5000" class="indexterm"/>
+<a id="d9e5003" class="indexterm"/></p>
+<div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+<p>Доступны различные инструменты управления конфигурацией и данное 
+руководство не рекомендует какой- то один определенный. Двумя наиболее популярными в 
+сообществе OpenStack являются 
+<a class="link" href="https://puppetlabs.com/" target="_top">Puppet</a>, с доступными
+<a class="link" href="https://github.com/puppetlabs/puppetlabs-openstack" target="_top">OpenStack Puppet
+modules</a>; а также <a class="link" href="http://www.getchef.com/chef/" target="_top">Chef</a>, 
+с доступными <a class="link" href="https://github.com/opscode/openstack-chef-repo" target="_top">
+OpenStack Chef recipes</a>.
+Другие, более новые средства настройки включают 
+<a class="link" href="https://juju.ubuntu.com/" target="_top">Juju</a>, 
+<a class="link" href="http://www.ansible.com/home" target="_top">Ansible</a> и 
+<a class="link" href="http://www.saltstack.com/" target="_top">Salt</a>; а более 
+зрелые инструменты управления конфигурацией включают
+<a class="link" href="http://cfengine.com/" target="_top">CFEngine</a> и 
+<a class="link" href="http://bcfg2.org/" target="_top">Bcfg2</a>.</p></td></tr></table>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="hardware"> </a>Работа с аппаратными средствами</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="maintenance.html#add_new_node">Добавление вычислительного узла</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#add_new_object_node">Добавление узла хранилища объектов</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#replace_components">Замена компонентов</a></span></dt></dl>
+</div>
+<p>Аналогично с начальным развертыванием, вы должны убедиться, что все оборудование 
+надлежащим образом включено перед его добавлением в работу. Запустите используемое 
+аппаратными средствами программное обеспечение на свои ограничения - используйте до предела 
+возможности ОЗУ, ЦПУ, диска и сети. Доступно много опций, причем обычно они дублируются 
+в виде программного обеспечения замера производительности, следовательно вы 
+получаете хорошее представление о производительности вашей системы.
+<a id="d9e5020" class="indexterm"/>
+<a id="d9e5023" class="indexterm"/></p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="add_new_node"> </a>Добавление вычислительного узла</h3>
+</div></div></div>
+<p>Если вы обнаружите, что вы уже достигли или приближаетесь к пределу пропускной 
+способности ваших вычислительных ресурсов, вы должны планировать добавление дополнительных 
+вычислительных узлов. Выполнить добавление дополнительных узлов довольно просто. 
+Процесс добавления узлов аналогичен размещению первых вычислительных узлов в вашем облаке: 
+используйте автоматизированную систему развертывания для самозагрузки сервера 
+для работы на аппаратном уровне с операционной системой, а затем воспользуйтесь 
+системой управления конфигурацией для установки и настройки службы вычислительных ресурсов OpenStack. 
+Как только служба вычислительных ресурсов установлена и настроена аналогично другим 
+вычислительным узлам, она автоматически привязывается к облаку. Контроллер облака замечает 
+новый узел/ узлы и начинает планирование для запуска там экземпляров.
+<a id="d9e5029" class="indexterm"/>
+<a id="d9e5032" class="indexterm"/>
+<a id="d9e5035" class="indexterm"/></p>
+<p>Если узлы блочного хранилища OpenStack размещаются раздельно с вычислительными 
+узлами, та же процедура применяется к одним и тем же очередям и 
+системам опроса используемым в обеих службах.</p>
+<p>Мы рекомендуем вам использовать одно и то же оборудование для новых вычислительных узлов и 
+узлов блочного хранения. По крайней мере убедитесь, что используются процессоры одного типа, 
+чтобы не прерывать миграцию в онлайн- режиме.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="add_new_object_node"> </a>Добавление узла хранилища объектов</h3>
+</div></div></div>
+<p>Добавление нового узла хранения объектов отличается от добавления вычислительного узлов 
+или узлов блочного хранилища. Вам все еще требуется использование ваших систем управления 
+автоматическим развертыванием и настройкой для начальной настройки. 
+После выполнения этих действий вам нужно добавить локальные диски узла хранения объектов 
+в кольцо системы хранения. Правильная команда выполнения подобного действия абсолютно 
+та же, что и команда, выполнявшаяся для первоначального добавления дисков в кольцо. 
+Просто повторно выполните эту команду на прокси- сервере хранения объектов для всех дисков 
+на новом узле хранения объектов. Как только это будет сделано, сбалансируйте кольцо 
+и скопируйте полученные файлы кольца на другие узлы хранения объектов.
+<a id="d9e5043" class="indexterm"/></p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>Если ваш новый узел хранения объектов имеет количество дисков отличное 
+от значения для имевшихся в начале узлов, команда добавления нового узла отличается 
+от первоначальных команд. Эти параметры меняются от среды к среде.</p></td></tr></table>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="replace_components"> </a>Замена компонентов</h3>
+ </div></div></div>
+ <p>В крупномасштабных реализациях, подобных облачным инфраструктурам, 
+ отказы оборудования обычны. Продумайте свои процессы и сбалансируйте сохранение времени 
+ и доступность. Например, кластер хранения объектов легко может жить с отказавшими дисками 
+ в течение некоторого промежутка времени, если он имеет достаточную емкость. 
+ Или же, если система вычислительных узлов не заполнена вы можете рассмотреть 
+ миграцию экземпляров в реальном времени с хоста, имеющего сбои ОЗУ, пока у вас 
+ есть время на решение данной проблемы.</p>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="databases"> </a>Базы данных</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="maintenance.html#database_connect">Связь с базой данных</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#perf_and_opt">Производительность и оптимизация</a></span></dt></dl>
+</div>
+<p>Почти все компоненты OpenStack имеют в своей основе для хранения 
+постоянной информации базу данных. Обычно MySQL является такой базой данных. 
+К этим базам данных применимо стандартное администрирование MySQL. OpenStack не 
+настраивает базы данных экстраординарным способом. Основное администрирование включает в себя 
+улучшение производительности, высокую доступность, резервное копирование, восстановление и исправление. 
+Для получения дополнительной информации ознакомьтесь со стандартным руководством администрирования MySQL.
+<a id="d9e5054" class="indexterm"/>
+<a id="d9e5057" class="indexterm"/></p>
+<p>Вы можете выполнить ряд трюков с базой данных для более быстрого 
+получения информации или исправления ошибок несогласованности данных —
+например, экземпляр был прекращен, но статус не был обновлен в базе данных. 
+Подобные трюки обсуждаются в этой книге.</p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="database_connect"> </a>Связь с базой данных</h3>
+</div></div></div>
+<p>Просмотрите файл конфигурации компонентов, чтобы увидеть, как каждый 
+компонент OpenStack получает доступ к соответствующей базе данных. Ищите 
+<code class="code">sql_connection</code> или просто 
+<code class="code">connection</code> 
+<code class="code">sql_connection</code> or simply <code class="code">connection</code>. 
+Следующая команда использует <code class="code">grep</code> 
+для отображения строк соединений SQL для nova, glance, cinder и keystone:</p>
+<pre class="programlisting"># <span class="bold"><strong>grep -hE "connection ?=" /etc/nova/nova.conf /etc/glance/glance-*.conf
+/etc/cinder/cinder.conf /etc/keystone/keystone.conf</strong></span>
+sql_connection = mysql://nova:nova@cloud.alberta.sandbox.cybera.ca/nova
+sql_connection = mysql://glance:password@cloud.example.com/glance
+sql_connection = mysql://glance:password@cloud.example.com/glance
+sql_connection = mysql://cinder:password@cloud.example.com/cinder
+    connection = mysql://keystone_admin:password@cloud.example.com/keystone</pre>
+<p>Строки подключения имеют следующий формат:</p>
+<pre class="programlisting">mysql:// &lt;username&gt; : &lt;password&gt; @ &lt;hostname&gt; / &lt;database name&gt;</pre>
+</div>
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="perf_and_opt"> </a>Производительность и оптимизация</h3>
+</div></div></div>
+<p>По мере роста облака MySQL используется все больше и больше. Если вы 
+подозреваете, что MySQL может стать узким местом, вы должны начать изучение 
+оптимизации MySQL. Руководство MySQL имеет целый раздел, посвященный этой теме: 
+<a class="link" href="http://dev.mysql.com/doc/refman/5.5/en/optimize-overview.html" target="_top">
+Обзор оптимизации</a>.</p>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="hdmy"> </a>HDWMY</h2></div></div></div><div class="toc"><dl><dt><span class="section">
+ <a href="maintenance.html#hourly">Каждый час</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#daily">Ежедневно</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#weekly">Еженедельно</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#monthly">Ежемесячно</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#quarterly">Ежеквартально</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#semiannual">Каждые полгода</a></span></dt></dl>
+</div>
+<p>Приведем краткий список различных задач на выполнение каждый час, день, неделю, 
+месяц и год. Пожалуйста, обратите внимание, что эти задачи не являются обязательными и предписанными, 
+однако их выполнение - полезная идея: 
+<a id="d9e5078" class="indexterm"/></p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="hourly"> </a>Каждый час</h3>
+</div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Проверяйте вашу систему мониторинга на наличие предупреждений и реагируйте на них.</p></li><li class="listitem">
+<p>Проверяйте очередь билетов на доступ к объектам на предмет новых билетов.</p></li></ul>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="daily"> </a>Ежедневно</h3>
+</div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Проверьте наличие экземпляров в состоянии отказа или в странном состоянии и 
+выясните причину.</p></li><li class="listitem">
+<p>Проверьте появление исправлений безопасности (security patches) 
+и примените их в случае необходимости.</p></li></ul>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="weekly"> </a>Еженедельно</h3>
+</div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Проверьте использование облака: </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+ <p>
+ Квоты пользователя</p></li><li class="listitem">
+ <p>
+ Дисковое пространство</p></li><li class="listitem">
+ <p>
+ Использование образов</p></li><li class="listitem">
+ <p>
+ Большие экземпляры</p></li><li class="listitem">
+ <p>
+ Использование сети (пропускная способность и использование IP).</p></li></ul>
+</div></li><li class="listitem">
+<p>Убедитесь, что ваши механизмы предупреждения все еще работают.</p></li></ul>
+</div></div>
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="monthly"> </a>Ежемесячно</h3>
+</div></div></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Проверьте использование и тренды за прошедший месяц.</p></li><li class="listitem">
+<p>Проверьте наличие пользовательских учетных записей, подлежащих удалению.</p></li><li class="listitem">
+<p>Проверьте наличие учетных записей операторов, подлежащих удалению.</p></li></ul>
+</div></div>
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="quarterly"> </a>Ежеквартально</h3>
+</div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Проведите анализ использования и трендов за последний квартал.</p></li><li class="listitem">
+<p>Подготовьте все квартальные отчеты об использовании и статистике.</p></li><li class="listitem">
+<p>Проведите анализ и планирование необходимых добавлений в облако.</p></li><li class="listitem">
+<p>Проведите анализ и планирование главных обновлений OpenStack.</p></li></ul>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="semiannual"> </a>Каждые полгода</h3>
+</div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Обновляйте OpenStack.</p></li><li class="listitem">
+<p>Проведите очистку после обновления OpenStack (вы должны быть в курсе о 
+наличии всех неиспользуемых или новых служб?).</p></li></ul>
+</div></div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="broken_component"> </a>Выявление неисправных компонентов</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="maintenance.html#tailing_logs">Хвосты журналов</a></span></dt><dt><span class="section">
+ <a href="maintenance.html#daemons_cli">Запуск демонов с использованием интерфейса командной строки</a></span></dt></dl>
+ </div>
+<p>Сбор OpenStack-ом сведений о том как взаимодействуют между собой различные 
+компоненты обязателен. Например, загрузка образов требует взаимодействия от 
+<code class="code">nova-api</code>, <code class="code">glance-api</code>,
+<code class="code">glance-registry</code>, keystone и, потенциально, 
+<code class="code">swift-proxy</code>. В результате, иногда бывает трудно определить 
+точно источник проблемы. Цель данного раздела заключается в помощи в этом.
+<a id="d9e5147" class="indexterm"/>
+<a id="d9e5150" class="indexterm"/></p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="tailing_logs"> </a>Хвосты журналов</h3>
+</div></div></div>
+<p>Первое место для просмотра файла журнала, связанного с командой, которую вы 
+пытаетесь запустить. Например, если <code class="code">nova list</code> 
+завершилась неудачей, попробуйте запустить просмотр хвоста файла журнала nova 
+и запустите команду снова: 
+<a id="d9e5157" class="indexterm"/></p>
+<p>
+Terminal 1:</p>
+<pre class="programlisting"># tail -f /var/log/nova/nova-api.log</pre>
+<p>
+Terminal 2:</p>
+<pre class="programlisting"># nova list</pre>
+<p>Ознакомьтесь со всеми ошибками и трассировкой в файле журнала. Для получения 
+дополнительной информации ознакомьтесь с 
+<a class="xref" href="logging_monitoring.html" title="Chapter 13. Logging and Monitoring">
+Гылавой 13, <em>Ведение журналов и мониторинг</em></a>.</p>
+<p>Если ошибка индицирует, что проблема с другим компонентом,
+переключитесь на анализ хвоста файла журнала этой компоненты.
+Например, если nova не может получить доступ к glance, просмотрите журнал 
+<code class="literal">glance-api</code>:</p>
+<p>
+Terminal 1:</p><pre class="programlisting"># tail -f /var/log/glance/api.log</pre>
+<p>
+Terminal 2:</p>
+<pre class="programlisting"># nova list</pre>
+<p>Промывайте, полощите и повторяйте пока не найдете основную причину проблемы.</p></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="daemons_cli"> </a>Запуск демонов с использованием интерфейса командной строки</h3>
+</div></div></div>
+<p>К сожалению, иногда ошибка не очевидна из файлов журналов. 
+В этом случае измените тактику и используйте различные команды, возможно, 
+запустите службу непосредственно в командной строке. Например, если служба 
+<code class="code">glance-api</code> отказывается стартовать и остается работающей, 
+попробуйте запустить демон из командной строки:
+<a id="d9e5176" class="indexterm"/>
+<a id="d9e5179" class="indexterm"/></p>
+<pre class="programlisting"># sudo -u glance -H glance-api</pre>
+<p>Это может вывести ошибку и причину проблемы.</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>При работе демона с sudo необходим флаг <code class="literal">-H</code>, 
+так как некоторые демоны будут записывать файлы относительно домашнего каталога 
+пользователя и данная запись может окончиться неудачей при 
+опускании <code class="literal">-H</code>.</p></td></tr></table>
+</div>
+<div class="sidebar">
+<div class="titlepage">
+<!--FOOBAR!-->
+<div><div>
+ <p class="title"><strong>Пример осложнений</strong></p>
+</div></div></div>
+<p>Однажды утром, вычислительному узлу не удалось запустить никакие экземпляры. Файлы журналов 
+были слегка туманны, утверждая, что определенный экземпляр не смог стартовать. 
+Такое завершение оказалось ложным следом, поскольку данный экземпляр был просто 
+первым экземпляром в алфавитном порядке, так что это был первый экземпляр, 
+с которого должен был начать <code class="literal">nova-compute</code>.</p>
+<p>Дальнейший поиск неисправностей показал, что libvirt вовсе не работает. 
+Это имело больше смысла. Если libvirt не работает, то никакой экземпляр не может 
+виртуализироваться с использованием KVM. После попытки запуска libvirt, 
+она сразу молча падает. Журналы libvirt не объясняют причину.</p>
+<p>Далее, демон <code class="code">libvirtd</code> был запущен в командной строке. 
+Наконец, полезное сообщение об ошибке: он не может подключиться к d-bus. 
+Как не смешно это звучит, libvirt, и, следовательно, <code class="code">nova-compute</code>, 
+полагаются на d-bus и по какой-то причине d-bus отказывает. 
+Простой старт d-bus устанавливает всю цепочку необходимым образом и вскоре 
+все восстанавливается и работает.</p>
+</div></div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="uninstalling"> </a>Деинсталляция</h2>
+</div></div></div>
+<p>Хотя мы всегда рекомендовали бы выполнять деинсталляцию систем с помощью автоматизированной 
+системы развертывания с нуля, иногда вы должны удалить OpenStack из системы тяжелым способом. 
+Опишем как:
+<a id="d9e5198" class="indexterm"/>
+<a id="d9e5200" class="indexterm"/></p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Удалите все пакеты.</p></li><li class="listitem">
+<p>Удалите все оставшиеся файлы.</p></li><li class="listitem">
+<p>Удалите базы данных.</p></li></ul>
+</div>
+<p>Эти действия зависят от вашего исходного дистрибутива, но в целом 
+вы должны искать команды &quot;purge&quot; в менеджере пакетов, подобные 
+<code class="literal">aptitude purge ~c $package</code>. Затем вы можете 
+осуществить поиск потерянных файлов в каталогах, упомянутых в данном руководстве. 
+Для удаления должным образом базы данных, обратитесь к руководству, соответствующего используемому 
+вами продукту.
+<a id="d9e5212" class="indexterm"/></p>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

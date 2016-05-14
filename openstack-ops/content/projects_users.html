@@ -1,0 +1,933 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+    </script>
+<title>Глава 9. Управление проектами и пользователями - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="operations.html" title="Эксплуатация"/>
+<link rel="prev" href="lay_of_the_land.html" title="Глава 8. Что к чему"/>
+<link rel="next" href="user_facing_operations.html" title="Глава 10. Операции стороны пользователя"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:03+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//projects_users.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 9. Управление проектами и пользователями';
+PrevRef = 'lay_of_the_land.html';
+UpRef = 'operations.html';
+NextRef = 'user_facing_operations.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="chapter">
+ <div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="projects_users"> </a>Глава 9. Управление проектами и пользователями</h2>
+ </div></div></div>
+ 
+ <div class="toc"><dl><dt><span class="section">
+  <a href="projects_users.html#projects_or_tenants">Проекты или владельцы?</a></span></dt><dt><span class="section">
+  <a href="projects_users.html#managing_projects">Управление проектами</a></span></dt><dt><span class="section">
+  <a href="projects_users.html#quotas">Квоты</a></span></dt><dt><span class="section">
+  <a href="projects_users.html#user_mgmt">Управление пользователями</a></span></dt><dt><span class="section">
+  <a href="projects_users.html#create_new_users">Создание нового пользоваетеля</a></span></dt><dt><span class="section">
+  <a href="projects_users.html#associate_users_with_projects">Связывание пользователей с проектами</a></span></dt><dt><span class="section">
+  <a href="projects_users.html#projects_users_summary">Резюме</a></span></dt></dl>
+ </div>
+ 
+ <p>Без пользователей облако OpenStack не имеет большого значения. В данной 
+ главе рассматриваются темы, связанные с пользователями, проектами и квотами.
+ Этот раздел описывает пользователей и проекты в соответствии с версией 2
+ API идентификации OpenStack.</p>
+ <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+  <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+  <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr>
+  <td align="left" valign="top">
+  <p>Хотя версия 3 API идентификации уже доступна, инструменты клиентов 
+  пока еще не поддерживают эти вызовы, и большинство облаков OpenStack 
+  все еще реализуют API идентификации v2.0.
+  <a id="d9e3431" class="indexterm"/></p></td></tr></table>
+ </div>
+ 
+ <div class="section">
+ <div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+  <a id="projects_or_tenants"> </a>Проекты или владельцы?</h2>
+ </div></div></div>
+ 
+ <p>В интерфейсах пользователя и документации OpenStack, группа пользователей называется 
+ <a class="gloss" href="#" def="&lt;strong&gt;проект: &lt;/strong&gt; &lt;p&gt;
+ Логически сгруппированные пользователи в пределах вычислительной среды; 
+ определяют квоты и доступ к &lt;span class='keep-together'&gt;образам &lt;/span&gt; 
+ виртуальных машин. &lt;/p&gt;">проектами</a> 
+ или 
+ <a class="gloss" href="#" def="&lt;strong&gt;владелец: &lt;/strong&gt; &lt;p&gt;
+ Группа пользователей; используется для изоляции доступа к ресурсам вычислительной среды.
+ Альтернатива термину проект. &lt;/p&gt;">владельцами</a> (tenant). 
+ Эти термины взаимозаменяемые.
+ <a id="d9e3439" class="indexterm"/>
+ <a id="d9e3442" class="indexterm"/>
+ <a id="d9e3445" class="indexterm"/></p>
+ 
+ <p>Первоначальная реализация вычислительной службы (Compute Service) OpenStack (nova) 
+ имела собственную систему аутентификации и использовался термин 
+ <code class="literal">проект</code>. После перемещения аутентификации в проект службы 
+ идентификации (Identity Service) OpenStack (keystone), для названия группы пользователей 
+ используется термин <code class="literal">владелец</code> (tenant).
+ Из-за такого наследия некоторые инструменты OpenStack используют термин проекты, а некоторые
+ термин владельцы.</p>
+ 
+ <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+  <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+  <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr>
+  <td align="left" valign="top">
+  <p>Данное руководство использует термин <code class="literal">проект</code>, 
+  , за исключением примера, демонстрирующего взаимодействие с инструментом, 
+  который использует термин <code class="literal">владелец</code>.</p></td></tr></table>
+ </div></div>
+ 
+ <div class="section">
+ <div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+  <a id="managing_projects"> </a>Управление проектами</h2>
+ </div></div></div>
+ <div class="toc"><dl><dt><span class="section">
+  <a href="projects_users.html#add_projects">Добавление проектов</a></span></dt></dl>
+ </div>
+ <p>Пользователи должны быть связаны хотя бы с одним проектом, хотя они и могут 
+ принадлежать множеству проектов. Следовательно, перед добавлением пользователей 
+ вы должны создать хотя бы один проект.
+ <a id="d9e3458" class="indexterm"/></p>
+ 
+ <div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="add_projects"> </a>Добавление проектов</h3>
+ </div></div></div>
+ 
+ <p>Чтобы создать проект при помощи инструментальной панели OpenStack:</p>
+ 
+ <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+  <p>Войдите в систему с правами администратора.</p></li><li class="listitem">
+  <p>Выберите закладку <span class="guilabel"><strong>Admin</strong></span> 
+  в левой панели навигации.</p></li><li class="listitem">
+  <p>Под панелью идентификации (Identity Panel), кликните на
+  <span class="guilabel"><strong>Projects</strong></span>.</p></li><li class="listitem">
+  <p>Кликните по кнопке <span class="guibutton"><strong>Create Project</strong></span> (создать проект).</p></li></ol>
+ </div>
+ 
+ <p>Вам будет предложено ввести название проекта и, что не является обязательным, 
+ однако рекомендуется, его описание. Чтобы включить этот проект, установите флажок 
+ в нижней части формы. По умолчанию эта опция включена, как показано на 
+ <a class="xref" href="projects_users.html#horizon-add-project" title="Рисунок 9.1. Форма создания проекта в инструментальной панели">
+ Рисунке 9.1., “Форма создания проекта в инструментальной панели”</a>.</p>
+ 
+ <div class="figure"><a id="horizon-add-project"> </a>
+  <p class="title"><strong>Рисунок 9.1. Форма создания проекта в инструментальной панели</strong></p>
+  <div class="figure-contents"><div class="mediaobject">
+   <img src="figures/osog_0901.png"/>
+  </div></div></div><br class="figure-break"/>
+  <span><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0901.png"/>
+  Источник рисунка</a></span>
+  
+  <p>Кроме того, можно добавить участников проекта и скорректировать его 
+  квоты. Мы обсудим это позже, однако, на практике может оказаться 
+  весьма удобным иметь дело со всеми этими операциями одновременно.</p>
+  
+  <p>Для добавления проекта с использованием командной строки необходимо применить 
+  утилиту keystone, которая использует термин 
+  To add a project through the command line, you must use the
+  keystone utility, which uses <code class="literal">владелец</code> (tenant) вместо 
+  <code class="literal">проект</code>:</p>
+  
+  <pre class="programlisting"># keystone tenant-create --name=demo</pre>
+  
+  <p>Данная команда создает проект с именем &quot;demo&quot;. По желанию вы можете 
+  добавить строку описания путем добавления 
+  <code class="code">--description <em class="replaceable"><code>tenant-description</code></em></code>, 
+  что может быть очень полезным. Также вы можете создать группу в отключенном состоянии 
+  путем добавления в команде <code class="code">--enabled false</code>. 
+  По умолчанию проекты создаются во включенном состоянии.</p>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="quotas"> </a>Квоты</h2>
+</div></div></div>
+
+<div class="toc"><dl><dt><span class="section">
+ <a href="projects_users.html#set_image_quotas">Квотирование образов</a></span></dt><dt><span class="section">
+ <a href="projects_users.html#cli_set_compute_quotas">Квотирование вычислительных служб</a></span></dt><dt><span class="section">
+ <a href="projects_users.html#cli_set_object_storage_quotas">Квотирование хранилищ объектов</a></span></dt><dt><span class="section">
+ <a href="projects_users.html#cli_set_block_storage_quotas">Квотирование блочных хранилищ</a></span></dt></dl>
+</div>
+
+<p>Для предотвращения исчерпания системных возможностей без 
+предупреждения можно настроить 
+<a class="gloss" href="#" def="&lt;strong&gt;квоты: &lt;/strong&gt; &lt;p&gt;
+В вычислительной среде и блочном хранилище возможно устанавливать пределы ресурса на 
+&lt;span class='keep-together'&gt;основе &lt;/span&gt;
+ограничений на проект. &lt;/p&gt;">квоты</a>. 
+Квоты являются эксплутационными пределами. Например, 
+можно управлять количеством доступных владельцу гигабайт, 
+чтобы пребывать в уверенности, что отдельный владелец не займет все доступное 
+дисковое пространство. В настоящее время квоты применяются на уровне владельца 
+(или проекта), а не на уровне пользователя.
+<a id="quotas9" class="indexterm"/>
+<a id="d9e3498" class="indexterm"/></p>
+
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr>
+ <td align="left" valign="top">
+ <p>Поскольку без разумного квотирования отдельный владелец может
+ использовать все доступные ресурсы, OpenStack поставляется с квотами по умолчанию.
+ Вы должны обратить внимание на то, какие установки квот имеют
+ смысл для имеющегося у вас оборудования.</p></td></tr></table>
+</div>
+
+<p>Используя интерфейс командной строки, вы можете управлять квотами 
+служб вычислительной среды и блочных хранилищ OpenStack.</p>
+
+<p>Как правило, значения по умолчанию изменяются, поскольку владельцу требуется больше, 
+чем установленное в OpenStack по умолчанию значение 10 томов на владельца, 
+или более чем установленное по умолчанию в OpenStack значение в 1Тб дискового 
+пространства на вычислительном узле.</p>
+
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr>
+ <td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr>
+ <td align="left" valign="top">
+ <p>
+ Для просмотра всех владельцев выполните команду: </p>
+ <pre class="screen">$ keystone tenant-list
+
++---------------------------------+----------+---------+
+|                id               |   name   | enabled |
++---------------------------------+----------+---------+
+| a981642d22c94e159a4a6540f70f9f8 |  admin   |   True  |
+| 934b662357674c7b9f5e4ec6ded4d0e | tenant01 |   True  |
+| 7bc1dbfd7d284ec4a856ea1eb82dca8 | tenant02 |   True  |
+| 9c554aaef7804ba49e1b21cbd97d218 | services |   True  |
++---------------------------------+----------+---------+
+</pre></td></tr></table>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="set_image_quotas"> </a>Квотирование образов</h3>
+ </div></div></div>
+ 
+ <p>OpenStack Havana ввела базовую функцию квотирования для служб образов,
+ так что теперь вы можете ограничивать хранение образов проекта
+ общим числом байт. В настоящее время эта квота применяется по всему
+ облаку, так что если вы установите предел квотирования в 5ГБ, то все
+ проекты в вашем облаке будут в состоянии хранить только 5ГБ образов
+ и моментальных снимков.
+ <a id="d9e3511" class="indexterm"/></p>
+ 
+ <p>Для включения этой функции, отредактируйте файл 
+ <code class="filename">/etc/glance/glance-api.conf</code>, и в разделе
+ [DEFAULT] добавьте:</p>
+ <pre class="programlisting brush: bash; ">user_storage_quota = &lt;bytes&gt;</pre>
+ 
+ <p>Например, чтобы ограничить хранение образов проектов 5ГБ, сделайте так:</p>
+<pre class="programlisting brush: bash; ">user_storage_quota = 5368709120</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr>
+ <td align="left" valign="top">
+ <p>В редакции Icehouse, существует опция настройки в
+ <code class="filename">glance-api.conf</code>, которая ограничивает число участников,
+ которым разрешен доступ к образу, называемое <code class="code">image_member_quota</code>, 
+ по умолчанию установленное в значение 128. Эта настройка является квотой, отличающейся от
+ квоты хранения.
+ <a id="d9e3523" class="indexterm"/></p></td></tr></table>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="cli_set_compute_quotas"> </a>Квотирование вычислительных служб</h3>
+</div></div></div>
+
+<div class="toc"><dl><dt><span class="section">
+ <a href="projects_users.html#cli_set_compute_quotas_procedure">
+ Просмотр и обновление квот вычислительной среды для владельца (проекта)</a></span></dt></dl>
+</div>
+
+<p>В качестве пользователя с правами администратора, вы можете обновить квоты вычислительной службы 
+для существующих владельцев, а также обновлять значения квот по умолчанию для нового владельца. 
+<a id="d9e3529" class="indexterm"/> См. 
+<a class="xref" href="projects_users.html#compute-quota-table" title="Таблица 9.1. Описание квот вычислительной среды">
+Таблица 9.1., “Таблица 9.1.Описание квот вычислительной среды”</a>.</p>
+<table rules="all" id="compute-quota-table"><caption>
+Таблица 9.1. Описание квот вычислительной среды</caption><col width="20%"/><col width="45%"/><col width="35%"/><thead><tr>
+            <th>Квота</th>
+            <th>Описание</th>
+            <th>Название атрибута</th>
+          </tr></thead><tbody><tr>
+            <td><p>Fixed IPs</p></td>
+            <td><p>Количество фиксированных IP- адресов, доступных владельцу. Это 
+			число должно быть больше или равно числу доступных экземпляров.</p></td>
+            <td><p> <code class="systemitem">fixed-ips</code> </p></td>
+          </tr><tr>
+            <td><p>Floating IPs</p></td>
+            <td><p>Количество плавающих IP, доступных владельцу.</p></td>
+            <td><p> <code class="systemitem">floating-ips</code> </p></td>
+          </tr><tr>
+            <td><p>Injected file content bytes</p></td>
+            <td><p>Количество байт содержимого, доступных для внедряемого файла.</p></td>
+            <td><p> <code class="systemitem">injected-file-content-bytes</code>
+            </p></td>
+          </tr><tr>
+            <td><p>Injected file path bytes</p></td>
+            <td><p>Количество байт, доступных для пути внедряемого файла.</p></td>
+            <td><p> <code class="systemitem">injected-file-path-bytes</code>
+            </p></td>
+          </tr><tr>
+            <td><p>Injected files</p></td>
+            <td><p>Количество внедряемых файлов, доступных владельцу.</p></td>
+            <td><p> <code class="systemitem">injected-files</code> </p></td>
+          </tr><tr>
+            <td><p>Instances</p></td>
+            <td><p>Количество экземпляров, доступных владельцу.</p></td>
+            <td><p> <code class="systemitem">instances</code> </p></td>
+          </tr><tr>
+            <td><p>Key pairs</p></td>
+            <td><p>Количество ключевых пар, доступных пользователю.</p></td>
+            <td><p> <code class="systemitem">key-pairs</code> </p></td>
+          </tr><tr>
+            <td><p>Metadata items</p></td>
+            <td><p>Количество элементов метаданных, доступных экземпляру.</p></td>
+            <td><p> <code class="systemitem">metadata-items</code> </p></td>
+          </tr><tr>
+            <td><p>RAM</p></td>
+            <td><p>Объем ОЗУ в мегебайтах, доступных владельцу.</p></td>
+            <td><p> <code class="systemitem">ram</code> </p></td>
+          </tr><tr>
+            <td><p>Security group rules</p></td>
+            <td><p>Количество правил, доступных группе безопасности.</p></td>
+            <td><p> <code class="systemitem">security-group-rules</code>
+            </p></td>
+          </tr><tr>
+            <td><p>Security groups</p></td>
+            <td><p>Количество групп безопасности, доступных владельцу.</p></td>
+            <td><p> <code class="systemitem">security-groups</code> </p></td>
+          </tr><tr>
+            <td><p>VCPUs</p></td>
+            <td><p>Количество ядер экземпляров, доступных владельцу.</p></td>
+            <td><p> <code class="systemitem">cores</code> </p></td>
+          </tr></tbody></table>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="cli_set_compute_quotas_procedure"> </a>Просмотр и обновление квот вычислительной среды для владельца (проекта)</h4>
+</div></div></div>
+
+<p>
+Для просмотра и обновления квот владельца вы можете использовать поддерживаемые клиентом 
+<code class="literal">python-novaclient</code> команды <code class="literal">nova quota-*</code> 
+в качестве пользователя с правами администратора.</p>
+<div class="procedure"><a id="d9e3645"> </a>
+
+<p class="title"><strong>Для просмотра и обновления значения квот по умолчанию</strong></p><ol class="procedure" type="1"><li class="step">
+<p>Выведите список всех квот по умолчаниюдля всех владельцев следующим образом:</p>
+<pre class="screen">$ nova quota-defaults</pre>
+<p>Например:</p>
+<pre class="screen">$ nova quota-defaults
++-----------------------------+-------+
+| Property                    | Value |
++-----------------------------+-------+
+| metadata_items              | 128   |
+| injected_file_content_bytes | 10240 |
+| ram                         | 51200 |
+| floating_ips                | 10    |
+| key_pairs                   | 100   |
+| instances                   | 10    |
+| security_group_rules        | 20    |
+| injected_files              | 5     |
+| cores                       | 20    |
+| fixed_ips                   | -1    |
+| injected_file_path_bytes    | 255   |
+| security_groups             | 10    |
++-----------------------------+-------+</pre></li><li class="step">
+<p>
+Обновите значения по умолчанию для нового владельца следующим образом:</p>
+<pre class="screen">$ nova quota-class-update default <em class="replaceable">
+<code>key</code></em> <em class="replaceable"><code>value</code></em></pre>
+<p>Например:</p>
+<pre class="screen">$ nova quota-class-update default instances 15</pre></li></ol>
+</div>
+<div class="procedure"><a id="d9e3659"> </a>
+<p class="title"><strong>Чтобы просмотреть значения квот для владельца (проекта)</strong></p><ol class="procedure" type="1"><li class="step">
+<p>Поместите ID владельца в используемую переменную следующим образом:</p>
+<pre class="screen">$ tenant=$(keystone tenant-list | awk '/<em class="replaceable">
+<code>tenantName</code></em>/ {print $2}')</pre></li><li class="step">
+
+<p>Выведите список значений квот, установленных в настоящее время для владельца следующим образом:</p>
+<pre class="screen">$ nova quota-show --tenant $tenant</pre>
+
+<p>Например:</p>
+<pre class="screen">$ nova quota-show --tenant $tenant
++-----------------------------+-------+
+| Property                    | Value |
++-----------------------------+-------+
+| metadata_items              | 128   |
+| injected_file_content_bytes | 10240 |
+| ram                         | 51200 |
+| floating_ips                | 12    |
+| key_pairs                   | 100   |
+| instances                   | 10    |
+| security_group_rules        | 20    |
+| injected_files              | 5     |
+| cores                       | 20    |
+| fixed_ips                   | -1    |
+| injected_file_path_bytes    | 255   |
+| security_groups             | 10    |
++-----------------------------+-------+</pre></li></ol></div><div class="procedure"><a id="d9e3670"> </a>
+<p class="title"><strong>Чтобы обновить значения квот для владельца (проекта)</strong></p><ol class="procedure" type="1"><li class="step">
+<p>
+Пoлучите ID владельца следующим образом:</p>
+<pre class="screen">$ tenant=$(keystone tenant-list | awk '/<em class="replaceable">
+<code>tenantName</code></em>/ {print $2}')</pre></li><li class="step">
+<p>Обновите определенное значение квоты следующим образом:</p>
+<pre class="screen"># nova quota-update --<em class="replaceable">
+<code>quotaName</code></em> <em class="replaceable">
+<code>quotaValue</code></em> <em class="replaceable"><code>tenantID</code></em></pre>
+<p>Например:</p><pre class="screen"># nova quota-update --floating-ips 20 $tenant
+# nova quota-show --tenant $tenant
++-----------------------------+-------+
+| Property                    | Value |
++-----------------------------+-------+
+| metadata_items              | 128   |
+| injected_file_content_bytes | 10240 |
+| ram                         | 51200 |
+| floating_ips                | 20    |
+| key_pairs                   | 100   |
+| instances                   | 10    |
+| security_group_rules        | 20    |
+| injected_files              | 5     |
+| cores                       | 20    |
+| fixed_ips                   | -1    |
+| injected_file_path_bytes    | 255   |
+| security_groups             | 10    |
++-----------------------------+-------+</pre>
+
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr>
+ <td align="left" valign="top">
+ <p>Для просмотра списка опций команды <code class="literal">quota-update</code> выполните:</p>
+ <pre class="screen">$ nova help quota-update</pre></td></tr></table>
+</div></li></ol>
+</div></div></div>
+
+<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="cli_set_object_storage_quotas"> </a>Квотирование хранилищ объектов</h3>
+</div></div></div>
+
+<p>Квотирование хранилищ объектов было введено вSwift 1.8 (OpenStack
+Grizzly). В настоящее время существует две категории квот для хранилищ объектов:
+<a id="d9e3691" class="indexterm"/>
+<a id="d9e3693" class="indexterm"/>
+<a id="d9e3696" class="indexterm"/></p>
+
+<div class="variablelist"><dl><dt>
+ <span class="term">Квоты контейнера</span></dt><dd>
+ <p>Ограничивают общий объем (в байтах) или число объектов,
+ которое может быть сохранено в одном контейнере.</p></dd><dt>
+ <span class="term">Квоты учетных записей</span></dt><dd>
+ <p>Ограничивает общий размер (в байтах), который доступен пользователю
+ в <span class="keep-together">службе</span> хранилища объектов.</p></dd></dl>
+</div>
+
+<p>Для того, чтобы воспользоваться либо квотами контейнера, либо квотами
+учетных записей, ваш сервер прокси хранилища объектов должен иметь 
+<code class="code">container_quotas</code> или 
+<code class="code">account_quotas</code> (или и то, и другое) добавленные в конвейер
+<code class="literal">[pipeline:main]</code>. Каждый тип квоты также требует свой собственный раздел 
+в файле <code class="filename">proxy-server.conf</code>:</p>
+<pre class="programlisting brush: bash; ">[pipeline:main]
+pipeline = healthcheck [...] container_quotas account_quotas proxy-server
+
+[filter:account_quotas]
+use = egg:swift#account_quotas
+
+[filter:container_quotas]
+use = egg:swift#container_quotas
+   </pre>
+<p>Для просмотра и обновления квот хранилища объектов воспользуйтесь
+командой <code class="code">swift</code>, поддерживаемой пакетом
+<code class="code">python-swiftclient</code>. Любой включенный в проект пользователь может
+просматривать размещенные в этом проекте квоты. Для обновления квот хранилища объектов
+в проекте вы должны иметь роль ResellerAdmin в том проекте, к которому применяются квоты.</p>
+
+<p>Для просмотра размещенных в проекте квот учетных записей:</p>
+<pre class="screen">$ swift stat</pre>
+<pre class="screen">   Account: AUTH_b36ed2d326034beba0a9dd1fb19b70f9
+Containers: 0
+   Objects: 0
+     Bytes: 0
+Meta Quota-Bytes: 214748364800
+X-Timestamp: 1351050521.29419
+Content-Type: text/plain; charset=utf-8
+Accept-Ranges: bytes</pre>
+<p>Для применения или обновления квот в проекте:</p>
+<pre class="screen">$ swift post -m quota-bytes:
+     &lt;bytes&gt;</pre>
+<p>Например, для размещения квоты 5ГБ в учетных записях:</p>
+<pre class="screen">$ swift post -m quota-bytes:
+     5368709120</pre>
+<p>Для проверки квот снова выполните команду <code class="literal">swift stat</code>:</p>
+<pre class="screen">$ swift stat</pre>
+<pre class="screen">   Account: AUTH_b36ed2d326034beba0a9dd1fb19b70f9
+Containers: 0
+   Objects: 0
+     Bytes: 0
+Meta Quota-Bytes: 5368709120
+X-Timestamp: 1351541410.38328
+Content-Type: text/plain; charset=utf-8
+Accept-Ranges: bytes</pre>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="cli_set_block_storage_quotas"> </a>Квотирование блочных хранилищ</h3>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="projects_users.html#cli_set_block_storage_quotas_procedure">
+ Просмотр и обновление квот блочных хранилищ для владельца (проекта)</a></span></dt></dl>
+</div>
+
+<p>В качестве пользователя с правами администратора вы можете обновить квоты службы блочного хранилища 
+(Block Storage) для владельцев, а также обновлять значения по умолчанию квот для новых владельцев. См. 
+<a class="xref" href="projects_users.html#block-storage-quota-table" title="Таблица 9.2. Описание квот блочного хранилища">
+Таблицу 9.2, “Описание квот блочного хранилища”</a>.<a id="d9e3733" class="indexterm"/></p>
+<table rules="all" id="block-storage-quota-table">
+<caption>Таблица 9.2. Описание квот блочного хранилища</caption><col width="20%"/><col width="80%"/><thead><tr>
+              <th>Название атрибута</th>
+              <th>Описание</th>
+            </tr></thead><tbody><tr>
+              <td><p>gigabytes</p></td>
+              <td><p>Объем доступных на томе данных в гигабайтах, доступных для каждого владельца.</p></td>
+            </tr><tr>
+              <td><p>snapshots</p></td>
+              <td><p>Количество моментальных снимков блочного хранилища, доступных для каждого владельца.</p></td>
+            </tr><tr>
+              <td><p>volumes</p></td>
+              <td><p>Количество томов блочного хранилища, доступных каждому владельцу.</p></td>
+            </tr></tbody></table>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="cli_set_block_storage_quotas_procedure"> </a>Просмотр и обновление квот блочного хранилища для владельца (проекта)</h4>
+</div></div></div>
+
+<p>Для просмотра и обновления квот владельца вы можете использовать поддерживаемые пакетом 
+<code class="literal">python-cinderclient</code> команды <code class="literal">cinder quota-*</code> 
+в качестве пользователя с правами администратора.</p><div class="procedure"><a id="d9e3765"> </a>
+		
+<p class="title"><strong>Для просмотра и обновления значения квот блочного хранилища по умолчанию</strong></p><ol class="procedure" type="1"><li class="step">
+
+<p>Выведите список всех квот по умолчанию для всех владельцев следующим образом:</p>
+<pre class="screen">$ cinder quota-defaults</pre>
+<p>Например:</p>
+<pre class="screen">$ cinder quota-defaults
++-----------+-------+
+|  Property | Value |
++-----------+-------+
+| gigabytes |  1000 |
+| snapshots |   10  |
+|  volumes  |   10  |
++-----------+-------+</pre></li><li class="step">
+
+<p>Для обновления значений по умолчанию для новых владельцев, обновите
+атрибуты в файле <code class="filename">/etc/cinder/cinder.conf</code>.</p></li></ol>
+</div>
+
+<div class="procedure"><a id="d9e3775"> </a>
+ <p class="title"><strong>Для просмотра квот блочного хранилища для владельцев (проектов)</strong></p><ul class="procedure"><li class="step">
+ <p>Просмотрите квоты для владельцев следующим образом:</p>
+ <pre class="screen"># cinder quota-show <em class="replaceable"><code>tenantName</code></em></pre>
+ <p> Например:</p>
+ <pre class="screen"># cinder quota-show tenant01
++-----------+-------+
+|  Property | Value |
++-----------+-------+
+| gigabytes |  1000 |
+| snapshots |   10  |
+|  volumes  |   10  |
++-----------+-------+</pre></li></ul>
+</div>
+<div class="procedure"><a id="d9e3783"> </a>
+<p class="title"><strong>Для обновления квот блочного хранилища для владельцев (проекта)</strong></p><ol class="procedure" type="1"><li class="step">
+<p>Поместите ID владельца в используемую переменную следующим образом:</p>
+<pre class="screen">$ tenant=$(keystone tenant-list | awk '/<em class="replaceable">
+<code>tenantName</code></em>/ {print $2}')</pre></li><li class="step">
+<p>Обновите определенное значение квоты следующим образом:</p>
+<pre class="screen"># cinder quota-update --<em class="replaceable"><code>quotaName</code></em> <em class="replaceable"><code>NewValue</code></em> <em class="replaceable"><code>tenantID</code></em></pre>
+<p>Например:<a id="d9e3796" class="indexterm"/></p>
+<pre class="screen"># cinder quota-update --volumes 15 $tenant
+# cinder quota-show tenant01
++-----------+-------+
+|  Property | Value |
++-----------+-------+
+| gigabytes |  1000 |
+| snapshots |   10  |
+|  volumes  |   15  |
++-----------+-------+</pre></li></ol>
+</div></div></div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="user_mgmt"> </a>Управление пользователями</h2></div></div></div>
+ <p>Инструменты командной строки для управления пользователями неудобны для 
+ непосредственного использования. Они требуют выдачи нескольких команд для выполнения одной задачи, 
+ а также для многих элементов они используют UUID вместо символических имен. На практике 
+ люди, как правило, не используют эти инструменты непосредственно. К счастью, 
+ инструментальная панель OpenStack (Dashboard) обеспечивает приемлемый интерфейс для этих целей. 
+ Кроме того, многие сайты написали пользовательские инструменты для собственных потребностей 
+ по обеспечению соблюдения локальных политик и обеспечивают уровни самообслуживания 
+ для пользователей, которые не доступны в настоящее время в виде пакетов инструментов. 
+ <a id="d9e3801" class="indexterm"/></p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="create_new_users"> </a>Создание нового пользователя</h2>
+</div></div></div>
+
+<p>Для создания пользователя вам потребуется следующая информация:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Имя пользователя </p></li><li class="listitem">
+ <p>Адрес электронной почты </p></li><li class="listitem">
+ <p>Пароль</p></li><li class="listitem">
+ <p>Первичный проект</p></li><li class="listitem">
+ <p>Роль</p></li></ul>
+</div>
+<p>Имя пользователя и адрес электронной почты не требуют пояснений, 
+хотя ваш сайт может иметь локальные соглашения, которые вы должны соблюдать. Установка 
+и изменение паролей в службе идентификации (Identity Service) требует административных привилегий. 
+Начиная с версии Folsom пользователи не могут изменять свои собственные пароли. Это является 
+большим стимулом для создания локальных пользовательских инструментов, и должно приниматься во 
+внимание при назначении и распространении паролей. Первичный проект просто является первым 
+ассоциированным с пользователем проектом и он должен существовать перед созданием пользователя. 
+Роль почти всегда устанавливается в значение &quot;участник&quot;. Распространяемый 
+в дистрибутиве OpenStack поставляется с двумя ролями, определяемыми как:</p>
+
+<div class="variablelist"><dl><dt><span class="term">участник</span> (member)</dt><dd>
+<p>A typical user</p></dd><dt><span class="term">администратор</span> (admin)</dt><dd>
+<p>Административный супер пользователь, наделенный полные правами для 
+всех проектов, который должен использоваться с большой осторожностью</p></dd></dl>
+</div>
+
+<p>Можно определять и другие роли, но это не является общей практикой.</p>
+<p>После того, как вы собрали эту информацию, создание пользователя в 
+инструментальной панели Dashboard является просто заполнением еще одной веб-формы, 
+подобной тем, которые мы видели ранее, и которую можно найти по ссылке 
+Users (Пользователи) в панели навигации Admin, с последующим нажатием кнопки 
+Create User (Создать пользователя) в правом верхнем углу.</p>
+
+<p>Изменение пользователей выполняется также на данной странице Пользователи (User). 
+Если у вас имеется большое количество пользователей, то эта страница может стать довольно 
+переполненной. Поле поиска Filter (Фильтр) в верхней части страницы можно использовать для 
+ограничения просматриваемых пользователей. 
+Очень похожая на диалог создания пользователя форма может быть раскрыта выбором
+Edit (редактирование) в действиях ниспадающего меню в конце линии для 
+изменяемого пользователя.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="associate_users_with_projects"> </a>Связывание пользователей с проектами</h2>
+</div></div></div><div class="toc"><dl><dt><span class="section">
+ <a href="projects_users.html#customize_auth">Настройка авторизации</a></span></dt><dt><span class="section">
+ <a href="projects_users.html#problem_users">Пользователи, разрушающие других пользователей</a></span></dt></dl>
+</div>
+<p>Многие сайты работают с пользователями, ассоциируемыми только с одним проектом. 
+Это является более традиционным и простым выбором как для администрирования, так и 
+для пользователей. С точки зрения администрирования: если пользователь сообщает о проблеме 
+с экземпляром или квотой, то очевидно, о каком проекте идет речь. Пользователям не следует беспокоиться 
+о том, в рамках какого проекта они работают, если они участвуют только в одном проекте. 
+Тем не менее, обратите внимание, что по умолчанию любой пользователь может повлиять на ресурсы и 
+любого другого пользователь в рамках своего проекта. Кроме того, можно ассоциировать пользователей 
+с несколькими проектами, если это имеет смысл для вашей организации. 
+<a id="d9e3834" class="indexterm"/>
+<a id="d9e3836" class="indexterm"/></p>
+<p>Связывание существующих пользователей с дополнительным проектом или их удаление 
+из старого проекта выполняется на странице Projects (Проекты) в инструментальной 
+панели Dashboard, при выборе Modify Users (Изменить пользователей) 
+в колонке Actions (Действия), как показано на
+<a class="xref" href="projects_users.html#horizon-edit-project" title="Рисунок 9.2. Вкладка редактирования участников проекта">
+Рисунок 9.2, “Вкладка <span class="guilabel">редактирования участников проекта</span>”</a>.</p>
+<p>В данном представлении вы можете выполнить ряд полезных, впрочем, также и опасных вещей.</p>
+<p>Первый столбец в данной форме, озаглавленный All Users (Все пользователи), включает в себя 
+список всех пользователей вашего облака, которые пока не ассоциированы с данным 
+проектом, а во втором пользователи, которые уже связаны с ним. Они могут быть 
+достаточно длинными, однако их можно ограничить набором подстроки имени пользователя, 
+которого вы ищете в поле фильтрации в верхней части <span class="keep-together">столбца</span>.</p>
+
+<p>В данном месте нажмите иконку <span class="guiicon"><strong>+</strong></span> для добавления пользователя к 
+проекту. Кликните на <span class="guiicon"><strong>-</strong></span> для его удаления.</p>
+
+<div class="figure"><a id="horizon-edit-project"> </a>
+<p class="title"><strong>Рисунок 9.2. Вкладка <span class="guilabel">редактирования участников проекта</span></strong></p>
+ <div class="figure-contents">
+ <div class="mediaobject">
+ <img src="figures/osog_0902.png"/>
+ <span><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0902.png"/>
+ Источник рисунка</a></span>
+ </div></div></div><br class="figure-break"/>
+ <p>Вероятность угрозы происходит из возможности изменения ролей 
+ участников. А именно, после имени пользователя в списке 
+ <span class="guilabel"><strong>Project Members</strong></span> (Участники проекта) 
+ существует ниспадающий список. Почти всегда его значение должно быть установлено в 
+ Member (Участник). Данный пример намеренно демонстрирует и пользователя с правами администратора, 
+ где это значение установлено admin (Администратор).</p>
+ <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr>
+ <td align="left" valign="top">
+ <p>Администратор (admin ) является глобальным, не только для определенного
+ проекта, следовательно предоставление этой роли в любом проекте 
+ дает пользователю права администратора во всем облаке.</p></td></tr></table>
+</div>
+<p>Обычная практика заключается в создании только одного пользователя с правами администратора 
+в отдельном проекте, по договоренности, это обычно проект admin, создаваемый по 
+умолчанию при установке облака. Если ваши пользователи с правами администратора 
+также используют облако для запуска и управления экземплярами, настоятельно 
+рекомендуется использовать отдельные учетные записи для административного 
+доступа и для обычной работы, а также их принадлежность различным проектам.
+<a id="d9e3858" class="indexterm"/></p>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="customize_auth"> </a>Настройка авторизации</h3>
+</div></div></div>
+<p>
+Параметры <a class="gloss" href="#" def="&lt;strong&gt;авторизация: &lt;/strong&gt; &lt;p&gt;
+Действие, проверяющее что пользователь, процесс или клиент авторизованы для выполнения работы. &lt;/p&gt;">
+авторизации</a> по умолчанию позволяют создавать ресурсы от имени другого 
+проекта только пользователям с правами администратора. OpenStack обрабатывает два вида 
+<span class="keep-together">политик</span> авторизации: 
+<a id="d9e3865" class="indexterm"/></p>
+<div class="variablelist"><dl><dt><span class="term">На основе операций</span></dt><dd>
+<p>Политики описывают критерии доступа для определенных операций, возможно с уточняющим 
+управлением с использованием конкретных атрибутов.</p></dd><dt>
+<span class="term">На основе ресурсов</span></dt><dd>
+<p>в соответствии с разрешениями, определяемыми для ресурса, определяется: 
+может или нет предоставляться определенный ресурс (на время написания [переводимой книги] 
+доступно только для сетевого ресурса). Фактические политики, 
+вводимые в действие службой OpenStack изменяются от развертывания к развертыванию.</p></dd></dl>
+</div>
+<p>Механизм политик читает записи из файла <code class="code">policy.json</code>. 
+Фактическое местонахождение этого файла может варьироваться от дистрибутива к 
+дистрибутиву, для nova это обычно <code class="code">/etc/nova/policy.json</code>. 
+Вы можете обновлять записи во время работы системы, при этом вы не должны перезапускать службы. 
+В настоящее время единственный способ обновлять такие политики заключается в редактировании файла политик. 
+</p>
+
+<p>Механизм службы политик OpenStack помечает политику непосредственно. 
+Например, в операторе <code class="code">compute:create: [[&quot;rule:admin_or_owner&quot;]]</code>, 
+политикой является <code class="code">compute:create</code>, 
+а правило - <code class="code">admin_or_owner</code>.</p>
+
+<p>Политики включаются механизмом политик OpenStack всякий раз, когда одна 
+из них соответствует операции OpenStack API или для данной операции используется 
+конкретный атрибут. Например, механизм проверяет политику <code class="code">create:compute</code> 
+всякий раз, когда пользователь отправляет запрос 
+<code class="code">POST
+/v2/{tenant_id}/servers</code> серверу OpenStack Compute API. 
+Политики также могут быть связаны с определенными 
+<a class="gloss" href="#" def="&lt;strong&gt;расширение API: &lt;/strong&gt; &lt;p&gt;
+Пользовательские модули, которые расширяют некоторые API ядра OpenStack. &lt;/p&gt;">
+расширениями API</a>. Например, если пользователю необходимо расширение подобное 
+<code class="code">compute_extension:rescue</code>, атрибуты, определенные 
+поддержкой расширений включают проверку правила для этой операции.</p>
+<p>Политики авторизации могут состоять из одного или большего количества правил. Если 
+задано много правил, политика оценивается как успешная когда выполняется одно из правил; 
+если операция API помечает много политик, то все политики должны определиться успешными. 
+Помимо этого, правила авторизации рекурсивны. После того, как правило совпало, оно (они) 
+могут быть приняты для решения другого правила, пока не будет достигнуто завершающее правило. 
+Существуют <span class="keep-together">определенные правила</span>:</p>
+<div class="variablelist"><dl><dt><span class="term">Правила, определяемые ролями</span> (Role-based rules)</dt><dd>
+<p>Оцениваются успешным в случае, когда выполняющий запрос пользователя имеет описываемую 
+роль. Например, <code class="code">&quot;role:admin&quot;</code> является успешным, 
+если выполняющий запрос пользователь является администратором.</p></dd><dt>
+<span class="term">Правила, определяемые полями</span> (Field-based rules)</dt><dd>
+<p>Оцениваются как успешные, если поле описываемого ресурса в текущем запросе соответствует 
+определенному значению. Например, 
+<code class="code">&quot;field:networks:shared=True&quot;</code> является успешным, 
+если атрибут сети совместного использования (shared) имеет значение истинно 
+(<code class="literal">true</code>).</p></dd><dt>
+<span class="term">Общие правила</span> (Generic rules)</dt><dd>
+<p>Сравнивает атрибут в ресурсе с атрибутом, извлекаемым из 
+учетных данных пользователя и принимается успешным, при успешном сравнении. 
+Например, <code class="code">&quot;tenant_id:%(tenant_id)s&quot;</code> 
+является успешным, если идентификатор владельца в ресурсе равен идентификатору владельца 
+для выполняющего запрос пользователя.</p></dd></dl>
+</div>
+<p>
+Вот фрагменты файла <code class="filename">policy.json</code> nova по умолчанию:</p>
+<pre class="programlisting brush: json; ">{
+        "context_is_admin":  [["role:admin"]],
+        "admin_or_owner":  [["is_admin:True"], \
+        ["project_id:%(project_id)s"]], <a id="ch9-co-1"> </a><img src="../common/images/callouts/1.png" alt="1" border="0"/>
+        "default": [["rule:admin_or_owner"]], <a id="ch9-co-2"> </a><img src="../common/images/callouts/2.png" alt="2" border="0"/>
+        "compute:create": [ ],
+        "compute:create:attach_network": [ ],
+        "compute:create:attach_volume": [ ],
+        "compute:get_all": [ ],
+    "admin_api": [["is_admin:True"]],
+        "compute_extension:accounts": [["rule:admin_api"]],
+        "compute_extension:admin_actions": [["rule:admin_api"]],
+        "compute_extension:admin_actions:pause": [["rule:admin_or_owner"]],
+        "compute_extension:admin_actions:unpause": [["rule:admin_or_owner"]],
+        ...
+        "compute_extension:admin_actions:migrate": [["rule:admin_api"]],
+        "compute_extension:aggregates": [["rule:admin_api"]],
+        "compute_extension:certificates": [ ],
+        ...
+        "compute_extension:flavorextraspecs": [ ],
+        "compute_extension:flavormanage": [["rule:admin_api"]], <a id="ch9-co-3"> </a><img src="../common/images/callouts/3.png" alt="3" border="0"/>
+        }
+        </pre>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left">
+<p><a href="#ch9-co-1">
+<img src="../common/images/callouts/1.png" alt="1" border="0"/></a> </p></td><td valign="top" align="left">
+<p>Демонстрирует правило, которое оценивается как успешное, если текущий пользователь 
+является администратором или владельцем указанного в ресурсе 
+запроса (равным идентификатору владельца).</p></td></tr><tr><td width="5%" valign="top" align="left">
+<p><a href="#ch9-co-2">
+<img src="../common/images/callouts/2.png" alt="2" border="0"/></a> </p></td><td valign="top" align="left">
+<p>Демонстрирует политику по умолчанию, принимаемую всегда, когда операция API 
+не соответствует ни одной из политик в 
+<code class="code">policy.json</code>.</p></td></tr><tr><td width="5%" valign="top" align="left">
+<p><a href="#ch9-co-3">
+<img src="../common/images/callouts/3.png" alt="3" border="0"/></a> </p></td><td valign="top" align="left">
+<p>Демонстрирует политику, ограничивающую возможность манипулирования предпочтениями (flavors) 
+администраторами исключительно административными API.
+<a id="d9e3921" class="indexterm"/></p></td></tr></table>
+</div>
+<p>В определенных случаях некоторые операции должны быть ограничены только 
+для администраторов. Поэтому, в качестве еще одного примера, рассмотрим, 
+как этот пример файла политики может быть изменен в сценарии, при котором 
+мы позволим пользователям создавать свои собственные особенности (flavors):</p>
+<pre class="programlisting">"compute_extension:flavormanage": [ ],</pre>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="problem_users"> </a>Пользователи, разрушающие других пользователей</h3></div></div></div>
+ <p>Пользователи в вашем облаке могут разрушать других пользователей иногда 
+ намеренно и предумышленно, а иногда из-за сбоев. Понимание 
+ ситуации позволяет вам сделать лучший выбор для обработки нарушения.
+ <a id="d9e3928" class="indexterm"/></p>
+ <p>Например: Некая группа пользователей имеет имеет экземпляры, которые используют 
+ большое количество вычислительных ресурсов для задач с очень 
+ интенсивными вычислениями. Это побуждает к загрузке вычислительных узлов 
+ с одновременным воздействием на остальных пользователей. В 
+ подобной ситуации пересмотрите варианты эксплуатации ресурсов вашими 
+ пользователями. Вы можете обнаружить, что сценарии массивных вычислений являются общеупотребимыми, 
+ и, следовательно, должны быть разделены в вашем облаке, например, 
+ путем группирования хостов или разбиения на области.</p>
+ <p>Другим примером являются пользователи, потребляющие очень большой трафик.
+ <a id="d9e3933" class="indexterm"/>. 
+ Опять же, главное понять, что делают пользователи. 
+ Если они действительно нуждаются в высоком объеме пропускной способности, 
+ вам, возможно, придется ограничить их скорость передачи, чтобы они не 
+ оказывали существенного воздействия на других пользователей, или же переместить их в область 
+ с более высокой пропускной способностью. С другой стороны может оказаться, 
+ что экземпляр пользователя был взломан, и в настоящее время является частью ботнета 
+ запускающего DDOS атаки. Разрешение этой проблемы является аналогичным тому, 
+ что любой другой сервер в вашей сети был взломан. 
+ Обратитесь к пользователям, и дайте им время на ответ. 
+ Если они не отвечают, закройте данный экземпляр. </p>
+ <p>Последний пример заключается в том, что пользователи разбивают ресурс 
+ неоднократно. Пообщайтесь с пользователями и выясните, 
+ что они пытаются сделать. Может быть, они не понимают, что то, 
+ что они делают, является неуместным или, может быть, есть проблема с ресурсом, 
+ к которому они пытаются получить доступ, что вызывает очередь их запросов или запаздывания.</p>
+</div></div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="projects_users_summary"> </a>Резюме</h2>
+</div></div></div>
+<p>
+Одним из ключевых элементов системного администрирования, который часто упускается из виду, 
+заключается в том, что конечные пользователи являются причиной, объясняющей 
+наличие системных администраторов. Не следуйте маршрутом BOFH и не прерывайте 
+каждого пользователя, который вызывает сигнал отключения. Поработайте с ними, 
+чтобы понять, что они пытаются сделать, и увидеть, как ваша среда может лучше помочь им в достижении их целей. 
+Удовлетворите потребности ваших пользователей путем организации ваших пользователей в проекты,
+применения политик, управления квотами и работая с ними.
+<a id="d9e3940" class="indexterm"/></p>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

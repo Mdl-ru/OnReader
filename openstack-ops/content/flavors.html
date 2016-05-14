@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Шаблоны виртуального ресурса - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="user_facing_operations.html" title="Глава 10. Операции стороны пользователя"/>
+<link rel="prev" href="user_facing_images.html" title="Образы"/>
+<link rel="next" href="private-flavors.html" title="Частные шаблоны виртуального ресурса"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:04+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//flavors.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Шаблоны виртуального ресурса';
+PrevRef = 'user_facing_images.html';
+UpRef = 'user_facing_operations.html';
+NextRef = 'private-flavors.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="flavors"> </a>Шаблоны виртуального ресурса</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="private-flavors.html">Частные шаблоны виртуального ресурса</a></span></dt></dl>
+</div>
+<p>Шаблоны виртуального оборудования в OpenStack называются 
+&quot;flavors&quot; (особенностями, предпочтениями), определяющими размеры оперативной памяти, 
+дискового пространства, количества ядер и тому подобного. Установка по 
+умолчанию обеспечивает диапазон из пяти шаблонов виртуальных ресурсов. </p>
+<p>Они настраиваются пользователями с правами администратора (что в свою очередь может 
+быть делегировано путем переопределения управления доступом для 
+<code class="code">compute_extension:flavormanage</code> в 
+<code class="code">/etc/nova/policy.json</code> на сервере <code class="code">nova-api</code>). 
+Чтобы получить список доступных в вашей системе шаблонов выполните: 
+<a id="d9e4046" class="indexterm"/>
+<a id="d9e4048" class="indexterm"/>
+<a id="d9e4050" class="indexterm"/></p>
+<pre class="screen">$ nova flavor-list
++----+-----------+-----------+------+-----------+\+-------+-\+-------------+
+| ID | Name      | Memory_MB | Disk | Ephemeral |/| VCPUs | /| extra_specs |
++----+-----------+-----------+------+-----------+\+-------+-\+-------------+
+| 1  | m1.tiny   | 512       | 1    | 0         |/| 1     | /| {}          |
+| 2  | m1.small  | 2048      | 10   | 20        |\| 1     | \| {}          |
+| 3  | m1.medium | 4096      | 10   | 40        |/| 2     | /| {}          |
+| 4  | m1.large  | 8192      | 10   | 80        |\| 4     | \| {}          |
+| 5  | m1.xlarge | 16384     | 10   | 160       |/| 8     | /| {}          |
++----+-----------+-----------+------+-----------+\+-------+-\+-------------+</pre>
+<p>Команда <code class="code">nova flavor-create</code> позволяет авторизованным пользователям 
+создавать новые шаблоны виртуальных ресурсов. Дополнительные команды работы с шаблонами виртуальных ресурсов 
+могут быть отображены с помощью команды: </p>
+<pre class="screen">$ nova help | grep flavor</pre>
+<p>Предпочтения определяют ряд параметров, которые имеют результатом
+возможность выбора пользователем типа виртуальной машины для запуска —
+прямо как если бы он покупал настоящий сервер.
+<a class="xref" href="flavors.html#table-flavor-params" title="Таблица 10.1. Параметры предпочтений">
+Таблица 10.1., “Параметры предпочтений”</a> перечисляет список элементов, которые могут быть установлены.
+Заметим, в частности, <span class="keep-together"><code class="literal">extra_specs</code>,</span> 
+которые могут использоваться для определения характеристик в произвольной форме,
+привнося большую гибкость по сравнению с размером оперативной памяти, процессоров и 
+дискового пространства.
+<a id="d9e4061" class="indexterm"/></p><table rules="all" id="table-flavor-params">
+<caption>Таблица 10.1. Параметры предпочтений</caption><col width="25%"/><col width="75%"/><thead><tr>
+          <th><p> <span class="bold"><strong>Графа</strong></span> </p></th>
+          <th><p> <span class="bold"><strong>Описание</strong></span> </p></th>
+        </tr></thead><tbody><tr>
+          <td><p>ID</p></td>
+          <td><p>Уникальный идентификатор (ID) в числовом выражении.</p></td>
+        </tr><tr>
+          <td><p>Name</p></td>
+          <td><p>Описательное имя, например, xx.size_name,
+		  общеупотребимое, однако не обязательно, хотя некоторые инструменты сторонних 
+		  производителей могут их использовать.</p></td>
+        </tr><tr>
+          <td><p>Memory_MB</p></td>
+          <td><p>Размер оперативной памяти виртуальной машины в мегабайтах.</p></td>
+        </tr><tr>
+          <td><p>Disk</p></td>
+          <td><p>Размер виртуального корневого диска в гигабайтах. Это временный диск (ephemeral), 
+		  в который копируется базовый образ. При загрузке с постоянного тома 
+		  он не требуется. Размер &quot;0&quot; является специальным случаем, который 
+		  использует для размера временного корневого тома собственный размер базового образа.</p></td>
+        </tr><tr>
+          <td><p>Ephemeral</p></td>
+          <td><p>Описывает размер вторичного временного диска данных. Это пустой, неформатированный 
+		  диск и он существует только на время жизни экземпляра.</p></td>
+        </tr><tr>
+          <td><p>Swap</p></td>
+          <td><p>Не обязательное пространство свопинга выделяемое для покачки памяти экземпляром.</p></td>
+        </tr><tr>
+          <td><p>VCPUs</p></td>
+          <td><p>Количество виртуальных процессоров, предоставленных экземпляру.</p></td>
+        </tr><tr>
+          <td><p>RXTX_Factor</p></td>
+          <td><p>Дополнительное свойство, позволяющее создаваемым серверам иметь 
+		  предел пропускной способности<a id="d9e4116" class="indexterm"/>, 
+		  отличный от того, который определен в сети, 
+		  к которым они подключены. Данный коэффициент умножается на свойство rxtx_base сети. 
+		  Значением по умолчанию является 1.0 (т.е. то же что и у подключенной сети).</p></td>
+        </tr><tr>
+          <td><p>Is_Public</p></td>
+          <td><p>Булевское значение, определяющее доступен ли шаблон виртуального ресурса 
+		  всем пользователям или он частный (доступен только владельцу, который его создал). 
+		  Частное предпочтение не делает текущего владельца назначенным ему.
+		  Значение по умолчанию <code class="literal">True</code>.</p></td>
+        </tr><tr>
+          <td><p>extra_specs</p></td>
+          <td><p>Дополнительные необязательные ограничения, с которыми могут работать шаблоны 
+		  виртуальных ресурсов вычислительных узлов. Оно реализуется как пары ключ- значение, которые 
+		  должны сравниваться с соответствующими парами ключ- значение в вычислительных 
+		  узлах. Может быть использован для реализации сущностей, таких как специальные ресурсы (например, 
+		  шаблоны виртуальных ресурсов, которые могут работать только на вычислительных узлах с 
+		  аппаратными GPU).</p></td>
+        </tr></tbody></table>
+	<div class="simplesect">
+	<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	 <a id="d9e4141"> </a>Как мне модифицировать существующий шаблон виртуального ресурса?</h3>
+	</div></div></div>
+	<p>Инструментальная панель OpenStack 
+	имитирует способность изменять шаблоны виртуальных ресурсов 
+	путем удаления существующего шаблона и создания нового с тем же именем.</p></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

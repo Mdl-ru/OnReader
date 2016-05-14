@@ -1,0 +1,1235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Настройка сети - Книга рецептов Proxmox</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="ProxmoxCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="up" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Управление кластером и виртуальными машинами - Книга рецептов Proxmox"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Настройка межсетевого экрана"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Настройка сети';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Настройка сети</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns="">
+  <p>Мы охватим следующие разделы в данной главе:
+  	</p><div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Настройку основной сети</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку моста</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку виртуальной сети</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку сетевого связывания</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку сетевой трансляции адресов</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку Infiniband</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку сетевого интерфейса виртуальной машины</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку высокой доступности</p>
+	 </li>
+   </ul>
+   </div>
+  <p></p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html">4. Настройка сети</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#basic_network">Настройка основной сети</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#bridge">Настройка моста</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#VLAN">Настройка VLAN</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#network_bonding">Настройка сетевого связывания</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#NAT">Настройка сетевой трансляции адресов</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#Infiniband">Настройка Infiniband</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#VM_interface">Настройка сетевого интерфейса виртуальной машины</a></span></dt>
+	<dt><span class="section"><a href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch04.html#High_Availability">Настройка высокой доступности</a></span></dt>
+	</dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction">&nbsp;</a>Введение</h3>
+   </div></div></div>
+   <p>В данной главе мы собираемся рассмотреть как настраивается сетевая
+ среда Proxmox. Сетевая среда выступает в качестве клея при 
+   связывании виртуальных машин друг с другом, а также с кластером. Как и
+ многие другие гипервизоры, Proxmox применяет  модель сетевой 
+   среды с мостами.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="basic_network">&nbsp;</a>Настройка основной сети</h3>
+   </div></div></div>
+   <p>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся рассмотреть настройку сетевой среды
+ Proxmox. Последующие рецепты в данной главе охватят различные 
+   компоненты сетевой среды.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Перед углублением в настройку сети, важно узнать, что конфигурация
+ сети может быть выполнена в Proxmox как через графический 
+   интерфейс, так и в командной строке. Настройки, выполняемые в 
+графическом интерфейсе потребуют для активации перезагрузки, в то время 
+   как настройки через интерфейс командной строки могут приниматься в 
+реальном времени.</p>
+   <p>Настройки, применяемые через графический интерфейс, записываются в файл сетевых настроек 
+   <span class="term"><code>/etc/network/interfaces.new</code></span>. После перезагрузки узла новые настройки переносятся на постоянное 
+   место в <span class="term"><code>/etc/network/interfaces</code></span>. Если перезагрузка узла недоступна прямым способом, 
+   настройка должна выполняться через интерфейс командной строки путем непосредственного изменения 
+   <span class="term"><code>/etc/network/interfaces</code></span>.</p>
+
+   <p>Вот шаги для настройки сети посредством графического интерфейса Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Для изменения сетевых настроек в графическом интерфейсе, зарегистрируйтесь в качестве root в GUI Proxmox.</p>
+	 </li><li class="listitem">
+      <p>Кликните на узел, чтобы увидеть меню с закладками <span class="term"><strong class="userinput"><code>Network</code></strong></span>,
+	  как показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0401.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Чтобы создать новый сетевой интерфейс, кликните на <span class="term"><strong class="userinput"><code>Create</code></strong></span>
+	  для отображения ниспадающего меню, как показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0402.jpg"> </div><br>
+      </div>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	    <table summary="Замечание" border="0"><tbody><tr><td rowspan="2" align="center" valign="top" width="25">
+	    <img alt="[Замечание]" src="../common/images/admon/note.png"></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	    <p>Отметим, что в графическом интерфейсе Proxmox мы можем создавать только мост и подключать интерфейсы. Любые физические 
+	    интерфейсы, установленные в нашем хосте могут только настраиваться, но не создаваться.</p></td></tr></tbody></table>
+      </div>
+      <p>Когда изменение выполнено в графическом интерфейсе, возникнет <span class="term"><strong class="userinput"><code>Pending 
+	  changes</code></strong></span> (отложенные изменения) до начала перезагрузки, как показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0403.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Для возврата изменений до перезагрузки просто нажмите на <span class="term"><strong class="userinput"><code>Revert 
+	  changes</code></strong></span>. Это отменит изменения в <span class="term"><code>/etc/network/interfaces.new</code></span>.</p>
+	 </li>
+	 </ol>
+   <p>Следующие шаги необходимы в случае настройки сети через интерфейс командной строки Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь вузле Proxmox с применением программы SSH, подобной PuTTY.</p>
+	 </li><li class="listitem">
+      <p>Откройте при помощи редактора <span class="term"><code>/etc/network/interfaces</code></span>.</p>
+	 </li><li class="listitem">
+      <p>Внесите необходимые изменения в настройку. Например, если мы хотим настроить второй сетевой интерфейс в нашем узле 
+	  со статическим IP, мы сделаем следующие изменения:</p>
+	   <pre class="screen"># nano /etc/network/interfaces
+auto eth2
+iface eth2 inet static
+   address 192.168.1.1
+   netmask 255.255.255.0
+   gateway 192.168.1.254
+   bridge_ports eth2
+   bridge_stp off
+   bridge_fd 0
+#ifup eth2
+	   </pre>
+	 </li><li class="listitem">
+      <p>Сохраним изменения и покинем редактор.</p>
+	 </li><li class="listitem">
+      <p>Приведем новый интерфейс в действие выполнив следующую команду:</p>
+	   <pre class="screen">#ifup eth2
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+	 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table summary="Совет" border="0"><tbody><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Если изменения были выполнены для существующего интерфейса, будет необходимо отключить интерфейс с применением следующей 
+		команды, после чего перевести его опять во включенное состояние:
+	    </p><pre class="screen">		#ifdown eth2
+	    </pre>
+		<p></p></td></tr></tbody></table>
+      </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>В Proxmox VE 3.4 физический интерфейс не может настраиваться 
+напрямую для определенной виртуальной машины. Все виртуальные машины 
+   должны настраиваться через мост или сетевую связь (bond). Это 
+относится как к виртуальным машинам, так и к контейнерам OpenVZ 
+   {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC</em></span>}.</p>
+   </div>
+
+  </div>
+
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="bridge"> </a>Настройка моста</h3>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся ознакомиться с тем, чем является 
+мост в Proxmox и как его настраивать для создания виртуальной сети 
+   виртуальной машины.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Мост является виртуальной реализацией физического сетевого 
+коммутатора. Виртуальные машины могут присоединяться к мосту во 
+   многом аналогичным способом, которым физический компьютер может быть 
+присоединен к сетевому коммутатору, служащему для соединения сетевых 
+   устройств. Именуемым обозначением для интерфейса моста является <span class="term"><code>vmbrX</code></span>, где 
+   <span class="term"><code>X</code></span> может быть целым числом от 0 до максимум 4096. По умолчанию новая установка Proxmox 
+   создает мост с именем <span class="term"><code>vmbr0</code></span> в каждом узле.</p>
+   <p>Каждый мост может быть подключен к физическому сетевому интерфейсу
+ узла или остаться без него. Мост настраиваемый без какого- либо 
+   физического сетевого интерфейса не может осуществлять прямой обмен за
+ пределами самого узла. Обмен может осуществляться только 
+   между любыми виртуальными машинами, подключенными к этому мосту без 
+физического интерфейса. Следующая схема показывает сетевую 
+   диаграмму моста без физического сетевого интерфейса:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0404.jpg"> </div><br>
+      </div>
+   <p>На предыдущей диаграмме <span class="term"><strong class="userinput"><code>VM 1</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>VM 2</code></strong></span> и <span class="term"><strong class="userinput"><code>VM 3</code></strong></span>
+   напрямую соединены с мостом <span class="term"><strong class="userinput"><code>vmbr0</code></strong></span>. Этот мост настроен с 
+   сетевым физическим интерфейсом <span class="term"><strong class="userinput"><code>eth0</code></strong></span>, который подключен к 
+   физическому коммутатору. <span class="term"><strong class="userinput"><code>VM 4</code></strong></span> настроен в качестве виртуального 
+   межсетевого экрана, который имеет два виртуальных сетевых интерфейса, <span class="term"><strong class="userinput"><code>net0</code></strong></span>
+   и <span class="term"><strong class="userinput"><code>net1</code></strong></span>. Интерфейс 
+   <span class="term"><strong class="userinput"><code>net0</code></strong></span> подключен к мосту 
+   <span class="term"><strong class="userinput"><code>vmbr0</code></strong></span>, а интерфейс
+   <span class="term"><strong class="userinput"><code>net1</code></strong></span> подключен к мосту 
+   <span class="term"><strong class="userinput"><code>vmbr1</code></strong></span>вместе с 
+   <span class="term"><strong class="userinput"><code>VM 5</code></strong></span> и <span class="term"><strong class="userinput"><code>VM 6</code></strong></span>.
+   Мост <span class="term"><strong class="userinput"><code>vmbr1</code></strong></span> не настроен на работу ни с какими физическими интерфейсами,
+   следовательно, <span class="term"><strong class="userinput"><code>VM 5</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>VM 6</code></strong></span>могут взаимодействовать только друг с другом и 
+   <span class="term"><strong class="userinput"><code>VM 4</code></strong></span>.</p>
+   <p>Только один физический сетевой интерфейс может быть настроен на 
+работу с мостом. Используемый для моста интерфейс не может быть 
+   использован другим мостом. Путем создания множества мостов для групп 
+виртуальных машин мы можем создавать изолированные виртуальные 
+   сети в пределах одной и той же виртуальной среды. Применение 
+межсетевого экрана для каждой группы виртуальных машин может открыть 
+   доступ в интернет без компрометации изоляции.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Следующие шаги необходимы для создания виртуального моста с применением графического интерфейса Proxmox. Для нашего примера
+   мы собираемся создать мост с именем <span class="term"><code>vmbr1</code></span> без физического сетевого интерфейса:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите узел в левом обзоре навигации, в котором должен быть настроен мост.</p>
+	 </li><li class="listitem">
+      <p>Кликните на закладку меню <span class="term"><strong class="userinput"><code>Network</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Create</code></strong></span> для открытия ниспадающего меню, 
+	  затем выберите <span class="term"><strong class="userinput"><code>Linux Bridge</code></strong></span> для открытия блока диалога 
+	  создания моста, как показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0405.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Для моста без физического интерфейса мы собираемся оставить все все блоки пустыми за исключением текстового блока
+	  <span class="term"><strong class="userinput"><code>Name</code></strong></span>. Чтобы назначить мосту физический интерфейс
+	  просто введите имя интерфейса, такое как <span class="term"><code>eth0</code></span>, <span class="term"><code>eth1</code></span>
+	  и тому подобных, в текстовом блоке <span class="term"><strong class="userinput"><code>Bridge Ports</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>После введения необходимой информации кликните на <span class="term"><strong class="userinput"><code>Create</code></strong></span>
+	  для завершения создания моста <span class="term"><code>vmbr1</code></span>.</p>
+	  <p>Следующий экранный снимок показывает только что созданный мост с 
+отложенной перезагрузкой после сделанных в графическом интерфейсе 
+	  Proxmox изменений:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0406.jpg"> </div><br>
+      </div>
+	 </li>
+	 </ol>
+   </div>
+   <p>Следующие шаги необходимы при создании виртуального моста посредством интерфейса командной строки:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в узле Proxmox через SSH или непосредственно в консоли.</p>
+	 </li><li class="listitem">
+      <p>Откройте редактором файлы сетевой настройки из <span class="term"><code>/etc/network/interfaces</code></span>.</p>
+	 </li><li class="listitem">
+      <p>Добавьте новый мост со следующим форматом настройки. В нашем примере мы добавляем новый виртуальный мост с именем 
+	  <span class="term"><code>vmbr1</code></span>:</p>
+	   <pre class="screen">auto vmbr1
+iface vmbr1`inet manual
+   bridge_ports none
+   bridge_stp off
+   bridge_fd 0
+#ifup vmbr1
+	   </pre>
+	 </li><li class="listitem">
+      <p>Сохраните изменения и покиньте редактор.</p>
+	 </li><li class="listitem">
+      <p>Активируйте мост следующей командой:</p>
+	   <pre class="screen">#ifup vmbr1
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Настройка моста является зависящей от узла. Например, если существует мост с именем <span class="term"><code>vmbr1</code></span> в 
+   узле <span class="term"><code>node 1</code></span>, в месте подключения <span class="term"><code>VM 2</code></span>, то, если мы 
+   собираемся осуществлять миграцию <span class="term"><code>VM 2</code></span> на узле <span class="term"><code>node 2</code></span>, 
+   мы должны создать другой мост <span class="term"><code>vmbr1</code></span>
+ на этом узле. Если мост присоединен к физическому 
+   интерфейсу, который соединен через коммутатор с другими узлами 
+Proxmox в кластере, то будет возможно взаимодействие между 
+   виртуальными машинами на множестве узлов. Мост без физического 
+сетевого интерфейса ограничен только узлом, на котором он размещен.</p>
+   <p>В качестве хорошей общей практики рекомендуется дублировать настройки моста на всех узлах Proxmox с тем, чтобы миграция 
+   виртуальных машин могла осуществляться с минимальным временем простоя.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Для создания виртуальной сети любого размера существенным является
+ хорошее понимание мостов. Если у вас есть доступ кластеру Proxmox,
+   и понимание того, как создавать мосты, будет полезным потратить 
+некоторое время на создание нескольких мостов на различных узлах 
+   на практике вручную. Вот пример сетевой диаграммы вымышленной 
+компании поставщика облачных услуг в которой широко применяются мосты:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0407.jpg"> </div><br>
+      </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="VLAN">&nbsp;</a>Настройка VLAN</h3>
+   </div></div></div>
+   <p>Виртуальные сети (<span class="term"><strong class="userinput"><code>VLAN, VLAN</code></strong></span>)
+ являются сетевым стандартом 
+   на основе 802.1q для создания логических разделов в одном и том же 
+сетевом интерфейсе для изоляции обмена множества сетей. В данном 
+   рецепте мы рассмотрим как настроить виртуальные сети в сетевой среде 
+Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Чтобы виртуальная сть могла работать, физический коммутатор в сетевой среде должен поддерживать виртуальные сети. Почти все 
+   интеллектуальные (smart) и управляемые коммутаторы имеют возможности виртуальных сетей (VLAN). Проверьте руководство вашего 
+   коммутатора перед настройкой виртуальной сети в Proxmox. Следующий снимок экрана показывает панель управления smart, который 
+   является 48- портовым гигабитным интеллектуальным коммутатором с поддержкой виртуальных сетей:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0408.jpg"> </div><br>
+      </div>
+   <p>Каждой виртуальной сети присваивается уникальный номер, называемый дескриптором виртуальной сети 
+   (<span class="term"><strong class="userinput"><code>VLAN tag</code></strong></span>).
+ Допускается максимум в 4096 дескрипторов.
+   Дескриптор (тег) является уникальным для логической сети или для 
+каждой виртуальной сети в одной и той же сетевой среде. Любое 
+   сетевое устройство или интерфейс в сети настраиваемые с каким-то 
+тегом виртуальной сети смогут взаимодействовать только с 
+   устройствами или интерфейсами с тем же самым тегом виртуальной сети, 
+тем самым сохраняя изолированность сетевого обмена. Сетевые 
+   пакеты получают отметку от коммутатора с определенным дескриптором 
+(тегом) виртуальной сети.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table summary="Замечание" border="0"><tbody><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения подробностей о виртуальных сетях посетите 
+	   <a class="link" href="http://en.wikipedia.org/wiki/Virtual_LAN" target="_top">http://en.wikipedia.org/wiki/Virtual_LAN</a>.
+	   {<span class="emphasis"><em>Прим. пер.: <a class="link" href="http://ru.wikipedia.org/wiki/Virtual_LAN" target="_top">http://ru.wikipedia.org/wiki/Virtual_LAN</a></em></span>}.</p></td></tr></tbody></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>В Proxmox существует два способа которыми мы можем назначать виртуальные сети виртуальной машине. Они следующие:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Назначение тега виртуальной сети каждому сетевому интерфейсу виртуальной машины. Это может быть сделано через графический 
+	 интерфейс.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Создание субинтерфейса виртуальной сети и выделенного виртуального моста. Это должно быть выполнено в интерфейсе командной 
+	 строки.</p>
+	 </li>
+   </ul>
+   </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table summary="Замечание" border="0"><tbody><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Обе процедуры имеют в итоге аналогичные виртуальные сети. Однако, в зависимости от сценария варианта применения одному 
+	   может отдаваться предпочтение перед другим. При назначении тега виртуальной сети каждому сетевому устройству виртуальной 
+	   машины сами виртуальные машины могут взаимодействовать напрямую с коммутатором. При субинтерфейсе виртуальной сети 
+	   и выделенном мосте каждая виртуальная машина соединяется с помеченным дескриптором мостом виртуальной сети и никакая 
+	   индивидуальная пометка виртуальных машин не нужна.</p></td></tr></tbody></table>
+     </div>
+   <p>Следующие этапы применяются при назначении тегов виртуальной сети каждому сетевому интерфейсу виртуальной машины в отдельности 
+   через графический интерфейс Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите узел в левой колонке навигации.</p>
+	 </li><li class="listitem">
+      <p>Кликните на закладку меню <span class="term"><strong class="userinput"><code>Hardware</code></strong></span>, затем 
+	  выберите <span class="term"><strong class="userinput"><code>Network Device</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Edit</code></strong></span> для открытия блока диалога, как 
+	  это показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0409.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Введите численное значение идентификатора виртуальной сети в текстовом блоке 
+	  <span class="term"><strong class="userinput"><code>VLAN Tag</code></strong></span>. В нашем примере мы добавили идентификатор 
+	  виртуальной сети 2.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>OK</code></strong></span> для завершения.</p>
+	 </li><li class="listitem">
+      <p>Выполните цикл выключения- включения для активации тега виртуальной сети.</p>
+	  <p>Следующий экранный снимок демонстрирует сетевой интерфейс виртуальной сети с добавленным тегом VLAN:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0410.jpg"> </div><br>
+      </div>
+	 </li>
+	 </ol>
+   </div>
+   <p>Последующие шаги показывают как создавать субинтерфейс виртуальной сети и выделенный мост для VLAN с применением 
+   интерфейса командной строки:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь через SSH или PuTTY в качестве root или с аналогичными правами администратора.</p>
+	 </li><li class="listitem">
+      <p>С применением текстового редактора откройте файл сетевой настройки хоста Proxmox:</p>
+	   <pre class="screen">#nano /etc/network/interfaces
+	   </pre>
+	 </li><li class="listitem">
+      <p>Добавьте следующие строки для создания субинтерфейса виртуальной сети. Измените интерфейс согласно вашему сетевому 
+	  окружению. В нашем примере используется интерфейс <span class="term"><code>eth2</code></span> для создания субинтерфейса 
+	  виртуальной сети для VLAN с дескриптором 2:</p>
+	   <pre class="screen">auto vlan2
+iface vlan2 inet manual
+      vlan_raw_device eth2
+auto vmbr2
+iface vmbr2 inet manual
+      bridge_ports vlan2
+      bridge_stp off
+      bridge_fd 0
+	  </pre>
+	 </li><li class="listitem">
+      <p>Сохраните изменения и покиньте текстовый редактор.</p>
+	 </li><li class="listitem">
+      <p>Выполните следующие команды для активации субинтерфейса виртуальной сети и моста без перезагрузки:</p>
+	   <pre class="screen">#ifup vlan2
+#ifup vmbr2
+	  </pre>
+	 </li><li class="listitem">
+      <p>Назначьте данный мост вашей виртуальной машине, как показано на следующем снимке экрана:.</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0411.jpg"> </div><br>
+      </div>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>В сценарии при котором виртуальная сеть назначается каждому 
+виртуальному сетевому интерфейсу виртуальной машины, все виртуальные 
+   машины присоединяются к одному мосту.</p>
+   <p>При создании субинтерфейсов виртуальных сетей мы можем создавать 
+множество мостов для множества виртуальных сетей в одном и том же 
+   физическом сетевом интерфейсе. Далее приводится содержание сетевых 
+настроек в <span class="term"><code>/etc/network/interfaces</code></span>,
+   в котором созданы три субинтерфейса виртуальных сетей поверх одного интерфейса физической сети через три выделенных моста:</p>
+	   <pre class="screen">auto vlan10
+iface vlan10 inet manual
+ vlan_raw_device eth1
+auto vlan20
+iface vlan20 inet manual
+   vlan_raw_device eth1
+auto vlan30
+iface vlan30 inet manual
+   vlan_raw_device eth1
+auto vmbr10
+iface vmbr10 inet manual
+   bridge_ports vlan10
+   bridge_stp off
+   bridge_fd 0
+auto vmbr20
+iface vmbr20 inet manual
+   bridge_ports vlan20
+   bridge_stp off
+   bridge_fd 0
+auto vmbr30
+iface vmbr30 inet manual
+   bridge_ports vlan30
+   bridge_stp off
+   bridge_fd 0
+	  </pre>
+   <p>При назначении мостам имен будет хорошей мыслью назначать теже номера, что и идентификаторы виртуальных сетей. Таким образом
+   будет легко распознавать к какой виртуальной сети подключен мост.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="network_bonding">&nbsp;</a>Настройка сетевого связывания</h3>
+   </div></div></div>
+   <p>Сетевое связывание (bonding), образование групп (trunking) или 
+агрегация связей (link aggregation) является процессом, при котором 
+   различные сетевые интерфейсы объединяются для создания большей 
+пропускной способности или реализации отказоустойчивости для связности
+   сетевой среды. В данном рецепте мы собираемся рассмотреть типы 
+связывания и того, как создавать связные конфигурации.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Перед настройкой связывания важно понять типы или различные режимы
+ связывания которые доступны и что они предлагают. Только один тип
+   связывания может быть настроен в определенный момент времени. 
+Следующая таблица показывает типы связывания и их свойства Отметим, 
+   что данная таблица служит исключительно для информационных целей:</p>
+        <table rules="all" style="text-align:center" id="add_fs_options" width="800">
+        <caption></caption><colgroup><col width="10%"><col width="56%"><col width="17%"><col width="17%"></colgroup><thead><tr valign="top">
+          <th>Режим</th>
+          <th>Свойство</th>
+          <th>Устойчивость к отказам</th>
+          <th>Специальный коммутатор</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p>0</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Round-robin</code></strong></span> (карусельный):
+		  Все пакеты последовательно посылаются всем участникам сетевых портов.</p></td>
+          <td><p>Да</p></td>
+          <td><p>Нет</p></td>
+        </tr><tr valign="top">
+          <td><p>1</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Active-backup</code></strong></span> (активное резервирование):
+		  Только один участник порта активен в определенный момент времени.</p></td>
+          <td><p>Да</p></td>
+          <td><p>Нет</p></td>
+        </tr><tr valign="top">
+          <td><p>2</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Balance XOR</code></strong></span> (сбалансированное исключающее или):
+		  Пакеты передаются через участников портов на основе алгоритмов избирательного хеширования.</p></td>
+          <td><p>Да</p></td>
+          <td><p>Нет</p></td>
+        </tr><tr valign="top">
+          <td><p>3</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Broadcast</code></strong></span> (широковещательный):
+		  Все пакеты посылаются всем членам портов.</p></td>
+          <td><p>Да</p></td>
+          <td><p>Нет</p></td>
+        </tr><tr valign="top">
+          <td><p>4</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>802.3ad or LACP</code></strong></span>:
+		  Пакеты посылаются на основании спецификации 802.3ad через агрегированные группы с одинаковыми скоростью и 
+		  установками.</p></td>
+          <td><p>Да</p></td>
+          <td><p>Да</p></td>
+        </tr><tr valign="top">
+          <td><p>5</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Balance TLB</code></strong></span> (балансированный буфер 
+		  быстрого преобразования адреса): Пакеты, отправляются в соответствии с нагрузкой через все порты участников. Входящие 
+		  пакеты принимаются в текущем порту. При сбое порта MAC-адрес отказавшего порта получает новый порт.</p></td>
+          <td><p>Да</p></td>
+          <td><p>Нет</p></td>
+        </tr><tr valign="top">
+          <td><p>6</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Balance ALB</code></strong></span>:
+		  Аналогично режиму 5, но также принимает пакеты на всех портах посредством соглашений по ARP.</p></td>
+          <td><p>Да</p></td>
+          <td><p>Нет</p></td>
+        </tr></tbody></table>
+   <p>Методы связывания 2 и 4 применяют алгоритмы хеширования для передачи сетевых пакетов. Вот три политики хеширования, доступные 
+   при связывании Proxmox:</p>
+        <table rules="all" style="text-align:center" id="add_fs_options" width="800">
+        <caption></caption><colgroup><col width="20%"><col width="80%"></colgroup><thead><tr valign="top">
+          <th>Политика хеширования</th>
+          <th>Описание</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Layer 2</code></strong></span></p></td>
+          <td><p>Эта политика посылает пакеты данных в сетевое устройство на том же участнике порта. Хеш образуется с применением
+		  XOR MAC адресов.</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Layer 2+3</code></strong></span></p></td>
+          <td><p>Эта политика посылает пакеты данных в сетевое устройство на том же участнике порта. Хеш образуется с применением
+		  XOR MAC адресов и IP адресов.</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Layer 3+4</code></strong></span></p></td>
+          <td><p>Эта политика посылает пакеты данных в сетевое устройство охватывая всех участников портов. Хеш образуется с применением
+		  информации протоколов верхнего уровня.</p></td>
+        </tr></tbody></table>
+   <p>Вне зависимости от различных режимов сетевого связывания процесс настройки аналогичен для всех режимов. Связываемый интерфейс 
+   может быть создан как в графическом интерфейсе Proxmox, так и в интерфейсе командной строки.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Перед тем как связывание можно будет применить в Proxmox, 
+существуют некоторые модули, подлежащие загрузке в ядро. Они следующие:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Модуль <span class="term"><code>bonding</code></span></p>
+	 </li>
+	 <li class="listitem">
+	 <p>Модуль <span class="term"><code>mii</code></span></p>
+	 </li>
+   </ul>
+   </div>
+   <p>Мы можем вставить их в процессе загрузки путем добавления в отдельные строки в <span class="term"><code>/etc/modules</code></span>.
+   Для проверки того доступны модули связывания для загрузки или нет мы можем выполнить в командной строке следущее:</p>
+	   <pre class="screen">#modprobe bonding
+	   </pre>
+   <p>Если модуль не найден, то мы должны установить <span class="term"><code>ifenslave</code></span> следующей командой:</p>
+	   <pre class="screen">#apt-get install ifenslave-2.6
+	   </pre>
+   <p>Последующие шаги показывают как создавать связанный интерфейс через графический интерфейс Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите узел из левой колонки навигации.</p>
+	 </li><li class="listitem">
+      <p>Кликните на закладку меню <span class="term"><strong class="userinput"><code>Hardware</code></strong></span>,
+	  затем выберите <span class="term"><strong class="userinput"><code>Network Device</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Edit</code></strong></span> для открытия блока диалога,
+	  как показано в следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0412.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Введите в блоке диалога необходимую информацию. Все порты, которые предполагается использовать как часть связи должны быть
+	  введены в текстовом блоке <span class="term"><strong class="userinput"><code>Slaves</code></strong></span> разделенные 
+	  пробелом. Если выбран режим 2 или 4, то выберите также желаемую политику хеширования. В нашем примере мы имеем связь с 
+	  именем <span class="term"><code>bond0</code></span>, которая включит в себя порты участников <span class="term"><code>eth3</code></span>
+	  и <span class="term"><code>eth4</code></span>. Выбран режим <span class="term"><strong class="userinput"><code>balance-xor</code></strong></span> с политикой хеширования 
+	  <span class="term"><strong class="userinput"><code>layer2</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Create</code></strong></span> для завершения.</p>
+	 </li><li class="listitem">
+      <p>Перегрузите узел Proxmox для активации связывания.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Следующие шаги показывают как создавать связывание через интерфейс командной строки:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь через SSH или PuTTY в качестве root или с аналогичными правами администратора.</p>
+	 </li><li class="listitem">
+      <p>С применением текстового редактора откройте файл сетевой настройки хоста Proxmox:</p>
+	   <pre class="screen">#nano /etc/network/interfaces
+	   </pre>
+	 </li><li class="listitem">
+      <p>Добавьте следующие строки для создания связанного интерфейса. Измените имена интерфейсов в соответствии с вашей средой
+	  В нашем примере мы используем для связывания интерфейсы <span class="term"><code>eth3</code></span> и 
+	  <span class="term"><code>eth4</code></span>:</p>
+	   <pre class="screen">auto bond0
+iface bond0 inet manual
+      slaves eth3 eth4
+      bond_miimon 100
+      bond_mode balance-xor
+      bond_xmit_hash_policy layer2
+	   </pre>
+	 </li><li class="listitem">
+      <p>Сохраните изменения и покиньте текстовый редактор.</p>
+	 </li><li class="listitem">
+      <p>Выполните следующую команду для активации связанного интерфейса:</p>
+	   <pre class="screen">#ifup bond0
+	   </pre>
+	 </li>
+	 </ol>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table summary="Замечание" border="0"><tbody><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Связанный интерфейс может применяться в мосте аналогично стандартному интерфейсу. Просто замените порт моста соответствующим 
+	   связанным интерфейсом следующим образом:
+	   </p><pre class="screen">	   auto vmbr0
+	   iface vmbr0 inet manual
+	   bridge_ports bond0
+	   bridge_stp off
+	   bridge_fd 0
+	   </pre>
+	   <p></p></td></tr></tbody></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Связывание может быть отличным, экономичным способом повышения 
+общей пропускной способности сети или просто 
+   создает избыточное соединение сети для увеличения времени безотказной
+ работы. Четкое понимание различных режимов склеивания 
+   поможет в выборе правильного режима для различных требований. 
+Например, с помощью нескольких коммутаторов и сетевых интерфейсов, 
+   мы можем легко создать карусельную (round-robin) связь, которая 
+обеспечит избыточность не только для сетевых кабелей, но и 
+   для сетевых коммутаторов. Сетевая среда может напоминать следующую 
+диаграмму:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0413.jpg"> </div><br>
+      </div>
+   <p>В предыдущем рисунке узлы Proxmox и хранилища Ceph соединяются двумя физическими коммутаторами. Сетевые интерфейсы во всех 
+   узлах настраиваются со связыванием <span class="term"><code>balance-rr</code></span>. В данном сценарии в случае отказа коммутатора 1
+   все узлы продолжат свою работу с коммутатором 2.</p>
+   <p>Хотя она и работает, эта установка не рекомендуется для сред с 
+критичным промышленным применением. В случае потери пакетов при данной 
+   политике, пакеты часто отсылаются повторно.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="NAT">&nbsp;</a>Настройка сетевой трансляции адресов</h3>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся рассмотреть чем является сетевая трансляция адресов (<span class="term"><strong class="userinput"><code>NAT, 
+   Network Address Translation</code></strong></span>) и как ее настроить в Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Сетевая трансляция адресов является техникой, которая делает 
+возможным узлу с частным IP адресом в сети взаимодействовать с 
+   интернетом через интерфейс с задействованной NAT или через 
+маршрутизатор без необходимости наличия общедоступного с точки зрения 
+   интернет IP адреса. Сетевая трансляция адресов также обеспечивает 
+безопасность, поскольку исходный IP адрес остается скрытым за NAT.</p>
+   <p>Без сетевой трансляции адресов каждому устройству требовался бы 
+общедоступный IP для соединения с интернетом. При нехватке адресов 
+   IPv4 и высокой стоимости их получения Сетевая трансляция адресов 
+предоставляет решение для сетевых сред любых размеров.</p>
+   <p>В Proxmox настройка сетевой трансляции адресов может выполняться только через интерфейс командной строки.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Для того чтобы сетевая трансляция адресов работала, необходимо 
+разрешить переадресацию (forwarding) IP адресов. По умолчанию она 
+   запрещена. Следующие шаги показывают как сделать доступной 
+переадресацию IP адресов, а затем настройку сетевой трансляции адресов 
+   для сетевого интерфейса:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Примените текстовый редактор для открытия файла <span class="term"><code>/etc/sysctl.conf</code></span>:</p>
+	   <pre class="screen">#nano /etc/sysctl.conf
+	   </pre>
+	 </li><li class="listitem">
+      <p>Уберите комментарий следующей строки:</p>
+	   <pre class="screen">net.ipv4.ip_forward=1
+	   </pre>
+	 </li><li class="listitem">
+      <p>Сохраните изменения файла и перезагрузитесь для активации сделанных изменений.</p>
+	 </li><li class="listitem">
+      <p>Откройте настройку сетевого интерфейса в текстовом редакторе:</p>
+	   <pre class="screen">#nano /etc/network/interfaces
+	   </pre>
+	 </li><li class="listitem">
+      <p>Добавьте и удалите настройки из интерфейса как показано далее. Внесенные в настройку изменения показаны жирным шрифтом:</p>
+	   <pre class="screen">auto vmbr0
+iface vmbr0 inet static
+address 192.168.10.1
+netmask 255.255.255.0
+bridge_ports none
+bridge_stp off
+bridge_fd 0
+
+<strong>post-up echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+post-up iptables –t nat –A POSTROUTING –s '192.168.10.0/24' –o
+eth0 –j MASQUERADE
+post-down iptables –t nat –D POSTROUTING –s '192.168.10.0/24' –o eth0 –j MASQUERADE</strong>
+	   </pre>
+	 </li><li class="listitem">
+      <p>Сохраните файл настройки и перезагрузитесь для активации внесенных изменений.</p>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>На основе настроек выполненных в предыдущем разделе весь обмен виртуального интерфейса <span class="term"><code>vmbr0</code></span>
+   проходит через <span class="term"><code>eth0</code></span>, в то время как вся информация об IP виртуальной машины остается скрытой 
+   за мостом <span class="term"><code>vmbr0</code></span>.</p>
+   <p>Такой результат может быть достигнут с применением виртуального 
+межсетевого экрана, в котором межсетевой экран работает как 
+   устройство сетевой трансляции адресов для виртуальной машины и 
+интернета. Следует заметить, что хотя NAT обеспечивает сетевую 
+   безопасность, межсетевой экран будь он в физическом или виртуальном 
+исполнении, всегда должен быть на своем месте.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Infiniband">&nbsp;</a>Настройка Infiniband</h3>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся узнать что такое Infiniband и как он может быть настроен для создания сетевой среды с 
+   высокой пропускной способностью в кластере Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Обладая очень низкой латентностью, <span class="term"><strong class="userinput"><code>Infiniband (IB)</code></strong></span>, 
+   конкурирует с гигабитным Ethernet, 10 GbE и 100 GbE {<span class="emphasis"><em>Прим. пер.:  а также Fibre Channel 
+   1-8GFC/16GFC/32GFC/128GFC</em></span>}. Созданный в 1999 году, Infiniband продолжает предоставлять средства для создания 
+   высокопроизводительных кластеров побивающих Ethernet как в латентности, так и по цене. {<span class="emphasis"><em>Прим. пер.: см. 
+   <a class="link" href="https://parallel.ru/testmpi/transfer.html" target="_top">определение латентности на parallel.ru</a></em></span>}
+   IB является отличным выбором для подключения кластера хранения к 
+вычислительному кластеру в виртуальной среде. Linux 
+   обеспечивает полную поддержку для IB. Для применения IB должны быть 
+загружены некоторые модули ядра. Сетевая настройка похожа 
+   на конфигурирование любого другого интерфейса. Настройка IB должна 
+выполняться через интерфейс командной строки. Она не 
+   может быть изменена или выполнена через графический интерфейс 
+Proxmox.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table summary="Замечание" border="0"><tbody><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения дополнительной информации по Infiniband посетите <a class="link" href="http://en.wikipedia.org/wiki/InfiniBand" target="_top">http://en.wikipedia.org/wiki/InfiniBand</a>. {<span class="emphasis"><em>Прим. пер.: 
+	   <a class="link" href="http://ru.wikipedia.org/wiki/InfiniBand" target="_top">http://ru.wikipedia.org/wiki/InfiniBand</a></em></span>}.</p></td></tr></tbody></table>
+     </div>
+   <p>На следующем рисунке представлен пример адаптера Infiiband QDR производства Mellanox Technlogoies Inc.:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0414.jpg"> </div><br>
+      </div>
+   <p>Существуют различные типы плат IB, различающиеся скоростями и 
+латентностью. каждая категория имеет уникальное имя, идентифицируемое 
+   тремя буквами. Следующая таблица показывает различные соотношения IB:</p>
+        <table rules="all" style="text-align:center" id="add_fs_options" width="800">
+        <caption></caption><colgroup><col width="30%"><col width="40%"><col width="30%"></colgroup><thead><tr valign="top">
+          <th><p>Модель</p>
+		  <p>{<span class="emphasis"><em>Прим. пер.: год выпуска</em></span>}</p></th>
+          <th><p>Пропускная способность (Gbit/s)</p>
+		  <p>{<span class="emphasis"><em>Прим. пер.: скорость передачи сигнала одной шины, Gbit/s</em></span>}</p></th>
+          <th>Латентность (микросекунды)</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Single Data Rate (SDR)</code></strong></span></p>
+		  <p>{<span class="emphasis"><em>2001-2003</em></span>}</p></td>
+          <td><p>10</p>
+		  <p>{<span class="emphasis"><em>2</em></span>}</p></td>
+          <td><p>5</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Double Data Rate (DDR)</code></strong></span></p>
+		  <p>{<span class="emphasis"><em>2005</em></span>}</p></td>
+          <td><p>20</p>
+		  <p>{<span class="emphasis"><em>4</em></span>}</p></td>
+          <td><p>2.5</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Quad Data Rate (QDR)</code></strong></span></p>
+		  <p>{<span class="emphasis"><em>2007</em></span>}</p></td>
+          <td><p>40 {реально 32}</p>
+		  <p>{<span class="emphasis"><em>8</em></span>}</p></td>
+          <td><p>1.3</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Fourteen Data Rate (FDR)</code></strong></span></p>
+		  <p>{<span class="emphasis"><em>2011</em></span>}</p></td>
+          <td><p>56</p>
+		  <p>{<span class="emphasis"><em>14</em></span>}</p></td>
+          <td><p>0.7</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Enhanced Data Rate (EDR)</code></strong></span></p>
+		  <p>{<span class="emphasis"><em>2014</em></span>}</p></td>
+          <td><p>100</p>
+		  <p>{<span class="emphasis"><em>25</em></span>}</p></td>
+          <td><p>0.5</p></td>
+        </tr><tr valign="top">
+          <td><p>{<span class="term"><strong class="userinput"><code>High Data Rate (HDR)</code></strong></span>}</p>
+		  <p>{<span class="emphasis"><em><a class="link" href="http://www.infinibandta.org/content/pages.php?pg=technology_overview" target="_top">2017?</a></em></span>}</p></td>
+          <td><p>200</p>
+		  <p>{<span class="emphasis"><em>50</em></span>}</p></td>
+          <td><p>?</p></td>
+        </tr></tbody></table>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Приведем шаги, которые покажут как загрузить модули IB и настроить сетевую среду для интерфейса Infiniband:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в узле Proxmox через SSH или консоль в качестве root.</p>
+	 </li><li class="listitem">
+      <p>Добавьте следующие строки в <span class="term"><code>/etc/modules</code></span> для загрузки модулей IB при загрузке:</p>
+	   <pre class="screen">mlx4_ib
+ib_ipoib
+	   </pre>
+	 </li><li class="listitem">
+      <p>В настройку интерфейса в <span class="term"><code>/etc/network/interfaces</code></span> добавьте приводимые ниже строки. Подправьте информацию IP на основе вашей среды:</p>
+	   <pre class="screen">auto ib0
+iface ib0 inet static
+      address 192.168.10.1
+      netmask 255.255.255.0
+      pre-up echo connected &gt; /sys/class/net/ib0/mode
+      mtu 65520
+	   </pre>
+	 </li><li class="listitem">
+      <p>Сохраните файл сетевых настроек и перезагрузитесь.</p>
+	 </li><li class="listitem">
+      <p>Проверьте состояние интерфейса IB выполнив команду:</p>
+	   <pre class="screen">#ibstat
+	   </pre>
+      <p>Команда должна отобразить информацию аналогичную приводимой на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0415.jpg"> </div><br>
+      </div>
+      <p>Если команда <span class="term"><code>ibstat</code></span> отсутствует, установите инструментарий IB следующей командой:</p>
+	   <pre class="screen">#apt-get install infiniband-diags
+	   </pre>
+      <p>Следующий снимок экрана показывает настройки интерфейса IB в GUI Proxmox:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0416.jpg"> </div><br>
+      </div>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>IB использует совершенно другой протокол и набор аппаратных 
+средств. Стандартные кабели Ethernet и коммутаторы не 
+   применимы к IB. Передтем как начать вкладываться в IB, рассмотрите 
+существующую сеть на месте и то, как радикальное изменение на IB может 
+повлиять на 
+   вашу повседневную работу. Также IB может быть добавлен в существующую
+ сеть путем установки дополнительных плат IB в хосты.</p>
+   <p>Для нормального функционирования IB требуется менеджер подсети. 
+Менеджер подсети может быть интегрирован в коммутатор IB или он может 
+   быть настроен на одном из узлов с интерфейсной платой IB. Установка и
+ работа менеджера подсети на узле является простейшим и наиболее 
+   предпочтительным способом для наличия отказоустойчивости. Для 
+операционных систем на базе Linux менеджером подсети является 
+   <span class="term"><strong class="userinput"><code>Opensm</code></strong></span>. Просто установите его на любом узле Proxmox, а затем 
+   запустите его с применением следующих команд:</p>
+	   <pre class="screen">#apt-get install opensm
+#opensm
+	   </pre>
+   <p><span class="term"><strong class="userinput"><code>Opensm</code></strong></span> стартует и просканирует подключенный коммутатор IB, а 
+   также другие подключенные к коммутатору интерфейсы.</p>
+   <p>В Proxmox VE 3.4 существует возможность настройки виртуальных 
+сетей поверх IB. Он может иметь только одну подсеть в определенный 
+   момент времени.К тому же порты IB не могут связываться в состоянии 
+активный-активный. Только один порт может быть активным во всех случаях.
+ 
+   Следовательно, единственной причиной для связывания портов IB будет 
+реализация отказоустойчивости, а не увеличение пропускной способности.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="VM_interface">&nbsp;</a>Настройка сетевого интерфейса виртуальной машины</h3>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся рассмотреть различные модели 
+виртуальных сетевых интерфейсов, доступные для применения с виртуальными
+ 
+   машинами и то, как настраивать их свойства.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>В Proxmox VE 3.4 существует четыре модели виртуальных сетевых интерфейсов, доступных для виртуальной машины:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Intel E1000</p>
+	 </li><li class="listitem">
+      <p>VirtIO (частичная виртуализация, paravirtualized)</p>
+	 </li><li class="listitem">
+      <p>Realtec RTL8139</p>
+	 </li><li class="listitem">
+      <p>VMWare vmxnet3</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Из всех четырех приведенных, наиболее широко применяются в среде 
+Proxmox интерфейсы Intel E1000 и VirtIO. Для достижения максимальной 
+   производительности сети рекомендуется применение VirtIO. Почти все 
+операционные системы на базе Linux автоматически настраивают какие- либо
+ 
+   виртуальные сетевые интерфейсы. Однако носители с установкой 
+операционной системы Windows не поставляются с драйвером VirtIO, который
+ должен 
+   быть загружен вручную. Для Intel E1000 встроенные в Windows 7 и 
+Windows Server 2008 драйверы работают прекрасно. Однако более ранние 
+версии 
+   Windows или, в некоторых случаях, драйверы Windows Server 2012, могут
+ потребовать установку вручную.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Ниже излагаются этапы выгрузки драйверов VirtIO и Intel E1000 с последующей их загрузкой в виртуальную машину на базе Windows:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Перейдите на <a class="link" href="https://downloadcenter.intel.com/download/22283/IntelEthernet-Connections-CD" target="_top">https://downloadcenter.intel.com/download/22283/IntelEthernet-Connections-CD</a> для выгрузки последнего драйвера 
+	  VirtIO в вормате ISO.</p>
+	 </li><li class="listitem">
+      <p>Перейдите на <a class="link" href="http://www.linux-kvm.org/page/WindowsGuestDrivers/Download_Drivers" target="_top">http://www.linux-kvm.org/page/WindowsGuestDrivers/Download_Drivers</a> для выгрузки последнего драйвера 
+	  Intel E1000 в вормате ISO.</p>
+	 </li><li class="listitem">
+      <p>Выгрузите ISO в доступное хранилище образов ISO. Отсылаем вас к рецепту <a class="link" href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch03.html#Managing_ISO_and_OpenVZ" target="_top">Управление 
+	  ISO и шаблонами OpenVZ</a> в <a class="link" href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch03.html" target="_top">Главе 3. Управление кластером и виртуальными машинами</a>
+ для 
+	  ознакомления с подробностями по выгрузке образов. Следующий снимок 
+экрана отображает образы ISO после их выгрузки в хранилище:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0417.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Загрузите образ ISO в виртуальную машину как показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0418.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Выключите виртуальную машину если она еще включена, затем установите необходимый драйвер из ISO с применением 
+	  <span class="term"><strong class="userinput"><code>Control Panel | Device Manager</code></strong></span>.</p>
+	 </li>
+	 </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="High_Availability">&nbsp;</a>Настройка высокой доступности</h3>
+   </div></div></div>
+   <p>Высокая доступность Proxmox (<span class="term"><strong class="userinput"><code>HA, High Availability</code></strong></span>)
+ делает 
+   возможной автоматический запуск настроенной на HA виртуальной машины 
+на другом узле в кластере в случае отказа физического узла. 
+   Proxmox HA построена на основе давно существующей проверенной 
+технологии Linux HA. В данном рецепте мы рассмотрим как настроить
+   высокую доступность в Proxmox для автоматической миграции виртуальной
+ машины при сбое узла или сети.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Существуют три предварительных требования перед настройкой высокой доступности:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Cluster</code></strong></span>
+ (кластер): Поскольку основная функция HA заключается в 
+	 автоматическом перезапуске виртуальной машины с отказавшего узла на 
+другом узле, она, разумеется, может быть настроена только в кластере.
+	 Это одно из минимальных требований высокой доступности Proxmox.</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Fencing</code></strong></span>
+ (отгораживание): Это второе самое важное требование для 
+	 высокой доступности. Для настройки высокой доступности на площадке 
+должно существовать устройство или оборудование для ограждения. В 
+настоящее 
+	 время не существует никакого программного обеспечения для ограждения. 
+Говоря проще, ограждение происходит когда кластер форсирует или 
+	 выносит неисправный узел и предотвращает его от возврата во включенное
+ состояние. Это делается для предотвращения запуска виртуальной 
+	 машины на нескольких узлах одновременно, что почти всегда вызывает 
+ошибки в данных.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table summary="Замечание" border="0"><tbody><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения подробностей по настройке ограждающего устройства посетите <a class="link" href="http://pve.proxmox.com/wiki/Fencing" target="_top">http://pve.proxmox.com/wiki/Fencing</a>.</p></td></tr></tbody></table>
+     </div>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Shared storage</code></strong></span> (совместно используемое хранилище): 
+	 Кластер Proxmox также должен иметь настроенное совместно используемое хранилище. Для выполнения миграции высокой доступности 
+	 виртуальный диск должен храниться в совместно используемом хранилище.</p>
+	 </li>
+   </ul>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь на узле Proxmox через SSH или напрямую с консоли. Настройка ограждающего устройства должна быть выполнена из 
+      интерфейса командной строки. Перед добавлением оградительного устройства настройка кластера в 
+      <span class="term"><code>/etc/pve/cluster.conf</code></span> должна выглядеть в следующем формате:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0419.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Добавьте ограждаюющее (fencing) устройство в соответствии с документацией <a class="link" href="http://pve.proxmox.com/wiki/Fencing" target="_top">http://pve.proxmox.com/wiki/Fencing</a>.</p>
+      <p>Например, мы выбрали ограждающее устройство APC. После 
+добавления ограждающего устройства в кластер нашего примера настройка 
+будет 
+	  выглядеть так:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0420.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Сохраните настройку и перезагрузите узел.</p>
+	 </li><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox в качестве root после перезагрузки.</p>
+	 </li><li class="listitem">
+      <p>Убедитесь что подлежащая настройке виртуальная машина с  высокой доступностью окончательно выключена. Состояние HA на странице 
+	  <span class="term"><strong class="userinput"><code>Summary</code></strong></span> должно быть <span class="term"><strong class="userinput"><code>No</code></strong></span> перед добавлением этой виртуальной машины в HA, как это отображено на следующем 
+	  снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0421.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Datacenter</code></strong></span> из левой панели навигации, затем 
+	  кликните на <span class="term"><strong class="userinput"><code>HA</code></strong></span> в меню с закладками. Следующий экранный снимок 
+	  показывает страницу с текущей настройкой кластера при добавленном устройстве ограждения:
+	  <span class="term"><strong class="userinput"><code>HA</code></strong></span>.</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0422.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на ниспадающее меню <span class="term"><strong class="userinput"><code>Add</code></strong></span> и выберите 
+	  <span class="term"><strong class="userinput"><code>HA managed VM/CT</code></strong></span> для открытия блока диалога, как показано 
+	  на следующем снимке экрана. В нашем примере мы добавляем контейнер с идентификатором <span class="term"><code>101</code></span> в HA:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0423.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на кнопку <span class="term"><strong class="userinput"><code>Create</code></strong></span> для добавления виртуальной 
+	  машины в HA.</p>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Activate</code></strong></span> для завершения настройки или кликните на 
+	  <span class="term"><strong class="userinput"><code>Revert changes</code></strong></span> для возврата настройки в прежнее состояние.</p>
+	 </li><li class="listitem">
+      <p>Проверьте что выбранная виртуальная машина теперь настроена с <span class="term"><strong class="userinput"><code>HA</code></strong></span>
+	  на странице <span class="term"><strong class="userinput"><code>Summary</code></strong></span>. Если все хорошо, состояние HA виртуальной 
+	  машины должно отображать <span class="term"><strong class="userinput"><code>Yes</code></strong></span>, как это показано на следующем снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0424.jpg"> </div><br>
+      </div>
+	 </li><li class="listitem">
+      <p>Для проверки настройки высокой доступности отключите узел 
+Proxmox с виртуальной машиной и наблюдайте за его запуском на другом 
+узле в 
+	  кластере.</p>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Proxmox HA является отличным способом увеличения максимального 
+времени безотказной работы в случае, когда происходит отказ узла и 
+   ИТ-персонал не может решить проблему в срок. Несмотря на преимущества
+ высокой доступности, существует множество виртуальных сред, где 
+   эта функция не используется. Например, в большой среде, большое число
+ виртуальных машин на узел может вызвать некоторые проблемы при 
+   настроенной высокой доступности. В случае отказа узла в такой среде 
+большое количество виртуальных машин автоматически запустится на других 
+   узлах. Если эти узлы не имеют достаточные ресурсы, новые виртуальные 
+машины не смогут перезапуститься.</p>
+   <p>В некритического среде с меньшими размерами менеджер сети может 
+просто игнорировать функцию высокой доступности и перемещать 
+   виртуальные машины только вручную, тем самым, устраняя любую 
+необходимость включения в бюджет устройства ограждения. Применение 
+   высокой доступности полностью зависит от требований. Проверьте 
+правильное использование высокой доступности заранее, прежде чем 
+   погрузиться в ее применение. Это позволит предотвратить ненужные 
+сложности настройки высокой доступности Proxmox.</p>
+  </div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</div></div></div></div></body></html>

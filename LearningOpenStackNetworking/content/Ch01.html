@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 1. Подготовка сети для OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content=""/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="up" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="prev" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="next" href="Ch02.html" title="Глава 2. Установка OpenStack"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//openstack-ops_preface.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 1. Подготовка сети для OpenStack';
+PrevRef = 'index.html';
+UpRef = 'index.html';
+NextRef = 'Ch02.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 1. Подготовка сети для OpenStack</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+    <dt><span class="section"><a href="Ch01.html#what_is_Neutron">Что такое сетевая среда OpenStack</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#features_of_Neutron">Функциональные возможности сетевой среды OpenStack</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch01.html#switching">Коммутация</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#routing">Маршрутизация</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#load_balancing">Балансировка нагрузки</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#firewalling">Организация межсетевой защиты</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#vpn">Виртуальные частные сети</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#prepare_phys_infrastructure">Подготовка физической инфраструктуры</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch01.html#types_of_traffic">Типы сетевого обмена</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch01.html#management_network">Управляющая сеть</a></span></dt>
+          <dt><span class="section"><a href="Ch01.html#api_network">Сеть программного интерфейса приложений</a></span></dt>
+          <dt><span class="section"><a href="Ch01.html#external_network">Внешняя сеть</a></span></dt>
+          <dt><span class="section"><a href="Ch01.html#guest_network">Гостевая сеть</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#physical_server_connections">Подключения физических серверов</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch01.html#single_interface">Одиночный интерфейс</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#multiple_interfaces">Множественный интерфейс</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#bonding">Связывание</a></span></dt>
+        <dt><span class="section"><a href="Ch01.html#separating_services">Разделение служб по узлам</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch01.html#single_controller">Один контроллер с одним или более узлами</a></span></dt>
+          <dt><span class="section"><a href="Ch01.html#plus_network">Один контроллер плюс сетевой узел с одним или более узлами</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch01.html#Summary">Заключение</a></span></dt>
+    </dl>
+  </div>
+  <p>Как большие, так и малые предприятия запускают свои облака используя программное обеспечение  OpenStack. В то время как сами облака могут 
+  различаться по сложности одна вещь является общей: они стали возможными благодаря масштабируемости и гибкости вычислительных и сетевых 
+  служб OpenStack.</p>
+  <p>Современные облачные вычислительных платформы, таких как OpenStack, полагаются на сетевые методы, называемые определяемой программным 
+  обеспечением сетевой средой, или SDN (software-defied networking). Традиционное администрирование сети  в основном полагается на то, что 
+  администратор вручную настраивает и обслуживает физическое оборудование сетевой среды и подключения. С другой стороны, SDN позволяет 
+  сетевым администраторам управлять сетевыми службами абстрактно и автоматизированно. Программно определяемы сетевые среды и целиком 
+  программно определяемы центр обработки данных часто рассматриваются в качестве необходимой основы для масштабируемых и эффективных 
+  облачных вычислений.</p>
+  <p>В этой главе вы познакомитесь с различными компонентами и функциями сетевой среды OpenStack с кодовым названием Neutron, а также
+  различные методы при помощи которых Neutron может быть развернута и настроена как с точки зрения программного обеспечения, так и 
+  со стороны оборудования. Псевдоним Neutron будет использоваться на протяжении всей книги будет часто использоваться вместо 
+  официального названия.</p>
+  
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="what_is_Neutron"> </a>Что такое сетевая среда OpenStack</h2>
+   </div></div></div>
+   <p>OpenStack Networking является автономной службой, которая может быть установлена независимо от других служб в облаке. Другие службы OpenStack, 
+   подпадающе под эту категорию включают вычислительную службу (Compute - Nova), службу образов (Image - Glance), службу идентификации (Identity - 
+   Keystone), службу блочного хранилища (Block Storage - Cinder) и инструментальную панель (Dashboard - Horizon). Сетевые службы OpenStack 
+   могут быть разделены между несколькими узлами для обеспечения устойчивости и избыточности, или могут быть настроены для работы на одном узле.</p>
+   <p>Сетевая среда OpenStack использует службу под названием neutron-server для выделения программируемого интерфейса, или API, для пользователей 
+   и передачи запросов в настроенные сетевые подключаемые программы (plugin) для дополнительной обработки. Пользователи имеют возможность 
+   определять сетевые подключения в облаке, а также операторы облака могут использовать различные сетевые технологии для расширения и 
+   придания дополнительной мощности облаку.</p>
+   <p>Как и многие другие службы OpenStack, сетевая среда (Networking) требует доступа к базе данных для постоянного хранения сетевых настроек.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="features_of_Neutron"> </a>Функциональные возможности сетевой среды OpenStack</h2>
+   </div></div></div>
+   <p>Сетевая среда OpenStack в Havana содержит многие технологии, которые характерны для центров обработки данных, 
+   в том числе коммутацию, маршрутизацию, балансировку нагрузки, межсетевое экранирование и виртуальные частные сети. 
+   Эти функции могут быть настроены для усиления программного обеспечения с открытым исходным кодом или коммерческого ПО,
+   а также предоставить оператору облака все инструменты, необходимые для построения функционального и самодостаточного облака.   
+   Сетевая среда OpenStack также обеспечивает сторонним поставщикам каркас для построения облака и расширения его возможностей.</p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="switching"> </a>Коммутация</h3>
+    </div></div></div>
+    <p><span class="term"><span class="emphasis"><em>Виртуальные коммутаторы</em></span></span> определяются как программные приложения, которые подключают виртуальные машины к виртуальным сетям на 2м уровне, 
+	или канальном уровне (data link) в модели OSI. Neutron поддерживает множество платформ виртуальной коммутации, включая встроенные 
+	мосты Linux и Open vSwitch. Open vSwitch, также называемый OVS, является виртуальным коммутатором с открытым исходным кодом, который 
+	поддерживает стандартные интерфейсы управления и протоколы, в том числе 
+	<a class="link" href="https://ru.wikipedia.org/wiki/Netflow" target="_top">NetFlow</a>, 
+	<a class="link" href="http://admindoc.ru/783/span-switch-port-analyzer-rspan-remote-switch-port-analyzer/" target="_top">SPAN, RSPAN</a>, 
+	<a class="link" href="https://ru.wikipedia.org/wiki/Агрегирование_каналов" target="_top">LACP</a> 
+	{<span class="emphasis"><em>Прим. пер.: 802.3ad</em></span>}, 
+	<a class="link" href="https://ru.wikipedia.org/wiki/IEEE_802.1Q" target="_top">802.1Q</a>, хотя многие из этих функций не являются открытыми 
+	для пользователя в API облака. В дополнение к разметке VLAN, пользователи могут создавать перекрывающиеся (overlay) сети в программном 
+	обеспечении с применением туннельных протоколов L2 в L3, подобных 
+	<a class="link" href="https://ru.wikipedia.org/wiki/GRE_(протокол)" target="_top">GRE</a> или 
+	<a class="link" href="http://www.vmgu.ru/news/vmware-vxlan-for-vsphere" target="_top">VXLAN</a>.
+	Open vSwitch может использоваться для облегчения связи между экземплярами и устройствами за пределами управления OpenStack, которые 
+	включают аппаратные коммутаторы, межсетевые экраны сетевой среды, устройства хранения, выделенные серверы и многое другое. 
+	Дополнительную информацию об использовании мостов Linux и Open vSwitch в качестве коммутаторов платформ для OpenStack можно найти в
+    <a class="xref" href="Ch04.html" title="Глава 4. Построение инфраструктуры виртуальной коммутации"><em>Главе 4. 
+	Построение инфраструктуры виртуальной коммутации</em></a>.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="routing"> </a>Маршрутизация</h3>
+    </div></div></div>
+    <p>Сетевая среда OpenStack обеспечивает маршрутизацию и возможности 
+	<a class="link" href="https://ru.wikipedia.org/wiki/NAT" target="_top">NAT</a>.
+	с помощью переадресации IP,	<a class="link" href="https://ru.wikipedia.org/wiki/Iptables" target="_top">iptables</a>
+	и <a href="https://ru.wikipedia.org/wiki/DNS">сетевых пространств имен</a>. 
+	Пространство имен сети аналогично <span class="term"><code>
+	<a class="link" href="https://ru.wikipedia.org/wiki/NAT" target="_top">chroot</a></code></span> для сетевого стека. 
+	Внутри пространства имен сети вы можете найти сокеты, связанные порты и интерфейсы, которые были созданы в пространстве имен. 
+	Каждое пространство имен сети имеет свою собственную таблицу маршрутизации и процесс iptables, которые обеспечивают фильтрацию и 
+	преобразование адресов сети, также известные как NAT. Сетевые пространства имен сопоставимы с 
+	<a class="link" href="http://habrahabr.ru/post/138698/" target="_top">VRF</a> в Cisco, 
+	<a class="link" href="http://habrahabr.ru/company/billing/blog/253315/" target="_top">экземплярами маршрутизации</a> 
+	в Juniper JunOS или <a class="link" 
+	href="https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-ip-routing-administration-11-2-0/2.html" 
+	target="_top">доменами маршрутов</a> в F5 BIG-IP. при применении пространств сетевых имен нет связи перекрывающихся подсетей 
+	между сетями, созданных владельцами. Настройка маршрутизатора в Neutron позволяет экземплярам взаимодействовать и общаться с внешними сетями. 
+	Дополнительные сведения о маршрутизации в рамках OpenStack можно найти в 
+    <a class="xref" href="Ch06.html" title="Глава 6. Создание маршрутизатора в Neutron"><em>Главе 6. Создание маршрутизатора в Neutron</em></a>.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="load_balancing"> </a>Балансировка нагрузки</h3>
+    </div></div></div>
+    <p>Впервые представленная в редакции OpenStack Grizzly, <span class="term"><span class="emphasis"><em>Load-Balancing-as-a-Service</em></span></span>
+	(балансировка-нагрузки-как-служба), также сокращенно именуемая как <span class="term"><span class="emphasis"><em>LBaaS</em></span></span>, 
+	предоставляет пользователям возможность распределять запросы клиентов по множеству экземпляров серверов. Havana оснащена подключаемой 
+	программой (plugin), которая применяет HAProxy в качестве балансировщика нагрузки. Более подробную информацию по использованию 
+	балансировки нагрузки в пределах Нейтрон можно найти в 
+    <a class="xref" href="Ch07.html" title="Глава 7. Балансировка нагрузки обмена в Neutron"><em>Главе 7. Балансировка нагрузки обмена в Neutron</em></a>.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="firewalling"> </a>Организация межсетевой защиты</h3>
+    </div></div></div>
+    <p>В Havana существует два способа обеспечения безопасности для экземпляров или сетевых сред: группы безопасности (security group) и 
+	межсетевые экраны (fiewall). Группы безопасности первоначально были созданы в nova-network из OpenStack Compute. Это способ обеспечения 
+	безопасноти трафика к- или от- экземпляра посредством применения iptables на вычислительных узлах. С введением 
+	<span class="term"><span class="emphasis"><em>Firewall-as-a-Service</em></span></span> (межсетевой-экран-как-служба), также сокращенно 
+	называемой <span class="term"><span class="emphasis"><em>FWaaS</em></span></span>, работы по обеспечению безопасности выполняются на 
+	маршрутизаторе, а не на вычислительном узле. В редакции OpenStack Havana FWaaS это экспериментальное расширение без гарантии обратной 
+	совместимости в последующих версиях. Более подробная информация по обеспечению безопасности экземпляров может быть найдена в
+    <a class="xref" href="Ch08.html" title="Глава 8. Безопасность экземпляров в сетевой среде"><em>Главе 8. Безопасность экземпляров в сетевой среде</em></a>.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="vpn"> </a>Виртуальные частные сети</h3>
+    </div></div></div>
+    <p><span class="term"><span class="emphasis"><em>Virtual private network</em></span></span> виртуальная частная сеть 
+	(<span class="emphasis"><em>VPN</em></span></span>) 
+	распространяет частную сеть в сети общего пользования подобные Интернет. VPN позволяет компьютеру отправлять и получать данные по 
+	сетям общего пользования, как будто они напрямую связаны с данной частной сетью. Neutron предоставляет набор API, позволяющий 
+	владельцам (tenant) создать VPN туннели к удаленным шлюзам на основе IPSec.
+	In the Havana release of OpenStack, VPNaaS is an experimental extension with no guaranteed backwards compatibility in future releases; 
+	it will not be covered in this book.
+	В редакции OpenStack Havana, VPNaaS является экспериментальным расширение, не гарантирующим обратную совместимость в будущих версиях; 
+	он не будет рассматриваться в этой книге.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="prepare_phys_infrastructure"> </a>Подготовка физической инфраструктуры</h2>
+   </div></div></div>
+   <p>При проектировании сети важно для начала определить цель данного облака. Существует ли задача построения высоко масштабируемой среды 
+   с несколькими уровнями резервирования сети? Или: существует ли цель обеспечения песочницы для разработчиков с небольшими заботами об
+   устойчивости такой сети или вычислительной платформы? Вам нужна среда, которая использует всю мощь, которую OpenStack Networking 
+   должен предложить в плане маршрутизации, коммутации и сетевых приложений? Предусматривается ли в среде расширение существующей 
+   физической сети?</p>
+   <p>Сетевая среда OpenStack может обслуживать много ролей в пределах различных облаков, но в некоторых технологиях является лучше других. 
+   Цель облака самого по себе, заключается в том, что наряду с требованиями безопасности и доступности оборудования, оно будет играть 
+   большое значение в определении архитектуры сети и роли OpenStack в сетевой среде.</p>
+   <p>Портал OpenStack <a class="xref" href="http://www.openstack.org" title="OpenStack"><em>www.openstack.org</em></a>.</p>
+   предоставляет эталонные архитектуры для облаков на основе Neutron, которые содержат комбинацию из следующих узлов:</p>
+   <div class="itemizedlist">
+     <ul class="itemizedlist" type="disc">
+	   <li class="listitem">Узел контроллера</li>
+	   <li class="listitem">Сетевой узел</li>
+	   <li class="listitem">Вычислительный узел (узлы)</li>
+     </ul>
+   </div>
+   <p>Перед установкой OpenStack, должна быть настроена физическая сетевая инфраструктура для поддержки сетевых потребностей работающего облака. 
+   На следующей диаграмме, автор выделил зону ответственности для администратора сети:</p>
+   <div class="informalfigure"><div class="mediaobject">
+     <img src="figures/Fig0101.jpg"/></div><br />
+   </div>
+   <p>Физическая сетевая инфраструктура должна быть настроена для поддержки OpenStack Networking. На данной схеме область, отмеченная пунктиром 
+   в верхней части, находится в ответственности администратора сети. Она может включать в себя необходимость настройки физических коммутаторов, 
+   межсетевых экранов или маршрутизаторов, а также интерфейсы на самих серверах.</p>
+   <p>В следующих нескольких главах автор определил сетевые среды и VLAN, которые будут использоваться на протяжении всей этой книги чтобы 
+   продемонстрировать различные компоненты OpenStack Networking. Общая информация о настройке портов коммутатора, маршрутизаторов или 
+   межсетевых экранов также можно найти в последующих главах.</p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="types_of_traffic"> </a>Типы сетевого обмена</h3>
+    </div></div></div>
+    <p>Эталонный проект OpenStack Networking определяет по крайней мере четыре различных типа сетевого обмена:</p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist" type="disc">
+	   <li class="listitem">Управление</li>
+	   <li class="listitem">API</li>
+	   <li class="listitem">Внешний</li>
+	   <li class="listitem">Гостевой</li>
+     </ul>
+    </div>
+    <p>Эти различные типы сетевого обмена не требуют специализированных интерфейсов и часто сворачиваются в один интерфейс. В зависимости от 
+	выбранной модели развертывания, проект облака может распространять сетевые службы на множество узлов. Часто требования безопасности предприятия, 
+	внедряющего облако, диктуют как строится это облако.</p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="management_network"> </a>Управляющая сеть</h4>
+      </div></div></div>
+      <p>Сеть управления используется для внутренней связи между хостами для предоставления услуг, таких как службы обмена сообщениями и 
+	  службы базы данных. Все хосты будут общаться друг с другом через эту сеть. Управляющая сеть может быть выполнена в виде отдельной 
+	  сети на выделенном интерфейс или в сочетании с другой сетью, как это описано ниже.</p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="api_network"> </a>Сеть программного интерфейса приложений</h4>
+      </div></div></div>
+      <p>Сеть API используется для открытия OpenStack API пользователям облака и службам в данном облаке. Адреса конечных точек служб, таких как 
+	  Keystone, Neutron, Glance и Horizon, доставляются из сети API.</p>
+      <p>Общей практикой является настройка одного IP-адреса на выделенный интерфейс, который будет служить в качестве адреса обработчиков для 
+	  различных служб, а также адрес управления для самого хоста. Схема такой настройки предоставляется далее в этой главе.</p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="external_network"> </a>Внешняя сеть</h4>
+      </div></div></div>
+      <p>Внешняя сеть предоставляет маршрутизаторам Neutron доступ к сети. После того, как маршрутизатор был настроен, эта сеть 
+	  становится источником однородных IP-адресов для экземпляров и балансировщика нагрузки VIP. IP-адреса из этой сети должны быть 
+	  доступны любому клиенту в Интернете.</p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="guest_network"> </a>Гостевая сеть</h4>
+      </div></div></div>
+      <p>Гостевая сеть призвана обеспечить обмен экземпляров. Варианты гостевых сетей включают в себя локальные сети ограниченные 
+	  определенными узлами, однородной или выделенной в VLAN сетью, или с применением инкапсуляции GRE или VXLAN становится 
+	  возможным использование виртуальных перекрывающихся сетей. Для получения более подробной информации о гостевых сетях, пожалуйста, 
+	  обратитесь к 
+      <a class="xref" href="Ch05.html" title="Глава 5. Создание сетевой среды с применением Neutron"><em>Главе 5. 
+	  Создание сетевой среды с применением Neutron</em></a>.</p>
+      <p>Интерфейсы, используемые для внешних и гостевых сетей могут быть выделенными интерфейсами или интерфейсами, которые являются совместными 
+	  с другими типами обмена. Каждый подход имеет свои преимущества и недостатки, и все они описываются более подробно, по мере нашего 
+	  продвижения в данной главе.</p>
+     </div>
+	 
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="physical_server_connections"> </a>Подключения физических серверов</h2>
+   </div></div></div>
+   <p>Количество интерфейсов, необходимых для каждого хоста зависит от типа строимого облака, а также требований безопасности и 
+   производительности для данной организации.</p>
+   <p>Все, что необходимо для полностью функционального облака OpenStack, это один интерфейс на сервер, который в результате объединяет 
+   уровни управления и данных. Многие организации предпочитают развертавыть свое облако таким путем, в особенности, когда плотность портов 
+   стоит дорого или среда используется просто для тестирования. В промышленных облаках, однако, рекомендуются отдельные интерфейсы 
+   управления и данных.
+   </p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="single_interface"> </a>Одиночный интерфейс</h3>
+    </div></div></div>
+    <p>Для хостов, испуользующих один интерфейс весь обмен к экземпляру или от него, а также внутреннее управление OpenStack, SSH 
+	а также трафик API проходят через один и тот же интерфейс. Такая настройка может в результате может привести к серьезной деградации, 
+	поскольку гости могут созать атака с целью нарушения нормального обслуживания пользователей (DOS-атаку) на свой хосты, потребляя 
+	всю доступную полосу пропускания. Данный тип настройки не рекомендуется для промышленного применения и может быть использован тольо 
+	для тестирования или проверки правильности концепции.</p>
+    <p>Следующая диаграмма демонстрирует использование одного физического интерфейса для всего обмена с применением подключаемой 
+	программы Open vSwitch. Физический интерфейс расположен в сети моста и обрабатывает внешний и гостевой обмен, а также трафик 
+	управления и API:</p>
+    <div class="informalfigure"><div class="mediaobject">
+     <img src="figures/Fig0102.jpg"/></div><br />
+    </div>
+    <p>На данной диаграмме обмен служб OpenStack и управления проходят через тот же физический интерфейс, что и гостевой трафик.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="multiple_interfaces"> </a>Множественный интерфейс</h3>
+    </div></div></div>
+    <p>Чтобы уменьшить влияние потребления полосы пропускания гостевой сетью  на обмен управления и поддерживать надлежащий уровень 
+	безопасности, рекомендуется разделение обмена между несколькими физическими интерфейсами. По крайней мере должно использоваться 
+	два интерфейса: один обслуживает интерфейсы управления и API, а второй работает как внешний и гостевой интерфейс. Если необходимо, 
+	могут использоваться дополнительные интерфейсы для дальнейшего разделения трафика. Следующая диаграмма показывает использование 
+	двух физических интерфейсов применяющих подключаемую программу Open vSwitch:</p>
+    <div class="informalfigure"><div class="mediaobject">
+     <img src="figures/Fig0103.jpg"/></div><br />
+    </div>
+    <p>На этойдиаграмме выделенный физический интерфейс обрабатывает весь обмен, направляющийся к интерфейсам или от них или других служб 
+	OpenStack Networking,таких как LBaaS и FWaaS, вто время как другой интерфейс обрабатывает трафик OpenStack API и управления.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="bonding"> </a>Связывание</h3>
+    </div></div></div>
+    <p>Соединение NIC предлагает пользователям умножать доступную полосу пропускания путем агрегации связей. Два или более физических 
+	интерфейса могут быть объединены для создания единого виртуального интерфейса или соединения (bond), который далее может быть помещен 
+	в мост. Физическая инфраструктура коммутации, однако, должна быть способна поддерживать такой тип соединения. В дополнение к 
+    агрегации связей, соединение также рассматривается как возможность создавать избыточные связи активным/ пассивным образом.
+    Обе связи одновременно подключаются кабелями к коммутатору или паре коммутаторов, однако только один является активным в любой 
+    определенный момент времени. Оба типа соединений могут быть созданы в рамках CentOS или Ubuntu при установке соответствующего модуля 
+	ядра. Вместо встроенных методов соединения, при желании может быть настроено соединение в Open vSwitch.</p>
+    <p></p>
+    <div class="itemizedlist">
+     <ul class="itemizedlist" type="disc">
+	   <li class="listitem"><span class="emphasis"><em>CentOS 6.5</em></span></span>: 
+       <a class="xref" href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/s2-networkscripts-interfaces-chan.html" 
+	   title="RedHat: Channel Bonding Interfaces"><em>
+	   https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Deployment_Guide/s2-networkscripts-interfaces-chan.html</em></a></li>
+	   <li class="listitem"><span class="emphasis"><em>Ubuntu 12.04 LTS:</em></span></span>: 
+       <a class="xref" href="https://help.ubuntu.com/community/UbuntuBonding" title="UbuntuBonding"><em>https://help.ubuntu.com/community/UbuntuBonding</em></a></li>
+     </ul>
+    </div>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="separating_services"> </a>Разделение служб по узлам</h3>
+    </div></div></div>
+    <p>Как это делается и с другими службами OpenStack, операторы облака могут разделить службы OpenStack Networking на несколько узлов.
+    Небольшие реализации могут использовать один узел для размещения всех служб, в том числе сетевой среды, среды вычислений, базы данных 
+    и обмена сообщениями, в то время как могут воспользоваться преимуществами от использования выделенного узла для обработки гостевого 
+    трафика, направляемого через программный маршрутизатор и разгружающий службы Neutron DHCP и метаданных. Следующие диаграммы отражают 
+    несколько моделей развертывания общего обслуживания.</p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="single_controller"> </a>Один контроллер с одним или более узлами</h4>
+      </div></div></div>
+      <p>В среде, состоящей из одного контроллера и одного или более вычислительных узлов, контроллер, скорее всего, обрабатывает все сетевые 
+	  службы и другие службы OpenStack, в то время как вычислительные узлы строго обеспечивают вычислительные ресурсы.</p>
+      <p>Следующая диаграмма показывает контроллер узла, размещающий все службы управления OpenStack и сетевой среды, в которых 
+	  не используется агент 3 уровня. Два физических интерфейса используются для обеспечения раздельных уровне управления и данных:</p>
+      <div class="informalfigure"><div class="mediaobject">
+       <img src="figures/Fig0104.jpg"/></div><br />
+      </div>
+      <p>Эта диаграмма отражает использование одного контроллера и одного или более вычислительных узлов, в котором Neutron обеспечивает 
+	  только соединения с экземплярами 2 уровня. Для обработки маршрутизации между сегментами сети необходим внешний маршрутизатор.</p>
+      <p>Следующая диаграмма демонстрирует контроллер узла, который размещает все службы управления и сетевой среды OpenStack, 
+	  в том числе агента Neutron L3. Два физических интерфейсов используются для обеспечения раздельных уровней управления и данных:</p>
+      <div class="informalfigure"><div class="mediaobject">
+       <img src="figures/Fig0105.jpg"/></div><br />
+      </div>
+      <p>Эта диаграмма отражает использование одного узла контроллера, а также одного или более вычислительных узлов в конфигурации сети, 
+	  которые используют агент Neutron L3. Программный маршрутизатор, созданный Neutron расположенным на узле контроллера и обрабатывает 
+	  маршрутизацию между подключенными сетями владельцев (tenant).</p>
+     </div>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="plus_network"> </a>Один контроллер плюс сетевой узел с одним или более узлами</h4>
+      </div></div></div>
+      <p>Сетевой узел является выделенным для обработки большинства или всех служб сетевой среды OpenStack, в том числе агента L3, DHCP агента, 
+	  агента метаданных и многих других. Использование выделенного сетевого узла обеспечивает дополнительную безопасность и устойчивость, 
+	  вто время как узел контроллера будет менее подвержен риску насыщения сетевой среды и ресурсов.</p>
+      <p>Следующий рисунок демонстрирует сетевой узел размещающий все сетевые службы OpenStack, включая агента Neutron L3. Neutron API, 
+	  однако, установлен на узле контроллера. Два физических интерфейса используются для обеспечения разделения уровней управления и данных::</p>
+      <div class="informalfigure"><div class="mediaobject">
+       <img src="figures/Fig0106.jpg"/></div><br />
+      </div>
+      <p>Эта диаграмма отражает использование выделенного узла сети в ее конфигурации, которая использует агента Neutron L3. 
+	  Программные маршрутизаторы, созданные Neutron находятся на сетевом узле и обрабатывают маршрутизации между подключенными сетями владельцев.
+	  Служба API, neutron-server, остается на узле контроллера.</p>
+     </div>
+
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h2>
+   </div></div></div>
+   <p>OpenStack Networking предлагает возможность использования различных найденных в центре обработки данных технологий виртуально и 
+   в виде программ. Если встроенных функций оказывается недостаточно, архитектура подключаемых программ OpenStack Networking допускает 
+   дополнительную функциональность, предоставляемую третьими сторонами, будь то коммерческая организация или сообщество с открытым исходным кодом.
+   Требования безопасности строящегося облака масштаба предпрития, а также варианты его использования, в конечном счете, определяют 
+   физическое расположение и разделение услуг в узлах инфраструктуры.</p>
+   <p>В этой книге вы узнаете как построить функциональное облако OpenStack использующее передовую сетевую функциональноть, доступную в 
+   редакции Havana. В следующей главе вы будете проведены сквозь пакетную установку OpenStack в операционной системе CentOS. Обсуждаемые темы 
+   включают установку, настройку и верификацию базы данных, обмена сообщениями, а также служб OpenStack: идентификации (Identity), образов 
+   (Image), вычислений (Compute) и приборной панели (Dashboard). Описание установки и настройки служб OpenStack Networking может быть найдена 
+   в <a class="xref" href="Ch03.html" title="Глава 3. Установка Neutron"><em>Главе 3. Установка Neutron</em></a>.</p>
+  </div>
+
+
+ </div>
+
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

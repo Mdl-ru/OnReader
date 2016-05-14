@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 10. Сетевые приложения и службы - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch09.html" title="Глава 9. Понимание вашей сетевой среды и ее настройки"/>
+<link rel="next" href="Ch11.html" title="Глава 11. Введение в сценарии оболочки"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 10. Сетевые приложения и службы';
+PrevRef = 'Ch09.html';
+UpRef = 'index.html';
+NextRef = 'Ch11.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 10. Сетевые приложения и службы</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch10.html">10. Сетевые приложения и службы</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch10.html#10.1">10.1. Основы служб</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.1.1">10.1.1 Более подробное рассмотрение</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#10.2">10.2 Сетевые серверы</a></span></dt>
+	 <dt><span class="section"><a href="Ch10.html#10.3">10.3 Безопасная оболочка (SSH)</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.3.1">10.3.1 Сервер SSHD</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.3.2">10.3.2 Клиент SSH</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#10.4">10.4 Демоны inetd и xinetd</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.4.1">10.4.1 TCP Wrappers: tcpd, /etc/hosts.allow и /etc/hosts.deny</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#10.5">10.5 Средства диагностики</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.5.1">10.5.1 lsof</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.5.2">10.5.2 tcpdump</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.5.3">10.5.3 netcat</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.5.4">10.5.4 Сканирование портов</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#10.6">10.6 Удаленный вызов процедур (RPC)</a></span></dt>
+	 <dt><span class="section"><a href="Ch10.html#10.7">10.7 Безопасность сетевой среды</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.7.1">10.7.1 Типичные уязвимости</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.7.2">10.7.2 Ресурсы по безопасности</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#10.8">10.8 Заглядывая в будущее</a></span></dt>
+	 <dt><span class="section"><a href="Ch10.html#10.9">10.9 Сокеты: как процессы взаимодействуют с сетевой средой</a></span></dt>
+	 <dt><span class="section"><a href="Ch10.html#10.10">10.10 Сокеты межпроцессного взаимодействия (UDS)</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.10.1">10.10.1 Преимущества для разработчиков</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.10.2">10.10.2 Список сокетов межпроцессного взаимодействия</a></span></dt>
+	 </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+  <p></p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.1"> </a>10.1 Основы служб</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.1.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.1.1 Более подробное рассмотрение</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.2"> </a>10.2 Сетевые серверы</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.3"> </a>10.3 Безопасная оболочка (SSH)</h3>
+   </div></div></div>
+   <p>.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.3.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.3.1 Сервер SSHD</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.3.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.3.2 Клиент SSH</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4"> </a>10.4 Демоны inetd и xinetd</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.4.1 TCP Wrappers: tcpd, /etc/hosts.allow и /etc/hosts.deny</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.5"> </a>10.5 Средства диагностики</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.5.1 lsof</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.5.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.5.2 tcpdump</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.5.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.5.3 netcat</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.5.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.5.4 Сканирование портов</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.6"> </a>10.6 Удаленный вызов процедур (RPC)</h3>
+   </div></div></div>
+   <p>.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.7"> </a>10.7 Безопасность сетевой среды</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.7.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.7.1 Типичные уязвимости</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.7.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.7.2 Ресурсы по безопасности</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.8"> </a>10.8 Заглядывая в будущее</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.9"> </a>10.9 Сокеты: как процессы взаимодействуют с сетевой средой</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.10"> </a>10.10 Сокеты межпроцессного взаимодействия (UDS)</h3>
+   </div></div></div>
+   <p>.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.10.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.10.1 Преимущества для разработчиков</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.10.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">10.10.2 Список сокетов межпроцессного взаимодействия</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

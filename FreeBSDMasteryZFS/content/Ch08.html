@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 8. Установка на ZFS - Мастерство FreeBSD: ZFS</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="prev" href="Ch07.html" title="Глава 7. Моментальные снимки и клоны"/>
+<link rel="next" href="Afterword.html" title="Послесловие"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 8. Установка на ZFS';
+PrevRef = 'Ch07.html';
+UpRef = 'index.html';
+NextRef = 'Afterword.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 8. Установка на ZFS</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch08.html">8. Установка на ZFS</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch08.html#FreeBSDReferenceInstall">Эталонная установка FreeBSD</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#CustomZFSInstallationPartitioning">Выделение разделов пользовательской установки ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch08.html#DiskPartitioning">Разбиение диска</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#PoolCreation">Создание пула</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#Datasets">Наборы данных</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#Post-InstallSetup">Настройка после установки</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#ManuallyInstallingFreeBSD">Установка FreeBSD вручную</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Весь смысл изучения ZFS заключается в применении файловой системы на машине. Давайте обсудим установку на ZFS FreeBSD 10.</p>
+  <p>Если необходимо установить целую кучу машин FreeBSD, например, фермe серверов, мы рекомендуем установщик PC-BSD. Сценарии наподобие 
+  демонстрируемые здесь хороши для установок по случаю для несколько машин, однако если вы настраиваете машины стойками, вы на 
+  самом деле нуждаетесь в установщике на основе <a class="link" href="https://ru.wikipedia.org/wiki/PXE" target="_top">PXE</a>.</p>
+  <p>Ваше оборудование ограничивает ваши возможности выбора. За редким исключением ноутбуки имеют один жесткий диск. Для работы FreeBSD это 
+  означает применение отдельного чередующегося пула виртуального устройства для хранения. Если у вас есть сотни дисков, вам понадобится 
+  рассмотреть то, как вы хотите разделять свои пулы.</p>
+  <p>Когда у вас есть очень очень много дисков, отделяйте вашу операционную систему от ваших данных. FreeBSD и хорошая выборка дополнительного 
+  программного обеспечения прекрасно разместятся в зеркалированном пуле или в RAID-Z. Вам не нужен RAIDZ-3 только для операционной системы! Если 
+  у вас есть сотни дисков для хранения данных, используйте раздельные пулы для операционной системы и данных. При сотнях дисков Лукас 
+  хотел бы всего несколько отдельных пулов, но он старый хрен. Джуд залил бы всё в один гигантский пул. Один неправильный выбор 
+  может создать вам очень много работы.</p>
+  <p>Данная глава подразумевает, что вы знакомы с разбиением на разделы <a class="link" href="https://ru.wikipedia.org/wiki/Таблица_разделов_GUID"
+  target="_top">GPT</a>, инструментами наподобие FreeBSD <span class="term"><code>gpart(8)</code></span> и типами разделов FreeBSD. Если нет, 
+  освежите знания по документации <a class="link" href="http://www.freebsd.org/docs.html" target="_top">FreeBSD</a> или, возможно, прочтите 
+  <a class="link" href="https://www.tiltedwindmillpress.com/?product=freebsd-mastery-storage-essentials" target="_top">FreeBSD Mastery: 
+  Storage Essentials</a>. (<span class="emphasis"><em>FMSE</em></span> также охватывает сценарии установки и другие профессиональные техники 
+  установки.)</p>
+  <p>Установка системы на основе ZFS требует настройки пулов хранения, назначения наборов данных и установки FreeBSD в эти наборы данных. Вы 
+  можете делать отдельный выбор на каждом шаге, поэтому рассмотрим их по раздельности.</p>
+  <p>Однако начните с эталонной установки FreeBSD.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FreeBSDReferenceInstall"> </a>Эталонная установка FreeBSD</h3>
+   </div></div></div>
+   <p>перед установкой настроенной под ваши нужды системы FreeBSD, установите небольшую виртуальную машину ZFS FreeBSD в качестве эталонной 
+   платформы. Это снабдит вас большим объёмом информации о стандартной установке FreeBSD. Установка вашей собственной системы это прекрасно, 
+   но не отказывайтесь от всех тщательно предусмотренных по умолчанию назначений, используемых установщиком. Возможно имеющиеся у вас 
+   цели подстройки установки по ее ходу не допускаются, не ликвидируют все стандарты FreeBSD.</p>
+   <p>Загрузите свою эталонную платформу, станьте <span class="term"><strong class="userinput"><code>root</code></strong></span>-ом 
+   и выполните <span class="term"><code>zpool history</code></span> для просмотра того, как была создана данная ZFS.</p>
+	   <pre class="screen">
+# zpool history
+History for 'zroot':
+2015-04-08.07:18:30 zpool create -o altroot=/mnt -O compress=lz4 -O atime=off -m none -f zroot raidz1 da0p3.nop da1p3.nop da2p3.nop
+2015-04-08.07:18:30 zfs create -o mountpoint=none zroot/ROOT
+2015-04-08.07:18:30 zfs create -o mountpoint=/ zroot/ROOT/default
+2015-04-08.07:18:30 zfs create -o mountpoint=/tmp -o exec=on -o setuid=off zroot/tmp
+...
+	   </pre>
+   <p>Вы воспользуемся этой информацией в процессе установки для подстройки нашей инсталляции.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CustomZFSInstallationPartitioning"> </a>Выделение разделов пользовательской установки ZFS</h3>
+   </div></div></div>
+   <p>Загрузите в ваш установщик FreeBSD образ и выберите <span class="emphasis"><em>install</em></span>. Когда вы достигните места где вы 
+   создаете разделы дисков, выберите режим командной строки вместо любого автоматического метода или действия по инструкции. Вы также можете 
+   воспользоваться чем-то наподобие <span class="term"><code>mfsBSD</code></span> для выбранной вами версии, если вы находите это удобным.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DiskPartitioning">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Разбиение диска</span></h4>
+    </div></div></div>
+    <p>Когда компьютер загрузится, он попытается найти операционную систему на носителе. Для FreeBSD это будет начальный загрузчик. FreeBSD 
+	предоставляет начальный загрузчик <span class="term"><code>gptzfsboot(8)</code></span> специально для загрузки с пулов ZFS. Аппаратный 
+	BIOS {<span class="emphasis"><em>Прим. пер.: правильнее для современных машин использовать термин
+	<a class="link" href="https://ru.wikipedia.org/wiki/Extensible_Firmware_Interface" target="_top">UEFI</a></em></span>} 
+	загружает ваш начальный загрузчик, который активирует пул и запускает ядро ​​FreeBSD. Каждый диск в каждом виртуального устройства в 
+	загрузочном пуле должен иметь установленный загрузчик ZFS, что означает, что на дисках должны быть созданы разделы. Максимальный размер 
+	раздела начального загрузчика FreeBSD только чуть-чуть больше 512кБ по некоторой странной причине, так что назначайте для начального 
+	загрузчика  512кБ. Затем мы выделим 1ГБ для раздела подкачки FreeBSD и выделим оставшееся пространство для ZFS. Разделы подкачки и ZFS 
+	выравниваются на границы 1МБ.</p>
+    <p>Хотя я применяю такие короткие имена для своих меток GPT для учебных целей, мы строго рекомендуем вам использовать метки на основе 
+	местоположения, как это обсуждалось в <a class="link" href="Ch00.htmll#Disk_Installation_and_Labeling" target="_top">Главе 0</a>.</p>
+	   <pre class="screen">
+# gpart add –a 1m -t freebsd-boot -s 512k -l zfsboot da0
+da0p1 added
+# gpart add –a 1m -t freebsd-swap -s 1g -a 1m -l swap0 da0
+da0p2 added
+# gpart add –a 1m -t freebsd-zfs -a 1m -l zfs0 da0
+da0p3 added
+	   </pre>
+    <p>Теперь установите начальный загрузчик FreeBSD на этот диск. Каждый диск, с которого вам нужно выполнять загрузку, должен иметь 
+	начальный загрузчик.</p>
+	   <pre class="screen">
+# gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 da0
+bootcode written to da0
+	   </pre>
+    <p>Повторите эту процедуру для каждого диска, содержащегося в данном пуле хранения.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PoolCreation">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание пула</span></h4>
+    </div></div></div>
+    <p>Соберите ваши диски в ваш корневой пул хранения, находясь все еще в командной строке приглашения форматирования диска. 
+	Общепринято называть корневой пул как-то типа <span class="term"><code>system</code></span>, или 
+	<span class="term"><code>zroot</code></span>, или вы можете назвать его именем хоста. Делайте все что удобно вашей среде. 
+	Я, например, называю пул <span class="term"><code>zroot</code></span>, так что это соответствует имени, используемому 
+	 по умолчанию установщиком FreeBSD.</p>
+    <p>Взглянем на <span class="term"><code>zpool history</code></span> установки FreeBSD по умолчанию и рассмотрим что она 
+	отображает.</p>
+	   <pre class="screen">
+2015-04-08.07:18:30 zpool create -o altroot=/mnt -O compress=lz4 -O atime=off -m none -f zroot raidz1 da0p3.nop da1p3.nop da2p3.nop
+	   </pre>
+    <p>Это система FreeBSD 10.1. Установщик временно смонтировал загрузочный пул в <span class="term"><code>/mnt</code></span>, и мы 
+	на самом деле должны оставить это так чтобы установщик мог продолжить работу. Нам нужны дополнительные параметры наподобие установок
+	<span class="term"><strong class="userinput"><code>compression</code></strong></span> в <span class="term"><code>lz4</code></span> 
+	и запрета <span class="term"><strong class="userinput"><code>atime</code></strong></span>. <span class="term"><code>-m none</code></span>
+	просит <span class="term"><code>zpool(8)</code></span> не назначать точку монтирования для этого пула. Применение 
+	<span class="term"><code>-f</code></span> просит <span class="term"><code>zpool(8)</code></span> игнорировать любую другую 
+	информацию на этих дисках. Свойство <span class="term"><strong class="userinput"><code>altroot</code></strong></span>
+	предоставляет временную точку монтирования, как это обсуждалось в <a class="link" href="Ch04.html" target="_top">Главе 4</a>
+	{<span class="emphasis"><em>Прим. пер.: так в оригинале, на самом деле обсуждение свойства 
+	<span class="term"><strong class="userinput"><code>altroot</code></strong></span> идет только в разделе 
+	<a class="link" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch05.html#RenamingImportedPools" target="_top">Переименование 
+	импортированных пулов</a> в <a class="link" href="Ch05.html" target="_top">Главе 5</a>.</em></span>}</p>
+    <p>Установщик 10.1 еще не обновлен {на момент написания книги} для получения преимуществ 
+	<span class="term"><code>vfs.zfs.min_auto_ashift sysctl</code></span>, но я собираюсь ими сейчас воспользоваться.</p>
+	   <pre class="screen">
+# sysctl vfs.zfs.min_auto_ashift=12
+	   </pre>
+    <p>Теперь ZFS использует сектора с 4096 байтами. Создадим наш пул. Мы тырим все параметры установки FreeBSD по умолчанию, 
+	заменяя только те, которые хотим изменить.</p>
+	   <pre class="screen">
+# zpool create -o altroot=/mnt -O compress=lz4 -O atime=off -m none -f zroot mirror gpt/zfs0 gpt/zfs1 cache gpt/zcache0 log gpt/zlog0
+	   </pre>
+    <p>Скорее всего, установки пула FreeBSD нормальные. Возможно, вы захотите подстроить наборы данных.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Datasets">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Наборы данных</span></h4>
+    </div></div></div>
+    <p>Раз уж вы хотите создать свои собственные настройки набора данных, для начала сверьтесь с настройками FreeBSD по умолчанию.
+	Они понятны любому пользователю среднего уровня и позволяют применять расширенные свойства наподобие средств управления загрузкой 
+	окружения.</p>
+    <p>Если вы хотите завершить загрузку при помощи установщика FreeBSDб вы должны предоставить установщику распознаваемую систему.
+	Это подразумевает последующие шаги из эталонной установки, даже если вы не уверены в экспорте и импорте пула в конце этапа создания 
+	набора данных. В итоге мы рекомендуем добавлять свои собственные наборы данных, но оставлять при этом настройки по умолчанию без 
+	изменений.</p>
+    <p>Вот некоторые выдержки из <span class="term"><code>zpool history</code></span> с эталонного хоста FreeBSD с опусканием временных 
+	отметок.</p>
+	   <pre class="screen">
+zfs create -o mountpoint=none zroot/ROOT
+zfs create -o mountpoint=/ zroot/ROOT/default
+zfs create -o mountpoint=/tmp -o exec=on -o setuid=off zroot/tmp
+zfs create -o mountpoint=/usr -o canmount=off zroot/usr
+zfs create zroot/usr/home
+zfs create -o setuid=off zroot/usr/ports
+zfs create zroot/usr/src
+zfs create -o mountpoint=/var -o canmount=off zroot/var
+zfs create -o exec=off -o setuid=off zroot/var/crash
+zfs create -o exec=off -o setuid=off zroot/var/log
+zfs create -o atime=on zroot/var/mail
+zfs create -o setuid=off zroot/var/tmp
+zpool set bootfs=zroot/ROOT/default zroot
+zpool set cachefile=/mnt/boot/zfs/zpool.cache zroot
+	   </pre>
+    <p>Вы легко можете добавить сюда ваши собственные наборы данных, создав <span class="term"><code>zroot/var/mysql</code></span>
+	или переместив <span class="term"><code>/home</code></span> из <span class="term"><code>/usr</code></span>, или еще что-то 
+	нужное вам.</p>
+    <p>Создание наборов данных сопряжено с обильным набором данных с клавиатуры. Мы рекомендуем создавать сценарии установки, как это 
+	обсуждается в книге <a class="link" href="https://www.tiltedwindmillpress.com/?product=freebsd-mastery-storage-essentials" 
+	target="_top">FreeBSD Mastery: Storage Essentials</a>.</p>
+    <p>Когда вы получите свои наборы данных, выйдите из командной строки создания разделов , тем самым возобновив работу установщика.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Post-InstallSetup">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка после установки</span></h4>
+    </div></div></div>
+    <p>Когда установщик закончит копирование файлов на ваши диски, выполните настройку сетевой среды и тому подобного и вы получите возможность 
+	войти в установленную систему и внести изменения. Воспользуйтесь этим шансом. Вым следует изменить несколько установок в созданной системе.</p>
+    <p>Убедитесь что ZFS запустилась в <span class="term"><code>/etc/rc.conf</code></span>. Это монтирует ваши наборы данных файловых систем
+	при загрузке.</p>
+	   <pre class="screen">
+zfs_enable=yes
+	   </pre>
+    <p>Измените <span class="term"><code>/boot/loader.conf</code></span>, чтобы сообщить FreeBSD о необходимости загрузки ZFS и 
+	соответствующих модулей ядра при начальной загрузке.</p>
+	   <pre class="screen">
+zfs_load=&quot;YES&quot;
+	   </pre>
+    <p>Здесь вы также можете сделать любые другие нужные вам изменения системы.</p>
+    <p>Хотя некоторая документации ссылается на другие необходимые этапы, например, копирование файла кэша пула, это больше не требуется.</p>
+    <p>Когда завершите, перезагрузитесь и вы в новую, настроенную под ваши потребности установку FreeBSD!</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ManuallyInstallingFreeBSD"> </a>Установка FreeBSD вручную</h3>
+   </div></div></div>
+   <p>Если вы должны перейти в командную строку для создания разделов на ваших дисках, вы можете также установить файлы FreeBSD на 
+   свой диск самостоятельно. Файлы дистрибутива FreeBSD находятся в <span class="term"><code>/usr/freebsd-dist</code></span> и вы
+   записываете их на свой диск посредством <span class="term"><code>tar(1)</code></span>. Ваше место назначения установки смонтировано 
+   в <span class="term"><code>/mnt</code></span>.</p>
+	   <pre class="screen">
+# tar --unlink -xpJf base.txz -C /mnt
+# tar --unlink -xpJf kernel.txz -C /mnt
+	   </pre>
+   <p>Вы можете установить и другие наборы дистрибутива, однако base и kernel являются критически важными.</p>
+   <p>Вашей установке понадобится <span class="term"><code>/etc/fstab</code></span> для файлов подкачки, даже если больше ничего не надо.
+   Создайте его в <span class="term"><code>/mnt/etc/fstab</code></span>. Вы также можете изменить критически важные системные файлы, такие как 
+   <span class="term"><code>/mnt/etc/rc.conf</code></span> и <span class="term"><code>/mnt/boot/loader.conf</code></span>.</p>
+   <p>После небольшого объема работ и тестирований вы можете сделать свою установку ZFS {<span class="emphasis"><em>Прим. пер.: 
+   FreeBSD?</em></span>} как простой, так и сложной по своему желанию.</p>
+   <p>Точно так же, как вы можете поступать с ZFS.</p>
+  </div>
+
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

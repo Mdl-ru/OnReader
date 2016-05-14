@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Вычислительные узлы - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="architecture.html" title="Архитектура"/>
+<link rel="prev" href="cloud_controller_design.html" title="Глава 3. Проектирование контроллера облака и управления облаком"/>
+<link rel="next" href="scaling.html" title="Глава 5. Масштабирование"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:00+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//compute_nodes.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Вычислительные узлы';
+PrevRef = 'cloud_controller_design.html';
+UpRef = 'architecture.html';
+NextRef = 'scaling.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="chapter">
+  <div xmlns="" class="titlepage">
+   <div>
+    <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	 <a id="compute_nodes"> </a>Глава 4. Вычислительные узлы</h2>
+	</div>
+   </div>
+  </div>
+  <div class="toc"><dl><dt><span class="section">
+  <a href="compute_nodes.html#cpu_choice">Выбор процессора</a></span></dt><dt><span class="section">
+  <a href="compute_nodes.html#hypervisor_choice">Выбор гипервизора</a></span></dt><dt><span class="section">
+  <a href="compute_nodes.html#instance_storage">Решения хранилищ экземпляра</a></span></dt><dt><span class="section">
+  <a href="compute_nodes.html#overcommit">Перегруженное выделение</a></span></dt><dt><span class="section">
+  <a href="compute_nodes.html#logging">Ведение журнала</a></span></dt><dt><span class="section">
+  <a href="compute_nodes.html#networking">Сетевое обеспечение</a></span></dt><dt><span class="section">
+  <a href="compute_nodes.html#conclusion">Выводы</a></span></dt></dl>
+ </div>
+ 
+ <p>В этой главе мы обсудим некоторые варианты, которые вам необходимо
+ рассмотреть при построении ваших вычислительных узлов. Вычислительные 
+ узлы образуют ядро ресурсов облака OpenStack Compute, предоставляя для 
+ запуска экземпляров процессоры, память, сетевые ресурсы и ресурсы 
+ систем хранения.</p>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage">
+   <div>
+    <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	 <a id="cpu_choice"> </a>Выбор процессора</h2>
+	</div>
+   </div>
+  </div>
+  
+  <p>Выбор типа процессора в вашем вычислительном узле является очень важным. 
+  Для начала убедитесь, что процессор поддерживает виртуализацию посредством 
+  <span class="emphasis"><em>VT-x</em></span> для микросхем Intel, 
+  или <span class="emphasis"><em>AMD-v</em></span>  для микросхем AMD.
+  <a id="d9e1733" class="indexterm"/>
+  <a id="d9e1736" class="indexterm"/></p>
+  
+  <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Совет"><tr>
+   <td rowspan="2" align="center" valign="top" width="25">
+   <img alt="[Tip]" src="../common/images/admon/tip.png"/></td>
+   <th align="left">Совет</th></tr><tr><td align="left" valign="top">
+   <p>Обратитесь к документации производителя для проверки того, поддерживается ли
+   виртуализация. Для Intel, ознакомьтесь с 
+   <a class="link" href="http://www.intel.com/support/processors/sb/cs-030729.htm" title="Intel VT-x" target="_top">
+   “Поддерживает ли мой процессор технологию виртуализации Intel®?”</a>. 
+   Для AMD, озакомьтесь с 
+   <a class="link" href="http://sites.amd.com/us/business/it-solutions/virtualization/Pages/client-side-virtualization.aspx" title="AMD-v" target="_top"> 
+   Виртуализация AMD</a>. Заметим, что ваш процессор может поддерживать виртуализацию,
+   однако она может быть выключена. Ознакомьтесь с документацией на BIOS 
+   для того чтобыпонять как разрешать свойства процессора.
+   <a id="d9e1743" class="indexterm"/>
+   <a id="d9e1745" class="indexterm"/>
+   <a id="d9e1747" class="indexterm"/></p></td></tr></table>
+  </div>
+  
+  <p>На ваше решение также влияет число ядер в процессоре. Для современных 
+  процессоров обычным является наличие до 12 ядер. Кроме того, если процессор 
+  поддерживает технологию Hyper-threading (многопоточности), эти 12 ядер удваиваются до 24 ядер 
+  (<em>прим. перев.: корректнее, аппаратных потоков</em>). Если вы приобретаете 
+  сервер, поддерживающий несколько процессоров, количество ядер еще умножается.
+  <a id="d9e1750" class="indexterm"/>
+  <a id="d9e1752" class="indexterm"/>
+  <a id="d9e1754" class="indexterm"/></p>
+  
+  <div class="sidebar">
+   <div class="titlepage"><!--FOOBAR!-->
+    <div>
+	 <div>
+	  <p class="title"><strong>Анализ многопоточности</strong></p>
+	 </div>
+	</div>
+   </div>
+   
+   <p>Многопоточность (Hyper-Threading) является проприетарной реализацией Intel
+   одновременного выполнения потоков используемой для улучшения распараллеливания их
+   процессоров. Вы можете рассмотреть возможность разрешения поддержки многопоточности
+   для улучшения производительности многопоточных приложений.</p>
+   
+   <p>Следует или нет применять многопоточность (Hyper-threading) на ваших процессорах, зависит 
+   от ваших приложений. Например, запрет многопоточности может дать преимущества в средах
+   с интенсивными вычислениями.Мы рекомендуем провести тестирование с вашей локальной нагрузкой 
+   с включенной и выключенной многопоточностью, чтобы определить что больше подходит в вашем 
+   случае.
+   <a id="d9e1760" class="indexterm"/></p>
+  </div>
+ </div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage">
+   <div>
+    <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	 <a id="hypervisor_choice"> </a>Выбор гипервизора</h2>
+	</div>
+   </div>
+  </div>
+  
+  <p>Гипервизор предоставляет программное обеспечение для управления доступом виртуальных
+  машин к аппаратным средствам нижнего уровня. Гипервизор создает, управляет и
+  контролирует виртуальные машины.
+  <a id="d9e1766" class="indexterm"/>
+  <a id="d9e1768" class="indexterm"/>
+  <a id="d9e1770" class="indexterm"/>
+  <a id="d9e1772" class="indexterm"/>
+  <a id="d9e1774" class="indexterm"/>
+  <a id="d9e1776" class="indexterm"/>
+  <a id="d9e1778" class="indexterm"/>
+  <a id="d9e1780" class="indexterm"/>
+  <a id="d9e1782" class="indexterm"/>
+  <a id="d9e1785" class="indexterm"/>
+  <a id="d9e1788" class="indexterm"/> 
+  OpenStack Compute поддерживает множество гипервизоров для различных уровней, в том числе: </p>
+  <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   <p><a class="link" href="http://www.linux-kvm.org/page/Main_Page" title="reference manual" target="_top">KVM</a></p></li><li class="listitem">
+   <p><a class="link" href="https://linuxcontainers.org/" title="reference manual" target="_top">LXC</a></p></li><li class="listitem">
+   <p><a class="link" href="http://wiki.qemu.org/Main_Page" title="reference manual" target="_top">QEMU</a></p></li><li class="listitem">
+   <p><a class="link" href="https://www.vmware.com/support/vsphere-hypervisor" title="reference manual" target="_top">VMware ESX/ESXi</a></p></li><li class="listitem">
+   <p><a class="link" href="http://www.xenproject.org/" title="reference manual" target="_top">Xen</a></p></li><li class="listitem">
+   <p><a class="link" href="http://technet.microsoft.com/en-us/library/hh831531.aspx" title="reference manual" target="_top">Hyper-V</a></p></li><li class="listitem">
+   <p><a class="link" href="https://www.docker.com/" title="reference manual" target="_top">Docker</a></p></li></ul>
+  </div>
+  
+  <p>Вероятно, наиболее важным фактором при вашем выборе гипервизора будет 
+  текущая практика использования или опыта. Кроме того, существуют практические 
+  соображения обойтись свойствами соответствия, документированности, 
+  а также уровня компетентности сообщества.</p>
+  <p>Например, KVM является наиболее часто используемым гипервизором в сообществе 
+  OpenStack. Помимо KVM, многие существующие реализации чаще чем с остальными 
+  перечисленными работают с Xen, LXC, VMWare и Hyper-V — однако, каждому из них 
+  не хватает некоторых функций поддержки или устарела документация об их 
+  использовании с OpenStack.</p>
+  <p>Наилучшая информация для поддержки вашего выбора может быть найдена в 
+  <a class="link" href="https://wiki.openstack.org/wiki/HypervisorSupportMatrix" title="справочное руководство" target="_top">
+  матрице поддержки гипервизоров</a>  а также в 
+  <a class="link" href="http://docs.openstack.org/trunk/config-reference/content/section_compute-hypervisors.html" title="справочник конфигурации" target="_top">
+  справочнике конфигурации</a>.</p>
+  <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Замечание"><tr>
+   <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+   <p>Кроме того возможен запуск нескольких гипервизоров в одной реализации с использованием 
+   Объединения хостов (Host Aggregates) или Ячеек (Cells). Тем не менее, на отдельном 
+   вычислительном узле в одно и тоже время может работать только один гипервизор.
+   <a id="d9e1820" class="indexterm"/></p></td></tr></table>
+  </div>
+ </div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage">
+   <div>
+    <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	 <a id="instance_storage"> </a>Решения хранилищ экземпляра</h2>
+	</div>
+   </div>
+  </div>
+  
+  <div class="toc"><dl><dt><span class="section">
+   <a href="compute_nodes.html#off_compute_node_storage">Система хранения вне вычислительного узла – совместно используемая файловая система</a></span></dt><dt><span class="section">
+   <a href="compute_nodes.html#on_compute_node_storage">Система хранения на вычислительном узле – совместно используемая файловая система</a></span></dt><dt><span class="section">
+   <a href="compute_nodes.html#on_compute_node_storage_nonshared">Система хранения на вычислительном узле – не разделяемая файловая система</a></span></dt><dt><span class="section">
+   <a href="compute_nodes.html#live_migration">Проблемы миграции в реальном масштабе времени</a></span></dt><dt><span class="section">
+   <a href="compute_nodes.html#file_systems">Выбор файловой системы</a></span></dt></dl>
+  </div>
+  
+  <p>В рамках закупки для вычислительного кластера вам необходимо задать технические 
+  требования для дисковой системы хранения с которой работает установленный экземпляр. 
+  Существует три основных подхода предоставления такого хранилища временного типа и 
+  очень важно понимать последствия вашего выбора.
+  <a id="d9e1826" class="indexterm"/>
+  <a id="d9e1829" class="indexterm"/>
+  <a id="d9e1832" class="indexterm"/></p>
+  
+  <p>
+  Это подходы:</p>
+  
+  <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   <p>Система хранения вне вычислительного узла – совместно используемая файловая система </p></li><li class="listitem">
+   <p>Система хранения на вычислительном узле – совместно используемая файловая система</p></li><li class="listitem">
+   <p>Система хранения на вычислительном узле – не разделяемая файловая система </p></li></ul>
+  </div>
+  <p>
+   В общем случае, вопросы на которые вы должны ответить при выборе системы хранения будут следующими:</p>
+  <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   <p>Какое количество дисковых пластин вы хотите получить?</p></li><li class="listitem">
+   <p>Можно ли получить лучшую производительность ввода/вывода добавляя шпиндели при неизменной сетевой структуре?</p></li><li class="listitem">
+   <p>К какому результату с лучшим соотношением стоимость-производительность вы стремитесь? </p></li><li class="listitem">
+   <p>Как вы оперативно управляете системой хранения?</p></li></ul>
+  </div>
+  
+  <p>Многие операторы используют раздельные хосты для вычислений и для хранения. Вычислительные 
+  службы и услуги хранения имеют различные требования, например, вычислительные хосты обычно 
+  требуют больше процессоров и памяти, чем хосты хранения. Таким образом при фиксированном 
+  бюджете есть смысл иметь различные конфигурации для ваших вычислительных узлов и ваших 
+  узлов хранения, при основных вложениях в процессоры и память на вычислительных узлах и 
+  главных затратах на блочные устройства на узлах хранения.</p>
+  <p>Однако, если вы более ограничены в количестве имеющихся у вас в наличии физических хостов 
+  для создания вашего облака и вы хотите дать возможность выделять работающим экземплярам все 
+  имеющиеся в вашем распоряжении хосты, имеет смысл запускать вычислительные хосты и хосты 
+  хранения на одинаковых компьютерах.</p>
+  
+  <p>Мы рассмотрим все три главных подхода к экземплярам хранилищ в следующих
+  нескольких разделах.</p>
+ 
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	  <a id="off_compute_node_storage"> </a>Система хранения вне вычислительного узла – совместно используемая файловая система</h3>
+	 </div>
+	</div>
+   </div>
+   
+   <p>В данном разделе диски хранилища обслуживаются экземплярами, расположенными
+   на серверах вне вычислительных узлов.
+   <a id="d9e1859" class="indexterm"/>
+   <a id="d9e1861" class="indexterm"/></p>
+   
+   <p>Когда вы используете раздельные хосты для вычислений и хранения данных, вы можете рассматривать 
+   ваши вычислительные узлы как &quot;не запоминающие состояние&quot;. 
+   Если на вычислительном хосте у вас нет работающего в настоящий момент экземпляра, вы можете 
+   использовать его в автономном режиме или полностью очистить, что не окажет никакого влияния 
+   на оставшуюся часть вашего облака. Это упрощает обслуживание вычислительных хостов.</p>
+	  
+   <p>Существует ряд преимуществ такого подхода:</p>
+   
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+    <p>При выходе из строя вычислительных узлов экземпляры обычно легко восстанавливаются.</p></li><li class="listitem">
+	<p>Работа выделенной системы хранения может быть проще в эксплуатации.</p></li><li class="listitem">
+	<p>У вас есть возможность масштабирования на любое количество шпинделей.</p></li><li class="listitem">
+	<p>Становится возможным совместно использовать внешние накопители для других целей .</p></li></ul>
+   </div>
+   
+   <p>Основные недостатки такого подхода:</p>
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+    <p>В зависимости от конструкции, интенсивное использование ввода/вывода может приводить к 
+	несвязности экземпляров.</p></li><li class="listitem">
+	<p>Использование сети может приводить к снижению производительности.</p></li></ul>
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	  <a id="on_compute_node_storage"> </a>Система хранения на вычислительном узле – совместно используемая файловая система</h3>
+	 </div>
+	</div>
+   </div>
+   
+   <p>При данном выборе, каждый вычислительный узел имеет достаточное количество дисков, 
+   однако распределенная файловая система связывает диски всех вычислительных узлов в 
+   единую реализацию.</p>
+   
+   <p> Основным преимуществом данного подхода заключается в том, что он масштабируется на 
+   внешние системы хранения по мере запросов на дополнительное пространство хранения.</p>
+   
+   <p>Однако, данная система имеет ряд негативных моментов:</p>
+   
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+    <p>Запуск распределенной файловой системы может заставить вас утратить локальность 
+	данных по сравнению с не разделяемым хранилищем.</p></li><li class="listitem">
+	<p>Восстановление экземпляров усложняется из- за зависимости от множества хостов.</p></li><li class="listitem">
+	<p>Физические размеры шасси вычислительного узла могут ограничивать количество 
+	шпинделей, доступное в вычислительном узле.</p></li><li class="listitem">
+	<p>Использование сети может привести к снижению производительности.</p></li></ul>
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	  <a id="on_compute_node_storage_nonshared"> </a>Система хранения на вычислительном узле – не разделяемая файловая система</h3>
+	 </div>
+	</div>
+   </div>
+   
+   <p>В данном случае каждый вычислительный узел снабжается достаточным количеством дисков для 
+   хранения экземпляров своих хостов.
+   <a id="d9e1898" class="indexterm"/></p>
+	  
+   <p>Существует две основные причины, почему это является хорошей идеей:</p>
+   
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   
+    <p>Использование интенсивной нагрузки ввода/вывода на одном вычислительном узле 
+	не влияет на экземпляры на других вычислительных узлах.</p></li><li class="listitem">
+   
+    <p>Ввод/вывод с пямым доступом может повысить производительность. </p></li></ul>
+   </div>
+   
+   <p>Он также имеет недостатки:</p>
+   
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+   
+    <p>В случае отказа данного узла, работающие на нем экземпляры утрачиваются.</p></li><li class="listitem">
+	<p>Физические размеры шасси вычислительного узла могут ограничивать количество шпинделей, 
+	доступное в вычислительном узле.</p></li><li class="listitem">	
+	<p>Миграция экземпляров с одного узла на другой является более сложной и может быть 
+	основана на функциях, которые могут не получить поддержки в дальнейших разработках.</p></li><li class="listitem">
+	<p>В случае потребности в дополнительном пространстве хранения, данное решение 
+	не является масштабируемым.</p></li></ul>
+   </div>
+   
+   <p>Работа совместно используемой файловой системы всистеме хранения отдельном
+   от вычислительных узлов идеально подходит для облаков, в которых надежность и 
+   масштабируемость являются наиболее важными факторами. Работа совместно используемой
+   файловой системы на самих вычислительных узлах может быть лучшим сценарием при котором вы
+   должны развертывать предустановленные серверы для которых вы практически не имеете
+   возможности управления их спецификациями. Запуск не разделяемой файловой системы 
+   на самих вычислительных узлах может быть хорошей идеей для облака с высокими
+   требованиями к вводу/выводу и низкими требованиями к надежности.
+   <a id="d9e1918" class="indexterm"/></p>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	  <a id="live_migration"> </a>Проблемы миграции в реальном масштабе времени</h3>
+	 </div>
+	</div>
+   </div>
+   
+   <p>Мы рассматриваем миграцию в реальном масштабе времени неотъемлемой частью деятельности 
+   облака. Эта функция обеспечивает возможность экземплярам беспрепятственно 
+   передвигаться с одного хоста на другой, необходимость выполнения для 
+   требующих перезагрузки на хосте обновлений, однако хорошо работает только с совместно 
+   используемой системой хранения.
+	<a id="d9e1924" class="indexterm"/>
+	<a id="d9e1927" class="indexterm"/>
+	<a id="d9e1929" class="indexterm"/>
+	<a id="d9e1931" class="indexterm"/></p>
+	
+	<p>Миграция в реальном масштабе времени может быть выполнена и при использовании не 
+	разделяемых хранилищ с использованием функции, известной как миграция динамических 
+	блоков KVM (<span class="emphasis"><em>KVM live block migration</em></span>). 
+	Хотя ранее реализация блочной миграции KVM и QEMU считалась ненадежной, существуют 
+	более новые, более надежные реализации блочной миграции в реальном режиме времени, 
+	такие как QEMU 1.4 и libvirt 1.0.2, которые, к тому же, совместимы с OpenStack. Тем не менее, 
+	ни один из авторов данного руководства не имеет опыта первых рук использования блочной 
+	миграции в реальном времени.
+	<a id="d9e1936" class="indexterm"/></p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+	   <a id="file_systems"> </a>Выбор файловой системы</h3>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>Если вы хотите поддерживать миграцию в реальном времени на совместно 
+	используемой системе хранения, вам необходимо настроить распределенную файловую систему.
+	<a id="d9e1941" class="indexterm"/>
+	<a id="d9e1944" class="indexterm"/>
+	<a id="d9e1947" class="indexterm"/></p>
+	
+	<p>Возможные варианты включают:</p>
+	
+	<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+	 <p>NFS (система по умолчанию для  Linux)</p></li><li class="listitem">
+	 <p>GlusterFS</p></li><li class="listitem">
+	 <p>MooseFS</p></li><li class="listitem">
+	 <p>Lustre</p></li><li class="listitem">
+	 <p><em>Прим. перев.: GPFS, см. 
+	  <a href="http://www.mdl.ru/Solutions/Put.htm?Nme=GPFS">http://www.mdl.ru/Solutions/Put.htm?Nme=GPFS</a>,
+	  например, подробности во врезке "Сосредоточение внимания на OpenStack" в книге "Определяемые программным обеспечением системы хранения `для чайников`"</em></p></li></ul>
+	</div>
+	<p>Нам знакомо применение всех этих систем и мы рекомендуем вам выбрать ту, 
+	с которой у вас есть наибольший практический опыт.Если вы не знакомы ни с одной
+	из них, выберите NFS, поскольку она наиболее проста в установке и существует 
+	обширное сообщество со знаниями о ней.</p>
+	</div>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="overcommit"> </a>Перегруженное выделение</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <p>OpenStack позволяет перерасход (overcommit) процессоров и памяти на вычислительных узлах. 
+   Это позволяет вам увеличить количество экземпляров, которое вы можете иметь работающими 
+   в вашем облаке за счет снижения производительности этих экземпляров. 
+   <a id="d9e1964" class="indexterm"/>
+   <a id="d9e1966" class="indexterm"/>
+   <a id="d9e1969" class="indexterm"/>
+   <a id="d9e1971" class="indexterm"/> 
+   OpenStack Compute использует следующие коэффициенты по умолчанию:</p>
+	
+   <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+    <p>Отношение выделения процессоров: 16:1</p></li><li class="listitem">
+	<p>Отношение выделения памяти: 1.5:1</p></li></ul>
+   </div>
+   
+   <p>Коэффициент выделения процессоров по умолчанию 16:1 означает, что планировщик 
+   распределяет до 16 виртуальных ядер на узле для физического ядра. Например, если 
+   физический узел имеет 12 ядер, планировщик выделяет до 192 виртуальных ядер для 
+   экземпляров. При типичном определении предпочтения каждый экземпляр имеет 4 виртуальных ядра, 
+   при этом соотношении на физическом узле будет запущено 48 экземпляров.</p>
+   
+   <p>Формула для числа виртуальных экземпляров на вычислительном узле такая:
+    <span class="emphasis"><em>(OR*PC)/VC</em></span>, где:</p>
+   
+   <div class="variablelist"><dl><dt><span class="term">
+    <span class="emphasis"><em>OR</em></span></span></dt><dd>
+    <p>Соотношение перегрузки процессора (число виртуальных ядер на физическое ядро)</p></dd><dt>
+	<span class="term"><span class="emphasis"><em>PC</em></span></span></dt>
+	<dd><p>Число физических ядер</p></dd><dt><span class="term">
+	<span class="emphasis"><em>VC</em></span></span></dt><dd>
+	<p>Число виртуальных ядер на экземпляр</p></dd></dl>
+   </div>
+   
+   <p>Точно так же, значение по умолчанию, равное 1.5:1, для коэффициента выделения 
+   оперативной памяти означает, что планировщик распределяет экземпляры в физическом узле, 
+   пока общее количество оперативной памяти, связанной с экземплярами меньше чем 3/2 
+   объема оперативной памяти, доступной на физическом узле.</p>
+   
+   <p>Например, если физический узел имеет 48ГБ оперативной памяти, планировщик 
+   распределяет экземпляры на этом узле, пока сумма ОЗУ, связанного с этими экземплярами 
+   не достигнет 72ГБ (например, девять, когда каждый экземпляр имеет 8ГБ ОЗУ).</p>
+   
+   <p>Вы должны выбрать надлежащее значения коэффициента выделения процессоров и памяти для 
+   вашего конкретного случая.</p>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage">
+    <div>
+	 <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	  <a id="logging"> </a>Ведение журнала</h2>
+	 </div>
+	</div>
+   </div>
+   
+   <p>Ведение журнала более подробно описано 
+   <a class="xref" href="logging_monitoring.html" title="Глава 13. Ведение журнала и мониторинг">Главе 13, <em>Ведение журнала и мониторинг</em></a>. 
+   Однако важно принять во внимание анализ проекта до начала эксплуатации вашего облака.
+   <a id="d9e2005" class="indexterm"/>
+   <a id="d9e2008" class="indexterm"/></p>
+   
+   <p>OpenStack порождает много полезной регистрационной информации, 
+   однако, для того, чтобы она стала полезной для целей эксплуатации вы 
+   должны рассмотреть возможность наличия центрального сервера ведения журнала, 
+   чтобы отправлять туда журналы, а также систему разбора/анализа журналов (например, 
+   <span class="keep-together">logstash</span>).</p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="networking"> </a>Сетевое обеспечение</h2>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>
+	Сеть в OpenStack является сложной, многогранной проблемой. См.
+    <a class="xref" href="network_design.html" title="Глава 7. Проектирование сети">Главу 7, <em>Проектирование сети</em></a>.
+	<a id="d9e2017" class="indexterm"/></p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage">
+	 <div>
+	  <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	   <a id="conclusion"> </a>Выводы</h2>
+	  </div>
+	 </div>
+	</div>
+	
+	<p>Вычислительные узлы являются рабочими лошадками вашего облака и место,
+	в котором выполняются приложения пользователей. Они скорее всего будут
+	подвергнуты вашему анализу при выборе решения и том как его разворачивать.
+	Их требования должны быть отражены в выборе, который вы осуществляете.</p>
+  </div>
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

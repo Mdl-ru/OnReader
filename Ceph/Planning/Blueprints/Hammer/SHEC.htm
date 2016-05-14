@@ -1,0 +1,856 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="wf-ptsans-n4-active wf-ptsans-i4-active wf-sourcecodepro-n4-active wf-ptsans-n7-active wf-sourcecodepro-n7-active wf-active" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" dir="" itemscope="" itemtype="http://schema.org/Article" lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <meta name="csrf-token" content="3c10b66e8edf955db3753f9755f69f87"><meta name="robots" content="index,follow"><meta name="generator" content="MindTouch 4 15.4.23.1018"><link rel="search" type="application/opensearchdescription+xml" title="Ceph Wiki Search" href="https://wiki.ceph.com/@api/deki/site/opensearch/description"><link rel="apple-touch-icon" href="https://a.mtstatic.com/skins/common/logo/apple-touch-icon.png?_=472f77b4:site_4517"><link rel="shortcut icon" href="https://a.mtstatic.com/skins/common/logo/favicon.ico?_=472f77b4:site_4517">
+
+        <title>Shingled Erasure Code (SHEC) - Ceph Wiki</title>
+
+        <style type="text/css">body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:400;}ol,ul{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:400;}q:before,q:after{content:'';}caption{margin-bottom:.5em;text-align:center;}fieldset,img,abbr,acronym{border:0;}</style>
+
+    
+
+        <link media="screen" type="text/css" rel="stylesheet" href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/anonymous.css" id="mt-screen-css">
+
+    
+        <link media="print" type="text/css" rel="stylesheet" href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/print.css" id="mt-print-css">
+
+        <!--[if IE 8]><link type="text/css" rel="stylesheet" href="https://a.mtstatic.com/skins/styles/cedar/out/ie8.min.css?_=472f77b4:site_4517"/><![endif]-->
+        <!--[if IE 9]><link type="text/css" rel="stylesheet" href="https://a.mtstatic.com/skins/styles/cedar/out/ie9.min.css?_=472f77b4:site_4517"/><![endif]-->
+
+    <script async="" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/rollbar.js"></script><script type="text/javascript">
+    var _rollbarConfig = {"accessToken":"4b9f4143765a4ba1a3caf2a826c145ab","captureUncaught":false,"verbose":false,"payload":{"environment":"production","person":{"id":"site_4517:2"},"client":{"javascript":{"source_map_enabled":true,"guess_uncaught_frames":true,"code_version":"472f77b4"}},"server":{"branch":"release_20150423","host":"app-production-release_20150423-54_162_2_48"}},"scrubFields":["accountpassword","password","authpassword","apikey","authtoken","csrf_token"]};
+    _rollbarConfig.transform = function(payload) {
+        var trace = payload.data.body.trace;
+        if(trace && trace.frames) {
+            for(var i = 0; i < trace.frames.length; i++) {
+                var filename = trace.frames[i].filename;
+                if(filename) {
+                    var url = document.createElement('a');
+                    url.href = filename;
+                    if((url.hostname === 'wiki.ceph.com' || ('a.mtstatic.com' !== '' && url.hostname === 'a.mtstatic.com')) && filename.indexOf('.js', filename.length - 3) !== -1) {
+                        url.hostname = 'mindtouch.sourcemap'
+                        trace.frames[i].filename = url.href;
+                    }
+                }
+            }
+        }
+    };
+</script><script type="text/javascript">!function(a,b){function c(b){this.shimId=++h,this.notifier=null,this.parentShim=b,this.logger=function(){},a.console&&void 0===a.console.shimId&&(this.logger=a.console.log)}function d(b,c,d){a._rollbarWrappedError&&(d[4]||(d[4]=a._rollbarWrappedError),d[5]||(d[5]=a._rollbarWrappedError._rollbarContext),a._rollbarWrappedError=null),b.uncaughtError.apply(b,d),c&&c.apply(a,d)}function e(b){var d=c;return g(function(){if(this.notifier)return this.notifier[b].apply(this.notifier,arguments);var c=this,e="scope"===b;e&&(c=new d(this));var f=Array.prototype.slice.call(arguments,0),g={shim:c,method:b,args:f,ts:new Date};return a._rollbarShimQueue.push(g),e?c:void 0})}function f(a,b){if(b.hasOwnProperty&&b.hasOwnProperty("addEventListener")){var c=b.addEventListener;b.addEventListener=function(b,d,e){c.call(this,b,a.wrap(d),e)};var d=b.removeEventListener;b.removeEventListener=function(a,b,c){d.call(this,a,b&&b._wrapped?b._wrapped:b,c)}}}function g(a,b){return b=b||this.logger,function(){try{return a.apply(this,arguments)}catch(c){b("Rollbar internal error:",c)}}}var h=0;c.init=function(a,b){var e=b.globalAlias||"Rollbar";if("object"==typeof a[e])return a[e];a._rollbarShimQueue=[],a._rollbarWrappedError=null,b=b||{};var h=new c;return g(function(){if(h.configure(b),b.captureUncaught){var c=a.onerror;a.onerror=function(){var a=Array.prototype.slice.call(arguments,0);d(h,c,a)};var g,i,j="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(g=0;g<j.length;++g)i=j[g],a[i]&&a[i].prototype&&f(h,a[i].prototype)}return a[e]=h,h},h.logger)()},c.prototype.loadFull=function(a,b,c,d,e){var f=g(function(){var a=b.createElement("script"),e=b.getElementsByTagName("script")[0];a.src=d.rollbarJsUrl,a.async=!c,a.onload=h,e.parentNode.insertBefore(a,e)},this.logger),h=g(function(){var b;if(void 0===a._rollbarPayloadQueue){var c,d,f,g;for(b=new Error("rollbar.js did not load");c=a._rollbarShimQueue.shift();)for(f=c.args,g=0;g<f.length;++g)if(d=f[g],"function"==typeof d){d(b);break}}"function"==typeof e&&e(b)},this.logger);g(function(){c?f():a.addEventListener?a.addEventListener("load",f,!1):a.attachEvent("onload",f)},this.logger)()},c.prototype.wrap=function(b,c){try{var d;if(d="function"==typeof c?c:function(){return c||{}},"function"!=typeof b)return b;if(b._isWrap)return b;if(!b._wrapped){b._wrapped=function(){try{return b.apply(this,arguments)}catch(c){throw c._rollbarContext=d(),c._rollbarContext._wrappedSource=b.toString(),a._rollbarWrappedError=c,c}},b._wrapped._isWrap=!0;for(var e in b)b.hasOwnProperty(e)&&(b._wrapped[e]=b[e])}return b._wrapped}catch(f){return b}};for(var i="log,debug,info,warn,warning,error,critical,global,configure,scope,uncaughtError".split(","),j=0;j<i.length;++j)c.prototype[i[j]]=e(i[j]);var k="//d37gvrvc0wt4s1.cloudfront.net/js/v1.1/rollbar.min.js";_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||k;var l=c.init(a,_rollbarConfig);l.loadFull(a,b,!1,_rollbarConfig)}(window,document);</script><script type="text/javascript">var Deki = {"BaseHref":"https:\/\/wiki.ceph.com","PageId":781,"PageTitle":"Planning\/Blueprints\/Hammer\/Shingled Erasure Code (SHEC)","PageName":"Shingled Erasure Code (SHEC)","PageIsRedirect":false,"PageLanguageCode":"en-US","FollowRedirects":1,"PathSkin":"\/skins\/styles\/cedar","PathCommon":"\/skins\/common","UserName":"Anonymous","UserSystemName":"Anonymous","UserIsAnonymous":true,"UserPermissions":["LOGIN","BROWSE","READ","SUBSCRIBE"],"PageEditable":false,"PageNamespace":"","CDNHostname":"a.mtstatic.com","CacheFingerprint":"472f77b4:site_4517","WebFontConfig":{"google":{"families":["PT Sans:r,b,i","Source Code Pro:r,b"]}},"isF1Request":false};</script><script type="text/javascript">if(!window.matchMedia){document.write('<script type="text/javascript" src="https://a.mtstatic.com/deki/javascript/out/matchMedia.min.js?_=472f77b4:site_4517"><\/script><script type="text/javascript" src="https://a.mtstatic.com/deki/javascript/out/matchMedia.addListener.min.js?_=472f77b4:site_4517"><\/script>');}</script><script type="text/javascript" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/community.js"></script><style type="text/css"></style><script type="text/javascript">if(typeof Deki.jsLibLoaded === "undefined"){document.write('<script type="text/javascript" src="/deki/javascript/out/community.min.js"><\/script>');!function(){"use strict";Deki._disableCdn=function(e){if(Deki.CDNHostname){var t=e.indexOf(Deki.CDNHostname);if(-1!==t)return e.substr(t+Deki.CDNHostname.length)}return e};var e=function(e){var t=e.getAttribute("href");t&&e.setAttribute("href",Deki._disableCdn(t))},t=document.getElementById("mt-screen-css");t&&e(t);var n=document.getElementById("mt-print-css");n&&e(n)}();}</script><script type="text/javascript">!function(e){"use strict";e(function(){var t=function(){var t=e(".trayframe"),i=e(".traybody"),a=e(".mt-content-container").height(),s=t.height()+30;if(s>a){var n=a-10+"px";i.css({"max-height":n,"overflow-y":"auto"}),i.addClass("traybody-wider"),t.addClass("trayframe-wider")}else i.removeClass("traybody-wider"),t.removeClass("trayframe-wider")};t();var i=function(){e("#login-link").hide(),e("#forgot-password-link").css("display","inline-block"),e(".mt-user-nav form").fadeIn(function(){e("#username").focus()})},a="placeholder"in document.createElement("input");a||e(".login-form-label").css("display","block"),e("[resetval]").each(function(){var t=e(this).val(),i=e(this).attr("resetval");""===t&&e(this).val(i)}).focus(function(){var t=e(this).attr("resetval"),i=e(this).val();i===t&&e(this).val("")}).blur(function(){var t=e(this).attr("resetval"),i=e(this).val();(i===t||""===i)&&e(this).val(t)});var s=e("#pageText");s.find("img").css("max-width",s.width()),e("body").click(function(t){e(t.target).hasClass("drop-link")||e(".dropdown").hide()}),e(".drop-link").click(function(t){t.preventDefault(),e(".dropdown").hide(),e(this).next(".dropdown").show()}),e(".content-rate-up, .content-rate-down").addClass("ui-button"),e(".page a.disabled").parent().hide(),e(document).on("click",".in-page-sign-in",function(t){t.preventDefault(),i(),e("html, body").animate({scrollTop:0},"fast")});var n=e("#widget-comments");n.on("click",function(){e(".widget-comments").show(),e(".widget-tabs > ul > li").removeClass("active"),e(this).parent("li").addClass("active"),e(".widget-files").hide()});var l=e("#widget-files");l.on("click",function(){e(".widget-files").show(),e(".widget-tabs > ul > li").removeClass("active"),e(this).parent("li").addClass("active"),e(".widget-comments").hide()}),e("#tab-files").hasClass("active")&&e(".widget-files").show(),"#widget-comments"===window.location.hash?n.trigger("click"):"#widget-files"===window.location.hash&&l.trigger("click"),e(".file-link a").each(function(){var t=e(this);t.text().length>25&&t.text(t.text().slice(0,25)).append("...")}),e("#live-tag-normal-tags").bind(Deki.Ui.Events.Tags.TagAdded,function(){t()}).bind(Deki.Ui.Events.Tags.TagRemoved,function(){t()});var o=e(".nav-icon:visible");if(o.length||e("#site-hierarchy").hasClass("show")){o.find("a").addClass("active");var r=new Deki.Site;r._sitePlug.at("nav",Deki.PageId,"full").get(function(t){var i=e('<div id="siteNavTree"></div>').html(JSON.parse(t.responseText));e("#site-hierarchy").append(i).show()})}e(".nav-icon a").click(function(t){t.preventDefault(),e(this).toggleClass("active"),e("#site-hierarchy").toggle()}),e(".systemmsg:visible")&&e(".systemmsg:first-of-type").find(".delete-msg").focus()})}(jQuery);</script><script type="text/javascript">var aLt=_.extend(aLt||[], {"adding-tags":"Adding Tags...","advanced-search":"Advanced Search","attach-no-description":"No description","cancel":"Cancel","close":"Close","comment-delete":"Are you sure you want to delete this comment?","error":"Error","error-permission-denied":"Permission denied","error-permission-details":"Your account does not have sufficient permissions to perform that action.","file-moved":"Your file was successfully moved.","gallery-close":"close","gallery-next":"next","gallery-prev":"prev","grant-type-group":"(Group)","internal-error":"Sorry, but there was an internal problem - please try again soon.","js-label_cancel":"Cancel","js-label_save":"Save","js-tooltip_cancel":"Exit Without Saving Changes","js-tooltip_save":"Save and Exit (Alt+S)","ldap-provide-credentials":"Please provide external service sign in credentials.","loading":"Loading...","menu-confirm-delete":"Are you sure you want to delete this file?","menu-delete-file":"Delete","menu-edit-description":"Edit description","menu-move-file":"Move","menu-previous-versions":"Previous versions","menu-view-original":"View original","ready":"Ready","remove-tag":"Remove tag","restore-tag":"Restore tag","save":"Save","standard-search":"Standard Search","submit":"Submit","wikibits-attach-another":"Attach another file","wikibits-attach-file":"Attach File","wikibits-cant-attach-editing":"Sorry, you can\\'t attach files while editing a page. Please close the editor first.","wikibits-edit-section":"Edit section","wikibits-remove-file":"Remove file","login-required":"You must be <a href=\"https:\/\/wiki.ceph.com\/?title=Special%3AUserLogin&returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29\" class=\"in-page-sign-in \" rel=\"nofollow\" tabindex=\"1\">signed in<\/a> to perform that action"});var wfMsg=function(){Deki.Logger.deprecatedFunction('wfMsg()');return Deki.loc.apply(null,arguments);};</script><link href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/css.css" rel="stylesheet">
+
+    
+
+</head><body class="yui-skin-sam action-view">
+<noscript><div class="noscript">This application requires Javascript to be enabled.</div></noscript>
+<!-- START Unseated user navigation -->
+<div class="mt-wrapper mt-header">
+	<div class="mt-user-nav">
+		<ul class="mt-login-links">
+		<!-- START Logged out user nav -->
+												<li id="login-link" class="last">
+												<a href="https://wiki.ceph.com/?title=Special%3AUserLogin&amp;returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" class="in-page-sign-in login-link" rel="nofollow" tabindex="1">Sign In</a>					</li>
+					<li id="forgot-password-link" class="last"><a title="Forgot Password" class="" href="https://wiki.ceph.com/Special:UserLogin#?tab=password" rel="nofollow" tabindex="6">Forgot Password</a>
+</li>
+									<!-- END Logged out user nav -->
+
+		<!-- START Logged in user nav -->
+					<!-- END Logged in user nav -->
+		</ul>
+
+		<!-- START Login form -->
+		<form action="https://wiki.ceph.com/?title=Special%3AUserLogin&amp;returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" method="POST" id="quick-login">
+	<div class="row">
+            <span class="col">
+                <input autocomplete="off" name="username" class="reset" tabindex="3" placeholder="username" id="username" type="text">
+                <label class="title login-form-label" for="username">
+                    username
+                </label>
+            </span>
+            <span class="col">
+            <input name="password" autocomplete="off" id="password" tabindex="4" placeholder="password" type="password">
+                <label class="title login-form-label" for="password">
+                    password
+                </label>
+            </span>
+		<span class="col col-btn">
+            <input tabindex="5" value="Sign In" class="primary btn" type="submit">
+		</span>
+	</div>
+</form>
+		<!-- END Login form -->
+	</div>
+</div>
+<!-- END Unseated user navigation -->
+
+<div class="mt-wrapper">
+	<div class="mt-logo"><a class="logo-anonymous" href="https://wiki.ceph.com/" title="Ceph Wiki">
+    <img class="mt-cdn" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/logo.png" alt="Ceph Wiki" title="Ceph Wiki">
+</a></div>
+    <div class="mt-content">
+
+    <!-- START Site navigation -->
+	<div class="mt-site-nav">
+        		    <!-- START Content navigation -->
+		    <ul><li class="home"><a class="help-center" title="Home" rel="internal" href="https://wiki.ceph.com/"></a></li><li><div class="product-menu quick-more" title="Planning"><a class="drop-link" href="#" title="Planning">Planning</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Clustering_a_few_NAS_into_a_Ceph_cluster">Clustering a few NAS into a Ceph cluster</a></li><li><a rel="custom" href="https://wiki.ceph.com/Community">Community</a></li><li><a rel="custom" href="https://wiki.ceph.com/Development">Development</a></li><li><a rel="custom" href="https://wiki.ceph.com/FAQs">FAQs</a></li><li><a rel="custom" href="https://wiki.ceph.com/Guides">Guides</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning">Planning</a></li></ul></div></li><li><div class="article-menu quick-more" title="Blueprints"><a class="drop-link" href="#" title="Blueprints">Blueprints</a><ul style="display: none;" class="dropdown"><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints">Blueprints</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/CDS">Ceph Developer Summit</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Roadmap">Roadmap</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Sideboard">Sideboard</a></li></ul></div></li><li class="divider"><div class="article-menu quick-more" title="Hammer"><a class="drop-link" href="#" title="Hammer">Hammer</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/%3CSIDEBOARD%3E">&lt;SIDEBOARD&gt;</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Dumpling">Dumpling</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Emperor">Emperor</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Firefly">Firefly</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Giant">Giant</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer">Hammer</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Infernalis">Infernalis</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Submissions">Submissions</a></li></ul></div></li><li class="divider"><div class="article-menu quick-more" title="Shingled Erasure Code (SHEC)"><a class="drop-link" href="#" title="Shingled Erasure Code (SHEC)">Shingled Erasure Code (SHEC)</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Accelio_RDMA_Messenger">Accelio RDMA Messenger</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Calamari_localization">Calamari localization</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Calamari_RESTful_API">Calamari RESTful API</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS%3A_Forward_Scrub">CephFS: Forward Scrub</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS%3A_Hadoop_Support">CephFS: Hadoop Support</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS_quota_support_discussion">CephFS quota support discussion</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Ceph_Security_hardening">Ceph Security hardening</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Clustered_SCSI_target_using_RBD">Clustered SCSI target using RBD</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Diff%3A_integrity___local_import">Diff: integrity   local import</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Fixed_memory_layout_for_Message%2F%2FOp_passing">Fixed memory layout for Message/Op passing</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/How_to_make_Ceph_enterprise_ready">How to make Ceph enterprise ready</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/kerberos_authn%2C_AD_authn%2F%2Fauthz">kerberos authn, AD authn/authz</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librados%3A_expose_checksums">librados: expose checksums</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librados%3A_support_parallel_reads">librados: support parallel reads</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librbd%3A_shared_flag%2C_object_map">librbd: shared flag, object map</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/monitor%3A_reweight_near_full_osd_autonomicly">monitor: reweight near full osd autonomicly</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/OSD%3A_add_flexible_cache_control_of_object_data">OSD: add flexible cache control of object data</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_opportunistic_whole-object_checksums">osd: opportunistic whole-object checksums</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_prepopulate_pg_temp">osd: prepopulate pg temp</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_Scrub%2F%2FSnapTrim_IO_prioritization">osd: Scrub/SnapTrim IO prioritization</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_tiering%3A_fine-grained_promotion_unit">osd: tiering: fine-grained promotion unit</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_tiering%3A_reduce_read%2F%2Fwrite_latencies_on_cache_tier_miss">osd: tiering: reduce read/write latencies on cache tier miss</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_update_Transaction_encoding">osd: update Transaction encoding</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/quotas_vs_subtrees">quotas vs subtrees</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rados%3A_improve_ex-%2F%2Fimport_functionality">rados: improve ex-/import functionality</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rbd%3A_Copy-on-read_for_clones_in_kernel_rbd_client">rbd: Copy-on-read for clones in kernel rbd client</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/RBD%3A_Mirroring">RBD: Mirroring</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_bucket_index_scalability">rgw: bucket index scalability</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_object_versioning">rgw: object versioning</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_Snapshots">rgw: Snapshots</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29">Shingled Erasure Code (SHEC)</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Towards_Ceph_Cold_Storage">Towards Ceph Cold Storage</a></li></ul></div></li></ul>		    <!-- END Content navigation -->
+        	</div>
+	<!-- END Site navigation -->
+
+	    <!-- START Page Content -->
+	<div class="mt-content-container">
+		<div id="flash-messages"><div class="dekiFlash"></div></div>		<span class="product-portfolio-hidden"><span class="dw-hierarchy"><a href="https://wiki.ceph.com/" class="deki-ns">Home</a> &gt; <a href="https://wiki.ceph.com/Planning" class="deki-ns">Planning</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints" class="deki-ns">Blueprints</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints/Hammer" class="deki-ns">Hammer</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29" class="deki-ns current">Shingled Erasure Code (SHEC)</a></span></span>                            <script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['MindTouch.IDF3.help-link-page-settings'] = 'Learn more about the "Page Settings" controls';aLt['MindTouch.IDF3.label.image.placeholder'] = 'Add page thumbnail';aLt['MindTouch.IDF3.label.overview.edit'] = 'Edit overview';aLt['MindTouch.IDF3.label.overview.placeholder'] = 'Add page summary';aLt['MindTouch.IDF3.label.summary.toggle'] = 'Page Settings';aLt['MindTouch.IDF3.label.thumbnail.delete'] = 'Delete thumbnail';aLt['MindTouch.IDF3.label.thumbnail.edit'] = 'Edit thumbnail';aLt['MindTouch.IDF3.label.overview.max.count'] = '{0} characters remaining.';aLt['MindTouch.IDF3.label.overview.max.count.over'] = 'Warning.  {0} characters will be truncated.';aLt['MindTouch.IDF3.message.overview.changed'] = 'Change has been saved, page may need to be <a href="{0}">refreshed</a> to see updated overview.';aLt['MindTouch.IDF3.message.overview.unsaved'] = 'This page summary is leveraged by search and LightSpeed Framework to show a preview of an article.  Previously, overviews were used to perform this function.  Once you\'ve modified this summary, you can not go back to the old format.';aLt['MindTouch.IDF3.message.overview.unsaved.link'] = 'Learn more about Page Settings';aLt['MindTouch.IDF3.message.overview.unsaved.button'] = 'Update summary';aLt['MindTouch.IDF3.message.thumbnail.delete.title'] = 'Delete page thumbnail?';aLt['MindTouch.IDF3.message.thumbnail.delete.message'] = 'This will delete this page\'s thumbnail image. Are you sure you wish to proceed?';aLt['MindTouch.IDF3.message.thumbnail.delete.submit'] = 'Yes';aLt['MindTouch.IDF3.message.thumbnail.delete.cancel'] = 'Cancel';/*]]>*/</script><script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Dialog.Attach.max-size'] = 'Maximum upload file size: {0}';/*]]>*/</script><script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Article.Attach.file.upload.notAllowed'] = 'The selected file can not be uploaded because you do not have permission to upload files of that type.';aLt['Article.Attach.file.upload.fileExtension'] = 'You picked a file with an unsupported extension.  Please try again with a valid file.';/*]]>*/</script>        		<h1 style="visibility: visible;" id="title">
+    <div id="deki-page-title">
+        <div class="state-view">
+            <span class="title">Shingled Erasure Code (SHEC)</span>
+        </div>
+    </div>
+</h1>
+		<div id="page-top">
+        <div id="pageToc"><div class="pageToc"><h5>Содержание</h5>
+		 <div class="tocdata">
+		 <ol>
+		  <li><a href="#Summary" rel="internal">Резюме</a></li>
+		  <li><a href="#Owners" rel="internal">Владельцы</a></li>
+		  <li><a href="#Interested_Parties" rel="internal">Заинтересованные стороны</a></li>
+		  <li><a href="#Current_Status" rel="internal">Текущее состояние</a></li>
+		  <li><a href="#Detailed_Description" rel="internal">Подробное описание</a></li>
+		  <li><a href="#Work_items" rel="internal">Элементы в работе</a>
+		  <ol>
+		    <li><a href="#Coding_tasks" rel="internal">Проблемы кодирования</a></li>
+			<li><a href="#Build_.2F_release_tasks" rel="internal">Вопросы построения / издания</a></li>
+			<li><a href="#Documentation_tasks" rel="internal">Задачи документирования</a></li>
+			<li><a href="#Deprecation_tasks" rel="internal">Обсуждаемые вопросы</a></li>
+		  </ol></li>
+		 </ol>
+		 </div>
+		</div></div>
+    <div id="topic">
+        <div id="pageText">
+                <div id="section_1"> <div id="section_1" class="mt-page-section"><span id="Summary"></span>
+				<h3 style="visibility: visible;" class="editable">Резюме</h3>  
+				<p style="visibility: visible;">Драночный код затирания (Shingled Erasure Code, SHEC или исходный SHEC) <sup>[1]</sup>
+ является кодом затирания с эффективным восстановлением и высокой настраиваемостью.
+ Более того, SHEC расширяется на множественный&nbsp;SHEC (mSHEC), чья компоновка автоматически собирается из сочетания исходных
+ компоновок SHEC в ответ на предписанные&nbsp;каждым пользователем надежность и эффективность использования пространства
+ и, как результат, приводит к улучшению эффективность восстановления исходного SHEC.</p>
+ </div></div> <div id="section_2"> <div id="section_2" class="mt-page-section"><span id="Owners"></span>
+ <h3 style="visibility: visible;" class="editable">Владельцы</h3>  <ul> <li> 
+ <p style="visibility: visible;">Takeshi Miyamae (Fujitsu Laboratories Ltd., <a class="link-mailto" href="mailto:miyamae.takeshi@jp.fujitsu.com" rel="freeklink" title="mailto:miyamae.takeshi@jp.fujitsu.com">miyamae.takeshi@jp.fujitsu.com</a>)</p> </li> <li> 
+ <p style="visibility: visible;">Takanori Nakao (Fujitsu Laboratories Ltd., <a class="link-mailto" href="mailto:nakao.takanori@jp.fujitsu.com" rel="freeklink" title="mailto:nakao.takanori@jp.fujitsu.com">nakao.takanori@jp.fujitsu.com</a>)</p> </li> <li> 
+ <p style="visibility: visible;">Kensuke Shiozawa (Fujitsu Laboratories Ltd.,&nbsp;<a class="link-mailto" href="mailto:shiozawa.kennsu@jp.fujitsu.com" rel="freeklink" title="mailto:shiozawa.kennsu@jp.fujitsu.com">shiozawa.kennsu@jp.fujitsu.com</a>)</p> </li> </ul>
+ </div></div> <div id="section_3"> <div id="section_3" class="mt-page-section"><span id="Interested_Parties"></span>
+ <h3 style="visibility: visible;" class="editable">Заинтересованные стороны</h3>
+ </div></div> <div id="section_4"> <div id="section_4" class="mt-page-section"><span id="Current_Status"></span>
+ <h3 style="visibility: visible;" class="editable">Текущее состояние</h3>  
+ <p style="visibility: visible;" align="left"><span><span>У нас имеется работающий прототип SHEC для Firefly/Giant 
+ и все его локальные испытания завершены.</span></span></p> 
+ <p style="visibility: visible;"><span><span>(И SHEC, и mSHEC работают в редакции Firefly, поскольку ему достаточно
+ API прикрепляемых программ (plugin) кода затирания Firefly и алгоритма CRUSH.)</span></span></p>
+ </div></div> <div id="section_5"> <div id="section_5" class="mt-page-section"><span id="Detailed_Description"></span>
+ <h3 style="visibility: visible;" class="editable">Подробное описание</h3>
+ <p style="visibility: visible;">&nbsp;</p> 
+ <ol>
+  <li> 
+  <p style="visibility: visible;"><span>Исходный SHEC</span></p> </li> 
+ </ol> 
+ <p style="visibility: visible;"><span><span>SHEC является кодом затирания с локальными группами сравнимости по модулю и 
+ диапазоны вычислений перекрываются друг с другом, аналогично выравниванию гонтовых пластин (дранок) на крыше дома. 
+ Пример расположения соответствий SHEC демонстрируется на Рисунке 1.</span></span></p> 
+ <p style="visibility: visible;">&nbsp;</p>
+ </div></div> 
+ <p style="visibility: visible;"><img alt="figure21.png" class="internal default" style="width: 574px; height: 274px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure21.png" height="274px" width="574px"></p> 
+ <p style="visibility: visible;"><span><span>&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Рисунок 1 &nbsp;Пример 
+ расположения соответствий SHEC</span></span></p> 
+ <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;"><span><span>SHEC(k,m,c)
+ обозначает схему SHEC, которая имеет k порций данных, m порций коррекции и оценку надежности c. 
+ Оценка надежности является средним значением порций коррекции, которые покрывают каждую порцию данных.</span></span></p> 
+ <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;" align="left"><span><span>SHEC 
+ имеет определенные преимущества. Во- первых, SHEC является эффективным для восстановления, поскольку SHEC 
+ всегда использует локальные коррекции для восстановления пропавших порций даже в случае отказа множества дисков.</span></span></p> 
+ <p style="visibility: visible;"><span><span>Далее,  SHEC обладает хорошей настраиваемостью,
+ благодаря присущей SHEC особой компоновке, которая плотно заполняет область эффективного восстановления в трех измерениях 
+ (минимизации пространства, эффективности восстановления и надежности), как это показывает карта свойств на Рисунке 2.
+ Локализации кода Рида- Соломона (Reed Solomon) изображены участками окружностей и разрежены в сравнении и расположением SHEC.</span></span></p> 
+ <p style="visibility: visible;">&nbsp;</p> 
+ <p style="visibility: visible;"><img alt="figure22.png" class="internal center" style="width: 600px; height: 354px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure22.png" height="354px" width="600px"></p>
+ <p style="visibility: visible;">&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span><span>Рисунок 2</span></span><span><span>&nbsp;&nbsp;Карта&nbsp;свойств&nbsp;SHEC</span></span></p>
+ <p style="visibility: visible;">&nbsp;</p>
+ <ol start="2">
+  <li><span>Множественный SHEC (mSHEC)</span></li> </ol>
+  <p style="visibility: visible;" align="left"><span><span>Тем не менее, исходный SHEC может получить более высокую эффективность
+  восстановления только в ущерб надежности или эффективности использования пространства.
+  Для достижения более высокой эффективности восстановления без таких жертв мы комбинируем множество различных исходных расположений 
+  SHEC в одно (mSHEC, Рисунок 3).</span></span></p> 
+  <p style="visibility: visible;" align="left">mSHEC(k,m,c) автоматически выбирает наиболее эффективную локализацию для 
+  восстановления&nbsp;среди всех, удовлетворяющих m=m1+m2 и c=c1+c2.&nbsp;<span><span>Это основной источник эффективности восстановления mSHEC.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure23.png" class="internal center" style="width: 690px; height: 317px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure23.png" height="317px" width="690px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Рисунок 3&nbsp;&nbsp;Расположение множественного SHEC</span></span></p> 
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;" align="left"><span><span>В отличие от исходного SHEC, чья эффективность восстановления была почти
+  такой же как у кода Рида- Соломона (Рисунок 2), эффективность восстановления mSHEC улучшается, как это показано на Рисунке 4.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;"><img alt="figure24.png" class="internal center" style="width: 562px; height: 425px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure24.png" height="425px" width="562px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Рисунок 4 
+  &nbsp;Карта свойств mSHEC</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;" align="left">На первый взгляд 
+  схема&nbsp;mSHEC&nbsp;выглядит&nbsp;усложненной, однако шаблоны&nbsp;mSHEC также вырабатываются&nbsp;автоматически 
+  как ответ на запрашиваемые надежность и эффективность использования пространства, а пользователям нет нужды знать 
+  детали этих&nbsp;схем.</p>
+  <p style="visibility: visible;" align="left">&nbsp;</p>
+  <p style="visibility: visible;" align="left"><span><span>В заключение: mSHEC следует использовать, когда наиболее важна эффективность 
+  восстановления. Рисунок 5&nbsp;представляет собой для пользователей схему выбора соответствующей подключаемой программы 
+  кодирования затирания (EC plugin) для пользователей.</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure25.png" class="internal default" style="width: 501px; height: 421px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure25.png" height="421px" width="501px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 5 &nbsp;Схема для выбора EC Plugin</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <hr>
+  <p style="visibility: visible;">Ссылки</p>
+  <p style="visibility: visible;">[1]&nbsp;Erasure Code with Shingled Local Parity Groups for Efficient Recovery from Multiple Disk Failures (HotDep'14)</p>
+  <p style="visibility: visible;">&nbsp; &nbsp;&nbsp;<a class="link-https" rel="external nofollow" href="https://www.usenix.org/conference/hotdep14/workshop-program/presentation/miyamae" title="https://www.usenix.org/conference/hotdep14/workshop-program/presentation/miyamae" target="_blank">https://www.usenix.org/conference/hotdep14/workshop-program/presentation/miyamae</a></p>
+  <p style="visibility: visible;">​ &nbsp; &nbsp;<a class="external" href="http://www.slideshare.net/miyamae1994/shec-hotdep14-slides021slideshare" rel="freeklink" title="http://www.slideshare.net/miyamae1994/shec-hotdep14-slides021slideshare">http://www.slideshare.net/miyamae199...s021slideshare</a> (presentation slides)</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <div id="section_6"> <div id="section_6" class="mt-page-section"><span id="Work_items"></span>
+  <h3 style="visibility: visible;" class="editable">Элементы в работе</h3>  <ul> <li>Тестирование в редакциях Giant/Hammer&nbsp;</li> </ul>
+  <div id="section_7"> <div id="section_7" class="mt-page-section"><span id="Coding_tasks"></span>
+   <h4 style="visibility: visible;" class="editable">Проблемы кодирования</h4>
+   <ol>
+    <li>Task 1</li>
+	<li>Task 2</li>
+	<li>Task 3</li>
+   </ol>
+  </div></div>
+  <div id="section_8"> <div id="section_8" class="mt-page-section"><span id="Build_.2F_release_tasks"></span>
+   <h4 style="visibility: visible;" class="editable">Вопросы построения / издания</h4>
+   <ol>
+    <li>Task 1</li>
+	<li>Task 2</li>
+	<li>Task 3</li>
+   </ol>
+   </div></div>
+   <div id="section_9"> <div id="section_9" class="mt-page-section"><span id="Documentation_tasks"></span>
+    <h4 style="visibility: visible;" class="editable">Задачи документирования</h4>
+	<ol>
+	 <li>Task 1</li>
+	 <li>Task 2</li>
+	 <li>Task 3</li>
+	</ol>
+    </div></div> 
+	<div id="section_10"> <div id="section_10" class="mt-page-section"><span id="Deprecation_tasks"></span>
+	 <h4 style="visibility: visible;" class="editable">Обсуждаемые вопросы</h4>
+	 <ol>
+	  <li>Task 1</li>
+	  <li>Task 2</li>
+	  <li>Task 3</li>
+	 </ol>
+	 </div></div>
+  </div></div>
+  <div id="section_a"> <div id="section_6" class="mt-page-section"><span id="Fujitsu"> </span>
+  <h3 style="visibility: visible;" class="editable">Код затирания с драночными локальными группами коррекции для эффективного восстановления 
+  при множественных отказах дисков.</h3> 
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Перевод Erasure Code with Shingled Local Parity Groups for
+  Efficient Recovery from Multiple Disk Failures</p>
+  <p style="visibility: visible;">Takeshi Miyamae Takanori Nakao Kensuke Shiozawa</p>
+  <p style="visibility: visible;">{miyamae.takeshi, nakao.takanori, shiozawa.kennsu}@jp.fujitsu.com</p>
+  <p style="visibility: visible;">Fujitsu Laboratories Ltd.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <h4 style="visibility: visible;" class="editable">Аннотация</h4>
+  <p style="visibility: visible;">Постоянно растущие важность и объем цифровых данных, генерируемых службами ИВТ привели к запросу 
+  на высоко надежные и эффективные в отношении пространства технологии хранения содержания. Код затирания (erasure code) может быть 
+  эффективным решением для таких решений, однако имеющиеся в настоящее время решения не эффективно обрабатывают одновременный выход из 
+  строя множества дисков. Мы предлагаем драночный код затирания (SHEC, Shingled Erasure Code), код затирания с локальными группами 
+  коррекции, накладывающимися друг на друга для обеспечения обеспечения эффективного восстановления при множественных отказах дисков, 
+  при этом обеспечивая подстройку под требования пользователя конфликтующих свойств эффективности использования пространства и 
+  надежности. Мы получили подтверждения того, что SHEC отвечает требованиям проекта применив результаты численного 
+  исследования взаимосвязи между вступающими в конфликт характеристиками, а также оценки производительности реальной реализации 
+  SHEC для Ceph, варианта программного обеспечения с открытым исходным кодом масштабируемого хранилища объектов.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <h4 style="visibility: visible;" class="editable">1. Введение</h4>
+  <p style="visibility: visible;">Постоянно растущая важность цифрового содержания, создаваемого поставщиками услуг в области ИВТ, 
+  привела к росту спроса на высоко надежные технологии хранения содержания. Для служб ИВТ техника тройного реплицирования данных 
+  на протяжении лет отвечала этим потребностям, однако ее низкая эффективность использования пространства (умножение на три хранилища 
+  для данных пользователя), делало это решение менее привлекательным для поставщиков услуг. Код затирания является надежной техникой 
+  хранения с меньшим объемом избыточной информации (корректировки, соответствий по модулю) и быстро получает популярность.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">С увеличением вычислительных мощностей приходят эффективность использования пространства и 
+  долговечность кодирования затирания. В частности, накладные расходы на восстановление, связанные с отказами дисков, сильно влияют 
+  на доступность и производительность служб ИВТ, если не будут должным образом управляться операции восстановления. Регулирование 
+  пропускными способностями процессора и операций ввода/ вывода для восстановления с целью минимизации помех от восстановления является 
+  одной из наиболее распространенных практик [18], однако контроль над зависимостью от восстановления влечет за собой увеличение 
+  продолжительности восстановления, что, в свою очередь, делает хранилище менее надежным. Поэтому производительность восстановления 
+  сама по себе стала целью исследований кода затирания в последнее время [10].</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Последними замечательными достижениями в повышении производительности являются Microsoft LRC (MS-LRC) [9] 
+  и Facebook Xorbas [10]. Они используют понятие локального соответствия при котором несколько экземпляров соответствия по модулю 
+  (избыточных кодов) вычисляются на основе только подмножеств всего набора данных. Принимая во внимание то, что количество 
+  передаваемых данных уменьшается только до этого подмножества набора данных, восстановление потребляет меньший объем всех 
+  ресурсов ИВТ и становится более быстрым.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Однако, при множественных отказах дисков MSLRC и Xorbas используют глобальные соответствия по модулю, 
+  которые включают информацию корректирующих кодов, вычисляемую по всему набору данных и, соответственно, при операциях восстановления 
+  передаются большие объемы данных. Поскольку в реальном мире каждый отказы дисков часто коррелируют [16], мы имеем мотивацию создания 
+  нового кода затирания, который будет надежным в отношении множественных отказов дисков.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В этой статье мы предлагаем драночный код затирания (SHEC, Shingled Erasure Code), в котором 
+  локальные группы соответствий по модулю перекрывают друг друга. Данный код разработан для эффективного восстановления при множественных 
+  отказах дисков, причем эффективность использования пространства и долговечность настраиваются пользователем. Чтобы подтвердить цели 
+  проектирования SHEC, мы вначале изучим во втором разделе взаимосвязи между тремя характеристиками кода затирания (эффективность 
+  использования пространства, надежность и эффективность восстановления) с нашими различными макетами локальных групп соответствия 
+  по модулю (корректирующих кодов). Затем мы покажем, что для достижения оптимального сочетания планируемых свойств пользователя 
+  регулируется локализация. В третьем разделе мы покажем вышеупомянутую эффективность восстановления SHEC путем оценки реализации 
+  SHEC в Ceph [14], варианте программного обеспечения с открытым исходным кодом масштабируемого хранилища объектов.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">2. Анализ локальных групп соответствия и новый код</h4>
+  <p style="visibility: visible;">&nbsp;</p>
+  <h5 style="visibility: visible;" class="editable">2.1. Свойства локальных групп соответствия</h5>
+  <p style="visibility: visible;">В данной статье мы называем каждый отделенный элемент данных в полосе кода затирания &quot;порцией 
+  данных&quot;, а каждую локальную группу соответствия по модулю (корректирующего кода) &quot;порцией соответствия&quot;. Мы 
+  определяем <strong>локализацию</strong> ограниченной в размерах (локальной) группы соответствия как число порций данных для 
+  вычисления каждой порции соответствия по модулю (корректирующего кода).</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Мы выбираем три основные характеристики кода затирания для групп локальных соответствия:</p>
+	 <ul>
+	  <li>Эффективность использования пространства</li>
+	  <li>Надежность</li>
+	  <li>Эффективность восстановления</li>
+	 </ul>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Первое свойство, эффективность использования пространства, определяется как соотношение 
+  порций данных и вычисляется как  k/(k+m) (k: число порций данных, m: число порций соответствий по модулю), что отображает 
+  стоимостную эффективность.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Вторая характеристика, надежность, определяется как вероятность потери данных, что 
+  показано в уравнении (1) [17].</p>
+  <p style="visibility: visible;"><em>PDL = <sub>n</sub>P<sub>f</sub> × (1 / MTBF) × (MTTR / MTBF)<sup>f-1</sup> </em> &nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;(1)<br />
+   &nbsp; &nbsp;PDL: Вероятность потери данных (Probability of data loss)<br />
+   &nbsp; &nbsp;MTTR: Среднее время восстановления (Mean time to recovery)<br />
+   &nbsp; &nbsp;MTBF: Среднее время между отказами (Mean time between failures)<br />
+   &nbsp; &nbsp;n: Общее число дисков<br />
+   &nbsp; &nbsp;f: Число одновременно отказавших дисков<br />
+   &nbsp; &nbsp;<sub>n</sub>P<sub>f</sub>: n!/(n-f)!<br />
+   </p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Последнее свойство, эффективность восстановления, определяется как обратное значение накладных 
+  расходов на восстановление (затраты на восстановление означают соотношение считываемых порций ко всем порциям данных, 
+  задействованных в процессе восстановления). Как правило, чем меньше локализация, тем выше эффективность восстановления. 
+  Эффективность восстановления повышает доступность или производительность служб ИВТ.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Далее, мы сейчас объясним три способа компромиссов взаимоотношений между указанными характеристиками 
+  затирания кода, как показано на Рисунке 1а. Во- первых, отметим взаимосвязь между эффективностью использования пространства и 
+  надежностью. Этот компромисс очевиден, поскольку если мы добавляем соответствия по модулю, надежность возрастает, в то время 
+  как эффективность использования пространства уменьшается (компромисс №1, tradeoff #1). Вторая взаимосвязь состоит между 
+  надежностью и эффективностью восстановления. Если мы понижаем локализацию для увеличения эффективности восстановления, 
+  то число порций соответствий по модулю, покрывающих каждую порцию данных уменьшается, что указывает на снижение надежности 
+  (компромисс №2, tradeoff #2). Последняя взаимосвязь состоит между эффективностью использования пространства и эффективностью 
+  восстановления. Для уменьшения локализации при той же надежности мы должны добавить больше локальных соотношений по 
+  модулю для сохранения числа соотношений, покрывающих каждую порцию данных, что указывает на понижение эффективности 
+  использования пространства.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Пользователи обычно полагают, что надежность не должна приноситься в жертву для повышения 
+  эффективности восстановления. В таком случае, мы, как правило, предполагаем жертву эффективности использования пространства 
+  в противовес надежности, поскольку эффективность использования пространства и эффективность восстановления также совместно 
+  используют компромисс взаимоотношений (#3).</p>
+  <p style="visibility: visible;"><img alt="figure1a.jpg" class="internal default" style="width: 350px; height: 114px; max-width: 748px;" src="figures/Figure1a.jpg" height="350px" width="114px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 1а &nbsp;Три способа компромиссов</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В оставшейся части данной статьи мы предложим и испробуем новый код затирания с локальными 
+  группами соотношения по модулю, основанном на приведенном выше анализе.</p>
+  <h5 style="visibility: visible;" class="editable"><a id="def"></a>2.2. Драночный код затирания</h5>
+  <p style="visibility: visible;">Мы предлагаем новый код затирания, драночный код затирания (SHEC, Shingled Erasure Code), который 
+  разрабатывается для для эффективного восстановления в случае множественного отказов дисков с настраиваемыми под требования пользователя 
+  эффективностью использования пространства и надежностью. SHEC является кодом затирания с локальными группами соответствия по модулю  
+  и диапазоны вычисления локального соответствия по модулю сдвигаются и соответствия перекрывают друг друга аналогично дранкам на крыше 
+  здания. Все локальные группы соответствия имеют одну и ту же локализацию и сдвигаются на практически почти постоянные интервалы.
+  SHEC(k,m,l) представляет схему с k порциями данных, m порциями соответствий по модулю и локализацией l. {<em>Прим.пер.: обращаем 
+  ваше внимание на то, что в данной статье принято обозначение метода, отличное от приводимого выше перевода описания метода с сайта 
+  Ceph, а именно: там использовалось обозначение SHEC(k,m,c), где c обозначало оценку надежности метода, равную ml/k в терминах 
+  данной статьи.</em>}</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Среднее число порций соответствия, которое имеет отношение к каждой порции данных равно ml/k. 
+  Поскольку отказ ml/k+1 порций данных или соответствий может вызвать потерю данных, мы используем ml/k как оценку долговечности SHEC. 
+  Например, в случае SHEC(10,6,5) оценка равна 3 (= ml/k= 6*5/10) и четыре отказа D1/P1/P5/P6 вызовут потерю данных, поскольку D1 не 
+  может быть восстановлен из оставшихся порций (Рисунок 2а). </p>
+  <p style="visibility: visible;"><img alt="figure2a.jpg" class="internal default" style="width: 304px; height: 163px; max-width: 748px;" src="figures/Figure2a.jpg" height="304px" width="163px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 2а &nbsp;Оценка долговечности SHEC</span></span></p>
+  <p style="visibility: visible;">В случае множественного отказа порций данных SHEC восстанавливает данные из множества порций 
+  соответствия. Обычно существует множество комбинаций порций соответствий, которые восстанавливают отказавшие порции. SHEC 
+  выбирает те, которые требуют меньшее число чтений дисков. Например, когда отказывают присутствующие на Рисунке 2а D6/D9, 
+  SHEC выберет P3/P4, поскольку объединение вычислительных диапазонов P3/P4 имеет результатом шесть непрерывных порций данных 
+  и размер объединения (который указывает количество данных, подлежащих чтению) является наименьшим среди всех кандидатов пар 
+  порций соответствий по модулю (корректирующих кодов).</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Чтобы продемонстрировать фактор улучшения надежности мы сравним SHEC(6,4,3) c представителем 
+  простых локальных групп соответствия по модулю (SLPG, Рисунок 3а). Если одновременно отказывают D1/D2/D3, SLPG не может быть 
+  восстановлен, поскольку к D1/D2/D3 имеют отношение только P1/P3. В противоположность этому, SHEC(6,4,3) может быть восстановлен 
+  по P1/P2/P4. Для всех моделей отказов случаи потери данных для SHEC(6,4,3) составляют половину от потерь данных для SLPG. Это 
+  означает, что надежность SHEC(6,4,3) вдвое выше чем у SLPG при тех же значениях эффективности использования пространства и 
+  восстановления. Более того, чем выше значение оценки надежности, тем больше значение коэффициента улучшения надежности 
+  (Рисунок 4а). Улучшение связано со сдвигом диапазона вычислений для каждого локального соответствия по модулю (корректирующего 
+  кода).</p>
+  <p style="visibility: visible;"><img alt="figure3a.jpg" class="internal default" style="width: 315px; height: 124px; max-width: 748px;" src="figures/Figure3a.jpg" height="315px" width="124px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 3а &nbsp;Сопоставление SLPG и SHEC</span></span></p>
+  <p style="visibility: visible;"><img alt="figure4a.jpg" class="internal default" style="width: 335px; height: 187px; max-width: 748px;" src="figures/Figure4a.jpg" height="335px" width="187px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 4а &nbsp;Коэффициент улучшения надежности</span></span></p>
+  <p style="visibility: visible;">Формулировка генерирующей матрицы SHEC очень проста. Во- первых мы создаем генерирующую матрицу 
+  систематического кода Рида- Соломона (сокращенно записываемого в данной статье как RS(k,m)). Далее каждый элемент матрицы, чья 
+  надлежащая порция данных не используется для вычисления надлежащей порции соответствия (корректирующегокода) устанавливается 
+  равной нулю (Рисунок 5а). Использование процессора прямо пропорционально числу ненулевых элементов матрицы.</p>
+  <p style="visibility: visible;"><img alt="figure5a.jpg" class="internal default" style="width: 358px; height: 129px; max-width: 748px;" src="figures/Figure5a.jpg" height="358px" width="129px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 5а &nbsp;Генерирующая матрица SHEC</span></span></p>
+
+  <p style="visibility: visible;"><span><span>&nbsp;
+  <h5 style="visibility: visible;" class="editable">2.3. Сравнение наборов параметров SHEC</h5>
+  <p style="visibility: visible;">В этом разделе мы покажем, что SHEC обеспечивает шаблоны с меньшими затратами на восстановление, 
+  при этом обеспечивая соответствие требованиям пользователя конфликтующих свойств эффективности использования пространства и 
+  надежности.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Ограничиваясь только значащими значениями, SHEC способен создавать более 100 различных наборов 
+  параметров в трехмерном пространстве свойств. Мы укажем на некоторые из этих наборов и сравним их свойства кода затирания. 
+  Давайте начнем с SHEC(4,2,4), эквивалентного RAID6 набора параметров SHEC, и найдем альтернативные кандидатуры, которые имеют более 
+  эффективное восстановление практически с той же надежностью (Таблица 1). В этом случае мы жертвуем эффективностью использования 
+  пространства и мы можем рассмотреть кандидатуры SHEC(4,3,3) и SHEC(6,4,3).</p>
+  <table style="border: thin solid; align=center;" align="center" cellspacing="0" cellpadding="0"><tbody>
+  <tr>
+   <td width="8%" style="border: thin solid; align=center;">k
+   <td width="8%" style="border: thin solid; align=center;">l
+   <td width="8%" style="border: thin solid; align=center;">m
+   <td width="14%" style="border: thin solid; align=center;">ml/k
+   <td width="18%" style="border: thin solid; align=center;">Эфф. исп. <br />пространства
+   <td width="22%" style="border: thin solid; align=center;">Надежность <br />(за год)
+   <td width="22%" style="border: thin solid; align=center;">Затраты на восст. <br />(1x/2x отказа)
+  </tr><tr>
+   <td style="border: thin solid; align=center;">4
+   <td style="border: thin solid; align=center;">2
+   <td style="border: thin solid; align=center;">4
+   <td style="border: thin solid; align=center;">2
+   <td style="border: thin solid; align=center;">67%
+   <td style="border: thin solid; align=center;">1.44E-17
+   <td style="border: thin solid; align=center;">1.00/1.00
+  </tr><tr>
+   <td style="border: thin solid; align=center;">4
+   <td style="border: thin solid; align=center;">3
+   <td style="border: thin solid; align=center;">3
+   <td style="border: thin solid; align=center;">2.25
+   <td style="border: thin solid; align=center; background: #FFDEAD;">57%
+   <td style="border: thin solid; align=center;">1.60E-18
+   <td style="border: thin solid; align=center; background: #E6E6FA;">0.75/1.00
+  </tr><tr>
+   <td style="border: thin solid; align=center;">6
+   <td style="border: thin solid; align=center;">4
+   <td style="border: thin solid; align=center;">3
+   <td style="border: thin solid; align=center;">2
+   <td style="border: thin solid; align=center; background: #FFDEAD;">60%
+   <td style="border: thin solid; align=center;">3.46E-18
+   <td style="border: thin solid; align=center; background: #E6E6FA;">0.50/0.74
+  </tr></tbody></table>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Таблица 1 &nbsp;Кандидаты с эквивалентной надежностью</span></span></p>
+  <p style="visibility: visible;">Давайте подыщем других кандидатов с бОльшей эффективностью восстановления при почти равной
+  эффективности использования пространства (Таблица 2). В этом случае мы жертвуем надежностью и мы получаем кандидатами 
+  SHEC(5,3,3) и SHEC(7,4,3).</p>
+  <table style="border: thin solid; align=center;" align="center" cellspacing="0" cellpadding="0"><tbody>
+  <tr>
+   <td width="8%" style="border: thin solid; align=center;">k
+   <td width="8%" style="border: thin solid; align=center;">l
+   <td width="8%" style="border: thin solid; align=center;">m
+   <td width="14%" style="border: thin solid; align=center;">ml/k
+   <td width="18%" style="border: thin solid; align=center;">Эфф. исп. <br />пространства
+   <td width="22%" style="border: thin solid; align=center;">Надежность <br />(за год)
+   <td width="22%" style="border: thin solid; align=center;">Затраты на восст. <br />(1x/2x отказа)
+  </tr><tr>
+   <td style="border: thin solid; align=center;">4
+   <td style="border: thin solid; align=center;">2
+   <td style="border: thin solid; align=center;">4
+   <td style="border: thin solid; align=center;">2
+   <td style="border: thin solid; align=center;">67%
+   <td style="border: thin solid; align=center;">1.44E-17
+   <td style="border: thin solid; align=center;">1.00/1.00
+  </tr><tr>
+   <td style="border: thin solid; align=center;">5
+   <td style="border: thin solid; align=center;">3
+   <td style="border: thin solid; align=center;">3
+   <td style="border: thin solid; align=center; background: #FFDEAD;">1.8
+   <td style="border: thin solid; align=center;">63%
+   <td style="border: thin solid; align=center; background: #FFDEAD;">1.22E-10
+   <td style="border: thin solid; align=center; background: #E6E6FA;">0.60/0.90
+  </tr><tr>
+   <td style="border: thin solid; align=center;">6
+   <td style="border: thin solid; align=center;">4
+   <td style="border: thin solid; align=center;">3
+   <td style="border: thin solid; align=center; background: #FFDEAD;">1.71
+   <td style="border: thin solid; align=center;">64%
+   <td style="border: thin solid; align=center; background: #FFDEAD;">1.65E-10
+   <td style="border: thin solid; align=center; background: #E6E6FA;">0.43/0.69
+  </tr></tbody></table>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Таблица 2 &nbsp;Кандидаты с эквивалентной эффективностью использования пространства</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h5 style="visibility: visible;" class="editable">2.4. Сравнение с другими кодами затирания</h5>
+  <p style="visibility: visible;">Мы сравнили теоретические затраты на восстановление между кодом Рида- Соломона, MS-LRC, 
+  Xorbas и SHEC при условии практически одинаковой надежности (Рисунок 6а). Затраты на восстановление с применением SHEC меньше чем 
+  во всех остальных случаях при отказе двух и более дисков. Остальные варианты еще хуже, поскольку они должны в данном случае 
+  использовать глобальные соответствия по модулю (корректирующие коды).</p>
+  <p style="visibility: visible;"><img alt="figure6a.jpg" class="internal default" style="width: 294px; height: 192px; max-width: 748px;" src="figures/Figure6a.jpg" height="294px" width="192px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 6а &nbsp;Сравнение затрат на восстановление различных кодов</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">3. Реализация и оценки</h4>
+  <h5 style="visibility: visible;" class="editable">3.1. Архитектура Ceph</h5>
+  <p style="visibility: visible;">Мы сделали оценку SHEC в Ceph. Кластер Ceph содержит большое число демонов хранения объектов 
+  (OSD). Каждый OSD соответствует устройству хранения. В данной статье OSD обозначает целое дисковое устройство. Группа размещения 
+  (PG, Placement Group) является набором OSD, в которых случайно распределены порции данных и соответствий по модулю (корректирующих 
+  кодов).</p>
+  <p style="visibility: visible;">Когда данные записываются в кластер Ceph, (a) эти данные дробятся на объекты Ceph размером 4МБ. 
+  Далее, (b) группа размещения (PG) определяется значением хэш-тега для имени данного объекта. Наконец, (c) каждый элемент данных 
+  или порция соответствия (корректирующий код) сохраняется в одном из OSD, назначенном этой PG. Если (d) OSD отказывает, другой 
+  OSD назначается деградировавшей PG и потерянная порция восстанавливается в OSD с оставшихся порций в действующем наборе.</p>
+  <p style="visibility: visible;"><img alt="figure7a.jpg" class="internal default" style="width: 257px; height: 178px; max-width: 748px;" src="figures/Figure7a.jpg" height="257px" width="178px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 7а &nbsp;Архитектура Ceph</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <h5 style="visibility: visible;" class="editable">3.2. Реализация SHEC</h5>
+  <p style="visibility: visible;">Начиная с редакции v0.80.1 (Firefly), объектное хранилище Ceph имеет интерфейс подключаемых программ 
+  для кода затирания. В качестве кода по умолчанию он поддерживает код Рида- Соломона, а в качестве альтернативы мы реализовали SHEC. 
+  Интерфейс является достаточным для реализации SHEC, поскольку он содержит полезную функцию <code>minimum_to_decode()</code>, 
+  которая возвращает множество номеров порций, требующееся для декодирования утраченных порций. SHEC возвращает подмножество номеров 
+  порций, которое возвращает код Рида- Соломона.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h5 style="visibility: visible;" class="editable">3.3. Условия тестирования</h5>
+  <p style="visibility: visible;">Мы сделали оценку эффективности восстановления SHEC(6,4,3), а для сопоставления выбрали RS(6,4) 
+  (Рисунок 8а). Сравнение с Xorbas или MS-LRC выходит за рамки данной статьи.</p>
+  <p style="visibility: visible;"><img alt="figure8a.jpg" class="internal default" style="width: 357px; height: 114px; max-width: 748px;" src="figures/Figure8a.jpg" height="357px" width="114px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 8а &nbsp;Размещение соответствий по модулю для сравнения</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Установленные аппаратные средства и версии программного обеспечения для тестирования приведены на
+  Рисунке 9а.</p>
+  <p style="visibility: visible;"><img alt="figure9a.jpg" class="internal default" style="width: 324px; height: 164px; max-width: 748px;" src="figures/Figure9a.jpg" height="324px" width="164px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 9а &nbsp;Установленная аппаратура и версии программного обеспечения</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h5 style="visibility: visible;" class="editable">3.4. Производительность восстановления SHEC</h5>
+  <p style="visibility: visible;">Мы подготовили 100ГБ данных (25 000 объектов по 4МБ) и измерили время восстановления при отказе 
+  двух OSD в каждом из вариантов RS(6,4) и SHEC(6,4,3). Мы установили число потоков восстановления равным пяти. Вначале мы 
+  увидели, что общие затраты ЦПУ для SHEC(6,4,3) были примерно на 20% ниже чем для RS(6,4), как это показано на Рисунке 10а. 
+  Мы сочли, что в основном это обусловлено упрощением генерирующей матрицы (Рисунок 5а), поскольку использование процессора прямо 
+  пропорционально числу ненулевых элементов матрицы.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Далее, затраты на восстановление RS(6,4) равны 1.00 (число считываемых порций равно k), в то время, 
+  как для SHEC(6,4,3) они равны 0.74 (Таблица 1). По этой причине мы оценили вначале время восстановления SHEC(6,4,3) как 74% от 
+  RS(6,4). Однако, эксперимент показал, что хотя объем считываемых с диска данных составлял 74%, действительное время восстановления 
+  составляло 81.4% от RS(6,4) (Рисунок 10а).</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Причина заключалась в существовании определенно узкого места. Мы предположили, что один из ресурсов 
+  системы является бутылочным горлышком, и действительно, диски выглядят узким местом (Рисунок 11а), в то время как ЦПУ и сеть 
+  (Рисунок 10а, Рисунок 12а) совсем не являются таковыми. Однако, бутылочное горлышко за счет дисков не является непрерывным. 
+  Рассмотрев Рисунок 11а, мы видим, что пропускная способность дисков не используется полностью на протяжении 35% от всего времени 
+  восстановления (в прямоугольнике) и мы можем повторно сделать оценку времени восстановления SHEC(6,4,3) следующим образом:</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">0.74 * (1-0.35) + 1.0 * 0.35 = 0.831&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;(2)</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Результат составил 83% от RS(6,4), что примерно равно действительному соотношению, 81.4%.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В конце концов мы пришли к выводу, что затраты на восстановление SHEC уменьшились по сравнению с 
+  кодом Рида- Соломона. Однако, в условиях нашего теста 70% эффективности восстановления SHEC воплощается в уменьшении времени 
+  ожидания выполнения восстановления, а 30% реализуется как уменьшение от пропускной способности дисков, используемых для 
+  выполнения восстановления.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Более того, мы получили аналогичные результаты при попытке сравнения между RS(5,3) и SHEC(5,3,3) 
+  в случае отказа одного OSD.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure10a.jpg" class="internal default" style="width: 359px; height: 237px; max-width: 748px;" src="figures/Figure10a.jpg" height="359px" width="237px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 10а &nbsp;Выполнение восстановления и использование ЦПУ</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure11a.jpg" class="internal default" style="width: 348px; height: 225px; max-width: 748px;" src="figures/Figure11a.jpg" height="348px" width="225px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 11а &nbsp;Использование диска</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;"><img alt="figure12a.jpg" class="internal default" style="width: 349px; height: 225px; max-width: 748px;" src="figures/Figure12a.jpg" height="349px" width="225px"></p>
+  <p style="visibility: visible;"><span><span>&nbsp;
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  &nbsp; &nbsp; &nbsp;Рисунок 12а &nbsp;Сетевой обмен</span></span></p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">4. Связанные работы</h4>
+  <p style="visibility: visible;">Различные системы хранения используют код затирания [1] для реализации более высокой 
+  надежности хранения данных на протяжении длительных периодов времени. В особенности, хорошо известный RAID [1], основанный 
+  на коде Рида- Соломона, который был реализован практически во всех высоконадежных системах хранения. </p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">После того, как Google предал гласности свою файловую систему (Google File System) [3], которая 
+  использовала тройные репликации с рассеиванием их по общедоступным дискам, другие основные облачные хранилища, такие как 
+  Amazon HDFS [4] и хранилище Microsoft Azure [5] последовали в этом направлении. Однако, поскольку создаваемые службами ИВТ 
+  объемы данных начали расти взрывообразно, вновь произошла переоценка эффективности использования пространства кодом затирания [6].</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">В последние годы затраты на восстановление стали рассматриваться как существенная проблема кодов 
+  затирания, в особенности для распределенных или масштабируемых систем хранения [9], [10]. Многие исследователи предложили 
+  методы, включая технологии локального соответствия по модулю для уменьшения затрат на восстановление. Коды WEAVER [7] предложили 
+  общий метод, который содержит большинство локальных шаблонов соответствия по модулю (корректирующих кодов). Пирамидальные коды 
+  Microsoft (Microsoft Pyramid Codes) [8], а впоследствии коды локальной реконструкции Azur (MS-LRC) [9], а также Facebook 
+  Xorbas [10] изучили надежность локальных кодов соответствия. МС-LRC настаивал, что вероятность утраты данных (случай теоретически 
+  не декодируемой информации) ограничен незначительным уровнем. С другой стороны Xorbas исследовал на высоком теоретическом 
+  уровне взаимосвязь между локальностью и расстояниями между кодами. Восстанавливающие (Regenerating) коды [11], [12] предложили 
+  интересный подход, в котором обсуждаются оптимальный компромисс между эффективностью использования пространства и пропускной 
+  способностью восстановления с помощью анализа на &quot;основе отсечений&quot;. Циклические коды Рида- Соломона (Rotated 
+  Reed-Solomon Codes) [13] предлагают локальные соответствия имеют аналогичные шаблоны SHEC. Тем не менее, они характеризуются 
+  числом дисков данных, фактически ограниченными для продукта парами целых чисел. Фонтанный (Fountain) код [19] также способен 
+  использовать скользящие окна, однако выбирает слишком вероятностный подход.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">5. Заключение и дальнейшие работы</h4>
+  <p style="visibility: visible;">Во- первых, мы предложили SHEC, новый затирающий код, разработанный для высокоэффективного 
+  восстановления, в особенности, в случае множественных отказов дисков. Во-вторых, мы показали что SHEC предоставляет схемы с 
+  бОльшей эффективностью, чем коды Рида- Соломона, при этом гарантируя, что конфликтующие характеристики эффективности использования 
+  пространства и надежности устанавливаются в соответствии с требованиями пользователя. Наконец, с помощью экспериментов 
+  мы продемонстрировали, что восстановление с применением SHEC действительно быстрее чем применение кодов Рида- Соломона.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+  <p style="visibility: visible;">Тем не менее, демонстрация превосходства SHEC над современными кодами (Xorbas и MS-LRC) без 
+  каких- либо жертв со стороны эффективности использования пространства или надежности может оказаться не такой простой. 
+  Таким образом, мы будем в будущем расширять концепцию нормального SHEC в сторону несимметричности или объединения с глобальными 
+  соответствиями по модулю.</p>
+  <p style="visibility: visible;">&nbsp;</p>
+
+  <h4 style="visibility: visible;" class="editable">6. Ссылки</h4>
+  <p style="visibility: visible;">&nbsp;[1] &nbsp; &nbsp; L. Rizzo. Effective erasure codes for reliable computer
+  communication protocols. <em>Computer Communication Review</em>, April 1997.</p>
+  <p style="visibility: visible;">&nbsp;[2] &nbsp; &nbsp; David A. Patterson, Garth A. Gibson, and Randy H. Katz. 
+  A case for redundant arrays of inexpensive disks (RAID). In <em>Proceedings of the 1988 ACM SIGMOD 
+  International Conference on Management of Data</em>, pages 109-116, Chicago, Illinois, September 1988.</p>
+  <p style="visibility: visible;">&nbsp;[3] &nbsp; &nbsp; Ghemawat, S., Gobioff, H., and Leung, S.-T. The Google File System. 
+  In <em>19th Symposium on Operating Systems Principles</em>. Lake George, NY. 29-43, December 2003.</p>
+  <p style="visibility: visible;">&nbsp;[4] &nbsp; &nbsp; K. Shvachko, H. Kuang, S. Radia, and R. Chansler. 
+  The hadoop distributed file system. In <em>Proceedings of the 2010 IEEE 26th Symposium on Mass Storage 
+  Systems and Technologies (MSST)</em>, pages 1 -10, Washington, DC, USA, 2010. IEEE Computer Society</p>
+  <p style="visibility: visible;">&nbsp;[5] &nbsp; &nbsp; B. Calder, J. Wang, A. Ogus, N. Nilakantan, A. Skjolsvold, 
+  S. McKelvie, Y. Xu, S. Srivastav, J. Wu, H. Simitci, J. Haridas, C. Uddaraju, H. Khatri, A. Edwards, 
+  V. Bedekar, S. Mainali, R. Abbasi, A. Agarwal, M. Fahim ul Haq, M. Ikram ul Haq, D. Bhardwaj, S. Dayanand, 
+  A. Adusumilli, M. McNett, S. Sankaran, K. Manivannan, and L. Rigas. Windows Azure storage: A highly 
+  available cloud storage service with strong consistency. In <em>Symposium on Operating Systems Principles</em>, 2011.</p>
+  <p style="visibility: visible;">&nbsp;[6] &nbsp; &nbsp; H. Weatherspoon and J. D. Kubiatowicz. Erasure coding vs. replication: 
+  A quantitiative comparison. In <em>Procs. of IPTPS</em>, 2002.</p>
+  <p style="visibility: visible;">&nbsp;[7] &nbsp; &nbsp; J. L. Hafner. WEAVER Codes: Highly fault tolerant erasure 
+  codes for storage systems. <em>FAST 2005</em>, San Francisco, CA, Dec. 2005.</p>
+  <p style="visibility: visible;">&nbsp;[8] &nbsp; &nbsp; C. Huang, M. Chen, and J. Li. Pyramid codes: Flexible schemes 
+  to trade space for access efficiency in reliable data storage systems. Presented at the 
+  <em>IEEE Int. Symp. Network Computing and Applications</em>, Jul. 2007.</p>
+  <p style="visibility: visible;">&nbsp;[9] &nbsp; &nbsp; C. Huang, H. Simitci, Y. Xu, A.Ogus, B. Calder, P. Gopalan, 
+  J. Li, and S. Yekhanin. Erasure coding in Windows Azure Storage. Presented at the <em>USENIX Annu. Tech. 
+  Conf.</em>, Boston, MA, 2012.</p>
+  <p style="visibility: visible;">[10] &nbsp; &nbsp; M. Sathiamoorthy, M. Asteris, D. S. Papailiopoulos, A. G. Dimakis, 
+  R. Vadali, S. Chen, D. Borthakur. XORing elephants: novel erasure codes for big data. 
+  In <em>Proc. of the Very Large Data Bases conference (VLDB)</em>, 2013, pp. 325-336.</p>
+  <p style="visibility: visible;">[11] &nbsp; &nbsp; Y. Wu, A. G. Dimakis, and K. Ramchandran. Deterministic regenerating 
+  codes for distributed storage. Presented at the <em>Allerton Con. Control, Computing, and Communication</em>, 
+  Urbana-Champaign, IL, Sep. 2007.</p>
+  <p style="visibility: visible;">[12] &nbsp; &nbsp; K. V. Rashmi, N. B. Shah, P. V. Kumar, and K. Ramchandran. Explicit 
+  and optimal exact-regenerating codes for the minimum-bandwidth point in distributed storage. In <em>Proc. 
+  IEEE Int. Symp. Information Theory (ISIT)</em>, Austin, Jun. 2010, pp. 1938-1942.</p>
+  <p style="visibility: visible;">[13] &nbsp; &nbsp; O. Khan, R. Burns, J. Plank, W. Pierce, and C. Huang. Rethinking 
+  erasure codes for cloud file systems: Minimizing I/O for recovery and degraded reads. In <em>FAST</em> 2012.</p>
+  <p style="visibility: visible;">[14] &nbsp; &nbsp; S. Weil, S. Brandt, E. Miller, D. Long, and C. Maltzahn. 
+  Ceph: A scalable, high-performance distributed file system. In <em>Proc. of the 7th Symposium 
+  on Operating Systems Design and Implementation</em>, Seattle, WA, November 2006.</p>
+  <p style="visibility: visible;">[15] &nbsp; &nbsp; S. A. Weil, S. A. Brandt, E. L. Miller, and C. Maltzahn.
+  CRUSH: Controlled, scalable, decentralized placement of replicated data. In <em>Proc. Supercomputing 
+  (SC)</em>, 2006.</p>
+  <p style="visibility: visible;">[16] &nbsp; &nbsp; D. Ford, F. Labelle, F. Popovici, M. Stokely, V.-A. Truong, 
+  L. Barroso, C. Grimes, and S. Quinlan. Availability in globally distributed storage systems. 
+  In <em>OSDI</em>, 2010.</p>
+  <p style="visibility: visible;">[17] &nbsp; &nbsp; Richard Elling. A story of two MTTDL models. Ramblings from Richard’s Ranch, 
+  2007. Retrieved from 
+  <a href="https://blogs.oracle.com/relling/entry/a_story_of_two_mttdl">https://blogs.oracle.com/relling/entry/a_story_of_two_mttdl</a></p>
+  <p style="visibility: visible;">[18] &nbsp; &nbsp; M. Silberstein, L. Ganesh, Y. Wang, L. Alvisi and M. Dahlin. 
+  Lazy means smart: Reducing repair bandwidth costs in erasure-coded distributed storage. 
+  In <em>Proc. SYSTOR</em>, Jun. 2014.</p>
+  <p style="visibility: visible;">[19] &nbsp; &nbsp; M. Asteris and A. G. Dimakis. Repairable fountain codes. 
+  In <em>Proc. Int. Symp. Inform. Theory</em>, Cambridge, MA, July 2012, pp. 1752–1756.</p>
+  </div></div>
+    </div>
+    </div>
+</div>
+
+			<ul class="mt-pagination">
+			<li><a title="Previous" class="prev  " href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_Snapshots" onclick="">Previous</a>
+</li>
+			<li><a title="Next" class="next  " href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Towards_Ceph_Cold_Storage" onclick="">Next</a>
+</li>
+		</ul>
+	    			<div class="widget">
+            			<div class="widget-tabs">
+				<ul>
+										<li id="tab-comments" class="active"><a href="#widget-comments" id="widget-comments">Комментарии</a><span></span></li>
+														</ul>
+			</div>
+
+            Для просмотра комментариев перейдите на 
+			<a title="Коментарии" class="external" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29" onclick="">
+			исходную страницу</a>
+
+			<!-- START File attachments -->
+						<!-- END File attachments -->
+		</div>
+      </div>
+	</div>
+    <!-- END Page Content -->
+
+	<!--START Right Tray -->
+	<div class="tray" id="tray">
+	<div class="trayframe">
+		<div class="mt-tray-header">
+			<!-- START Search field -->
+			<div class="mt-site-search">
+			    <form action="https://wiki.ceph.com/Special:Search">
+        <input name="search" placeholder="Search" class="search-field" type="text">
+        <input name="qid" id="mt-qid-skin" value="" type="hidden">
+        <input name="path" id="mt-search-path" value="" type="hidden">
+        <input name="fpid" id="mt-search-filter-id" value="781" type="hidden">
+        <input name="fpth" id="mt-search-filter-path" value="" type="hidden">
+        <input class="search-button" value="Search" type="submit">
+            </form>
+    			</div>
+			<!-- END Search field -->
+		</div>
+		<div class="traybody">
+						
+			<!-- START Page controls -->
+			<div class="section no-line" id="controls">
+				<ul class="page-controls">
+					<li class="nav-icon hide"><a title="" class="" href="#"></a>
+</li>
+            								<li class="pdf"><a title="Save as PDF" class=" page-pdf-export-launcher" href="https://wiki.ceph.com/@api/deki/pages/781/pdf/Shingled%2bErasure%2bCode%2b%28SHEC%29.pdf" onclick="" rel="nofollow">Save as PDF</a>
+</li>
+					<li class="email"><a title="Email page" class=" " href="mailto:?subject=Anonymous%20wants%20to%20share%20a%20link%20%7C%20Ceph%20Wiki&amp;body=Anonymous%20wants%20to%20share%20a%20link%20on%20Ceph%20Wiki%3A%20https%3A%2F%2Fwiki.ceph.com%2FPlanning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" onclick="">Email page</a>
+</li>
+				</ul>
+			</div>
+			<!-- END Page controls -->
+
+			<!-- START Social sharing -->
+						<!-- END Social sharing -->
+
+			<!-- START Page history -->
+			<div class="section" id="page-version-tags">
+				<div class="updated-label">Last modified</div> <div class="modified">03:22, 17 Feb 2015</div>			</div>
+			<!-- END Page history -->
+
+			<!-- START Home content -->
+						<!-- END Home content -->
+
+			
+			<!-- START Related articles -->
+			<div class="section" id="related">
+				<h2 style="visibility: visible;">Related Articles</h2>
+				<div class="noindex"><div class="mt-related-pages"><ul><li><a rel="internal" href="https://wiki.ceph.com/Planning/Blueprints/Hammer" title="Planning/Blueprints/Hammer">Hammer</a></li></ul></div></div>			</div>
+			<!-- END Related Articles-->
+			
+			 				<div class="section hide" id="site-hierarchy">
+					<!-- dynamically injected -->
+				</div>
+			
+			<!-- START Tags -->
+			<div class="tags section" id="anchor-tags">
+				<h2 style="visibility: visible;">Tags</h2>
+				<div id="live-tags-edit-area">
+					<script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Page.LiveTags.error.custom'] = 'Tag not found';aLt['Page.LiveTags.error.custom.detail'] = 'The tag you entered is not valid for the "{0}" tag type';aLt['Page.LiveTags.error.updating'] = 'Could not update tags for the following pages (check permissions):';aLt['Page.LiveTags.error.updating-failed'] = 'There was an error updating tags:';aLt['Page.LiveTags.error.skipped-showall'] = 'Show all';/*]]>*/</script><div class="live-tag-section" id="live-tag-normal-tags"><div id="live-tag-entries"><span class="live-tag-message">This page has no custom tags.</span></div></div>					<div class="br"></div>
+				</div>
+            </div>
+            <!-- END Tags -->
+
+            <!-- START Classifications -->
+            <div class="classifications section" id="classifications">
+                <h2 style="visibility: visible;">Classifications</h2>
+				<span class="live-tag-message">This page has no classifications.</span>            </div>
+            <!-- END Classifications -->
+
+		            <div class="custom-tray">
+                            </div>
+		</div>
+	</div>
+    </div>
+    <!--END Right Tray -->
+
+	<!--START Footer -->
+	<div class="mt-foot">
+	<ul class="mt-site-info">
+		<li class="last">© Copyright 2015 Ceph Wiki, Module-Project Ltd (перевод)</li>
+	</ul>
+	<div class="poweredBy"><a href="http://www.mindtouch.com/" class="mt-poweredby product " title="MindTouch 4 v.15.4" target="_blank">Powered by MindTouch <span class="mt-registered">®</span></a></div>	</div>
+
+    <script src="http://t1.extreme-dm.com/f.js" id="eXF-mdlshec-0" async defer></script>
+	<!--END Footer -->
+</div>
+
+<script type="text/javascript">$(function(){$.getScript("https://cdn.mindtouch.us/f1.js",function(){});});</script>
+<div id="menuFiller"></div><div id="bodyHeight"></div>
+<script type="text/javascript">
+	(function($) {
+		$(function() {
+			if(Deki.Fonts.getFontElements().length <= 0) {
+				Deki.Fonts.setFontElements([ ".product-links .title a", "p", "h1", "h2", "h3", "h4", "h5", "h6", ".sub-guides .title", "pre.script-css", ".code", ".pre", "fieldset legend" ]);
+			}
+		});
+	})(jQuery);
+</script>
+<script type="text/javascript">/*<![CDATA[*/new Deki.Page(Deki.PageId).logPageView();/*]]>*/</script><script type="text/javascript">$(function(){Deki.Fonts.loadFonts();});</script><script type="text/javascript">Deki.CssPreview.getCustomCss('anonymous:custom-css-preview', 'CSS PREVIEW MODE', 'The CSS preview link is either invalid or has expired. Please close this browser window.');</script><script type="text/javascript">Deki.Stats={"stats":{"totals":{"api":"288.68","cache":"1.21","other":"77.01","elapsed":"366.89"},"requests":{"api":{"0":{"verb":"GET","path":"\/@api\/deki\/site\/settings?include=anonymous%2Clicense%2Cproperties&names=urn%3Aui.deki.mindtouch.com%23%2A%2Cmindtouch.prince.stylesheet%23%2A","time":"61.38","stats":"request-time-ms=50; cache-hit=4; cache-ratio=1.00; mysql-queries=3; mysql-time-ms=24.84; permission-hit=1; permission-ratio=1.00; role-hit=1; role-ratio=1.00; user-hit=2; user-ratio=1.00;"},"1":{"verb":"GET","path":"\/@api\/deki\/pages\/=Planning%252FBlueprints%252FHammer%252FShingled%2BErasure%2BCode%2B%2528SHEC%2529?mode=view&redirects=0&exclude=files%2Cinbound%2Coutbound&include=contents%2Cprevnext&Target%3Acedar-related-pages=Template%3AMindTouch%2FControls%2FRelatedPages&Target%3Acedar-tray-tips=Template%3AMindTouch%2FCedar%2FControls%2FTrayTips&Target%3Acedar-content-nav=Template%3AMindTouch%2FCedar%2FControls%2FContentNavigation&Target%3Acedar-page-summary-controls=Template%3AMindTouch%2FControls%2FPageOverviewEditor&Target%3Acedar-feedback-rating=Template%3AMindTouch%2FControls%2FFeedbackRating&Target%3Amt-live-tags=Template%3AMindTouch%2FControls%2FLiveTags&Target%3Acedar-side-tray=Template%3ACustom%2FViews%2FSidetray&Target%3Apagefooter=Template%3ACustom%2FViews%2FFooter&Target%3Apageheader=Template%3ACustom%2FViews%2FHeader","time":"215.14","stats":"request-time-ms=212; cache-hit=116; cache-miss=105; cache-ratio=0.52; hs-queries=25; hs-time-ms=23.20; mysql-queries=84; mysql-time-ms=76.27; page-hit=10; page-miss=34; pagenode-hit=23; pagenode-miss=23; pagenode-ratio=0.50; page-ratio=0.23; permission-hit=36; permission-miss=38; permission-ratio=0.49; ratings-miss=2; ratings-ratio=0.00; request-hit=1; request-miss=4; request-ratio=0.20; role-hit=1; role-ratio=1.00; tag-hit=2; tag-miss=2; tag-ratio=0.50; user-hit=43; user-miss=2; user-ratio=0.96;"},"2":{"verb":"GET","path":"\/@api\/deki\/pages\/781\/comments?sortby=-date.posted&limit=15&redirects=0","time":"12.15","stats":"request-time-ms=10; cache-hit=21; cache-miss=2; cache-ratio=0.91; mysql-queries=3; mysql-time-ms=2.47; page-hit=6; pagenode-hit=7; pagenode-ratio=1.00; page-ratio=1.00; permission-hit=1; permission-ratio=1.00; user-hit=7; user-miss=2; user-ratio=0.78;"}},"_cache":{"0":{"cache":"cache.apc","time":"0.04","hit":0},"1":{"cache":"cache.memcache.content","time":"1.17","hit":0}}}}};</script>
+</body></html>

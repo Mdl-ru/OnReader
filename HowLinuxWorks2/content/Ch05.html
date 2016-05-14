@@ -1,0 +1,957 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 5. Как загружается ядро Linux - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch04.html" title="Глава 4. Диски и файловые системы"/>
+<link rel="next" href="Ch06.html" title="Глава 6. Как запускается пользовательское пространство"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 5. Как загружается ядро Linux';
+PrevRef = 'Ch04.html';
+UpRef = 'index.html';
+NextRef = 'Ch06.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 5. Как загружается ядро Linux</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch05.html">5. Как загружается ядро Linux</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch05.html#05.1">5.1 Сообщения запуска</a></span></dt>
+	 <dt><span class="section"><a href="Ch05.html#05.2">5.2 Инициализация ядра и опции загрузки</a></span></dt>
+	 <dt><span class="section"><a href="Ch05.html#05.3">5.3 Параметры ядра</a></span></dt>
+	 <dt><span class="section"><a href="Ch05.html#05.4">5.4 Начальные загрузчики</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05.4.1">5.4.1 Задачи начального загрузчика</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05.4.2">5.4.2 Обзор начального загрузчика</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch05.html#05.5">5.5 Введение в GRUB</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05.5.1">5.5.1 Изучение устройств и разделов при помощи командной строки GRUB</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05.5.2">5.5.2 Настройка GRUB</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05.5.3">5.5.3 Установка GRUB</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch05.html#05.6">5.6 Проблемы безопасной загрузки UEFI</a></span></dt>
+	 <dt><span class="section"><a href="Ch05.html#05.7">5.7 Последовательная загрузка других операционных систем</a></span></dt>
+	 <dt><span class="section"><a href="Ch05.html#05.8">5.8 Подробности начальной загрузки</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05.8.1">5.8.1 Загрузка MBR</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05.8.2">5.8.2 Загрузка UEFI</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05.8.3">5.8.3 Как работает GRUB</a></span></dt>
+	 </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Теперь вы знаете физическую и логическую структуру системы Linux, что такое ядро и как работать с процессами. Данная глава научит вас тому 
+  как запускается ядро - или загрузке (boot). Другими словами, мы узнаем как ядро перемещается в оперативную память, в точку, в которой 
+  запустится первый процесс пользователя.</p>
+  <p>Упрощённый вид процесса загрузки выглядит следующим образом:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>BIOS машины или firmware запуска загружает и выполняет начальный загрузчик (boot lader).</p>
+	 </li><li class="listitem">
+      <p>Начальный загрузчик находит на диске образ ядра, загружает его в оперативную память и запускает его.</p>
+	 </li><li class="listitem">
+      <p>Ядро инициализирует ваши устройства и их драйверы.</p>
+	 </li><li class="listitem">
+      <p>Ядро монтирует вашу корневую файловую систему.</p>
+	 </li><li class="listitem">
+      <p>Ядро запускает программу, называемую <span class="emphasis"><em><code>init</code></em></span> с 
+	  <span class="term"><strong class="userinput"><code>ID</code></strong></span> процесса равным 
+	  <span class="term"><strong class="userinput"><code>1</code></strong></span>. Эта точка является точкой 
+	  <span class="emphasis"><em>запуска пространства пользователя</em></span> (user space).</p>
+	 </li><li class="listitem">
+      <p><span class="emphasis"><em><code>init</code></em></span> в своём продвижении устанавливает остальные процессы системы.</p>
+	 </li><li class="listitem">
+      <p>В данной точке <span class="emphasis"><em><code>init</code></em></span> запускает процесс, позволяющий вам зарегистрироваться, 
+	  обычно в самом конце загрузки или рядом с ним.</p>
+	 </li>
+	 </ol>
+   </div>
+  <p>Данная глава охватывает первые четыре этапа, сосредотачиваясь на загрузке ядра и начальном загрузчике. 
+  <a class="link" href="Ch06.html" target="_top">Глава 6</a> продолжает с запуска пространства пользователя.</p>
+  <p>Способность идентифицировать вами каждый этап процесса загрузки будет иметь огромное значение при устранении проблем загрузки и в 
+  понимании системы в целом. Однако, поведение по умолчанию многих дистрибутивов Linux часто делает это трудным, если не невозможным, 
+  определить первые несколько этапов загрузки по мере их продвижения, следовательно, скорее всего вы будете в состоянии хорошую 
+  возможность для изучения только по окончанию загрузки и вашей регистрации в системе.</p>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.1"> </a>5.1 Сообщения запуска</h3>
+   </div></div></div>
+   <p>Традиционные системы Unix производят в процессе загрузки множество диагностических сообщений, которые рассказывают вам о процессе 
+   загрузки. Соопщения вначале поступают от ядра, а затем от запускаемых <span class="emphasis"><em><code>init</code></em></span> процессов 
+   и процедур инициализации. Однако эти сообщения не очень хороши и совместимы, а порой даже и не очень информативны. Большинство 
+   современных дистрибутивов Linux делают всё возможное чтобы скрыть их в окнах начальной загрузки, фильтрах и параметрах загрузчиков.
+   Кроме того, улучшения в аппаратных средствах привели к болеебыстрой загрузке ядра, чем это происходило ранее, сообщения мерцают так быстро,
+   что трудно понять что происходит.</p>
+   <p>Существует два способа просмотра загрузки ядра и диагностический сообщений в реальном режиме. Вы можете:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Просмотреть файл журнала ядра системы. Обычно вы можете найти его в <span class="term"><code>/var/log/kern.log</code></span>, 
+	 однако в зависимости от настроек вашей системы, он может быть свален в кучу вместе с огромным количеством прочих системных журналов в
+	 <span class="term"><code>/var/log/messages</code></span> или куда- либо ещё.</p>
+	 </li><li class="listitem">
+	 <p>Применить команду <span class="term"><code>dmesg</code></span>, однако убедитесь, что её вывод подан через конвейер на 
+	 <span class="term"><code>less</code></span>, поскольку он будет намного больше размера экрана. Команда 
+	 <span class="term"><code>dmesg</code></span> использует кольцевой буфер ядра, который ограничен в размере, однако более новые ядра имеют 
+	 достаточно большой буфер для удержания сообщений загрузки продолжительное время.</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Вот пример того, что вы можете ожидать увидеть в выводе команды <span class="term"><code>dmesg</code></span>:</p>
+	   <pre class="screen">
+$ dmesg
+[ 0.000000] Initializing cgroup subsys cpu
+[ 0.000000] Linux version 3.2.0-67-generic-pae (buildd@toyol) (gcc version 4.
+6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5) ) #101-Ubuntu SMP Tue Jul 15 18:04:54 UTC 2014
+(Ubuntu 3.2.0-67.101-generic-pae 3.2.60)
+[ 0.000000] KERNEL supported cpus:
+--snip--
+[ 2.986148] sr0: scsi3-mmc drive: 24x/8x writer dvd-ram cd/rw xa/form2 cdda tray
+[ 2.986153] cdrom: Uniform CD-ROM driver Revision: 3.20
+[ 2.986316] sr 1:0:0:0: Attached scsi CD-ROM sr0
+[ 2.986416] sr 1:0:0:0: Attached scsi generic sg1 type 5
+[ 3.007862] sda: sda1 sda2 &lt; sda5 &gt;
+[ 3.008658] sd 0:0:0:0: [sda] Attached SCSI disk
+--snip--
+	   </pre>
+   <p>После запуска вашего ядра начнётся процедура старта пространства пользователя, часто создающая сообщения. Вероятно, эти сообщения 
+   будут более сложными для просмотра и обзора, поскольку в большинстве систем вы не найдёте их в едином файле журнала. Запускающие сценарии 
+   обычно выводят сообщения на консоль и они удаляются после завершения процесса загрузки. Тем не менее это обычно не является проблемой, 
+   поскольку каждый сценарий обычно записывает свой собственный журнал. Некоторые версии <span class="emphasis"><em><code>init</code></em></span>, 
+   такие как <span class="emphasis"><em><code>Upstart</code></em></span> и <span class="emphasis"><em><code>systemd</code></em></span> могут 
+   перехватывать сообщения при запуске и выполнении, которые обычно выводятся на консоль.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.2"> </a>5.2 Инициализация ядра и опции загрузки</h3>
+   </div></div></div>
+   <p>В процессе запуска ядро Linux инициализируется в следующем общем порядке:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Проверка ЦПУ.</p>
+	 </li><li class="listitem">
+      <p>Проверка оперативной памяти.</p>
+	 </li><li class="listitem">
+      <p>Обследование шины устройств.</p>
+	 </li><li class="listitem">
+      <p>Обследование устройств.</p>
+	 </li><li class="listitem">
+      <p>Установка вспомогательных подсистем ядра (сетевой среды и т.п.).</p>
+	 </li><li class="listitem">
+      <p>Монтирование корневой файловой системы.</p>
+	 </li><li class="listitem">
+      <p>Запуск пространства пользователя.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Первые шаги не слишком впечатляющие, однако, когда ядро приступает к устройствам, возникают вопросы зависимостей. Например, драйверы дисковых 
+   устройств могут зависеть от поддержки шины и поддержки подсистемы SCSI.</p>
+   <p>Позже в процессе инициализации ядро должно смонтировать корневую файловую систему перед запуском 
+   <span class="emphasis"><em><code>init</code></em></span>. Обычно вы не должны беспокоиться об этом, за исключением случаев, когда некоторые 
+   специальные компоненты могут быть загружаемыми модулями ядра, а не частью главного ядра. В некоторых машинах мы должны загрузить эти 
+   модули ядра перед монтированием настоящей файловой системы ядра. Мы обсудим эту проблему и решения обходных путей начальной файловой системы 
+   в оперативной памяти в разделе <a class="link" href="Ch06.html#06.8" target="_top">6.8 Файловая система на диске в оперативной памяти для начальной 
+   инициализации</a>.</p>
+   <p>На момент написания книги ядро не выдавало специальных сообщений когда оно собиралось свой первый процесс пользователя. Тем не менее, 
+   последующие сообщения об управлении памятью являются хорошим показателем того, что должна произойти передача пользовательского пространства, 
+   это то место, в котором ядро защищает свою собственную область памяти от процессов пространства пользователя.</p>
+	   <pre class="screen">
+Freeing unused kernel memory: 740k freed
+Write protecting the kernel text: 5820k
+Write protecting the kernel read-only data: 2376k
+NX-protecting the kernel data: 4420k
+	   </pre>
+   <p>Также вы можете увидеть сообщение о том, что в данной точке смонтирована корневая файловая система.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Skip"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Можете не стесняться и пропустить оставшуюся часть, перескочив вперёд к <a class="link" href="Ch06.html" target="_top">Главе 6</a>. 
+	   Остаток данной главы подробно описывает как стартует ядро.</p></td></tr></table>
+     </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.3"> </a>5.3 Параметры ядра</h3>
+   </div></div></div>
+   <p>При выполнении ядра Linux начальный загрузчик передаёт набор текстовых <span class="emphasis"><em>параметров ядра</em></span>, которые 
+   сообщают ядру как оно должно запускаться. Эти параметры описывают много различных вариантов поведения, например, объём диагностического 
+   вывода, которое должно создавать ядро, а также параметры специфические для драйверов устройств.</p>
+   <p>Вы можете увидеть параметры ядра для загрузки вашей системы просмотрев файл <span class="emphasis"><em><code>/proc/cmdline</code></em></span>:</p>
+	   <pre class="screen">
+$ cat /proc/cmdline
+BOOT_IMAGE=/boot/vmlinuz-3.2.0-67-generic-pae root=UUID=70ccd6e7-6ae6-44f6-812c-51aab8036d29 ro quiet splash vt.handoff=7
+	   </pre>
+   <p>Параметр является либо флагом из одного слова, например, <span class="term"><code>ro</code></span> или 
+   <span class="term"><code>quiet</code></span>, или парой <span class="emphasis"><em><code>key=value</code></em></span>, наподобие
+   <span class="term"><code>vt.handoff=7</code></span>. Многие параметры не очень важны, например флаг <span class="term"><code>splash</code></span>
+   для отображения рекламного экрана, однако одним из критических является параметр <span class="term"><code>root</code></span>. Это 
+   местоположение корневой файловой системы; без него ядро не сможет найти <span class="emphasis"><em><code>init</code></em></span> и, тем более, 
+   выполнить запуск пространства пользователя.</p>
+   <p>Корневая файловая система может быть определена как файловое устройство, подобно данному примеру:</p>
+	   <pre class="screen">
+root=/dev/sda1
+	   </pre>
+   <p>Однако в большинстве современных настольных систем более распространены UUID (см. раздел <a class="link" href="Ch04.html#04.2.4" 
+   target="_top">4.2.4 UUID файловой системы</a>):</p>
+	   <pre class="screen">
+root=UUID=70ccd6e7-6ae6-44f6-812c-51aab8036d29
+	   </pre>
+   <p>Параметр <span class="term"><code>ro</code></span> обычен; он указывает, что ядро должно смонтировать файловую ядра в режиме только для 
+   чтения, пока запускается пространство пользователя. (Режим только для чтения гарантирует, что <span class="term"><code>fsck</code></span> 
+   сможет безопасно проверить вашу корневую файловую систему; после проверки процесс загрузки перемонтирует корневую файловую систему в режиме
+   чтения- записи.)</p>
+   <p>Встретив неизвестный ему параметр, ядро Linux сохранит этот параметр. Позже ядро передаст это параметр 
+   <span class="emphasis"><em><code>init</code></em></span> при выполнении запуска пространства пользователя. Например, если вы добавите параметр 
+   <span class="term"><code>-s</code></span> в параметры ядра, ядро передаст <span class="term"><code>-s</code></span> программе 
+   <span class="emphasis"><em><code>init</code></em></span> для индикации того, что она должна запускаться в однопользовательском режиме.</p>
+   <p>Теперь давайте рассмотрим механизм того, как начальные загрузчики запускают ядро.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.4"> </a>5.4 Начальные загрузчики</h3>
+   </div></div></div>
+   <p>При запуске процесса загрузки, перед тем как начнут работать ядро и <span class="emphasis"><em><code>init</code></em></span>, 
+   начальный загрузчик запускает ядро. Задача начального загрузчика звучит просто: Он загружает ядро в память, а затем запускает ядро 
+   с набором параметров ядра. Однако рассмотрим вопросы, на которые должен ответить начальный загрузчик:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Где находится ядро?</p>
+	 </li><li class="listitem">
+	 <p>Какие параметры должны быть переданы ядру при его запуске?</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Ответы (обычно) состоят в том, что ядро и его параметры обычно находятся где-то в корневой файловой системе. Это звучит так, что 
+   параметры ядра должны быть легко найдены, за исключением того, что ядро ещё пока не работает, следовательно оно не может обойти 
+   файловую систему для поиска необходимых файлов. Хуже того, драйверы устройств ядра, обычно применяемые для доступа к диску также 
+   недоступны. Представляйте себе это как своего рода проблему &quot;курицы или яйца&quot;.</p>
+   <p>Давайте начнём с заботы о драйвере. В ПК начальные загрузчики используют для доступа к дискам 
+   <span class="emphasis"><em>BIOS</em></span> (Basic Input/Output System, базовая система ввода/ вывода) или 
+   <span class="emphasis"><em>UEFI</em></span> (Unified Extensible Firmware Interface, унифицированного расширяемого интерфейса встраиваемого ПО).
+   Почти все аппаратные диски имеют вcтроенное ПО (firmware) которое делает возможным доступ BIOS к подключённому устройству хранения 
+   через <span class="emphasis"><em>LBA</em></span> (Linear Block Addressing {<span class="emphasis"><em>Прим. пер.: так в исходном 
+   тексте, в данном контексте более принята расшифровка Logical Block Addressing, логическая адресация блоков</em></span). Хотя он и 
+   демонстрирует худшую производительность, этот режим доступа делает возможным универсальный доступ к дискам. Зачастую начальные 
+   загрузчики единственные программы, применяющие BIOS для доступа к диску; ядро применяет свои собственные высокопроизводительные 
+   драйверы.</p>
+   <p>Вопрос с файловой системой более изощрённый. Большинство современных начальных загрузчиков могут читать таблицы разделов и имеют 
+   встроенную поддержку для доступа в режиме только для чтения к файловым системам. Таким образом они могут найти файлы для чтения. 
+   Такая возможность делает намного более лёгкой динамическую настройку и расширение начального загрузчика. Начальный загрузчик Linux 
+   не всегда имеет такую возможность; в её отсутствии настройка начального загрузчика была более сложной.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.4.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.4.1 Задачи начального загрузчика</span></h4>
+    </div></div></div>
+    <p>Сердцевина начального загрузчика Linux функционально содержит возможность выполнения следующего:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Выбор между множеством ядер.</p>
+	 </li><li class="listitem">
+	 <p>Переключение между наборами параметров ядра.</p>
+	 </li><li class="listitem">
+	 <p>Позволяет пользователю вручную переписывать и изменять имена образа ядра и параметры (например, для входа в однопользовательский 
+	 режим).</p>
+	 </li><li class="listitem">
+	 <p>Предоставляет поддержку для загрузки других операционных систем.</p>
+	 </li>
+    </ul>
+    </div>
+    <p>Начальные загрузчики стали намного более продвинутыми с момента создания ядра Linux, получив такую функциональность как история 
+	и меню систем, однако основная потребность всегда заключалась в гибкости выбора образа ядра и параметров. Одним из интересных феноменов 
+	заключается в том, что определённые потребности уменьшились. Например, поскольку вы теперь можете выполнять аварийную загрузку или 
+	загрузку для восстановления частично или полностью с запоминающего устройства USB, вам, вероятно, не придётся беспокоиться о вводе 
+	параметров ядра вручную или входя в однопользовательский режим. Но современные начальные загрузчики предлагают большую мощность чем 
+	когда- либо, что может быть очень удобно, если вы создаёте собственные ядра или просто хотите выполнять тонкую настройку параметров.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.4.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.4.2 Обзор начального загрузчика</span></h4>
+    </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. Почти универсальный стандарт в системах Linux.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>LILO</code></strong></span>. Один из первых загрузчиков Linux. 
+	 <span class="term"><code>ELILO</code></span> это версия <span class="term"><code>UEFI</code></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>SYSLINUX</code></strong></span> Может быть настроен и работать во многих 
+	 различных файловых системах.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>LOADLIN</code></strong></span>. Загружает ядро из MS-DOS.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>efilinux</code></strong></span>. Начальный загрузчик 
+	 <span class="term"><code>UEFI</code></span> предназначен в качестве модели и справки для других загрузчиков
+	 <span class="term"><code>UEFI</code></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>coreboot</code></strong></span> (первоначально
+	 <span class="term"><strong class="userinput"><code>LinuxBIOS</code></strong></span>). Высокопроизводительная замена для PC BIOS, 
+	 которая может включать ядро.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Linux Kernel EFISTUB</code></strong></span> 
+	 Подключаемый модуль (plugin) ядра для загрузки ядра непосредственно из раздела системы <span class="term"><code>EFI/UEFI</code></span> 
+	 (<span class="term"><code>ESP</code></span>, <span class="term"><code>EFI/UEFI</code></span> System Partition).</p>
+	 </li>
+    </ul>
+    </div>
+    <p>Данная книга рассматривает исключительно <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. Рациональным 
+	объяснением применения других начальных загрузчиков является то, что они либо проще в настройке чем 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, либо быстрее.</p>
+    <p>Чтобы ввести имя ядра и параметры, вы для начала должны знать как получить приглашение на ввод при загрузке. К сожалению, это иногда 
+	не просто понять, так как дистрибутивы Linux настраивают поведение и появление начального загрузчика по своему усмотрению.</p>
+    <p>Следующий раздел расскажет вам как получить приглашение на ввод начального загрузчика чтобы ввести имя ядра и параметры. Когда 
+	вы освоитесь с этим, вы узнаете как настроить и установить начальный загрузчик.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.5"> </a>5.5 Введение в GRUB</h3>
+   </div></div></div>
+   <p><span class="emphasis"><em><code>GRUB</code></em></span> является сокращением <span class="emphasis"><em>GRand Unified Boot 
+   Loader</em></span>. Мы будем рассматривать <span class="term"><strong class="userinput"><code>GRUB 2</code></strong></span>; также 
+   существует более старая версия, ныне называемая <span class="term"><strong class="userinput"><code>GRUB Legacy</code></strong></span>, 
+   которая медленно прекращает свой век.</p>
+   <p>Одна из наиболее важных возможностей <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> состоит в 
+   возможности навигации файловой системы, которая делает возможной более быстрый выбор образа ядра и настроек. Один из лучших способов 
+   увидеть это и понять в общих деталях <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> заключается в
+   просмотре его меню. Интерфейс прост для навигации, однако существует хорошая возможность больше никогда не увидеть его. Дистрибутивы 
+   Linux обычно прикладывают усилия к тому, чтобы скрыть начальный загрузчик от вас.</p>
+   <p>Для доступа к меню <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> нажмите и удерживайте 
+   <span class="term"><code>SHIFT</code></span> при первом появлении вашего экрана запуска BIOS или fimware. В противном случае начальный 
+   загрузчик может не сделать паузу перед загрузкой вашего ядра. <a class="link" href="#Fig0501" target="_top">Рисунок 5.1</a> 
+   отображает меню <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. Нажмите 
+   <span class="term"><code>ESC</code></span> для временного запрета автоматического таймаута загрузки после возникновения меню
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>.</p>
+   <div class="figure"><a id="Fig0501"> </a>
+    <p class="title"><strong>Рисунок 5.1. Меню GRUB</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+    <img src="figures/Fig0501.jpg" width="708" height="462"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Для обследования начального загрузчика попробуйте следующее:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Перезагрузите или включите вашу систему Linux.</p>
+	 </li><li class="listitem">
+      <p>Придерживайте нажатой клавишу <span class="term"><code>SHIFT</code></span> в процессе самотестирования BIOS/ firmware и/ или 
+	  рекламного окна для получения меню <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Нажмите <span class="term"><code>e</code></span> для просмотра команд настройки начального загрузчика для параметров загрузки 
+	  по умолчанию. Вы должны увидеть что-то подобное <a class="link" href="#Fig0502" target="_top">Рисунку 5.2</a>.</p>
+	 </li>
+	 </ol>
+   </div>
+   <div class="figure"><a id="Fig0502"> </a>
+    <p class="title"><strong>Рисунок 5.2. Редактор настроек GRUB</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+    <img src="figures/Fig0502.jpg" width="707" height="479"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Данный рисунок сообщает нам, что для текущей настройки корень установлен с применением UUID, образом ядра является 
+   <span class="emphasis"><em><code>/boot/vmlinuz-3.2.0-31-generic-pae</code></em></span>, а параметры ядра содержат
+   <span class="term"><code>ro</code></span>, <span class="term"><code>quiet</code></span> и <span class="term"><code>splash</code></span>.
+   Начальной файловой системой в оперативной памяти является <span class="emphasis"><em><code>/boot/initrd.img-3.2.0-31-generic-pae</code></em></span>.
+   Однако вы никогда не встречали такой вид настроек ранее, вы можете находить их несколько обескураживающими. Почему существует 
+   множество ссылок для <span class="term"><code>root</code></span> и почему они различные? Зачем здесь 
+   <span class="term"><code>insmod</code></span>? Разве это свойство ядра Linux не может работать обычным образом с помощью
+   <span class="term"><code>udevd</code></span>?</p>
+   <p>Размышления гарантированы, потому что <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> на 
+   самом деле не <span class="emphasis"><em><code>использует</code></em></span> ядро Linux - он  
+   <span class="emphasis"><em><code>запускает</code></em></span> его. Настройка, которую вы видите, целиком состоит из внутренних команд 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> в действительности совершенно иной мир.</p>
+   <p>Путаница происходит из- за того, что <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> 
+   заимствует терминологию из многих источников. <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> имеет 
+   своё собственное &quot;ядро&quot; и свою собственную команду <span class="term"><code>insmod</code></span> для динамической загрузки 
+   модулей <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, полностью независимую от ядра Linux. Многие команды 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> аналогичны командам оболочки Unix; даже существует команда 
+   <span class="term"><code>ls</code></span> для просмотра файлов.</p>
+   <p>Однако наибольшую путаницу привносит использование слова <span class="emphasis"><em><code>root</code></em></span>. Чтобы сделать его 
+   ясным существует одно простое правило, которому нужно следовать при поиске вашей корневой файловой системы: 
+   <span class="emphasis"><em><code>Единственный</code></em></span> корневой параметр <span class="emphasis"><em><code>ядра</code></em></span> 
+   будет корневой файловой системой при загрузке вашей системы.</p>
+   <p>В вашей настройке <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> этот параметр ядра находится где- то 
+   после имени образа вашей команды <span class="term"><code>linux</code></span>. Все другие ссылки на <span class="term"><code>root</code></span>
+   в вашей настройке являются ссылками на корень <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, который 
+   существует внутри <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. &quot;root&quot; 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> это файловая система, в которой 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> осуществляет поиск файлов ядра и образа файловой системы в 
+   оперативной памяти.</p>
+   <p>На <a class="link" href="#Fig0502" target="_top">Рисунке 5.2</a> корнем <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>
+   является первая установка на устройство специфичное для <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> 
+   (<span class="term"><code>hd0</code></span>, <span class="term"><code>msdos1</code></span>). Затем, в следующей команде, 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> осуществляет поиск определённого UUID в разделе. Если он находит 
+   этот UUID, он устанавливает корень <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> на этот раздел.</p>
+   <p>Чтобы обернуть эти вещи, первый аргумент <span class="term"><code>/boot/vmlinuz-...</code></span> команды 
+   <span class="term"><code>linux</code></span> является местоположением файла образа вашего ядра Linux. 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> загружает этот файл из корня 
+   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. Команда <span class="term"><code>initrd</code></span> 
+   аналогична, предписывая файл для вашей начальной файловой системы в оперативной памяти.</p>
+   <p>Вы можете изменять эту настройку внутри <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>; выполнение этого 
+   обычно самый простой способ временно исправлять неверную загрузку. Чтобы исправить проблему загрузки на постоянной основе, вам необходимо 
+   изменить ваши настройки (см. <a class="link" href="Ch05.html#05.5.2" target="_top">5.5.2 Настройка GRUB</a>), однако сейчас давайте 
+   опустимся на уровень ниже и проверим некоторые внутренние свойства <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> 
+   при помощи интерфейса командной строки.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.5.1 Изучение устройств и разделов при помощи командной строки GRUB</span></h4>
+    </div></div></div>
+    <p>Как вы можете увидеть на <a class="link" href="#Fig0502" target="_top">Рисунке 5.2</a>, 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span> имеет свою собственную схему адресации устройств. Например, 
+	первый найденный жёсткий диск это <span class="term"><code>hd0</code></span>, за которым следует <span class="term"><code>hd1</code></span> 
+	и так далее. Однако назначение устройств является предметом для изменения. К счастью, <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> 
+	может просматривать все разделы на предмет UUID для обнаружения того, где расположено ядро, как вы уже видели, при помощи команды 
+	<span class="term"><code>search</code></span>.</p>
+
+	<p class="title"><strong>Вывод списка устройств</strong></p>
+    <p>Чтобы почувствовать как <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> ссылается на устройства в вашей 
+	системе, получите доступ к командной строке <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> нажав 
+	<span class="term"><code>C</code></span> в меню загрузки или редакторе настроек. Вы должны получить приглашение
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>:</p>
+	   <pre class="screen">
+grub&gt;
+	   </pre>
+    <p>Здесь вы можете увидеть любую из команд, которые вы видели в настройке, однако для начала попробуем вместо этого диагностическую 
+	команду <span class="term"><strong class="userinput"><code>ls</code></strong></span>. В отсутствии параметров вывод будет списком 
+	известных <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> устройств:</p>
+	   <pre class="screen">
+grub&gt; ls
+(hd0) (hd0,msdos1) (hd0,msdos5)
+	   </pre>
+    <p>В этом случае существует одно основное дисковое устройство обозначенное как <span class="term"><code>(hd0)</code></span> и 
+	разделы <span class="term"><code>(hd0, msdos1)</code></span> и <span class="term"><code>(hd0, msdos5)</code></span>. Префикс 
+	<span class="emphasis"><em>msdos</em></span> в имени раздела сообщает вам что диск содержит таблицу разделов 
+	<a class="link" href="https://ru.wikipedia.org/wiki/Главная_загрузочная_запись" target="_top">MBR</a>; для 
+	<a class="link" href="https://ru.wikipedia.org/wiki/Таблица_разделов_GUID" target="_top">GPT</a> имя должно начинаться с 
+	<span class="emphasis"><em>gpt</em></span>. (Вы найдёте даже более глубокие комбинации с третьим идентификатором, в котором метка диска BSD 
+	отвечает расположенное внутри раздела, однако обычно вам не следует беспокоиться об этом пока вы не работаете со множеством 
+	операционных систем на одной машине.)</p>
+    <p>Для получения более подробной информации воспользуйтесь <span class="term"><code>ls -l</code></span>. Эта команда может быть 
+	особенно полезной, поскольку она отображает все UUID разделов на вашем диске. Например:</p>
+	   <pre class="screen">
+grub&gt; ls -l
+Device hd0: Not a known filesystem - Total size 426743808 sectors
+       Partition hd0,msdos1: Filesystem type ext2 – Last modification time
+         2015-09-18 20:45:00 Friday, UUID 4898e145-b064-45bd-b7b4-7326b00273b7 -
+Partition start at 2048 - Total size 424644608 sectors
+       Partition hd0,msdos5: Not a known filesystem - Partition start at
+         424648704 - Total size 2093056 sectors
+	   </pre>
+    <p>Этот определённый диск имеет файловую систему Linux ext2/3/4 в первом разделе MBR, а также подпись swap Linux на разделе 5, что является 
+	довольно распространённой конфигурацией. (Хотя из данного вывода вы не можете сказать что <span class="term"><code>(hd0, msdos5)</code></span>
+	является разделом свопа.)</p>
+
+	<p class="title"><strong>Перемещение по файлам</strong></p>
+    <p>Теперь давайте рассмотрим возможности <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> навигации по 
+	файловой системе. Определим корень <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> при помощи 
+	команды <span class="term"><code>echo</code></span> (напомним, что это то место, где 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span> ожидает найти ваше ядро):</p>
+	   <pre class="screen">
+grub&gt; echo $root
+hd0,msdos1
+	   </pre>
+    <p>Чтобы применить команду <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> 
+	<span class="term"><code>ls</code></span> для вывода списка ваших файлов и каталогов в этом корне, вы можете добавить левую косую 
+	черту в конце раздела:
+	</p>
+	   <pre class="screen">
+grub&gt; ls (hd0,msdos1)/
+	   </pre>
+    <p>Однако это головная боль запоминать тип действующего корневого раздела, поэтому применяйте переменную <span class="term"><code>root</code></span>
+	для некоторого сохранения собственного времени:</p>
+	   <pre class="screen">
+grub&gt; ls ($root)/
+	   </pre>
+    <p>Вывод состоит из короткого списка файлов и каталогов, например, <span class="term"><code>etc/</code></span>, 
+	<span class="term"><code>bin/</code></span> и <span class="term"><code>dev/</code></span>. Вам следует понимать, что теперь это совсем другая 
+	функция <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> 
+	<span class="term"><code>ls</code></span>: Ранее вы перечисляли устройства, таблицы разделов и, возможно, некоторую заголовочную информацию 
+	файловой системы. Теперь вы на самом деле просматриваете содержимое файловой системы.</p>
+    <p>Вы можете заглянуть глубже в свои файлы и каталоги в разделе аналогичным образом. Например, чтобы исследовать каталог 
+	<span class="term"><code>/boot</code></span>, начните со следующего:</p>
+	   <pre class="screen">
+grub&gt; ls ($root)/boot
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="ArrowsInGRUB"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Применяйте клавиши стрелок вверх и вниз для переключения по истории команд 
+	   <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, а стрелки влево и вправо для изменение текущей командной 
+	   строки. Также работают стандартные клавиши чтения строки (CTRL-N, CTRL-P и тому подобное).</p></td></tr></table>
+     </div>
+    <p>Также вы можете просмотреть все текущие установки переменных <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> 
+	при помощи команды <span class="term"><code>set</code></span>:</p>
+	   <pre class="screen">
+grub&gt; set
+?=0
+color_highlight=black/white
+color_normal=white/black
+--snip--
+prefix=(hd0,msdos1)/boot/grub
+root=hd0,msdos1
+	   </pre>
+    <p>Одной из наиболее важных среди этих переменных является <span class="term"><code>$prefix</code></span>, имя файловой системы и 
+	каталога, где <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> ожидает найти свои настройку и вспомогательную
+	поддержку. Мы рассмотрим это в следующем разделе.</p>
+    <p>По завершению работы с интерфейсом командной строки <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>,
+	введите команду <span class="term"><strong class="userinput"><code>boot</code></strong></span> для загрузки вашей текущей настройки или 
+	просто нажмите <span class="term"><strong class="userinput"><code>ESC</code></strong></span> для возврата в меню 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. В любом случае, загрузите вашу систему; мы собираемся 
+	исследовать настройку <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, а это лучше сделать когда в вашем 
+	распоряжении вся система.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.5.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.5.2 Настройка GRUB</span></h4>
+    </div></div></div>
+    <p>Каталог настройки <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> содержит централизованный файл 
+	настроек (<span class="emphasis"><em><code>grub.cfg</code></em></span>) и ряд загружаемых модулей с суффиксом 
+	<span class="emphasis"><em><code>.mod</code></em></span>. (По мере развития версий 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span> данные модули будут перемещаться в подкаталоги подобные
+	<span class="emphasis"><em><code>i386-pc</code></em></span>.)  Обычно каталог именуется <span class="emphasis"><em><code>/boot/grub</code></em></span>
+	или <span class="emphasis"><em><code>/boot/grub2</code></em></span>. Мы не изменяем <span class="emphasis"><em><code>grub.cfg</code></em></span>
+	напрямую; вместо этого мы применяем команду <span class="term"><code> grub-mkconfig</code></span> (или 
+	<span class="term"><code>grub2-mkconfig</code></span> для Fedora).</p>
+
+	<a id="05.5.2.1"> </a>
+	<p class="title"><strong>Обзор Grub.cfg</strong></p>
+    <p>Для начала давайте бегло рассмотрим на <span class="emphasis"><em><code>grub.cfg</code></em></span> чтобы понять как 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span> выполняет инициализацию своего меню и параметров ядра. 
+	Вы увидите, что файл <span class="emphasis"><em><code>grub.cfg</code></em></span> состоит из команд 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, которые обычно начинаются с ряда шагов инициализации, 
+	за которыми обычно следуют серии записей для различных ядер и загрузочных конфигураций. Инициализация не является сложной; это 
+	группа определений функций и команд настроек видео навроде:</p>
+	   <pre class="screen">
+if loadfont /usr/share/grub/unicode.pf2 ; then
+set gfxmode=auto
+load_video
+insmod gfxterm
+--snip--
+	   </pre>
+    <p>Далее в этом файле мы должны увидеть доступные конфигурации загрузок, причём каждая начинается с команды 
+	<span class="term"><code>menuentry</code></span>. Вы должны быть в состоянии прочитать и понять данный пример на основе полученных 
+	в предыдущем разделе знаний:</p>
+	   <pre class="screen">
+menuentry 'Ubuntu, with Linux 3.2.0-34-generic-pae' --class ubuntu --class gnu-linux --class gnu
+--class os {
+       recordfail
+       gfxmode $linux_gfx_mode
+       insmod gzio
+       insmod part_msdos
+       insmod ext2
+       set root='(hd0,msdos1)'
+       search --no-floppy --fs-uuid --set=root 70ccd6e7-6ae6-44f6-812c-51aab8036d29
+       linux /boot/vmlinuz-3.2.0-34-generic-pae root=UUID=70ccd6e7-6ae6-44f6-812c-51aab8036d29
+         ro quiet splash $vt_handoff
+       initrd /boot/initrd.img-3.2.0-34-generic-pae
+}
+	   </pre>
+    <p>Отыщем команду <span class="term"><code>submenu</code></span>. Если ваш файл <span class="emphasis"><em><code>grub.cfg</code></em></span> 
+	содержит множество команд <span class="term"><code>menuentry</code></span>, большинство из них вложены вовнутрь команд
+	<span class="term"><code>submenu</code></span> для более старых версий ядра, так что они не смогут показаться в меню 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>.</p>
+
+	<p class="title"><strong>Генерация нового файла настроек</strong></p>
+    <p>Если вы хотите внести изменения в свои настройки <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, 
+	вам не нужно изменять напрямую файл <span class="emphasis"><em><code>grub.cfg</code></em></span>, поскольку он генерируется автоматически
+	и система время от времени переписывает его. Вам нужно добавлять новые настройки где-то в другом месте, после чего выполнить 
+	<span class="term"><code>grub-mkconfig</code></span> для генерации новой конфигурации.</p>
+    <p>Чтобы рассмотреть как работает генерация новой конфигурации, взглянем на самое начало 
+	<span class="emphasis"><em><code>grub.cfg</code></em></span>. В нём должна присутствовать строка комментария, подобная следующей:</p>
+	   <pre class="screen">
+### BEGIN /etc/grub.d/00_header ###
+	   </pre>
+    <p>При последующем рассмотрении вы обнаружите, что все файлы в <span class="emphasis"><em><code>/etc/grub.d</code></em></span> 
+	являются сценариями оболочки, которые составляют куски файла <span class="emphasis"><em><code>grub.cfg</code></em></span>. 
+	Команда <span class="term"><code>grub-mkconfig</code></span> сама по себе является сценарием оболочки, который выполняет всё в 
+	<span class="emphasis"><em><code>/etc/grub.d</code></em></span>.</p>
+    <p>Попробуйте её в качестве корня. (Не беспокойтесь по поводу перезаписывания текущих настроек. Эта команда сама по себе просто 
+	осуществляет выдачу на стандартный вывод.)</p>
+	   <pre class="screen">
+# grub-mkconfig
+	   </pre>
+    <p>Что если вы хотите добавить элементы меню и прочие команды в свою настройку 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>? Короткий ответ состоит в том, что вам следует поместить 
+	ваши персональные установки в новый файл <span class="emphasis"><em><code>custom.cfg</code></em></span> в вашем каталоге настроек 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>, например,
+	<span class="emphasis"><em><code>/boot/grub/custom.cfg</code></em></span>.</p>
+    <p>Длинный ответ несколько сложнее. Каталог настроек <span class="emphasis"><em><code>/etc/grub.d</code></em></span> предоставляет вам 
+	два параметра: <span class="emphasis"><em><code>40_custom</code></em></span> и <span class="emphasis"><em><code>41_custom</code></em></span>. 
+	Первый, <span class="emphasis"><em><code>40_custom</code></em></span>, является сценарием, который вы можете изменять самостоятельно, 
+	однако это скорее всего менее стабильно; обновление пакета с большой вероятностью может разрушить ваши изменения. Сценарий 
+	<span class="emphasis"><em><code>41_custom</code></em></span> более простой; это всего лишь последовательность команд, которая загружает 
+	<span class="emphasis"><em><code>custom.cfg</code></em></span> при запуске 
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span>. (Имейте в виду, что если вы выберете этот второй параметр, 
+	ваши изменения не появятся при генерации вашего файла настроек.)</p>
+    <p>Два варианта пользовательских файлов настроек - не особенно большой выбор. В <span class="emphasis"><em><code>/etc/grub.d</code></em></span> 
+	своего определённого дистрибутива вы найдете добавления. Например, Ubuntu добавляет в настройки загрузочный параметр проверки памяти 
+	(<span class="term"><code>memtest86+</code></span>).</p>
+    <p>Чтобы написать и установить заново сгенерированный файл настроек <span class="term"><strong class="userinput"><code>GRUB</code></strong></span>,
+	вы можете записать свои настройки в ваш каталог <span class="term"><strong class="userinput"><code>GRUB</code></strong></span> с 
+	параметром <span class="term"><code>-o</code></span> для <span class="term"><code>grub-mkconfig</code></span>, например, так:</p>
+	   <pre class="screen">
+# grub-mkconfig -o /boot/grub/grub.cfg
+	   </pre>
+    <p>Или, если вы пользователь Ubuntu, просто выполните <span class="term"><code>install-grub</code></span>. В любом случае, сделайте 
+	резервную копию вашей старой конфигурации, проверьте что вы установили правильный каталог и тому подобное.</p>
+    <p>Теперь мы собираемся получить некоторые дополнительные технические подробности  
+	<span class="term"><strong class="userinput"><code>GRUB</code></strong></span> и начальных загрузчиках. Если вы устали слушать про 
+	начальные загрузчики и ваше ядро, вы свободны перейти к <a class="link" href="Ch06.html" target="_top">Главе 6</a>.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.5.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.5.3 Установка GRUB</span></h4>
+    </div></div></div>
+    <p>Установка GRUB более запутанная чем её настройка. К счастью вам обычно нет причины беспокоиться об установке, поскольку дистрибутив 
+	должен отработать это для вас. Однако, если вы пытаетесь дублировать или восстановить ваш загружаемый диск или подготовить свою 
+	собственную последовательность загрузки, вам может понадобиться установить его самостоятельно.</p>
+    <p>Перед выполнением ознакомьтесь с <a class="link" href="Ch05.html#05.8.3" target="_top">5.8.3 Как работает GRUB</a> чтобы получить 
+	представление о том как загружается ПК и определяет применяете вы загрузку MBR или EFI. Далее постройте свой набор программного 
+	обеспечения GRUB и определите где будет ваш каталог GRUB; по умолчанию это <span class="emphasis"><em><code>/boot/grub</code></em></span>.
+	Вам может не понадобиться строить GRUB, если ваш дистрибутив сделал это для вас, однако если это понадобится, ознакомьтесь с
+	<a class="link" href="Ch16.html" target="_top">Главой 16</a> для того чтобы ознакомиться как построить программное обеспечение 
+	из исходного кода. Убедитесь, что вы построили правильного получателя: Загрузка различна для MBR и UEFI (и даже существует разница 
+	для 32- битного и 64- битного EFI).</p>
+	
+	<a id="05.5.3.1"> </a>
+    <p class="title"><strong>Установка GRUB на вашей системе</strong></p>
+    <p>Установка начального загрузчика требует чтобы вы или установщик определили следующее:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Целевой каталог GRUB после проверки вашей работающей в настоящее время системой. Обычно это <span class="emphasis"><em><code>/boot/grub</code></em></span>,
+	 однако он может отличаться, если вы устанавливаете GRUB на другой диск для применения другой операционной системой.</p>
+	 </li><li class="listitem">
+	 <p>Текущее устройство вашего целевого диска GRUB.</p>
+	 </li><li class="listitem">
+	 <p>Для загрузки UEFI текущую точку монтирования вашего загрузочного раздела UEFI</p>
+	 </li>
+    </ul>
+    </div>
+    <p>Помните, что GRUB является модульной системой, однако чтобы загружать модули он должен читать файловую ту систему, которая содержит каталог 
+	GRUB. Ваша задача состоит в построении версии GRUB способной читать такую файловую систему чтобы он смог загружать оставшуюся часть своей 
+	конфигурации (<span class="emphasis"><em><code>grub.cfg</code></em></span>) и все необходимые модули. В Linux это обычно означает построение версии 
+	GRUB с предварительно загружаемым модулем <span class="emphasis"><em><code>ext2.mod</code></em></span>. Если у вас есть такая версия, всё что вам 
+	нужно сделать это поместить его в загружаемую часть вашего диска, а оставшуюся часть необходимых файлов в 
+	<span class="emphasis"><em><code>/boot/grub</code></em></span>.</p>
+    <p>К счастью GRUB поставляется с утилитой, называемой <span class="term"><code>grub-install</code></span> (не путайте с утилитой Ubuntu
+	<span class="term"><code>install-grub</code></span>), которая выполнит большую часть работы по установке файлов GRUB и их настройке для вас.
+	Например, если ваш текущий диск <span class="emphasis"><em><code>/dev/sda</code></em></span> и вы хотите установить GRUB наэтот диск в ваш 
+	текущий каталог <span class="emphasis"><em><code>/boot/grub</code></em></span>, воспользуйтесь этой командой для установки GUB в свой MBR:</p>
+	   <pre class="screen">
+# grub-install /dev/sda
+	   </pre>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+      <p>Неверно установленный GRUB может прервать последовательность загрузки в вашей системе, поэтому не выполняйте эту команду необдуманно. 
+	  Если вы беспокоитесь об этом, прочитайте как сделать резервную копию  вашего MBR при помощи <span class="emphasis"><em><code>dd</code></em></span>, 
+	  выполните резервное копирование всех прочих установленных в настоящее время каталогов GRUB и убедитесь что у вас есть запасной план загрузки.</p>
+	  </td></tr></table>
+     </div>
+
+	<a id="05.5.3.2"> </a>
+	<p class="title"><strong>Установка GRUB на внешнее устройство хранения</strong></p>
+    <p>Для установки GRUB на устройство вне пределов вашей текущей системы вы должны вручную определить каталог GRUB на этом устройстве как его 
+	в настоящий момент видит ваша система. Например, скажем, у вас есть устройство назначения <span class="emphasis"><em><code>/dev/sdc</code></em></span>
+	и root/boot файловая система этого устройства (например, <span class="emphasis"><em><code>/dev/sdc1</code></em></span>) смонтирована в 
+	<span class="emphasis"><em><code>/mnt</code></em></span> вашей текущей системе. Это подразумевает, что когда вы установите GRUB, 
+	ваша текущая система будет видеть файлы GRUB в <span class="emphasis"><em><code>/mnt/boot/grub</code></em></span>. При выполнении 
+	<span class="term"><code>grub-install</code></span> где должны быть эти файлы следующим образом:</p>
+	   <pre class="screen">
+# grub-install --boot-directory=/mnt/boot /dev/sdc
+	   </pre>
+
+	<a id="05.5.3.3"> </a>
+	<p class="title"><strong>Установка GRUB c UEFI</strong></p>
+    <p>Предполагается, что установка UEFI проводится легче, потоиу что всё что вам требуется, это скопировать начальный загрузчик на своё место.
+	Однако вам также необходимо &quot;представить&quot; начальный загрузчик firmware при помощи команды <span class="term"><code>efibootmgr</code></span>.
+	Команда <span class="term"><code>grub-install</code></span> выполнит это по возможности, поэтому в теории всё что вам нужно сделать для 
+	установки в раздел UEFI это:<p></p>
+	   <pre class="screen">
+# grub-install --efi-directory=efi_dir –-bootloader-id=name
+	   </pre>
+    <p>Здесь <span class="term"><code>efi_dir</code></span> это место где появится каталог UEFI в вашей системе (обычно 
+	<span class="emphasis"><em><code>/boot/efi/efi</code></em></span>, так как раздел UEFI обычно монтируется в
+	<span class="emphasis"><em><code>/boot/efi</code></em></span>), а <span class="term"><code>name</code></span> является идентификатором 
+	для вашего начального загрузчика, который описан в <a class="link" href="Ch05.html#05.8.2" target="_top">5.8.2 Загрузка UEFI</a>.</p>
+    <p>К сожалению, при установке начального загрузчика UEFI может обнаружиться много проблем. Например, если вы выполняете установку на 
+	диск, которая в конечном счёте завершится в другой системе, вы должны определить как представить этот начальный загрузчик 
+	firmware этой новой системы. К тому же существуют различия в процедуре установки для удаляемого носителя.</p>
+    <p>Однако одной из самых больших проблем является безопасная загрузка UEFI.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.6"> </a>5.6 Проблемы безопасной загрузки UEFI</h3>
+   </div></div></div>
+   <p>Одна из новейших проблем, влияющих на установки Linux заключается в функциональности безопасной загрузки введённой на последних ПК. 
+   Когда он включен, этот механизм UEFI требует чтобы начальный загрузчик был подписан цифровой подписью заверенной авторизацией для 
+   выполнения. Microsoft потребовал от поставщиков, отгружающих Windows 8 применять безопасную загрузку. В результате если вы попытаетесь 
+   установить не подписанный начальный загрузчик (что наблюдается в большинстве современных дистрибутивов Linux), он не будет работать, </p>
+   <p>Самый простой способ обхода этого для всех, кому не нужен Windows, состоит в запрете безопасной загрузки в установках UEFI. Однако, 
+   это не будет аккуратно работать в системах с двойной загрузкой и может устраивать не всех пользователей. Таким образом, дистрибутивы 
+   Linux предлагают подписанные начальные загрузчики. Некоторые решения являются просто интерфейсом для GRUB, некоторые предлагают полностью
+   подписанную последовательность  загрузки (от начального загрузчика до ядра системы), а остальные  являются полностью новыми начальными 
+   загрузчиками (некоторые основаны на efilinux).</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.7"> </a>5.7 Последовательная загрузка других операционных систем</h3>
+   </div></div></div>
+   <p>UEFI делает относительно простой поддержку загрузки других операционных систем, поскольку вы можете установить множество начальных 
+   загрузчиков в своём разделе UEFI. Однако, старый стиль MBR не поддерживает их и, даже если у вас есть UEFI, вам всё ещё может 
+   требоваться персональный раздел для начального загрузчика в MBR стиле, который вы хотите применять. Вы можете получить загрузку и выполнение
+   различных начальных загрузчиков через GRUB в определённом разделе на вашем диске посредством <span class="emphasis"><em>chainloading</em></span>
+   (вереницы загрузок).</p>
+   <p>Для вереницы загрузок создайте новую запись меню в вашей настройке GRUB (используя один из методов, описанных в <a class="link" 
+   href="Ch05.html#05.5.2.1" target="_top">Обзор Grub.cfg</a>). Вот пример для установки Windows в ваш третий раздел диска:</p>
+	   <pre class="screen">
+menuentry &quot;Windows&quot; {
+	insmod chain
+	insmod ntfs
+	set root=(hd0,3)
+	chainloader +1
+}
+	   </pre>
+   <p>Параметр <span class="emphasis"><em>+1</em></span> для <span class="emphasis"><em>chainloading</em></span> сообщает ей загрузить всё из 
+   первого сектора раздела. Вы также можете получить от него непосредственную загрузку файла при помощи строки подобной этой для загрузки
+   загрузчика MS DOS <span class="emphasis"><em><code>io.sys</code></em></span>:
+   </p>
+	   <pre class="screen">
+menuentry &quot;DOS&quot; {
+	insmod chain
+	insmod fat
+	set root=(hd0,3)
+	chainloader /io.sys
+}
+	   </pre>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.8"> </a>5.8 Подробности начальной загрузки</h3>
+   </div></div></div>
+   <p>Теперь мы быстро рассмотрим некоторую внутреннюю организацию начального загрузчика. Если этот материал вам не интересен, вы 
+   свободно можете пропустить его.</p>
+   <p>Для понимания того как работают начальные загрузчики подобные GRUB, давайте вначале обследуем как загружается ПК после того как 
+   вы его включаете. Из- за повторяющихся несоответствий требованиям традиционных механизмов загрузки ПК существуют различные вариации, 
+   однако двумя основными схемами являются MBR и UEFI.</p>
+ 
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.8.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.8.1 Загрузка MBR</span></h4>
+    </div></div></div>
+    <p>В дополнение к информации о разделах, изложенной в разделе <a class="link" href="Ch04.html#04.1" target="_top">4.1 Разбиение 
+	на разделы дисковых устройств</a>, запись главной загрузки (<span class="emphasis"><em>MBR, Master Boot Record</em></span>) 
+	содержит небольшую область (441 байт), которую ваш PC BIOS загружает и выполняет после самотестирования после включения 
+	(<span class="emphasis"><em>POST, Power-On Self-Test</em></span>). К сожалению, это очень маленькое хранилище для размещения 
+	практически любого начального загрузчика, поэтому необходимо дополнительное пространство, что в результате приводит к тому, 
+	что называется многоэтапной начальной загрузкой (<span class="emphasis"><em>multi-stage boot loader</em></span>). В этом случае 
+	начальный кусочек кода в вашем MBR не делает ничего иного, кроме как загрузку остального кода начального загрузчика. Остальная 
+	часть начального загрузчика обычно набивается в пространство между MBR и первым разделом вашего диска.</p>
+    <p>Конечно, это страшно опасно, поскольку любой может переписать здесь код, однако большинство начальных загрузчиков делают это, 
+	включая большинство установок GRUB. Кроме того эта схема не работает с диском разделённым GPT, применяющим для загрузки BIOS, так как 
+	информация таблицы GPT располагается в области сразу после MBR. (GPT оставляет традиционный MBR в одиночестве для обратной 
+	совместимости.)</p>
+    <p>Обходной путь для GPT состоит в создании небольшого раздела с названием (<span class="emphasis"><em>BIOS boot partition</em></span>) 
+	со специальным UUID для предоставления места размещения полного кода начального загрузчика. Однако GPT обычно применяется с UEFI, а 
+	не с традиционными BIOS, что приводит нас к схеме загрузки UEFI.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.8.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.8.2 Загрузка UEFI</span></h4>
+    </div></div></div>
+    <p>Производители ПК и компании программного обеспечения осознали что традиционный PC BIOS является строго ограниченным, поэтому решили 
+	разработать замещение, названное Расширенным интерфейсом встроенных программ (<span class="emphasis"><em>EFI, Extensible Firmware 
+	Interface</em></span>). EFI потребовалось некоторое время чтобы охватить большинство ПК, но теперь он наиболее распространён. Текущим
+	стандартом является <span class="emphasis"><em>UEFI,Unified EFI</em></span>, который включает такую функциональность как встроенная 
+	оболочка и возможность читать таблицы разделов и перемещаться по файловым системам. Схема разделов GPT является частью стандарта UEFI.</p>
+    <p>В UEFI системах загрузка совершенно другая и, в большей части, намного легка для понимания. Вместо располагающегося за пределами 
+	файловой системы исполняемого загрузочного кода всегда существует специализированная файловая система, называемая разделом системы EFI
+	(<span class="emphasis"><em>ESP, EFI System Partition</em></span>), которая содержит каталог с именем 
+	<span class="emphasis"><em>efi</em></span>. Каждый начальный загрузчик имеет собственный идентификатор и соответствующий подкаталог, наприер,
+	<span class="emphasis"><em>efi/microsoft</em></span>, <span class="emphasis"><em>efi/apple</em></span> или 
+	<span class="emphasis"><em>efi/grub</em></span>. Файл начального загрузчика имеет расширение <span class="emphasis"><em>.efi</em></span>
+	и располагается внутри одного из этих подкаталогов, совместно с другими файлами поддержки.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="ArrowsInGRUB"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>ESP отличаются от раздела загрузки BIOS описанного в <a class="link" href="Ch05.html#05.8.1" target="_top">5.8.1 Загрузка MBR</a>
+	   и имеет другой UUID.</p></td></tr></table>
+     </div>
+    <p>Однако, существует препятствие: Вы не можете просто разместить старый начальный загрузчик в ESP, так как этот код написан для 
+	интерфейса BIOS. Вместо этого вы обязаны предоставлять начальный загрузчик, написанный для UEFI. Например, для применения 
+	GRUB вам нужно установить UEFI версию GRUB вместо версии BIOS. Кроме того, вы должны &quot;представить&quot; (announce) новый 
+	начальный загрузчик своему firmware.</p>
+    <p>И, как уже упоминалось в разделе <a class="link" href="Ch05.html#05.6" target="_top">5.6 Проблемы безопасной загрузки UEFI</a> у нас 
+	имеется проблема &quot;безопасной загрузки&quot;.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05.8.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">5.8.3 Как работает GRUB</span></h4>
+    </div></div></div>
+    <p>Давайте завершим наше обсуждение GRUB обзором того как он делает свою работу:</p>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>PC BIOS или firmware инициализируют оборудование и осуществляют поиск своего устройства хранения загрузки для кода загрузки.</p>
+	 </li><li class="listitem">
+      <p>Обнаружив код вашей начальной загрузки, BIOS/ firmware загружает и исполняет его. Здесь начинается GRUB.</p>
+	 </li><li class="listitem">
+      <p>Загружается ядро GRUB.</p>
+	 </li><li class="listitem">
+      <p>Ядро инициализируется. В данной точке GRUB может теперь обращаться к дискам и файловым системам.</p>
+	 </li><li class="listitem">
+      <p>GRUB определяет свой загрузочный раздел и загружает оттуда настройку.</p>
+	 </li><li class="listitem">
+      <p>GRUB предоставляет пользователю возможность изменить настройку.</p>
+	 </li><li class="listitem">
+      <p>По истечению таймаута или по действию пользователя, GRUB выполняет эту настройку (последовательность команд, обрисованных в 
+	  <a class="link" href="Ch05.html#05.5.2" target="_top">5.5.2 Настройка GRUB</a>).</p>
+	 </li><li class="listitem">
+      <p>В ходе выполнения настройки GRUB может загружать дополнительный код (<span class="emphasis"><em>module</em></span>) из своего 
+	  раздела загрузки.</p>
+	 </li><li class="listitem">
+      <p>GRUB выполняет команду <span class="term"><code>boot</code></span> для загрузки и выполнения ядра, как предписано конфигурацией 
+	  команды <span class="term"><code>linux</code></span>.</p>
+	 </li>
+    </ol>
+    </div>
+    <p>Шаги 3 и 4 предыдущей последовательности, на которых загружается ядро GRUB могут быть осложнены из- за повторяющихся несоответствий 
+	требованиям традиционных механизмов загрузки ПК. Самый большой вопрос: &quot;Где <span class="emphasis"><em>находится</em></span>
+	ядро GRUB?&quot; Существует три основные возможности:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Частично впихнуто между MBR и самым началом вашего первого раздела</p>
+	 </li><li class="listitem">
+	 <p>В обычном разделе</p>
+	 </li><li class="listitem">
+	 <p>В специальном разделе загрузки: GPT разделе загрузки, ESP (EFI System Partition) или ещё где- то</p>
+	 </li>
+    </ul>
+    </div>
+    <p>Во всех случаях за исключением того, когда у вас имеется ESP, PC BIOS загружает 512 байт из MBR и это то место, с которого 
+	стартует GRUB. Этот небольшой кусочек (извлекаемый из <span class="emphasis"><em>boot.img</em></span> в вашем каталоге GRUB) ещё не 
+	является ядром, но он содержит местоположение начала своего ядра и загружает ядро из этого места.</p>
+    <p>Однако, если у вас есть ESP, ядро GRUB находится там в виде файла. Firmware может перемещаться по ESP и непосредственно исполнять 
+	ядро GRUB илилюбой другой загрузчик операционной системы, расположенный здесь.</p>
+    <p>Тем не менее, в большинстве систем это не законченная картина. Начальному загрузчику может также понадобиться загрузить образ 
+	начальной файловой системы RAM в оперативную память перед загрузкой и исполнением определённого ядра. Это то, что определяет 
+	параметр настройки <span class="term"><code>initrd</code></span> в <a class="link" href="Ch06.html#06.8" target="_top">6.8 Файловая 
+	система на диске в оперативной памяти для начальной инициализации</a>. Однако перед изучением файловой системы на диске в 
+	оперативной памяти для начальной инициализации вам необходимо изучить запуск пользовательского пространства - это то, с чего 
+	начинается следующая глава.</p>
+   </div>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

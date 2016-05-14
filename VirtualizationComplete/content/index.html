@@ -1,0 +1,885 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Proxmox, pfSense, freeNAS, Zentyal, VPN authentication, IDS, Rsync, iSCSI, CIFS, NFS, LVM, ZFS, QEMU, KVM, LXC, Snort, fencing, Disaster Recovery, small footprint virtualization, hardware pass-through, e1000, BSD, Wireshark, Nagios, OpenVPN">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Полная виртуализация. Базовая коммерческая редакция: Proxmox-freeNAS-Zentyal-pfSense</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="VirtualizationComplete"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Предельно пошаговый атлас для Proxmox в реальном мире...!!! Узнайте секреты построения пуленепробиваемой инфраструктуры виртуальной ИТ. Данная 4-в-1 коллекция применяет преимущества и стоимостную эффективность открытого кода Linux, предоставляя законченное решение в простом пошаговом формате. Все программные компоненты этой системы проверены временем в промышленности и были выбраны потому что они НАИЛУЧШИЕ в своем деле. Данный атлас достаточно прост для только начинающих работать с Linux и достаточно серъёзен для ИТ профессионалов! Выберите свою модель системы, а затем она будет быстро развернута для вас по полным схемам и со ВСЕМИ необходимыми элементами командной строки!"/>
+<link rel="home" href="index.html" title="Полная виртуализация. Базовая коммерческая редакция. Proxmox-freeNAS-Zentyal-pfSense"/>
+<link rel="prev" href="Ch0A.html" title="Заключительные материалы"/>
+<link rel="next" href="Ch01.html" title="Книга 1. Proxmox VE"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "virtualization-complete";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/VirtualizationComplete/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Полная виртуализация. Базовая коммерческая редакция: Proxmox-freeNAS-Zentyal-pfSense';
+PrevRef = 'Ch0A.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="VirtualizationComplete"/>Полная виртуализация. Базовая коммерческая редакция: Proxmox-freeNAS-Zentyal-pfSense</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Ли Р. Сюрбер</span>
+   </div>
+  </div>
+ </div>
+<div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p class="title"><strong><a id="BookDescription"> </a>Описание книги</strong></p>
+  <p>Предельно пошаговый атлас для Proxmox в реальном мире...!!! Узнайте секреты построения пуленепробиваемой инфраструктуры виртуальной ИТ. 
+  Данная 4-в-1 коллекция применяет преимущества и стоимостную эффективность открытого кода Linux, предоставляя законченное решение 
+  в простом пошаговом формате. Все программные компоненты этой системы проверены временем в промышленности и были выбраны потому что 
+  они НАИЛУЧШИЕ в своем деле. Данный атлас достаточно прост для только начинающих работать с Linux и достаточно серъёзен для ИТ профессионалов! 
+  Выберите свою модель системы, а затем она будет быстро развернута для вас по полным схемам и со ВСЕМИ необходимыми элементами командной строки!</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Воспользуйтесь преимуществами гипервизора голого металла <span class="term"><strong class="userinput">Proxmox</strong></span> для 
+	 развёртывания полностью модульного высокопроизводительного фундамента!</p>
+	 </li><li class="listitem">
+	 <p>Замените дорогостоящие компоненты Cisco легко переносимыми виртуальными управляемыми сетевыми терминалами 
+	 <span class="term"><strong class="userinput">pfSense</strong></span>.</p>
+	 </li><li class="listitem">
+	 <p>Узнайте как устанавливать высокопроизводительные, обладающие резервированием, полу-виртуальные файловые сервера 
+	 <span class="term"><strong class="userinput">freeNAS</strong></span> с исполняемой на них само-восстанавливающейся файловой системой ZFS.</p>
+	 </li><li class="listitem">
+	 <p>Замените Microsoft active directory надежными первичным и резервным серверами каталогов <span class="term"><strong class="userinput">Zentyal</strong></span>.</p>
+	 </li><li class="listitem">
+	 <p>Дополнительное содержание охватывает VPN авторизацию на основе каталогов, IDS, Rsync, iSCSI, NFS, LVM, резервное копирование снимков ZFS, 
+	 пробрасывание аппаратных средств, 10 минутное восстановление после отказов, лучший опыт и многое другое!</p>
+	 </li><li class="listitem">
+	 <p>Возьмите под свой полный контроль всё оборудование в серверной стойке посредством управления через веб- средства поверх безопасного 
+	 VPN.</p>
+	 </li>
+    </ul>
+    </div>
+	<p><span class="emphasis"><em>Полная виртуализация</em></span> (<span class="term"><strong class="userinput"><em class="emphasis">Virtualization 
+	Complete</em></strong></span>) является <span class="term"><strong class="userinput">ЕДИНСТВЕННЫМ</strong></span> набором, способным 
+	предложить такое всеобъемлющее и работающее бизнес решение!</p>
+ </div>
+</div></div><hr/></div>
+
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a>Авторские права</h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2016 Linux Solutions(LRS-TEK)</p>
+  <p>Первая публикация на английском языке: 31 января 2016</p>
+<p>Все права защищены. Никакая часть данной публикации не может быть воспроизведена, распространена или передана в любой форме или любыми средствами, 
+или храниться в системе базы данных или извлечения без предварительного письменного разрешения опубликовавшей стороны.</p>
+<p>Linux Solutions(LRS-TEK)</p>
+<p>3000 CR 615</p>
+<p>Alvarado, TX 76009</p>
+<p>Email: lee.surber@linuxsolutions.us</p>
+<p>Посетите наш вебсайт: http://www.linuxsolutions.us</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2016 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.tiltedwindmillpress.com/?p=502" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     TWP
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2016-02-13</p>
+</div>
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+   <dt><span class="chapter"><a href="index.html">Вводные материалы</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="index.html#BookDescription">Описание книги</a></span></dt>
+    <dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+    <dt><span class="section"><a href="index.html#0001">.1 Введение</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="index.html#000101">.1.1 Для кого разработана эта книга?</a></span></dt>
+      <dt><span class="section"><a href="index.html#000102">.1.2 Что вы изучите!</a></span></dt>
+      <dt><span class="section"><a href="index.html#000103">.1.3 Основные свойства</a></span></dt>
+      <dt><span class="section"><a href="index.html#000104">.1.4 Насколько легко это всё установить?</a></span></dt>
+      <dt><span class="section"><a href="index.html#000105">.1.5 Какие дистрибутивы Linux используются в данной системе?</a></span></dt>
+      <dt><span class="section"><a href="index.html#000106">.1.6 Я не знаю Linux! Он слишком сложен!</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="index.html#0002">.2 Прежде чем вы начнете</a></span></dt>
+    <dt><span class="section"><a href="index.html#0003">.3 Опыт из практики</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="index.html#000301">.3.1 Совмещённые серверы</a></span></dt>
+      <dt><span class="section"><a href="index.html#000302">.3.2 Восстановление после аварий</a></span></dt>
+      <dt><span class="section"><a href="index.html#000303">.3.3 KVM предпочтительнее</a></span></dt>
+      <dt><span class="section"><a href="index.html#000304">.3.4 Виртуализация с малыми отпечатками</a></span></dt>
+      <dt><span class="section"><a href="index.html#000305">.3.5 Кластеризация</a></span></dt>
+      <dt><span class="section"><a href="index.html#000306">.3.6 Максимизация производительности</a></span></dt>
+      <dt><span class="section"><a href="index.html#000307">.3.7 Схемы систем</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch01.html">Книга 1. Proxmox VE</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#0101">1.1 Введение в Proxmox</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0102">1.2 Установка Proxmox</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0103">1.3 Первичная регистрация</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0104">1.4 Сетевые адаптеры</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0105">1.5 Администрирование хранилища LVM</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0106">1.6 Настройка хранилища LVM</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0107">1.7 Настройка хранилища NFS</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0108">1.8 Настройка хранилища iSCSI</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0109">1.9 Создание настроек ВМ</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0110">1.10 Резервное копирование и восстановление ВМ</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0111">1.11 Аппаратные средства ВМ</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0112">1.12 Добавление прокидываемых ВМ</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0113">1.13 Сложности Proxmox</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0114">1.14 Обновление Proxmox</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch02.html">Книга 2. pfSense</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch02.html#0201">2.1 Введение в pfSense</a></span></dt>
+    <dt><span class="section"><a href="Ch02.html#0202">2.2 Установка pfSense</a></span></dt>
+    <dt><span class="section"><a href="Ch02.html#0203">2.3 Назначение сетевых интерфейсов</a></span></dt>
+    <dt><span class="section"><a href="Ch02.html#0204">2.4 Назначение IP адресов</a></span></dt>
+    <dt><span class="section"><a href="Ch02.html#0205">2.5 Сброс пароля администратора</a></span></dt>
+    <dt><span class="section"><a href="Ch02.html#0206">2.6 Мастер веб- настройки</a></span></dt>
+    <dt><span class="section"><a href="Ch02.html#0207">2.7 Смена тем</a></span></dt>
+    <dt><span class="section"><a href="Ch02.html#0208">2.8 Настройка сервера DHCP</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#020801">2.8.1 WINS, DNS, шлюз и домен</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#020802">2.8.2 Резервирование клиента DHCP</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch02.html#0209">2.9 Настройки межсетевого экрана</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#020901">2.9.1 Правила LAN</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#020902">2.9.2 Правила WAN</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch02.html#0210">2.10 OpenVPN</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#021001">2.10.1 Утилита экспорта клиента OpenVPN</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021002">2.10.2 Мастер настройки OpenVPN</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021003">2.10.3 Соединения клиента OpenVPN</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021004">2.10.4 Аутентификация пользователей домена Zentyal</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch02.html#0211">2.11 Snort IDS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#021101">2.11.1 Установка пакета Snort</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021102">2.11.2 Глобальные настройки Snort</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021103">2.11.3 Интерфейсы Snort</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021104">2.11.4 Обновление правил угроз</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021105">2.11.5 Категории правил угроз</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021106">2.11.6 Добавление оповещений в список блокировок</a></span></dt>
+      <dt><span class="section"><a href="Ch02.html#021107">2.11.7 Блокировка источника нарушения правил</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch02.html#0212">2.12 Резервные копии настроек</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch03.html">Книга 3. freeNAS</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch03.html#0301">3.1 Отказы обычных хранилищ</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0302">3.2 freeNAS и ZFS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0303">3.3 Установка freeNAS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0304">3.4 Пробрасываение дисков freeNAS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0305">3.5 Настройка системы хранения без резервного копирования</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0306">3.6 Запуск freeNAS из консоли</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0307">3.7 Первоначальная регистрация</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0308">3.8 Навигация по freeNAS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0309">3.9 Настройка сетевой среды</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0310">3.10 Пользователи и группы</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#031001">3.10.1 Добавление нового пользователя</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031002">3.10.2 Добавление новой группы</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch03.html#0311">3.11 Добавление тома ZFS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0312">3.12 Отсоединение и перемещение томов</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0313">3.13 Наборы данных ZFS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0314">3.14 Полномочия ZFS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0315">3.15 Службы freeNAS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#031501">3.15.1 Служба CIFS (совместное использование в Windows)</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031502">3.15.2 Служба NFS (совместное использование в Linux)</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031503">3.15.3 Служба таргетов iSCSI</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031504">3.15.4 Служба Rsync (резервное копиование)</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031505">3.15.5 Служба SSH (безопасная оболочка)</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch03.html#0316">3.16 Добавление совместных ресурсов</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#031601">3.16.1 Совместные ресурсы NFS</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031602">3.16.2 Совместные ресурсы Windows</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031603">3.16.3 Совместно используемые таргеты iSCSI</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch03.html#0317">3.17 Резервные копии снимков ZFS</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0318">3.18 Восстановление снимков в Windows</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#0319">3.19 Репликации Rsync</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#031901">3.19.1 Добавление задания продвижения Rsync</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031902">3.19.2 Добавление модуля Rsync</a></span></dt>
+      <dt><span class="section"><a href="Ch03.html#031903">3.19.3 Советы по применению Rsync</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch03.html#0320">3.20 Членство в домене</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#032001">3.20.1 Полномочия в домене</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch03.html#0321">3.21 Резервные копии настроек</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch04.html">Книга 4. Контроллер домена Zentyal</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch04.html#0401">4.1 Введение в Zentyal</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0402">4.2 Установка Zentyal</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0403">4.3 Первичная регистрация</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0404">4.4 Начальные установки</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0405">4.5 Навигация по Zentyal</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0406">4.6 Добавление пользователей</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0407">4.7 Добавление групп</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0408">4.8 Дополнительный контроллер домена</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0409">4.9 Останов и перезагрузка</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0410">4.10 Обновление Zentyal</a></span></dt>
+    <dt><span class="section"><a href="Ch04.html#0411">4.11 Присоединение к домену Zentyal</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#041101">4.11.1 Аутентификация в рабочей группе</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#041102">4.11.2 Присоединение к домену Windows</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch04.html#0412">4.12 Резервные копии настроек</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch0A.html">Заключительные материалы</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch0A.html#0004">.4 Заключительные соображения и благодарности</a></span></dt>
+    <dt><span class="section"><a href="Ch0A.html#0005">.5 Дополнительные ресурсы</a></span></dt>
+   </dl></dd>
+ </dl>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0001"> </a>.1 Введение</h3>
+ </div></div></div>
+   <p>После десятилетия исследований и экспериментов данная книга раскроет секреты построения <span class="emphasis"><em>пуленепробиваемой</em></span>
+   инфраструктуры виртуального ИТ. Она применяет преимущества <span class="emphasis"><em>мощности</em></span> и <span class="emphasis"><em>стоимостной 
+   эффективности</em></span> открытых кодов Linux, предоставляя <span class="emphasis"><em>законченное 
+   решение в лёгком пошаговом формате</em></span>. В книгу также были включены полные <span class="emphasis"><em>схемы систем</em></span> для помощи 
+   в визуализации вашей системы! Все программные компоненты данной системы <span class="emphasis"><em>проверены временем</em></span> в 
+   <span class="emphasis"><em>промышленном</em></span> применении и были выбраны просто по той причине, что они 
+   <span class="term"><strong class="userinput">ЛУЧШИЕ</strong></span> в своём деле. Будучи идеально подогнанной к 
+   <span class="emphasis"><em>бизнес- среде</em></span>, это - <span class="term"><strong class="userinput">ЕДИНСТВЕННАЯ</strong></span> из доступных 
+   сегодня книг, которая предлагает столь завершенное и работающее решение!</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000101">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.1.1 Для кого разработана эта книга?</span></h4>
+    </div></div></div>
+    <p>Когда я писал эту книгу, я хотел сохранить её достаточно <span class="emphasis"><em>простой</em></span> для <span class="emphasis"><em>новичков 
+	в Linux</em></span> и в то же время достаточно концептуально <span class="emphasis"><em>серъзной</em></span> для <span class="emphasis"><em>ИТ 
+	профессионалов</em></span>, чтобы они тоже могли найти пользу. Обладая <span class="emphasis"><em>всеми</em></span> элементами командной строки и 
+	лёгкими для чтения схемами, <span class="term"><strong class="userinput">ЭТО ТОТ</strong></span> атлас, на который я надеялся, когда годы тому 
+	назад вступил в виртуальную инфраструктуру!</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000102">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.1.2 Что вы изучите!</span></h4>
+    </div></div></div>
+    <p>Сегодня существует очень много методик поваренных книг по виртуализации, которые могут быстро ошеломить вас. В конечном счёте это всё 
+	легко покрывается сложной системой, которая ещё и плохо работает. В центре внимания данной книги лежит сохранение установки и настройки 
+	как можно более простыми при сохранении очень высокого уровня производительности и надежности. По завершению чтения вы можете быть уверены 
+	в следующем:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Вы будете понимать установку и настройку много машинной мощной <span class="emphasis"><em>виртуальной инфраструктуры</em></span>
+	 Linux.</p>
+	 </li><li class="listitem">
+	 <p>Вы обучитесь тому, как установить виртуальную 30- секундную миграцию между серверами поддержку <span class="emphasis"><em>управляемую
+	 сетевыми терминалами/ маршрутизаторами</em></span>.</p>
+	 </li><li class="listitem">
+	 <p>Вы изучите как настраивать <span class="emphasis"><em>обнаружение непредусмотренных вторжений</em></span> на мировом уровне, которое 
+	 немедленно блокирует правонарушителей. Оно также содержит угрозы смартфонов и флэш- накопителей!</p>
+	 </li><li class="listitem">
+	 <p>Вы обучитесь тому, как установить <span class="emphasis"><em>первичный и резервный контроллеры домена</em></span> на основе Linux. 
+	 Эти контроллеры полностью совместимы с Microsoft Active Directory.</p>
+	 </li><li class="listitem">
+	 <p>Вы узнаете как настраивать <span class="emphasis"><em>VPN туннель</em></span> в вашем новом виртуальном маршрутизаторе.</p>
+	 </li><li class="listitem">
+	 <p>Вы ознакомитесь с тем как устанавливать <span class="emphasis"><em>аутентификацию в домене</em></span> для вашего виртуального 
+	 сервера <span class="emphasis"><em>VPN</em></span>.</p>
+	 </li><li class="listitem">
+	 <p>Вы изучите как устанавливать полу- виртуализованные <span class="emphasis"><em>свмещённые сервера</em></span> с применением 
+	 простых методов <span class="emphasis"><em>проброса аппаратных средств</em></span>.</p>
+	 </li><li class="listitem">
+	 <p>Вы научитесь как настраивать <span class="emphasis"><em>избыточность файл- серверов</em></span> с применением преимуществ мощности 
+	 Rsync.</p>
+	 </li><li class="listitem">
+	 <p>Вы узнаете как настроить файловую систему <span class="emphasis"><em>ZFS с самовосстановлением</em></span> для 
+	 <span class="emphasis"><em>ZFS с самовосстановлением</em></span> устойчивых скоростей ввода/ вывода в пределах между 30 и 60
+	 <span class="emphasis"><em>МегаБайт в секунду</em></span> с применением Гигабитных адаптеров.</p>
+	 </li><li class="listitem">
+	 <p>Вы ознакомитесь как применять преимущества <span class="emphasis"><em>резервного копирования снимков ZFS</em></span> избегая 
+	 потребности в дорогостоящем программном обеспечении резервного копирования.</p>
+	 </li><li class="listitem">
+	 <p>Вы получите знания того, насколько <span class="emphasis"><em>ЛЁГКИМ</em></span> в действительности может быть ИТ администрирование!</p>
+	 </li>
+    </ul>
+    </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000103">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.1.3 Основные свойства</span></h4>
+    </div></div></div>
+    <p>Большинство людей не хотят или не приветствуют изменения, пока их <span class="emphasis"><em>преимущества</em></span> не станут
+	<span class="emphasis"><em>исключительно</em></span> положительными! Вы можете быть уверены в следующем:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Вы сохраните <span class="emphasis"><em>полную</em></span> <span class="emphasis"><em>совместимость</em></span> с 
+	 Microsoft.</p>
+	 </li><li class="listitem">
+	 <p>В большинстве случаев вы сможете применять <span class="emphasis"><em>существующее оборудование</em></span>.</p>
+	 </li><li class="listitem">
+	 <p>Вы получите даже бОльшую совместимость программного обеспечения.</p>
+	 </li><li class="listitem">
+	 <p>Вы <span class="emphasis"><em>НИКОГДА БОЛЬШЕ</em></span> не будете должны снова платить за лицензии.</p>
+	 </li><li class="listitem">
+	 <p>Вы сможете <span class="emphasis"><em>упростить</em></span> управление и <span class="emphasis"><em>уменьшить</em></span>
+	 ИТ персонал.</p>
+	 </li><li class="listitem">
+	 <p>Вы получите <span class="emphasis"><em>дополнительную безопасность</em></span> в отношении вторжений и атак.</p>
+	 </li><li class="listitem">
+	 <p>Вы обеспечите <span class="emphasis"><em>мобильную связность</em></span> с вашим офисом.</p>
+	 </li><li class="listitem">
+	 <p>Вы получите полное удалённое <span class="emphasis"><em>управление</em></span> на <span class="emphasis"><em>веб -основе</em></span>
+	 для всей вашей системы.</p>
+	 </li><li class="listitem">
+	 <p>Вы обеспечите себе <span class="emphasis"><em>моментальное резервное копирование</em></span>.</p>
+	 </li><li class="listitem">
+	 <p>Вы <span class="emphasis"><em>сохраните 90%</em></span> стоимости по отношению к традиционным системам.</p>
+	 </li>
+    </ul>
+    </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000104">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.1.4 Насколько легко это всё установить?</span></h4>
+    </div></div></div>
+    <p>Все компоненты в моей системе основаны на дистрибутивах ISO CD/DVD! Гуру Linux могут захотеть развернуть свои собственные системы, однако 
+	в этом нет никакой необходимости. Данный подход <span class="emphasis"><em>упрощает установку системы</em></span> и 
+	<span class="emphasis"><em>уменьшает необходимость в квалификации</em></span> для того чтобы поднять и запустить всё!</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000105">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.1.5 Какие дистрибутивы Linux используются в данной системе?</span></h4>
+    </div></div></div>
+    <p>После многих лет изучения и тестирования я выбрал следующие дистрибутивы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">Proxmox VE</strong></span> - для платформы виртуалтзации.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">pfSense</strong></span> - для маршрутизации, межесетевого экранирования, NAT 
+	 предотвращения вторжений и VPN.  {<span class="emphasis"><em>Прим. пер.: строго говоря, это BSD</em></span>}</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Zentyal Server</strong></span> - для active directory на основе Samba.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">freeNAS</strong></span> - для файлового хранения с применением надёжной файловой 
+	 системы ZFS {<span class="emphasis"><em>Прим. пер.: более точно, здесь используется FreeBSD</em></span>}.</p>
+	 </li>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000106">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.1.6 Я не знаю Linux! Он слишком сложен!</span></h4>
+    </div></div></div>
+    <p>Linux сложен! Даже профессионалам нужна справочная документация! По этой причине я <span class="emphasis"><em>включил</em></span>
+	все элементы <span class="emphasis"><em>командной строки</em></span>, которые могут вам понадобиться {<span class="emphasis"><em>Прим. пер.: 
+	за дополнительной информацией отсылаем вас к <a href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch12.html">How Linux Works, 
+	2nd Edition</a></em></span>}. Это на самом деле пошаговое руководство! Один из ключевых принципов в нём: <span class="emphasis"><em>оставить 
+	всё простым</em></span>! Виртуальные машины могут быть <span class="emphasis"><em>восстановлены за минуты</em></span>, если что- то 
+	пойдёт не так. Не т необходимости в сложных raid- устройствах или сетевых настройках! Вы можете чувствовать себя спокойно, так как по завершению 
+	у вас будет чрезвычайно надёжная высокопроизводительная система!</p>
+   </div>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0002"> </a>.2 Прежде чем вы начнете</h3>
+ </div></div></div>
+  <div class="itemizedlist">
+  <ul class="itemizedlist" type="disc">
+   <li class="listitem">
+    <p>Вам понадобится установленная на вашей рабочей станции копия PuTTY для какого- нибудь SSH сеанса изменений из командной строки после установки. 
+	Putty может быть загружена отсюда: <a class="link" href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html" target="_top">консоль 
+	PuTTY</a>.</p>
+   </li><li class="listitem">
+    <p>Вам понадобятся компьютеры, способные выполнять Proxmox. Я рекомендую выбрать наилучшие многоядерные машины, можно взять про запас, 
+	причём с оперативной памятью, по крайней мере 16-32ГБ. {<span class="emphasis"><em>Прим. пер.: удобнее считать в ГБ на ядро, 
+	расчёт 1ГБ на одно ядро можно применять на начальном этапе, однако 4-8ГБ на ядро предпочтительнее. Обратим ваше внимание на 
+	<a class="link" href="http://www.mdl.ru/Solutions/Put.htm?Nme=nscf2015" target="_top">пример реализации</a> в МФТИ, г. Долгопрудный, 
+	в декабре 2015г</em></span>}. Вам также понадобится несколько гигабитных сетевых адаптеров {<span class="emphasis"><em>Прим. пер.: а 
+	лучше хотя бы один-два 10GbE</em></span>} и несколько жестких дисков для хранения. Для хранения на сервере Proxmox было бы неплохо 
+	иметь от 2 до 6ТБ. {<span class="emphasis"><em>Прим. пер.: наличие 10GbE может помочь с экономией пространства - позволит обойтись 
+	SDRAM модулями (1-2) для загрузки сервера при использовании централизованного хранения для всего остального</em></span>}.</p>
+   </li><li class="listitem">
+    <p>Вам понадобится один или более неуправляемых сетевых гигабитных коммутаторов для надёжной высокоскоростной сетевой среды.
+	{<span class="emphasis"><em>Прим. пер.: понятно, что 10GbE лучше, но если вы стеснены в средствах, попробуйте хотя бы рассмотреть 
+	возможность приобретения коммутатора с веб-интерфейсом: разница в их стоимости по сравнению с неуправляемыми коммутаторами в последнее время
+	не столь значительна. Также рекомендуем обращать внимание на доброе имя производителя; вы приобретаете свою кровеносную систему, 
+	не будет здорово изначальное присутствие холестериновых бляшек в ней, да и о моторе с мозгами стоит подумать.</em></span>}</p>
+   </li><li class="listitem">
+    <p>Поскольку вы будете устанавливать на эти машины хранилище NAS, убедитесь, что у вас имеется достаточное количество дисков. 
+	Например, 1x 500ГБ диск для Proxmox, 1x 500ГБ диск для образов ВМ и 2x 2ТБ диск для проброса оборудования NAS. 
+	{<span class="emphasis"><em>Прим. пер.: не стоит гоняться за самыми ёмкими из доступных на текущий момент дисками: они будут не самыми 
+	эффективными по соотношению стоимости 1ГБ, а их само-восстановление (да, да: любое оборудование когда- то выходит из строя) займет 
+	гораздо больше времени из- за копирования по сети большего объёма данных. Во всём нужна золотая середина. Однако, за 
+	излишней дешевизной тоже гоняться не стоит: можно рекомендовать диски классом не хуже NL SATA/ RAID edition, NearLine = 
+	почти онлайн.</em></span>}</p>
+   </li><li class="listitem">
+    <p>Если вы хотите получить преимущества VPN вам понадобится интернет {<span class="emphasis"><em>Прим. пер.: правильнее на мой 
+	взгляд начать со связи с внешним миром, ну, да ладно... Здесь речь о привязке вашего IP к вашему доменному имени.</em></span>}. 
+	Большинство поставщиков интернет услуг выдают временные IP адреса соединений, применяют адаптивные порталы и аппаратную авторизацию 
+	2го уровня. Если ваш IP изменился... просто измените свою запись зоны DNS на новый IP. {<span class="emphasis"><em>Прим. пер.: как правило, 
+	производители маршрутизаторов для домашнего пользования автоматизируют эту процедуру посредством предоставления службы, 
+	обычно именуемой DDNS, DynDNS и т.п. - ознакомьтесь с руководством.</em></span>}</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Я рекомендую вам отключить все жёсткие диски и сетевые адаптеры за исключением диска операционной системы Proxmox и первичного 
+	   сетевого интерфейса. После установки вы подключите вновь эти жёсткие диски и сетевые адаптеры.</p></td></tr></table>
+     </div>
+   </li>
+  </ul>
+ </div>
+ <p></p>
+</div>
+
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0003"> </a>.3 Опыт из практики</h3>
+ </div></div></div>
+   <p>При написании данной книги мне пришлось принять решение где разместить этот раздел. Я <span class="emphasis"><em>настолько твёрдо</em></span> 
+   убежден в выбранных мной методах, что я решил охватить их здесь, прямо в начале. нет необходимости беспокоиться о том, что вы не поймёте 
+   некоторые из них сейчас! По мере вашего роста они будут вводиться повторно и поясняться дополнительно там, где в этом будет больше смысла!</p>
+   <p>На протяжении многих лет, по мере прогресса, я проводил тестирования и установки. Я пробовал высокую доступность, кластеризацию, внешние 
+   хранилища iSCSI, диски <a class="link" href="https://ru.wikipedia.org/wiki/Qcow2" target="_top">QCow</a> (Copy-On-Write) против сырых (Raw) 
+   против <a class="link" href="https://ru.wikipedia.org/wiki/VMDK" target="_top">VMDK</a>, OpenVZ в сопоставлении с KVM, драйверы virtio, этот 
+   перечень можно продолжить! <span class="emphasis"><em>В процессе пути я вынес несколько тяжёлых уроков!</em></span> Поэтому данный раздел 
+   посвящён советам и уловкам, которые сделают ваше развёртывание сверх-простым и максимизируют использование вашего оборудования! Итак, вперёд!</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000301">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.3.1 Совмещённые серверы</span></h4>
+    </div></div></div>
+    <p>Воспользуйтесь преимуществами современных аппаратных средств при построении совмещённых платформ! По сути вы строите хост виртуализации 
+	со <span class="emphasis"><em>встроенным сервером NAS на голом железе</em></span>. Вы устанавливаете NAS просто как любую другую виртуальную 
+	машину с её ОС размещённой на виртуальном диске. Действительные диски хранения расположены внутри массива LVM и назначаются при помощи 
+	техники, называемой <span class="term"><strong class="userinput">пробросом оборудования</strong></span>. Этот метод обеспечивает очень значительные 
+	производительности чтения/ записи данных! Я наблюдал непрерывные скорости пропускной способности в диапазоне 30-60 
+	<span class="term"><strong class="userinput">МегаБайт в секунду</strong></span> с применением гигабитных адаптеров.</p>
+    <p>Наибольшее преимущество состоит в том, что ваши данные <span class="term"><strong class="userinput">НЕ</strong></span> хранятся в 
+	файле виртуального диска! Даже если вы разрушите свою ВМ, <span class="emphasis"><em>данные останутся в сохранности</em></span>! Такой 
+	подход максимизирует использование ваших аппаратных ресурсов и делает управление, сопровождение и восстановление после сбоев 
+	<span class="term"><strong class="userinput">НАМНОГО</strong></span> легче!</p>
+    <p>Например: следующие сценарии должны помочь вам осознать стоимость и преимущества!</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">Сценарий 1</strong></span>: Предположим, у вас есть 2 сервера Proxmox, 2 NAS/SAN производителя 
+	 с Именем и 1 маршрутизатор производителя с Именем. Вы занимаете 5 мест в вашей стойке и вы не можете использовать 3 из этих места под что-то 
+	 ещё. Если NAS или маршрутизатор выйдут из строя из- за аппаратного сбоя, вы <span class="term"><strong class="userinput">БУДЕТЕ</strong></span> 
+	 простаивать как минимум <span class="term"><strong class="userinput">6-24 часов</strong></span>, если у вас есть точная копия вышедшего из 
+	 строя.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Сценарий 2</strong></span>: Допустим, у вас есть 5 серверов Proxmox не объединённых в кластер.
+	 Вы потребляете 5 мест в вашей стойке и каждое место может что- то вмещать! Нечто или всё из этого может совмещаться с применением транзита 
+	 дисков NAS и дополнительных сетевых адаптеров для маршрутизации. Если какая- либо из машин отказала, вы просто переносите NAS диски хранения с 
+	 возможностью горячей замены на следующий сервер Proxmox, выставляете соответствие пары Mac адресов сетевого адаптера для вашего маршрутизатора 
+	 и <span class="emphasis"><em>возвращаетесь назад к работе через 15 минут или даже меньше!</em></span> Также важно отметить, что данный метод НЕ 
+	 приводит в негодность Proxmox каким- либо образом по отношению к прочими ВМ, которые вы хотите установить, предоставляя вам достаточное число 
+	 дисков и сетевых ресурсов.</p>
+	 </li>
+    </ul>
+    </div>
+   </div> 
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000302">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.3.2 Восстановление после аварий</span></h4>
+    </div></div></div>
+    <p>Если какой- либо из ваших серверов выйдет из строя, единственным наиболее важным моментом для восстановления будет 
+	<span class="term"><strong class="userinput">НЕИЗМЕННОЕ</strong></span> наличие ваших <span class="emphasis"><em>резервных 
+	копий ВМ</em></span>. Считайте их Главными Образами Восстановления! Без них вы погибли, поэтому важно иметь так много копий, как это 
+	возможно! Моим предпочтением является выбрать некий NAS (виртуализованный или выделенный) для применения в качестве моего 
+	<span class="term"><strong class="userinput">первичного сервера</strong></span> <span class="emphasis"><em>резервных копий образов 
+	ВМ</em></span>. Этот сервер будет содержать NFS резервные копии образов, совместно используемые в Proxmox. Этот совместно используемый 
+	ресурс реплицируется вручную (только один раз в процессе установки) на все остальные сервера NAS в нашей системе и синхронизуется по 
+	расписанию с применением Rsync. {<span class="emphasis"><em>Прим. пер.: о ещё более совершенных методах резервного копирования ZFS, см.
+    <a class="link" href="http://onreader.mdl.ru/AdvancedZFS/content/Ch04.html" target="_top">Главу 4. Репликация</a> 
+	во второй книге Лукаса и Джуда по ZFS, вышедшей в апреле 2016.</em></span>}
+	Если машина выходит из строя, я могу заменить её, повторно установить Proxmox и все диски NAS, повторно 
+	установить соответствие моей резервной копии NFS и восстановить образы ВМ. Повторим: <span class="emphasis"><em>вы можете снова работать 
+	через 15 минут или даже меньше!</em></span> Этот метод всегда очень хорошо мне служил и выдержал как скала проверку временем!</p>
+    <p><span class="term"><strong class="userinput">ХРАНИТЕ КОПИЮ НА ФЛЕШКЕ:</strong></span> Другой настоятельно рекомендуемый совет 
+	состоит в сохранении ваших резервных копий образов ВМ на флешку или DVD с последующим помещением их в несгораемом сейфе. Вы можете 
+	легко отметить совместно используемыми samba для чтения резервные копии ваших образов ВМ для доступа к ним с машин windows и телефонов 
+	android. Применение описанного ниже метода малых отпечатков гарантирует, что весь ваш архив резервных копий образов ВМ легко поместится 
+	на современной флешке 64-128ГБ.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000303">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.3.3 KVM предпочтительнее</span></h4>
+    </div></div></div>
+    <p>Proxmox допускает два типа виртуализации, KVM и OpenVZ {<span class="emphasis"><em>Прим. пер.: начиная с Proxmox VE v.4x 
+	Open VZ заменён на LXC. <a class="link" href="http://onreader.mdl.ru/ProxmoxCookbook/content/Convert_OpenVZ_to_LXC.html" 
+	target="_top">подробнее...</a></em></span>}. Ключевое отличие между ними в том, что KVM полностью виртуализован, в то время как 
+	OpenVZ виртулизован частично {<span class="emphasis"><em>Прим. пер.: довольно свободная трактовка контейнеров: см, например,
+	<a class="link" href="http://onreader.mdl.ru/ProxmoxCookbook/content/Linux_Container.html" target="_top">LXC</a>,
+	<a class="link" href="http://onreader.mdl.ru/UsingDocker/content/Ch04.html" target="_top">Docker</a>,
+	<a class="link" href="https://ru.wikipedia.org/wiki/Parallels_Virtuozzo_Containers" target="_top">Virtuozzo</a>, а также  
+	<a class="link" href="https://ru.wikipedia.org/wiki/FreeBSD_Jail" target="_top">Jail</a></em></span>}. Хотя OpenVZ и выигрывает в 
+	производительности у KVM, во всём остальном она уступает. Мой выбор в исключительном применении KVM. Я всегда буду выбирать 
+	совместимость и простоту аварийного восстановления вместо производительности! Сегодня вы легко можете построить в одном охлаждаемом водой 
+	кристалле 8 или более ядер ЦПУ с оперативной памятью 32ГБ или даже более при реактивном ускорении!</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000304">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.3.4 Виртуализация с малыми отпечатками</span></h4>
+    </div></div></div>
+    <p>Предпочтительный для меня подход заключается в том, что я обозначаю как <span class="emphasis"><em>виртуализацией с малыми отпечатками</em></span> 
+	(small footprint virtualization). Предположим, у вас есть 2008 Windows Server с потребностью в хранении 500ГБ. Существует два подхода 
+	установки, причём оба будут работать!</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">Сценарий 1</strong></span>: Вы можете создать ВМ с виртуальными дискми общим объёмом 500ГБ. 
+	 При этом подходе вы найдёте большое число больших резервных копий образов, которые ещё и отнимают много времени на исполнение! Если вам 
+	 понадобится переместить или провести восстановление с использованием резервной копии образа, это также займёт много времени!</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Сценарий 2</strong></span>: При <span class="emphasis"><em>виртуализации с малыми 
+	 отпечатками</em></span> вы создаёте ВМ с виртуальным диском настолько малым, насколько это возможно, затем используете ресурсы с сетевой 
+	 поддержкой, например, <span class="emphasis"><em>iSCSI изнутри гостевой машины</em></span> для отображения дополнительного необходимого 
+	 пространства. Такой метод делает возможным сверхбыстрое резервное копирование и восстановление за счёт некоторых затрат производительности.</p>
+	 </li>
+    </ul>
+    </div>
+    <p>В промышленных средах гибкость <span class="emphasis"><em>виртуализации с малыми отпечатками</em></span> превосходит любые незначительные 
+	успехи в производительности. Это делает возможным быстрое резервное копирование и восстановление ВМ с отображениями большой ёмкости на 
+	другие физические машины. Это оказывается очень удобным если вам нужно вынуть машину для технического обслуживания.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000305">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.3.5 Кластеризация</span></h4>
+    </div></div></div>
+    <p>В этой книге я не охватываю кластеризацию, поскольку она <span class="term"><strong class="userinput">НЕ</strong></span> отвечает 
+	модели простоты. Кластеризация великолепна для управления большим количеством серверов через один интерфейс, однако она добавляет в систему 
+	сложность! Она также существенно полагается на хранилища с сетевой поддержкой, которые уменьшают уровни общей производительности ВМ в сравнении 
+	с установками на выделенное оборудование. При паднии кластера вы можете планировать всю ночь! Сохранение ваших серверов Proxmox вне кластера 
+	по- прежнему допускает большинство восстановлений, причем они продвигаются в пределах минут!</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000306">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.3.6 Максимизация производительности</span></h4>
+    </div></div></div>
+    <p>Следующий предпочтительный подход, которым я поделюсь на основе опыта: не должно быть никаких опасностей. Любая ВМ будет работать лучше 
+	если у нее есть <span class="emphasis"><em>выделенный</em></span> диск и <span class="emphasis"><em>оборудование</em></span> сетевой среды. 
+	Если вы можете иметь в избытке дополнительные диски и сетевые адаптеры - это настоятельно рекомендуется!</p>
+    <p>Я полагаю, что хорошим общим правилом будет допускать не более 2 гостевых ВМ на физическое устройство. Причем, одна будет гостем с низкой 
+	пропускной способностью, в то время как может быть более высокопроизводительной. Например: контроллер домена, обрабатывающий только 
+	аутентификацию легко может совмещать диск и сетевой адаптер с многодоменным сервером электронной почты. Многодоменный веб- сервер под нагрузкой 
+	может не очень хорошо совместно использовать ресурсы с файловым сервером.</p>
+    <p><span class="term"><strong class="userinput">SSD диски</strong></span>: У меня был очень удачный опыт работы до 6 ВМ с 
+	<span class="emphasis"><em>малыми отпечатками</em></span>, установленными только на одном SSD диске. При этом каждая из них имела свой 
+	выделенный сетевой адаптер!</p>
+    <p><span class="term"><strong class="userinput">В ПРОМЫШЛЕННЫХ РЕШЕНИЯХ ИЗБЕГАЙТЕ ХРАНИЛИЩ С СЕТЕВОЙ ПОДДЕРЖКОЙ</strong></span>: Хранилища 
+	такого типа обычно применяются большими компаниями для сотен серверов, причём скорость интернета является сдерживающим фактором, а скачкообразно 
+	меняющаяся производительность ожидается динамичной. Они зависят от различных протоколов, таких как GlusterFS, RBD, iSCSI и NFS. Из всех 
+	перечисленных протокол <span class="term"><strong class="userinput">iSCSI</strong></span> на сегодняшний день наиболее распространён для 
+	реализаций с размерами от малых до средних. Хотя <span class="term"><strong class="userinput">iSCSI</strong></span> работает и очень полезен 
+	для сред отладки, его производительность <span class="term"><strong class="userinput">НЕ</strong></span> на одном уровне с установками на
+	<span class="emphasis"><em>локально выделенное оборудование</em></span>. За 10 летний период я испробовал 
+	<span class="term"><strong class="userinput">ВСЕ</strong></span> мыслимые конфигурации в средах с <span class="term"><strong 
+	class="userinput">ОЧЕНЬ</strong></span> солидными ресурсами! Моё заключение: Если вы <span class="term"><strong class="userinput">ДОЛЖНЫ</strong></span> 
+	устанавливать ВМ с сетевой поддержкой, то это только потому, что вам не удалось построить вашу систему с достаточной системой хранения или 
+	у вас не достаточное число доступных серверов Proxmox! Если вы собираетесь отображать iSCSI таргеты, делайте это 
+	<span class="emphasis"><em>изнутри гостевой ВМ</em></span>, работающей на выделенных аппаратных средствах! У вас будет достаточная 
+	производительность и вы <span class="term"><strong class="userinput">ПОЛУЧИТЕ</strong></span> чрезвычайное управление резервным копированием
+	и восстановлением.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="000307">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">.3.7 Схемы систем</span></h4>
+    </div></div></div>
+    <p><a id="Case0001"> </a><strong>Приводимая ниже схема отображает систему с 3 совмещёнными серверами Proxmox. Она разработана для максимального использования ресурсов за счёт
+	применения <span class="term"><strong class="userinput">ВСЕХ</strong></span> доступных физических машин! <span class="term"><strong 
+	class="userinput">КАЖДАЯ</strong></span> виртуальная машина устанавливается на <span class="emphasis"><em>выделенный</em></span> диск и 
+	сетевое оборудование для наилучшей производительности работы. Установка ВМ на поддерживаемые сетью хранилища (iSCSI и NFS) может всё ещё 
+	для временных потребностей с более низкой производительностью.</p>
+	<div class="figure"><a id="Fig0001"> </a>
+	 <p class="title">Вариант-1</strong></p>
+	 <div class="figure-contents"><div class="mediaobject">
+	 <img src="figures/Fig0001.jpg" width="516" height="588"/><br />
+	 <span></span>
+	 </div></div>
+	</div><br class="figure-break"/>
+	<p class="title"><strong>Роль freeNAS-1 в системе (вариант-1)</strong></p>
+    <p>В данной системе <span class="term"><strong class="userinput">freeNAS-1</strong></span> установлен в качестве первичного файлового 
+	сервера NAS. Он поддерживает для ваших сетевых клиентов обычные Windows(CIFS), Linux(NFS), носители, а также ftp. Он также будет размещать 
+	данные, относящиеся (НИКАКИХ ДИСКОВ РЕЗЕРВНОГО КОПИРОВАНИЯ) iSCSI таргеты для <span class="emphasis"><em>отображения изнутри гостевых 
+	операционных систем</em></span>. Все совместные ресурсы реплицированы вручную при установке на <span class="term"><strong 
+	class="userinput">freeNAS-2</strong></span> и <span class="term"><strong class="userinput">freeNAS-3</strong></span>, где они 
+	автоматически синхронизируются раз в час с применением Rsync.
+	{<span class="emphasis"><em>Прим. пер.: о ещё более совершенных методах резервного копирования ZFS, см.
+    <a class="link" href="http://onreader.mdl.ru/AdvancedZFS/content/Ch04.html" target="_top">Главу 4. Репликация</a> 
+	во второй книге Лукаса и Джуда по ZFS, вышедшей в апреле 2016.</em></span>}</p>
+	<p class="title"><strong>Роль freeNAS-3 в системе (вариант-1)</strong></p>
+    <p>В данной системе <span class="term"><strong class="userinput">freeNAS-3</strong></span> устанавливается для обслуживания специальных 
+	совместных ресурсов Proxmox NFS для временного хранения, контейнеров, ISO и резервных копий образов ВМ. Он будет осуществлять 
+	<span class="emphasis"><em>балансировку нагрузки</em></span> размещая совместные ресурсы для резервных копий сетевых клиентов. Это также 
+	включает в себя (НИКАКИХ ДИСКОВ ДАННЫХ) iSCSI таргеты, которые должны <span class="emphasis"><em>отображаться изнутри гостевых 
+	операционных систем</em></span>. <span class="term"><strong class="userinput">freeNAS-3</strong></span> может размещать iSCSI и NFS таргеты 
+	для образов ВМ Proxmox, чего, однако, следует избегать из- за ослабления производительности. Все совместные ресурсы реплицируются 
+	вручную при установке на <span class="term"><strong class="userinput">freeNAS-1</strong></span> и <span class="term"><strong 
+	class="userinput">freeNAS-2</strong></span>, где впоследствии автоматически синхронизируются один раз в час с применением Rsync.
+	<span class="term"><strong class="userinput">freeNAS-3</strong></span> <span class="emphasis"><em>доступен исключительно</em></span> для 
+	сетевых клиентов для целей резервного копирования.</p>
+    <p><span class="term"><strong class="userinput">ВАЖНО</strong></span>: Существует <span class="emphasis"><em>оговорка</em></span>! Поскольку
+	<span class="term"><strong class="userinput">freeNAS-3</strong></span> является виртуальным, он не будет спосбен выполнять резервное 
+	копирование своих собственных образов ВМ! Вы ДОЛЖНЫ резервировать эти образы ВМ на различных совместных ресурсах NFS поддерживаемых 
+	<span class="term"><strong class="userinput">freeNAS-1</strong></span> (<span class="term"><code>nfs.netbackups2</code></span>), а затем снова 
+	применять Rsync для автоматической синхронизации наборов данных на все остальные узлы. ОТМЕТИМ: 
+	<span class="term"><code>nfs.netbackups2</code></span> будет использоваться ТОЛЬКО для резервного копирования образов ВМ 
+	<span class="term"><strong class="userinput">freeNAS-3</strong></span>, поскольку ВСЕ остальные резервные копии образов ВМ будут отсылаться на 
+	совместный ресурс <span class="term"><code>nfs.netbackups</code></span>.</p>
+	<p class="title"><strong>Роль freeNAS-2 в системе (вариант-1)</strong></p>
+    <p><span class="term"><strong class="userinput">freeNAS-2</strong></span> ничего не размещает и <span class="emphasis"><em>не 
+	доступен</em></span> для сетевых клиентов. Он получает резервные копии Rsync по расписанию с <span class="term"><strong 
+	class="userinput">freeNAS-1</strong></span> и <span class="term"><strong class="userinput">freeNAS-3</strong></span> для использования при 
+	восстановлении после отказов. Он также может быть использован для балансировки нагрузки обслуживая <span class="emphasis"><em>исключительно 
+	на чтение</em></span> совместные ресурсы для файлов, которые сильно не изменяются.</p>
+    <p>С использованием <span class="emphasis"><em>магии</em></span> <span class="term"><strong class="userinput">Rsync</strong></span> все 
+	сервера NAS в конце концов содержат одни и те же наборы данных. Конечный результат заключается в полной виртуальности дел веб 
+	администрирования с 3 зеркалированными серверами NAS, active directory, управлением доменом, DHCP, DNS, межсетевым экраном, обнаружением 
+	вторжений, а также возможностями VPN!</p>
+	<p class="title"><a id="Case0002"> </a><strong>(Вариант-2) Оптимизированный для систем хранения с сетевой поддержкой</strong></p>
+    <p>Приводимая ниже схема отображает систему с 2 совмещёнными серверами и одним отдельным NAS. Она разработана для максимального использования 
+	производительности системы хранения с сетевой поддержкой с применением <span class="emphasis"><em>автономного</em></span> сервера freeNAS. 
+	Система хранения с сетевой поддержкой обычно применяется в больших кластерных системах. <span class="term"><strong 
+	class="userinput">КАЖДАЯ</strong></span> виртуальная машина всё ещё должна устанавливаться на <span class="emphasis"><em>выделенный</em></span>
+	диск и сетевое оборудование для наилучшей производительности при работе. Такая система предлагает весьма приемлемую производительность при 
+	установке ВМ на таргетах iSCSI или NFS. Она также обеспечивает исключительную производительность резервного копирования образов за счёт 
+	использования целого слота в вашей серверной стойке. Здесь существует ещё один <span class="emphasis"><em>нюанс</em></span>! 
+	<span class="emphasis"><em>Если автономный freeNAS-3 откажет по причине аппаратного сбоя, вы, возможно не будете работать 6 часов или 
+	даже больше</em></span> пока вы не получите идентичное оборудование для замены.</p>
+	<div class="figure"><a id="Fig0002"> </a>
+	 <p class="title"><strong>Вариант-2</strong></p>
+	 <div class="figure-contents"><div class="mediaobject">
+	 <img src="figures/Fig0002.jpg" width="539" height="576"/><br />
+	 <span></span>
+	 </div></div>
+	</div><br class="figure-break"/>
+	<p class="title"><strong>Роль freeNAS-1 в системе (вариант-2)</strong></p>
+    <p>В данной системе <span class="term"><strong class="userinput">freeNAS-1</strong></span> всё ещё установлен в качестве первичного 
+	файлового сервера NAS. Он содержит для ваших сетевых клиентов обычные Windows(CIFS), Linux(NFS), носители, а также ftp. Он также будет размещать 
+	данные, относящиеся (НИКАКИХ ДИСКОВ РЕЗЕРВНОГО КОПИРОВАНИЯ) iSCSI таргеты для <span class="emphasis"><em>отображения изнутри гостевых 
+	операционных систем</em></span>. Все совместные ресурсы реплицированы вручную при установке на <span class="term"><strong 
+	class="userinput">freeNAS-2</strong></span> и <span class="term"><strong class="userinput">freeNAS-3</strong></span>, где они 
+	автоматически синхронизируются раз в час с применением Rsync.
+	{<span class="emphasis"><em>Прим. пер.: о ещё более совершенных методах резервного копирования ZFS, см.
+    <a class="link" href="http://onreader.mdl.ru/AdvancedZFS/content/Ch04.html" target="_top">Главу 4. Репликация</a> 
+	во второй книге Лукаса и Джуда по ZFS, вышедшей в апреле 2016.</em></span>}</p>
+	<p class="title"><strong>Роль freeNAS-3 в системе (вариант-2)</strong></p>
+    <p>В данной системе <span class="term"><strong class="userinput">freeNAS-3</strong></span> устанавливается для обслуживания специальных 
+	совместных ресурсов Proxmox NFS для временного хранения, контейнеров, ISO и резервных копий образов ВМ. Он будет осуществлять 
+	<span class="emphasis"><em>балансировку нагрузки</em></span> размещая совместные ресурсы для резервных копий сетевых клиентов. Это также 
+	включает в себя (НИКАКИХ ДИСКОВ ДАННЫХ) iSCSI таргеты, которые должны <span class="emphasis"><em>отображаться изнутри гостевых 
+	операционных систем</em></span>. <span class="term"><strong class="userinput">freeNAS-3</strong></span> может размещать iSCSI и NFS таргеты 
+	для образов ВМ Proxmox, чего, однако, следует избегать из- за ослабления производительности. Все совместные ресурсы реплицируются 
+	вручную при установке на <span class="term"><strong class="userinput">freeNAS-1</strong></span> и <span class="term"><strong 
+	class="userinput">freeNAS-2</strong></span>, где впоследствии автоматически синхронизируются один раз в час с применением Rsync.
+	<span class="term"><strong class="userinput">freeNAS-3</strong></span> <span class="emphasis"><em>доступен исключительно</em></span> для 
+	сетевых клиентов для целей резервного копирования.</p>
+    <p>Главное отличие: при <span class="emphasis"><em>производительности голого железа</em></span> он теперь может быть применён для размещения 
+	iSCSIтаргетов для образов ВМ Proxmox. Применение драйверов iSCSI с множественностью путей при сетевой среде высокого качества даёт очень 
+	приемлемые производительности при тестировании критически важных сред.</p>
+	<p class="title"><strong>Роль freeNAS-2 в системе (вариант-2)</strong></p>
+    <p><span class="term"><strong class="userinput">freeNAS-2</strong></span> ничего не размещает и <span class="emphasis"><em>не 
+	доступен</em></span> для сетевых клиентов. Он получает резервные копии Rsync по расписанию с <span class="term"><strong 
+	class="userinput">freeNAS-1</strong></span> и <span class="term"><strong class="userinput">freeNAS-3</strong></span> для использования при 
+	восстановлении после отказов. Он также может быть использован для балансировки нагрузки обслуживая <span class="emphasis"><em>исключительно 
+	на чтение</em></span> совместные ресурсы для файлов, которые сильно не изменяются.</p>
+    <p>С использованием <span class="emphasis"><em>магии</em></span> <span class="term"><strong class="userinput">Rsync</strong></span> все 
+	сервера NAS в конце концов содержат одни и те же наборы данных. Конечный результат заключается в полной виртуальности дел веб 
+	администрирования с 3 зеркалированными серверами NAS, active directory, управлением доменом, DHCP, DNS, межсетевым экраном, обнаружением 
+	вторжений, а также возможностями VPN!</p>
+	<p class="title"><a id="Case0003"> </a><strong>(Вариант-3) Простое перемещение маршрутизатора с отключением</strong></p>
+    <p>Схема ниже отображает систему с 3 совмещёнными серверами Proxmox. Путём добавления простого 5- портового коммутатора и некоторого хорошо 
+	продуманного планирования становится возможным помещение маршрутизатора pfSense между Proxmox1 и Proxmox2. Данная система разработана для 
+	максимального применения ресурсов путём использования <span class="term"><strong class="userinput">ВСЕХ</strong></span> доступных физических 
+	машин! <span class="term"><strong class="userinput">КАЖДАЯ</strong></span> виртуальная машина устанавливается на 
+	<span class="emphasis"><em>выделенный</em></span> диск и сетевое оборудование для лучшей производительности при работе. Установка ВМ на 
+	систему хранения с сетевой поддержкой (iSCSI и NFS) всё ещё могут применяться для временных потребностей с меньшей производительностью.</p>
+	<div class="figure"><a id="Fig0003"> </a>
+	 <p class="title"><strong>Вариант-3</strong></p>
+	 <div class="figure-contents"><div class="mediaobject">
+	 <img src="figures/Fig0003.jpg" width="520" height="583"/><br />
+	 <span></span>
+	 </div></div>
+	</div><br class="figure-break"/>
+	<p class="title"><strong>Роль freeNAS-1 в системе (вариант-3)</strong></p>
+    <p>В данной системе <span class="term"><strong class="userinput">freeNAS-1</strong></span> установлен в качестве первичного 
+	файлового сервера NAS. Он содержит для ваших сетевых клиентов обычные Windows(CIFS), Linux(NFS), носители, а также ftp. Он также будет размещать 
+	данные, относящиеся (НИКАКИХ ДИСКОВ РЕЗЕРВНОГО КОПИРОВАНИЯ) iSCSI таргеты для <span class="emphasis"><em>отображения изнутри гостевых 
+	операционных систем</em></span>. Все совместные ресурсы реплицированы вручную при установке на <span class="term"><strong 
+	class="userinput">freeNAS-2</strong></span> и <span class="term"><strong class="userinput">freeNAS-3</strong></span>, где они 
+	автоматически синхронизируются раз в час с применением Rsync.
+	{<span class="emphasis"><em>Прим. пер.: о ещё более совершенных методах резервного копирования ZFS, см.
+    <a class="link" href="http://onreader.mdl.ru/AdvancedZFS/content/Ch04.html" target="_top">Главу 4. Репликация</a> 
+	во второй книге Лукаса и Джуда по ZFS, вышедшей в апреле 2016.</em></span>}</p>
+	<p class="title"><strong>Роль freeNAS-3 в системе (вариант-3)</strong></p>
+    <p>В данной системе <span class="term"><strong class="userinput">freeNAS-3</strong></span> устанавливается для обслуживания специальных 
+	совместных ресурсов Proxmox NFS для временного хранения, контейнеров, ISO и резервных копий образов ВМ. Он будет осуществлять 
+	<span class="emphasis"><em>балансировку нагрузки</em></span> размещая совместные ресурсы для резервных копий сетевых клиентов. Это также 
+	включает в себя (НИКАКИХ ДИСКОВ ДАННЫХ) iSCSI таргеты, которые должны <span class="emphasis"><em>отображаться изнутри гостевых 
+	операционных систем</em></span>. <span class="term"><strong class="userinput">freeNAS-3</strong></span> может размещать iSCSI и NFS таргеты 
+	для образов ВМ Proxmox, чего, однако, следует избегать из- за ослабления производительности. Все совместные ресурсы реплицируются 
+	вручную при установке на <span class="term"><strong class="userinput">freeNAS-1</strong></span> и <span class="term"><strong 
+	class="userinput">freeNAS-2</strong></span>, где впоследствии автоматически синхронизируются один раз в час с применением Rsync.
+	<span class="term"><strong class="userinput">freeNAS-3</strong></span> <span class="emphasis"><em>доступен исключительно</em></span> для 
+	сетевых клиентов для целей резервного копирования.</p>
+    <p><span class="term"><strong class="userinput">ВАЖНО</strong></span>: Существует <span class="emphasis"><em>оговорка</em></span>! Поскольку
+	<span class="term"><strong class="userinput">freeNAS-3</strong></span> является виртуальным, он не будет спосбен выполнять резервное 
+	копирование своих собственных образов ВМ! Вы ДОЛЖНЫ резервировать эти образы ВМ на различных совместных ресурсах NFS поддерживаемых 
+	<span class="term"><strong class="userinput">freeNAS-1</strong></span> (<span class="term"><code>nfs.netbackups2</code></span>), а затем снова 
+	применять Rsync для автоматической синхронизации наборов данных на все остальные узлы. ОТМЕТИМ: 
+	<span class="term"><code>nfs.netbackups2</code></span> будет использоваться ТОЛЬКО для резервного копирования образов ВМ 
+	<span class="term"><strong class="userinput">freeNAS-3</strong></span>, поскольку ВСЕ остальные резервные копии образов ВМ будут отсылаться на 
+	совместный ресурс <span class="term"><code>nfs.netbackups</code></span>.</p>
+	<p class="title"><strong>Роль freeNAS-2 в системе (вариант-3)</strong></p>
+    <p><span class="term"><strong class="userinput">freeNAS-2</strong></span> ничего не размещает и <span class="emphasis"><em>не 
+	доступен</em></span> для сетевых клиентов. Он получает резервные копии Rsync по расписанию с <span class="term"><strong 
+	class="userinput">freeNAS-1</strong></span> и <span class="term"><strong class="userinput">freeNAS-3</strong></span> для использования при 
+	восстановлении после отказов. Он также может быть использован для балансировки нагрузки обслуживая <span class="emphasis"><em>исключительно 
+	на чтение</em></span> совместные ресурсы для файлов, которые сильно не изменяются.</p>
+    <p>С использованием <span class="emphasis"><em>магии</em></span> <span class="term"><strong class="userinput">Rsync</strong></span> все 
+	сервера NAS в конце концов содержат одни и те же наборы данных. Конечный результат заключается в полной виртуальности дел веб 
+	администрирования с 3 зеркалированными серверами NAS, active directory, управлением доменом, DHCP, DNS, межсетевым экраном, обнаружением 
+	вторжений, а также возможностями VPN!</p>
+   </div>
+</div>
+
+
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

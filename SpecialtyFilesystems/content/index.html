@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="zfsd, NVMe, OCFS2, cLVM2, LVM2, Logical Volume Manager, GFS2, Libvirt, STONITH, Shoot Th Other Node In Th Head, fencing, pengine, luci and ricci,CIFS, DLM, DRBD, Distributed replicated block device, Heartbeat, HAProxy, Open Cluster Framework, CIB, Cluster information base, APC PDU, iDRAC, Pacemaker, corosync, cibadmin">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Мастерство FreeBSD: ZFS для профессионалов.</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="AdvancedZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Хранилище данных 21 века ZFS: быстрая, гибкая, самостоятельно восстанавливающаяся файловая система, произведшая революцию в хранении данных."/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="prev" href="Afterword.html" title="Послесловие"/>
+<link rel="next" href="Ch00.html" title="Глава 0. Введение"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "advanced-zfs";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/AdvancedZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Мастерство FreeBSD: ZFS для профессионалов.';
+PrevRef = 'Afterword.html';
+UpRef = 'index.html';
+NextRef = 'Ch00.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="FreeBSDMasteryZFS"/>Мастерство FreeBSD: ZFS для профессионалов.</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Майкл В. Лукас и Аллан Джуд</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2016 Michael W Lucas and Allan Jude</p>
+  <p>Первая публикация на английском языке: 10 апреля 2016</p>
+<p>Все права защищены. Никакая часть данной работы не может быть воспроизведена или передана в любой форме или любыми средствами, 
+электронными или механическими, включая фотокопирование, запись, клинописью, или любого хранения или поиска информации, без предварительного 
+письменного разрешения владельца авторских прав и издателя. Для получения информации о распространении книг, переводах, или других правах, 
+свяжитесь, пожалуйста, с Tilted Windmill Press (accounts@tiltedwindmillpress.com).</p>
+<p>Продукты и названия фирм, упомянутые здесь, могут быть торговыми марками их соответствующих владельцев. Вместо того чтобы использовать 
+символ торговой марки при каждом появлении торговой марки, мы используем имена только в редакционном виде, а также в интересах владельца 
+торговой марки, без намерения нарушения товарного знака. </p>
+<p>Информация в этой книге, предоставляется «как есть», без какой бы то ни было гарантии.
+В то время как при подготовке данной работы были предприняты все меры предосторожности, ни автор, ни Tilted Windmill Press не несут 
+никакой ответственности перед любым лицом или организацией в отношении каких-либо потерь или ущербов, причиненных или предположительно 
+вызванных прямо или косвенно информацией, содержащейся в ней.</p>
+<p>Tilted Windmill Press</p>
+<p>https://www.tiltedwindmillpress.com</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2016 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.tiltedwindmillpress.com/?p=502" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     TWP
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2016-05-01</p>
+</div>
+<div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p class="title"><strong>Аннотация</strong></p>
+  <p>Хранилище данных 21 века ZFS: быстрая, гибкая, самостоятельно восстанавливающаяся файловая система, произведшая революцию в хранении данных.
+  Применение ZFS изменяет все вокруг управления системы FreeBSD. С помощью <span class="term"><code>Мастерство FreeBSD: ZFS для профессионалов</code></span> 
+  вы научитесь:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>понимать как ваше оборудование влияет на ZFS</p>
+	 </li><li class="listitem">
+	 <p>организовывать ваше хранилище на максимальную производительность</p>
+	 </li><li class="listitem">
+	 <p>настраивать наборы данных, которые соответствуют потребностям вашего предприятия</p>
+	 </li><li class="listitem">
+	 <p>восстанавливать пулы хранения и контролировать их</p>
+	 </li><li class="listitem">
+	 <p>расширять ваше хранилище</p>
+	 </li>
+    </ul>
+    </div>
+ </div>
+</div></div><hr/></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Credits"> </a>Состав исполнителей</h3>
+   Первого издания на английском языке
+ </div></div></div>
+ <dl><dt><strong>Авторы</strong></dt>
+  <dd><dl>
+   <dt>Майкл В Лукас и Аллан Джуд</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор</strong></dt>
+  <dd><dl>
+   <dt>Линди Лу Лош</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Переплет</strong></dt>
+  <dd><dl>
+   <dt><span class="term"><code>Beastie-cycling</code></span>, illustration copyright © 2015 Eddie Sharam, after Bicycling, 1887, by Hy Sandham</dt>  
+  </dl></dd>
+ </dl>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Об авторах</h3>
+ </div></div></div>
+ <p><strong>Майкл В Лукас и Аллан Джуд</strong>
+ </p>
+</div>
+
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Acknowledgments"> </a>Благодарности</h3>
+ </div></div></div>
+ <p></p>
+</div>
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Dedication"> </a>Посвящение</h3>
+ </div></div></div>
+ <p align="center">Мы посвящаем Мастерство FreeBSD: ZFS нашему хорошему другу</p>
+ <p align="center">Полу Шенкевельду</p>
+ <p align="center">который, к сожалению, скончался пока мы писали эту книгу</p>
+</div>
+
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Acknowledgments">Благодарности</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+  </dl></dd>
+ </dl>
+ <dd><dl>
+   <dt><span class="chapter"><a href="Ch00.html">0. Введение</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch00.html#01">Предварительные требования</a></span></dt>
+     <dt><span class="chapter"><a href="Ch00.html#02">Практический опыт ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch00.html#0201">Управление пространством</a></span></dt>
+       <dt><span class="chapter"><a href="Ch00.html#0202">Закрепление типа VDEV</a></span></dt>
+       <dt><span class="chapter"><a href="Ch00.html#0203">Важность меток</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch00.html#03">Пометка дисков</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch00.html#0301">Метка GPT (ручная)</a></span></dt>
+       <dt><span class="chapter"><a href="Ch00.html#0302">Метка GPTID (автоматическая)</a></span></dt>
+       <dt><span class="chapter"><a href="Ch00.html#0303">Метка идентификации диска (автоматическая)</a></span></dt>
+       <dt><span class="chapter"><a href="Ch00.html#0304">Glabel (ручная)</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch00.html#04">DTrace</a></span></dt>
+     <dt><span class="chapter"><a href="Ch00.html#05">Обзор книги</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch01.html">1. Окружения загрузки</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch01.html#01">Наборы данных установки</a></span></dt>
+     <dt><span class="chapter"><a href="Ch01.html#02">Применение сред загрузки</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch01.html#0201">Доступ к неиспользуемым средам загрузки</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch01.html#03">Среды загрузки и ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch01.html#0301">Просмотр сред загрузки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch01.html#0302">Создание сред загрузки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch01.html#0303">Активация сред загрузки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch01.html#0304">Переименование сред загрузки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch01.html#0305">Удаление сред загрузки</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch01.html#04">Среды загрузки в процессе загрузки</a></span></dt>
+     <dt><span class="chapter"><a href="Ch01.html#05">Среды загрузки и приложения</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch01.html#0501">Перемещение данных приложений</a></span></dt>
+       <dt><span class="chapter"><a href="Ch01.html#0502">Создание новых наборов данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch01.html#0503">Шифрование диска и среды загрузки</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch02.html">2. Передача полномочий и джейлы</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch02.html#01">Передача полномочий ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch02.html#0101">Добавление передачи полномочий</a></span></dt>
+       <dt><span class="chapter"><a href="Ch02.html#0102">Изъятие передачи полномочий</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch02.html#02">Наследование передачи полномочий</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#03">Создание полномочий по времени</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#04">Полномочия на измение полномочий</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#05">Наборы полномочий</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#06">Передача полномочий и джейлы</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch02.html#0601">Заключение набора данных в джейл</a></span></dt>
+       <dt><span class="chapter"><a href="Ch02.html#0602">Построение передачи полномочий ZFS джейл</a></span></dt>
+       <dt><span class="chapter"><a href="Ch02.html#0603">Определение пределов и ремни безопасности</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch03.html">3. Совместное использование наборов данных</dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch03.html#01">SMB</a></span></dt>
+     <dt><span class="chapter"><a href="Ch03.html#02">iSCSI</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch03.html#0201">Настройка таргета</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch03.html#03">Network File System</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch03.html#0301">Типы настроек NFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0302">Разрешение NFSv2/v3</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0303">Настройка NFSv2/v3 через ZFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0304">Разрешение NFSv4</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0305">Настройка NFSv4 через ZFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch03.html#0306">Отладка NFS ZFS</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch04.html">4. Репликация</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch04.html#01">Но у меня есть Rsync!</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#02">Зачем репликации?</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#03">Основы репликаций</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch04.html#0301">Локальные репликации</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0302">Просмотр копий</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch04.html#04">Удалённые репликации</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch04.html#0401">Пользователи и наборы данных репликации</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0402">Полная удалённая репликация набора данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0403">Инкрементальная репликация</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0404">Допущения инкрементальной репликации</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0405">Дифференциальная репликация</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0406">Ограничения пропускной способности SSH</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch04.html#05">Сложность инкрементальных репликаций</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#06">Рекурсивные репликации</a></span></dt>
+     <dt><span class="chapter"><a href="Ch04.html#07">Дополнительные параметры отсылки</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch04.html#0701">Отсылка свойств</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0702">Дедуплицированный поток данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0703">Отладка и тестирование</a></span></dt>
+       <dd><dl>
+         <dt><span class="chapter"><a href="Ch04.html#070301">Большие и маленькие блоки</a></span></dt>
+       </dl></dd>
+       <dt><span class="chapter"><a href="Ch04.html#0704">Дополнительные параметры приёма</a></span></dt>
+       <dd><dl>
+         <dt><span class="chapter"><a href="Ch04.html#070401">Управление путём и монтированием</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070402">Изменение отката</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070403">Отладка и тестирование</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070404">Клонирование по предписанию</a></span></dt>
+       </dl></dd>
+       <dt><span class="chapter"><a href="Ch04.html#0705">Закладки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0706">Возобновляемая отсылка</a></span></dt>
+       <dt><span class="chapter"><a href="Ch04.html#0707">Автоматизация репликаций</a></span></dt>
+       <dd><dl>
+         <dt><span class="chapter"><a href="Ch04.html#070701">Применение zxfer</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070702">Режим извлечения zxfer</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070703">Циклические снимки</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070704">Сохранение старых снимков</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070705">Свойства и аварийное восстановление</a></span></dt>
+         <dt><span class="chapter"><a href="Ch04.html#070706">Дополнительные параметры zxfer</a></span></dt>
+       </dl></dd>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch05.html">5. Тома ZFS</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch05.html#01">Создание, удаление и манипулирование томами ZFS</a></span></dt>
+     <dt><span class="chapter"><a href="Ch05.html#02">Разрежённые тома</a></span></dt>
+     <dt><span class="chapter"><a href="Ch05.html#03">Режим тома</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch05.html#0301">volmode в командной строке</a></span></dt>
+       <dt><span class="chapter"><a href="Ch05.html#0302">volmode по умолчанию</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch05.html#04">Доступ zvols</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch06.html">6. Профессиональное оборудование</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch06.html#01">Службы полок SCSI</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0101">Опрос ваших полок</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0102">Путь полки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0103">Поддержание сигнальной индикации</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#02">Управление HBA</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0201">Подробности адаптера</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0202">Отображение полок</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#03">sas2ircu</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0301">Просмотр аппаратных средств</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0302">Подсветка местоположения с помощью sas2ircu</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#04">Множество путей SAS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0401">Зачем нужна множественность путей?</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0402">Режимы множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0403">Идентификация дисков</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0404">Настройка множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0405">Узлы устройств множества путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0406">Ручная настройка множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0407">Просмотр множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0408">Изменение режима множественности путей</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#05">SSD</a></span></dt>
+     <dt><span class="chapter"><a href="Ch06.html#06">NVMe</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0601">Просмотр устройств NVMe</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0602">Производительность NVMe</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0603">Поставщики NVMe GEOM и загрузка</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#07">zfsd</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch07.html">7. Кэширование</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch07.html#01">Кэш адаптивной замены</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch07.html#0101">Традиционный буферирующий кэш</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0102">Проектирование ARC</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0103">Использование памяти ARC</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0104">Zfs-stats</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch07.html#02">Модификации ARC</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch07.html#0201">Ограничение размера ARC</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0202">Метаданные и ARC</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0203">Наборы данных и ARC</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch07.html#03">ARC 2 уровня</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch07.html#0301">Использование памяти L2ARC</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0302">Кэширование L2ARC</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0303">Потоковая обработка файлов</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0304">Скорость записи L2ARC</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch07.html#04">Целевой журнал ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch07.html#0401">Синхронные и асинхронные транзакции</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0402">Целевой журнал ZFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0403">Отдельный целевой журнал ZFS</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0404">Настройка целевого журнала по наборам данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch07.html#0405">Выполнение синхронных записей в стеке</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch07.html#05">zpool.cache</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch08.html">8. Производительность</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch08.html#01">Что такое производительность?</a></span></dt>
+     <dt><span class="chapter"><a href="Ch08.html#02">ZFS и производительность</a></span></dt>
+     <dt><span class="chapter"><a href="Ch08.html#03">zpool iostat</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch08.html#0301">Текущая и продолжительная активность пула</a></span></dt>
+       <dt><span class="chapter"><a href="Ch08.html#0302">Активность виртуального устройства</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch08.html#04">Упреждающая выборка ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch08.html#0401">Упреждающая выборка на основе VDEV</a></span></dt>
+       <dt><span class="chapter"><a href="Ch08.html#0402">Пофайловая упреждающая выборка</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch08.html#05">Настройка групп транзакций</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch08.html#0501">Времена txg</a></span></dt>
+       <dt><span class="chapter"><a href="Ch08.html#0502">Размер txg</a></span></dt>
+       <dt><span class="chapter"><a href="Ch08.html#0503">Длительность и содержание txg</a></span></dt>
+       <dt><span class="chapter"><a href="Ch08.html#0504">Плавное регулирование записи</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch08.html#06">Расписание ввода/вывода</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch08.html#0601">Измерение латентности и пропускной способности</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch08.html#07">Очереди ввода/вывода</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch08.html#0701">Запросы по-VDEV</a></span></dt>
+       <dt><span class="chapter"><a href="Ch08.html#0702">Расписание больших VDEV</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch08.html#08">Асинхронные записи и размеры групп транзакций</a></span></dt>
+     <dt><span class="chapter"><a href="Ch08.html#09">Плавное регулирование записи</a></span></dt>
+     <dt><span class="chapter"><a href="Ch08.html#10">Производительность очистки и восстановления</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch09.html">9. Тонкая настройка</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch09.html#01">Выделение чередований ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch09.html#0101">Зеркалирование и чередование</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0102">RAID-Z1</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0103">RAID-Z2</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0104">RAID-Z3</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0105">Чередующиеся зеркала</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0106">Изменение выделенного размера</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0107">Рекомендации</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch09.html#02">Базы данных и ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch09.html#0201">Все базы данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0202">MySQL – InnoDB/XtraDB</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0203">MySQL – MyISAM</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0204">PostgreSQL</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch09.html#03">Настройка под размер файла</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch09.html#0301">Маленькие файлы</a></span></dt>
+       <dt><span class="chapter"><a href="Ch09.html#0302">Большие файлы</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch09.html#04">Худшее из обоих миров: Bittorrent</a></span></dt>
+     <dt><span class="chapter"><a href="Ch09.html#05">Короткие переходы</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch10.html">10. Попурри ZFS</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch10.html#01">Расслаиваемые зеркала</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch10.html#0101">Как сделать зеркалирование более глубоким</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0102">Расщепление пула</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch10.html#02">SnapSpec</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch10.html#0201">Диапазон снимка</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0202">Определение по возрасту</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0203">Уничтожение снимка</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch10.html#03">Восстановление разрушенных пулов</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch10.html#0301">Восстанавливаемые пулы</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0302">Невосстанавливаемые пулы</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0303">Переименование пула при восстановлении</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch10.html#04">Клонирование машин</a></span></dt>
+     <dt><span class="chapter"><a href="Ch10.html#05">Файловая система не чувствительная к регистру</a></span></dt>
+     <dt><span class="chapter"><a href="Ch10.html#06">Глубокое погружение в ZFS: zdb(8)</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch10.html#0601">Статистика блоков</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0602">Подробная статистика блоков</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0603">Настройка ZFS</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch10.html#07">Информация набора данных</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch10.html#0701">Основы набора данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0702">Подробности набора данных</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0703">Опрос определённого объекта</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0704">Опрос определённого файла</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0705">Metaslab-ы и гистограммы свободного пространства</a></span></dt>
+       <dt><span class="chapter"><a href="Ch10.html#0706">Uberblock</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+ </dl></dd>
+ <dd><dl>
+  <dt><span class="preface"><a href="Afterword.html">Заключение</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="Afterword.html#Sponsors">Спонсоры</a></span></dt>
+	<dt><span class="section"><a href="Afterword.html#Authors">Об авторах</a></span></dt>
+  </dl></dd>
+ </dl></dd>
+
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

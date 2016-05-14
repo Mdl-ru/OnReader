@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Архитектура - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="prev" href="openstack-ops_preface.html" title="Предисловие"/>
+<link rel="next" href="example_architecture.html" title="Глава 1. Пример архитектур"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:01+00:00"/><script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//architecture.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Архитектура';
+PrevRef = 'openstack-ops_preface.html';
+UpRef = 'index.html';
+NextRef = 'example_architecture.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="part"><div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="architecture"> </a>Архитектура</h1>
+</div></div></div><div class="partintro"><div xmlns=""/>
+	<p>Разработка облака OpenStack является большим достижением. Это требует трудоемкого
+    осмысления требований и запросов пользователей облака для определения
+    наиболее соответствующих настроек для их удовлетворения. OpenStack обеспечивает
+    большую гибкость для достижения ваших потребностей, и данная часть книги
+    служит освещению большого количества решений, которые вы должны принимать
+    в ходе процесса.</p><p>Для проектирования, развертывания и настройки OpenStack,
+    администраторы должны понимать логическую архитектуру. Схема может помочь вам
+    представить все интегрированные в OpenStack службы и их взаимодействие друг с
+    другом.<a id="d9e403" class="indexterm"/><a id="d9e405" class="indexterm"/></p>
+    <p>Модули OpenStack могут быть одного из следующего типов:</p><div class="variablelist">
+    <dl><dt><span class="term">Демон</span></dt><dd><p>Работает как фоновый процесс. В платформах Linux,
+    демон обычно устанавливается как служба.<a id="d9e414" class="indexterm"/></p></dd>
+    <dt><span class="term">Сценарий</span></dt><dd><p>Устанавливает виртуальное окружение и выполняет тесты.
+    <a id="d9e421" class="indexterm"/></p></dd><dt><span class="term">Интерфейс командной строки (CLI, Command-line interface)</span></dt>
+    <dd><p>Позволяет пользователям делать вызовы API к службам OpenStack с использованием команд.
+    <a id="d9e427" class="indexterm"/></p></dd></dl></div>
+    <p>Как показано, конечные пользователи могут взаимодействоватьчерез приборную панель, CLI и
+    API. Все службы аутентификации проходят через общую службу идентификации (Identity Service), а
+    индивидуальные службы взаимодействуют друг с другом через общедоступные API, за исключением
+    случаев, когда необходимы привилегированные команды администратора. <a class="xref" href="architecture.html#openstack-diagram" title="Рисунок 1. Логическая архитектура OpenStack">Рисунок 1. &quot;Логическая архитектура OpenStack&quot;</a> 
+    показывает наиболее полную, но не единственную архитектуру облака OpenStack.</p>
+    <div class="figure"><a id="openstack-diagram"> </a><p class="title"><strong>Рисунок 1. Логическая архитектура OpenStack
+	 <a class="link" href="http://docs.openstack.org/openstack-ops/content/figures/2/figures/osog_0001.png" target="_top">http://docs.openstack.org/openstack-ops/content/figures/2/figures/osog_0001.png</a>)</strong></p>
+    <div class="figure-contents"><div class="mediaobject"><img src="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0001.png"/ width="815" height="579"></div></div></div>
+    <br class="figure-break"/><div class="toc"><p><strong>Содержание</strong></p><dl>
+    <dt><span class="chapter"><a href="example_architecture.html">1. Пример архитектур</a></span></dt>
+    <dd><dl><dt><span class="section"><a href="example_architecture.html#example_architecture-nova">Пример архитектуры—Традиционные сети (nova)</a></span></dt>
+    <dt><span class="section"><a href="example_architecture.html#example_architecture-neutron">Пример архитектуры—Сети OpenStack</a></span></dt>
+    <dt><span class="section"><a href="example_architecture.html#example_archs_conclusion">Заключительные размышления об архитектуре</a></span></dt></dl></dd>
+    <dt><span class="chapter"><a href="section_arch_provision.html">2. Подготовка и развертывание</a></span></dt>
+    <dd><dl><dt><span class="section"><a href="section_arch_provision.html#automated_deploy">Автоматическое развертывание</a></span></dt>
+    <dt><span class="section"><a href="section_arch_provision.html#auto_config">Автоматическая настройка</a></span></dt>
+    <dt><span class="section"><a href="section_arch_provision.html#remote_mgmt">Удаленное управление</a></span></dt>
+    <dt><span class="section"><a href="section_arch_provision.html#provision-deploy-summary">Заключительные размышления о подготовке и равертывании OpenStack</a></span></dt>
+    <dt><span class="section"><a href="section_arch_provision.html#provision_conclusion">Выводы</a></span></dt></dl></dd>
+    <dt><span class="chapter"><a href="cloud_controller_design.html">3. Проектирование для контроллеров облака и <span class="keep-together">управления облаком</span></a></span></dt>
+    <dd><dl><dt><span class="section"><a href="cloud_controller_design.html#hardware_consid">Анализ аппаратных средств</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#separate_services">Разделение служб</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#database">Базы данных</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#message_queue">Очередь сообщений</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#conductor">Службы проводника</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#api">Интерфейс прикладного программирования (API)</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#extensions">Расширения</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#scheduling">Планировщик</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#images">Образы</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#dashboard">Инструментальныя панель</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#authentication">Аутентификация и авторизация</a></span></dt>
+    <dt><span class="section"><a href="cloud_controller_design.html#network_consid">Анализ сети</a></span></dt></dl></dd>
+    <dt><span class="chapter"><a href="compute_nodes.html">4. Вычислительные узлы</a></span></dt>
+    <dd><dl><dt><span class="section"><a href="compute_nodes.html#cpu_choice">Выбор процессора</a></span></dt>
+    <dt><span class="section"><a href="compute_nodes.html#hypervisor_choice">Выбор гипервизора</a></span></dt>
+    <dt><span class="section"><a href="compute_nodes.html#instance_storage">Решения хранилищ экземпляра</a></span></dt>
+    <dt><span class="section"><a href="compute_nodes.html#overcommit">Перегруженное выделение</a></span></dt>
+    <dt><span class="section"><a href="compute_nodes.html#logging">Ведение журнала</a></span></dt>
+    <dt><span class="section"><a href="compute_nodes.html#networking">Сетевое обеспечение</a></span></dt>
+    <dt><span class="section"><a href="compute_nodes.html#conclusion">Выводы</a></span></dt></dl></dd>
+    <dt><span class="chapter"><a href="scaling.html">5. Масштабирование</a></span></dt><dd><dl>
+    <dt><span class="section"><a href="scaling.html#starting">Отправной пункт</a></span></dt>
+    <dt><span class="section"><a href="scaling.html#add_controller_nodes">Добавление узлов контроллера</a></span></dt>
+    <dt><span class="section"><a href="scaling.html#segregate_cloud">Разделение ваших облаков</a></span></dt>
+    <dt><span class="section"><a href="scaling.html#scalable_hardware">Масштабируемое оборудование</a></span></dt></dl></dd>
+    <dt><span class="chapter"><a href="storage_decision.html">6. Решения системы хранения</a></span></dt>
+    <dd><dl><dt><span class="section"><a href="storage_decision.html#ephemeral_storage">Эфемерные системы хранения</a></span></dt>
+    <dt><span class="section"><a href="storage_decision.html#persistent_storage">Системы постоянного хранения</a></span></dt>
+    <dt><span class="section"><a href="storage_decision.html#storage_concepts">Концепции хранения OpenStack</a></span></dt>
+    <dt><span class="section"><a href="storage_decision.html#storage_backends">Выбор серверов хранения</a></span></dt>
+    <dt><span class="section"><a href="storage_decision.html#storagedecisions_conclusion">Выводы</a></span></dt></dl></dd>
+    <dt><span class="chapter"><a href="network_design.html">7. Проектирование сети</a></span></dt>
+    <dd><dl><dt><span class="section"><a href="network_design.html#mgmt_network">Управляющая сеть</a></span></dt>
+    <dt><span class="section"><a href="network_design.html#public_addressing">Параметры для общедоступного адресного пространства</a></span></dt>
+    <dt><span class="section"><a href="network_design.html#ip_address_planning">Планирование адресов IP</a></span></dt>
+    <dt><span class="section"><a href="network_design.html#network_topology">Топология сети</a></span></dt>
+    <dt><span class="section"><a href="network_design.html#services_for_networking">Службы для функционирования сети</a></span></dt>
+    <dt><span class="section"><a href="network_design.html#ops-network-conclusion">Выводы</a></span></dt></dl></dd></dl></div></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

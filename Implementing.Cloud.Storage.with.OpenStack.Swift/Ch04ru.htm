@@ -1,0 +1,745 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 4. Использование Swift. Реализация облачного хранилища с OpenStack Swift.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing">
+   <meta name="Description" content="Глава 4. Использование Swift. Реализация облачного хранилища с OpenStack Swift.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="ToC.htm">Реализация облачного хранилища с OpenStack Swift.</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<h2 align="right">ГЛАВА 4</h2>
+<hr />
+<h1 id="Chapter_04" align="right">Использование Swift.</h1>
+<p>
+В этой главе рассматриваются различные механизмы, которые обеспечивают доступ к Swift.
+Используя эти механизмы, мы сможем выполнять аутентификацию учетных записей, просматривать контейнеры, создавать контейнеры, создавать объекты, удалять объекты и тому подобное.
+Инструменты и библиотеки, такие как CLI клиента Swift, клиент cURL, HTTP REST API, библиотеки Java, библиотеки Ruby OpenStack и библиотеки Python внутренне используют Swift API чтобы обеспечить доступ к кластеру Swift.
+В частности, мы будем использовать клиент CLI (интерфейса командной строки) Swift, cURL и HTTP REST API для доступа к Swift и выполнению различных операций с контейнерами и объектами. 
+Кроме того, мы будем использовать  облако хранения Long-Term Storage (LTS2) фирмы EVault для демонстрации использования Swift.
+</p>
+
+<h2 id="Ch0401">Установка клиентов</h2>
+<p>Этот раздел расскажет об установке cURL и клиента инструментов командной строки Swift CLI.
+В этом разделе мы опишем, как установить эти инструменты на операционную систему Linux Ubuntu 12.04.
+Пожалуйста, ознакомьтесь к другими наборами команд дистрибутивов Linux для установки клиентов в этих операционных системах.
+Также доступны версии этих инструментов для Windows и Mac.
+Следующие команды используются для установки cURL и клиента Swift CLI:<ul>
+ <li><strong>cURL</strong>: 
+Этот инструментарий командной строки может использоваться для передачи данных с использованием различных протоколов.
+Для установки cURL используется следующая команда:
+<strong><code># apt-get install curl</code></strong>
+ <li><strong>Клиент Swift CLI</strong>:
+Это средство для доступа и выполнения операций на кластере Swift.
+Этот инструмент устанавливается с использованием следующей команды:
+<strong><code># apt-get install python-swiftclient</code></strong>
+ <li><strong>Клиент REST API</strong>:
+Для доступа к службам Swift через REST API мы можем использовать средства сторонних разработчиков, например, такие как веб-отладчик Fiddler, который поддерживает архитектуру REST.
+</ul>
+</p>
+
+<h2 id="Ch0402">Создание маркера с использованием аутентификации</h2>
+<p>
+Первый шаг для того, чтобы получить доступ к контейнерам или объектам заключается в аутентификации пользователя посредством отправки запроса в службу аутентификации и получения действующего маркера, который затем может быть использован в последующих командах для выполнения различных операций.
+Мы используем аутентификацию Keystone в нашей конфигурации и приведенных в этой главе примерах.
+Существует еще один способ проверки подлинности, называемый Swauth, который может быть использован.
+Он работает слегка отличным способом, но мы не будем здесь разбираться с деталями Swauth.
+Следующая команда используется, чтобы получить действующий ключ аутентификации Keystone:<br />
+<strong><code># curl -X POST -i https://auth.lts2.evault.com/v2.0/Tokens -H 'Contenttype: application/json' -d '{&quot;auth&quot;:{&quot;passwordCredentials&quot;:{&quot;username&quot;:&quot;user&quot;,&quot;password&quot;:&quot;password&quot;},&quot;tenantName&quot;:&quot;tenant1&quot;}}'</code></strong>
+</p><p>
+В приведенной команде конечной точкой аутентификации является <a href="https://auth.lts2.evault.com/v2.0"><code>https://auth.lts2.evault.com/v2.0</code></a> производимый EValut.
+</p><p>
+Ниже демонстрируется сгенерированный маркер (он был усечен для лучшей читаемости):<br />
+<strong><code>token = MIIGIwYJKoZIhvcNAQcCoIIGFDCCBhACAQExCTAHBgUrDgMCGjCCBHkGCSqGSI
+b3DQEHAaCCBGoEggRme…yJhY2Nlc3MiOiB7InRva2VuIjogeyJpc3N1ZWRfYXQiOiAiMjAx
+My0xMS0yNlQwNjoxODo0Mi4zNTA0NTciLCU+KNYN20G7KJO05bXbbpSAWw+5Vfl8zl6Jq
+AKKWENTrlKBvsFzO-peLBwcKZXTpfJkJxqK7Vpzc-NIygSwPWjODs--0WTes+CyoRD</code></strong>
+<p></p>
+Этот маркер в последующем используется в командах доступа Swift, например, в следующей команде:<br />
+<strong><code>curl -X HEAD -i https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b -H 'X-Auth-Token: token' -H 'Content-type: application/json'</code></strong>
+<p></p>
+Дополнительные детали о командах приводятся в последующих разделах.
+</p>
+
+<h2 id="Ch0403">Отображение информации метаданных для учетных записей, контейнеров и объектов</h2>
+<p>Данный раздел описвает процедуру получения информации об учетных записях, контейнерах или объектах.
+</p>
+
+<h3 id="Ch040301">С использованием клиента Swift CLI</h3>
+<p>
+Команда клиента Swift CLI <code>stat</code> используется для получения информации об учетной записи, контейнере или объекте.
+Для получения информации о контейнере после команды <code>stat</code> должно быть указано имя контейнера.
+Для получения информации об объектее после команды <code>stat</code> должны быть указаны имена контейнера и объекта.
+</p><p>
+Для отображения состояния учетной записи выполните следующий запрос:<br />
+<strong><code># swift --os-auth-token=<em>token</em> --os-storage-url= https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b stat</code></strong>
+</p><p>
+В предыдущей команде <em><code>token</code></em> является маркером, сгенерированным как это описано в предыдущем разделе, а <code>26cef4782cca4e5aabbb9497b8c1ee1b</code> является именем учетной записи.
+</p><p>
+Отклик отображает следующую информацию об учетной записи:<br />
+<strong><code>
+Account: 26cef4782cca4e5aabbb9497b8c1ee1b<br />
+Containers: 2<br />
+Objects: 6<br />
+Bytes: 17<br />
+Accept-Ranges: bytes<br />
+Server: nginx/1.4.1<br />
+</code></strong>
+</p>
+
+<h3 id="Ch040302">С использованием cURL</h3>
+<p>
+Следующая команда демонстрирует возможность получения той же информации обучетной записи при помощи cURL.
+Она показывает, что учетная запись содержит два контейнера и шесть объектов.
+</p><p>
+Выполните следующий запрос:<br />
+<strong><code>
+# curl -X HEAD -i https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b -H 'X-Auth-Token: token' -H 'Content-type: application/json'
+</code></strong>
+</p><p>
+Ответ предыдущей команды выглядит следующим образом:<br />
+<strong><code>
+HTTP/1.1 204 No Content<br />
+Server: nginx/1.4.1<br />
+Date: Wed, 04 Dec 2013 06:53:13 GMT<br />
+Content-Type: text/html; charset=UTF-8<br />
+Content-Length: 0<br />
+X-Account-Bytes-Used: 3439364822<br />
+X-Account-Container-Count: 2<br />
+X-Account-Object-Count: 6
+</code></strong>
+</p>
+
+
+
+<h3 id="Ch040303">С использованием REST API</h3>
+<p>
+Поддерживающий REST отладчик веб Fiddler использовался для отправки запроса и получение HTTP отклика.
+Выполните следующий запрос:<br />
+<strong><code>
+Method : HEAD<br />
+URL : https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1e<br />
+e1b Header : X-Auth-Token: token<br />
+Data : No data<br />
+</code></strong>
+Отклик будет следующим:<br />
+<strong><code>
+HTTP/1.1 204 No Content<br />
+Server: nginx/1.4.1<br />
+Date: Wed, 04 Dec 2013 06:47:17 GMT<br />
+Content-Type: text/html; charset=UTF-8<br />
+Content-Length: 0<br />
+X-Account-Bytes-Used: 3439364822<br />
+X-Account-Container-Count: 2<br />
+X-Account-Object-Count: 6<br />
+</code></strong>
+</p><p>
+Как вы можете убедиться, это другой механизм выполнения команды, однако очень схожий с доступом в кластеру Swift с использованием cURL.
+</p>
+
+<h2 id="Ch0404">Вывод списка контейнеров</h2>
+<p>
+Данный раздел описывает как получить представленную в учетной записи информацию о контейнерах. 
+</p>
+
+<h3 id="Ch040401">С использованием клиента CLI</h3>
+<p>
+Выполните следующий запрос:<br />
+<strong><code>
+swift --os-auth-token=token --os-storage-url= https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b list
+</code></strong>
+</p><p>
+Ответ на запрос выглядит следующим образом:<br />
+<strong><code>
+cities<br />
+countries
+</code></strong>
+</p>
+
+<h3 id="Ch040402">С использованием cURL</h3>
+<p>
+Приводимая ниже команда показывает как получить ту же информацию о контейнерах с помощью cURL.
+Она сообщает, что учетная запись содержит два контейнера и шесть объектов.
+</p><p>
+Выполните следующий запрос:<br />
+<strong><code>
+curl -X GET –i https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b -H 'X-Auth_token: token'
+</code></strong>
+</p><p>
+Отклик на запрос следующий:<br />
+<strong><code>
+HTTP/1.1 200 OK<br />
+X-Account-Container-Count: 2<br />
+X-Account-Object-Count: 6<br />
+<br />
+cities<br />
+countries
+</code></strong>
+</p><p>
+Здесь мы видим, что вывод имеет заголовок и тело, в отличие от предадущего примера, в котором был только заголовок, а тело отсутствовало.
+</p>
+
+
+<h2 id="Ch0405">Вывод списка объектов контейнера</h2>
+<p>
+Этот раздел описывает как получить список присутсвующих в контейнере объектов.
+</p>
+
+<h3 id="Ch040501">С использованием клиента Swift CLI</h3>
+<p>
+Следующая команда показывает как вывести список объектов при помощи клиента Swift CLI (в этом примере мы перечисляем объекты в контейнере городов):
+</p><p>
+Выполните следующий запрос:<br />
+<strong><code>
+swift --os-auth-token=token --os-storage-url= https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b list cities
+</code></strong>
+</p><p>
+Отклик на запрос следующий:<br />
+<strong><code>
+London.txt
+Mumbai.txt
+NewYork.txt
+</code></strong>
+</p>
+
+<h3 id="Ch040502">С использованием cURL</h3>
+<p>
+Следующая команда демонстрирует как перечислить объекты с помощью cURL.
+В данном примере мы перечисляем объекты контейнера <code>cities</code>.
+</p><p>
+Выполните следующий запрос:<br />
+<strong><code>
+curl -X GET -i https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b/cities -H 'X-Auth-Token: token '
+</code></strong>
+</p><p>
+Ответ на запрос выглядит следующим образом:<br />
+<strong><code>
+HTTP/1.1 200 OK<br />
+Content-Type: text/plain; charset=utf-8<br />
+Content-Length: 34<br />
+X-Container-Object-Count: 3<br />
+<br />
+London.txt<br />
+Mumbai.txt<br />
+NewYork.txt<br />
+</code></strong>
+</p>
+
+<h3 id="Ch040503">С использованием REST API</h3>
+<p>
+В данном примере мы выводим список объектов контейнера <code>cities</code>.
+Выполните следующий запрос:<br />
+<strong><code>
+Method : GET<br />
+URL : URL : https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b/countries<br />
+Header : X-Auth-Token: token<br />
+Data : No content
+</code></strong>
+</p><p>
+Ответ на запрос выглядит следующим образом:<br />
+<strong><code>
+HTTP/1.1 200 OK<br />
+Content-Type: text/plain; charset=utf-8<br />
+Content-Length: 38<br />
+X-Container-Object-Count: 3<br />
+<br />
+France.txt<br />
+India.txt<br />
+UnitedStates.txt
+</code></strong>
+</p>
+
+
+<h2 id="Ch0406">Обновление метаданных для контейнера</h2>
+<p>
+В этом разделе описывается как добавить или обновить метаданные для контейнера.
+</p>
+
+<h3 id="Ch040601">С использованием клиента Swift CLI</h3>
+<p>
+В данном примере мы добавляем метаданные для контейнера, который мы только что посетили.
+Выполните следующий запрос:<br />
+<strong><code>
+swift --os-auth-token=token --os-storage-url= https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b post countries -H &quot;X-Container-Meta-Countries: visited&quot;
+</code></strong>
+</p>
+
+<h3 id="Ch040602">С использованием REST API</h3>
+<p>
+Теперь мы добавляем метаданные с использованием REST API.
+</p><p>
+Выполните следующий запрос:<br />
+<strong><code>
+Method : POST<br />
+URL : https://storage.lts2.evault.com/v1/26cef4782cca4e5aabbb9497b8c1ee1b/countries<br />
+Header : X-Auth-Token: token<br />
+ X-Container-Meta-Countries: visited<br />
+Data : No content
+</code></strong>
+</p>
+
+
+<h2 id="Ch0407">Переменные окружения</h2>
+<p>
+Для упрощения команд CLI могут быть использованы следующие переменные окружения:<ul>
+ <li><code>OS_USERNAME</code>: Содержит имя пользователя для доступа к учетной записи
+ <li><code>OS_PASSWORD</code>: Содержит пароль, связанный с именем пользователя
+ <li><code>OS_TENANT_NAME</code>: Содержит имя владельца
+ <li><code>OS_AUTH_URL</code>: Содержит URL аутентификации
+</ul></p><p>
+Экспортировав эти переменные окружения один раз, у нас больше не будет необходимости передавать эти значения как входные параметры при выполнении инструментов Swift CLI.  
+</p>
+
+<h2 id="Ch0408">Псевдо- иерархические каталоги</h2>
+<p>
+Система хранения объектов OpenStorage Swift может имитировать иерархическую структуру каталогов в контейнерах, в том числе / (косую черту) в имени объекта.
+</p><p>
+Давайте загрузим файл (<code>AMERICA/USA/Newyork.txt</code>) в контейнер <code>Continent</code> с использованием следующей команды:<br />
+<strong><code>
+# swift upload Continent AMERICA/USA/Newyork.txt
+</code></strong>
+</p><p>
+Давайте выведем список контейнера <code>Continent</code> который имеет несколько псевдо- иерархических папок с использованием следующей команды:<br />
+<strong><code>
+# swift list Continent<br />
+<br />
+AMERICA/USA/Newyork.txt<br />
+ASIA/ASIA.txt<br />
+ASIA/China/China.txt<br />
+ASIA/INDIA/India.txt<br />
+Australia/Australia.txt<br />
+continent.txt
+</code></strong>
+</p><p>
+Мы можем использовать / как параметр разделителя (delimiter), чтобы ограничить отображаемые результаты.
+Мы также можем использовать параметр префикса (prefix) вместе с параметром разделителя для просмотра объектов в псевдо- каталоге вместе с псевдо- каталогами внутри них.
+Ниже приведено несколько примеров, демонстрирующих использование этих параметров:<br />
+<strong><code>
+# swift list Continent --delimiter /<br />
+<br />
+AMERICA/<br />
+ASIA/<br />
+Australia/<br />
+continent.txt<br />
+<br />
+<br />
+# swift list Continent --delimiter / --prefix ASIA/<br />
+<br />
+ASIA/ASIA.txt<br />
+ASIA/China/<br />
+ASIA/INDIA/<br />
+<br />
+<br />
+# swift list Continent --delimiter / --prefix ASIA/INDIA/<br />
+<br />
+ASIA/INDIA/India.txt
+</code></strong>
+</p>
+
+<h2 id="Ch0409">ACL контейнера</h2>
+<p>
+Как мы видели в предыдущих разделах, для того, чтобы получить доступ к контейнерам и объектам, в заголовке <code>X-Auth-Token</code> каждого запроса должен быть направлен действующий <strong>маркер</strong> аутентификации.
+В противном случае, будет возвращен код ошибки авторизации. 
+В некоторых случаях для определенных контейнеров и объектов доступ должен быть обеспечен другим клиентам и приложениям.
+Доступ может быть обеспечен путем установки элемента метаданных для контейнера под названием <code>X-Container-Read</code>.
+Следующий пример устанавливает этот <strong>Access Control Lists</strong> (ACL) к <code>cities</code> контейнера:
+</p><p>
+Во-первых, давайте выведем список состояния контейнера, который показывает отсутствие ACL. 
+Выполните следующую команду с правами администратора (пользователь с правами администратора будет иметь право запускать эту команду):<br />
+<strong><code>
+# swift stat cities
+</code></strong>
+</p><p>
+Значения <code>Read ACL</code> и <code>Write ACL</code> в следующем ответе указывают на отсутствие ACL:<br />
+<strong><code>
+Account: 26cef4782cca4e5aabbb9497b8c1ee1b <br />
+Container: cities <br />
+Objects: 3 <br />
+Read ACL: <br />
+Write ACL: <br />
+Sync To:
+</code></strong>
+</p><p>
+Когда пользователь <code>tenant1:user1</code>, который не имеет доступа к данному контейнеру, пытается получить доступ к данному контейнеру, возвращается сообщение об ошибке запрета доступа.
+</p><p>
+Выполните следующий запрос:<br />
+<strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U tenant1:user1 -K t1 list cities
+</code></strong>
+</p><p>
+В качестве ответа будет возвращена ошибка, вызванная запретом на доступ.
+Эта ошибка выгдядит следующим образом: <br />
+<strong><code>
+Container GET failed: 403 Forbidden<br />
+Access was denied to this resource
+</code></strong>
+</p><p>
+В предыдущем примере, имя пользователя обеспечивается с помощью параметра <code>-U</code>, а ключ для доступа к учетной записи предоставляется с помощью опции <code>-K</code>.
+</p><p>
+Теперь, давайте установим элемент метаданных <code>X-Container-Read</code> и обеспеченим доступа на <code>чтение</code> для <code>tenant1:user1</code>.
+Эта операция может быть выполнена только пользователем с правами администратора, при помощи следующей команды:<br />
+<strong><code>
+# swift post -r tenant1:user1 cities
+</code></strong>
+</p><p>
+Для проверки допусков ACL мы выполним следующую команду:<br />
+<strong><code>
+# swift stat cities
+</code></strong>
+</p><p>
+Отклик на выполненную команду будет следующим:<br />
+<strong><code>
+Account: 26cef4782cca4e5aabbb9497b8c1ee1b<br />
+Container: cities<br />
+Objects: 3<br />
+Read ACL: tenant1:user1<br />
+Write ACL:<br />
+Sync To:
+</code></strong>
+</p><p>
+Теперь, когда пользователь <code>tenant1:user1</code> попытается получить доступ к данному контейнеру, доступ разрешен и команда выполнится успешно.
+</p><p>
+Выполните следующий запрос:<br />
+<strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U tenant1:user1 -K t1 list cities
+</code></strong>
+</p><p>
+Отклик на запрос будет следующим:<br />
+<strong><code>
+London.txt<br />
+Mumbai.txt<br />
+NewYork.txt
+</code></strong>
+</p><p>
+Так как ACL <code>X-Container-Write</code> на контейнер <code>cities</code> не установлен для пользователя <code>tenant1:user1</code>, этот пользователь не сможет записывать в контейнер <code>cities</code>.
+Чтобы предоставить право записи, давайте установим ACL <code>X-Container-Write</code> следующим образом:<br />
+<strong><code>
+# swift post -w tenant1:user1 cities
+</code></strong>
+</p><p>
+Чтобы проверить разрешения ACL, мы выполним следующую команду:<br />
+<strong><code>
+# swift stat cities
+</code></strong>
+</p><p>
+Ответ предыдущей команды будет следующим:<br />
+<strong><code>
+Account: 26cef4782cca4e5aabbb9497b8c1ee1b<br />
+Container: cities<br />
+Objects: 3<br />
+Read ACL: tenant1:user1<br />
+Write ACL: tenant1:user1
+Sync To:</code></strong>
+</p><p>
+Теперь пользователь <code>tenant1:user1</code> может записывать в контейнер <code>cities</code>. 
+</p><p>
+Если мы хотим предоставить доступ большому числу пользователей, могут быть использованы ACL такие, как <code>.r:*, .rlistings</code>.
+Префикс <code>.r:*</code> позволяет извлекать из контейнера объекты любому пользователю, а <code>.rlistings</code> включает просмотр списка содержимого контейнера.
+</p>
+
+<h2 id="Ch0410">Обмен большими объектами</h2>
+<p>
+Как уже обсуждалось в <a href="Ch02ru.htm"><em>Главе 2. Архитектура OpenStack Swift</em></a>, Swift ограничивает загрузку отдельного объекта объемом в 5ГБ.
+Объекты бОльшего размера могут быть разделены на сегменты по 5ГБ или меньше путем задания параметра размера сегмента в аргументе инструмента командной строки Swift CLI и загружать в специальный контейнер (создаваемый в пределах контейнера, в который загружается объект).
+</p><p>
+После того, как загрузка была завершена, должен быть создан объект манифест, который содержит информацию о сегментах.
+Файл манифеста имеет нулевой размер и заголовки, такие как <code>X-Object-Manifest</code>, которые идентифицируют специальный контейнер, где хранятся сегменты и имя, с которого начнется именование всех сегментов.
+Например, если мы должна загрузить <code>France.txt</code>, имеющий размер 8 Гб, контейнер <code>countries</code>, то объект <code>France.txt</code> должен быть разделен надвое (5 ГБайт и 3 ГБайта).
+Имя порции объекта начнется с <code>France.txt</code> (<code>France.txt/../00000000</code> и <code>France.txt/../00000001</code>).
+</p><p>
+Будет создан специальный контейнер с названием <code>countries_segments</code>, и порции данных будут загружаться в этот контейнер.
+В контейнере <code>countries</code> будет создан объект манифеста с названием <code>France.txt</code>.
+Файл манифеста будет иметь нулевую длину и будет содержать следующий заголовок. (Не обязательно помещать сегменты в специальный контейнер и они могут существовать в том же контейнере):<br />
+<strong><code>
+X-Object-Manifest: countries_segments/France.txt
+</code></strong>
+</p><p>
+Когда загрузка объекта большого размера выполнена, Swift автоматически объединяет все сегменты и загружается весь объект большого размера.</p><p>
+</p><p>
+CLI клиента Swift имеет флаг <code>-S</code> для определения размера сегмента, который может быть использован для разделения больших объектов на сегменты и последующей загрузки.
+Следующая команда использует для загрузки файла размер сегмента  5368709120 байт:
+Сделайте следующий запрос: <br />
+<strong><code>
+# swift upload countries -S 5368709120 France.txt
+</code></strong>
+</p><p>
+Выдача предыдущей команды выглядит следующим образом:<br />
+<strong><code>
+France.txt segment 0<br />
+France.txt segment 1<br />
+France.txt segment 2<br />
+France.txt
+</code></strong>
+</p><p>
+Следующая команда может быть использована для просмотра списка присутствующих контейнеров:<br />
+<strong><code>
+# Swift list
+</code></strong>
+</p><p>
+Ответ предыдущей команды будет следующим:<br />
+<strong><code>
+Countries<br />
+Countries_segments<br />
+cities
+</code></strong>
+</p><p>
+Следующая команда перечислит объекты в контейнере <code>countries_segments</code>:<br />
+<strong><code>
+# Swift list
+</code></strong>
+</p><p>
+Вывод последней команды выглядит так:<br />
+<strong><code>
+France.txt/1385989364.105938/5368709120/00000000<br />
+France.txt/1385989364.105938/5368709120/00000001<br />
+France.txt/1385989364.105938/5368709120/00000002<br />
+</code></strong>
+(<em>Прим. пер.: в оригинале отсутствует последняя строчка, я счел это опиской.</em>)
+</p>
+
+<h2 id="Ch0411">Совместимость с API Amazon S3</h2>
+<p>
+Пользователи, знакомые с API Amazon S3 и осуществляющими доступ к сегментам (bucket) и объектам S3, могут осуществлять Swift доступ использую S3 совместимый API с помощью программного обеспечения среднего уровня Swift3.
+</p><p>
+Здесь мы покажем шаги, требующиеся одному методу, который использует API S3 для доступа к хранилищу объектов Swift.
+Эти шаги объясняют как установить необходимые инструменты и пакеты, создать права и обновить файлы настройки.
+</p><p>
+Следующие шаги выполнены на узле прокси сервера, который работает под управлением дистрибутива Ubuntu 12.04:<ol>
+ <li>Вначале пользователь запрашивает права EC2 (ключ доступа и ключ безопасности).
+Команды <code>keystone user-list</code> и <code>keystone tenant-list</code> для получения ID пользователя и ID владельца.
+Следующая команда может быть использована для создания этих ключей (она должна быть выполнена на прокси сервере):<br />
+<strong><code>
+# keystone ec2-credentials-create --userid 916673a90b8749e18f0ee3ec5bf17ab9 --tenant-id 6530edfe037242d1ac8bb07b7fd76046
+</code></strong><br />
+Ответ такой:<br />
+<code>
++-----------+----------------------------------+<br />
+|&nbsp; Property |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-----------+----------------------------------+<br />
+| &nbsp; access &nbsp;| 1178d235dbd84d48b417170ec9aed72c |<br />
+| &nbsp; secret &nbsp;| c4ea0a8fbf7d4a469f6d0fb5cdb47d5b |<br />
+| tenant_id | 6530edfe037242d1ac8bb07b7fd76046 |<br />
+|&nbsp; user_id &nbsp;| 916673a90b8749e18f0ee3ec5bf17ab9 |
+</code>
+ <li>Установите пакет Swift3, выполнив следующие команды (эти команды требуют предварительной установки в вашей системе Git):<br />
+<strong><code>
+# sudo git clone https://github.com/fujita/swift3.git
+# cd swift3 <br />
+# sudo python setup.py install <br />
+</code></strong>
+ <li>Установите пакет <code>libdigest-hmac-perl</code> выполнив следующую команду (этот пакет используется для проверки согласованности между двумя элементами, которые совместно используют код безопасности):<br />
+<strong><code>
+# apt-get install libdigest-hmac-perl
+</code></strong>
+ <li>Отредактируйте файл <code>proxy-server.conf</code> и, если вы хотите использовать аутентификацию keystone, сделайте следующие изменения:<ul>
+  <li>Измените строку конвейера (pipeline) в файле <code>proxy-server.conf</code> на:<br />
+<strong><code>
+[pipeline:main]<br />
+pipeline = catch_errors cache swift3 s3token authtoken<br />
+keystone proxy-server
+</code></strong>
+  <li>Добавьте фильтр Swift3 WSGI в файл <code>proxy-server.conf</code> используя следующую команду:<br />
+<strong><code>
+[filter:swift3]<br />
+use = egg:swift3#swift3
+</code></strong>
+  <li>Добавьте фильтр <code>s3token</code> как это показано в следующей команде:<br />
+<strong><code>
+[filter:s3token]<br />
+paste.filter_factory = keystone.middleware.s3_token:filter_factory<br />
+auth_port = 35357<br />
+auth_host = 127.0.0.1<br />
+auth_protocol = http
+</code></strong>
+  <li>Перезапустите службу прокси при помощи следующей команды:<br />
+<strong><code>
+# Service swift-proxy restart
+</code></strong>
+ </ul>
+
+ <li>На клиенте, который будет осуществлять доступ к хранилищу объектов Swift должны быть выполнены следующие шаги:<ul>
+  <li>Поскольку мы будем использовать <code>s3curl</code> для команд S3, загрузите <code> s3-curl.zip</code> со следующей ссылки:<br />
+<a href="http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip">http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip</a>
+  <li>Перед выполнением следующей команды убедитесь, что у вас установлена утилита <code>wget</code>:<br />
+<strong><code>
+# wget http://s3.amazonaws.com/doc/s3-example-code/s3-curl.zip
+</code></strong>
+  <li>Распакуйте <code>s3-curl.zip</code> и предоставьте доступ с исполнением файлу <code>s3curl.pl</code>
+  <li>Создайте файл <code>.s3curl</code>, а также измените ID и ключ персональной учетной записи на права EC2 (ключи доступа и безопасности) выданные пользователю.
+Для создания такого файла, как приеден ниже, мы используем редактор vi:<br />
+<strong><code>
+#vi ~/.s3curl<br />
+%awsSecretAccessKeys = (<br />
+# personal account<br />
+ personal => {<br />
+ id => '1178d235dbd84d48b417170ec9aed72c',<br />
+ key => 'c4ea0a8fbf7d4a469f6d0fb5cdb47d5b',<br />
+ },<br />
+# corporate account<br />
+work => {<br />
+ id => '1ATXQ3HHA59CYF1CVS02',<br />
+ key => 'WQY4SrSS95pJUT95V6zWea01gBKBCL6PI0cdxeH8',<br />
+ },<br />
+);
+</code></strong>
+ </ul>
+</ol>
+</p>
+
+<h3 id="Ch041101">Доступ к Swift с использованием команд S3</h3>
+<p>
+В данном разделе мы приведем примеры команд S3 для выполнения различных действий.<ul>
+ <li><strong>Список сегментов (bucket)</strong>:
+Эта команда перечисляет все сегменты для данного пользователя.
+Сегменты в S3 являются аналогами контейнеров в Swift.<br />
+<strong><code>
+# ./s3curl.pl --id=personal -- https://auth.lts2.evault.com –v
+</code></strong><br />
+Ответ будет следующим:<br />
+<strong><code>
+<?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?><ListAllMyBucketsResultxmlns=&quot;http://doc.s3.amazonaws.com/2006-03-01&quot;><Buckets><br />
+ <Bucket><Name>cities</Name><CreationDate>2009-02-03T16:45:09.000Z</CreationDate></Bucket><br />
+ <Bucket><Name>countries</Name><CreationDate>2009-02-03T16:45:09.000Z</CreationDate></Bucket><br />
+ </Buckets></ListAllMyBucketsResult>
+</code></strong>
+ <li><strong>Список объектов в сегменте (bucket)</strong>:
+Эта команда перечисляет все объекты, присутствующие в описанном сегменте.
+Давайте выведем список всех объектов в сегменте <code>cities</code> с использованием следующей команды:<br />
+<strong><code>
+# ./s3curl.pl --id=personal -- https://auth.lts2.evault.com/cities -v
+</code></strong>
+ <li><strong>Создание сегмента (bucket)</strong>:
+Следующая команда создает сегмент с именем <code>continents</code>:<br />
+<strong><code>
+# ./s3curl.pl --id=personal --createBucket -- -v https://auth.lts2.evault.com/continents
+</code></strong>
+ <li><strong>Удаление сегмента (bucket)</strong>:
+Следующая команда удалит сегмент с именем <code>continents</code>:<br />
+<strong><code>
+# ./s3curl.pl --id=personal --delete -- -v https://auth.lts2.evault.com/continents
+</code></strong>
+</ul>
+</p>
+
+
+<h2 id="Ch0412">Доступ к Swift с использованием библиотек клиента</h2>
+<p>
+Для доступа к кластеру Swift cуществуют различные библиотеки, доступные в java, Python, Ruby, PHP и других языках программирования.
+С использованием этих библиотек приложения могут быть упрощены.
+Давайте осветим некоторые из этих библиотек.
+</p>
+
+<h3 id="Ch041201">Java</h3>
+<p>
+Для написания приложений на java для связи со Swift и выполнения различных операций с учетными записями, контейнерами и объектами могут быть использована библиотека Apache jclouds (<a hreef="http://jclouds.apache.org/documentation/quickstart/rackspace/">http://jclouds.apache.org/documentation/quickstart/rackspace/</a>), в частности <code>org.jclouds.openstack.swift.CommonSwiftClient</code>.
+</p><p>
+Простейший код выглядит следующим образом:<br />
+<code>
+import org.jclouds.ContextBuilder;<br />
+import org.jclouds.blobstore.BlobStore;<br />
+import org.jclouds.blobstore.BlobStoreContext;<br />
+import org.jclouds.openstack.swift.CommonSwiftAsyncClient;<br />
+import org.jclouds.openstack.swift.CommonSwiftClient;<br />
+<br />
+BlobStoreContext context = ContextBuilder.newBuilder(provider)<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.endpoint("http://auth.lts2.evault.com/")<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.credentials(user, password)<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.modules(modules)<br />
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;.buildView(BlobStoreContext.class);<br />
+storage = context.getBlobStore();<br />
+swift = context.unwrap();<br />
+containers = swift.getApi().listContainers();<br />
+objects = swift.getApi().listObjects(myContainer);
+</code>
+</p>
+
+<h3 id="Ch041202">Python</h3>
+<p>
+Библиотека python-swiftclient обеспечивает связывание языка Phyton с OpenStackSwift.
+После осуществления аутентификации, следующий код примера показывает как перечислить контейнеры: <br />
+<code>
+#!/usr/bin/env python<br />
+<br />
+http_connection = http_connection(url)<br />
+cont = get_container(url, token, container, marker, limit, prefix,<br />
+delimiter, end_marker, path, http_conn)<br />
+</code>
+</p><p>
+Дополнителная информация о библиотеки доступна по адресу: <a href="https://github.com/openstack/python-swiftclient/">https://github.com/openstack/python-swiftclient/</a>
+</p>
+
+<h3 id="Ch041203">Ruby</h3>
+<p>
+Библиотека ruby-openstack (<a href="https://github.com/ruby-openstack/rubyopenstack">https://github.com/ruby-openstack/rubyopenstack</a>) обеспечивает соединение ruby с облаком OpenStack.
+Код следующего примера демонстрирует как вывести список контейнеров и объектов: <br />
+<code>
+Lts2 = OpenStack::Connection.create(:username => USER, :api_key =><br />
+API_KEY, :authtenant => TENANT, :auth_url => API_URL, :service_type =><br />
+"object-store")<br />
+<br />
+Lts2.containers<br />
+=>["cities" , "countries"]<br />
+Cont = Lts2.container("cities")<br />
+Cont.objects<br />
+=>[" London.txt"," Mumbai.txt"," NewYork.txt"]<br />
+</code>
+</p>
+
+
+<h2 id="Ch0413">Заключение</h2>
+<p>
+В этой главе вы узнали как использовать различных клиентов Swift для взаимодействовия с кластерами Swift и получать информацию об учетных записях, контейнерах и объектах.
+Вы уже познакомились со списками контроля доступа (ACL), передачей больших объектов, а также к различными клиентскими библиотеками Swift, которые могут быть использованы для написания приложений на нужном Вам языке, например на Java, Ruby и Python.
+</p><p>
+В следующей главе мы обсудим управление системой Swift и подлежащих рассмотрению вещах при замене или расширении дисков, узлов и зон.
+Она также предоставит информацию о различных инструментах, которые могут быть использованы для сбора информации о поведении системы хранения объектов.
+</p>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch03ru.htm">Глава 3</a></td>
+ <td align="center"><a href="ToC.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch05ru.htm">Глава 5</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,858 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Словарь. Руководство по эксплуатации OpenStack.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing, Swift, RESTful, Object Storage, Ceph, CORS, CNAME lookup, Domain remap, Health check, Rate limiting, Bulk delete, Container qoutas, account qoutas, TempURL, Static Web, Form post, recon, Swift origin server, Bulk archive auto-extraction">
+   <meta name="Description" content="Словарь. Ресурсы. Руководство по эксплуатации OpenStack.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="index.htm">Руководство по эксплуатации OpenStack</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<hr />
+<h1 id="Glossary" align="right">Словарь</h1>
+
+<em>Пользуйтесь переводом <strong>существенно переработанной и дополенной <a href="http://onreader.mdl.ru/openstack-ops/content/openstack_glossary.html">2й редакции</a></strong> (12-дек-2014),<br />
+находящейся теперь и в режиме <a href="http://docs.openstack.org/openstack-ops/content/openstack_glossary.html">постоянно обновляемой документации</a> <br />
+(последняя пока доступна только на англ.яз.).</em><br />
+<p></p>
+
+<a class="inside" href="#"></a>
+Используйте данный словарь для получения определений слов и фраз в контексте OpenStack.
+  Для добавления в данный словарь сделайте ответвление репозитория <code>openstack/openstack-manuals</code> в <a href="http://github.com">github.com</a> и обновите исходные файлы с использованием процесса ответного сообщения OpenStack.
+<dl id="account"><strong>account</strong> <br />учетная запись
+ </dt><dd> Текущее состояние учетной записи <a class="inside" href="#swift">swift</a>, или учетная запись из службы идентификации такой как, <a class="inside" href="#Active Directory">Active Directory</a>, <code>/etc/passwd</code>, OpenLDAP, <a class="inside" href="#keystone">keystone</a> и тому подобных.
+</dd></dl><dl id="account auditor"><dt><strong>account auditor</strong> <br />средство контроля учетной записи
+ </dt><dd> Исправляет пропущенные репликации, некорректные и нарушенные объекты в определенной <a class="inside" href="#account">учетной записи</a> <a class="inside" href="#swift">swift</a> при помощи выполнения запросов к серверу базы данных <a class="inside" href="#SQLite">SQLite</a>.
+</dd></dl><dl id="account database"><dt><strong>account database</strong> <br />база данных учетных записей
+ </dt><dd> База данных <a class="inside" href="#SQLite">SQLite</a>, которая содержит <a class="inside" href="#account">учетные записи</a> <a class="inside" href="#swift">swift</a> и связанные с ними метаданные, доступная для серверов учетных записей.
+ Как вариант, сервер <a class="inside" href="#keystone">keystone</a>, который содержит <a class="inside" href="#account">учетные записи</a>.
+</dd></dl><dl id="account reaper"><dt><strong>account reaper</strong> <br />чистильщик учетных записей
+ </dt><dd> Рабочий процесс <a class="inside" href="#swift">swift</a>, который сканирует базы данных <a class="inside" href="#account">учетных записей</a> на предмет наличия помеченных на удаление и удаляет их на <a class="inside" href="#account server">серверах учетных записей</a>.
+</dd></dl><dl id="account server"><dt><strong>account server</strong> <br />сервер учетных записей
+ </dt><dd> Поддерживает список контейнеров в <a class="inside" href="#swift">swift</a> и хранит контейнерную информацию в <a class="inside" href="#account database">базе данных учетных записей</a>.
+</dd></dl><dl id="account service"><dt><strong>account service</strong> <br />служба учетных записей
+ </dt><dd> Компонент <a class="inside" href="#swift">swift</a>, который поддерживает сервисы <a class="inside" href="#account">учетных записей</a>, такие как: списки, создание, изменение и аудит (<a class="inside" href="#account auditor">контроль учетных записей</a>).
+ Не следует путать с <a class="inside" href="#keystone">keystone</a>, OpenLDAP или аналогичными службами <a class="inside" href="#account">учетных записей</a>!
+</dd></dl><dl id="Active Directory"><dt><strong>Active Directory</strong>
+ </dt><dd> Основанная на LDAP служба аутентификации и идентификации Microsoft.
+ Поддерживается в OpenStack.
+</dd></dl><dl id="address pool"><dt><strong>address pool</strong> <br />адресный пул
+ </dt><dd> Группа фиксированных и/или плавающих IP адресов, которые выделены проекту <a class="inside" href="#nova">nova</a> и могут использоваться экземплярами <a class="inside" href="#Virtual Machine (VM)">VM</a> или назначаться им в проекте.
+</dd></dl><dl id="admin API"><dt><strong>admin API</strong> <br />административный API
+ </dt><dd> Подмножество обращений к API, которое доступно авторизованным администраторам и, в общем случае, не доступно конечным пользователям или общедоступному интернету, может существовать в виде отдельной службы (<a class="inside" href="#keystone">keystone</a>) или может являться подмножеством другого API (<a class="inside" href="#nova">nova</a>).
+</dd></dl><dl id="Amazon Kernel Image (AKI)"><dt><strong>Amazon Kernel Image (AKI)</strong> <br /> Образ ядра Amazon
+ </dt><dd> Формат как контенера <a class="inside" href="#Virtual Machine (VM)"><a class="inside" href="#Virtual Machine (VM)">VM</a></a>, так и диска <a class="inside" href="#Virtual Machine (VM)">VM</a>.
+ Поддерживается <a class="inside" href="#glance">glance</a>.
+</dd></dl><dl id="Amazon Machine Image (AMI)"><dt><strong>Amazon Machine Image (AMI)</strong>
+ </dt><dd> Формат как контенера <a class="inside" href="#Virtual Machine (VM)"><a class="inside" href="#Virtual Machine (VM)">VM</a></a>, так и диска <a class="inside" href="#Virtual Machine (VM)">VM</a>.
+ Поддерживается <a class="inside" href="#glance">glance</a>.
+</dd></dl><dl id="Amazon Ramdisk Image (ARI)"><dt><strong>Amazon Ramdisk Image (ARI)</strong>
+ </dt><dd> Формат как контенера <a class="inside" href="#Virtual Machine (VM)">VM</a>, так и диска <a class="inside" href="#Virtual Machine (VM)">VM</a>.
+ Поддерживается <a class="inside" href="#glance">glance</a>.
+</dd></dl><dl id="Apache" id="HTTPd"><dt><strong>Apache</strong>
+ </dt><dd> Наиболее употребимое программное обеспечение веб сервера, используемое в настоящее время в интернете, также известно как HTTPd.
+</dd></dl><dl id="Apache License 2.0"><dt><strong>Apache License 2.0</strong> <br />Лицензия Apache 2.0
+ </dt><dd> Все проекты ядра OpenStack поддерживаются на условиях лицензирования лицензии Apache 2.0.
+</dd></dl><dl id="API endpoint"><dt><strong><a class="inside" href="#API endpoint">API endpoint</a></strong> <br />терминал API
+ </dt><dd> Демон, рабочий процесс или служба, с которыми взаимодействует клиент с доступом через API.
+ В OpenStack терминалы API могут поддерживатьтакие службы, как аутентификация, добавление образов, загружаемые виртуальные машины и присоединяемые тома.
+</dd></dl><dl id="API extension"><dt><strong>API extension</strong> <br />расширение API
+ </dt><dd> Функции <a class="inside" href="#nova">nova</a> и <a class="inside" href="#quantum">quantum</a>, которыепозволяют модулям пользователей расширять API ядра.
+</dd></dl><dl id="API extension plug-in"><dt><strong>API extension plug-in</strong> <br /> Расширение API встраиваемых программ
+ </dt><dd> Альтернативный термин для встраиваемых модулей <a class="inside" href="#quantum">quantum</a> или расширений API <a class="inside" href="#quantum">quantum</a>.
+</dd></dl><dl id="API server"><dt><strong>API server</strong> <br /> сервер API
+ </dt><dd> Любой узел, выполняющий демон или рабочий процесс, которые поддерживают <a class="inside" href="#API endpoint">терминал API</a>.
+</dd></dl><dl id="API version"><dt><strong>API version</strong> <br />версия API
+ </dt><dd> В OpenStack версия API для проекта является частью URL.
+ Например, <a href="http://example.com/nova/v1/foobar"><code>example.com/nova/v1/foobar</code></a>.
+</dd></dl><dl id="Application Programming Interface (API)"><dt><strong>Application Programming Interface (API)</strong> <br />интерфейс прикладного программирования
+ </dt><dd> Набор технических описаний, используемых для доступа к службе, приложению или програме.
+ Включает всебя вызовы служб, необходимые для каждого вызова параметры и ожидаемые возвращаемые значения.
+</dd></dl><dl id="arptables"><dt><strong>arptables</strong> <br /> таблицы ARP
+ </dt><dd> Используются совместно с <a class="inside" href="#iptables">iptables</a>, <a class="inside" href="#ebtables">ebtables</a> и <a class="inside" href="#ip6tables">ip6tables</a> в <a class="inside" href="#nova">nova</a> для поддержки служб <a class="inside" href="#firewall">firewall</a>.
+</dd></dl><dl id="Asynchronous JavaScript and XML (AJAX)"><dt><strong>Asynchronous JavaScript and XML (AJAX)</strong> <br /> асинхронные JavaScript и XML
+ </dt><dd> Группа взаимосвязанных технологий разработки веб- приложений, используемая на клиентской стороне для создания асинхронных веб- приложений.
+ Интенсивно используется в <a class="inside" href="#horizon">horizon</a>.
+</dd></dl><dl id="attachment (network)"><dt><strong>attachment (network)</strong> <br /> сетевое связывание
+ </dt><dd> Привязывание ID интерфейса к логическому порту.
+ Подключает интерфейс к порту.
+</dd></dl><dl id="auditor"><dt><strong>auditor</strong> <br />аудитор
+ </dt><dd> Рабочий процесс, который проверяет целостность объектов, контейнеров и учетных записей <a class="inside" href="#swift">swift</a>.
+ Термин &quot;аудитор&quot; является общим для службы контроля учетных записей <a class="inside" href="#swift">swift</a>, контейнеров и объктов.
+</dd></dl><dl id="Austin"><dt><strong>Austin</strong>
+ </dt><dd> Название проекта для первой реализации OpenStack.
+</dd></dl><dl id="authentication"><dt><strong>authentication</strong> <br />аутентификация
+ </dt><dd> Продура, которая удостоверяет, что пользователь, процесс или клиент являются действительно теми, кем они себя заявляют, с использованием личных ключей, меток безопсности, паролей, отпечатков пальцев или аналогичных методов.
+ Сокращается до AuthN.
+</dd></dl><dl id="authentication token"><dt><strong>authentication token</strong> <br /> метка аутентификации
+ </dt><dd> Строка текста, поддерживаемая для клиента после его <a class="inside" href="#authentication">аутентификации</a>.
+ Должна поддерживаться пользователем илипроцессом при последующих запросах к терминалам API.
+</dd></dl><dl id="authorization"><dt><strong>authorization</strong> <br />авторизация
+ </dt><dd> Проверка того, что пользователь, процесс или клиент имеют права для выполнения действия, такого как удаление объекта <a class="inside" href="#swift">swift</a>, просмотр содержимого контейнера <a class="inside" href="#swift">swift</a>, запуска <a class="inside" href="#Virtual Machine (VM)">VM</a> <a class="inside" href="#nova">nova</a>, сброс пароля и тому подобного.
+ Сокращается как AuthZ.
+</dd></dl><dl id="availability zone"><dt><strong>availability zone</strong> <br />зона доступности
+ </dt><dd> Отделенная область разработки облака.
+</dd></dl><dl id="back-end catalog"><dt><strong>back-end catalog</strong> <br />каталог на сервере
+ </dt><dd> Метод хранения, используемый службой каталога <a class="inside" href="#keystone">keystone</a> для хранения и выборки информации о <a class="inside" href="#API endpoint">терминалах API</a>, которые доступны клиенту.
+ Примеры включают базы данных SQL, базы данных LDAP или сервера KVS.
+</dd></dl><dl id="back-end store"><dt><strong>back-end store</strong> <br />сервер хранения
+ </dt><dd> Система хранения постоянных данных используемая <a class="inside" href="#glance">glance</a> для выборки и хранения образов <a class="inside" href="#Virtual Machine (VM)">VM</a>.
+ Дополнительно может содержать <a class="inside" href="#swift">swift</a>, локальную файловую систему, <a class="inside" href="#S3">S3</a> и HTTP.
+</dd></dl><dl id="bare"><dt><strong>bare</strong>
+ </dt><dd> Формат контейнера <a class="inside" href="#glance">glance</a>, который показывает, что для образа <a class="inside" href="#Virtual Machine (VM)">VM</a> не существует никакого контейнера.
+</dd></dl><dl id="Bexar"><dt><strong>Bexar</strong>
+ </dt><dd> Групповая редакция относящихся к OpenStack проектов, выпущенная в феврале 2011.
+ Она включает только <a class="inside" href="#compute controller">Compute</a> (<a class="inside" href="#nova">nova</a>) и <a class="inside" href="#object Storage">Object Storage</a> (<a class="inside" href="#swift">swift</a>).
+</dd></dl><dl id="block device"><dt><strong>block device</strong> <br />блочное устройство
+ </dt><dd> Устройство, которое оперирует данными в форме блоков.
+ Подобные узлы устройств соединяют компоненты, такие как накопители на жестких дисках, устройства CD-ROM, флэш- устройства и прочие алресуемые области памяти.
+</dd></dl><dl id="block migration"><dt><strong>block migration</strong> <br />блочная миграция
+ </dt><dd> Метод миграции VM в реальном времени, используемый KVM для перекачки экземпляров с одного <a class="inside" href="#host">хоста</a> на другой с очень маленьким временем простоя в течение инициированного пользователем переключения.
+ Не требует совместно используемых хранилищ.
+ Поддерживается <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="bootable disk image"><dt><strong>bootable disk image</strong> <br />загружаемый образ диска
+ </dt><dd> Тип <a class="inside" href="#VM image">образа VM</a>, который существует как отдельный, загружаемый файл.
+</dd></dl><dl id="builder file"><dt><strong>builder file</strong>
+ </dt><dd> Содержит информацию о настройке для кольца <a class="inside" href="#swift">swift</a>, и используется для перенастройки кольца или его повторного создания из рабочей области после серьезного сбоя.
+</dd></dl><dl id="cache pruner"><dt><strong>cache pruner</strong> <br /> служба усечения кэша
+ </dt><dd> Исполняемая программа, которая используется для сохранения кэша <a class="inside" href="#VM image">образов VM</a> <a class="inside" href="#glance">glance</a> на уровне установленного максимального значения или ниже его.
+</dd></dl><dl id="Cactus"><dt><strong>Cactus</strong>
+ </dt><dd> Групповая редакция проектов OpenStack, выпущенная весной 2011.
+ Она содержит <a class="inside" href="#compute controller">Compute</a> (<a class="inside" href="#nova">nova</a>), <a class="inside" href="#object Storage">Object Storage</a> (<a class="inside" href="#swift">swift</a>) и службу образов (Image service) (<a class="inside" href="#glance">glance</a>).
+</dd></dl><dl id="capability"><dt><strong>capability</strong> <br />мощность
+ </dt><dd> Определяет ресурсы для элемента, включающие CPU, память и сеть.
+ Может применяться к определенным службам в пределах элемента или для всего элемента.
+</dd></dl><dl id="capacity cache"><dt><strong>capacity cache</strong> <br />кэш- параметры мощности
+ </dt><dd> Таблица на сервере базы данных <a class="inside" href="#nova">nova</a>, которая содержит текущую рабочую нагрузку, объем свободной оперативной памяти, число <a class="inside" href="#Virtual Machine (VM)">виртуальных машин</a>, запущенных на каждом <a class="inside" href="#host">хосте</a>.
+ Используется для определения на какой <a class="inside" href="#Virtual Machine (VM)">виртуальной машине</a> запускается <a class="inside" href="#host">хост</a>.
+</dd></dl><dl id="capacity updater"><dt><strong>capacity updater</strong> <br />корректор мощности
+ </dt><dd> Драйвер уведомлений, который отслеживает экземпляры <a class="inside" href="#Virtual Machine (VM)">виртуальных машин</a> и, по мере необходимости, обновляет кэш-параметры мощности.
+</dd></dl><dl id="catalog"><dt><strong>catalog</strong> <br />каталог
+ </dt><dd> Содержит список доступных для пользователя <a class="inside" href="#API endpoint">терминалов API</a> после его <a class="inside" href="#authentication">аутентификации</a> в <a class="inside" href="#keystone">keystone</a>.
+</dd></dl><dl id="catalog service"><dt><strong>catalog service</strong> <br />служба каталога
+ </dt><dd> Служба <a class="inside" href="#keystone">keystone</a>, которая поддерживает список доступных пользователю <a class="inside" href="#API endpoint">терминалов API</a> после его <a class="inside" href="#authentication">аутентификации</a> в <a class="inside" href="#keystone">keystone</a>.
+</dd></dl><dl id="ceilometer"><dt><strong>ceilometer</strong>
+ </dt><dd> Вынашиваемый проект, который обеспечивает функции измерения и тарификации для OpenStack.
+</dd></dl><dl id="cell"><dt><strong>cell</strong> <br />элемент
+ </dt><dd> Обеспечивает логическую декомпозицию ресурсов <a class="inside" href="#nova">nova</a> во взаимоотношениях порожденных и порождающих процессов.
+ Запросы передаются отпорождающих элементов порождаемым элементам если родитель не может обеспечить необходимый ресурс.
+</dd></dl><dl id="cell forwarding"><dt><strong>cell forwarding</strong> <br />продвижение элемента
+ </dt><dd> Параметр <a class="inside" href="#nova">nova</a>, который позволяет порождающим элементам передавать запросы ресурсов порождаемым элементам если родитель не может обеспечить запрашиваемый ресурс.
+</dd></dl><dl id="cell manager"><dt><strong>cell manager</strong> <br />администратор элементов
+ </dt><dd> Компонент <a class="inside" href="#nova">nova</a>, который содержит список текущих возможностей <a class="inside" href="#host">хоста</a> в элементе и перенаправляет запросы надлежащим образом.
+</dd></dl><dl id="Ceph"><dt><strong>Ceph</strong>
+ </dt><dd> Массивно масштабируемая распределенная система хранения, которая состоит из <a class="inside" href="#object storage">хранилища объектов</a>, <a class="inside" href="#block device">блочных хранилищ</a>, а также POSIX-совместимых распределенных файловых систем.
+ Совместима с OpenStack.
+</dd></dl><dl id="CephFS"><dt><strong>CephFS</strong>
+ </dt><dd> POSIX-совмстимая файловая система, поддерживаемая <a class="inside" href="#Ceph">Ceph</a>.
+</dd></dl><dl id="certificate authority"><dt><strong>certificate authority</strong> <br />служба сертификации
+ </dt><dd> Простая организация сирификации поддерживается <a class="inside" href="#nova">nova</a> для VPN <a class="inside" href="#cloudpipe">конвейеров облака</a> и дешифровки <a class="inside" href="#VM image">образов VM</a>.
+</dd></dl><dl id="chance scheduler"><dt><strong>chance scheduler</strong> <br />случайный планировщик
+ </dt><dd> Используемый <a class="inside" href="#nova">nova</a> метод планирования, который случайным образом выбирает <a class="inside" href="#host">хосты</a> из пула.
+</dd></dl><dl id="changes-since"><dt><strong>changes-since</strong>
+ </dt><dd> Параметр API <a class="inside" href="#nova">nova</a>, который позволяет вам загружать изменения для запрашиваемого элемента с момента вашего последнего запроса, вместо загрузки нового, fresh set of data and comparing it against the old data.
+</dd></dl><dl id="Chef"><dt><strong>Chef</strong>
+ </dt><dd> A configuration management tool that supports OpenStack.
+</dd></dl><dl id="child cell"><dt><strong>child cell</strong>
+ </dt><dd> If a requested resource such as CPU time, disk storage, or memory is not available in the parent cell, the request is forwarded to its associated child cells. If the child cell can fulfill the request, it does.
+ </dt><dd> Otherwise, it attempts to pass the request to any of its children.
+</dd></dl><dl id="cinder"><dt><strong>cinder</strong>
+ </dt><dd> The OpenStack Block Storage service that maintains the block devices that can be attached to virtual machine instances.
+</dd></dl><dl id="cloud architect"><dt><strong>cloud architect</strong>
+ </dt><dd> A person who plans, designs, and oversees the creation of clouds.
+</dd></dl><dl id="cloud controller node"><dt><strong>cloud controller node</strong>
+ </dt><dd> A node that runs network, volume, API, scheduler and image services.
+ Each service may be broken out into separate nodes for scalability or availability.
+</dd></dl><dl id="cloud-init"><dt><strong>cloud-init</strong>
+ </dt><dd> A package commonly installed in <a class="inside" href="#VM image">VM image</a>s that performs initialization of an instance after boot using information that it retrieves from the metadata service such as the SSH public key and user data.
+</dd></dl><dl id="cloudpipe"><dt><strong>cloudpipe</strong>
+ </dt><dd> A service in <a class="inside" href="#nova">nova</a> used to create VPNs on a per-project basis.
+</dd></dl><dl id="cloudpipe image"><dt><strong>cloudpipe image</strong>
+ </dt><dd> A pre-made <a class="inside" href="#VM image">VM image</a> that serves as a cloudpipe server.
+ Essentially, OpenVPN running on Linux.
+</dd></dl><dl id="command filter"><dt><strong>command filter</strong>
+ </dt><dd> Lists allowed commands within the <a class="inside" href="#nova">nova</a> rootwrap facility.
+</dd></dl><dl id="community project"><dt><strong>community project</strong>
+ </dt><dd> A project that is not officially endorsed by the OpenStack Foundation.
+ If the project is successful enough, it might be elevated to an incubated project and then to a core project, or it might be merged with the main code trunk.
+</dd></dl><dl id="Compute API"><dt><strong>Compute API</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a>-api daemon that provides access to the <a class="inside" href="#nova">nova</a> services.
+ </dt><dd> Can also communicate with some outside APIs such as the Amazons EC2 API.
+</dd></dl><dl id="Compute API extension"><dt><strong>Compute API extension</strong>
+ </dt><dd> Alternative term for a <a class="inside" href="#nova">nova</a> API extension.
+</dd></dl><dl id="compute controller"><dt><strong>compute controller</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a> component that chooses suitable <a class="inside" href="#host">host</a>s on which to start <a class="inside" href="#Virtual Machine (VM)">VM</a> instances.
+</dd></dl><dl id="compute node"><dt><strong>compute node</strong>
+ </dt><dd> A node that runs the <a class="inside" href="#nova">nova</a>-compute daemon and the virtual machine instances.
+</dd></dl><dl id="compute service"><dt><strong>compute service</strong>
+ </dt><dd> Alternative term for the <a class="inside" href="#nova">nova</a> component that manages <a class="inside" href="#Virtual Machine (VM)">VM</a>s.
+</dd></dl><dl id="concatenated object"><dt><strong>concatenated object</strong>
+ </dt><dd> A segmented large object within <a class="inside" href="#swift">swift</a> that is put back together again and then sent to the client.
+</dd></dl><dl id="consistency window"><dt><strong>consistency window</strong>
+ </dt><dd> The amount of time it takes for a new <a class="inside" href="#swift">swift</a> object to become accessible to all clients.
+</dd></dl><dl id="console log"><dt><strong>console log</strong>
+ </dt><dd> Contains the output from a Linux <a class="inside" href="#Virtual Machine (VM)">VM</a> console in <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="container"><dt><strong>container</strong>
+ </dt><dd> Used to organize and store objects within <a class="inside" href="#swift">swift</a>, similar to the concept as a Linux directory but cannot be nested.
+ </dt><dd> Alternative term for a <a class="inside" href="#glance">glance</a> container format.
+</dd></dl><dl id="container auditor"><dt><strong>container auditor</strong>
+ </dt><dd> Checks for missing replicas or incorrect objects in the specified <a class="inside" href="#swift">swift</a> containers through queries to the <a class="inside" href="#SQLite">SQLite</a> back-end database.
+</dd></dl><dl id="container database"><dt><strong>container database</strong>
+ </dt><dd> A <a class="inside" href="#SQLite">SQLite</a> database that contains <a class="inside" href="#swift">swift</a> containers and related metadata and is accessed by the container server
+</dd></dl><dl id="container format"><dt><strong>container format</strong>
+ </dt><dd> The &quot;envelope&quot; used by <a class="inside" href="#glance">glance</a> to store a <a class="inside" href="#VM image">VM image</a> and its associated metadata, such as machine state, OS disk size, and so on.
+</dd></dl><dl id="container server"><dt><strong>container server</strong>
+ </dt><dd> Component of <a class="inside" href="#swift">swift</a> that manages containers.
+</dd></dl><dl id="container service"><dt><strong>container service</strong>
+ </dt><dd> The <a class="inside" href="#swift">swift</a> component that provides container services, such as create, delete, list, and so on.
+</dd></dl><dl id="controller node"><dt><strong>controller node</strong>
+ </dt><dd> Alternative term for a cloud controller node.
+</dd></dl><dl id="core API"><dt><strong>core API</strong>
+ </dt><dd> Depending on context, the core API is either the OpenStack API or the main API of a specific core project, such as <a class="inside" href="#nova">nova</a>, <a class="inside" href="#quantum">quantum</a>, <a class="inside" href="#glance">glance</a>, and so on.
+</dd></dl><dl id="core project"><dt><strong>core project</strong>
+ </dt><dd> An official OpenStack project.
+ </dt><dd> Currently consists of Compute (<a class="inside" href="#nova">nova</a>), Object Storage (<a class="inside" href="#swift">swift</a>), Image Service (<a class="inside" href="#glance">glance</a>), Identity (<a class="inside" href="#keystone">keystone</a>), Dashboard (<a class="inside" href="#horizon">horizon</a>), Networking (<a class="inside" href="#quantum">quantum</a>), and Volume (cinder).
+</dd></dl><dl id="credentials"><dt><strong>credentials</strong>
+ </dt><dd> Data that is only known to or accessible by a user that is used to verify the user is who they say they are and presented to the server during authentication.
+ </dt><dd> Examples include a password, secret key, digital certificate, fingerprint, and so on.
+</dd></dl><dl id="Crowbar"><dt><strong>Crowbar</strong>
+ </dt><dd> An open source community project by Dell that aims to provide all necessary services to quickly deploy clouds.
+</dd></dl><dl id="current workload"><dt><strong>current workload</strong>
+ </dt><dd> An element of the <a class="inside" href="#nova">nova</a> <a class="inside" href="#capacity cache">capacity cache</a> that is calculated based on the number of build, snapshot, migrate, and resize operations currently in progress on a given <a class="inside" href="#host">host</a>. 
+</dd></dl><dl id="customization module"><dt><strong>customization module</strong>
+ </dt><dd> A user-created Python module that is loaded by <a class="inside" href="#horizon">horizon</a> to change the look and feel of the dashboard.
+</dd></dl><dl id="dashboard"><dt><strong>dashboard</strong>
+ </dt><dd> The web-based management interface for OpenStack.
+ </dt><dd> An alternative name for <a class="inside" href="#horizon">horizon</a>.
+</dd></dl><dl id="database replicator"><dt><strong>database replicator</strong>
+ </dt><dd> The component of <a class="inside" href="#swift">swift</a> that copies changes in the account, container, and object databases to other nodes.
+</dd></dl><dl id="default panel"><dt><strong>default panel</strong>
+ </dt><dd> The panel that is displayed when a user accesses the <a class="inside" href="#horizon">horizon</a> dashboard.
+</dd></dl><dl id="default tenant"><dt><strong>default tenant</strong>
+ </dt><dd> New users are assigned to this <a class="inside" href="#keystone">keystone</a> tenant if no tenant is specified when a user is created.
+</dd></dl><dl id="default token"><dt><strong>default token</strong>
+ </dt><dd> A <a class="inside" href="#keystone">keystone</a> token that is not associated with a specific tenant and is exchanged for a scoped token.
+</dd></dl><dl id="delayed delete"><dt><strong>delayed delete</strong>
+ </dt><dd> An option within <a class="inside" href="#glance">glance</a> so that rather than immediately delete an image, it is deleted after a pre-defined number of seconds.
+</dd></dl><dl id="delivery mode"><dt><strong>delivery mode</strong>
+ </dt><dd> Setting for the <a class="inside" href="#nova">nova</a> RabbitMQ message delivery mode, can be set to either transient or persistent.
+</dd></dl><dl id="device"><dt><strong>device</strong>
+ </dt><dd> In the context of <a class="inside" href="#swift">swift</a> this refers to the underlying storage device.
+</dd></dl><dl id="device ID"><dt><strong>device ID</strong>
+ </dt><dd> Maps <a class="inside" href="#swift">swift</a> partitions to physical storage devices.
+</dd></dl><dl id="device weight"><dt><strong>device weight</strong>
+ </dt><dd> Used to distribute the partitions among <a class="inside" href="#swift">swift</a> devices.
+ </dt><dd> The distribution is usually proportional to the storage capacity of the device.
+</dd></dl><dl id="DevStack"><dt><strong>DevStack</strong>
+ </dt><dd> Community project that uses shell scripts to quickly deploy complete OpenStack development environments.
+</dd></dl><dl id="Diablo"><dt><strong>Diablo</strong>
+ </dt><dd> A grouped release of projects related to OpenStack that came out in the fall of 2011, the fourth release of OpenStack.
+ </dt><dd> It included Compute (<a class="inside" href="#nova">nova</a> 2011.3), Object Storage (<a class="inside" href="#swift">swift</a> 1.4.3), and the Image service (<a class="inside" href="#glance">glance</a>).
+</dd></dl><dl id="disk format"><dt><strong>disk format</strong>
+ </dt><dd> The underlying format that a disk image for a <a class="inside" href="#Virtual Machine (VM)">VM</a> is stored as within the <a class="inside" href="#glance">glance</a> back-end store. For example, AMI, ISO, QCOW2, VMDK, and so on.
+</dd></dl><dl id="dispersion"><dt><strong>dispersion</strong>
+ </dt><dd> In <a class="inside" href="#swift">swift</a>, tools to test and ensure dispersion of objects and containers to ensure fault tolerance.
+</dd></dl><dl id="Django"><dt><strong>Django</strong>
+ </dt><dd> A web framework used extensively in <a class="inside" href="#horizon">horizon</a>.
+</dd></dl><dl id="dnsmasq"><dt><strong>dnsmasq</strong>
+ </dt><dd> Daemon that provides DNS, DHCP, BOOTP, and TFTP services, used by the <a class="inside" href="#nova">nova</a> VLAN manager and FlatDHCP manager.
+</dd></dl><dl id="DNS record"><dt><strong>DNS record</strong>
+</dd></dl><dl id="A record that specifies information about"><dt><strong>A record that specifies information about</strong>
+</dd></dl><dl id="a particular domain and belongs to the"><dt><strong>a particular domain and belongs to the</strong>
+</dd></dl><dl id="domain."><dt><strong>domain.</strong>
+</dd></dl><dl id="Dynamic Host Configuration Protocol (DHCP)"><dt><strong>Dynamic Host Configuration Protocol (DHCP)</strong>
+ </dt><dd> A method to automatically configure networking for a <a class="inside" href="#host">host</a> at boot time.
+ </dt><dd> Provided by both <a class="inside" href="#quantum">quantum</a> and <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="ebtables"><dt><strong><a class="inside" href="#ebtables">ebtables</a></strong>
+ </dt><dd> Used in <a class="inside" href="#nova">nova</a> along with arptables, <a class="inside" href="#iptables">iptables</a>, and <a class="inside" href="#ip6tables">ip6tables</a> to create <a class="inside" href="#firewall">firewall</a>s and to ensure isolation of network communications.
+</dd></dl><dl id="EC2"><dt><strong>EC2</strong>
+ </dt><dd> The Amazon Elastic Compute Cloud, a public cloud run by Amazon that provides similar functionality to <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="EC2 access key"><dt><strong>EC2 access key</strong>
+ </dt><dd> Used along with an EC2 secret key to access the <a class="inside" href="#nova">nova</a> EC2 API.
+</dd></dl><dl id="EC2 API"><dt><strong>EC2 API</strong>
+ </dt><dd> OpenStack supports accessing the Amazon EC2 API through <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="EC2 Compatibility API"><dt><strong>EC2 Compatibility API</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> component that allows OpenStack to communicate with Amazon EC2
+</dd></dl><dl id="EC2 secret key"><dt><strong>EC2 secret key</strong>
+ </dt><dd> Used along with an EC2 access key when communicating with the <a class="inside" href="#nova">nova</a> EC2 API, is used to digitally sign each request.
+</dd></dl><dl id="Elastic Block Storage (EBS)"><dt><strong>Elastic Block Storage (EBS)</strong>
+ </dt><dd> The Amazon commercial block storage product, similar to cinder.
+</dd></dl><dl id="endpoint"><dt><strong>endpoint</strong>
+ </dt><dd> See <a class="inside" href="#API endpoint">API endpoint</a>.
+</dd></dl><dl id="endpoint registry"><dt><strong>endpoint registry</strong>
+ </dt><dd> Alternative term for a <a class="inside" href="#keystone">keystone</a> catalog.
+</dd></dl><dl id="endpoint template"><dt><strong>endpoint template</strong>
+ </dt><dd> A list of URL and port number endpoints that indicate where a service, such as object storage, compute, identity, and so on, can be accessed.
+</dd></dl><dl id="entity"><dt><strong>entity</strong>
+ </dt><dd> Any piece of hardware or software that wants to connect to the network services provided by <a class="inside" href="#quantum">quantum</a>, the Network Connectivity service. An entity can make use of <a class="inside" href="#quantum">quantum</a> by implementing a VIF.
+</dd></dl><dl id="ephemeral storage"><dt><strong>ephemeral storage</strong> <br />временное хранилище
+ </dt><dd> A storage volume attached to a virtual machine instance that does not persist after the instance is terminated.
+</dd></dl><dl id="Essex"><dt><strong>Essex</strong>
+ </dt><dd> A grouped release of projects related to OpenStack that came out in April 2012, the fifth release of OpenStack.
+ </dt><dd> It included Compute (<a class="inside" href="#nova">nova</a> 2012.1), Object Storage (<a class="inside" href="#swift">swift</a> 1.4.8), Image (<a class="inside" href="#glance">glance</a>), Identity (<a class="inside" href="#keystone">keystone</a>), and Dashboard (<a class="inside" href="#horizon">horizon</a>).
+</dd></dl><dl id="ESX"><dt><strong>ESX</strong>
+ </dt><dd> An OpenStack-supported hypervisor, owned by VMware.
+</dd></dl><dl id="ESXi"><dt><strong>ESXi</strong>
+ </dt><dd> An OpenStack-supported hypervisor, owned by VMware.
+</dd></dl><dl id="ETag"><dt><strong>ETag</strong>
+ </dt><dd> MD5 hash of an object within <a class="inside" href="#swift">swift</a>, used to ensure data integrity.
+</dd></dl><dl id="euca2ools"><dt><strong>euca2ools</strong>
+ </dt><dd> A collection of command line tools for administering <a class="inside" href="#Virtual Machine (VM)">VM</a>s, most are compatible with OpenStack.
+</dd></dl><dl id="evacuate"><dt><strong>evacuate</strong>
+ </dt><dd> The process of migrating one or all virtual machine (<a class="inside" href="#Virtual Machine (VM)">VM</a>) instances from one <a class="inside" href="#host">host</a> to another, compatible with both shared storage live migration and block migration.
+</dd></dl><dl id="extension"><dt><strong>extension</strong>
+ </dt><dd> Alternative term for a <a class="inside" href="#nova">nova</a> API extension or plug-in. In the context of <a class="inside" href="#keystone">keystone</a> this is a call that is specific to the implementation, such as adding support for OpenID.
+</dd></dl><dl id="extra specs"><dt><strong>extra specs</strong>
+ </dt><dd> Additional requirements that a user can specify when requesting a new instance, examples include a minimum amount of network bandwidth or a GPU.
+</dd></dl><dl id="FakeLDAP"><dt><strong>FakeLDAP</strong>
+ </dt><dd> An easy method to create a local LDAP directory for testing <a class="inside" href="#keystone">keystone</a> and <a class="inside" href="#nova">nova</a>.
+ </dt><dd> Requires Redis.
+</dd></dl><dl id="fill-first scheduler"><dt><strong>fill-first scheduler</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a> scheduling method that attempts to fill a <a class="inside" href="#host">host</a> with <a class="inside" href="#Virtual Machine (VM)">VM</a>s rather than starting new <a class="inside" href="#Virtual Machine (VM)">VM</a>s on a variety of <a class="inside" href="#host">host</a>s.
+</dd></dl><dl id="filter"><dt><strong>filter</strong>
+ </dt><dd> The step of the <a class="inside" href="#nova">nova</a> scheduling process where <a class="inside" href="#host">host</a>s that cannot run the <a class="inside" href="#Virtual Machine (VM)">VM</a>s are eliminated and are not chosen.
+</dd></dl><dl id="firewall"><dt><strong>firewall</strong>
+ </dt><dd> Used to restrict communications between <a class="inside" href="#host">host</a>s and/or nodes, implemented in <a class="inside" href="#nova">nova</a> using <a class="inside" href="#iptables">iptables</a>, arptables, <a class="inside" href="#ip6tables">ip6tables</a> and etables.
+</dd></dl><dl id="Fixed IP address"><dt><strong>Fixed IP address</strong>
+ </dt><dd> An IP address that is associated with the same instance each time that instance boots, generally not accessible to end users or the public internet, used for management of the instance.
+</dd></dl><dl id="FlatDHCP Manager"><dt><strong>FlatDHCP Manager</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> networking manager that provides a single Layer 2 domain for all subnets in the OpenStack cloud.
+ </dt><dd> Provides a single DHCP server for each instance of <a class="inside" href="#nova">nova</a>network to assign and manage IP addresses for all instances.
+</dd></dl><dl id="Flat Manager"><dt><strong>Flat Manager</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a> component that gives IP addresses to authorized nodes and assumes DHCP, DNS, and routing configuration and services are provided by something else.
+</dd></dl><dl id="flat mode injection"><dt><strong>flat mode injection</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> networking method where the OS network configuration information is injected into the <a class="inside" href="#Virtual Machine (VM)">VM</a> (VM) image before the instance starts.
+</dd></dl><dl id="flat network"><dt><strong>flat network</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> network configuration where all of the instances have IP addresses on the same subnet.
+ </dt><dd> Flat networks do not use VLANs.
+</dd></dl><dl id="flavor"><dt><strong>flavor</strong> <br /> шаблон виртуального ресурса
+ </dt><dd> Describes the parameters of the various virtual machine images that are available to users, includes parameters such as CPU, storage, and memory.
+ </dt><dd> Also known as instance type.
+</dd></dl><dl id="flavor ID"><dt><strong>flavor ID</strong>
+ </dt><dd> UUID for each <a class="inside" href="#nova">nova</a> or <a class="inside" href="#glance">glance</a> <a class="inside" href="#Virtual Machine (VM)">VM</a> flavor or instance type.
+</dd></dl><dl id="Floating IP address"><dt><strong>Floating IP address</strong>
+ </dt><dd> An IP address that a <a class="inside" href="#nova">nova</a> project can associate with a <a class="inside" href="#Virtual Machine (VM)">VM</a> so the instance has the same public IP address each time that it boots.
+ </dt><dd> You create a pool of floating IP addresses and assign them to instances as they are launched to maintain a consistent IP address for maintaining DNS assignment.
+</dd></dl><dl id="Folsom"><dt><strong>Folsom</strong>
+ </dt><dd> A grouped release of projects related to OpenStack that came out in the fall of 2012, the sixth release of OpenStack.
+ </dt><dd> It includes Compute (<a class="inside" href="#nova">nova</a>), Object Storage (<a class="inside" href="#swift">swift</a>), Identity (<a class="inside" href="#keystone">keystone</a>), Networking (<a class="inside" href="#quantum">quantum</a>), Image service (<a class="inside" href="#glance">glance</a>) and Volumes or Block Storage (cinder).
+</dd></dl><dl id="FormPost"><dt><strong>FormPost</strong>
+ </dt><dd> <a class="inside" href="#swift">swift</a> middleware that allows users to upload (post) an image through a form on a web page.
+</dd></dl><dl id="glance"><dt><strong>glance</strong>
+ </dt><dd> A core project that provides the OpenStack Image Service.
+</dd></dl><dl id="glance API server"><dt><strong>glance API server</strong>
+ </dt><dd> Processes client requests for <a class="inside" href="#Virtual Machine (VM)">VM</a>s, updates <a class="inside" href="#glance">glance</a> metadata on the registry server, and communicates with the store adapter
+</dd></dl><dl id="FakeLDAP"><dt><strong>FakeLDAP</strong>
+ </dt><dd> to upload <a class="inside" href="#VM image">VM image</a>s from the back-end store.
+</dd></dl><dl id="global endpoint template"><dt><strong>global endpoint template</strong>
+ </dt><dd> The <a class="inside" href="#keystone">keystone</a> endpoint template that contains services available to all tenants.
+</dd></dl><dl id="GlusterFS"><dt><strong>GlusterFS</strong>
+ </dt><dd> An open-source, distributed, shared file
+</dd></dl><dl id="system,"><dt><strong>system,</strong>
+</dd></dl><dl id="Grizzly"><dt><strong>Grizzly</strong>
+ </dt><dd> Project name for the seventh release of OpenStack.
+</dd></dl><dl id="guest OS"><dt><strong>guest OS</strong>
+ </dt><dd> An operating system instance running under the control of a hypervisor. 
+</dd></dl><dl id="handover"><dt><strong>handover</strong>
+ </dt><dd> An object state in <a class="inside" href="#swift">swift</a> where a new replica of the object is automatically created due to a drive failure.
+</dd></dl><dl id="hard reboot"><dt><strong>hard reboot</strong>
+ </dt><dd> A type of reboot where a physical or virtual power button is pressed as opposed to a graceful, proper shutdown of the operating system.
+</dd></dl><dl id="Heat"><dt><strong>Heat</strong>
+ </dt><dd> An integrated project that aims to orchestrate multiple cloud applications for OpenStack.
+</dd></dl><dl id="horizon"><dt><strong>horizon</strong>
+ </dt><dd> The project that provides the OpenStack Dashboard.
+</dd></dl><dl id="host"><dt><strong>host</strong>
+ </dt><dd> A physical computer, also known as a node.
+ </dt><dd> Contrast with: instance.
+</dd></dl><dl id="host aggregate"><dt><strong>host aggregate</strong>
+ </dt><dd> A method to further subdivide availability zones into a collection of <a class="inside" href="#host">host</a>s.
+</dd></dl><dl id="Hyper-V"><dt><strong>Hyper-V</strong>
+ </dt><dd> One of the hypervisors supported by OpenStack, developed by Microsoft.
+</dd></dl><dl id="hypervisor"><dt><strong>hypervisor</strong>
+ </dt><dd> Software that arbitrates and controls <a class="inside" href="#Virtual Machine (VM)">VM</a> access to the actual underlying hardware.
+</dd></dl><dl id="hypervisor pool"><dt><strong>hypervisor pool</strong>
+ </dt><dd> A collection of hypervisors grouped together through <a class="inside" href="#host">host</a> aggregates.
+</dd></dl><dl id="ID number"><dt><strong>ID number</strong>
+ </dt><dd> Unique numeric ID associated with each user in <a class="inside" href="#keystone">keystone</a>, conceptually similar to a Linux or LDAP UID.
+</dd></dl><dl id="Identity API"><dt><strong>Identity API</strong>
+ </dt><dd> Alternative term for the Identity Service API.
+</dd></dl><dl id="Identity back-end"><dt><strong>Identity back-end</strong>
+ </dt><dd> The source used by <a class="inside" href="#keystone">keystone</a> to retrieve user information an OpenLDAP server for example.
+</dd></dl><dl id="Identity Service"><dt><strong>Identity Service</strong>
+ </dt><dd> Provides authentication services, also known as <a class="inside" href="#keystone">keystone</a>.
+</dd></dl><dl id="Identity Service API"><dt><strong>Identity Service API</strong>
+ </dt><dd> The API used to access the OpenStack Identity Service provided through <a class="inside" href="#keystone">keystone</a>.
+</dd></dl><dl id="image"><dt><strong>image</strong>
+</dd></dl><dl id="A collection of files for a specific operating system (OS) that you use to create or rebuild a server."><dt><strong>A collection of files for a specific operating system (OS) that you use to create or rebuild a server.</strong>
+ </dt><dd> You can also create custom images, or snapshots, from servers that you have launched.
+</dd></dl><dl id="Image API"><dt><strong>Image API</strong>
+ </dt><dd> The <a class="inside" href="#glance">glance</a> <a class="inside" href="#API endpoint">API endpoint</a> for management of <a class="inside" href="#VM image">VM image</a>s.
+</dd></dl><dl id="image cache"><dt><strong>image cache</strong>
+ </dt><dd> Used by <a class="inside" href="#glance">glance</a> to allow images on the local <a class="inside" href="#host">host</a> to be used rather than redownloading them from the image server each time one is requested.
+</dd></dl><dl id="image ID"><dt><strong>image ID</strong>
+ </dt><dd> Combination of URI and UUID used to access <a class="inside" href="#glance">glance</a> <a class="inside" href="#VM image">VM image</a>s through the image API.
+</dd></dl><dl id="image membership"><dt><strong>image membership</strong>
+ </dt><dd> A list of tenants that can access a given <a class="inside" href="#VM image">VM image</a> within <a class="inside" href="#glance">glance</a>.
+</dd></dl><dl id="image owner"><dt><strong>image owner</strong>
+ </dt><dd> The <a class="inside" href="#keystone">keystone</a> tenant who owns a <a class="inside" href="#glance">glance</a> virtual machine image.
+</dd></dl><dl id="image registry"><dt><strong>image registry</strong>
+ </dt><dd> A list of <a class="inside" href="#VM image">VM image</a>s that are available through <a class="inside" href="#glance">glance</a>.
+</dd></dl><dl id="Image Service API"><dt><strong>Image Service API</strong>
+ </dt><dd> Alternative name for the <a class="inside" href="#glance">glance</a> image API.
+</dd></dl><dl id="image status"><dt><strong>image status</strong>
+ </dt><dd> The current status of a <a class="inside" href="#VM image">VM image</a> in <a class="inside" href="#glance">glance</a>, not to be confused with the status of a running instance.
+</dd></dl><dl id="image store"><dt><strong>image store</strong>
+ </dt><dd> The back-end store used by <a class="inside" href="#glance">glance</a> to store <a class="inside" href="#VM image">VM image</a>s, options include <a class="inside" href="#swift">swift</a>, local file system, <a class="inside" href="#S3">S3</a>, or HTTP.
+</dd></dl><dl id="image UUID"><dt><strong>image UUID</strong>
+ </dt><dd> The UUID used by <a class="inside" href="#glance">glance</a> to uniquely identify each <a class="inside" href="#VM image">VM image</a>.
+</dd></dl><dl id="incubated project"><dt><strong>incubated project</strong>
+ </dt><dd> A community project may be elevated to this status and is then promoted to a core project.
+</dd></dl><dl id="ingress filtering"><dt><strong>ingress filtering</strong>
+ </dt><dd> The process of filtering incoming network traffic.
+ </dt><dd> Supported by <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="injection"><dt><strong>injection</strong>
+ </dt><dd> The process of putting a file into a virtual machine image before the instance is started.
+</dd></dl><dl id="instance"><dt><strong>instance</strong>
+ </dt><dd> A running <a class="inside" href="#Virtual Machine (VM)">VM</a>, or a <a class="inside" href="#Virtual Machine (VM)">VM</a> in a known state such as suspended that can be used like a hardware server.
+</dd></dl><dl id="instance ID"><dt><strong>instance ID</strong>
+ </dt><dd> Unique ID that is specific to each running <a class="inside" href="#nova">nova</a> <a class="inside" href="#Virtual Machine (VM)">VM</a> instance.
+</dd></dl><dl id="instance state"><dt><strong>instance state</strong>
+ </dt><dd> The current state of a <a class="inside" href="#nova">nova</a> <a class="inside" href="#VM image">VM image</a>.
+</dd></dl><dl id="instance type"><dt><strong>instance type</strong>
+ </dt><dd> Alternative term for flavor.
+</dd></dl><dl id="instance type ID"><dt><strong>instance type ID</strong>
+ </dt><dd> Alternative term for a flavor ID.
+</dd></dl><dl id="instance UUID"><dt><strong>instance UUID</strong>
+ </dt><dd> Unique ID assigned to each <a class="inside" href="#nova">nova</a> <a class="inside" href="#Virtual Machine (VM)">VM</a> instance.
+</dd></dl><dl id="interface ID"><dt><strong>interface ID</strong>
+ </dt><dd> Unique ID for a <a class="inside" href="#quantum">quantum</a> VIF or vNIC in the form of a UUID.
+</dd></dl><dl id="ip6tables"><dt><strong><a class="inside" href="#ip6tables">ip6tables</a></strong>
+ </dt><dd> Used along with arptables, <a class="inside" href="#ebtables">ebtables</a>, and <a class="inside" href="#iptables">iptables</a> to create <a class="inside" href="#firewall">firewall</a>s in <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="iptables"><dt><strong>iptables</strong>
+ </dt><dd> Used along with arptables, <a class="inside" href="#ebtables">ebtables</a>, and <a class="inside" href="#ip6tables">ip6tables</a> to create <a class="inside" href="#firewall">firewall</a>s in <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="JavaScript Object Notation (JSON)"><dt><strong>JavaScript Object Notation (JSON)</strong>
+ </dt><dd> One of the supported response formats for the OpenStack API.
+</dd></dl><dl id="Jenkins"><dt><strong>Jenkins</strong>
+ </dt><dd> Tool used for OpenStack development to run jobs automatically.
+</dd></dl><dl id="kernel-based VM (KVM)"><dt><strong>kernel-based VM (KVM)</strong>
+ </dt><dd> An OpenStack-supported hypervisor
+</dd></dl><dl id="keystone"><dt><strong>keystone</strong>
+ </dt><dd> The project that provides OpenStack Identity services.
+</dd></dl><dl id="Kickstart"><dt><strong>Kickstart</strong>
+ </dt><dd> A tool to automate system configuration and installation on Red Hat, Fedora, and CentOS based Linux distributions.
+</dd></dl><dl id="large object"><dt><strong>large object</strong>
+ </dt><dd> An object within <a class="inside" href="#swift">swift</a> that is larger than 5 GBs.
+</dd></dl><dl id="Launchpad"><dt><strong>Launchpad</strong>
+ </dt><dd> The collaboration site for OpenStack.
+</dd></dl><dl id="Layer-2 network"><dt><strong>Layer-2 network</strong>
+ </dt><dd> Term used for OSI network architecture for the data link layer.
+</dd></dl><dl id="libvirt"><dt><strong>libvirt</strong>
+ </dt><dd> Virtualization API library used by OpenStack to interact with many of its supported hypervisors, including KVM, QEMU and LXC.
+</dd></dl><dl id="Linux bridge"><dt><strong>Linux bridge</strong>
+ </dt><dd> Software used to allow multiple <a class="inside" href="#Virtual Machine (VM)">VM</a>s to share a single physical NIC within <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="Linux bridge <a class="inside" href="#quantum">quantum</a> plug-in"><dt><strong>Linux bridge <a class="inside" href="#quantum">quantum</a> plug-in</strong>
+ </dt><dd> Plugin that allows a Linux bridge to understand a <a class="inside" href="#quantum">quantum</a> port, interface attachment, and other abstractions.
+</dd></dl><dl id="Linux containers (LXC)"><dt><strong>Linux containers (LXC)</strong>
+ </dt><dd> An OpenStack-supported hypervisor.
+</dd></dl><dl id="live migration"><dt><strong>live migration</strong>
+ </dt><dd> The ability within <a class="inside" href="#nova">nova</a> to move running virtual machine instances from one <a class="inside" href="#host">host</a> to another with only a small service interruption during switch-over.
+</dd></dl><dl id="management API"><dt><strong>management API</strong>
+ </dt><dd> Alternative term for an admin API.
+</dd></dl><dl id="management network"><dt><strong>management network</strong>
+ </dt><dd> A network segment used for administration, not accessible to the public internet.
+</dd></dl><dl id="manifest"><dt><strong>manifest</strong>
+ </dt><dd> Used to track segments of a large object within <a class="inside" href="#swift">swift</a>.
+</dd></dl><dl id="manifest object"><dt><strong>manifest object</strong>
+ </dt><dd> A special <a class="inside" href="#swift">swift</a> object that contains the manifest for a large object.
+</dd></dl><dl id="membership"><dt><strong>membership</strong>
+ </dt><dd> The association between a <a class="inside" href="#glance">glance</a> <a class="inside" href="#VM image">VM image</a> and a tenant, allows images to be shared with specified tenant(s).
+</dd></dl><dl id="membership list "><dt><strong>membership list </strong>
+ </dt><dd> Contains a list of tenants that can access a given <a class="inside" href="#VM image">VM image</a> within <a class="inside" href="#glance">glance</a>.
+</dd></dl><dl id="memory overcommit"><dt><strong>memory overcommit</strong>
+ </dt><dd> The ability to start new <a class="inside" href="#Virtual Machine (VM)">VM</a> instances based on the actual memory usage of a <a class="inside" href="#host">host</a>, as opposed to basing the decision on the amount of RAM each running instance thinks it has available.
+ </dt><dd> Also known as RAM overcommit.
+</dd></dl><dl id="message broker"><dt><strong>message broker</strong>
+ </dt><dd> The software package used to provide AMQP messaging capabilities within <a class="inside" href="#nova">nova</a>, default is RabbitMQ.
+</dd></dl><dl id="message bus"><dt><strong>message bus</strong>
+ </dt><dd> The main virtual communication line used by all AMQP messages for intercloud communications within <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="message queue"><dt><strong>message queue</strong>
+ </dt><dd> Passes requests from clients to the appropriate workers and returns the output to the client once the job is complete.
+</dd></dl><dl id="migration"><dt><strong>migration</strong>
+ </dt><dd> The process of moving a <a class="inside" href="#Virtual Machine (VM)">VM</a> instance from one <a class="inside" href="#host">host</a> to another.
+</dd></dl><dl id="multinic"><dt><strong>multinic</strong>
+ </dt><dd> Facility in <a class="inside" href="#nova">nova</a> that allows each virtual machine instance to have more than one VIF connected to it.
+</dd></dl><dl id="network ID"><dt><strong>network ID</strong>
+ </dt><dd> Unique ID assigned to each network segment within <a class="inside" href="#quantum">quantum</a>.
+</dd></dl><dl id="network manager"><dt><strong>network manager</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a> component that manages various network components, such as <a class="inside" href="#firewall">firewall</a> rules, IP address allocation, and so on.
+</dd></dl><dl id="network node"><dt><strong>network node</strong>
+ </dt><dd> Any <a class="inside" href="#nova">nova</a> node that runs the network worker daemon.
+</dd></dl><dl id="network segment"><dt><strong>network segment</strong>
+ </dt><dd> Represents a virtual, isolated OSI layer 2 subnet in <a class="inside" href="#quantum">quantum</a>.
+</dd></dl><dl id="network UUID"><dt><strong>network UUID</strong>
+ </dt><dd> Unique ID for a <a class="inside" href="#quantum">quantum</a> network segment.
+</dd></dl><dl id="network worker"><dt><strong>network worker</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a>-network worker daemon, provides services such as giving an IP address to a booting <a class="inside" href="#nova">nova</a> instance.
+</dd></dl><dl id="non-persistent volume"><dt><strong>non-persistent volume</strong>
+ </dt><dd> Alternative term for an ephemeral volume.
+</dd></dl><dl id="nova"><dt><strong>nova</strong>
+ </dt><dd> The OpenStack project that provides compute services.
+</dd></dl><dl id="nova API"><dt><strong>nova API</strong>
+ </dt><dd> Alternative term for the <a class="inside" href="#nova">nova</a> Compute API.
+</dd></dl><dl id="nova-network"><dt><strong>nova-network</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> component that manages IP address allocation, <a class="inside" href="#firewall">firewall</a>s, and other network-related tasks.
+</dd></dl><dl id="object"><dt><strong>object</strong>
+ </dt><dd> A BLOB of data held by <a class="inside" href="#swift">swift</a>, can be in any format.
+</dd></dl><dl id="Object API"><dt><strong>Object API</strong>
+ </dt><dd> Alternative term for the <a class="inside" href="#swift">swift</a> object API.
+</dd></dl><dl id="object auditor"><dt><strong>object auditor</strong>
+ </dt><dd> Opens all objects for an object server and verifies the MD5 hash, size, and metadata for each object.
+</dd></dl><dl id="object expiration"><dt><strong>object expiration</strong>
+ </dt><dd> A configurable option within <a class="inside" href="#swift">swift</a> to automatically delete objects after a specified amount of time has passed or a certain date is reached.
+</dd></dl><dl id="object hash"><dt><strong>object hash</strong>
+ </dt><dd> Uniquely ID for a <a class="inside" href="#swift">swift</a> object.
+</dd></dl><dl id="object path hash"><dt><strong>object path hash</strong>
+ </dt><dd> Used by <a class="inside" href="#swift">swift</a> to determine the location of an object in the ring. Maps objects to partitions.
+</dd></dl><dl id="object replicator"><dt><strong>object replicator</strong>
+ </dt><dd> Component of <a class="inside" href="#swift">swift</a> that copies and object to remote partitions for fault tolerance.
+</dd></dl><dl id="object server"><dt><strong>object server</strong>
+ </dt><dd> Component of <a class="inside" href="#swift">swift</a> that is responsible for managing objects.
+</dd></dl><dl id="Object Service API"><dt><strong>Object Service API</strong>
+ </dt><dd> Alternative term for the <a class="inside" href="#swift">swift</a> object API.
+</dd></dl><dl id="object storage"><dt><strong>object storage</strong>
+ </dt><dd> Provides eventually consistent and redundant storage and retrieval of fixed digital content.
+</dd></dl><dl id="object versioning"><dt><strong>object versioning</strong>
+ </dt><dd> Allows a user to set a flag on a <a class="inside" href="#swift">swift</a> container so all objects within the container are versioned.
+</dd></dl><dl id="operator"><dt><strong>operator</strong>
+ </dt><dd> The person responsible for planning and maintaining an OpenStack installation.
+</dd></dl><dl id="parent cell"><dt><strong>parent cell</strong>
+ </dt><dd> If a requested resource, such as CPU time, disk storage, or memory, is not available in the parent cell, the request is forwarded to associated child cells.
+</dd></dl><dl id="partition"><dt><strong>partition</strong>
+ </dt><dd> A unit of storage within <a class="inside" href="#swift">swift</a> used to store objects, exists on top of devices, replicated for fault tolerance.
+</dd></dl><dl id="partition index"><dt><strong>partition index</strong>
+ </dt><dd> Contains the locations of all <a class="inside" href="#swift">swift</a> partitions within the ring.
+</dd></dl><dl id="partition shift value"><dt><strong>partition shift value</strong>
+ </dt><dd> Used by <a class="inside" href="#swift">swift</a> to determine which partition data should reside on.
+</dd></dl><dl id="pause"><dt><strong>pause</strong>
+ </dt><dd> A <a class="inside" href="#Virtual Machine (VM)">VM</a> state where no changes occur (no changes in memory, network communications stop, etc), the <a class="inside" href="#Virtual Machine (VM)">VM</a> is frozen but not shut down.
+</dd></dl><dl id="persistent volume"><dt><strong>persistent volume</strong>
+ </dt><dd> Disk volumes that persist beyond the lifetime of individual virtual machine instances.
+ </dt><dd> Contrast with: ephemeral storage
+</dd></dl><dl id="plugin"><dt><strong>plugin</strong>
+ </dt><dd> Software component providing the actual implementation for <a class="inside" href="#quantum">quantum</a> APIs, or for Compute APIs, depending on the context.
+</dd></dl><dl id="policy service"><dt><strong>policy service</strong>
+ </dt><dd> Component of <a class="inside" href="#keystone">keystone</a> that provides a rule management interface and a rule based authorization engine.
+</dd></dl><dl id="port"><dt><strong>port</strong>
+ </dt><dd> A virtual network port within <a class="inside" href="#quantum">quantum</a>, VIFs / vNICs are connected to a port.
+</dd></dl><dl id="port UUID"><dt><strong>port UUID</strong>
+ </dt><dd> Unique ID for a <a class="inside" href="#quantum">quantum</a> port.
+</dd></dl><dl id="preseed"><dt><strong>preseed</strong>
+ </dt><dd> A tool to automate system configuration and installation on Debian based Linux distributions.
+</dd></dl><dl id="private image"><dt><strong>private image</strong>
+ </dt><dd> A <a class="inside" href="#glance">glance</a> <a class="inside" href="#VM image">VM image</a> that is only available to specified tenants.
+</dd></dl><dl id="project"><dt><strong>project</strong>
+ </dt><dd> A logical grouping of users within <a class="inside" href="#nova">nova</a>, used to define quotas and access to <a class="inside" href="#VM image">VM image</a>s.
+</dd></dl><dl id="project ID"><dt><strong>project ID</strong>
+ </dt><dd> User defined alpha-numeric string in <a class="inside" href="#nova">nova</a>, the name of a project.
+</dd></dl><dl id="project VPN"><dt><strong>project VPN</strong>
+ </dt><dd> Alternative term for a cloudpipe.
+</dd></dl><dl id="proxy node"><dt><strong>proxy node</strong>
+ </dt><dd> A node that provides the <a class="inside" href="#swift">swift</a> proxy service.
+</dd></dl><dl id="proxy server"><dt><strong>proxy server</strong>
+ </dt><dd> Users of <a class="inside" href="#swift">swift</a> interact with the service through the proxy server which in-turn looks up the location of the requested data within the ring and returns the results to the user.
+</dd></dl><dl id="public API"><dt><strong>public API</strong>
+ </dt><dd> An <a class="inside" href="#API endpoint">API endpoint</a> used for both service to service communication and end user interactions.
+</dd></dl><dl id="public image"><dt><strong>public image</strong>
+ </dt><dd> A <a class="inside" href="#glance">glance</a> <a class="inside" href="#VM image">VM image</a> that is available to all tenants.
+</dd></dl><dl id="public IP address"><dt><strong>public IP address</strong>
+ </dt><dd> An IP address that is accessible to endusers.
+</dd></dl><dl id="public network"><dt><strong>public network</strong>
+ </dt><dd> The Network Controller provides virtual networks to enable compute servers to interact with each other and with the public network.
+ </dt><dd> All machines must have a public and private network interface.
+ </dt><dd> The public network interface is controlled by the public_interface option.
+</dd></dl><dl id="Puppet"><dt><strong>Puppet</strong>
+ </dt><dd> A configuration management tool that supports OpenStack.
+</dd></dl><dl id="Python"><dt><strong>Python</strong>
+ </dt><dd> Programming language used extensively in OpenStack.
+</dd></dl><dl id="<a class="inside" href="#quantum">quantum</a>"><dt><strong>quantum</strong>
+ </dt><dd> A core OpenStack project that provides a network connectivity abstraction layer to OpenStack Compute.
+</dd></dl><dl id="quantum API"><dt><strong>quantum API</strong>
+ </dt><dd> API used to access <a class="inside" href="#quantum">quantum</a>, provides and extensible architecture to allow custom plugin creation.
+</dd></dl><dl id="quantum manager"><dt><strong>quantum manager</strong>
+ </dt><dd> Allows <a class="inside" href="#nova">nova</a> and <a class="inside" href="#quantum">quantum</a> integration thus allowing <a class="inside" href="#quantum">quantum</a> to perform network management for <a class="inside" href="#nova">nova</a> <a class="inside" href="#Virtual Machine (VM)">VM</a>s.
+</dd></dl><dl id="quantum plugin"><dt><strong>quantum plugin</strong>
+ </dt><dd> Interface within <a class="inside" href="#quantum">quantum</a> that allows organizations to create custom plugins for advanced features such as QoS, ACLs, or IDS.
+</dd></dl><dl id="quarantine"><dt><strong>quarantine</strong>
+ </dt><dd> If <a class="inside" href="#swift">swift</a> finds objects, containers, or accounts that are corrupt they are placed in this state, are not replicated, cannot be read by clients, and a correct copy is rereplicated.
+</dd></dl><dl id="Quick EMUlator (QEMU)"><dt><strong>Quick EMUlator (QEMU)</strong>
+ </dt><dd> One of the hypervisors supported by OpenStack, generally used for development purposes.
+</dd></dl><dl id="quota"><dt><strong>quota</strong>
+ </dt><dd> In <a class="inside" href="#nova">nova</a>, the ability to set resource limits on a per-project basis.
+</dd></dl><dl id="RAM filter"><dt><strong>RAM filter</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a> setting that allows or disallows RAM overcommitment.
+</dd></dl><dl id="RAM overcommit"><dt><strong>RAM overcommit</strong>
+ </dt><dd> The ability to start new <a class="inside" href="#Virtual Machine (VM)">VM</a> instances based on the actual memory usage of a <a class="inside" href="#host">host</a>, as opposed to basing the decision on the amount of RAM each running instance thinks it has available.
+ </dt><dd> Also known as memory overcommit.
+</dd></dl><dl id="rate limit"><dt><strong>rate limit</strong>
+ </dt><dd> Configurable option within <a class="inside" href="#swift">swift</a> to limit database writes on a per-account and/or per-container basis.
+</dd></dl><dl id="rebalance"><dt><strong>rebalance</strong>
+ </dt><dd> The process of distributing <a class="inside" href="#swift">swift</a> partitions across all drives in the ring, used during initial ring creation and after ring reconfiguration.
+</dd></dl><dl id="Recon"><dt><strong>Recon</strong>
+ </dt><dd> A component of <a class="inside" href="#swift">swift</a> used to collect metrics.
+</dd></dl><dl id="record ID"><dt><strong>record ID</strong>
+ </dt><dd> A number within a database that is incremented each time a change is made.
+ </dt><dd> Used by <a class="inside" href="#swift">swift</a> when replicating.
+</dd></dl><dl id="registry server"><dt><strong>registry server</strong>
+ </dt><dd> A <a class="inside" href="#glance">glance</a> service that provides <a class="inside" href="#VM image">VM image</a> metadata information to clients.
+</dd></dl><dl id="replica"><dt><strong>replica</strong>
+ </dt><dd> Provides data redundancy and fault tolerance by creating copies of <a class="inside" href="#swift">swift</a> objects, accounts, and containers so they are not lost when the underlying storage fails.
+</dd></dl><dl id="replica count"><dt><strong>replica count</strong>
+ </dt><dd> The number of replicas of the data in a <a class="inside" href="#swift">swift</a> ring.
+</dd></dl><dl id="replication"><dt><strong>replication</strong>
+ </dt><dd> The process of copying data to a separate physical device for fault tolerance and performance.
+</dd></dl><dl id="replicator"><dt><strong>replicator</strong>
+ </dt><dd> The <a class="inside" href="#swift">swift</a> back-end process that creates and manages object replicas.
+</dd></dl><dl id="request ID "><dt><strong>request ID </strong>
+ </dt><dd> Unique ID assigned to each request sent to <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="ring"><dt><strong>ring</strong>
+ </dt><dd> An entity that maps <a class="inside" href="#swift">swift</a> data to partitions.
+ </dt><dd> A separate ring exists for each service, such as account, object, and container.
+</dd></dl><dl id="ring builder"><dt><strong>ring builder</strong>
+ </dt><dd> Builds and manages rings within <a class="inside" href="#swift">swift</a>, assigns partitions to devices, and pushes the configuration to other storage nodes.
+</dd></dl><dl id="role ID"><dt><strong>role ID</strong>
+ </dt><dd> Alpha-numeric ID assigned to each <a class="inside" href="#keystone">keystone</a> role.
+</dd></dl><dl id="rootwrap"><dt><strong>rootwrap</strong>
+ </dt><dd> A feature of <a class="inside" href="#nova">nova</a> that allows the unprivileged &quot;<a class="inside" href="#nova">nova</a>&quot; user to run a specified list of commands as the Linux root user.
+</dd></dl><dl id="RPC driver"><dt><strong>RPC driver</strong>
+ </dt><dd> Modular system that allows the <a class="inside" href="#nova">nova</a> underlying message queue software to be changed.
+ </dt><dd> For example, from RabbitMQ to ZeroMQ or Qpid.
+</dd></dl><dl id="S3"><dt><strong>S3</strong>
+ </dt><dd> Object storage service by Amazon, similar in function to <a class="inside" href="#swift">swift</a>, can act as a back-end store for <a class="inside" href="#glance">glance</a> <a class="inside" href="#VM image">VM image</a>s.
+</dd></dl><dl id="scheduler manager"><dt><strong>scheduler manager</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> component that determines where <a class="inside" href="#Virtual Machine (VM)">VM</a> instances should start.
+ </dt><dd> Uses modular design to support a variety of scheduler types.
+</dd></dl><dl id="scoped token"><dt><strong>scoped token</strong>
+ </dt><dd> A <a class="inside" href="#keystone">keystone</a> API access token that is associated with a specific tenant.
+</dd></dl><dl id="secret key"><dt><strong>secret key</strong>
+ </dt><dd> String of text only known by the user, used along with an access key to make requests to the <a class="inside" href="#nova">nova</a> API.
+</dd></dl><dl id="security group"><dt><strong>security group</strong>
+ </dt><dd> A set of network traffic filtering rules that are applied to a <a class="inside" href="#nova">nova</a> instance.
+</dd></dl><dl id="segmented object"><dt><strong>segmented object</strong>
+ </dt><dd> A <a class="inside" href="#swift">swift</a> large object that has been broken up into pieces, the re-assembled object is called a concatenated object.
+</dd></dl><dl id="server image"><dt><strong>server image</strong>
+ </dt><dd> Alternative term for a <a class="inside" href="#VM image">VM image</a>.
+</dd></dl><dl id="server UUID"><dt><strong>server UUID</strong>
+ </dt><dd> Unique ID assigned to each <a class="inside" href="#nova">nova</a> <a class="inside" href="#Virtual Machine (VM)">VM</a> instance.
+</dd></dl><dl id="service catalog"><dt><strong>service catalog</strong>
+ </dt><dd> Alternative term for the <a class="inside" href="#keystone">keystone</a> catalog.
+</dd></dl><dl id="service ID"><dt><strong>service ID</strong>
+ </dt><dd> Unique ID assigned to each service that is available in the <a class="inside" href="#keystone">keystone</a> catalog.
+</dd></dl><dl id="service registration"><dt><strong>service registration</strong>
+ </dt><dd> A <a class="inside" href="#keystone">keystone</a> feature that allows services such as <a class="inside" href="#nova">nova</a> to automatically register with the catalog.
+</dd></dl><dl id="service tenant"><dt><strong>service tenant</strong>
+ </dt><dd> Special <a class="inside" href="#keystone">keystone</a> tenant that contains all services that are listed in the catalog.
+</dd></dl><dl id="service token"><dt><strong>service token</strong>
+ </dt><dd> An administrator defined token used by <a class="inside" href="#nova">nova</a> to communicate securely with <a class="inside" href="#keystone">keystone</a>.
+</dd></dl><dl id="session back-end"><dt><strong>session back-end</strong>
+ </dt><dd> The method of storage used by <a class="inside" href="#horizon">horizon</a> to track client sessions such as local memory, cookies, a database, or memcached.
+</dd></dl><dl id="session persistence"><dt><strong>session persistence</strong>
+ </dt><dd> A feature of the load balancing service.
+ </dt><dd> It attempts to force subsequent connections to a service to be redirected to the same node as long as it is online.
+</dd></dl><dl id="session storage"><dt><strong>session storage</strong>
+ </dt><dd> A <a class="inside" href="#horizon">horizon</a> component that stores and tracks client session information.
+ </dt><dd> Implemented through the Django sessions framework.
+</dd></dl><dl id="shared storage"><dt><strong>shared storage</strong>
+ </dt><dd> Block storage that is simultaneously accessible by multiple clients.
+ </dt><dd> For example, NFS.
+</dd></dl><dl id="SmokeStack"><dt><strong>SmokeStack</strong>
+ </dt><dd> Runs automated tests against the core OpenStack API, written in Rails.
+</dd></dl><dl id="snapshot"><dt><strong>snapshot</strong>
+ </dt><dd> A point-in-time copy of an OpenStack storage volume or image.
+ </dt><dd> Use storage volume snapshots to back up volumes.
+ </dt><dd> Use image snapshots to back up data, or as &quot;gold&quot; images for additional servers.
+</dd></dl><dl id="spread-first scheduler"><dt><strong>spread-first scheduler</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a> <a class="inside" href="#Virtual Machine (VM)">VM</a> scheduling algorithm that attempts to start new <a class="inside" href="#Virtual Machine (VM)">VM</a> on the <a class="inside" href="#host">host</a> with the least amount of load.
+</dd></dl><dl id="SQLAlchemy"><dt><strong>SQLAlchemy</strong>
+ </dt><dd> An open source SQL toolkit for Python, used in OpenStack.
+</dd></dl><dl id="SQLite"><dt><strong><a class="inside" href="#SQLite">SQLite</a></strong>
+ </dt><dd> A lightweight SQL database, used as the default persistent storage method in many OpenStack services.
+</dd></dl><dl id="StackTach"><dt><strong>StackTach</strong>
+ </dt><dd> Community project that captures <a class="inside" href="#nova">nova</a> AMQP communications, useful for debugging.
+</dd></dl><dl id="static IP address"><dt><strong>static IP address</strong>
+ </dt><dd> Alternative term for a fixed IP address.
+</dd></dl><dl id="StaticWeb"><dt><strong>StaticWeb</strong>
+ </dt><dd> WSGI middleware component of <a class="inside" href="#swift">swift</a>
+ </dt><dd> that serves container data as a static web page.
+</dd></dl><dl id="storage back-end"><dt><strong>storage back-end</strong>
+ </dt><dd> The method that a service uses for persistent storage such as iSCSI, NFS, or local disk.
+</dd></dl><dl id="storage node"><dt><strong>storage node</strong>
+ </dt><dd> A <a class="inside" href="#swift">swift</a> node that provides container services, account services, and object services, controls the account databases, container databases, and object storage.
+</dd></dl><dl id="storage manager"><dt><strong>storage manager</strong>
+ </dt><dd> Component of XenAPI that provides a pluggable interface to support a wide variety of persistent storage back-ends.
+</dd></dl><dl id="storage manager back-end"><dt><strong>storage manager back-end</strong>
+ </dt><dd> A persistent storage method supported by XenAPI such as iSCSI or NFS.
+</dd></dl><dl id="storage services"><dt><strong>storage services</strong>
+ </dt><dd> Collective name for the <a class="inside" href="#swift">swift</a> object services, container services, and account services.
+</dd></dl><dl id="swift"><dt><strong>swift</strong>
+ </dt><dd> An OpenStack core project that provides object storage services.
+</dd></dl><dl id="swift All in One (SAIO)"><dt>swift All in One (SAIO)</strong>
+ </dt><dd> Creates a full <a class="inside" href="#swift">swift</a> development environment within a single <a class="inside" href="#Virtual Machine (VM)">VM</a>.
+</dd></dl><dl id="swift middleware"><dt><strong>swift middleware</strong>
+ </dt><dd> Collective term for components within <a class="inside" href="#swift">swift</a> that allows for additional functionality.
+</dd></dl><dl id="swift proxy server"><dt><strong>swift proxy server</strong>
+ </dt><dd> Acts as the gatekeeper to <a class="inside" href="#swift">swift</a> and is responsible for authenticating the user.
+</dd></dl><dl id="swift storage node"><dt><strong>swift storage node</strong>
+ </dt><dd> A node that runs <a class="inside" href="#swift">swift</a> account, container, and object services.
+</dd></dl><dl id="sync point"><dt><strong>sync point</strong>
+ </dt><dd> Point in time since the last container and a<a class="inside" href="#ccounts database sync among nodes within <a class="inside" href="#swift">swift</a>.
+</dd></dl><dl id="TempAuth"><dt><strong>TempAuth</strong>
+ </dt><dd> An authentication facility within <a class="inside" href="#swift">swift</a> that allows <a class="inside" href="#swift">swift</a> itself to perform authentication and authorization, frequently used in testing and development.
+</dd></dl><dl id="Tempest"><dt><strong>Tempest</strong>
+ </dt><dd> Automated software test suite designed to run against the trunk of the OpenStack core project.
+</dd></dl><dl id="TempURL"><dt><strong>TempURL</strong>
+ </dt><dd> A <a class="inside" href="#swift">swift</a> middleware component that allows a user to create URLs for temporary object access.
+</dd></dl><dl id="tenant"><dt><strong>tenant</strong>
+</dd></dl><dl id="A group of users, used to isolate access to <a class="inside" href="#nova">nova</a> resources."><dt><strong>A group of users, used to isolate access to <a class="inside" href="#nova">nova</a> resources.</strong>
+ </dt><dd> An alternative term for a <a class="inside" href="#nova">nova</a> project.
+</dd></dl><dl id="tenant endpoint"><dt><strong>tenant endpoint</strong>
+ </dt><dd> A <a class="inside" href="#keystone">keystone</a> <a class="inside" href="#API endpoint">API endpoint</a> that is associated with one or more tenants.
+</dd></dl><dl id="tenant ID"><dt><strong>tenant ID</strong>
+ </dt><dd> Unique ID assigned to each tenant within <a class="inside" href="#keystone">keystone</a>, the <a class="inside" href="#nova">nova</a> project IDs map to the <a class="inside" href="#keystone">keystone</a> tenant IDs.
+</dd></dl><dl id="token"><dt><strong>token</strong>
+ </dt><dd> An alpha-numeric string of text used to access OpenStack APIs and resources.
+</dd></dl><dl id="tombstone"><dt><strong>tombstone</strong>
+ </dt><dd> Used to mark <a class="inside" href="#swift">swift</a> objects that have been deleted, ensures the object is not updated on another node after it has been deleted.
+</dd></dl><dl id="transaction ID"><dt><strong>transaction ID</strong>
+ </dt><dd> Unique ID assigned to each <a class="inside" href="#swift">swift</a> request, used for debugging and tracing.
+</dd></dl><dl id="unscoped token"><dt><strong>unscoped token</strong>
+ </dt><dd> Alternative term for a <a class="inside" href="#keystone">keystone</a> default token.
+</dd></dl><dl id="updater"><dt><strong>updater</strong>
+ </dt><dd> Collective term for a group of <a class="inside" href="#swift">swift</a> components that process queued and failed updates for containers and objects.
+</dd></dl><dl id="user"><dt><strong>user</strong>
+ </dt><dd> In <a class="inside" href="#keystone">keystone</a> each user is associated with one or more tenants, and in <a class="inside" href="#nova">nova</a> they can be associated with roles, projects, or both.
+</dd></dl><dl id="user data"><dt><strong>user data</strong>
+ </dt><dd> A blob of data that can be specified by the user when launching an instance.
+ </dt><dd> This data can be accessed by the instance through the metadata service or config drive.
+ </dt><dd> Commonly used for passing a shell script that is executed by the instance on boot.
+</dd></dl><dl id="VIF UUID"><dt><strong>VIF UUID</strong>
+ </dt><dd> Unique ID assigned to each <a class="inside" href="#quantum">quantum</a> VIF.
+</dd></dl><dl id="Virtual Central Processing Unit (vCPU)"><dt><strong>Virtual Central Processing Unit (vCPU)</strong>
+ </dt><dd> Allows physical CPUs to be sub-divided and those divisions are then used by instances.
+ </dt><dd> Also known as virtual cores.
+</dd></dl><dl id="Virtual Machine (VM)"><dt><strong>Virtual Machine (VM)</strong>
+ </dt><dd> An operating system instance that runs on top of a hypervisor.
+ </dt><dd> Multiple <a class="inside" href="#Virtual Machine (VM)">VM</a>s can run at the same time on the same physical <a class="inside" href="#host">host</a>.
+</dd></dl><dl id="virtual network"><dt><strong>virtual network</strong>
+ </dt><dd> An L2 network segment within <a class="inside" href="#quantum">quantum</a>.
+</dd></dl><dl id="Virtual Network InterFace (VIF)"><dt><strong>Virtual Network InterFace (VIF)</strong>
+ </dt><dd> An interface that is plugged into a port in a <a class="inside" href="#quantum">quantum</a> network.
+ </dt><dd> Typically a virtual network interface belonging to a <a class="inside" href="#Virtual Machine (VM)">VM</a>.
+</dd></dl><dl id="virtual port"><dt><strong>virtual port</strong>
+ </dt><dd> Attachment point where a virtual interface connects to a virtual network.
+</dd></dl><dl id="virtual private network (VPN)"><dt><strong>virtual private network (VPN)</strong>
+ </dt><dd> Provided by <a class="inside" href="#nova">nova</a> in the form of cloudpipes, specialized instances that are used to create VPNs on a per-project basis.
+</dd></dl><dl id="virtual server"><dt><strong>virtual server</strong>
+ </dt><dd> Alternative term for a <a class="inside" href="#Virtual Machine (VM)">VM</a> or guest.
+</dd></dl><dl id="virtual switch (vSwitch)"><dt><strong>virtual switch (vSwitch)</strong>
+ </dt><dd> Software that runs on a <a class="inside" href="#host">host</a> or node and provides the features and functions of a hardware based network switch.
+</dd></dl><dl id="virtual VLAN"><dt><strong>virtual VLAN</strong>
+ </dt><dd> Alternative term for a virtual network.
+</dd></dl><dl id="VLAN manager"><dt><strong>VLAN manager</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> networking manager that divides subnet and tenants into different VLANs allowing for Layer 2 segregation.
+ </dt><dd> Provides a DHCP server for each VLAN to assign IP addresses for instances.
+</dd></dl><dl id="VLAN network"><dt><strong>VLAN network</strong>
+ </dt><dd> The Network Controller provides virtual networks to enable compute servers to interact with each other and with the public network.
+ </dt><dd> All machines must have a public and private network interface.
+ </dt><dd> A VLAN network is a private network interface, which is controlled by the vlan_interface option with VLAN managers.
+</dd></dl><dl id="VM image"><dt><strong>VM image</strong>
+ </dt><dd> Alternative term for an image.
+</dd></dl><dl id="VNC proxy"><dt><strong>VNC proxy</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> component that provides users access to the consoles of their <a class="inside" href="#Virtual Machine (VM)">VM</a> instances through VNC or VMRC.
+</dd></dl><dl id="volume"><dt><strong>volume</strong>
+ </dt><dd> Disk-based data storage generally represented as an iSCSI target with a file system that supports extended attributes, can be persistent or ephemeral.
+ </dt><dd> Commonly usedas a synonym for block device.
+</dd></dl><dl id="Volume API"><dt><strong>Volume API</strong>
+ </dt><dd> An API on a separate endpoint for attaching, detaching, and creating block storage for compute <a class="inside" href="#Virtual Machine (VM)">VM</a>s.
+</dd></dl><dl id="volume controller"><dt><strong>volume controller</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> component that oversees and coordinates storage volume actions.
+</dd></dl><dl id="volume driver"><dt><strong>volume driver</strong>
+ </dt><dd> Alternative term for a volume plugin.
+</dd></dl><dl id="volume ID"><dt><strong>volume ID</strong>
+ </dt><dd> Unique ID applied to each storage volume under the <a class="inside" href="#nova">nova</a> control.
+</dd></dl><dl id="volume manager"><dt><strong>volume manager</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> component that creates, attaches, and detaches persistent storage volumes.
+</dd></dl><dl id="volume node"><dt><strong>volume node</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> node that runs the cinder-volume daemon.
+</dd></dl><dl id="volume plugin"><dt><strong>volume plugin</strong>
+ </dt><dd> A plugin for the <a class="inside" href="#nova">nova</a> volume manager.
+ </dt><dd> Provides support for a new and specialized types of back-end storage.
+</dd></dl><dl id="Volume Service API"><dt><strong>Volume Service API</strong>
+ </dt><dd> Alternative term for the Block Storage API.
+</dd></dl><dl id="volume worker"><dt><strong>volume worker</strong>
+ </dt><dd> The <a class="inside" href="#nova">nova</a> component that interacts with back-end storage to manage the creation and deletion of volumes and the creation of compute volumes, provided by the <a class="inside" href="#nova">nova</a>-volume daemon.
+ </dt><dd> Virtual Network InterFace (VIF)
+</dd></dl><dl id="weight"><dt><strong>weight</strong>
+ </dt><dd> Used by <a class="inside" href="#swift">swift</a> storage devices to determine which storage devices are suitable for the job.
+ </dt><dd> Devices are weighted by size.
+</dd></dl><dl id="weighted cost"><dt><strong>weighted cost</strong>
+ </dt><dd> The sum of each cost used when deciding where to start a new <a class="inside" href="#Virtual Machine (VM)">VM</a> instance in <a class="inside" href="#nova">nova</a>.
+</dd></dl><dl id="weighing"><dt><strong>weighing</strong>
+ </dt><dd> A <a class="inside" href="#nova">nova</a> process that determines the suitability of the <a class="inside" href="#Virtual Machine (VM)">VM</a> instances for a job for a particular <a class="inside" href="#host">host</a>.
+ </dt><dd> For example, not enough RAM on the <a class="inside" href="#host">host</a>, too many CPUs on the <a class="inside" href="#host">host</a>, and so on.
+</dd></dl><dl id="worker"><dt><strong>worker</strong>
+ </dt><dd> A daemon that carries out tasks.
+ </dt><dd> For example, the <a class="inside" href="#nova">nova</a>-volume worker attaches storage to an <a class="inside" href="#Virtual Machine (VM)">VM</a> instance.
+ </dt><dd> Workers listen to a queue and take action when new messages arrive.
+</dd></dl><dl id="Zuul"><dt><strong>Zuul</strong>
+ </dt><dd> Tool used in OpenStack development to ensure correctly ordered testing of changes in parallel.
+</dd></dl>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="ApCru.htm">Дополнение C</a></td>
+ <td align="center"><a href="index.htm">Оглавление</a></td>
+ <td align="right">&nbsp;</td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</tbody></table>
+</body>
+</html>

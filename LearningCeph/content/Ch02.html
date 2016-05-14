@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 2. Моментальное развертывание Ceph - Изучаем Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningCeph"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем Ceph"/>
+<link rel="up" href="index.html" title="Изучаем Ceph"/>
+<link rel="prev" href="Ch01.html" title="Глава 1. Введение в систему хранения Ceph"/>
+<link rel="next" href="Ch03.html" title="Глава 3. Архитектура и компоненты Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningCeph/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 2. Моментальное развертывание Ceph';
+PrevRef = 'Ch01.html';
+UpRef = 'index.html';
+NextRef = 'Ch03.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 2. Моментальное развертывание Ceph</h1>
+  </div></div></div>
+  <p>В данной главе мы охватим:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Создание среды песочницы с использованием VirtualBox</p>
+	 </li>
+	<li class="listitem">
+	 <p>Ceph RADOS</p>
+	 </li>
+	<li class="listitem">
+	 <p>Историю и эволюцию Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Увеличение вашего кластера Ceph в масштабах- добавление монитора и OSD</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+ 
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch02.html#sandbox_environment">Создание среды песочницы с использованием VirtualBox</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#From_zero">От нуля к Ceph- развертывание вашего первого кластера Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#Scaling_up">Увеличение вашего кластера Ceph в масштабах- добавление монитора и OSD</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch02.html#Adding_monitor">Добавление монитора Ceph</a></span></dt>
+        <dt><span class="section"><a href="Ch02.html#Adding_OSD">Добавление OSD Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="sandbox_environment"> </a>Создание среды песочницы с использованием VirtualBox</h3>
+   </div></div></div>
+   <p>Мы можем проверить развертывание Ceph в среде песочницы с использованием виртуальных машин Oracle VirtualBox. 
+   Эта виртуальная установка может помочь нам с исследованиями и проводить эксперименты с кластерами хранения Ceph, 
+   как будто мы работаем в реальной среде. Поскольку Ceph является определяемой программным обеспечением системой хранения 
+   с открытым исходным кодом разворачиваемой поверх общедоступного оборудования в промышленной среде, мы можем 
+   полностью имитировать функциональность среды Ceph на виртуальных машинах вместо того, чтобы использовать реальное 
+   общедоступное аппаратное обеспечение для наших целей тестирования.</p>
+     <p>{<span class="emphasis"><em>Прим. пер.: Отдавая должное методологической важности данного раздела, рады сообщить: у нас 
+	 есть хорошие новости для совсем ленивых: 
+     <a class="link" href="http://onreader.mdl.ru/CephCookbook/content/Ch09.html" target="_top">VSM</a>
+     делает процесс установки Ceph исключительно простым. В качестве бонуса вы получаете очень ээфективное средство мониторинга и 
+     сопровождения.</em></span>}</p>
+   <p>Oracle VirtualBox является свободно распространяемым программным обеспечением доступным на 
+   <a class="link" href="http://www.virtualbox.org" target="_top">http://www.virtualbox.org</a> для Windows, Mac OS X, и Linux.
+   Мы должны выполнять системные требования для программного обеспечения VirtualBox, чтобы он моu функционировать должным образом 
+   во время нашего тестирования. Тестовая среда Ceph, которую мы будем создавать на виртуальных машинах VirtualBox, будет использоваться 
+   в остальных главах этой книги. Мы предполагаем, что сервер вашей операционной системы является вариантом Unix; 
+   для Windows Microsoft, хосты используют абсолютный путь для запуска команды VBoxManage, который по умолчанию 
+   является <span class="term"><code class="literal">C:\Program Files\Oracle\VirtualBox\VBoxManage.exe</code></span>.</p>
+   <p>Системные требования для VirtualBox зависят от количества и настроек работающих на нем виртуальных машин. 
+   Ваш хост VirtualBox должен требовать процессор x86-типа (Intel или AMD), несколько гигабайт памяти 
+   (для запуска трех виртуальных машин Ceph), и пару ГигаБайт пространства на жестком диске. Для начала мы должны загрузить 
+   <a class="link" href="http://www.virtualbox.org" target="_top">http://www.virtualbox.org</a>, а затем, после загрузки,
+   выполнить процедуру установки.Мы также должны загрузить ISO образ сервера CentOS 6.4 с 
+   <a class="link" href="http://vault.centos.org/6.4/isos/" target="_top">http://vault.centos.org/6.4/isos/</a>.</p>
+   <p>Чтобы настроить нашу среду песочницы, мы создадим как минимум три виртуальные машины. Вы можете создать еще 
+   больше машин для кластера Ceph на базе аппаратной настройки на вашей машине. Сначала мы создаем отдельную виртуальную машину 
+   и устанавливаем на нее операционную систему. После этого, мы будем клонировать эту виртуальную машину два раза. 
+   Это сэкономит нам много времени и повысит производительность труда. 
+   Давайте начнем с выполнения следующих шагов, чтобы создать первую виртуальную машину:</p>
+   <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+     <p>Машина хоста VirtualBox, используемая в этой демонстрации является Mac OS X, которая является хостом UNIX-типа. 
+	 Если вы выполняете эти действия на машине без UNIX, то есть на базе хоста Windows, имейте в виду, что VirtualBox 
+	 hostonly имя адаптера будет чем-то вроде 
+	 <span class="term"><code class="literal">VirtualBox Host-Only Ethernet Adapter #&lt;adapter number&gt;</code></span>.
+	 Пожалуйста, выполните следующие команды с правильными именами адаптеров. При использовании хостов Windows, 
+	 вы можете проверить параметры сети VirtualBox в Oracle VM VirtualBox менеджере по навигации в меню 
+	 <span class="term"><strong class="userinput"><code>File | VirtualBox Settings | Network | Host-only Networks</code></strong></span>.</p></td></tr></table>
+   </div>
+   <ol type="1" class="substeps"><li class="step">
+ <p>После установки программного обеспечения VirtualBox создается сетевой адаптер, который вы можете использовать,
+ или вы можете новый сетевой адаптер с заказанным IP:</p>
+ <pre class="screen">Для хостов VirtualBox на базе UNIX
+# VBoxManage hostonlyif remove vboxnet1
+# VBoxManage hostonlyif create
+# VBoxManage hostonlyif ipconfig vboxnet1 --ip 192.168.57.1 --netmask 255.255.255.0
+Для хостов VirtualBox на базе Windows
+# VBoxManage.exe hostonlyif remove "VirtualBox Host-Only Ethernet Adapter"
+# VBoxManage.exe hostonlyif create
+# VBoxManage hostonlyif ipconfig "VirtualBox Host-Only Ethernet Adapter" --ip 192.168.57.1 --netmask 255.255.255.0
+ </pre></li><li class="step">
+ <p>VirtualBox поставляется с менеджером GUI.
+Если ваша машина работает ОС Linux, она должна иметь установленную среду X- рабочего стола (Gnome или KDE).
+Откройте диспетчер Oracle VM VirtualBox и создайте новую виртуальную машину со следующими характеристиками с 
+помощью графического интерфейса на основе мастера новой виртуальной машины 
+(<span class="term"><code class="literal">New Virtual Machine Wizard</code></span>), или воспользуйтесь командами CLI, 
+приводимые в конце каждого шага:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>1 ЦПУ</p>
+	 </li>
+	<li class="listitem">
+	 <p>1024 МБ оперативной памяти</p>
+	 </li>
+	<li class="listitem">
+	 <p>10ГБ x 4 жестких диска (один диск для ОС и три диска для Ceph OSD)</p>
+	 </li>
+	<li class="listitem">
+	 <p>2 сетевых адаптера</p>
+	 </li>
+	<li class="listitem">
+	 <p>CentOS 6.4 ISO подключенный к виртуальной машине</p>
+	 </li>
+    </ul>
+    </div>
+   Ниже приводится пошаговый процесс для создания виртуальной машины с применением команд CLI:
+   <ol type="1" class="substeps"><li class="step">
+    <p>Создайте вашу первую виртуальную машину:</p><pre class="screen">
+# VBoxManage createvm --name ceph-node1 --ostype RedHat_64 --register
+# VBoxManage modifyvm ceph-node1 --memory 1024 --nic1 nat --nic2 hostonly --hostonlyadapter2 vboxnet1
+</pre>
+    <p>Для хостов с VirtualBox на базе Windows:</p><pre class="screen">
+# VBoxManage.exe modifyvm ceph-node1 --memory 1024 --nic1 nat --nic2 hostonly --hostonlyadapter2 "VirtualBox HostOnly Ethernet Adapter"
+</pre>
+	</li><li class="step">
+	<p>Создайте CD-диск и подключите образ CentOS ISO к первой виртуальной машине:</p><pre class="screen">
+# VBoxManage storagectl ceph-node1 --name &quot;IDE Controller&quot; --add ide --controller PIIX4 --hostiocache on --bootable on
+# VBoxManage storageattach ceph-node1 --storagectl &quot;IDE Controller&quot; --type dvddrive --port 0 --device 0 --medium CentOS-6.4-x86_64-bin-DVD1.iso
+</pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+      <p>Убедитесь, что вы выполняете предыдущую команду из того же каталога, где вы сохранили образ CentOS ISO, 
+	  или вы можете указать место, где вы его сохранили.</p></td></tr></table>
+     </div>
+	</li><li class="step">
+	<p>Создайте интерфейс SATA, жесткий диск операционной системы и подключите их к виртуальной машине; 
+	убедитесь, что хост VirtualBox имеет достаточно свободного пространства для создания дисков 
+	<span class="term"><code class="literal">vm</code></span>. 
+	Если нет, выберите диск хоста, который имеет свободное место:</p><pre class="screen">
+# VBoxManage storagectl ceph-node1 --name &quot;SATA Controller&quot; --add sata --controller IntelAHCI --hostiocache on --bootable on
+# VBoxManage createhd --filename OS-ceph-node1.vdi --size 10240
+# VBoxManage storageattach ceph-node1 --storagectl &quot;SATA Controller&quot; --port 0 --device 0 --type hdd --medium OSceph-node1.vdi
+</pre>
+	</li><li class="step">
+	<p>Создайте интерфейс SATA, первый диск Ceph и подключите его к виртуальной машине:</p><pre class="screen">
+# VBoxManage createhd --filename ceph-node1-osd1.vdi --size 10240
+# VBoxManage storageattach ceph-node1 --storagectl &quot;SATA Controller&quot; --port 1 --device 0 --type hdd --medium cephnode1-osd1.vdi
+</pre>
+	</li><li class="step">
+	<p>Создайте интерфейс SATA, второй диск Ceph и подключите его к виртуальной машине:</p><pre class="screen">
+# VBoxManage createhd --filename ceph-node1-osd2.vdi --size 10240
+# VBoxManage storageattach ceph-node1 --storagectl &quot;SATA Controller&quot; --port 2 --device 0 --type hdd --medium cephnode1-osd2.vdi
+</pre>
+	</li><li class="step">
+	<p>Создайте интерфейс SATA, третий диск Ceph и подключите его к виртуальной машине:</p><pre class="screen">
+# VBoxManage createhd --filename ceph-node1-osd3.vdi --size 10240
+# VBoxManage storageattach ceph-node1 --storagectl &quot;SATA Controller&quot; --port 3 --device 0 --type hdd --medium cephnode1-osd3.vdi
+</pre>
+	</li>
+   </ol>
+
+ </li><li class="step">
+ <p>Сейчас, в данной точке, мы готовы включить нашу виртуальную машину ceph-node1.
+ Вы можете сделать это, выбрав <span class="term"><strong class="userinput"><code>
+ ceph-node1</code></strong></span> VM в Менеджере Oracle VM VirtualBox, а затем нажав на кнопку 
+ <span class="term"><strong class="userinput"><code>Start</code></strong></span>, 
+ или вы можете запустить следующую команду:</p>
+ <pre class="screen"># VBoxManage startvm ceph-node1 --type gui</pre></li><li class="step">
+ <p>Как только вы стартуете свою виртуальную машину, она должна загрузиться из образа.
+ После этого вы должны установить CentOS на виртуальную машину. Если вы еще не знакомы с установкой 
+ ОС Linux, вы можете следовать за рекомендациями документации с 
+ <a class="link" href="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/index.html"
+ target="_top">https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Installation_Guide/index.html</a>.
+ </p></li><li class="step">
+ <p>После успешной установки операционной системы измените настройки сетевой среды для этой машины:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Отредактируйте <span class="term"><code class="literal">/etc/sysconfig/network</code></span> и измените 
+	 параметр <span class="term"><code class="literal">hostname</code></span> 
+	 <span class="term"><code class="literal">HOSTNAME=ceph-node1</code></span></p>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal">/etc/sysconfig/network-scripts/ifcfg-eth0</code></span> 
+	 и добавьте:</p><pre class="screen">
+	ONBOOT=yes
+	BOOTPROTO=dhcp</pre>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal"> /etc/sysconfig/network-scripts/ifcfg-eth1</code></span> 
+	 и добавьте:</p><pre class="screen">
+	ONBOOT=yes
+	BOOTPROTO=static
+	IPADDR=192.168.57.101
+	NETMASK=255.255.255.0</pre>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal">/etc/hosts</code></span> 
+	 и добавьте:</p><pre class="screen">
+	192.168.57.101 ceph-node1
+	192.168.57.102 ceph-node2
+	192.168.57.103 ceph-node3</pre>
+	 </li>
+   </ul>
+   </div>
+  </p></li><li class="step">
+  <p>После установки сетевых настроек перезапустите виртуальную машину и зарегистрируйтесь через SSH с 
+  вашей машины хоста. Также проверьте связь этого компьютера с интернетом, поскольку ему потребуется 
+  загрузка пакетов Ceph:</p><pre class="screen">
+	# ssh root@192.168.57.101</pre>
+  </li><li class="step">
+  <p>После того, как установка сети была выполнена корректно, вы должны остановить свою первую виртуальную машину 
+  чтобы сделать два клона вашей первой виртуальной машины. Если вы не выполните останов своей первой виртуальной машины,
+  операция клонирования может закончиться неудачей.
+  </p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Создайте клон <span class="term"><code class="literal">ceph-node1</code></span> с именем
+	 <span class="term"><code class="literal">ceph-node2</code></span>:</p>
+	 <pre class="screen">
+	# VBoxManage clonevm --name ceph-node2 ceph-node1
+	--register</pre>
+	 </li>
+	 <li class="listitem">
+	 <p>Создайте клон <span class="term"><code class="literal">ceph-node1</code></span> с именем
+	 <span class="term"><code class="literal">ceph-node3</code></span>:</p>
+	 <pre class="screen">
+	# VBoxManage clonevm --name ceph-node3 ceph-node1
+	--register</pre>
+	 </li>
+   </ul>
+   </div>
+  </li><li class="step">
+  <p>После операции завершения клонирования вы можете запустить все три виртуальные машины:</p>
+  <pre class="screen">
+	# VBoxManage startvm ceph-node1
+	# VBoxManage startvm ceph-node2
+	# VBoxManage startvm ceph-node3</pre>
+</li><li class="step">
+  <p>Выполните установку виртуальной машины <span class="term"><code class="literal">ceph-node2</code></span>
+  с правильными именем хоста и сетевой настройкой:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Отредактируйте <span class="term"><code class="literal">/etc/sysconfig/network</code></span> и измените 
+	 параметр <span class="term"><code class="literal">hostname</code></span> 
+	 <span class="term"><code class="literal">HOSTNAME=ceph-node2</code></span></p>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal">/etc/sysconfig/network-scripts/ifcfg-&lt;first interface name&gt;</code></span> 
+	 и добавьте:</p><pre class="screen">
+	DEVICE=<correct device name of your first network
+	interface, check ifconfig -a>
+	ONBOOT=yes
+	BOOTPROTO=dhcp
+	HWADDR= <correct MAC address of your first network
+	interface, check ifconfig -a ></pre>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal"> /etc/sysconfig/network-scripts/ifcfg-&lt;second interface name&gt;</code></span> 
+	 и добавьте:</p><pre class="screen">
+	DEVICE=<correct device name of your second network
+	interface, check ifconfig -a>
+	ONBOOT=yes
+	BOOTPROTO=static
+	IPADDR=192.168.57.102
+	NETMASK=255.255.255.0
+	HWADDR= <correct MAC address of your second network
+	interface, check ifconfig -a ></pre>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal">/etc/hosts</code></span> 
+	 и добавьте:</p><pre class="screen">
+	192.168.57.101 ceph-node1
+	192.168.57.102 ceph-node2
+	192.168.57.103 ceph-node3</pre>
+	 </li>
+   </ul>
+   </div>
+   <p>По окончанию этих изменений вы должны перезагрузить вашу виртуальную машину чтобы
+   ввести в действие новые имена хостов. Перезапуск также обновит ваши сетевые настройки.</p>
+  </li><li class="step">
+  <p>Выполните установку виртуальной машины <span class="term"><code class="literal">ceph-node3</code></span>
+  с правильными именем хоста и сетевой настройкой:
+  </p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Отредактируйте <span class="term"><code class="literal">/etc/sysconfig/network</code></span> и измените 
+	 параметр <span class="term"><code class="literal">hostname</code></span> 
+	 <span class="term"><code class="literal">HOSTNAME=ceph-node3</code></span></p>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal">/etc/sysconfig/network-scripts/ifcfg-&lt;first interface name&gt;</code></span> 
+	 и добавьте:</p><pre class="screen">
+	DEVICE=<correct device name of your first network
+	interface, check ifconfig -a>
+	ONBOOT=yes
+	BOOTPROTO=dhcp
+	HWADDR= <correct MAC address of your first network
+	interface, check ifconfig -a ></pre>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal"> /etc/sysconfig/network-scripts/ifcfg-&lt;second interface name&gt;</code></span> 
+	 и добавьте:</p><pre class="screen">
+	DEVICE=<correct device name of your second network
+	interface, check ifconfig -a>
+	ONBOOT=yes
+	BOOTPROTO=static
+	IPADDR=192.168.57.103
+	NETMASK=255.255.255.0
+	HWADDR= <correct MAC address of your second network
+	interface, check ifconfig -a ></pre>
+	 </li>
+	<li class="listitem">
+	 <p>Отредактируйте файл <span class="term"><code class="literal">/etc/hosts</code></span> 
+	 и добавьте:</p><pre class="screen">
+	192.168.57.101 ceph-node1
+	192.168.57.102 ceph-node2
+	192.168.57.103 ceph-node3</pre>
+	 </li>
+   </ul>
+   </div>
+   <p>По окончанию этих изменений вы должны перезагрузить вашу виртуальную машину чтобы
+   ввести в действие новые имена хостов. Перезапуск также обновит ваши сетевые настройки.</p>
+  </li></ol>
+  
+  <p>{<span class="emphasis"><em>Прим. пер.: предлагаем альтернативную процедуру для Ubuntu с Qemu/KVM:</em></span></p>
+  <ol type="1" class="substeps"><li class="step">
+    <p><span class="emphasis"><em>Сначала необходимо убедиться, что оборудование поддерживает аппаратную виртуализацию, например, 
+	выполнив:</em></span></p><pre class="screen">
+	kvm-ok</pre>
+    <p><span class="emphasis"><em>Вам будет выведено сообщение о том поддерживает ли ваш центральный процессор (CPU) аппаратную 
+	виртуализацию или нет.</em></span></p>	
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+      <p><span class="emphasis"><em>На большинстве компьютеров, чьи процессоры поддерживают виртуализацию, необходимо включать эту опцию 
+	  в BIOS.</em></span></p></p></td></tr></table>
+     </div>
+    <p><span class="emphasis"><em>Можно узнать более подробную информацию, например, выполнив:</em></span></p><pre class="screen">
+	egrep '(vmx|svm)' /proc/cpuinfo</pre>
+    <p><span class="emphasis"><em>Пустой вывод означает отсутствие аппаратной поддержки виртуализации.</em></span></p>	
+	<p><span class="emphasis"><em>Существует несколько способов позволить виртуальной машине получить доступ во внешнюю сеть. 
+	По умолчанию виртуальная сеть настраивается как <span class="term"><strong class="userinput"><code>usermode</code></strong></span>, 
+	когда используется протокол <span class="term"><strong class="userinput"><code>SLIRP</code></strong></span>, а сетевые данные 
+	маскируются с помощью <span class="term"><strong class="userinput"><code>NAT</code></strong></span> на сетевом интерфейсе компьютера 
+	при соединении с внешней сетью.</em></span></p>
+	<p><span class="emphasis"><em>Чтобы разрешить внешним компьютерам соединяться с сервисами виртуальной машины напрямую, требуется настроить 
+	мост (<span class="term"><strong class="userinput"><code>bridge</code></strong></span>). Это делает возможным соединения виртуальных 
+	интерфейсов с внешней сетью через физический интерфейс, позволяя им считать себя обычными компьютерами в нормальной сети.</em></span></p>
+	<p><span class="emphasis"><em> Для получения дополнительной информации по настройке сетевых мостов, например, изучите 
+    <a class="link" href="http://help.ubuntu.ru/wiki/руководство_по_ubuntu_server/сеть/сетевые_настройки#строительство_мостов"
+    target="_top">http://ubuntu.ru/ &gt;Официальная документация&gt;Руководство по Ubuntu Server 12.04&gt;Сеть&gt;Сетевые настройки&gt;Строительство мостов</a>.
+	</em></span></p>
+	<p><span class="emphasis"><em>Для установки необходимых пакетов введите в строке терминала: </em></span></p><pre class="screen">
+	sudo apt-get install kvm libvirt-bin python-virtinst bridge-utils</pre>
+	<p><span class="emphasis"><em>Добавляем пользователя, который будет управлять виртуальными машинами (по умолчанию 
+	<span class="term"><strong class="userinput"><code>ubuntu:ubuntu</code></strong></span>), обычно это пользователь, заведенный во 
+	время установки системы, под которым мы выполняем все текущие действия:</em></span></p><pre class="screen">
+	sudo adduser $USER libvirtd</pre>
+	<p><span class="emphasis"><em>Проверяем, как установилась KVM, командой: </em></span></p><pre class="screen">
+	virsh -c qemu:///system list --all</pre>
+	<p><span class="emphasis"><em>Вывод консоли должен выглядеть примерно так:</em></span></p><pre class="screen">
+	$ virsh -c qemu:///system list --all
+    Connecting to uri: qemu:///system
+    Id Name State</pre>
+	<p><span class="emphasis"><em>Если увидели нечто подобное, можно продолжить.</em></span></p>
+   </li>
+   <li class="listitem">
+	<p><span class="emphasis"><em>В случае с виртуальными машинами графический пользовательский интерфейс (GUI) аналогичен 
+	использованию физической клавиатуры и мыши. Вместо установки GUI для соединения с консолью виртуальной машины по VNC 
+	(или, например, через <a class="link" href="http://www.straightrunning.com/XmingNotes/" target="_top">Xming</a> -Putty для 
+	Windows- рабочей станции) может быть использовано приложение <span class="term"><strong class="userinput"><code>virt-manager</code></strong></span>. 
+	Для установки <span class="term"><strong class="userinput"><code>virt-manager</code></strong></span> из терминала 
+	введите: </em></span></p><pre class="screen">
+	sudo apt-get install virt-manager</pre>
+	<p><span class="emphasis"><em>Как только виртуальная машина установлена и запущена, вы можете подсоединиться к ней 
+	командой (напомним, требуется поддержка графического интерфейса!):</em></span></p><pre class="screen">
+	virt-manager -c qemu:///system</pre>
+	<p><span class="emphasis"><em>Вы можете соединиться и к сервису libvirt, запущенном на другом компьютере, введя следующую команду 
+	в терминале:</em></span></p><pre class="screen">
+	virt-manager -c qemu+ssh://192.168.57.1/system</pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+      <p><span class="emphasis"><em>В последнем примере подразумевается, что SSH соединение между управляющей системой и 
+	  <span class="term"><strong class="userinput"><code>192.168.57.1</code></strong></span> уже настроено и для аутентификации 
+	  используются ключи SSH. SSH ключи обязательны, поскольку <span class="term"><strong class="userinput"><code>libvirt</code></strong></span> 
+	  посылает запрос на ввод пароля другому процессу. С подробности настройки SSH можно ознакомиться на
+      <a class="link" href="http://help.ubuntu.ru/wiki/руководство_по_ubuntu_server/удаленное_администрирование/openssh_server"
+      target="_top">http://ubuntu.ru/ &gt;Официальная документация&gt;Руководство по Ubuntu Server 12.04&gt;Удаленное 
+	  администрирование&gt;Сервер OpenSSH</a>.</em></span></p></p></td></tr></table>
+     </div>
+	<p><span class="emphasis"><em>Для просмотра виртуальных машин можно воспользоваться приложением 
+	<span class="term"><strong class="userinput"><code> virt-viewer</code></strong></span>. Для его установки введите в терминале: </em></span></p><pre class="screen">
+	sudo apt-get install virt-viewer</pre>
+	<p><span class="emphasis"><em>Как только виртуальная машина установлена и запущена, вы можете подсоединиться к ней 
+	командой (напомним, требуется поддержка графического интерфейса!):</em></span></p><pre class="screen">
+	virt-viewer -c qemu:///system <em>ceph-node1</em></pre>
+	<p><span class="emphasis"><em>Вы можете соединиться и к сервису libvirt, запущенном на другом компьютере, введя следующую команду 
+	в терминале:</em></span></p><pre class="screen">
+	virt-viewer -c qemu+ssh://192.168.57.1/system <em>ceph-node1</em></pre>
+	<p><span class="emphasis"><em>Убедитесь, что <span class="term"><strong class="userinput"><code>ceph-node1</code></strong></span> 
+	соответствует реальному названию созданной машины!</em></span></p>
+	<p><span class="emphasis"><em>Напомним рекомендуемые параметры для виртуальных машин, уже приводившиеся в случае настройки
+	VirtualBox:</em></span></p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p><span class="emphasis"><em>1 ЦПУ</em></span></p>
+	 </li>
+	<li class="listitem">
+	 <p><span class="emphasis"><em>1024 МБ оперативной памяти</em></span></p>
+	 </li>
+	<li class="listitem">
+	 <p><span class="emphasis"><em>10ГБ x 4 жестких диска (один диск для ОС и три диска для Ceph OSD)</em></span></p>
+	 </li>
+	<li class="listitem">
+	 <p><span class="emphasis"><em>2 сетевых адаптера</em></span></p>
+	 </li>
+	<li class="listitem">
+	 <p><span class="emphasis"><em>ubuntu-14.04.2-server-amd64.iso ISO, подключенный к виртуальной машине.</em></span></p>
+	 <p><span class="emphasis"><em>Вместо ISO можно воспользоваться &quot;джусом&quot;: 
+     <a class="link" href="http://help.ubuntu.ru/wiki/руководство_по_ubuntu_server/виртуализация/jeos_and_vmbuilder"
+     target="_top">http://ubuntu.ru/ &gt;Официальная документация&gt;Руководство по Ubuntu Server 12.04&gt;Виртуализация&gt;JeOS 
+	 и vmbuilder</a>. <span class="term"><strong class="userinput"><code>ubuntu-vm-builder</code></strong></span>, кстати,
+	 является альтернативным способом установки виртуальной машины, позволяющим также создать дополнительные разделы, 
+	 выполнить после-установочные сценарии и пр.</em></span></p>
+	 </li>
+    </ul>
+    </div>
+	<p><span class="emphasis"><em>Приведем также пошаговый процесс создания виртуальной машины из командной строки:</em></span></p>
+    <ol type="1" class="substeps"><li class="step">
+     <p><span class="emphasis"><em>Воспользуемся для этого пакетом <span class="term"><strong class="userinput"><code>virtinst</code></strong></span>, 
+	 выполним:</em></span></p><pre class="screen">
+sudo apt-get install virtinst</pre>
+    <p><span class="emphasis"><em>Существует несколько опций доступных при использовании 
+	<span class="term"><strong class="userinput"><code>virt-install</code></strong></span>. 
+	Например:</em></span></p><pre class="screen">
+sudo virt-install -n ceph-node1 -r 1024 \
+--disk path=/var/lib/libvirt/images/web_devel.img,bus=virtio,size=10 -c \
+jeos.iso --accelerate --network network=default,model=virtio \
+--connect=qemu:///system --vnc --noautoconsole -v</pre>
+	<p><span class="emphasis"><em>Здесь: </em></span></p>
+     <ol type="1" class="substeps"><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-n ceph-node1</code></strong></span>: имя 
+	 новой виртуальной машины, в данном примере <span class="term"><strong class="userinput"><code>ceph-node1</code></strong></span>.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>–disk path=/var/lib/libvirt/images/ceph-node1.img,bus=virtio,size=4</code></strong></span>: 
+	 указывает путь к виртуальному диску, который может быть файлом, разделом или логическим томом. В этом примере файл с именем 
+	 <span class="term"><strong class="userinput"><code>ceph-node1.img</code></strong></span> в каталоге 
+	 <span class="term"><strong class="userinput"><code>/var/lib/libvirt/images/</code></strong></span> размером 10 гигабайт, 
+	 использующий virtio в качестве дисковой шины</em></span></p></li><li class="step">
+	 <p>или, вместо диска: <span class="emphasis"><em><span class="term"><strong class="userinput"><code>-f ceph-node1</code></strong></span>: 
+	 файл, являющийся виртуальный жестким диском для гостевой ОС и 
+	 <span class="emphasis"><em><span class="term"><strong class="userinput"><code>-s 10</code></strong></span>— объем этого диска 
+	 в гигабайтах. </em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-r 1024</code></strong></span>: определяет размер 
+	 памяти виртуальной машины в мегабайтах. </em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>c jeos.iso</code></strong></span>: файл, используемый 
+	 как виртуальный CDROM. Файл может быть как образом ISO, так и путем к устройству CDROM основной системы.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>–accelerate</code></strong></span>: разрешает 
+	 использование ускоряющих технологий ядра. Также можно указать версию ядра и тип ОС: 
+	 <span class="emphasis"><em><span class="term"><strong class="userinput"><code>--os-type=linux</code></strong></span> и
+	 <span class="emphasis"><em><span class="term"><strong class="userinput"><code>--os-variant=generic26</code></strong></span></em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>–network</code></strong></span>: обеспечивает детали, 
+	 касающиеся сетевого интерфейса виртуальной машины.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>–vnc</code></strong></span>: предоставление 
+	 гостевой виртуальной консоли через VNC.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>–noautoconsole</code></strong></span>: не подключается 
+	 автоматически к консоли виртуальной машины.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-v</code></strong></span>: создает 
+	 полностью вируализированную гостевую систему.</em></span></p>
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-w bridge:br0</code></strong></span>: указываем использовать 
+	 сетевой мост.</em></span></p>
+	 <p><span class="emphasis"><em>После загрузки <span class="emphasis"><em><span class="term"><strong class="userinput"><code>virt-install</code></strong></span> 
+	 вы сможете подсоединиться к консоли виртуальной машины либо локально с использованием GUI, либо с помощью утилиты 
+	 <span class="emphasis"><em><span class="term"><strong class="userinput"><code>virt-viewer</code></strong></span>. </em></span></p>
+	 </li></ol>
+	</li><li class="step">
+	<p>Приложение <span class="emphasis"><em><span class="term"><strong class="userinput"><code>virt-clone</code></strong></span> может быть использовано 
+	для копирования одной виртуальной машины в другую. Например: </em></span></p>
+sudo virt-clone -o ceph-node1 -n ceph-node2 -f /path/to/ceph-node2.img \
+--connect=qemu:///system</pre>
+	<p><span class="emphasis"><em>Здесь: </em></span></p>
+     <ol type="1" class="substeps"><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-o</code></strong></span>: оригинальная 
+	 виртуальная машина.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-n</code></strong></span>: имя новой 
+	 виртуальной машины.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-f</code></strong></span>: путь к файлу, 
+	 локальному тому или разделу для использования новой виртуальной машиной. </em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>–connect</code></strong></span>: определяет 
+	 к какому супервизору подключаться. </em></span></p></li><li class="step">
+	 <p>также <span class="emphasis"><em><span class="term"><strong class="userinput"><code>-d</code></strong></span> или 
+	 <span class="emphasis"><em><span class="term"><strong class="userinput"><code>–debug</code></strong></span>: для помощи 
+	 при решении проблем с <span class="emphasis"><em><span class="term"><strong class="userinput"><code>virt-clone</code></strong></span>.</em></span></p></li><li class="step">
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-v</code></strong></span>: создает 
+	 полностью вируализированную гостевую систему.</em></span></p>
+	 <p><span class="emphasis"><em><span class="term"><strong class="userinput"><code>-w bridge:br0</code></strong></span>: указываем использовать 
+	 сетевой мост.</em></span></p>
+	 <p><span class="emphasis"><em>После загрузки <span class="emphasis"><em><span class="term"><strong class="userinput"><code>virt-install</code></strong></span> 
+	 вы сможете подсоединиться к консоли виртуальной машины либо локально с использованием GUI, либо с помощью утилиты 
+	 <span class="emphasis"><em><span class="term"><strong class="userinput"><code>virt-viewer</code></strong></span>. </em></span></p>
+	 </li></ol>
+	</li><li class="step">
+	<p><span class="emphasis"><em>Для управления виртуальными машинами и <span class="emphasis"><em><span class="term"><strong class="userinput"><code>libvirt</code></strong></span> 
+	 из командной строки может быть использована утилита <span class="emphasis"><em><span class="term"><strong class="userinput"><code>virsh</code></strong></span>. 
+	 Несколько примеров: </em></span></p>
+     <ol type="1" class="substeps"><li class="step">
+	 <p><span class="emphasis"><em>Получить список запущенных виртуальных машин:</em></span></p><pre class="screen">
+virsh -c qemu:///system list</pre>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Запустить виртуальную машину:</em></span></p><pre class="screen">
+virsh -c qemu:///system start ceph-node1</pre>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Аналогично, запустить виртуальную машину в процессе загрузки:</em></span></p><pre class="screen">
+virsh -c qemu:///system autostart ceph-node1</pre>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Перегрузить виртуальную машину:</em></span></p><pre class="screen">
+virsh -c qemu:///system reboot ceph-node1</pre>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Состояние (state) виртуальной машины может быть сохранено в файл с целью возможного 
+	 восстановления в дальнейшем. Приведенная команда сохранит состояние виртуальной машины в файл с именем, 
+	 содержащем дату:</em></span></p><pre class="screen">
+virsh -c qemu:///system save ceph-node1 ceph-node1-150622.state</pre>
+     <p><span class="emphasis"><em>Сохраненная копия машины больше не может быть запущена!</em></span></p>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Сохраненная виртуальная машина может быть восстановлена такой командой:</em></span></p><pre class="screen">
+virsh -c qemu:///system restore ceph-node1-150622.state</pre>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Выключить виртуальную машину:</em></span></p><pre class="screen">
+virsh -c qemu:///system shutdown ceph-node1</pre>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Устройство чтения CDROM может быть подмонтировано к виртуальной машине следующей командой:</em></span></p><pre class="screen">
+virsh -c qemu:///system attach-disk ceph-node1 /dev/cdrom /media/cdrom</pre>
+	 </li><li class="step">
+	 <p><span class="emphasis"><em>Подключение образа SATA диска в гостевую машину: </em></span></p>
+	 <ul class="itemizedlist" type="disk">
+	  <li class="listitem">
+	  <p><span class="emphasis"><em>Создайте определение пула на основе каталога <span class="term"><strong class="userinput"><code>/var/lib/libvirt/ceph_images</code></strong></span>:</em></span></p><pre class="screen">
+$ sudo virsh pool-define-as ceph-images dir - - - - "/var/lib/libvirt/ceph_images"
+Pool ceph_images defined</pre>
+	  <p><span class="emphasis"><em>Проверьте наличие пула в списке:</em></span></p><pre class="screen">
+$ sudo virsh pool-list --all
+ Name                 State      Autoatart
+-------------------------------------------
+ ceph_images          inactive   no
+ default              active     yes</pre>
+...
+	  <p><span class="emphasis"><em>Создайте локальный каталог и проверьте установленные права:</em></span></p><pre class="screen">
+$ sudo virsh pool-build ceph_images
+Pool ceph_images built
+
+$ sudo ls -la "/var/lib/libvirt/ceph_images"
+total 0
+drwx------ 2 root root  6 Jun 26 14:28 .
+drwxr-xr-x 8 root root 87 Jun 26 14:28 ..</pre>
+	  <p><span class="emphasis"><em>Стартуйте пул хранения:</em></span></p><pre class="screen">
+$ sudo virsh pool-build ceph_images
+Pool ceph_images started</pre>
+	  <p><span class="emphasis"><em>Включите автозапуск и проверьте его состояние:</em></span></p><pre class="screen">
+$ sudo virsh pool-autostart ceph_images
+Pool ceph_images marked as autostarted
+
+$ sudo virsh pool-list --all
+ Name                 State      Autoatart
+-------------------------------------------
+ ceph_images          active     yes
+ default              active     yes
+...</pre>
+	  <p><span class="emphasis"><em>Проверьте настройки пула хранения:</em></span></p><pre class="screen">
+$ sudo virsh pool-info ceph_images
+Name:           ceph_images
+UUID:           3e389857-8096-44f3-b532-808e489a2de8
+State:          running
+Persistent:     yes
+Autostart:      yes
+Capacity:       49.22 GiB
+Allocation:     12.80 GiB
+Available       36.41 GiB</pre>
+      Подробнее: <a class="link" href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Virtualization_Deployment_and_Administration_Guide/sect-Directory_based_storage_pools.html#sect-Directory_based_storage_pools-Creating_a_directory_based_storage_pool_with_virsh"
+      target="_top">RedHat.com &gt;Support&gt;Product Documentation&gt;Red Hat Enterprise Linux&gt;7&gt;Virtualization 
+	  Deployment and Administration Guide&gt;<strong>Creating a directory based storage pool</strong></a>.
+	  </li><li class="listitem">
+	  <p><span class="emphasis"><em>Создайте том:</em></span></p><pre class="screen">
+$ sudo virsh vol-create-as ceph_images ceph-node1-osd1 10G
+Vol ceph-node1-osd1 created</pre>
+	  <p><span class="emphasis"><em>Проверьте его состояние:</em></span></p><pre class="screen">
+$ sudo virsh vol-list ceph_images
+ Name                 Path                                    
+------------------------------------------------------------------------------
+ ceph-node1-osd1      /var/lib/libvirt/ceph_images/ceph-node1-osd1
+
+$ sudo parted -s &quot;/var/lib/libvirt/ceph_images/ceph-node1-osd1&quot; print
+Error: /var/lib/libvirt/ceph_images/ceph-node1-osd1: unrecognised disk label
+Model:  (file)
+Disk /var/lib/libvirt/ceph_images/ceph-node1-osd1: 10240MB
+Sector size (logical/physical): 512B/512B
+Partition Table: unknown
+Disk Flags: 
+</pre>
+	  </li><li class="listitem">
+	  
+	  <p><span class="emphasis"><em>Клонируйте том:</em></span></p><pre class="screen">
+$ sudo virsh vol-clone --pool ceph_images ceph-node1-osd1 ceph-node1-osd2
+Vol ceph-node1-osd2 cloned from ceph-node1-osd1
+$ sudo virsh vol-clone --pool ceph_images ceph-node1-osd1 ceph-node1-osd3
+Vol ceph-node1-osd3 cloned from ceph-node1-osd1</pre>
+	  </li><li class="listitem">
+	  <p><span class="emphasis"><em>Подключите диски к виртуальной машине:</em></span></p><pre class="screen">
+$ sudo virsh attach-disk ceph-node1 /var/lib/libvirt/ceph_images/ceph-node1-osd1 vdb --cache none
+Disk attached successfully
+</pre>
+	  <p><span class="emphasis"><em>и т.д.</em></span></p>
+      <p><span class="emphasis"><em>Подробнее: <a class="link" 
+	  href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Virtualization_Deployment_and_Administration_Guide/sect-Storage_Volumes-Creating_volumes.html"
+      target="_top">RedHat.com &gt;Support&gt;Product Documentation&gt;Red Hat Enterprise Linux&gt;7&gt;Virtualization 
+	  Deployment and Administration Guide&gt;<strong>Creating volumes</strong></a>.
+      Описание диска в виде xml- файла: <a class="link" href="http://libvirt.org/formatstorage.html"
+      target="_top">http://libvirt.org/formatstorage.html</strong></a>.
+      Руководство по настройке виртуализации на русском языке: <a class="link" href="http://help.ubuntu.ru/wiki/руководство_по_ubuntu_server/виртуализация/libvirt"
+      target="_top">http://help.ubuntu.ru/wiki/system&gt;Руководство по Ubuntu Server 12.04&gt;20. Виртуализация&gt;1. libvirt</strong></a>.</em></span></p>
+	  </li></ul>
+	</li>
+   </ol>
+	<p><span class="emphasis"><em>... </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+	<p><span class="emphasis"><em> </em></span></p>
+  </li></ol>}
+
+  
+  <p>В этой точке мы подготовили три виртуальные машины и убедились, что каждая из них взаимодействует с остальными.
+  Они также должны иметь доступ в интернет для установки пакетов Ceph.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="From_zero"> </a>От нуля к Ceph- развертывание вашего первого кластера Ceph</h3>
+   </div></div></div>
+   <p>Для развертывания вашего первого кластера Ceph мы воспользуемся инструментом <span class="term"><strong class="userinput"><code>ceph-deploy</code></strong></span>
+   для установки и настройки Ceph на всех трех виртуальных машинах. Инструмент ceph-deploy является частью определяемого программным обеспечением
+   хранилища, который используется для упрощения развертывания и управления вашим кластером хранения Ceph.</p>
+   <p>Поскольку мы создали три виртуальные машины, которые выполняют CentOS 6.4 и имеем связь с интернетом, а также
+   частные сетевые соединения, мы настроим эти машины как кластер хранения Ceph согласно следующей диаграмме:</p>
+
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0201.jpg"/> </div><br />
+    </div>
+	
+   <ol type="1" class="substeps"><li class="step">
+	<p>Настройте <span class="term"><code class="literal">ceph-node1</code></span> для регистрации на остальных узлах
+	через SSH без пароля. Выполните следующие команды на <span class="term"><code class="literal">ceph-node1</code></span>:
+	  <ul class="itemizedlist" type="circle">
+	  <li class="listitem">
+	   <p>При настройке SSH оставьте фразу-пароль {<span class="emphasis"><em>Прим. пер.: в тексте paraphrase,
+	   что, видимо, опечатка в passphrase</em></span>} пустой и продолжайте с настройками по умолчанию:<pre class="screen">
+	# ssh-keygen</pre>
+	   </p>
+	  </li>
+	  <li class="listitem">
+	   <p>Скопируйте ID ключи SSH на <span class="term"><code class="literal">ceph-node2</code></span>
+	   и <span class="term"><code class="literal">ceph-node3</code></span> предоставляя их пароли root. 
+	   После этого вы должны быть в состоянии войти на эти узлы без пароля:<pre class="screen">
+	# ssh-copy-id ceph-node2</pre>
+	   </p>
+	   </li>
+  	  </ul>
+	  </li><li class="step">
+	<p>Установите и настройте EPEL на все узлы Ceph:
+	  <ol type="1" class="substeps"><li class="step">
+	  <p>Установите EPEL, который является репозиторием для установки дополнительных пакетов для систем Linux
+	  посредством выполнения следующей команды на всех узлах Ceph:</p><pre class="screen">
+	# rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/
+	epel-release-6-8.noarch.rpm</pre>
+	  </li><li class="step">
+	  <p>Убедитесь, что параметр <span class="term"><code class="literal">baserul</code></span> разрешен
+	  в файле <span class="term"><code class="literal">/etc/yum.repos.d/epel.repo</code></span>. 
+	  Параметр <span class="term"><code class="literal">baseurl</code></span> определяет URL для
+	  дополнительных пакетов Linux. Также проверьте, что параметр <span class="term"><code class="literal">mirrorlist</code></span>
+	  должен быть запрещен (присутствовать в виде комментария) в этом файле.  Если параметр 
+	  <span class="term"><code class="literal">mirrorlist</code></span> включен в файле 
+	  <span class="term"><code class="literal">epel.repo</code></span>, при установке могут наблюдаться проблемы. 
+	  Выполните этот шаг на всех трех узлах.</p>
+	  </li></ol>
+	</p>
+	  </li>
+	  <li class="listitem">
+	  <p>Установите <span class="term"><code class="literal">ceph-deploy</code></span> на машине 
+	  <span class="term"><code class="literal">ceph-node1</code></span> выполнив следующую команду
+	  на узле <span class="term"><code class="literal">ceph-node1</code></span>:</p><pre class="screen">
+	# yum install ceph-deploy</pre>
+	  </li>
+	  <li class="listitem">
+	  <p>Далее мы создаем кластер Ceph с применением <span class="term"><code class="literal">ceph-deploy</code></span>,
+	  путем выполнения следующей команды на <span class="term"><code class="literal">ceph-node1</code></span>:</p><pre class="screen">
+	# ceph-deploy new ceph-node1
+	## Create a directory for ceph
+	# mkdir /etc/ceph
+	# cd /etc/ceph</pre>
+	  <p>Подкоманда <span class="term"><code class="literal">new</code></span> 
+	  <span class="term"><code class="literal">ceph-deploy</code></span> разворачивает
+	  новый кластер именем кластера <span class="term"><code class="literal">ceph</code></span>,
+	  что является значением по умолчанию; она создает настройки кластера и файлы ключей.
+	  Просмотрите существующие рабочие каталоги, вы найдете в них файлы 
+	  <span class="term"><code class="literal">ceph.conf</code></span> и
+	  <span class="term"><code class="literal">ceph.mon.keyring</code></span></p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+        <p>При данном тестировании мы намеренно установки редакцию  программного обеспечения Ceph Emperor (v0.72), 
+		которая не является последней версией. Позже в этой книге мы продемонстрируем модернизацию Emperor на 
+		редакцию Ceph Firefly.
+		</p></td></tr></table>
+      </div>
+	  </li>
+	  <li class="listitem">
+	  <p>Для установки двоичных кодов программного обеспечения Ceph на все машины при помощи ceph-deploy выполните
+	  следующую команду на <span class="term"><code class="literal">ceph-node1</code></span>:</p><pre class="screen">
+	ceph-deploy install --release emperor ceph-node1 ceph-node2 cephnode3</pre>
+	  </li>
+	  <p>Инструмент <span class="term"><code class="literal">ceph-deploy</code></span> сначала установит все зависимости 
+	  а затем двоичные файлы Ceph Emperor. После успешного завершения команды, проверьте версию Ceph 
+	  и состояние Ceph на всех узлах, а именно:</p><pre class="screen">
+	# ceph –v</pre>	  
+	  <li class="listitem">
+	  <p>Создайте ваш первый монитор на <span class="term"><code class="literal">ceph-node1</code></span>:</p><pre class="screen">
+	# ceph-deploy mon create-initial</pre></p>
+	<p>Если создание монитора завершилось успешно, проверьте состояние вашего кластера. Ваш кластер не будет 
+	работоспособным на этой стадии:</p><pre class="screen">
+	# ceph status</pre></p>
+	  </li>
+	  <li class="listitem">
+	  <p>Создайте на этой машине устройство хранения объектов (<span class="term"><strong class="userinput"><code>OSD, 
+	  object storage device</code></strong></span>) и добавьте его в кластер Ceph,
+	  выполнив следующие шаги:</p>
+	  <ol type="1" class="substeps"><li class="step">
+	  <p>Выведите перечень дисков виртуальной машины:</p><pre class="screen">
+	# ceph-deploy disk list ceph-node1</pre>
+	  <p>В выводе команды тщательно определите диски (кроме дисков OS-разделов), на которых мы должны 
+	  создать Ceph OSD. В нашем случае имена дисков, в идеале, должны быть SDB, SDC и SDD.</p>
+	  </li><li class="step">
+	  <p>Подкоманда <span class="term"><code>disk zap</code></span> уничтожит существующую таблицу разделов и 
+	  содержание диска. Перед запуском следующей команды убедитесь, что вы используете правильное 
+	  имя дискового устройства.</p><pre class="screen">
+	# ceph-deploy disk zap ceph-node1:sdb ceph-node1:sdc cephnode1:sdd</pre>
+	  </li><li class="step">
+	  <p></p><pre class="screen">
+	# ceph-deploy mon create-initial</pre>
+	  </li><li class="step">
+	  <p>Подкоманда <span class="term"><code>osd create</code></span> сначала подготовит диск, то есть сотрет диск 
+	  с файловой системой, которой по умолчанию является xfs. Затем она активирует первый раздел диска в качестве 
+	  раздела данных и второй раздел как журнал:</p>
+	  <pre class="screen">
+	# ceph-deploy osd create ceph-node1:sdb ceph-node1:sdc cephnode1:sdd</pre>
+	  </li><li class="step">
+	  <p>Проверьте состояние кластера для новых элементов OSD:</p>
+	  <pre class="screen">
+	# ceph status</pre>
+	  <p>На данном этапе кластер не будет работоспособным. Нам нужно добавить несколько узлов в кластер 
+	  Ceph так, чтобы он мог создать распределенное, реплицированное хранилище объектов, и, следовательно, 
+	  стать работоспособным.</p>
+	  </li></ol>
+   </li></ol>
+
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Scaling_up"> </a>Увеличение вашего кластера Ceph в масштабах- добавление монитора и OSD</h3>
+   </div></div></div>
+   <p>Теперь у нас есть кластер с одним узлом. Чтобы сделать его распределенным, надежным кластером хранения, 
+   мы должны выполнить его масштабирование. Для расширения кластера мы должны добавить больше узлов мониторов и OSD.
+   Согласно нашему плану мы теперь будем настраивать машины <span class="term"><code class="literal">ceph-node2</code></span>
+   и <span class="term"><code class="literal">ceph-node3</code></span> как узлы мониторов и OSD.
+   </p>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Adding_monitor"> </a>Добавление монитора Ceph</h4>
+    </div></div></div>
+    <p>Кластеру хранения данных Ceph для работы, по крайней мере, требуется один монитор. Для обеспечения высокой доступности
+	кластер хранения Ceph основывается на нечетном числе мониторов более одного, например, 3 или 5, для получения кворума.
+	Он использует алгоритм Paxos для поддержки кворума большинства. Поскольку мы уже имеем один запущенный монитор на 
+	<span class="term"><code class="literal">ceph-node1</code></span>, давайте создадим два дополнительных монитора для нашего
+	кластера Ceph:</p>
+	  <ol type="1" class="substeps"><li class="step">
+	   <p>Правила межсетевого экрана не должны блокировать связь между узлами мониторов Ceph. Если такие правила имеются, 
+	   вы должны исправить эти правила межсетевого экрана чтобы мониторы могли формировать кворум. Поскольку в нашем 
+	   случае мы имеем дело с тестовой установкой, давайте запретим межсетевые экраны на всех трех узлах. Мы запустим 
+	   эти команды с машины <span class="term"><code class="literal">ceph-node1</code></span>, если специально
+	   не оговорено иное:</p>
+	   	  <pre class="screen">
+	# service iptables stop
+	# chkconfig iptables off
+	# ssh ceph-node2 service iptables stop
+	# ssh ceph-node2 chkconfig iptables off
+	# ssh ceph-node3 service iptables stop
+	# ssh ceph-node3 chkconfig iptables off</pre>
+      </li><li class="step">
+	   <p>Разверните монитор на <span class="term"><code class="literal">ceph-node2</code></span>
+	   и <span class="term"><code class="literal">ceph-node3</code></span></p>
+	   	  <pre class="screen">
+	# ceph-deploy mon create ceph-node2
+	# ceph-deploy mon create ceph-node3</pre>
+	  </li><li class="step">
+	   <p>Операция развертывания должна быть успешной. Вы можете проверить свои вновь добавленные
+	   мониторы в состоянии Ceph:</p>
+	   	  <pre class="screen">
+	[root@ceph-node1 ~]# ceph status
+		cluster ffa7c0e4-6368-4032-88a4-5fb6a3fb383c
+		 health HEALTH_WARN 192 pgs degraded; 192 pgs stuck unclean
+		 monmap e9: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,ceph-node3=192.168.57.103:6789/0}, election epoch 24, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3
+         osdmap e20: 3 osds: 3 up, 3 in
+          pgmap v37: 192 pgs, 3 pools, 0 bytes data, 0 objects
+                106 MB used, 1520 MB / 15326 MB avail
+                     192 active+degraded
+
+	[root@ceph-node1 ~]# _</pre>
+      </li><li class="step">
+	   <p>Вы можете столкнуться с предупредительными сообщениями, вызванными <span class="term"><span class="emphasis"><em>
+	   расфазировкой синхросигналов</em></span></span> на новых узлах мониторов. Чтобы решить эту проблему, 
+	   мы должны установить <span class="term"><code class="literal">Network Time Protocol (NTP)</code></span> на 
+	   новых узлах монитора:</p>
+	   	  <pre class="screen">
+	# chkconfig ntpd on
+	# ssh ceph-node2 chkconfig ntpd on
+	# ssh ceph-node3 chkconfig ntpd on
+	# ntpdate pool.ntp.org
+	# ssh ceph-node2 ntpdate pool.ntp.org
+	# ssh ceph-node3 ntpdate pool.ntp.org
+	# /etc/init.d/ntpd start
+	# ssh ceph-node2 /etc/init.d/ntpd start
+	# ssh ceph-node3 /etc/init.d/ntpd start</pre>
+      </li></ol>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Adding_OSD"> </a>Добавление OSD Ceph</h4>
+    </div></div></div>
+    <p>В данном пункте мы имеем работающий кластер Ceph с тремя мониторами OSD. Теперь мы будем масштабировать наш кластер 
+	и добавим дополнительные OSD. Для осуществления этой задачи мы будем выполнять последующие команды с машины 
+	<span class="term"><code class="literal">ceph-node2</code></span>, если специально
+	не оговорено иное:</p>
+	   	  <pre class="screen">
+	# ceph-deploy disk list ceph-node2 ceph-node3
+	# ceph-deploy disk zap ceph-node2:sdb ceph-node2:sdc ceph-node2:sdd
+	# ceph-deploy disk zap ceph-node3:sdb ceph-node3:sdc ceph-node3:sdd
+	# ceph-deploy osd create ceph-node2:sdb ceph-node2:sdc ceph-node2:sdd
+	# ceph-deploy osd create ceph-node3:sdb ceph-node3:sdc ceph-node3:sdd
+	# ceph status</pre>
+	<p>Проверьте состояние кластера для новых OSD. На данном этапе ваш кластер будет работоспособным
+	с девятью работающими OSD в нем:</p>
+	   	  <pre class="screen">
+	cluster ffa7c0e4-6368-4032-88a4-5fb6a3fb383c
+	 health HEALTH_OK
+	 monmap e9: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,ceph-node3=192.168.57.103:6789/0}, election epoch 30, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3
+	 osdmap e44: 9 osds: 9 up, 9 in 
+	  pgmap v92: 192 pgs, 3 pools, 0 bytes data, 0 objects
+		342 MB used, 45638 MB / 45980 MB avail
+		     192 active+clean</pre>
+      </li><li class="step">
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h3>
+   </div></div></div>
+   <p>Определяемая программным обеспечением природа Ceph обеспечивает своим последователям большую гибкость. 
+   В отличие от других фирменных систем хранения, которые зависят от аппаратных средств, Ceph может быть 
+   легко установлена и опробована практически на любых доступных сегодня компьютерных системах. Кроме того, 
+   если получение физических машин является проблемой, вы можете использовать виртуальные машины для установки Ceph, 
+   как уже упоминалось в этой главе, но имейте в виду, что такая настройка должна использоваться только 
+   в целях тестирования.</p>
+   <p>В этой главе мы узнали, как создать набор виртуальных машин с применением программного обеспечение VirtualBox, 
+   а затем развернули Ceph в виде кластера из трех узлов с помощью инструмента ceph-deploy. Мы также добавили 
+   несколько OSD и машин мониторов в наш кластер для того, чтобы продемонстрировать его динамичное масштабирование. 
+   Мы рекомендуем Вам развернуть ваш собственный кластер Ceph, используя инструкции, данные в этой главе. В следующей главе
+   мы опишем в деталях архитектуру Ceph, ее основные компоненты, а также то. как они взаимодействуют друг с другом, 
+   чтобы формировать кластер.</p>
+   <div class="variablelist"><dl><dt><span class="term"><code class="literal">Btrfs</code></span>:</dt><dd>
+    <p></p></dd><dt><span class="term"><code class="code">XFS</code></span></dt><dd>
+ <p>Служба keystone</p></dd><dt><span class="term"><code class="literal">horizon</code></span></dt><dd>
+ <p>Веб- приложение инструментальной панели horizon</p></dd><dt><span class="term"><code class="literal">n-{name}</code></span></dt><dd>
+ <p>Службы nova</p></dd><dt><span class="term"><code class="code">n-sch</code></span></dt><dd>
+ <p>Служба планировщика nova</p></dd></dl>
+</div>
+
+  </div>
+  
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

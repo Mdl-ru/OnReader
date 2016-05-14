@@ -1,0 +1,844 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 10. Операции стороны пользователя. Руководство по эксплуатации OpenStack.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing, Swift, RESTful, Object Storage, Ceph, CORS, CNAME lookup, Domain remap, Health check, Rate limiting, Bulk delete, Container qoutas, account qoutas, TempURL, Static Web, Form post, recon, Swift origin server, Bulk archive auto-extraction">
+   <meta name="Description" content="Глава 10. Операции стороны пользователя. Руководство по эксплуатации OpenStack.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2015 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="index.htm">Руководство по эксплуатации OpenStack</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<h2 align="right">ГЛАВА 10</h2>
+<hr />
+<h1 id="Chapter_10" align="right">Операции стороны пользователя</h1>
+
+<em>Пользуйтесь переводом <strong>существенно переработанной и дополенной <a href="http://onreader.mdl.ru/openstack-ops/content/user_facing_operations.html">2й редакции</a></strong> (12-дек-2014),<br />
+находящейся теперь и в режиме <a href="http://docs.openstack.org/openstack-ops/content/user_facing_operations.html">постоянно обновляемой документации</a> <br />
+(последняя пока доступна только на англ.яз.).</em><br />
+<p></p>
+
+<p>Данное руководство предназначено для операторов OpenStack и не преследует цель стать исчерпывающим 
+справочником для пользователей, однако, оператору важно иметь общее представление о том, каким образом можно 
+использовать облачные службы.
+ В данной главе рассматривается OpenStack с точки зрения базового пользователя, что поможет вам понять 
+ потребности ваших пользователей и определить, когда вы получаете свидетельство о неприятности, является 
+ ли она проблемой пользователя или проблемой службы.
+  Основные понятия охватывают образы, шаблоны виртуальных ресурсов (flavor), группы безопасности, блочные 
+  хранилища и экземпляры.</p>
+
+<h2 id="Ch1001">Образы</h2>
+<p>Образы OpenStack часто могут рассматриваться как &quot;шаблоны виртуальных машин&quot;.
+ Они также могут быть стандартными носителями для установки, такими как образы ISO.
+ По существу, они содержат загружаемые файловые системы, которые используются для запуска экземпляров.</p>
+
+<h3 id="Ch100101">Добавление образов</h3>
+<p>Существуют некоторые предварительно собранные образы и они могут быть легко импортированы 
+в службу образов (Image service).
+ Образ CirrOS является очень маленьким общеупотребимым образом для добавления и используется для целей 
+ тестирования.
+ Чтобы добавить этот образ, просто выполните:<br /><code>
+# wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img <br />
+# glance image-create --name='cirros image' --is-public=true --container-format=bare --disk-format=qcow2 &lt; cirros-0.3.0-x86_64-disk.img<br />
+</code></p>
+<p>Команда <code>image-create</code> glance предоставляет большой набор параметров для обеспечения вас образами.
+ Например, параметр <code>min-disk</code> полезен для образов, которые требуют root диски определенного 
+ размера (например, большие образы Windows).
+ Для ознакомления с этими параметрами выполните:
+<br /><code>
+$ glance help image-create<br />
+</code></p>
+<p>Важно отметить параметр расположения (location).
+ Он не копирует весь образ в Glance, а вместо этого дает ссылку на оригинальное местоположение, по 
+ которой может быть найден данный образ.
+ После запуска экземпляра данного образа Glance получает образ из описанного местоположения.</p>
+<p>Параметр <code>copy-from</code> копирует образ из описанного местоположения в каталог
+<code>/var/lib/glance/images</code>.
+ То же самое выполняется при перенаправлении <code>STDIN</code>, как это демонстрируется в примере.
+ Выполните следующую команду, чтобы посмотреть свойства существующих образов:
+<br /><code>
+$ glance details<br />
+</code></p>
+
+<h3 id="Ch100102">Удаление образов</h3>
+<p>Для удаления образа просто выполните:
+<br /><code>
+$ glance image-delete &lt;image uuid&gt;<br />
+</code></p>
+<p><img src="i/Tip.jpg" alt="Tip" />Удаление образа не влияет на экземпляры или моментальные снимки, 
+которые основывались на нем.</p>
+
+<h3 id="Ch100103">Прочие параметры CLI</h3>
+<p>Полный набор опций можно найти с помощью:
+<br /><code>
+$ glance help<br />
+</code>
+ или в руководстве по CLI службы образов OpenStack 
+ (<span class="red-heading">OpenStack Image Service</span> CLI Guide, 
+ <a href="http://docs.openstack.org/cli/quickstart/content/glance-cli-reference.html">http://docs.openstack.org/cli/quickstart/content/glance-cli-reference.html</a> 
+ <em>--  прим. перев. ссылка не работает, рекомендую взамен этой, по состоянию на на 19 сентября 2014: 
+ <a href="http://docs.openstack.org/cli-reference/content/glanceclient_commands.html">Image Service command-line client</a> и  
+ <a href="http://docs.openstack.org/user-guide/content/glance_commands.html">glance commands</a></em>)</p>
+
+<h3 id="Ch100104">Служба образов и базы данных</h3>
+<p>Единственное, что Glance не хранит в базе данных, это сами образы.
+ База данных Glance имеет две основные таблицы:<ul>
+  <li>images (образы)
+  <li>image_properties (свойства образов)
+</ul></p>
+<p>Непосредственная работа с базой данных и выполнение SQL запросов может снабдить вас списками 
+пользователей и сообщить об образах Glance.
+  Технически, вы можете обновлять свойства об образах непосредственно через базу данных, хотя это и 
+  не рекомендуется.</p>
+
+<h3 id="Ch100105">Пример запросов к базе данных службы образов</h3>
+<p>Один интересный пример заключается в изменении таблицы образов и владельца этого образа.
+  Это можно легко сделать, если вы просто отображаете уникальный идентификатор (ID) владельца, данный 
+  пример идет на шаг дальше и отображает читаемое имя владельца:
+<br /><code>
+$ mysql&gt; select glance.images.id, glance.images.name, keystone.tenant.name, is_public from glance.images inner join keystone.tenant on glance.images.owner=keystone.tenant.id;<br />
+</code></p>
+<p>Другой пример заключается в отображении всех свойств для определенного образа:
+<br /><code>
+$ mysql&gt; select name, value from image_properties where id = &lt;image_id&gt;<br />
+</code></p>
+
+<h2 id="Ch1002">Шаблоны виртуального ресурса</h2>
+<p>Шаблоны виртуального оборудования в OpenStack называются &quot;flavors&quot; (особенностями), 
+определяющими размеры оперативной памяти, дискового пространства, количества ядер и тому подобного.
+ Установка по умолчанию обеспечивает диапазон из пяти шаблонов виртуальных ресурсов.
+ Они настраиваются пользователями с правами администратора (что в свою очередь может быть 
+ делегировано путем переопределения управления доступом для <code>compute_extension:flavormanage</code> в 
+ <code>/etc/nova/policy.json</code> на сервере <code>nova-api</code>).
+ Чтобы получить список доступных в вашей системе шаблонов выполните:
+<br /><code>
+$ nova flavor-list<br />
++----+-----------+-----------+------+-----------+\+-------+-\+-------------+<br />
+| ID | Name &nbsp; &nbsp; &nbsp;| Memory_MB | Disk | Ephemeral |/| VCPUs | /| extra_specs |<br />
++----+-----------+-----------+------+-----------+\+-------+-\+-------------+<br />
+| 1 &nbsp;| m1.tiny &nbsp; | 512 &nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; |/| 1 &nbsp; &nbsp; | /| {} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| 2 &nbsp;| m1.small &nbsp;| 2048 &nbsp; &nbsp; &nbsp;| 10 &nbsp; | 20 &nbsp; &nbsp; &nbsp; &nbsp;|\| 1 &nbsp; &nbsp; | \| {} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| 3 &nbsp;| m1.medium | 4096 &nbsp; &nbsp; &nbsp;| 10 &nbsp; | 40 &nbsp; &nbsp; &nbsp; &nbsp;|/| 2 &nbsp; &nbsp; | /| {} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| 4 &nbsp;| m1.large &nbsp;| 8192 &nbsp; &nbsp; &nbsp;| 10 &nbsp; | 80 &nbsp; &nbsp; &nbsp; &nbsp;|\| 4 &nbsp; &nbsp; | \| {} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| 5 &nbsp;| m1.xlarge | 16384 &nbsp; &nbsp; | 10 &nbsp; | 160 &nbsp; &nbsp; &nbsp; |/| 8 &nbsp; &nbsp; | /| {} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
++----+-----------+-----------+------+-----------+\+-------+-\+-------------+<br />
+</code></p>
+<p>Команда <code>nova flavor-create</code> позволяет авторизованным пользователям создавать новые 
+шаблоны виртуальных ресурсов.
+ Дополнительные команды работы с шаблонами виртуальных ресурсов могут быть отображены с помощью команды:
+<br /><code>
+$ nova help | grep flavor.<br />
+</code></p>
+<p>Шаблоны виртуальных ресурсов определяют ряд элементов:
+<br /><table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td width="20%"><strong>Графа</strong><br />&nbsp;</td>
+ <td width="80%"><strong>Описание</strong><br />&nbsp;</td>
+</tr><tr><td>
+ID<br />&nbsp;</td><td>
+ Уникальный идентификатор в численном выражении.<br />&nbsp;</td>
+</tr><tr><td>
+Название<br />&nbsp;</td><td>
+ Описательное имя, например, xx.size_name, общеупотребимое, однако не обязательно, 
+ хотя некоторые инструменты сторонних производителей могут их использовать.<br />&nbsp;</td>
+</tr><tr><td>
+Memory_MB<br />&nbsp;</td><td>
+ размер оперативной памяти виртуальной машины в мегабайтах.<br />&nbsp;</td>
+</tr><tr><td>
+Disk<br />&nbsp;</td><td>
+ Размер виртуального корневого диска в гигабайтах.
+ Это временный диск, в который копируется базовый образ.
+ При загрузке с постоянного тома он не требуется.
+ Размер &quot;0&quot; является специальным случаем, который использует для размера временного 
+ корневого тома собственный размер базового образа.<br />&nbsp;</td>
+</tr><tr><td>
+Ephemeral<br />&nbsp;</td><td>
+ Описывает размер вторичного временного диска данных.
+ Это пустой, неформатированный диск и он существует только на время жизни экземпляра.<br />&nbsp;</td>
+</tr><tr><td>
+Swap<br />&nbsp;</td><td>
+ Не обязательное пространство свопинга выделяемое для покачки памяти экземпляром.
+</tr><tr><td>
+VCPUs &nbsp;</td><td>
+Количество виртуальных процессоров, предоставленных экземпляру.<br />&nbsp;</td>
+</tr><tr><td>
+RXTX_Factor<br />&nbsp;</td><td>
+ Опциональное свойство, позволяющее создаваемым серверам иметь предел пропускной способности, 
+ отличный от того, который определен в сети, к которым они подключены.
+ Данный коэффициент умножается на свойство rxtx_base сети.
+ Значением по умолчанию является 1.0 (т.е. то же что и у подключенной сети).<br />&nbsp;</td>
+</tr><tr><td>
+Is_Public<br />&nbsp;</td><td>
+ Булевское значение, определяющее доступен ли шаблон виртуального ресурса всем пользователям или он 
+ доступен только владельцу (tenant), который его создал.
+ Значение по умолчанию True.<br />&nbsp;</td>
+</tr><tr><td>
+extra_specs<br />&nbsp;</td><td>
+ Дополнительные необязательные ограничения, с которыми могут работать шаблоны виртуальных ресурсов 
+ вычислительных узлов.
+ Оно реализуется как пары ключ/ значение, которые должны сравниваться с соответствующими парами 
+ ключ/ значение в вычислительных узлах.
+ Может быть использован для реализации сущностей, таких как специальные ресурсы (например, шаблоны 
+ виртуальных ресурсов, которые могут работать только на вычислительных узлах с аппаратными GPU).
+ <br />&nbsp;</td>
+</tr></tbody></table></p>
+
+<h3 id="Ch100202">Как мне изменить существующий шаблон виртуального ресурса?</h3>
+<p>К сожалению, OpenStack не обеспечивает интерфейс для изменения шаблонов виртуальных ресурсов, 
+они ограничены только для созданием и удаления шаблонов.
+ OpenStack Dashboard имитирует способность изменять шаблоны виртуальных ресурсов, путем удаления 
+ существующего шаблона и создания нового с тем же именем.</p>
+
+<h2 id="Ch1003">Группы безопасности</h2>
+<p>Один из наиболее распространенных вопросов начинающих работу с OpenStack пользователей является 
+сбой установки соответствующей группы безопасности при запуске экземпляра с последующей невозможностью 
+связи с экземпляром через сетевые средства.
+ Группы безопасности являются наборами правил фильтрации IP, которые применяются к сетевым средствам 
+ экземпляра.</p>
+<p>Они являются специфическими для проектов и, следовательно, члены проекта могут редактировать 
+установленные по умолчанию правила для своей группы, а также добавлять новые множества правил.
+  Все проекты имеют &quot;установленную по умолчанию &quot; группу безопасности, которая применяется к 
+  экземплярам, для которых не определена никакая другая группа безопасности, пока она не изменена, 
+  эта группыа безопасности отклоняет весь входящий трафик.</p>
+<p>Параметр <code>nova.conf</code> <code>allow_same_net_traffic</code> (по умолчанию имеющий значение true) 
+глобально управляет тем, применяются ли правила к совместно использующим сеть хостам.
+ Будучи установленным в значение true (истинно), хосты из той же подсети не фильтруются и разрешены 
+ все типы обмена данными между ними.
+ В однородной сети это разрешает нефильтруемое взаимодействие всем экземплярам всех проектов.
+ При использовании сетевого окружения с виртуальными сетями это делает возможным взаимодействие 
+ между экземплярами в пределах одного проекта.
+ Когда значение <code>allow_same_net_trafficis</code> установлено в false, ко всем соединениям 
+ применяются группы безопасности, в данном случае проекты могут имитировать 
+ <code>allow_same_net_traffic</code> путем настройки своих групп безопасности по умолчанию, 
+ разрешая весь трафик в своей подсети.</p>
+<p>Группы безопасности для данного конкретного проекта могут быть найдены в инструментальной панели 
+Horizon в разделе &quot;Access &amp; Security&quot; для просмотра деталей текущей существующей группы 
+выберите действие &quot;edit&quot; (редактирование) для данной группы безопасности.
+ Понятно, что изменение существующих групп может быть выполнено из этого интерфейса &quot;edit&quot;.
+ Существует кнопка &quot;Create Security Group&quot; на главной странице Access &amp; Security для 
+ создания новых групп.
+ Мы обсудим используемые в  этих полях термины по мере объяснения эквивалентов командной строки.</p>
+<p>Вы можете получить список групп безопасности для определенного проекта, с которым вы работаете в 
+настоящее время, выполнением команды nova в командной строке:
+ <br /><code>
+$ nova secgroup-list<br />
++---------+-------------+<br />
+| Name &nbsp; &nbsp;| Description |<br />
++---------+-------------+<br />
+| default | default &nbsp; &nbsp; |<br />
+| open &nbsp; &nbsp;| all ports &nbsp; |<br />
++---------+-------------+<br />
+</code></p>
+<p>Для просмотра деталей группы безопасности &quot;open&quot;:
+ <br /><code>
+$ nova secgroup-list-rules open<br />
++-------------+-----------+---------+-----------+--------------+ <br />
+| IP Protocol | From Port | To Port | IP Range &nbsp;| Source Group | <br />
++-------------+-----------+---------+-----------+--------------+ <br />
+| icmp &nbsp; &nbsp; &nbsp; &nbsp;| -1 &nbsp; &nbsp; &nbsp; &nbsp;| 255 &nbsp; &nbsp; | 0.0.0.0/0 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+| tcp &nbsp; &nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp; &nbsp; &nbsp; | 65535 &nbsp; | 0.0.0.0/0 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+| udp &nbsp; &nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp; &nbsp; &nbsp; | 65535 &nbsp; | 0.0.0.0/0 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
++-------------+-----------+---------+-----------+--------------+ <br />
+</code></p>
+<p>Все приводимые правила являются правилами &quot;разрешающего&quot; (allow) типа, хотя по умолчанию 
+установлены запрещающие (deny).
+ Первый столбец является типом протокола IP (один из icmp, tcp или udp), второй и третий столбцы 
+ описывают подвергаемый действию диапазон портов.
+ Четвертый столбец определяет диапазон IP в формате CIDR.
+ Данный пример демонстрирует полный диапазон портов для всех протоколов, разрешаемых всем IP адресам.</p>
+<p>Как отмечалось в предыдущей главе, число правил в группе безопасности управляется 
+<code>quota_security_group_rules</code>, а количество разрешенных групп безопасности в проекте 
+управляется квотой <code>quota_security_groups</code>.</p>
+<p>При добавлении новой группы безопасности вы должны выбрать описательное, но краткое имя.
+  Это имя появляется в кратких описаниях экземпляров, которые используют его там, где большие поля 
+  описания часто не доступны.
+  Видя, что экземпляр использует группу безопасности &quot;http&quot;, будет гораздо легче понять 
+  ее назначение, чем в случае ее именования &quot;bobs_group&quot; или &quot;secgrp1&quot;.</p>
+<p>В качестве примера, давайте создадим группу безопасности, которая позволяет веб-трафик повсеместно 
+в интернете.
+  Мы будем называть ее &quot;global_http&quot;, что ясно и разумно кратко и при этом содержит 
+  информацию о том, что разрешено и откуда.
+  В командной строке:
+<br /><code>
+(<em>Прим. перев.: в оригинале пропущена команда</em>)<br />
++-------------+-------------------------------------+<br />
+| Name &nbsp; &nbsp; &nbsp; &nbsp;| Description &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-------------+-------------------------------------+<br />
+| global_http | allow web traffic from the internet |<br />
+| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | (допускает обмен через интернет)&nbsp; &nbsp; |<br />
++-------------+-------------------------------------+<br />
+</code></p>
+<p>Это создает пустую группу безопасности, чтобы заставить ее выполнять то, что нужно нам, мы 
+должны добавить некоторые правила.
+<br /><code>
+$ nova secgroup-add-rule &lt;secgroup&gt; &lt;ip-proto&gt; &lt;from-port&gt; &lt;to-port&gt; &lt;cidr&gt;<br />
+$ nova secgroup-add-rule global_http tcp 80 80 0.0.0.0/0<br />
++-------------+-----------+---------+-----------+--------------+<br />
+| IP Protocol | From Port | To Port | IP Range &nbsp;| Source Group |<br />
++-------------+-----------+---------+-----------+--------------+<br />
+| tcp &nbsp; &nbsp; &nbsp; &nbsp; | 80 &nbsp; &nbsp; &nbsp; &nbsp;| 80 &nbsp; &nbsp; &nbsp;| 0.0.0.0/0 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
++-------------+-----------+---------+-----------+--------------+<br />
+</code></p>
+<p>Обратите внимание, что все аргументы являются позиционными, и аргумент &quot;from-port&quot;, 
+и аргумент &quot;to-port&quot; определяют диапазон разрешенных соединений локальных портов, 
+а не порты источника и получателя в соединении.
+ Более сложные наборы правил могут быть построены посредством множественных вызовов nova secgroup-add-rule.
+ Например, если вы хотите обмениваться и http, и https трафиком:
+<br /><code>
+$ nova secgroup-add-rule global_http tcp 443 443 0.0.0.0/0<br />
++-------------+-----------+---------+-----------+--------------+<br />
+| IP Protocol | From Port | To Port | IP Range &nbsp;| Source Group |<br />
++-------------+-----------+---------+-----------+--------------+<br />
+| tcp &nbsp; &nbsp; &nbsp; &nbsp; | 443 &nbsp; &nbsp; &nbsp; | 443 &nbsp; &nbsp; | 0.0.0.0/0 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
++-------------+-----------+---------+-----------+--------------+<br />
+</code></p>
+<p>Несмотря на вывод только вновь добавленного правила последняя операция аддитивная:
+<br /><code>
+$ nova secgroup-list-rules global_http<br />
++-------------+-----------+---------+-----------+--------------+<br />
+| IP Protocol | From Port | To Port | IP Range &nbsp;| Source Group |<br />
++-------------+-----------+---------+-----------+--------------+<br />
+| tcp &nbsp; &nbsp; &nbsp; &nbsp; | 80 &nbsp; &nbsp; &nbsp; &nbsp;| 80 &nbsp; &nbsp; &nbsp;| 0.0.0.0/0 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| tcp &nbsp; &nbsp; &nbsp; &nbsp; | 443 &nbsp; &nbsp; &nbsp; | 443 &nbsp; &nbsp; | 0.0.0.0/0 | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
++-------------+-----------+---------+-----------+--------------+<br />
+</code></p>
+<p>Обратная операция называется secgroup-delete-rule и использует тот же формат.
+ C помощью secgroup-Delete могут быть удалены группы безопасности целиком.</p>
+<p>Чтобы создать правила группы безопасности для кластера экземпляров:</p>
+<p>SourceGroup представляют собой особый динамический способ определения в формате CIDR разрешенных источников.
+ Пользователь описывает SourceGroup (имя группы безопасности) и все другие использующие SourceGroup 
+ экземпляры пользователя выбираются динамически.
+ Это избавляет от необходимости в индивидуальных правилах для каждого нового члена кластера.
+ Применение:
+<br /><code>
+nova secgroup-add-group-rule &lt;secgroup&gt; &lt;source-group&gt; &lt;ip-proto&gt; &lt;from-port&gt; &lt;to-port&gt;<br />
+<br />
+$ nova secgroup-add-group-rule cluster global-http tcp 22 22<br />
+</code></p>
+<p>Правило &quot;cluster&quot; делает возможным ssh доступ из любого другого экземпляра, который 
+использует группу &quot;global-http&quot;.</p>
+
+<h2 id="Ch1004">Блочные хранилища</h2>
+<p>Тома OpenStack являются устройствами постоянного хранения при блочном доступе, причем могут быть 
+присоединены и отсоединены к экземплярам, однако могут быть присоединены только к одному экземпляру 
+одновременно, по аналогии с внешним жестким диском они на практике не являются совместно используемым 
+хранилищем тем же образом, как это делают сетевая файловая система или хранилище объектов.
+  Они оставляют операционной системе экземпляра выбор: помещать файловую систему на блочное устройство 
+  и монтировать его - или нет.</p>
+<p>По аналогии с другими съемными дисковыми технологиями, важно, чтобы операционная система не пыталась 
+использовать диск перед его удалением.
+ В экземплярах Linux процесс обычно включает размонтирование всех файловых систем, смонтированных с тома.
+ Служба тома OpenStack не может сообщить является ли удаление томов безопасным, поэтому она выполняет то, 
+ о чем ее просят.
+ Если пользователь просит службу томов отсоединить тома от экземпляра во время записи на них, вы можете 
+ ожидать некоторый уровень разрушений файловой системы одновременно со сбоем в любом процессе экземпляра, 
+ который использует данное устройство.</p>
+<p>Не существует ничего специфичного для OpenStack в понимании шагов, необходимых операционной системе 
+экземпляра для доступа к блочному устройству: потенциально необходимое форматирование устройства перед 
+его первым использованием и предосторожности при его удалении.
+ Вот что действительно специфично, так это процесс создания нового тома, а также присоединение и 
+ отключение его от экземпляров.
+ Все эти операции могут быть выполнены на странице &quot;Volumes&quot; инструментальной панели (Dashboard) 
+ или с использованием клиента командной строки cinder.</p>
+<p>Для добавления новых томов вам потребуется только имя и размер тома в гигабайтах, либо поместив их в 
+веб-форму &quot;создать том&quot; (create volume), или с помощью командной строки:
+<br /><code>
+$ cinder create --display-name test-volume 10<br />
+</code></p>
+<p>Данная команда создает том объемом 10GB с названием &quot;test-volume.&quot;.
+ Чтобы вывести список томов и экземпляров, к которым они присоединены (если присоединение выполнялось):
+ <br /><code>
+$ cinder list<br />
++------------+---------+--------------------+------+-------------+-------------+<br />
+| ID &nbsp; &nbsp; &nbsp; &nbsp; | Status &nbsp;| Display Name &nbsp; &nbsp; &nbsp; | Size | Volume Type | Attached to |<br />
++------------+---------+--------------------+------+-------------+-------------+<br />
+| 0821...19f | active &nbsp;| test-volume &nbsp; &nbsp; &nbsp; &nbsp;| 10 &nbsp; | None &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++------------+---------+--------------------+------+-------------+-------------+<br />
+</code></p>
+<p>Служба блочных хранилищ также позволяет создавать моментальные снимки томов.
+  Помните, что это моментальные снимки выполняются именно на блочном уровне, который является 
+  чувствительным к согласованности при сбоях, так что лучше, если том не подключен к экземпляру 
+  при создании моментального снимка и, если он все-таки присоединен: лучше будет, если том не будет 
+  использоваться экземпляром к которому он присоединен.
+  Если том интенсивно используется, то моментальный снимок может иметь не согласованную файловую систему.
+  На самом деле, по умолчанию служба тома не выполняет создание моментального снимка присоединенного к 
+  экземпляру тома, хотя это и может быть выполнено принудительно.
+  Для получения моментального снимка тома либо выберите на странице тома (volume) инструментальной 
+  панели &quot;Создать снимок&quot; (Create Snapshot) в столбце действия (action), следующем за 
+  именем тома, или в командной строке:
+<br /><code>
+usage: cinder snapshot-create [--force &lt;True|False&gt;]<br />
+[--display-name &lt;display-name&gt;]<br />
+[--display-description &lt;display-description&gt;]<br />
+&lt;volume-id&gt;<br />
+Add a new snapshot.<br />
+Positional arguments:<br />
+&lt;volume-id&gt; ID of the volume to snapshot<br />
+Optional arguments:<br />
+--force &lt;True|False&gt; Optional flag to indicate whether to snapshot a volume even if its attached to an instance (Default=False). <br />
+--display-name &lt;display-name&gt; Optional snapshot name. (Default=None)<br />
+--display-description &lt;display-description&gt; Optional snapshot description. (Default=None)<br />
+<br />
+<em>Перевод на русский язык:<br />
+Добавить новый снимок. <br />
+Позиционные аргументы:<br />
+&lt;volume-id&gt; ID тома для моментального снимка<br />
+Дополнительные аргументы:<br />
+--force &lt;True|False&gt; опциональный флаг, указывающий на необходимость создания моментального 
+снимка тома, даже если он подключен к экземпляру (по умолчанию =False) . <br />
+--display-name &lt;display-name&gt; опциональное имя моментального снимка (по умолчанию =None).<br />
+--display-description &lt;display-description&gt; опциональное описание моментального снимка 
+(по умолчанию =None).<br />
+</em></code></p>
+
+<h3 id="Ch100402">Сбои при создании блочных хранилищ</h3>
+<p>Если пользователь пытается создать объем и сразу переходит в состояние ошибки, лучшим способ для 
+устранения проблемы является вычленение из файла журналов cinder утилитой grep строк, содержащих UUID тома.
+  Сначала проверьте файлы журналов в контроллере облака, а затем попробуйте на узле хранилища, 
+  на котором выполнялась попытка создания тома:
+<br /><code>
+# grep 903b85d0-bacc-4855-a261-10843fc2d65b /var/log/cinder/*.log <br />
+</code></p>
+
+<h2 id="Ch1005">Экземпляры</h2>
+<p>Экземпляры являются выполняемыми виртуальными машинами в пределах облака OpenStack.
+  Данный раздел рассматривает как работать с ними и их подлежащими образами, их сетевыми свойствами и 
+  как они представлены в базе данных.</p>
+
+<h3 id="Ch100501">Запуск экземпляров</h3>
+<p>Чтобы запустить экземпляр вам необходимо выбрать образ, шаблон виртуального ресурса и имя.
+ Имя не требует уникальности, однако ваша жизнь будет проще, если вы это сделаете, т.к. многие инструменты 
+ будут использовать имя на месте UUID пока имя является уникальным.
+ Это может быть выполнено с инструментальной панели кнопкой &quot;Запустить экземпляр&quot; 
+ (Launch Instance) на странице &quot;Instances&quot; или выбрав действие &quot;Запуск&quot; 
+ (Launch), следующее за образом или моментальным снимком на странице &quot;Images &amp; Snapshots&quot;.</p>
+<p>В командной строке:
+<br /><code>
+$ nova boot --flavor &lt;flavor&gt; --image &lt;image&gt; &lt;name&gt;<br />
+</code></p>
+<p>Существует ряд дополнительных элементов, которые можно задать.
+ Прежде чем попытаться их запустить, вы должны прочитать оставшуюся часть данного раздела об 
+ экземплярах, но приводимая команда является базовой на которую в последствии наслоятся детали.</p>
+<p>Для удаления экземпляра с инструментальной панели выберите действие &quot;Прекратить экземпляр &quot; 
+(Terminate instance) следующее за экземпляром на странице &quot;Instances&quot;, из командной строки:
+<br /><code>
+$ nova delete &lt;instance-uuid&gt;<br />
+</code></p>
+<p>Важно отметить, что выключение экземпляра не прекращает его в смысле OpenStack.</p>
+
+<h3 id="Ch100502">Сбои при загрузке экземпляра</h3>
+<p>Если экземпляр не запускается и немедленно переходит к состоянию &quot;Ошибка&quot; 
+существует несколько различных способов отследить, что пошло не так.
+  Некоторые из них можно выполнить обычным доступом пользователей, а другие требуют доступ 
+  к вашим журналам сервера или вычислительных узлов.</p>
+<p>Простейшими причинами отказа в запуске узлов являются превышения квот или неспособность планировщика 
+найти подходящий вычислительный узел для запуска экземпляра.
+  В этих случаях ошибка очевидна при выполнении <code>nova show</code> отказавшем экземпляре.
+<br /><code>
+$ nova show test-instance<br />
++------------------------+-----------------------------------------------------\<br />
+| Property &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; /<br />
++------------------------+-----------------------------------------------------\<br />
+| OS-DCF:diskConfig &nbsp; &nbsp; &nbsp;| MANUAL &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/<br />
+| OS-EXT-STS:power_state | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; \<br />
+| OS-EXT-STS:task_state &nbsp;| None &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/<br />
+| OS-EXT-STS:vm_state &nbsp; &nbsp;| error &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;\<br />
+| accessIPv4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;/<br />
+| accessIPv6 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;\<br />
+| config_drive &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;/<br />
+| created &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 2013-03-01T19:28:24Z &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; \<br />
+| fault &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| {u'message': u'NoValidHost', u'code': 500, u'created/<br />
+| flavor &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;| xxl.super (11) &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; \<br />
+| hostId &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;/<br />
+| id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;   | 940f3b2f-bd74-45ad-bee7-eb0a7318aa84 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;\<br />
+| image &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| quantal-test (65b4f432-7375-42b6-a9b8-7f654a1e676e) /<br />
+| key_name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | None &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;\<br />
+| metadata &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | {} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; /<br />
+| name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | test-instance &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; \<br />
+| security_groups &nbsp; &nbsp; &nbsp; &nbsp;| [{u'name': u'default'}] &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;/<br />
+| status &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ERROR &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;\<br />
+| tenant_id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 98333a1a28e746fa8c629c83a818ad57 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; /<br />
+| updated &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 2013-03-01T19:28:26Z &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; \<br />
+| user_id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| a1ef823458d24a68955fec6f3d390019 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; /<br />
++------------------------+-----------------------------------------------------\<br />
+</code></p>
+<p>В данном случае, просмотр &quot;отказавшего&quot; (fault) сообщения показывает NoValidHost 
+(отсутствует допустимый хост), указывая на то, что планировщик не был в состоянии удовлетворить 
+требования экземпляра.</p>
+<p>Если <code>nova show</code> не достаточно объясняет отказ, осуществите поиск строк, содержащих 
+UUID экземпляра в <code>nova-compute.log</code> на планировавшемся для запуска вычислительном узле или 
+<code>nova-scheduler.log</code> на вашем хосте планировщика тоже является хорошим местом для начала 
+поиска проблем более низкого уровня.</p>
+<p>Использование <code>nova show</code> пользователем с правами администратора покажет как 
+<code>hostId</code> вычислительный узел запланированного экземпляра, однако, если сбой запуска 
+экземпляра произошел во время планирования данное поле будет пустым.</p>
+
+<h3 id="Ch100503">Данные, присущие экземпляру</h3>
+<p>Существует множество способов как внести пользовательские данные, включающих инъекцию идентификаторов 
+authorized_keys, пользовательских данных, служб метаданных, а также инкапсулирование файла.</p>
+<p>Для уточнения разницы между данными пользователя и метаданными уясните, что 
+&quot;данные пользователя&quot; (user-data) являются фрагментами данных, размещенными при 
+не запущенном экземпляре.
+  Пользовательские данные доступны изнутри экземпляра при его работе.
+  Персонал использует эти данные пользователя для хранения конфигурации, сценария или того, что
+  хочет владелец.</p>
+<p>Для Compute метаданные экземпляра представляет собой набор связанных с экземпляром пар ключ/ значение.
+  Compute читает и пишет в эти пары ключ/ значение в любое время в течение времени жизни экземпляра, 
+  причем как из самого экземпляра, так и извне всякий раз, когда конечный пользователь применяет для 
+  этого интерфейс Compute API.
+  Однако, у вас нет возможности запросить связанные с экземпляром пары ключ/ значение через службу 
+  метаданных по аналогии со службой метаданных Amazon EC2.</p>
+<p>Пользователи могут создавать и регистрировать ключи ssh с использованием команды nova:
+ <br /><code>
+$ nova keypair-add mykey &gt; mykey.pem<br />
+</code></p>
+<p>Она создает ключ с именем mykey, который вы можете связать с экземпляром.
+ Файл <code>mykey.pem</code> является частным ключом, который должен быть сохранен в безопасном месте, 
+ поскольку он делает возможным доступ с правами root к экземпляру, с которым связан ключ mykey.</p>
+<p>Вы можете зарегистрировать существующий общедоступный ключ в OpenStack при помощи команды
+<br /><code>
+$ nova keypair-add --pub-key mykey.pub mykey<br />
+</code></p>
+<p>Вы должны иметь соответствующий частный ключ, чтобы получить доступ к связанным с этим ключом экземплярам.</p>
+<p>Для связывания ключа с экземпляром про загрузке, например, добавьте в командую строку 
+<code>--key_name mykey</code>:
+<br /><code>
+$ nova boot --image ubuntu-cloudimage --flavor 1 --key_name mykey<br />
+</code></p>
+<p>При загрузке сервера вы можете добавить метаданные, так что вы сможете легко определить их среди 
+других запущенных экземпляров.
+  Используйте параметр <code>--meta</code> с парой key-value, где вы можете использовать строковое 
+  выражение и для ключа, и для значения.
+  Например, можно добавить описание сервера, а также его автора.
+<br /><code>
+$ nova boot --image=test-image --flavor=1 smallimage --meta description='Small test image'<br />
+</code></p>
+<p>При просмотре информации о сервере, вы сможете увидеть метаданные, находящееся в строке метаданных:
+<br /><code>
+$ nova show smallimage<br />
++------------------------+-----------------------------------------+<br />
+| Property &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;|<br />
++------------------------+-----------------------------------------+<br />
+| OS-DCF:diskConfig &nbsp; &nbsp; &nbsp;| MANUAL &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| OS-EXT-STS:power_state | 1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;|<br />
+| OS-EXT-STS:task_state &nbsp;| None &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| OS-EXT-STS:vm_state &nbsp; &nbsp;| active &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| accessIPv4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| accessIPv6 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| config_drive &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| created &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 2012-05-16T20:48:23Z &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| flavor &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | m1.small &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| hostId &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | de0...487 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;|<br />
+| id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 8ec...f915 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| image &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| natty-image &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| key_name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| metadata &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| {u'description': u'Small test image'} &nbsp; |<br />
+| name &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| smallimage2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| private network &nbsp; &nbsp; &nbsp; &nbsp;| 172.16.101.11 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;|<br />
+| progress &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;|<br />
+| public network &nbsp; &nbsp; &nbsp; &nbsp; | 10.4.113.11 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| status &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | ACTIVE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| tenant_id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| e83...482 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;|<br />
+| updated &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 2012-05-16T20:48:35Z &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| user_id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| de3...0a9 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;|<br />
++------------------------+-----------------------------------------+<br />
+</code></p>
+<p>Пользовательские данные (User Data) являются специальным ключом в службе метаданных, хранящей файл, 
+который могут использовать в рамках гостевого экземпляра имеющие соответствующую компетенцию приложения облака.
+  Например, <span class="red-heading">cloudinit</span> 
+  (<a href="https://help.ubuntu.com/community/CloudInit">https://help.ubuntu.com/community/CloudInit</a>) 
+  является пакетом с открытым кодом из Ubuntu, обрабатывающим начальную инициализацию экземпляра облака, 
+  который позволяет использовать такие пользовательские данные.</p>
+<p>Пользовательские данные могут быть помещены в файл в вашей локальной системе и, например, 
+переданы в создаваемый экземпляр с помощью флага <code>--user-data &lt;user-data-file&gt;</code>:
+<br /><code>
+$ nova boot --image ubuntu-cloudimage --flavor 1 --user-data mydata.file <br />
+</code></p>
+<p>Произвольные локальные файлы также могут быть размещены в файловой системе экземпляра в момент создания 
+с помощью параметра <code>--file &lt;dst-path=src-path&gt;</code>.
+  Вы можете сохранять до 5 файлов.
+  Например, если у вас есть специальный файл <code>authorized_keys</code> с именем 
+  <code>special_authorized_keysfile</code>, который вы хотите поместить в экземпляр, 
+  причем по некоторым причинам без использования обычной инъекции с ключем ssh, вы можете использовать 
+  следующую команду:
+<br /><code>
+$nova boot --image ubuntu-cloudimage --flavor 1 --file /root/.ssh/authorized_keys=special_authorized_keysfile<br />
+</code></p>
+
+<h2 id="Ch1006">Привязывание группы безопасности</h2>
+<p>Обсуждавшиеся ранее группы безопасности, как правило, требуются для обеспечения сетевого трафика к 
+экземпляру всякий раз, когда группа безопасности по умолчанию для проекта изменяется для снижения требований.</p>
+<p>Добавление групп безопасности обычно выполняется при загрузке экземпляра.
+ При запуске с инструментальной панели, существует вкладка &quot;Access  &amp; Security &quot; 
+ (Доступ и Безопасность) в диалоге &quot;Launch Instance&quot; (Запуск экземпляра).
+ При запуске из командной строки присоединяйте к <code> --security-groups</code> разделенный 
+ запятыми список групп безопасности.</p>
+<p>Кроме того, можно добавлять и удалять группы безопасности при запущенном экземпляре.
+ В настоящее время эта функция доступна только через инструменты командной строки.
+<br /><code>
+$ nova add-secgroup &t;server&gt; &lt;securitygroup&gt;<br />
+$ nova remove-secgroup &lt;server&gt; &lt;securitygroup&gt;<br /></code></p>
+
+<h2 id="Ch1007">Плавающие IP- адреса</h2>
+<p>Проекты имеют управляемое квотой количество плавающих IP- адресов, однако они должны быть выделены 
+пользователем до того они доступны для использования.
+  Для выделения проекту плавающих IP- адресов на странице инструментальной панели 
+  &quot; Access &amp; Security&quot; (Доступ и Безопасность) существует кнопка 
+  &quot;Allocate IP to Project&quot; (Выделите IP для проекта) или в командной строке с помощью:
+<br /><code>
+$ nova floating-ip-create<br />
+</code></p>
+<p>Будучи выделенными, плавающие IP- адреса могут назначаться работающим экземплярам из инструментальной 
+панели либо путем выбора &quot;Associate Floating IP&quot; (Привязывание плавающих IP- адресов) из 
+ниспадающего меню действий, следующего за IP на странице &quot;Access &amp; Security&quot; 
+(Доступ и Безопасность), или в аналогичном меню действий, следующим за экземпляром, к которому вы 
+собираетесь привязывать IP- адреса на странице &quot;Instances&quot; (Экземпляры).
+ Обратное действие &quot;Dissociate Floating IP&quot; (Отсоединение плавающих IP- адресов), 
+ доступно только со страницы &quot;Access &amp; Security&quot; (Доступ и Безопасность) и 
+ не доступно со страницы &quot;Instances&quot; (Экземпляры).</p>
+<p>Для выполнения этих задач в командной строке введите:
+<br /><code>
+$ nova add-floating-ip &lt;server&gt; &lt;address&gt;<br />
+$ nova remove-floating-ip &lt;server&gt; &lt;address&gt;<br />
+</code></p>
+
+<h2 id="Ch1008">Присоединение блочных хранилищ</h2>
+<p>Вы можете присоединить блочное хранилище к экземпляру с инструментальной панели на странице 
+&quot;Volumes&quot; (Тома).
+ Кликните действие &quot;Edit Attachments&quot; (Редактировать Присоединения) сразу за томом, 
+ который вы хотите присоединить.</p>
+<p>Для выполнения этого действия из командной строки запустите следующую команду:
+<br /><code>
+$ nova volume-attach &lt;server&gt; &lt;volume&gt; <br />
+</code></p>
+<p>Также вы можете описать отображение блочных устройств при загрузке экземпляра следующим образом 
+с помощью команды <code>nova</code>:
+<br /><code>
+--block-device-mapping &lt;dev-name=mapping&gt; <br />
+</code></p>
+<p>Формат отображения блочных устройств следующий: <code>&lt;dev-name=&lt;id&gt;:&lt;type&gt;:&lt;size(GB)&gt;:&lt;deleteon-terminate&gt;</code>, где
+<dl id="dev-name"><dt><em>dev-name</em>
+ </dt><dd>Имя устройства, с которым том присоединяется к системе в каталог <code>/dev/dev_name</code>.
+</dd></dl><dl id="id"><dt><em>id</em>
+ </dt><dd>ID тома (volume), с которого необходимо выполнять загрузку, как оно отображается в выдаче 
+ списка томов nova.
+</dd></dl><dl id="type"><dt><em>type</em>
+ </dt><dd>Принимает значение либо <code>snap</code>, что означает, что том был создан из моментального 
+ снимка (snapshot), либо что- то отличное от <code>snap</code> (допустима пустая строка).
+ В приводимом выше примере том не создавался из моментального снимка, мы также оставили это поле пустым в 
+ нашем следующем примере.
+</dd></dl><dl id="size (GB)"><dt><em>size (GB)</em>
+ </dt><dd>Размер тома в ГигаБайтах.
+ Более безопасно оставить это поле пустым и предоставить возможность внести размер службе Compute.
+</dd></dl><dl id="delete-on-terminate"><dt><em>delete-on-terminate</em>
+ </dt><dd>Булевское значение, обозначающее: должен ли том быть удален после прекращения работы экземпляра.
+ Истинное значение (True) может быть описано как True или 1.
+ Ложное значение (False) может быть описано как False или 0.
+</dd></dl></p>
+<p>Если вы предварительно подготовили блочное хранилище с загрузочным образом файловой системы, 
+возможно будет даже загрузиться с постоянного блочного хранилища.
+  Следующий пример будет пытаться загрузиться с тома, имеющего <code>ID = 13</code>, причем он не 
+  будет удаляться по завершению.
+  Замените <code>--key-namewith</code> допустимое имя ключа:
+<br /><code>
+$nova boot --flavor 2 --key-name mykey --block-device-mapping vda=13:::0 bootfrom-vol-test<br />
+</code></p>
+<p>Из- за ошибки (bug) <span class="red-heading">1163566</span> 
+(<a href="https://bugs.launchpad.net/nova/+bug/1163566">https://bugs.launchpad.net/nova/+bug/1163566</a>) 
+вам необходимо описывать имя образа при его загрузке с Horizon, даже если этот образ не использовался.</p>
+<p>Для нормальной загрузки с образа и присоединения блочного хранилища, пропишите устройство, отличное от 
+<code>vda</code>.</p>
+
+<h2 id="Ch1009">Получение моментальных снимков</h2>
+<p>Механизм моментальных снимков OpenStack позволяет вам создавать новые образы из запущенных экземпляров.
+  Это очень удобно для модернизации базовых образов или получения публикуемых образов, а также для их 
+  настройки для локального использования.
+  Чтобы сделать моментальный снимок работающего экземпляра и поместить его в образ с помощью интерфейса 
+  командной строки (CLI):
+<br /><code>
+$ nova image-create &lt;instance name or uuid&gt; &lt;name of new image&gt;<br />
+</code></p>
+<p>Интерфейс инструментальной панели (Dashboard) для моментальных снимков может ввести в заблуждение, 
+поскольку страница &quot;Images &amp; Snapshots&quot; (Образов и Снимков) разбивает содержимое на:
+ <ul><li>Images (образы)
+ <li>Instance snapshots (моментальные снимки экземпляров)
+ <li>Volume snapshots (моментальные снимки томов)
+</ul></p>
+<p>Однако моментальный снимок экземпляра <em>является</em> образом.
+  Единственная разница между образом, который вы загружаете непосредственно в glance и образом, 
+  который вы создаете с помощью моментального снимка заключается в том, что созданный 
+  моментальным снимком образ имеет дополнительные свойства в базе данных glance.
+  Эти свойства можно найти в таблице image_properties, и включают в себя:
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td width="20%"><strong>Название</strong><br />&nbsp;</td>
+ <td width="80%"><strong>Значение</strong><br />&nbsp;</td>
+</tr><tr><td>
+image_type<br />&nbsp;</td><td>
+ snapshot (моментальный снимок)<br />&nbsp;</td>
+</tr><tr><td>
+instance_uuid<br />&nbsp;</td><td>
+ &lt;uuid экземпляра, с которого делается моментальный снимок&gt;<br />&nbsp;</td>
+</tr><tr><td>
+base_image_ref<br />&nbsp;</td><td>
+ &lt;uuid оригинального образа экземпляра, с которого выполняется моментальный снимок&gt;<br />&nbsp;</td>
+</tr><tr><td>
+image_location<br />&nbsp;</td><td>
+ snapshot (моментальный снимок)<br />&nbsp;</td>
+</tr></tbody></table><hr /></p>
+
+<h3 id="Ch100902">Обеспечение согласованности моментальных снимков</h3>
+<p>Содержание взято из записи в блоге Sebastien Han <span class="red-heading">OpenStack: 
+Perform Consistent Snapshots</span> 
+(<a href="http://www.sebastien-han.fr/blog/2012/12/10/openstack-perform-consistent-snapshots/">
+http://www.sebastien-han.fr/blog/2012/12/10/openstack-perform-consistent-snapshots/</a>)</p>
+<p>Моментальный снимок фиксирует состояние файловой системы, а не состояние оперативной памяти.
+ Следовательно, чтобы быть уверенным, что ваш моментальный снимок содержит необходимые вам данные, 
+ перед созданием моментального снимка вы должны убедиться, что:
+ <ul><li>Выполняющиеся программы записали свое содержимое на диск
+ <li>Файловая система не имеет никаких &quot;dirty&quot (&quot;грязных&quot) буферов: в которые 
+ программа отдала инструкцию сделать запись на диск, однако операционная система пока не выполнила запись
+ </ul></p>
+<p>Чтобы быть уверенным, что важные службы выполнили запись своего содержимого на диск (например, 
+такие, как базы данных), мы рекомендуем вам прочитать документацию на эти приложения для определения того, 
+какие команды непосредственно выполняют синхронизацию их содержимого с диском.
+ Если у вас нет уверенности как ее (синхронизацию) выполнить, самым надежным способом будет простой 
+ нормальный останов выполняющихся служб.</p>
+<p>Для решения проблемы &quot;грязного&quot; буфера, мы рекомендуем использование команды синхронизации 
+перед созданием моментального снимка:
+ <br /><code>
+# sync<br />
+</code></p>
+<p>Выполнение <code>sync</code> записывает грязный буфер (буферизованный блок, который был изменен, 
+но пока не был переписан в дисковый блок) на диск.</p>
+<p>Простое выполнение <code>sync</code> не гарантирует вам полной согласованности файловой системы.
+ Мы рекомендуем вам использовать инструментарий <code>fsfreeze</code>, который приводит к прекращению 
+ нового доступа к файловой системе и создает стабильный образ на диске, который предназначен для 
+ моментального снимка.
+ <code>fsfreeze</code> поддерживает несколько файловых систем, в том числе <code>ext3</code>, <code>ext4</code> и <code>XFS</code>.
+ Если ваш экземпляр виртуальной машины работает под Ubuntu, установите пакет <code>util-linux</code> 
+ для получения <code>fsfreeze</code>:
+<br /><code>
+# apt-get install util-linux<br />
+</code></p>
+<p>В случае, когда ваша операционная система не имеет доступной версии <code>fsfreeze</code>, 
+вы можете использовать вместо нее <code>xfs_freeze</code>, который доступен в Ubuntu из пакета 
+<code>xfsprogs</code>.
+ Несмотря на присутствие в имени &quot;<code>xfs</code>&quot;, <code>xfs_freeze</code> также работает с 
+ <code>ext3</code> и <code>ext4</code>, если вы используете ядро Linux версии 2.6.29 или старше, 
+ так как он работает на уровне виртуальной файловой системы (VFS), имеющейся начиная с версии 2.6.29.
+ <code>xfs_freeze</code> поддерживает те же аргументы командной строки, что и <code>fsfreeze</code>.</p>
+<p>Рассмотрим пример, в котором вы хотите сделать моментальный снимок тома постоянного хранения 
+блочного устройства, обнаруженного гостевой операционной системой как <code>/dev/vdb</code> и 
+смонтированного в <code>/mnt</code>.
+ Команда <code>fsfreeze</code> принимает 2 аргумента:<ul>
+ <li><code>-f</code>: заморозить систему
+ <li><code>-u</code>: растопить (разморозить) систему
+</ul></p>
+<p>Чтобы заморозить том при подготовке к созданию моментального снимка, вы должны выполнить в 
+пределах экземпляра с правами root:
+ <br /><code>
+# fsfreeze -f /mnt<br />
+</code></p>
+<p>Вы <strong>должны смонтировать файловую систему</strong> до выполнения команды <em>fsfreeze</em>.</p>
+<p>После выдачи команды &quot;<code>fsfreeze -f</code>&quot;, всем выполняющимся в файловой 
+системе транзакциям разрешается завершиться, новые запросы на запись приостанавливаются, 
+а также останавливаются все запросы к файловой системе, которые могут ее изменить.
+ Что особенно важно, все грязные данные, метаданные и информация в журналах записываются на диск.</p>
+<p>После того как том заморожен, не пытайтесь читать с него или осуществлять запись на него, 
+поскольку все операции ставятся в ожидание (подвешиваются).
+ Операционная система останавливает все операции ввода/ вывода и любые попытки ввода/ вывода будут 
+ задерживаться пока файловая система не будет разморожена.</p>
+<p>После выполнения команды <code>fsfreeze</code> создание моментального снимка становится безопасным.
+ Например, если ваш экземпляр называется mon-instance и вы хотите сделать его моментальный снимок в 
+ образ с названием mon-snapshot, вы можете теперь выполнить следующее:<br /><code>
+$ nova image-create mon-instance mon-snapshot<br />
+</code></p>
+<p>После создания моментального снимка вы можете растопить файловую систему в пределах экземпляра следующей командой, обладая правами root:
+ <br /><code>
+# fsfreeze -u /mnt<br />
+</code></p>
+<p>Если вы хотите сделать резервную копию файловой системы root, вы не можете просто выполнить 
+приводимую выше команду, так как она заморозит приглашение операционной системы (prompt).
+ Вместо этого выполните с правами root внутри экземпляра следующий однострочный скрипт:
+<br /><code>
+# fsfreeze -f / &amp;&amp; sleep 30 &amp;&amp; fsfreeze -u /<br />
+</code></p>
+
+<h2 id="Ch1010">Экземпляры в базах данных</h2>
+<p>Поскольку информация об экземпляре хранится в нескольких таблицах базы данных, скорее всего, 
+будут необходимы табличные операторы выполняемые относительно просмотра пользовательских экземпляров, 
+являющихся таблицей &quot;instances&quot; (&quot;экземпляров&quot;).</p>
+<p>Таблица instances содержит всю основную информацию, связанную как с выполняющимися, так и с удаленными 
+экземплярами.
+ Она имеет приводящее в замешательство множество полей для исчерпывающего списка поиска по базе данных.
+ Существуют наиболее полезные поля для создания запросов операций поиска.</p>
+<p>Удаленные (&quot;deleted&quot;) поля установлены в значение &quot;1&quot;, если экземпляр был удален и 
+NULL, если он не был удален, что важно для исключения удаленных экземпляров из ваших запросов.</p>
+<p>Поле &quot;uuid&quot; является UUID экземпляра и используется в других таблицах в базе данных в 
+качестве внешнего ключа (foreign key).
+ Этот идентификатор также передается в журналы, инструментальные панели и инструменты командной строки 
+ для уникальной идентификации экземпляра.</p>
+<p>Для поиска связей (relation) с экземплярами доступна совокупность внешних ключей.
+ Наиболее полезные из них это &quot;user_id&quot; и &quot;project_id&quot;, являющиеся, соответственно, 
+ UUID пользователя, запустившего экземпляр и проекта, в котором он запущен.</p>
+<p>Поле &quot;host&quot; говорит о том, какой вычислительный узел является хостом экземпляра.</p>
+<p>Поле &quot;hostname&quot; содержит имя экземпляра при его запуске.
+ Первоначально &quot;display-name&quot; то же что и &quot;hostname&quot;, однако может быть 
+ переустановлено командой <code>nova rename</code>.</p>
+<p>Для отслеживания момента изменения состояния экземпляра являются полезными ряд полей, 
+относящихся ко времени:<ul>
+ <li>created_at (создан в)
+ <li>updated_at (изменен в)
+ <li>deleted_at (удален в)
+ <li>scheduled_at (запланирован на)
+ <li>launched_at (запущен в)
+ <li>terminated_at (прекращен в)
+</ul></p>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch09ru.htm">Глава 9</a></td>
+ <td align="center"><a href="index.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch11ru.htm">Глава 11</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2015 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</tbody></table>
+</body>
+</html>

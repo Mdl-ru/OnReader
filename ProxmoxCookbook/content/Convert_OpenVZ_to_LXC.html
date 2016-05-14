@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Преобразование OpenVZ в LXC</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="Convert OpenVZ to LXC"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="up" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="prev" href="Linux_Container.html" title="Контейнеры Linux"/>
+<link rel="next" href="Fencing.html" title="Ограждение"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Преобразование OpenVZ в LXC';
+PrevRef = 'Linux_Container.html';
+UpRef = 'index.html';
+NextRef = 'Fencing.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Преобразование OpenVZ в LXC</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>Перевод <a class="link" href="http://pve.proxmox.com/wiki/Convert_OpenVZ_to_LXC" target="_top">Convert OpenVZ to LXC</a></p>
+  <p>опубликованной 6 October 2015, at 12:04</p>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Convert_OpenVZ_to_LXC.html">Преобразование OpenVZ в LXC</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#OpenVZ_to_LXC">Перемещение контейнера OpenVZ в LXC за 5 шагов</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#General_overview">Общий обзор</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#Step_by_step">Преобразование шаг за шагом</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Get_Network_Config">Получение сетевых настроек контейнеров OpenVZ и ее запись куда-нибудь</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Make_backup">Создание резервной копии вашего контейнера</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Create_LXC">Создание контейнера LXC на основе резервной копии</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Add_Network_Config">Добавление сетевых настроек на основе начальных установок</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Add_Network_Config_viaGUI">Добавление сетевых настроек через GUI</a></span></dt>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Add_Network_Config_viaCLI">Добавление сетевых настроек через CLI</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Start_Container">Запуск контейнера</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Optional_steps">Необязательные шаги</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Graph_Console">Графическая консоль</a></span></dt>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#bind_mounts">Связывание монтирований OpenVZ</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#Video_tutorials">Видео руководства</a></span></dt>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#See_also">Также смотрите</a></span></dt>
+	</dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+   </div></div></div>
+   <p>Эта статья описывает перенос контейнеров OpenVZ в Linux containers (LXC). OpenVZ не доступны начиная с ядер выше 2.6.32, 
+   следовательно необходима миграция. Технология <a class="link" href="http://pve.proxmox.com/wiki/Linux_Container" 
+   target="_top">Linux Container</a> во всех ядрах Linux основной ветви и будущая проверенная технология введенная в сериях Proxmox VE 4.x.</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: с более современной (31 марта 2016) информацией о контейнерах в версии Proxmox VE 4.1 вы 
+   можете ознакомиться в нашем переводе <a class="link" href="http://onreader.mdl.ru/LearningProxmoxVE/content/Ch03.html" 
+   target="_top">Изучение Proxmox VE</a></em></span>.}</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="OpenVZ_to_LXC"> </a>Перемещение контейнера OpenVZ в LXC за 5 шагов</h3>
+   </div></div></div>
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="General_overview"> </a>Общий обзор</h4>
+     </div></div></div>
+     <p>По существу вы должны выполнить следующие шаги:</p>
+     <p>в Proxmox VE 3.x узлах</p>
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+        <p>записать где-то сетевые настройки используемые вашими контейнерами</p>
+	   </li><li class="listitem">
+        <p>сделать резервную копию вашего OpenVZ контейнера</p>
+	   </li>
+	   </ol>
+     </div>
+     <p>в Proxmox VE 4.x узлах</p>
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+        <p>создать LXC контейнер на основе вашей резервной копии</p>
+	   </li><li class="listitem">
+        <p>настроить сеть с предыдущими настройками</p>
+	   </li><li class="listitem">
+        <p>загрузить и voilà, все работает</p>
+	   </li>
+	   </ol>
+     </div>
+	 <p>Обратите внимание, что все упомянутые здесь шаги могут быть выполнены в веб-интерфейсе. Тем не менее, будет легче разделить 
+	 эти шаги в действия командной строки. Это позволяет выполнять шаги в сценарии если существует большое количество контейнеров 
+	 для преобразования.</p>
+  </div>
+
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Step_by_step"> </a>Преобразование шаг за шагом</h3>
+   </div></div></div>
+   <p>Зарегистрируйтесь через ssh в вашем узле Proxmox VE 3.x.</p>
+   <p>Допустим, вы хотите перенести три различных контейнера: контейнер CentOS, Ubuntu и контейнер Debian.</p>
+	   <pre class="screen">
+    vzlist 
+     CTID      NPROC STATUS    IP_ADDR         HOSTNAME
+      100         20 running   -               centos6vz.proxmox.com
+      101         18 running   -               debian7vz.proxmox.com
+      102         20 running   192.168.15.142  ubuntu12vz.proxmox.com
+	  </pre>
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Get_Network_Config"> </a>Получение сетевых настроек контейнеров OpenVZ и ее запись куда-нибудь</h4>
+     </div></div></div>
+     <p>A) Если ваш контейнер использует устройство venet, вы получите адрес напрямую в командной строке:.</p>
+	   <pre class="screen">
+   vzlist 102
+   CTID      NPROC STATUS    IP_ADDR         HOSTNAME
+   102         20 running   192.168.15.142  ubuntu12vz.proxmox.com
+      </pre>
+     <p>Если ваш контейнер использует veth, сетевая настройка выполнена внутри самого контейнера. Как найти сетевую настройку 
+	 зависит от того какая операционная система работает внутри контейнера:</p>
+	 <p>если у вас контейнер на основе CentOS, вы можете получить сетевую настройку примерно так:</p>
+	   <pre class="screen">
+   # start a root shell inside the container 100
+   vzctl enter 100
+   cat /etc/sysconfig/network-scripts/ifcfg-eth0
+   exit
+      </pre>
+     <p>Если у вас Debian, Ubuntu или Turnkey Linux оборудование:</p>
+	   <pre class="screen">
+   vzctl enter 101
+   cat /etc/network/interfaces
+   exit
+      </pre>
+     <p>.</p>
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Make_backup"> </a>Создание резервной копии вашего контейнера</h4>
+     </div></div></div>
+     <p>Сначала выберите в каком хранилище вы хотите сделать резервную копию контейнеров.</p>
+	   <pre class="screen">
+   #list available storages
+   pvesm status
+   freenas     nfs 1        27676672             128        27676544 0.50%
+   local       dir 1         8512928         2122088         6390840 25.43%
+   nas-iso     nfs 1      2558314496       421186560      2137127936 16.96%
+      </pre>
+	 <p>Например, вы можете использовать &quot;локальное&quot; хранилище, которое соответствует каталогу 
+	 <span class="term"><code>/var/lib/vz/dump</code></span> в стандартной установке Proxmox VE. По умолчанию, это хранилище не 
+	 допускает сохранение резервных копий, поэтому убедитесь что вы разрешили ее для резервного содержимого. (см. 
+	 <a class="link" href="http://pve.proxmox.com/wiki/Storage_Model#Storage_type_Content" 
+	 target="_top">http://pve.proxmox.com/wiki/Storage_Model#Storage_type_Content</a>)</p> 
+	 <p>Затем сделайте резервные копии всех контейнеров</p> 
+	   <pre class="screen">
+   # stop the container, and
+   # start a backup right after the shutdown
+   vzctl stop 100 && vzdump 100 -storage local
+   vzctl stop 101 && vzdump 101 -storage local
+   vzctl stop 102 && vzdump 102 -storage local
+      </pre>
+	 <p>На данный момент вы можете:</p> 
+     <div class="orderedlist">
+       <ol class="orderedlist" type="A"><li class="listitem">
+        <p>Обновить ваш узел Proxmox VE 3.x на Proxmox VE 4.x</p>
+	   </li><li class="listitem">
+        <p>Скопировать резервные копии на узел Proxmox VE 4.x и выполнить преобразование на узле Proxmox VE 4.x</p>
+	   </li>
+	   </ol>
+     </div>
+	 <p>Предположим, вы следуете варианту B. (перенос резервных копий на узел Proxmox VE 4.x и преобразование в формат LXC)</p> 
+	   <pre class="screen">
+   # copy each container tar backup to the pve4 node via ssh
+   scp /var/lib/vz/dump/vzdump-openvz-100-2015_08_27-10_46_47.tar root@pve4:/var/lib/vz/dump
+   scp /var/lib/vz/dump/vzdump-openvz-101-2015_08_27-10_50_44.tar root@pve4:/var/lib/vz/dump
+   scp /var/lib/vz/dump/vzdump-openvz-102-2015_08_27-10_56_34.tar root@pve4:/var/lib/vz/dump
+      </pre>
+	 <p></p> 
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Create_LXC"> </a>Создание контейнера LXC на основе резервной копии</h4>
+     </div></div></div>
+     <p>Теперь переключаемся на узел Proxmox VE 4 и создаем контейнеры на основе резервных копий.</p>
+	   <pre class="screen">
+   pct restore  100 /var/lib/vz/dump/vzdump-openvz-100-2015_08_27-10_46_47.tar
+   pct restore  101 /var/lib/vz/dump/vzdump-openvz-101-2015_08_27-10_50_44.tar
+   pct restore  102 /var/lib/vz/dump/vzdump-openvz-102-2015_08_27-10_56_34.tar
+      </pre>
+	 <p>На данный момент вы должны быть способны увидеть контейнеры в веб-интерфейсе, но они все еще не имеют сети.</p>
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Add_Network_Config"> </a>Добавление сетевых настроек на основе начальных установок</h4>
+     </div></div></div>
+     <p>LXC использует виртуальный сетевой адаптер который через мост соединяется с физическим интерфейсом вашего хоста. Это работает 
+	 очень похоже на устройство <span class="term"><strong class="userinput"><code>veth</code></strong></span> функционирующее в OpenVZ.</p>
+     <p>В Proxmox VE 3.x настройка каждого контейнера использующего устройство 
+	 <span class="term"><strong class="userinput"><code>veth</code></strong></span> должна выполняться внутри самого контейнера.
+	 В Proxmox VE 4.x вы можете сделать это напрямую из хоста.</p>
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Add_Network_Config_viaGUI"> </a>Добавление сетевых настроек через GUI</h5>
+       </div></div></div>
+       <p>Для каждого контейнера.</p>
+   	   <div class="itemizedlist">
+	   <ul class="itemizedlist" type="disc">
+	    <li class="listitem">
+	    <p>Выберите контейнер кликнув на него</p>
+	    </li>
+	    <li class="listitem">
+	    <p>Перейдите в закладку <span class="term"><strong class="userinput"><code>Network</code></strong></span></p>
+	    </li>
+	    <li class="listitem">
+	    <p>Кликните <span class="term"><strong class="userinput"><code>Add</code></strong></span> устройство</p>
+	    </li>
+	    <li class="listitem">
+	    <p>В панели устройства <span class="term"><strong class="userinput"><code>veth</code></strong></span> добавьте устройство 
+		со следующими параметрами:</p>
+	   <pre class="screen">
+    ID: net0 
+    name eth0 
+    поместите ваш IP адрес и соответствующую сетевую маску в следующем формате 192.168.5.75/24 
+      </pre>
+	    </li>
+       </ul>
+       </div>
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Add_Network_Config_viaCLI"> </a>Добавление сетевых настроек через CLI</h5>
+       </div></div></div>
+	   <pre class="screen">
+pct set 101 -net0 name=eth0,bridge=vmbr0,ip=192.168.15.144/24,gw=192.168.15.1
+pct set 102 -net0 name=eth0,bridge=vmbr0,ip=192.168.15.145/24,gw=192.168.15.1
+      </pre>
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Start_Container"> </a>Запуск контейнера</h4>
+     </div></div></div>
+	   <pre class="screen">
+pct start 100
+pct start 101
+pct start 102 
+      </pre>
+     <p>И voilà, вы теперь можете зарегистрироваться в контейнере и проверить что все службы работают.</p>
+	   <pre class="screen">
+pct enter 100
+      </pre>
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Optional_steps"> </a>Необязательные шаги</h4>
+     </div></div></div>
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Graph_Console"> </a>Графическая консоль</h5>
+       </div></div></div>
+       <p>Если вы этого еще не сделали раньше, <a class="link" href="https://pve.proxmox.com/wiki/OpenVZ_Console" 
+	   target="_top">вы можете добавить консоль в ваш контейнер</a>, следовательно вы сможете регистрироваться в контейнере через 
+	   веб-интерфейс.</p>
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="bind_mounts"> </a>Связывание монтирований OpenVZ</h5>
+       </div></div></div>
+       <p>Если вы используете <a class="link" href="https://openvz.org/Bind_mounts" 
+	   target="_top">OpenVZ bind mounts</a>, вы должны перестроить его в LXC. Ознакомьтесь с 
+	   <a class="link" href="http://pve.proxmox.com/wiki/LXC_Bind_Mounts" 
+	   target="_top">LXC Bind Mounts</a>.</p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Video_tutorials"> </a>Видео руководства</h3>
+   </div></div></div>
+   <p><a class="link" href="http://pve.proxmox.com/wiki/Convert_OpenVZ_to_LXC#Video_tutorials" target="_top">см. оригинал</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="See_also"> </a>Также смотрите</h3>
+   </div></div></div>
+   <p><a class="link" href="http://pve.proxmox.com/wiki/Convert_OpenVZ_to_LXC#See_also" target="_top">см. оригинал</a>.</p>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

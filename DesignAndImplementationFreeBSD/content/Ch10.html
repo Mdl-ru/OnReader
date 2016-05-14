@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 10. ZFS: Зеттабайт файловая система</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="DesignAndImplementationFreeBSD"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Построение кластеров высокой доступности Linux для профи."/>
+<link rel="up" href="index.html" title="Построение кластеров высокой доступности Linux для профи."/>
+<link rel="prev" href="Ch09.html" title="Глава 9. Быстрая файловая система"/>
+<link rel="next" href="Ch11.html" title="Глава 11. NFS: Сетевая файловая система"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//openstack-ops_preface.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 10. ZFS: Зеттабайт файловая система';
+PrevRef = 'Ch09.html';
+UpRef = 'index.html';
+NextRef = 'Ch11.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 10. ZFS: Зеттабайт файловая система</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch10.html">10. ZFS: Зеттабайт файловая система</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch10.html#10.1">10.1 Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#10.2">10.2 Организация ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.2.review">Обзор</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.2.ZFS_Dnode">ZFS Dnode</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.2.ZFS_Block_Pointers">Указатели на блоки ZFS</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.2.ZFS_objset">Структура <em>objset</em> ZFS</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#10.3">Структура ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.3.review">Обзор</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.3.MOS_Layer">Уровень MOS</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.3.Object-Set_Layer">Уровень  набора объектов</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#10.4">Работа ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch10.html#10.4.review">Обзор</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.WritingNewData">Запись новых данных на диск</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.Logging">Протоколирование</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.RAIDZ">RAIDZ</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.Snapshots">Снимки</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.ZFS_BlockAllocation">Выделение блоков в ZFS</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.FreeingBlocks">Освобождение блоков</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.Deduplication">Дедупликация</a></span></dt>
+      <dt><span class="section"><a href="Ch10.html#10.4.Remote_Replication">Удаленная репликация</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch10.html#10.5">Компромиссы архитектуры ZFS</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#Exercises">Упражнения</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#References">Ссылки</a></span></dt>
+	</dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.1"> </a>10.1 Введение</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.2"> </a>10.2 Организация ZFS</h3>
+   </div></div></div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.2.review"> </a>Обзор</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.2.ZFS_Dnode"> </a>ZFS Dnode</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.2.ZFS_Block_Pointers"> </a>Указатели на блоки ZFS</h4>
+    </div></div></div>
+    <p><a class="link" href="#Fig1004" target="_top">Рисунок 10.4</a> отображает структуру блочного указателя. В отличие от
+	традиционного блочного указателя USF из 8 байт, который ссылается на номер блока в пределах дискового раздела блочный 
+	указатель является 128- байтовой структурой, которая содержит указатели на в точности три копии блока, причем все на разных 
+	дисках, сопровождаемые размером блока и его контрольной суммой. Сохранение контрольной суммы в отдельности от данных позволяет 
+	обнаруживать такие ошибки как неправильно адресованные чтения и записи. Если бы контрольная сумма хранилась в самом блоке данных, 
+	чтение или запись по ошибочному адресу казались бы правильными, поскольку одновременно бы по неверному адресу записывались бы и 
+	сами данные, и их контрольная сумма.</p>
+    <div class="informalfigure"><div class="mediaobject"><a id="Fig1004"> </a>
+      <img src="figures/Fig1004.jpg" width="444" height="356" /> </div><br />
+	  <p>Рисунок 10.4 Описание указателя на блок. Ключи: vdev — идентификатор виртуального устройства; grid — информация 
+	  расположения RAIDZ (зарезервировано для последующего использования); asize — выделенный размер (включая контрольную сумму 
+	  RAIDZ и заголовки блока набора {gang-block}); G — флаг блока набора {gang-block}; offset — смещение в виртуальном 
+	  устройстве; B — флаг порядка байт (endianness); D — флаг дедупликации; X — неиспользуемый флаг; lvl — число уровней косвенной 
+	  адресации для данных описываемых данным блочным указателем; type — тип объекта DMU; cksum — идентификатор функции 
+	  контрольной суммы; comp — идентификатор функции сжатия; psize — физический размер (после сжатия); lsize — логический
+	  размер; physical birth time — группа транзакции в которой физически размещен данный блок, ноль если идентичен logical birth time; 
+	  logical birth time — группа транзакции в которой данный был размещен данный логический блок; fill count — число ненулевых блоков,
+	  соответствующих данному блочному указателю; checksum[ ] — 256-битная контрольная сумма данных, описываемых данным блочным 
+	  указателем.</p>
+    </div>
+    <p>По умолчанию ZFS вычисляет контрольные суммы всех блоков, которыми она управляет. Поскольку многоядерный процессоры стали 
+	повседневностью, стоимость вычислений центральным процессором контрольных сумм незначительна при сопоставлении со стоимостью 
+	производительности операций ввода/ вывода.</p>
+    <p>Для систем с множеством дисков первой линией обороны против порчи данных или их утраты является RAID. Если блок данных или 
+	даже целый диск будут утрачены, структура RAID диска может восстановить данные. Для систем, в которых только один диск, таких как 
+	портативные компьютеры и таких как вторичная резервная копия для систем с множеством дисков, работающих в RAID, ZFS по умолчанию 
+	предоставляет двойную избыточность для всех метаданных. Таким образом все блочные указатели, которые ссылаются на метаданные, 
+	будут иметь задействованными два из трех полей в блочном указателе. Файловые системы могут быть настроены на репликацию всех данных.
+	При этом все блочные указатели, которые ссылаются на данные пользователей будут иметь используемыми два из трех полей блочных 
+	указателей. При работе в таком режиме ZFS использует тройное резервирование для всех метаданных. Таким образом, блочные 
+	указатели метаданных будут иметь задействованными все три поля блочного указателя.</p>
+    <p>Каждый блок имеет сопутствующее ему время порождения. Время порождения измеряется в количестве контрольных точек, которые были 
+	приняты с момента создания пула ZFS. Когда пул создается в первый раз, группа транзакций (TXG) устанавливается в ноль. Каждый раз, 
+	когда создается контрольная точка, увеличивается на единицу значение группы транзакций. Проблема с использованием секунд с начала 
+	эпохи для времени порождения в том, что секунды с начала эпохи могут не быть монотонно возрастающими, если батарея поддержки 
+	аппаратных часов отказывает или если демон времени устанавливает неправильную информацию о времени. Самосогласованность 
+	обеспечивается применением группы транзакций вместо секунд с начала эпохи. Это также гарантирует, что если две 
+	контрольные точки выполняются в период менее 1 секунды между ними, время порождении блоков для двух контрольных точек можно 
+	различать. Как будет описано в следующем разделе, время порождения служит для определения того, что блок не имеет ссылок на себя
+	и он может быть освобожден.</p>
+    <p>Флаг дедупликации идентифицирует блок, который находится в таблице дедупликации. Флаг используется при попытке освободить блок. 
+	Если флаг дедупликации установлен, ZFS должна найти соответствующую запись в таблице дедупликации и уменьшить его счетчик ссылок, 
+	так как блок может быть освобожден только тогда, когда счетчик ссылок достигает нулевого значения. В таблица дедупликации огромна, 
+	следовательно, как правило, она не умещается в памяти. Ее части считываются в память по мере необходимости. Таким образом, 
+	проверка на нахождения блока в таблице дедупликации дорога, особенно если требуемый блок таблицы дедупликации не находится в 
+	памяти. Если флаг дедупликации не установлен, ZFS может избегать затрат на поиск блока в таблице дедупликации.</p>
+    <p>Большинство блоков имеют только логическое время порождения, которое равен TXG, в которой они были созданы. Физическое время 
+	порождения требуется только блокам дедупликации. При первой записи блока он получает только логическое время порождения. Если то же 
+	содержимое записывается вновь, модуль дедупликации создает новый блочный указатель на оригинал. Новый блочный указатель имеет 
+	логическое время порождения текущей TXG, однако физическое время порождения соответствует TXG логическому времени порождения 
+	первоначального блока. Причина, по которой необходимо физическое время порождения заключается в том что, когда файловая система
+	обходится после сбоя диска для реконструкции RAIDZ, ядро знает действительное число созданий блока и, следовательно, знает, 
+	какие из них должны быть восстановлены.</p>
+    <p>Обычно, когда модулю SPA нужно выделить блок заданного размера, он в состоянии сделать это. Однако, когда пул неиспользуемых 
+	блоков становится небольшим, может не оказаться единого блока с достаточно большим пространством для выполнения запроса. 
+	В этом случае SPA должен выделить два или более блоков меньшего размера для создания блока большего размера. Эти мелкие части 
+	описываются массивом указателей в структуре, которая называется заголовком блока набора {gang-block}. В случае когда ссылка 
+	на указатель блока является одним из таких заголовков блока набора, устанавливается флаг блока набора для того, чтобы заголовок 
+	мог быть интерпретирован в системе ввода/ вывода для сбора вместе составляющих блок частей.</p>
+    <p>Каждый блочный указатель имеет три связанных с ним размера:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p><span class="term"><strong class="userinput"><code>lsize</code></strong></span> - логический размер блока.</p>
+	 </li><li class="listitem">
+      <p><span class="term"><strong class="userinput"><code>psize</code></strong></span> - физический размер блока, который может
+	  быть меньше логического размера блока, если он был сжат.</p>
+	 </li><li class="listitem">
+      <p><span class="term"><strong class="userinput"><code>asize</code></strong></span> - выделенный (allocated) размер на диске,
+	  содержащий контрольную сумму RAIDZ и заголовки блока набора.</p>
+	 </li>
+	 </ol>
+   </div>
+    <p>Для блоков, которые имеют ссылки блоков косвенной адресации также поддерживается уровень ссылок. Поскольку любой 
+	<span class="term"><strong class="userinput"><code>dnode</code></strong></span> использует фиксированное число уровней 
+	косвенной адресации, как описывалось ранее в данном подразделе, поддержка счетчика уровня в блочном указателе применяется 
+	исключительно для проверки согласованности и не требуется для обычных операций. Аналогично, поле типа известно, следовательно
+	оно используется только для проверки непротиворечивости.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.2.ZFS_objset"> </a>Структура <em>objset</em> ZFS</h4>
+    </div></div></div>
+   </div>
+  </div>р
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.3"> </a>10.3. Структура ZFS</h3>
+   </div></div></div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.3.review"> </a>Обзор</h4>
+    </div></div></div>
+    <p></p>
+    <div class="informalfigure"><div class="mediaobject"><a id="Fig1005"> </a>
+      <img src="figures/Fig1005.jpg" width="508" height="379" /> </div><br />
+	  <p>Рисунок 10.5 Структура ZFS.</p>
+    </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.3.MOS_Layer"> </a>Уровень MOS</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.3.Object-Set_Layer"> </a>Уровень  набора объектов</h4>
+    </div></div></div>
+   </div>
+  </div>
+  <div class="section">
+	  <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4"> </a>10.4. Работа ZFS</h3>
+   </div></div></div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.review"> </a>Обзор</h4>
+    </div></div></div>
+	<p>В отличие от перезаписываемых файловых систем, подобных UFS, которые непрерывно обновляют свои состояния на  диске, 
+	ZFS собирает все обновления файловой системы в памяти. Периодически она записывает все изменения в неиспользуемую область диска для создания 
+	контрольной точки. Никакие из изменений в состоянии на диске не видны, пока не выполнена окончательная запись контрольной точки, которая 
+	обновляет корень пула ZFS, <span class="term"><strong class="userinput"><code>uberblock</code></strong></span>. Таким образом файловая система ZFS всегда согласована; 
+	то есть, она переходит из одного согласованного состояния в новое согласованное состояние.</p>
+	<p>Каждая контрольная точка берется по всему пулу и влияет на каждую файловую систему, снимок, клон, и ZVOL в данном пуле, в одно и то же время.
+	ZFS называет эти контрольные точки группами транзакций (transaction groups), или сокращенно 
+	<span class="term"><strong class="userinput"><code>TXG</code></strong></span>. Все снимки, выполняемые в различных файловых системах, при этом 
+	находящиеся в пределах одной и той же контрольной точки, будут согласованы в один и тот же момент времени. Таким образом, два различных снимка 
+	в пределах одного пула с одной и той же TXG точно будут синхронизированы друг с другом во времени. С другой стороны будет трудно получить 
+	согласованные снимки в двух различных пулах, поскольку создание  контрольной точки требует точной координации.</p>
+	<p>Многие операции в ZFS, такие как способ, которым записываются файлы, являются атомарными для различных процессов выполняющих системные 
+	вызовы <span class="term"><code>write</code></span> в один и тот же файл, и обрабатываются аналогично традиционным файловым системам с 
+	перезаписью, подобным UFS. Данный раздел не будет описывать функциональные возможности, аналогичные UFS, описанные в 
+	<a class="link" href="Ch09.html" target="_top">Главе 9</a>. Этот раздел детализирует операции, выполняемые с помощью файловой системы ZFS, 
+	которые значительно отличаются по функциональности от того, как они выполняются в UFS.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.WritingNewData"> </a>Запись новых данных на диск</h4>
+    </div></div></div>
+	<p>Все обновления файловых систем, клонов, и ZVOL в пуле накапливаются в памяти до тех пор, пока не пройдет заданное время 
+	(по умолчанию 5 секунд), пока не накопятся  64 Мбайт измененных данных, или не выполнятся административные действия, которые потребуют 
+	контрольную точку, например запрос снимка. Чтобы сбросить новые данные на диск, ZFS должен принять контрольную точку в пул.</p>
+	<p>Принятие контрольной точки требует, чтобы все изменения в файловой системе, выполненные начиная с предыдущей контрольной точки, 
+	были сохранены на диске. Первый шаг заключается в получении согласованного состояние для файловой системы, которое требует чтобы все 
+	системные вызовы изменения данных файловой системы должны быть завершены. ZFS применяет методику, аналогичную описанной в разделе 
+	<a class="link" href="Ch09.html#9.7" target="_top">9.7</a>, как это происходит на 3 шаге выполнения снимка в UFS. В частности, 
+	процессам, которые уже выполняются в подобных системных вызовах, разрешено завершить эти системные вызовы. Контрольная точка 
+	продолжается, пока все незавершенные системные вызовы не завершатся.</p>
+	<p>Запись всех составляющих контрольную точку дисковых блоков может занять несколько секунд. Запрещение изменений во время всего такого 
+	периода приведет к неприемлемым задержкам работающих в системе приложений. Чтобы избежать такой задержки, все записываемые измененные блоки, 
+	образующие контрольную точку помечаются маркером их группы транзакций (<span class="term"><strong class="userinput"><code>TXG</code></strong></span>).
+	Новые изменения файловых систем, клонов, и ZVOL помечаются новой группой транзакций. Если изменение определяет, что подлежащий изменению блок 
+	отмечен как часть обрабатываемой контрольной точки, ZFS делает копию этого блока в памяти и модификация производится в копии. Скопированные блоки 
+	становятся частью следующей контрольной точки. По мере того, как  ввод/ вывод на блоках, которые являются частью текущей контрольной точки, 
+	 завершается, ZFS должен решить, как обрабатывать буферы в памяти. Если они не были скопированы, они могут быть отмечены как доступные 
+	 для текущего использования. Если они были скопированы, то их содержание в настоящее время устарело, поэтому содержащая устаревшую копию 
+	 память освобождается.</p>
+	<p><a class="link" href="#Fig1007" target="_top">Рисунок 10.7</a> отображает девять шагов, которые должны быть выполнены для сброса 
+	изменений в файл, в который были добавлены данные с момента последней контрольной точки:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Все блоки новых данных должны быть записаны. Если запись осуществляется поверх существующих данных, измененные блоки данных должны быть 
+	  записаны в новое место, поскольку ZFS никогда не перезаписывает существующие данные.</p>
+	 </li><li class="listitem">
+      <p>Обычно обновление требует обновления указателя на блок в одном из косвенных блоков файла. Поскольку косвенный блок был изменен, 
+	  будет необходимо записать его в новое местоположение, что означает, что косвенный блок, на который ссылается на него необходимо будет 
+	  изменить Эти модификации продолжаются вверх по дереву косвенной адресации вплоть до <span class="term"><strong 
+	  class="userinput"><code>dnode</code></strong></span> для данного файла.</p>
+	 </li><li class="listitem">
+      <p>Обновите <span class="term"><strong class="userinput"><code>dnode</code></strong></span> для файла, чтобы он ссылался на местоположение нового 
+	  блока для вершины косвенных указателей. Поскольку ZFS не может перезаписывать существующий 
+	  <span class="term"><strong class="userinput"><code>dnode</code></strong></span> при его изменении, он должна записать копию блока, содержащего 
+	  <span class="term"><strong class="userinput"><code>dnode</code></strong></span> с обновленным размером и новым указателем на блок.</p>
+      <p>В UFS, чтение в <span class="term"><strong class="userinput"><code>inode</code></strong></span> требует выделения пространства памяти, 
+	  который составляет размер <span class="term"><strong class="userinput"><code>dnode</code></strong></span> включая пространство, необходимое 
+	  для хранения <span class="term"><strong class="userinput"><code>dinode</code></strong></span> на диске, чтения в блок диска, который 
+	  содержит <span class="term"><strong class="userinput"><code>inode</code></strong></span>, копирование 
+	  <span class="term"><strong class="userinput"><code>dinode</code></strong></span> из дискового блока во вновь выделенную область памяти 
+	  с последующим освобождением буфера диска. Запись <span class="term"><strong class="userinput"><code>inode</code></strong></span> обратно на диск 
+	  требует чтения в блок диска, который содержит <span class="term"><strong class="userinput"><code>inode</code></strong></span>, копирование 
+	  измененного <span class="term"><strong class="userinput"><code>inode</code></strong></span> в соответствующую часть буфера с последующей 
+	  записью обновленного буфера обратно на диск.</p>
+      <p>В ZFS, чтение в <span class="term"><strong class="userinput"><code>dnode</code></strong></span> начинается с выделения пространства в памяти, 
+	  которая составляет размер <span class="term"><strong class="userinput"><code>dnode</code></strong></span> в памяти. 
+	  <span class="term"><strong class="userinput"><code>dnode</code></strong></span> в памяти не содержит 
+	  <span class="term"><strong class="userinput"><code>dnode</code></strong></span> диска; он содержит только указатель на часть на диске. ZFS 
+	  считывает и блокирует в памяти блок диска, который содержит <span class="term"><strong class="userinput"><code>dnode</code></strong></span> диска. 
+	  Затем устанавливает указатель на <span class="term"><strong class="userinput"><code>dnode</code></strong></span>, чтобы указывать на его на дисковую 
+	  часть в буфере диска. Запись <span class="term"><strong class="userinput"><code>dnode</code></strong></span> обратно на диск требует только того, 
+	  чтобы содержащий модифицированную <span class="term"><strong class="userinput"><code>dnode</code></strong></span> буфер диска был записан 
+	  на новое место.</p>
+      <p>Преимуществом подхода ZFS является меньшее копирование из памяти в память и меньшее число операций ввода/ вывода за счет использования 
+	  дополнительной памяти. Для системы с 100 000 кэшированными узлами, UFS будет использовать 50 Мегабайт памяти, в  то время как ZFS как правило, 
+	  использует 200 Мегабайт и может применять до 1,6 Гигабайт памяти.</p>
+      <p>Первоначальная файловая система со структурированным журналом (LFS, log-structured filesystem) собирала все свои измененные 
+	  <span class="term"><strong class="userinput"><code>inode</code></strong></span> вместе в наборы по 64, которые затем могли быть упакованы 
+	  в 16-килобайтные блоки. Недостатком такого подхода является то, что он требует дополнительного файла метаданных, который отображает номер 
+	  <span class="term"><strong class="userinput"><code>inode</code></strong></span> в местоположение на диске. ZFS просто записывает все 
+	  находящиеся в памяти блоки диска, которые содержат модифицированные <span class="term"><strong class="userinput"><code>dnode</code></strong></span>.
+	  При обновлении указателей на блоки в их измененных <span class="emphasis"><em>objset</em></span> 
+	  <span class="term"><strong class="userinput"><code>dnode</code></strong></span>, не существует никаких требований для отдельного файла 
+	  метаданных для отслеживания их местонахождения, поскольку они могут быть найдены с помощью простого поиска по их известному смещению в 
+	  <span class="emphasis"><em>objset</em></span> <span class="term"><strong class="userinput"><code>dnode</code></strong></span>. Хотя этот 
+	  подход требует большего ввода/ вывода по сравнению с методикой LFS, это упрощает и ускоряет последующие подстановки 
+	  <span class="term"><strong class="userinput"><code>dnode</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>После обновления всех <span class="emphasis"><em>dnode</em></span> файловой системы ссылающиеся на них измененные указатели на блоки 
+	  распространяются вверх по косвенным блокам <span class="emphasis"><em>objset</em></span> файловой системы аналогично тому как это выполнялось 
+	  для файла на шаге 2.</p>
+	 </li><li class="listitem">
+      <p>Для того чтобы ссылаться на новое местоположение вершины указателей косвенных <span class="emphasis"><em>objset</em></span> 
+	  <span class="emphasis"><em>dnode</em></span> обновляется объект <span class="emphasis"><em>objset</em></span> 
+	  <span class="emphasis"><em>dnode</em></span>.</p>
+	 </li><li class="listitem">
+      <p>Чтобы ссылаться на новую копию <span class="emphasis"><em>objset</em></span> файловой системы, на которую он указывает, обновляется 
+	  указатель на блок в MOS <span class="emphasis"><em>dsl_dataset</em></span>.</p>
+	 </li><li class="listitem">
+      <p>После того, как указатели <span class="emphasis"><em>dsl_dataset</em></span> были обновлены и указывают на свои новые объекты 
+	  <span class="emphasis"><em>objset</em></span>, ссылающиеся на них измененные указатели на блоки распространяются вверх по косвенным блокам 
+	  <span class="emphasis"><em>objset</em></span> MOS аналогично способу, применявшемуся на шагах 2 и 4 для данного файла и 
+	  <span class="emphasis"><em>objset</em></span>-ам файловой системы.</p>
+	 </li><li class="listitem">
+      <p>Чтобы ссылаться на новое местоположение блока для вершины его косвенных указателей обновляется объект 
+	  <span class="term"><strong class="userinput"><code>dnode</code></strong></span> <span class="emphasis"><em>objset</em></span> MOS.</p>
+	 </li><li class="listitem">
+      <p>Когда все эти изменения записаны в их местоположения на диске, последний шаг в создании контрольной точки заключается в обновлении 
+	  указателя на блок в <span class="term"><strong class="userinput"><code>uberblock</code></strong></span> с тем, чтобы он указывал на 
+	  новый <span class="emphasis"><em>objset</em></span> MOS и обновлении его группы транзакций 
+	  <span class="term"><strong class="userinput"><code>TXG</code></strong></span> для отражения новой контрольной точки. Обновленный
+	  <span class="term"><strong class="userinput"><code>uberblock</code></strong></span> затем записывается в его новое местоположение, как это
+	  описано в разделе<a class="link" href="#10.3" target="_top">10.3.</a></p>
+	 </li>
+	 </ol>
+   </div>
+    <div class="informalfigure"><div class="mediaobject"><a id="Fig1007"> </a>
+      <img src="figures/Fig1007.jpg" width="501" height="264" /> </div><br />
+	  <p>Рисунок 10.7 Девять шагов создания контрольной точки.</p>
+    </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.Logging"> </a>Протоколирование</h4>
+    </div></div></div>
+	<p>ZFS хранит все сохраненные в журнале изменения уровня ZPL в памяти. Журнал обрабатывается записями целей ZFS 
+	(<span class="term"><strong class="userinput"><code>ZIL, ZFS Intent Log</code></strong></span>). Примерами элементов протоколирования 
+	являются:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Требования к аппаратным средствам</p>
+	 </li><li class="listitem">
+	 <p>Требования к аппаратным средствам</p>
+	 </li><li class="listitem">
+	 <p>Требования к аппаратным средствам</p>
+	 </li>
+    </ul>
+    </div>
+	<p></p>
+	<p></p>
+	<p></p>
+	<p></p>
+	<p></p>
+	<p></p>
+	<p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.RAIDZ"> </a>RAIDZ</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.Snapshots"> </a>Снимки</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.ZFS_BlockAllocation"> </a>Выделение блоков в ZFS</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.FreeingBlocks"> </a>Освобождение блоков</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.Deduplication"> </a>Дедупликация</h4>
+    </div></div></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.4.Remote_Replication"> </a>Удаленная репликация</h4>
+    </div></div></div>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="10.5"> </a>10.5. Компромиссы архитектуры ZFS</h3>
+   </div></div></div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Exercises"> </a>Упражнения</h3>
+   </div></div></div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="References"> </a>Ссылки</h3>
+   </div></div></div>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

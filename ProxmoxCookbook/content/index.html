@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Proxmox, FreeNAS, NAS4Free, Nexenta, napp-it, TrueNAS, TurnKey, VirtIO, NUMA, noVNC, ZFS, Gluster, GlusterFS, Ceph, CephFS, CRUSH, RADOS, RBD, OSD, Placement Group, LXC, Linux Container, OpenVZ, UBC, KVM-based, pfSense, VZdump, Zabbix, pmxcfs, Infiniband, Suricata">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Книга рецептов Proxmox</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="ProxmoxCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Более 60 практических рецептов для выполнения виртуализации серверов и управления виртуализированными серверными решениями на Proxmox"/>
+<link rel="home" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="next" href="Ch01.html" title="Глава 1. Установка Proxmox"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Книга рецептов Proxmox';
+PrevRef = 'Fencing.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="proxmox-cookbook"/>Книга рецептов Proxmox</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Васим Ахмед</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2015 Packt Publishing</p>
+  <p>Первая публикация на английском языке: август 2015</p>
+<p>Все права защищены. Никакая часть этой книги не может быть воспроизведена, сохранена в поисковой системе или 
+передана в любой форме или любыми средствами без предварительного письменного разрешения издателя, 
+за исключением случаев кратких цитат, встроенных в критических статьях и обзорах.</p>
+<p>При подготовке этой книги были предприняты все усилия чтобы гарантировать точность представленной информации.
+Тем не менее, информация, содержащаяся в этой книге, продается без гарантии в явном или неявном виде.
+Ни авторы, ни Packt Publishing, ни у их дилеры и дистрибьюторы не будут нести ответственность за любые убытки, 
+вызванные или предположительно вызванные прямо или косвенно этой книгой.</p>
+<p>Packt Publishing пыталась предоставить информацию о товарных знаках обо всех компаниях и продуктов, 
+упомянутых в данной книге для надлежащего использования капиталов.
+Тем не менее, Packt Publishing не может гарантировать точность этой информации.</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2015 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.packtpub.com/books/info/packt/terms-and-conditions" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     <img src="../favicon.ico" align="middle"/>
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2015-01-23</p>
+</div>
+<div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p class="title"><strong>Аннотация</strong></p>
+  <p>Более 60 практических рецептов для выполнения виртуализации серверов и управления виртуализированными 
+  серверными решениями на Proxmox.</p>
+ </div>
+</div></div><hr/></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Credits"> </a>Состав исполнителей</h3>
+   Первого издания на английском языке
+ </div></div></div>
+ <dl><dt><strong>Автор</strong></dt>
+  <dd><dl>
+   <dt>Васим Ахмед</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Рецензенты</strong></dt>
+  <dd><dl>
+   <dt>Руди Джаурегай</dt>  
+   <dt>Хорхе Моратилья</dt>  
+   <dt>Ясин Себихи</dt>  
+   <dt>Марк Вербум</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор выпуска</strong></dt>
+  <dd><dl>
+   <dt>Картикей Панди</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор</strong></dt>
+  <dd><dl>
+   <dt>Субхо Губта</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор разработки содержания</strong></dt>
+  <dd><dl>
+   <dt>Саманта Гонсалвес</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Технический редактор</strong></dt>
+  <dd><dl>
+   <dt>Рахул К. Шан</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Литературный редактор</strong></dt>
+  <dd><dl>
+   <dt>Сони Мишель Чима</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор проекта</strong></dt>
+  <dd><dl>
+   <dt>Кинджал Бари</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Корректоры</strong></dt>
+  <dd><dl>
+   <dt>Сафис Едитинг</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Составитель указателя</strong></dt>
+  <dd><dl>
+   <dt>Моника Аджмера Мехта</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Графика</strong></dt>
+  <dd><dl>
+   <dt>Джейсон Монтейра</dt>  
+   <dt>Абхинаш Сэйху</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор производства</strong></dt>
+  <dd><dl>
+   <dt>Арвиндкумар Гупта</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Изготовитель переплета</strong></dt>
+  <dd><dl>
+   <dt>Арвиндкумар Гупта</dt>  
+  </dl></dd>
+ </dl>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Об авторе</h3>
+ </div></div></div>
+ <p><strong>Васим Ахмед</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reviewers"> </a>Рецензенты</h3>
+ </div></div></div>
+ <p><strong>Руди Джаурегай</strong>
+ </p>
+ <p><strong>Хорхе Моратилья</strong>
+ </p>
+ <p><strong>Ясин Себихи</strong>
+ </p>
+ <p><strong>Марк Вербум</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PacktPub"> </a>www.PacktPub.com</h3>
+ </div></div></div>
+</div>
+
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+	<dt><span class="section"><a href="index.html#Credits">Состав исполнителей</a></span></dt>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Reviewers">Рецензенты</a></span></dt>
+	<dt><span class="section"><a href="index.html#PacktPub">www.PacktPub.com</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+	<dt><span class="section"><a href="index.html#Preface">Предисловие</a></span></dt>
+	<dd><dl>
+	 <dt><span class="section"><a href="index.html#Covers">Что охватывает эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#You_need">Что вам нужно для этой книги</a></span></dt>
+	 <dt><span class="section"><a href="index.html#For_Who">Для кого эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Sections">Разделы</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Conventions">Соглашения</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Feedback">Обратная связь с читателями</a></span></dt>
+	 <dt><span class="section"><a href="index.html#DLcode">Загрузка кода примеров</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Support">Поддержка пользователей</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Errata">Опечатки</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Piracy">Незаконное тиражирование</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Questions">Вопросы</a></span></dt>
+	</dl></dd>
+  </dl></dd>
+ </dl>
+ <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Установка Proxmox</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#Introduction">Введение</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Hardware_requirements">Требования к аппаратным средствам</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Preparing_for_installation">Подготовка к установке</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Installing_on_bare_metal">Установка Proxmox на голом узле</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Installing_on_Debian">Установка Proxmox на Debian системы</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Proxmox_subscription">Подписки Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Disabling_subscription">Запрет подписок Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Applying_subscription">Применение подписок Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#SettingUp_Repository">Установка репозитория пакетов Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Seeking_support">Поиск поддержки</a></span></dt>
+    </dl></dd>
+    <dt><span class="chapter"><a href="Ch02.html">2. Знакомство с графическим интерфейсом Proxmox</a></span></dt>
+    <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#Accessing_GUI">Доступ к графическому интерфейсу Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#Viewing_styles">Просмотр стилей</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#datacenter_menus">Доступ к меню центра данных</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#node_menus">Доступ к меню узлов</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#KVM_menus">Доступ к меню KVM</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#OpenVZ_menus">Доступ к меню OpenVZ</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch03.html">3. Управление кластером и виртуальными машинами</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Creating_cluster">Создание кластера Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Adding_nodes">Добавление узлов в кластер</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Removing_nodes">Удаление узлов из кластера</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Rejoining_removed">Повторное подключение удаленных узлов в кластер</a></span></dt>
+    <dt><span class="section"><a href="Ch03.html#Understanding_pmxcfs">Понимание файловой системы Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Managing_ISO_and_OpenVZ">Управление ISO и шаблонами OpenVZ</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Creating_KVM_VM">Создание виртуальной машины на базе KVM</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Creating_OpenVZ_container">Создание контейнера OpenVZ</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Migrating_VM">Миграция виртуальных машин</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Cloning_VM">Клонирование виртуальных машин</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Managing_VDI">Управление образами виртуальных дисков</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Managing_OpenVZ_containers">Управление контейнерами OpenVZ</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Understanding_UBC">Понимание OpenVZ счетчиков пользовательских компонентов</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch04.html">4. Настройка сети</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch04.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#basic_network">Настройка основной сети</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#bridge">Настройка моста</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#VLAN">Настройка VLAN</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#network_bonding">Настройка сетевого связывания</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#NAT">Настройка сетевой трансляции адресов</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#Infiniband">Настройка Infiniband</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#VM_interface">Настройка сетевого интерфейса виртуальной машины</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#High_Availability">Настройка высокой доступности</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch05.html">5. Настройка межсетевого экрана</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#cluster_firewall">Настройка межсетевого экрана кластера</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#host_firewall">Настройка межсетевого экрана хоста</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#VM_firewall">Настройка межсетевого экрана виртуальной машины</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#Suricata IPS">Интегрирование Suricata IPS</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#firewall_CLI">Используемые обычно команды CLI межсетевого экрана</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#Logging">Ведение журналов межсетевого экрана</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch06.html">6. Настройка системы хранения</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#Basic">Настройка основного хранилища</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#FreeNAS">Установка хранилища FreeNAS</a></span></dt>
+    <dt><span class="section"><a href="Ch06.html#iSCSI">Соединение с хранилищем iSCSI</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#LVM">Соединение с хранилищем LVM</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#NFS">Соединение с хранилищем NFS</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#CephRBD">Соединение с хранилищем Ceph RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#ZFS">Соединение с хранилищем ZFS</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#GlusterFS">Соединение с хранилищем GlusterFS</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch07.html">7. Резервное копирование и восстановление</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch07.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#backup_storage">Настройка хранилища резервного копирования</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Scheduling_backups">Ведение расписаний резервного копирования</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#manual_backup">Выполнение резервного копирования вручную</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Managing_snapshots">Управление моментальными снимками</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Restoring_backup">Восстановление резервной копии</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#vzdump.conf_backup">Настройка резервного копирования при помощи vzdump.conf</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#CL_backup">Резервное копирование из командной строки</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#CL_restore">Восстановление из командной строки</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch08.html">8. Обновление и модернизация Proxmox</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch08.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#GUI_Updating">Обновление Proxmox с применением графического интерфейса</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#CLI_Updating">Обновление Proxmox из командной строки</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#change_in_subscription_Updating">Обновление после изменения в подписке</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Rebooting_dilemmas">Дилемма перезагрузки после обновления</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch09.html">9. Отслеживание Proxmox</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch09.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#Zabbix">Мониторинг с помощью Zabbix</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#built-in">Встроенный Proxmox мониторинг</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#health_notifiations">Настройка сообщений о состоянии</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#SNMP">Настройка SNMP в Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch09.html#Ceph_cluster">Настройка кластера Ceph при помощи приборной панели Ceph</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch10.html">10. Расширенная настройка виртуальных машин</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch10.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#sound_in_KVM_VM">Настройка звука в виртуальных машинах KVM</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#PCI_passthrough">Настройка транзита PCI</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#PCI_Express_GPU">Настройка транзита PCI Express GPU</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#USB_passthrough">Настройка транзита USB</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#hotplug">Настройка горячей замены</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#VM_Nesting">Вложенность виртуальных машин</a></span></dt>
+	<dt><span class="section"><a href="Ch10.html#Isolating_subnets">Изолирование множественных подсетей</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch11.html">11. Справочник команд интерфейса командной строки</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch11.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#Proxmox">Команды Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#OpenVZ">Относящиеся к контейнерам команды OpenVZ</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#Ceph">Команды Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#Gluster">Команды Gluster</a></span></dt>
+	<dt><span class="section"><a href="Ch11.html#ZFS">Команды ZFS</a></span></dt>
+		
+	</dl></dd>
+ </dl>
+	<dt><span class="index"><a href="ix01.html">Указатель</a></span></dt>
+
+	<dt><span class="chapter"><a href="Linux_Container.html">Контейнеры Linux</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Linux_Container.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Linux_Container.html#System_reqs">Системные требования</a></span></dt>
+	<dt><span class="section"><a href="Linux_Container.html#Features">Функциональность</a></span></dt>
+	<dt><span class="section"><a href="Linux_Container.html#Supported_OS">Поддерживаемые операционные системы</a></span></dt>
+	<dt><span class="section"><a href="Linux_Container.html#Manage_containers">Управление контейнерами</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Linux_Container.html#Get_template">Получение шаблона контейнера</a></span></dt>
+        <dt><span class="section"><a href="Linux_Container.html#Create">Создание контейнера</a></span></dt>
+        <dt><span class="section"><a href="Linux_Container.html#Start">Запуск контейнера</a></span></dt>
+        <dt><span class="section"><a href="Linux_Container.html#Stop">Останов контейнера</a></span></dt>
+        <dt><span class="section"><a href="Linux_Container.html#Backup">Резервное копирование контейнера</a></span></dt>
+        <dt><span class="section"><a href="Linux_Container.html#Restore">Восстановление контейнера</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Linux_Container.html#Migrate">Перенос контейнера с OpenVZ на LXC</a></span></dt>
+	<dt><span class="section"><a href="Linux_Container.html#References">Ссылки</a></span></dt>
+    </dl></dd>
+
+	<dt><span class="chapter"><a href="Convert_OpenVZ_to_LXC.html">Преобразование OpenVZ в LXC</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#OpenVZ_to_LXC">Перемещение контейнера OpenVZ в LXC за 5 шагов</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#General_overview">Общий обзор</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#Step_by_step">Преобразование шаг за шагом</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Get_Network_Config">Получение сетевых настроек контейнеров OpenVZ и ее запись куда-нибудь</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Make_backup">Создание резервной копии вашего контейнера</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Create_LXC">Создание контейнера LXC на основе резервной копии</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Add_Network_Config">Добавление сетевых настроек на основе начальных установок</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Add_Network_Config_viaGUI">Добавление сетевых настроек через GUI</a></span></dt>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Add_Network_Config_viaCLI">Добавление сетевых настроек через CLI</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Start_Container">Запуск контейнера</a></span></dt>
+        <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Optional_steps">Необязательные шаги</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#Graph_Console">Графическая консоль</a></span></dt>
+          <dt><span class="section"><a href="Convert_OpenVZ_to_LXC#bind_mounts">Связывание монтирований OpenVZ</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#Video_tutorials">Видео руководства</a></span></dt>
+	<dt><span class="section"><a href="Convert_OpenVZ_to_LXC.html#See_also">Также смотрите</a></span></dt>
+    </dl></dd>
+
+	<dt><span class="chapter"><a href="Fencing.html">Ограждение</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Fencing.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Fencing.html#Config">Настройка узлов на немедленную загрузку и непременную после цикла выключения- включения</a></span></dt>
+	<dt><span class="section"><a href="Fencing.html#Enabling">Разрешения ограждения на всех узлах</a></span></dt>
+	<dt><span class="section"><a href="Fencing.html#HowTo">Общее руководство по изменению <span class="term"><code>cluster.conf</code></span></a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Fencing.html#Fence_Devices">Перечень поддерживаемых устройств ограждения</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Fencing.html#APC_PDU">Устройство распределения питания коммутации стойки APC</a></span></dt>
+	      <dd><dl>
+            <dt><span class="section"><a href="Fencing.html#APC_User">Создание пользователя в веб- интерфейсе APC</a></span></dt>
+            <dt><span class="section"><a href="Fencing.html#APC_PDU_Example">Пример <span class="term"><code>/etc/pve/cluster.conf.new</code></span> с ограждением питания APC</a></span></dt>
+          </dl></dd>
+          <dt><span class="section"><a href="Fencing.html#iMudular_Server">Intel Modular Server HA</a></span></dt>
+          <dt><span class="section"><a href="Fencing.html#iDRAC">Применение iDRAC серверов Dell</a></span></dt>
+	      <dd><dl>
+            <dt><span class="section"><a href="Fencing.html#iDRAC_User">Создание пользователя в Dell iDRAC</a></span></dt>
+            <dt><span class="section"><a href="Fencing.html#iDRAC_Example">Пример <span class="term"><code>/etc/pve/cluster.conf.new</code></span> с iDRAC</a></span></dt>
+          </dl></dd>
+          <dt><span class="section"><a href="Fencing.html#Dell_Blades">Блейд- серверы Dell</a></span></dt>
+          <dt><span class="section"><a href="Fencing.html#IPMI">IPMI (типичный)</a></span></dt>
+	      <dd><dl>
+            <dt><span class="section"><a href="Fencing.html#IPMI_notes">Замечания по IPMI</a></span></dt>
+          </dl></dd>
+          <dt><span class="section"><a href="Fencing.html#APC_Master_Switch">Главный коммутатор APC</span></dt>
+          <dt><span class="section"><a href="Fencing.html#Managed_Switch">Ограждение с применением управляемых коммутаторов</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Fencing.html#MultipleMethods">Множественные методы для одного узла</a></span></dt>
+        <dt><span class="section"><a href="Fencing.html#DualPathAndPSU">Дублированный путь, избыточное электропитание</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Fencing.html#Testing">Тестирование ограждения</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Fencing.html#Testing_PDU">Тестирование устройства распределения питания коммутации стойки APC</a></span></dt>
+        <dt><span class="section"><a href="Fencing.html#Testing_iDRAC">Тестирование Dell iDRAC</a></span></dt>
+      </dl></dd>
+	</dl></dd>
+
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preface"> </a>Предисловие</h3>
+ </div></div></div>
+ <p>.</p>
+</div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Covers"> </a>Что охватывает эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="You_need"> </a>Что вам нужно для этой книги</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="For_Who"> </a>Для кого эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Sections"> </a>Разделы</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Conventions"> </a>Соглашения</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Обратная связь с читателями</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Загрузка кода примеров</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Support"> </a>Поддержка пользователей</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Errata"> </a>Опечатки</h4>
+  </div></div></div>
+ </div>
+ <p></p>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Piracy"> </a>Незаконное тиражирование</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Questions"> </a>Вопросы</h4>
+  </div></div></div>
+ </div>
+
+</div>
+
+<p> </p>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

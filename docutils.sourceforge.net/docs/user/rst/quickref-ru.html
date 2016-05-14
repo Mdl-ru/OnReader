@@ -1,0 +1,1355 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+  <head>
+    <title>Быстрый reStructuredText</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <style type="text/css"><!--
+      a.backref { text-decoration: none ; color: black }
+      div.line-block { display: block }
+      div.line-block div.line-block { margin-left: 1.5em }
+    --></style>
+
+  </head>
+
+  <body>
+    <h1>Быстрый <i>re</i><font size="+4"><tt>Structured</tt></font><i>Text</i></h1>
+
+    <!-- Предостережение: если вы читаете данный HTML в качестве примера,                  -->
+    <!-- имейте в виду, что оно было создано вручную, а не сиспользованием Docutils/ReST.  -->
+
+    <p align="right"><em><a href="http://docutils.sourceforge.net/docs/user/rst/quickref.html"
+    >http://docutils.sourceforge.net/docs/user/rst/quickref.html</a></em>
+    <br /><em>Создан как шпаргалка для reStructuredText</em>
+    <br /><em>Updated $Date: 2009-07-14 14:05:34 +0000 (Tue, 14 Jul 2009) $</em>
+	<br /><em>Дата перевода: 2015-05-24 01:05:34 +0300 (Sun, 24 May 2015) $</em>
+
+    <blockquote>
+      <p>Copyright: Этот документ был размещен для общего доступа.
+    </blockquote>
+
+
+    <p>Полные сведения об обсуждающейся разметке (markup) могут быть найдены на странице
+      <a href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>. 
+	  Данный документ является только памяткой.
+
+    <p>Ссылки, выглядящие как "(<a href="#details">подробнее...</a>)" указывают
+      на HTML версию полного документа <a
+      href="../../ref/rst/restructuredtext.html">reStructuredText
+      specification</a>.  Это относительные ссылки; если они не работают,
+      пожалуйста, воспользуйтесь документом <a
+      href="http://docutils.sourceforge.net/docs/user/rst/quickref.html"
+      >master "Quick reStructuredText"</a>.
+
+    <h2><a name="contents">Содержание</a></h2>
+
+    <ul>
+    <li><a href="#inline-markup">Встроенная разметка</a></li>
+    <li><a href="#escaping">Отключение обратными косыми</a></li>
+    <li><a href="#section-structure">Структура раздела</a></li>
+    <li><a href="#paragraphs">Параграфы</a></li>
+    <li><a href="#bullet-lists">Помеченные списки</a></li>
+    <li><a href="#enumerated-lists">Нумерованные списки</a></li>
+    <li><a href="#definition-lists">Списки определений</a></li>
+    <li><a href="#field-lists">Списки полей</a></li>
+    <li><a href="#option-lists">Списки параметров</a></li>
+    <li><a href="#literal-blocks">Литеральные блоки</a></li>
+    <li><a href="#line-blocks">Строковые блоки</a></li>
+    <li><a href="#block-quotes">Цитируемые блоки</a></li>
+    <li><a href="#doctest-blocks">Блоки Doctest</a></li>
+    <li><a href="#tables">Таблицы</a></li>
+    <li><a href="#transitions">Переходы</a></li>
+    <li><a href="#explicit-markup">Явная разметка</a>
+    <ul>
+    <li><a href="#footnotes">Сноски</a></li>
+    <li><a href="#citations">Цитирование</a></li>
+    <li><a href="#hyperlink-targets">Адресаты гиперссылок</a>
+    <ul>
+    <li><a href="#external-hyperlink-targets">Внешние адресаты гиперссылок</a></li>
+    <li><a href="#internal-hyperlink-targets">Внутренние адресаты гиперссылок</a></li>
+    <li><a href="#indirect-hyperlink-targets">Косвенные адресаты гиперссылок</a></li>
+    <li><a href="#implicit-hyperlink-targets">Неявные адресаты гиперссылок</a></li>
+    </ul></li>
+    <li><a href="#directives">Директивы</a></li>
+    <li><a href="#substitution-references-and-definitions">Ссылки замещения и определения</a></li>
+    <li><a href="#comments">Комментарии</a></li>
+    </ul></li>
+    <li><a href="#getting-help">Получение помощи</a></li>
+    </ul>
+
+    <h2><a href="#contents" name="inline-markup" class="backref"
+        >Встроенная разметка</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#inline-markup">подробнее...</a>)
+
+    <p>Встроенная разметка делает возможной словам и фразам в пределах текста иметь 
+	характерные стили (например, курсив  или полужирное начертание) и функциональность
+	(подобную гиперссылкам).
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th>Простой текст
+      <th>Обычный результат
+      <th>Замечания
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td nowrap><samp>*выделение*</samp>
+      <td><em>выделенный</em>
+      <td>Обычно приводит к курсиву.
+
+    <tr valign="top">
+      <td nowrap><samp>**сильное&nbsp;выделение**</samp>
+      <td><strong>сильно выделенный</strong>
+      <td>Обычно приводит к полужирному шрифту.
+
+    <tr valign="top">
+      <td nowrap><samp>`интерпретируемый&nbsp;текст`</samp>
+      <td>(см. замечание справа)
+      <td>Визуализация и <em>смысл</em> интерпретируемого текста является 
+	  зависящим от области действия или приложения. Он может быть использован для таких вещей 
+	  как индексные записи или явные описательные разметки (например, идентификаторы программы).
+
+    <tr valign="top">
+      <td nowrap><samp>``встроенный&nbsp;литерал``</samp>
+      <td><code>встроенный&nbsp;литерал</code>
+      <td>Обычно отображается как моноширинный текст. Пробелы должны быть 
+      зафиксированы, однако переносы строк нет.
+
+    <tr valign="top">
+      <td nowrap><samp>ссылка_</samp>
+      <td><a href="#hyperlink-targets">ссылка</a>
+      <td>Простая, в одно слово гиперссылка.  См. <a
+      href="#hyperlink-targets">Адресаты гиперссылок</a>.
+
+    <tr valign="top">
+      <td nowrap><samp>`фразовая ссылка`_</samp>
+      <td><a href="#hyperlink-targets">фразовая ссылка</a>
+      <td>Гиперссылка с пробелами или знаками пунктуации требует заключения в кавычки обратным апострофом.  См. <a
+      href="#hyperlink-targets">Адресаты гиперссылок</a>.
+
+    <tr valign="top">
+      <td nowrap><samp>anonymous__</samp>
+      <td><a href="#hyperlink-targets">anonymous</a>
+      <td>При наличии двух подчеркиваний вместо одного и простые и фразовые ссылки 
+	  могут быть анонимными (текст ссылки не повторяется в адресате). См. <a
+      href="#hyperlink-targets">Адресаты гиперссылок</a>.
+
+    <tr valign="top">
+      <td nowrap><samp>_`встроенный внутренний адресат`</samp>
+      <td><a name="inline-internal-target">встроенный внутренний адресат</a>
+      <td>Адресат перекрестной ссылки в пределах текста.
+      See <a href="#hyperlink-targets">Адресаты гиперссылок</a>.
+
+    <tr valign="top">
+      <td nowrap><samp>|подстановочная ссылка|</samp>
+      <td>(см. замечание справа)
+      <td>Результат подставляется из <a
+      href="#substitution-references-and-definitions">определения
+      замещения</a>.  IЭто может быть текст, образ, гиперссылка, или некая 
+      комбинация из них и прочего.
+
+    <tr valign="top">
+      <td nowrap><samp>ссылка сноски [1]_</samp>
+      <td>ссылка сноски <sup><a href="#footnotes">1</a></sup>
+      <td>См. <a href="#footnotes">Сноски</a>.
+
+    <tr valign="top">
+      <td nowrap><samp>Ссылка цитаты [CIT2002]_</samp>
+      <td>Ссылка цитаты <a href="#citations">[CIT2002]</a>
+      <td>См. <a href="#citations">Цитаты</a>.
+
+    <tr valign="top">
+      <td nowrap><samp>http://docutils.sf.net/</samp>
+      <td><a href="http://docutils.sf.net/">http://docutils.sf.net/</a>
+      <td>Отдельно стоящая гиперссылка.
+
+    </table>
+
+    <p>Звездочка (asterisk), обратный апостроф (backquote), вертикальная черта (vertical bar) и подчеркивание (underscore) 
+	являются встроенными символами разграничения. Звездочка, обратный апостроф и вертикальная черта действуют 
+	как кавычки; помечающие символы окружают размечаемые слово или фразу, 
+	пробелы или другие разграничители требуются за их пределами, а просто внутри них 
+	не может быть пробелов. Если вы хотите использовать встроенные разграничительные 
+	литеральные символы, <a href="#escaping">отключите
+    (обратными косыми)</a> или заковычьте их (двойными обратными апострофами; т.е.
+    воспользуйтесь встроенными литералами).
+
+    <p>Подробнее, определение reStructuredText говорит, что во
+	встроенной разметке для начала строки и конца строки применяются 
+	следующие правила (разграничители встроенной разметки):
+
+    <ol>
+      <li>Начало строки должно начинать блок текста или 
+	  ему непосредственно должен предшествовать символ пробела (whitespace) или любой из&nbsp;
+    <samp>' " ( [ {</samp> или&nbsp;<samp>&lt;</samp>.
+      <li>Начало строки должно непосредственно сопровождаться не-пробельным символом.
+      <li>Концу строки должен непосредственно предшествовать не-пробельный символ.
+      <li>Конец строки должен завершать текстовый блок (конец документа или 
+	  последующая пустая строка) или должен непосредственно сопровождаться пробельным символом 
+	  или любым из&nbsp;<samp>' " . , : ; ! ? - ) ] } / \</samp> 
+      или&nbsp;<samp>&gt;</samp>.
+      <li>Если начало строки непосредственно предшествует  одному из&nbsp;
+    <samp>' " ( [ {</samp> или&nbsp;<samp>&lt;</samp>, оно не должно быть сразу после 
+	соответствующего символа из &nbsp;
+    <samp>' " ) ] }</samp> или&nbsp;<samp>&gt;</samp>.
+      <li>Конец строки должен быть отделен по крайней мере одним 
+	  символом от начала строки.
+      <li><a href="#escaping">Не экранируемый</a> обратный апостроф, предшествующий 
+	  началу строки или концу строки будет отключать распознавание разметки, за исключением 
+	  конца строки встроенных литералов.
+    </ol>
+
+    <p>Также помните, что встроенная разметка не может быть вложенной (ну, 
+	за исключением того, сто встроенные литералы могут содержать любой из других встроенных 
+	символов разделителей разметки, но это не в счет, поскольку ничто не будет обработано).
+
+    <h2><a href="#contents" name="escaping" class="backref"
+        >Отключение обратными косыми</a></h2>
+
+    <p>(<a
+    href="../../ref/rst/restructuredtext.html#escaping-mechanism">подробнее...</a>)
+
+    <p>reStructuredText использует обратные косые ("\") для отключения специального 
+	значения имеющегося у символов разметки и дает литеральный сам символ. 
+	Чтобы получить литерал обратной косой, воспользуйтесь отключенной обратной косой
+    ("\\"). Например:
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Необработанный reStructuredText
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top"><td>
+        <samp>*отключение*&nbsp;``с``&nbsp;"\"</samp>
+      <td><em>отключение</em> <samp>с</samp> ""
+    <tr valign="top"><td>
+        <samp>\*отключение*&nbsp;\``с``&nbsp;"\\"</samp>
+      <td>*отключение* ``с`` "\"
+    </table>
+
+    <p>В строках Python, конечно, будет необходимо
+      отключать все символы обратной косой, так, чтобы они действительно 
+      <em>достигли</em> reStructuredText.
+	  Простейший способ сделать это заключается в использовании сырых строк:
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Строка Python
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top"><td>
+        <samp>r"""\*отключение*&nbsp;\`с`&nbsp;"\\""""</samp>
+      <td>*отключение* `с` "\"
+    <tr valign="top"><td>
+        <samp>&nbsp;"""\\*отключение*&nbsp;\\`c`&nbsp;"\\\\""""</samp>
+      <td>*отключение* `c` "\"
+    <tr valign="top"><td>
+        <samp>&nbsp;"""\*отключение*&nbsp;\`c`&nbsp;"\\""""</samp>
+      <td><em>отключение</em> c ""
+    </table>
+
+    <h2><a href="#contents" name="section-structure" class="backref"
+        >Структура раздела</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#sections">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>=====</samp>
+<br /><samp>Заголовок</samp>
+<br /><samp>=========</samp>
+<br /><samp>Подзаголовок</samp>
+<br /><samp>------------</samp>
+<br /><samp>Заголовки&nbsp;подчеркиваются&nbsp;(или&nbsp;выделяются</samp>
+<br /><samp>сверху&nbsp;и&nbsp;снизу)&nbsp;отображаемыми&nbsp;небуквен-</samp>
+<br /><samp>ноцифровыми&nbsp;7-битными&nbsp;ASCII</samp>
+<br /><samp>символами.&nbsp;Рекомендуются&nbsp;для&nbsp;выбора</samp>
+<br /><samp>"``=&nbsp;-&nbsp;`&nbsp;:&nbsp;'&nbsp;"&nbsp;~&nbsp;^&nbsp;_&nbsp;*&nbsp;+&nbsp;#&nbsp;&lt;&nbsp;&gt;``".</samp>
+<br /><samp>Подчеркивание/ограничение&nbsp;сверху&nbsp;должно&nbsp;быть</samp>
+<br /><samp>по&nbsp;крайней&nbsp;мере&nbsp;длиннее&nbsp;текста&nbsp;заголовка.</samp>
+<br /><samp></samp>
+<br /><samp>Отдельно&nbsp;стоящий&nbsp;(под)раздел&nbsp;верхнего&nbsp;уровня</samp>
+<br /><samp>поднимается&nbsp;вверх&nbsp;чтобы&nbsp;стать&nbsp;(под)заголовком</samp>
+<br /><samp>документа.</samp>
+
+      <td>
+        <font size="+2"><strong>Title</strong></font>
+        <p><font size="+1"><strong>Subtitle</strong></font>
+        <p>Заголовки подчеркиваются (или выделяются
+          сверху и снизу) отображаемыми небуквенноцифровыми 
+		  7-битными ASCII символами. Рекомендуются для выбора 
+          "<samp>= - ` : ' " ~ ^ _ * + # &lt; &gt;</samp>".
+          Подчеркивание/ограничение сверху должно быть
+          по крайней мере длиннее текста заголовка.
+        <p>Отдельно стоящий (под)раздел верхнего уровня
+          поднимается вверх чтобы стать (под)заголовком
+          документа.
+    </table>
+
+    <h2><a href="#contents" name="paragraphs" class="backref"
+        >Параграфы</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#paragraphs">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<p><samp>Это&nbsp;параграф.</samp>
+
+<p><samp>Строка&nbsp;параграфа&nbsp;вверху&nbsp;от&nbsp;своей&nbsp;левой</samp>
+<br /><samp>границы,&nbsp;и&nbsp;является&nbsp;нормально&nbsp;отделенной</samp>
+<br /><samp>пустыми&nbsp;строками.</samp>
+
+      <td>
+        <p>Это параграф.
+
+        <p>Строка параграфа вверху от своей левой границы, и является нормально отделенной
+        пустыми строками.
+
+    </table>
+
+    <h2><a href="#contents" name="bullet-lists" class="backref"
+        >Помеченные списки</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#bullet-lists">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>Помеченные&nbsp;списки:</samp>
+
+<p><samp>-&nbsp;Это"&nbsp;элемент&nbsp;1</samp>
+<br /><samp>-&nbsp;Это"&nbsp;элемент&nbsp;2</samp>
+
+<p><samp>-&nbsp;Маркерами&nbsp;являются&nbsp;"-",&nbsp;"*"&nbsp;или&nbsp;"+".</samp>
+<br /><samp>&nbsp;&nbsp;Продолжающийся&nbsp;текст&nbsp;должен&nbsp;быть&nbsp;выровнен</samp>
+<br /><samp>&nbsp;&nbsp;после&nbsp;маркера&nbsp;и&nbsp;пробела.</samp>
+
+<p><samp>Заметим&nbsp;что&nbsp;пустая&nbsp;линия&nbsp;требуется</samp>
+<br /><samp>перед&nbsp;первым&nbsp;элементом&nbsp;и&nbsp;после</samp>
+<br /><samp>последнего,&nbsp;однако&nbsp;являются&nbsp;необязательными&nbsp;между&nbsp;элементами.</samp>
+      <td>Список маркеров:
+        <ul>
+          <li>Это элемент 1
+          <li>Это элемент 2
+          <li>Маркерами являются "-", "*" или "+".
+        Продолжающийся текст должен быть выровнен
+        после маркера и пробела.
+        </ul>
+        <p>Заметим что пустая линия требуется перед первым 
+		элементом и после последнего, однако являются необязательными между элементами.
+    </table>
+
+    <h2><a href="#contents" name="enumerated-lists" class="backref"
+        >Нумерованные списки</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#enumerated-lists">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>Нумерованные&nbsp;списки:</samp>
+
+<p><samp>3.&nbsp;Это&nbsp;первый&nbsp;элемент</samp>
+<br /><samp>4.&nbsp;Это&nbsp;второй&nbsp;элемент</samp>
+<br /><samp>5.&nbsp;Счетчики&nbsp;являются&nbsp;арабскими&nbsp;числами,</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;отдельными&nbsp;буквами&nbsp;или&nbsp;римскими&nbsp;числами</samp>
+<br /><samp>6.&nbsp;Элементы&nbsp;списка&nbsp;должны&nbsp;быть&nbsp;последовательными</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;числами,&nbsp;но&nbsp;не&nbsp;обязаны&nbsp;начинаться&nbsp;с&nbsp;1</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;(хотя&nbsp;не&nbsp;все&nbsp;форматтеры&nbsp;будут</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;соблюдать&nbsp;первый&nbsp;индекс).</samp>
+<br /><samp>#.&nbsp;Этот&nbsp;элемент&nbsp;является&nbsp;автонумерованным</samp>
+      <td>Нумерованные списки:
+        <ol type="1">
+          <li value="3">Это первый элемент
+          <li>Это второй элемент
+          <li>Счетчики являются арабскими числами, отдельными буквами 
+		  или римскими числами
+          <li>Элементы списка должны быть последовательными числами, 
+		  но не обязаны начинаться с 1 (хотя не все 
+		  форматтеры будут соблюдать первый индекс).
+          <li>Этот элемент является автонумерованным
+        </ol>
+    </table>
+
+    <h2><a href="#contents" name="definition-lists" class="backref"
+        >Списки определений</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#definition-lists">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>Списки&nbsp;определений:</samp>
+<br />
+<br /><samp>что</samp>
+<br /><samp>&nbsp;&nbsp;Списки&nbsp;определений&nbsp;связывающие&nbsp;сам&nbsp;термин&nbsp;с</samp>
+<br /><samp>&nbsp;&nbsp;его&nbsp;определением.</samp>
+<br />
+<br /><samp>как</samp>
+<br /><samp>&nbsp;&nbsp;Определяемый&nbsp;термин&nbsp;является&nbsp;однострочной&nbsp;фразой,&nbsp;а&nbsp;само</samp>
+<br /><samp>&nbsp;&nbsp;определение&nbsp;описывается&nbsp;одной&nbsp;или&nbsp;несколькими&nbsp;параграфами&nbsp;или</samp>
+<br /><samp>&nbsp;&nbsp;элементами&nbsp;тела,&nbsp;со&nbsp;смещением&nbsp;по&nbsp;отношению&nbsp;к</samp>
+<br /><samp>&nbsp;&nbsp;термину.&nbsp;Пустые&nbsp;строки&nbsp;между&nbsp;термином&nbsp;и</samp>
+<br /><samp>&nbsp;&nbsp;определением&nbsp;не&nbsp;допускаются.</samp>
+      <td>Списки определений:
+        <dl>
+          <dt><strong>что</strong>
+          <dd>Списки определений связывающие сам термин с его определением.
+
+          <dt><strong>как</strong>
+          <dd>Определяемый термин является однострочной фразой, а само
+		  определение описывается одной или несколькими параграфами или
+		  элементами тела, со смещением по отношению к
+		  термину. Пустые строки между термином и
+		  определением не допускаются.
+        </dl>
+    </table>
+
+    <h2><a href="#contents" name="field-lists" class="backref"
+        >Списки полей</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#field-lists">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>:Авторы:</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;&nbsp;Тони&nbsp;Дж.&nbsp;(Тибс)&nbsp;Ибс,</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;&nbsp;Дэвид&nbsp;Гуджер</samp>
+
+<p><samp>&nbsp;&nbsp;&nbsp;&nbsp;(и&nbsp;различные&nbsp;другие&nbsp;добродушные&nbsp;соплеменники)</samp>
+
+<p><samp>:Версия:&nbsp;1.0&nbsp;от&nbsp;2001/08/08</samp>
+<br /><samp>:Посвящается:&nbsp;Моему&nbsp;отцу.</samp>
+      <td>
+        <table>
+          <tr valign="top">
+        <td><strong>Авторы:</strong>
+        <td>Тони Дж. (Тибс) Ибс,
+          Дэвид Гуджер
+          <tr><td><td>(и различные другие добродушные соплеменники)
+          <tr><td><strong>Версия:</strong><td>1.0 от 2001/08/08
+          <tr><td><strong>Посвящение:</strong><td>Моему отцу.
+        </table>
+    </table>
+
+    <p>Списки полей используются как часть синтаксиса расширения, такого как
+    параметры для <a href="#directives">директив</a>, или записи подобные
+    таковым в базе данных предназначенным для дальнейшей обработки. Списки полей могут также
+    быть использованы какобщие двухколоночные табличные построения в документах.
+
+    <h2><a href="#contents" name="option-lists" class="backref"
+        >Списки параметров</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#option-lists">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+      <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+        <p><samp>
+-a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;параметр&nbsp;командной&nbsp;строки&nbsp;"a"
+<br />-b&nbsp;file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;параметры&nbsp;могут&nbsp;иметь&nbsp;аргументы
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;и&nbsp;длинные&nbsp;описания
+<br />--long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;параметры&nbsp;тоже&nbsp;могут&nbsp;быть&nbsp;длинными
+<br />--input=file&nbsp;&nbsp;длинные&nbsp;параметры&nbsp;могут&nbsp;также&nbsp;иметь
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;аргументы
+<br />/V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DOS/VMS-style&nbsp;тоже&nbsp;параметры
+</samp>
+
+      <td>
+        <table border="0" width="100%">
+          <tbody valign="top">
+            <tr>
+              <td width="30%"><samp>-a</samp>
+              <td>параметр командной строки "a"
+            <tr>
+              <td><samp>-b <i>file</i></samp>
+              <td>параметры могут иметь аргументы и длинные описания
+            <tr>
+              <td><samp>--long</samp>
+              <td>параметры тоже могут быть длинными
+            <tr>
+              <td><samp>--input=<i>file</i></samp>
+              <td>длинные параметры могут также иметь аргументы
+            <tr>
+              <td><samp>/V</samp>
+              <td>DOS/VMS-style тоже параметры
+        </table>
+    </table>
+
+    <p>Должно присутствовать по крайней мере два пробела между данным параметром и его
+    определением.
+
+    <h2><a href="#contents" name="literal-blocks" class="backref"
+        >Литеральные блоки</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#literal-blocks">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>Параграф,&nbsp;содержащий&nbsp;только&nbsp;два&nbsp;столбца</samp>
+<br /><samp>показывает&nbsp;что&nbsp;последующий&nbsp;текст&nbsp;с&nbsp;отступом</samp>
+<br /><samp>или&nbsp;цитируемый&nbsp;текст&nbsp;является&nbsp;литеральным&nbsp;блоком.</samp>
+<br />
+<br /><samp>::</samp>
+<br />
+<br /><samp>&nbsp;&nbsp;Пробелы,&nbsp;новые&nbsp;строки,&nbsp;пустые&nbsp;строки,&nbsp;и</samp>
+<br /><samp>&nbsp;&nbsp;все&nbsp;виды&nbsp;разметки&nbsp;(как&nbsp;*эти*&nbsp;или</samp>
+<br /><samp>&nbsp;&nbsp;\эти)&nbsp;сохранены&nbsp;литеральными&nbsp;блоками.</samp>
+<br />
+<br /><samp>&nbsp;&nbsp;Параграф,&nbsp;содержащий&nbsp;только&nbsp;'::'</samp>
+<br /><samp>&nbsp;&nbsp;будет&nbsp;пропущен&nbsp;в&nbsp;конечном&nbsp;результате.</samp>
+<br />
+<br /><samp>Пара&nbsp;``::``&nbsp;может&nbsp;быть&nbsp;пришпилена&nbsp;в&nbsp;самом</samp>
+<br /><samp>конце&nbsp;любого&nbsp;параграфа.&nbsp;Пара&nbsp;``::``&nbsp;будет</samp>
+<br /><samp>пропущена,&nbsp;если&nbsp;она&nbsp;предваряется&nbsp;пробелом.</samp>
+<br /><samp>Пара&nbsp;``::``&nbsp;будет&nbsp;преобразована&nbsp;в&nbsp;одно</samp>
+<br /><samp>двоеточие&nbsp;если&nbsp;предваряется&nbsp;текстом&nbsp;как,&nbsp;эта::</samp>
+<br />
+<br /><samp>&nbsp;&nbsp;Это&nbsp;очень&nbsp;удобно&nbsp;для&nbsp;использования&nbsp;в&nbsp;подобной&nbsp;форме.</samp>
+<br />
+<br /><samp>Литеральные&nbsp;блоки&nbsp;заканчиваются&nbsp;когда&nbsp;текст&nbsp;возвращается&nbsp;к</samp>
+<br /><samp>отступу&nbsp;своего&nbsp;предыдущего&nbsp;параграфа.</samp>
+<br /><samp>Это&nbsp;означает&nbsp;что&nbsp;что-то&nbsp;типа&nbsp;данного&nbsp;текста</samp>
+<br /><samp>является&nbsp;возможным::</samp>
+<br />
+<br /><samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Мы&nbsp;начинаем&nbsp;здесь</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;&nbsp;и&nbsp;продолжаем&nbsp;тут</samp>
+<br /><samp>&nbsp;&nbsp;и&nbsp;завершаем&nbsp;в&nbsp;этом&nbsp;месте.</samp>
+<br />
+<br /><samp>Цитаты&nbsp;в&nbsp;одну&nbsp;строчку&nbsp;также&nbsp;могут&nbsp;быть&nbsp;использованы&nbsp;в</samp>
+<br /><samp>литеральных&nbsp;блоках&nbsp;без&nbsp;отступов::</samp>
+<br />
+<br /><samp>&gt;&nbsp;Полезно&nbsp;для&nbsp;цитирования&nbsp;из&nbsp;писем&nbsp;и</samp>
+<br /><samp>&gt;&nbsp;для&nbsp;грамотного&nbsp;программирования&nbsp;Haskell.</samp>
+
+      <td>
+        <p>Параграф, содержащий только два столбца
+        показывает что последующий текст с отступом
+        или цитируемый текст является литеральным блоком.
+
+        <pre>
+  Пробелы, новые строки, пустые строки,и
+  все виды разметки (как *эти* или
+  \эти) сохранены литеральными блоками.
+
+  Параграф содержащий только '::'
+  будет пропущен в конечном результате.</pre>
+
+        <p>Пара <samp>::</samp> может быть пришпилена в самом
+конце любого параграфа. Пара <samp>::</samp> будет
+пропущена, если она предваряется пробелом.
+Пара <samp>::</samp> будет преобразована в одно
+двоеточие если предваряется текстом как эта:
+
+        <pre>
+  Это очень удобно для использования в подобной форме.</pre>
+
+        <p>Литеральные блоки заканчиваются когда текст возвращается к
+отступу своего предыдущего параграфа.
+Это означает что что-то типа данного текста является возможным:
+
+        <pre>
+	  Мы начинаем здесь
+    продолжаем тут
+  и завершаем в этом месте.</pre>
+
+        <p>Цитаты в одну строчку также могут быть использованы в
+литеральных блоках без отступов:
+
+        <pre>
+  &gt; Полезно для цитирования из писем и
+  &gt; для грамотного программирования Haskell.</pre>
+    </table>
+
+    <h2><a href="#contents" name="line-blocks" class="backref"
+        >Строковые блоки</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#line-blocks">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>|&nbsp;Строковые&nbsp;Строковые блоки&nbsp;полезны&nbsp;для&nbsp;addresses,</samp>
+<br /><samp>|&nbsp;стихов&nbsp;и&nbsp;списков&nbsp;без&nbsp;пометок.</samp>
+<br /><samp>|</samp>
+<br /><samp>|&nbsp;Каждая&nbsp;новая&nbsp;строка&nbsp;начинается&nbsp;c</samp>
+<br /><samp>|&nbsp;вертикальной&nbsp;черты&nbsp;("|").</samp>
+<br /><samp>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Разрывы&nbsp;строк&nbsp;и&nbsp;начальные&nbsp;отступы</samp>
+<br /><samp>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;сохраняются.</samp>
+<br /><samp>|&nbsp;Продолжающиеся&nbsp;строки&nbsp;переносятся&nbsp;порциями</samp>
+<br /><samp>&nbsp;&nbsp;длинных&nbsp;строк;&nbsp;они&nbsp;начинаются</samp>
+<br /><samp>&nbsp;&nbsp;с&nbsp;пробелов&nbsp;на&nbsp;месте&nbsp;вертикальных&nbsp;черт.</samp>
+
+      <td>
+        <div class="line-block">
+          <div class="line">Строковые блоки полезны для адресов,</div>
+          <div class="line">стихов и списков без пометок.</div>
+          <div class="line"><br /></div>
+          <div class="line">Каждая новая строка начинается с</div>
+          <div class="line">вертикальной черты ("|").</div>
+          <div class="line-block">
+            <div class="line">Разрывы строк и начальные отступы</div>
+            <div class="line">сохраняются.</div>
+          </div>
+          <div class="line">Продолжающиеся строки переносятся порциями 
+            длинных строк; они начинаются
+			с пробелов на месте вертикальных черт.</div>
+        </div>
+    </table>
+
+    <h2><a href="#contents" name="block-quotes" class="backref"
+        >Цитируемые блоки</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#block-quotes">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+      <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<samp>Цитируемые&nbsp;блоки&nbsp;являются&nbsp;просто:</samp>
+
+<p><samp>&nbsp;&nbsp;&nbsp;&nbsp;Параграфами&nbsp;с&nbsp;отступами,</samp>
+
+<p><samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;и&nbsp;они&nbsp;могут&nbsp;встраиваться.</samp>
+      <td>
+        Цитируемые блоки являются просто:
+        <blockquote>
+          <p>Параграфами с отступами,
+          <blockquote>
+        <p>и они могут встраиваться.
+          </blockquote>
+        </blockquote>
+    </table>
+
+    <p>Применяйте <a href="#comments">пустые комментарии</a> для разделения контекстов с
+    отступом, таких как блоки цитат и содержание директив.</p>
+
+    <h2><a href="#contents" name="doctest-blocks" class="backref"
+        >Блоки Doctest</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#doctest-blocks">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+      <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+        <p><samp>Блоки&nbsp;Doctest&nbsp;являются&nbsp;интерактивными
+<br />сессиями&nbsp;Python.&nbsp;Они&nbsp;начинаются&nbsp;с
+<br />"``&gt;&gt;&gt;``"&nbsp;и&nbsp;заканчиваются&nbsp;пустой&nbsp;строкой.</samp>
+
+        <p><samp>&gt;&gt;&gt;&nbsp;print&nbsp;"Это&nbsp;блок&nbsp;doctest."
+<br />Это&nbsp;блок&nbsp;doctest.</samp>
+
+      <td>
+        <p>Блоки Doctest являются интерактивными
+        сессиями Python. Они начинаются с
+        "<samp>&gt;&gt;&gt;</samp>" и заканчиваются пустой строкой.
+
+        <p><samp>&gt;&gt;&gt;&nbsp;print&nbsp;"Это&nbsp;блок&nbsp;doctest."
+<br />Это&nbsp;блок&nbsp;doctest.</samp>
+    </table>
+
+    <p>"Модуль <a
+    href="http://www.python.org/doc/current/lib/module-doctest.html">doctest</a>
+	осуществляет поиск docstrings модулей с текстом который выглядит как 
+	интерактивная сессия Python, затем выполняет все такие сессии на предмет
+	того,что они все еще работают как показано." (Из документации doctest.)
+
+    <h2><a href="#contents" name="tables" class="backref"
+        >Таблицы</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#tables">подробнее...</a>)
+
+    <p>Для таблиц в reStructuredText сужествует два синтаксиса. Сетчатые (grid)
+    таблицы полные, однако громоздкие для сздания. Просты таблицы просты 
+	для создания, однако имеют ограничения (нет диапазонов рядов и т.д.).</p>
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+<p><samp>Сетчатая таблица:</samp></p>
+
+<p><samp>+-------------+------------------+--------------+</samp>
+<br /><samp>|&nbsp;Заголовок&nbsp;1&nbsp;|&nbsp;Заголовок&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;Заголовок&nbsp;3&nbsp;&nbsp;|</samp>
+<br /><samp>+=============+==================+==============+</samp>
+<br /><samp>|&nbsp;ряд&nbsp;тела&nbsp;1&nbsp;&nbsp;|&nbsp;колонка&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;колонка&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;|</samp>
+<br /><samp>+-------------+------------------+--------------+</samp>
+<br /><samp>|&nbsp;ряд&nbsp;тела&nbsp;2&nbsp;&nbsp;|&nbsp;Ячейки&nbsp;могут&nbsp;охватывать&nbsp;колонки.|</samp>
+<br /><samp>+-------------+------------------+--------------+</samp>
+<br /><samp>|&nbsp;ряд&nbsp;тела&nbsp;3&nbsp;&nbsp;|&nbsp;Ячейки&nbsp;могут&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;-&nbsp;Ячейки&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</samp>
+<br /><samp>+-------------+&nbsp;охватывать&nbsp;ряды.&nbsp;|&nbsp;-&nbsp;содержат&nbsp;&nbsp;&nbsp;|</samp>
+<br /><samp>|&nbsp;ряд&nbsp;тела&nbsp;4&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;-&nbsp;блоки.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</samp>
+<br /><samp>+-------------+------------------+--------------+</samp></p>
+      <td>
+        <p>Сетчатая таблица:</p>
+        <table border="1">
+          <thead valign="bottom">
+            <tr>
+              <th>Заголовок 1
+              <th>Заголовок 2
+              <th>Заголовок 3
+            </tr>
+          </thead>
+          <tbody valign="top">
+            <tr>
+              <td>ряд тела 1
+              <td>колонка 2
+              <td>колонка 3
+            </tr>
+            <tr>
+              <td>ряд тела 2
+              <td colspan="2">Ячейки могут охватывать колонки.
+            </tr>
+            <tr>
+              <td>ряд тела 3
+              <td rowspan="2">Ячейки могут<br /> охватывать ряды.
+              <td rowspan="2">
+                <ul>
+                  <li>Ячейки
+                  <li>содержат
+                  <li>блоки.
+                </ul>
+            </tr>
+            <tr>
+              <td>ряд тела 4
+            </tr>
+        </table>
+    <tr valign="top">
+      <td>
+<p><samp>Простая таблица:</samp></p>
+
+<p><samp>======&nbsp;&nbsp;======&nbsp;&nbsp;=======</samp>
+<br /><samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ввод&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Вывод</samp>
+<br /><samp>--------------&nbsp;&nbsp;-------</samp>
+<br /><samp>&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;или&nbsp;B</samp>
+<br /><samp>======&nbsp;&nbsp;======&nbsp;&nbsp;=======</samp>
+<br /><samp>Ложь&nbsp;&nbsp;&nbsp;&nbsp;Ложь&nbsp;&nbsp;&nbsp;&nbsp;Ложь</samp>
+<br /><samp>Истина&nbsp;&nbsp;Ложь&nbsp;&nbsp;&nbsp;&nbsp;Истина</samp>
+<br /><samp>Ложь&nbsp;&nbsp;&nbsp;&nbsp;Истина&nbsp;&nbsp;Истина</samp>
+<br /><samp>Истина&nbsp;&nbsp;Истина&nbsp;&nbsp;Истина</samp>
+<br /><samp>======&nbsp;&nbsp;======&nbsp;&nbsp;=======</samp></p>
+
+      <td>
+        <p>Простая таблица:</p>
+        <table border="1">
+          <colgroup>
+            <col width="31%">
+            <col width="31%">
+            <col width="38%">
+          </colgroup>
+          <thead valign="bottom">
+            <tr>
+              <th colspan="2">Ввод
+              <th>Вывод
+            <tr>
+              <th>A
+              <th>B
+              <th>A или B
+          <tbody valign="top">
+            <tr>
+              <td>Ложь
+              <td>Ложь
+              <td>Ложь
+            <tr>
+              <td>Истина
+              <td>Ложь
+              <td>Истина
+            <tr>
+              <td>Ложь
+              <td>Истина
+              <td>Истина
+            <tr>
+              <td>Истина
+              <td>Истина
+              <td>Истина
+        </table>
+
+    </table>
+
+    <h2><a href="#contents" name="transitions" class="backref"
+        >Переходы</a></h2>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#transitions">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+      <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td>
+        <p><samp>
+Маркер&nbsp;перехода&nbsp;это&nbsp;горизонтальная&nbsp;линия
+<br />из&nbsp;4&nbsp;или&nbsp;более&nbsp;повторяющихся&nbsp;символов
+<br />пунктуации.</samp>
+
+        <p><samp>------------</samp>
+
+        <p><samp>Переход&nbsp;не&nbsp;должен&nbsp;начинать&nbsp;или&nbsp;заканчивать&nbsp;заканчивать
+<br />раздел&nbsp;или&nbsp;документ,&nbsp;не&nbsp;должно&nbsp;быть&nbsp;двух
+<br />непосредственно&nbsp;соприкасающихся&nbsp;переходов.</samp>
+
+      <td>
+        <p>Маркер перехода это горизонтальная линия 
+		из 4 или более повторяющихся символов
+		пунктуации.</p>
+
+        <hr />
+
+        <p>Переход не должен начинать или заканчивать
+		раздел или документ, не должно быть двух
+		непосредственно соприкасающихся переходов.
+    </table>
+
+    <p>Переходы часто встречаются в новеллах и краткой беллетристике, в качестве
+	разрыва они охватывают одну или более строк, помечая разделение текста или
+    сообщая об изменении в предмете, времени, точке зрения или акценте.
+
+    <h2><a href="#contents" name="explicit-markup" class="backref"
+        >Явная разметка</a></h2>
+
+    <p>Блоки явной разметки используются для конструкций, являющихся подвижными
+	(сноски), не имеют прямого представления в печатном документе
+	(гиперссылки, комментарии) или требуют специализированной обработки 
+	(директивы). Все они начинаются двумя двоеточиями и пробелом, 
+    "началом явной разметки".
+
+    <h3><a href="#contents" name="footnotes" class="backref"
+        >Сноски</a></h3>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#footnotes">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+
+    <tr valign="top">
+      <td>
+        <samp>Сносочные&nbsp;ссылки,&nbsp;подобные&nbsp;[5]_.</samp>
+        <br /><samp>Заметим,&nbsp;что&nbsp;ссылки&nbsp;могут&nbsp;привести</samp>
+        <br /><samp>к&nbsp;трансформации,&nbsp;например,&nbsp;в&nbsp;конец</samp>
+        <br /><samp>текущей&nbsp;"страницы".</samp>
+
+        <p><samp>..&nbsp;[5]&nbsp;Числовые&nbsp;сноски.&nbsp;Заметим,</samp>
+          <br /><samp>&nbsp;&nbsp;&nbsp;Заметим,&nbsp;что&nbsp;двоеточие&nbsp;после&nbsp;&nbsp;``]``&nbsp;отсутствует.</samp>
+
+      <td>
+        Сносочные ссылки, подобные <sup><a href="#5">5</a></sup>.
+		Заметим, что ссылки могут привести к трансформации, например, в конец 
+		текущей "страницы".
+
+        <p><table>
+          <tr><td colspan="2"><hr />
+          <!-- <tr><td colspan="2">Footnotes: -->
+          <tr><td><a name="5"><strong>[5]</strong></a><td>Числовые сноски.
+		  Заметим, что двоеточие после <samp>]</samp> отсутствует.
+          </table>
+
+    <tr valign="top">
+      <td>
+        <samp>Возможны&nbsp;автонумерующиеся&nbsp;сноски,</samp>
+        <br /><samp>например,&nbsp;с&nbsp;использованием&nbsp;[#]_&nbsp;и&nbsp;[#]_.</samp>
+        <p><samp>..&nbsp;[#]&nbsp;Это&nbsp;первая&nbsp;ссылка&nbsp;сама&nbsp;по&nbsp;себе.</samp>
+          <br /><samp>..&nbsp;[#]&nbsp;Это,&nbsp;собственно,&nbsp;вторая&nbsp;ссылка.</samp>
+
+        <p><samp>Они&nbsp;могут&nbsp;быть&nbsp;установлены&nbsp;'автонумерующимися</samp>
+          <br /><samp>метками'&nbsp;-&nbsp;например,
+        <br />[#fourth]_&nbsp;и&nbsp;[#third]_.</samp>
+
+        <p><samp>..&nbsp;[#third]&nbsp;a.k.a.&nbsp;third_</samp>
+        <p><samp>..&nbsp;[#fourth]&nbsp;a.k.a.&nbsp;fourth_</samp>
+      <td>
+	    Возможны автонумерующиеся сноски, например, с использованием <sup><a
+        href="#auto1">1</a></sup> и <sup><a href="#auto2">2</a></sup>.
+
+        <p>Они могут быть установлены 'автонумерующимися метками' - например,
+          <sup><a href="#fourth">4</a></sup> и <sup><a
+          href="#third">3</a></sup>.
+
+        <p><table>
+          <tr><td colspan="2"><hr />
+          <!-- <tr><td colspan="2">Footnotes: -->
+          <tr><td><a name="auto1"><strong>[1]</strong></a><td>Это первая ссылка сама по себе.
+          <tr><td><a name="auto2"><strong>[2]</strong></a><td>Это, собственно, вторая ссылка.
+          <tr><td><a name="third"><strong>[3]</strong></a><td> a.k.a. <a href="#third">third</a>
+          <tr><td><a name="fourth"><strong>[4]</strong></a><td> a.k.a. <a href="#fourth">fourth</a>
+        </table>
+
+    <tr valign="top">
+      <td>
+        <samp>Сноски&nbsp;с&nbsp;автоподстановкой&nbsp;символов&nbsp;также</samp>
+        <br /><samp>возможны,&nbsp;например::&nbsp;[*]_&nbsp;и&nbsp;[*]_.</samp>
+        <p><samp>..&nbsp;[*]&nbsp;Это&nbsp;первая&nbsp;символьная&nbsp;сноска.</samp>
+          <br /><samp>..&nbsp;[*]&nbsp;Это&nbsp;вторая&nbsp;сноска.</samp>
+
+      <td>
+	    Сноски с автоподстановкой символов также
+		возможны, например: <sup><a href="#symbol1">*</a></sup>
+        и <sup><a href="#symbol2">&dagger;</a></sup>.
+
+        <p><table>
+          <tr><td colspan="2"><hr />
+          <!-- <tr><td colspan="2">Footnotes: -->
+          <tr><td><a name="symbol1"><strong>[*]</strong></a><td> Это первая символьная сноска
+          <tr><td><a name="symbol2"><strong>[&dagger;]</strong></a><td> Это вторая сноска.
+        </table>
+
+    </table>
+
+    <p>Нумерация автонумерованных сносок определяется 
+	порядком сносок, а не ссылок. Для автонумерующихся 
+    сносочных ссылок без меток автонумерации
+    ("<samp>[#]_</samp>"), ссылки и сноски должны быть в том
+	же самом относительном порядке. Аналогично для сносок с автоподстановкой символа
+    ("<samp>[*]_</samp>").
+
+    <h3><a href="#contents" name="citations" class="backref"
+        >Цитирование</a></h3>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#citations">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+
+    <tr valign="top">
+      <td>
+        <samp>Ссылки&nbsp;цитирования,&nbsp;как&nbsp;[CIT2002]_.</samp>
+        <br /><samp>Заметим,&nbsp;что&nbsp;цитирование&nbsp;может&nbsp;привести</samp>
+        <br /><samp>к&nbsp;трансформации,&nbsp;например,&nbsp;в&nbsp;конец</samp>
+        <br /><samp>текущей&nbsp;"страницы".</samp>
+
+        <p><samp>..&nbsp;[CIT2002]&nbsp;A&nbsp;citation</samp>
+          <br /><samp>&nbsp;&nbsp;&nbsp;(as&nbsp;often&nbsp;used&nbsp;in&nbsp;journals).</samp>
+
+        <p><samp>Метки&nbsp;цитирования&nbsp;содержат&nbsp;цифры&nbsp;и&nbsp;буквы,</samp>
+          <br /><samp>подчеркивания,&nbsp;дефисы&nbsp;и&nbsp;точки.</samp>
+          <br /><samp>Не&nbsp;важно&nbsp;прописная&nbsp;или&nbsp;строчная.</samp>
+
+        <p><samp>Задавая&nbsp;цитату,&nbsp;например,&nbsp;[так]_,</samp>
+          <br /><samp>также&nbsp;можно&nbsp;ссылаться&nbsp;на&nbsp;нее&nbsp;так_.</samp>
+
+        <p><samp>..&nbsp;[так]&nbsp;здесь.</samp>
+
+      <td>
+        Ссылки цитирования, как <a href="#cit2002">[CIT2002]</a>.
+        Заметим, что цитирование может привести к трансформации, например, в конец
+        текущей "страницы".
+
+        <p>Метки цитирования содержат цифры и буквы, подчеркивания, дефисы
+		  и точки. Не важно прописная или строчная.
+
+        <p>Задавая цитату, например, <a href="#this">[так]</a>, 
+          также можно ссылаться на нее <a href="#this">так</a>.
+
+        <p><table>
+          <tr><td colspan="2"><hr />
+          <!-- <tr><td colspan="2">Citations: -->
+          <tr><td><a name="cit2002"><strong>[CIT2002]</strong></a><td> Цитирование
+          (как это часто делается в журналах).
+          <tr><td><a name="this"><strong>[так]</strong></a><td> здесь.
+          </table>
+
+    </table>
+
+    <h3><a href="#contents" name="hyperlink-targets" class="backref"
+        >Адресаты гиперссылок</a></h3>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#hyperlink-targets">подробнее...</a>)
+
+    <h4><a href="#contents" name="external-hyperlink-targets" class="backref"
+        >Внешние адресаты гиперссылок</a></h4>
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+
+    <tr valign="top">
+      <td rowspan="2">
+        <samp>Внешние&nbsp;гиперссылки,&nbsp;подобные&nbsp;Python_.</samp>
+
+        <p><samp>..&nbsp;_Python:&nbsp;http://www.python.org/</samp>
+      <td>
+        <table width="100%">
+          <tr bgcolor="#99CCFF"><td><em>Вложенная форма</em>
+          <tr><td>Внешние гиперссылки, подобные
+          <a href="http://www.python.org/">Python</a>.
+        </table>
+    <tr valign="top">
+      <td>
+        <table width="100%">
+          <tr bgcolor="#99CCFF"><td><em>Выносная форма</em>
+          <tr><td>Внешние гиперссылки, подобные
+          <a href="#labPython"><i>Python</i></a>.
+
+          <p><table>
+            <tr><td colspan="2"><hr />
+            <tr><td><a name="labPython"><i>Python:</i></a>
+              <td> <a href="http://www.python.org/">http://www.python.org/</a>
+          </table>
+        </table>
+    </table>
+
+    <p>"<em>Вложенность</em>" является представлением, обычно используемым в HTML
+      документах (представляйте косвенную гиперссылку "вложенной" подобно
+      компонентам в торте), а "<em>выносные</em>" более применимы для
+      печатных документов, где эти ссылки должны быть представлены явно, например,
+      как сноска. Вы можете принудительно использовать выносную форму путем
+      использования такой
+      "<a href="../../ref/rst/directives.html#target-notes">указания цели</a>"
+      инструкции.
+
+    <p>reStructuredText также применяется для <b>встраиваемых URI</b> (<a
+      href="../../ref/rst/restructuredtext.html#embedded-uris">подробнее...</a>),
+      для удобства за счет читаемости.  Сноска на гиперссылку
+      может непосредственно вставлять целевой URI прямо в текст внутри угловых
+      скобок. Следующее в точности эквивалентно приведенному выше примеру:
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+
+    <tr valign="top">
+      <td rowspan="2">
+        <samp>Внешние&nbsp;ссылки,&nbsp;как&nbsp;`Python
+<br />&lt;http://www.python.org/&gt;`_.</samp>
+      <td>Внешние ссылки, как
+          <a href="http://www.python.org/">Python</a>.
+    </table>
+
+    <h4><a href="#contents" name="internal-hyperlink-targets" class="backref"
+        >Внутренние адресаты гиперссылок</a></h4>
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+
+    <tr valign="top">
+      <td rowspan="2"><samp>Внутренние&nbsp;перекрестный&nbsp;ссылки,&nbsp;как&nbsp;пример_.</samp>
+
+        <p><samp>..&nbsp;_пример:</samp>
+
+        <p><samp>Это&nbsp;пример&nbsp;перекрестной&nbsp;ссылки&nbsp;цели.</samp>
+      <td>
+        <table width="100%">
+          <tr bgcolor="#99CCFF"><td><em>Вложенная форма</em>
+          <!-- Заметим, что некоторым броузерам может не нравиться тег "a" который -->
+          <!-- не имеет содержания, следовательно мы можем произвольно             -->
+          <!-- использовать первое слово как содержание - *или* просто поверьте в  -->
+          <!-- удачу!                                                              -->
+          <tr><td>Внутренние перекрестный ссылки, как <a href="#example-foldin">пример</a>
+          <p><a name="example-foldin">Это</a> пример
+            цели перекрестной ссылки.
+        </table>
+    <tr valign="top">
+      <td>
+        <table width="100%">
+          <tr><td bgcolor="#99CCFF"><em>Выносная форма</em>
+          <tr><td>Внутренняя перекрестная ссылка, как <a href="#example-callout">пример</a>
+
+          <p><a name="example-callout"><i>пример:</i></a>
+            <br />Это пример цели перекрестной ссылки.
+        </table>
+
+    </table>
+
+    <h4><a href="#contents" name="indirect-hyperlink-targets" class="backref"
+        >Косвенные адресаты гиперссылок</a></h4>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#indirect-hyperlink-targets">подробнее...</a>)
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+
+    <tr valign="top">
+      <td>
+        <samp>Python_&nbsp;это&nbsp;`мой&nbsp;любимый
+<br />язык программирования&nbsp;язык программированияпрограммирования`__.</samp>
+
+        <p><samp>..&nbsp;_Python:&nbsp;http://www.python.org/</samp>
+
+        <p><samp>__&nbsp;Python_</samp>
+
+      <td>
+        <p><a href="http://www.python.org/">Python</a> это
+        <a href="http://www.python.org/">мой любимый 
+        язык программирования</a>.
+
+    </table>
+
+    <p>Вторая цель гиперссылки (строка, начинающаяся с
+    "<samp>__</samp>") одновременно является косвенной целевой гиперссылкой
+    (<i>косвенно</i> указывая на вебсайт Python посредством этой
+    ссылки "<samp>Python_</samp>") и <b>анонимной целью 
+    гиперссылки</b>. В нашем тексте, суффикс из двойного подчеркивания мспользуется для 
+    индикации <b>анонимной сноски на гиперссылку</b>. В анонимной
+    цели гиперссылки, сам текст ссылки не повторяется. Это 
+    полезно для ссылок с длинным текстом или одноразовых ссылок, однако
+    цель должна быть близкой к данной ссылке чтобы предотвратить их 
+    рассинхронизацию.
+
+    <h4><a href="#contents" name="implicit-hyperlink-targets" class="backref"
+        >Неявные адресаты гиперссылок</a></h4>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#implicit-hyperlink-targets">подробнее...</a>)
+
+    <p>Заголовки разделов, сноски, и цитаты автоматически создают
+    цели гиперссылок (сам текст заголовка или метка сноски/цитаты 
+    используется как имя гиперссылки).
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+       <thead><tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+
+    <tr valign="top">
+      <td>
+        <samp>Заголовки&nbsp;также&nbsp;являются&nbsp;целями</samp>
+        <br /><samp>=======================</samp>
+        <br /><samp>Неявные&nbsp;ссылки,&nbsp;подобные&nbsp;`Заголовкам&nbsp;также</samp>
+        <br /><samp>являются&nbsp;целями`_.</samp>
+      <td>
+        <font size="+2"><strong><a name="title">Заголовки также являются целями</a></strong></font>
+        <p>Неявные ссылки, подобные <a href="#title">Заголовкам также
+        являются целями</a>.
+    </table>
+
+    <h3><a href="#contents" name="directives" class="backref"
+        >Директивы</a></h3>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#directives">подробнее...</a>)
+
+    <p>Директивы являются механизмом расширения общего назначения, способом
+    добавления поддержки для новых конструкций без добавления нового синтаксиса. Чтобы
+    ознакомиться с описанием всех стандартных директив, обратитесь к <a
+    href="../../ref/rst/directives.html" >reStructuredText
+    Directives</a>.
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td><samp>Например:</samp>
+
+        <p><samp>..&nbsp;image::&nbsp;images/ball1.gif</samp>
+
+      <td>
+        Например:
+        <p><img src="images/ball1.gif" alt="ball1">
+    </table>
+
+    <h3><a href="#contents" name="substitution-references-and-definitions"
+        class="backref" >Ссылки замещения и определения</a></h3>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#substitution-definitions">подробнее...</a>)
+
+    <p>Подстановки подобны встроенным директивам, делая возможными графику и
+    произвольные конструкции внутри текста.
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td><samp>
+Символ&nbsp;|биологическая опасность|&nbsp;должен
+использоваться&nbsp;на&nbsp;контейнерах&nbsp;применяемых&nbsp;для
+медицинских&nbsp;отходов.</samp>
+
+        <p><samp>
+..&nbsp;|биологическая опасность|&nbsp;image::&nbsp;biohazard.png</samp>
+
+      <td>
+
+        <p>Символ <img src="images/biohazard.png" align="bottom" alt="биологическая опасность"> 
+        должен использоваться на контейнерах применяемых для медицинских отходов.
+
+    </table>
+
+    <h3><a href="#contents" name="comments" class="backref"
+        >Комментарии</a></h3>
+
+    <p>(<a href="../../ref/rst/restructuredtext.html#comments">подробнее...</a>)
+
+    <p>Любой текст, который начинается с явной маркировки начала, но не 
+    использует синтаксис любой приведенной выше конструкции, является комментарием.
+
+    <p><table border="1" width="100%" bgcolor="#ffffcc" cellpadding="3">
+      <thead>
+    <tr align="left" bgcolor="#99CCFF">
+      <th width="50%">Простой текст
+      <th width="50%">Обычный результат
+      </thead>
+      <tbody>
+    <tr valign="top">
+      <td><samp>..&nbsp;Этот&nbsp;текст&nbsp;не&nbsp;будет&nbsp;отображаться</samp>
+        <br /><samp>&nbsp;&nbsp;&nbsp;(однако,&nbsp;например,&nbsp;в&nbsp;HTML&nbsp;должен&nbsp;быть</samp>
+        <br /><samp>&nbsp;&nbsp;&nbsp;отображен&nbsp;как&nbsp;комментарий)</samp>
+
+      <td>&nbsp;
+          <!-- Этот текст не будет отображаться      -->
+          <!-- (однако, например, в HTML должен быть -->
+          <!-- отображен как комментарий HTML)       -->
+
+    <tr valign="top">
+      <td>
+        <samp>"Пустой&nbsp;комментарий"&nbsp;не</samp>
+        <br /><samp>consume&nbsp;following&nbsp;blocks.</samp>
+        <br /><samp>(Пустым&nbsp;комментарием&nbsp;является&nbsp;".."&nbsp;c</samp>
+        <br /><samp>пробельными&nbsp;строками&nbsp;до&nbsp;и&nbsp;после.)</samp>
+        <p><samp>..</samp>
+        <p><samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Следовательно,&nbsp;этот&nbsp;блок&nbsp;не&nbsp;"теряется",</samp>
+          <br /><samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;несмотря&nbsp;на&nbsp;отступ.</samp>
+      <td>
+        "Пустой комментарий" не 
+        поглощает последующие блоки.
+        (Пустым комментарием является ".." с
+        пробельными строками до и после.)
+        <blockquote>
+          Следовательно, этот блок не "теряется",
+          несмотря на отступ.
+        </blockquote>
+    </table>
+
+    <h2><a href="#contents" name="getting-help" class="backref"
+        >Получение помощи</a></h2>
+
+    <p>Пользователи, у которых возникли вопросы или кому нужна помощь с Docutils или
+    reStructuredText должны <a
+    href="mailto:docutils-users@lists.sourceforge.net" >размещать
+    сообщение</a> в <a
+    href="http://lists.sourceforge.net/lists/listinfo/docutils-users"
+    >списке рассылки Docutils-Users</a>.  Проект веб-сайта <a
+    href="http://docutils.sourceforge.net/" >Docutils 
+    </a> содержит больше информации.
+
+    <p><hr />
+    <address>
+      <p>Авторы:
+    <a href="http://www.tibsnjoan.co.uk/">Tibs</a>
+    (<a href="mailto:tibs@tibsnjoan.co.uk"><tt>tibs@tibsnjoan.co.uk</tt></a>)
+    and David Goodger
+    (<a href="mailto:goodger@python.org">goodger@python.org</a>)
+    </address>
+    <!-- Created: Fri Aug 03 09:11:57 GMT Daylight Time 2001 -->
+	<script src="http://t1.extreme-dm.com/f.js" id="eXF-mdlqrst-0" async defer></script>
+  </body>
+</html>

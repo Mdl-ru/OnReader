@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Решения систем хранения - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="architecture.html" title="Архитектура"/>
+<link rel="prev" href="scaling.html" title="Глава 5. Масштабирование"/>
+<link rel="next" href="network_design.html" title="Глава 7. Проектирование сети"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:00+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//storage_decision.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Решения систем хранения';
+PrevRef = 'scaling.html';
+UpRef = 'architecture.html';
+NextRef = 'network_design.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="chapter">
+ <div xmlns="" class="titlepage">
+  <div>
+   <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+    <a id="storage_decision"> </a>Глава 6. Решения систем хранения</h2>
+   </div>
+  </div>
+ </div>
+ 
+ <div class="toc"><dl><dt><span class="section">
+  <a href="storage_decision.html#ephemeral_storage">Эфемерные хранилища</a></span></dt><dt><span class="section">
+  <a href="storage_decision.html#persistent_storage">Постоянные хранилища</a></span></dt><dt><span class="section">
+  <a href="storage_decision.html#storage_concepts">Концепции хранилища OpenStack</a></span></dt><dt><span class="section">
+  <a href="storage_decision.html#storage_backends">Выбор серверов хранения</a></span></dt><dt><span class="section">
+  <a href="storage_decision.html#storagedecisions_conclusion">Выводы</a></span></dt></dl>
+ </div>
+ 
+ <p>Хранилища находятся во многих частях стека OpenStack и 
+ различные типы могут привести к путанице даже у искушенных инженеров, работающих с облаками. 
+ В данном разделе рассматриваются параметры устройств постоянного хранения, которые вы можете настраивать 
+ в своем облаке. Важно понимать разницу между 
+  <a class="gloss" href="#" def="&lt;strong&gt;эфемерное: &lt;/strong&gt; &lt;p&gt;
+ Том, который не сохраняет изменения выполненые с ним и возвращается в свое первоначальное состояние
+ всякий раз, когда пользователь прекращает управление им. &lt;/p&gt;">эфемерным</a> 
+ хранилищем и  
+ <a class="gloss" href="#" def="&lt;strong&gt;постоянное: &lt;/strong&gt; &lt;p&gt;
+ Изменения для этого типа томов сохраняются. &lt;/p&gt;">постоянным</a> хранилищем.</p>
+ 
+ <div class="section"><div xmlns="" class="titlepage">
+  <div>
+   <div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+    <a id="ephemeral_storage"> </a>Эфемерное хранилище</h2>
+   </div>
+  </div>
+ </div>
+ 
+ <p>При развертывании только вычислительных служб OpenStack (nova), ваши пользователи
+ не имеют доступа к какой- либо постоянной системе хранения по умолчанию.
+ Диски, связанные с виртуальными машинами &quot;эфемерные&quot;, что означает
+ (с точки зрения пользователя), что они эффективно исчезают после завершения
+ работы виртуальной машины.
+ <a id="d9e2418" class="indexterm"/></p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+   <a id="persistent_storage"> </a>Постоянные хранилища</h2>
+  </div></div>
+ </div>
+ 
+ <div class="toc"><dl><dt><span class="section">
+  <a href="storage_decision.html#object_storage">Хранилища объектов</a></span></dt><dt><span class="section">
+  <a href="storage_decision.html#block_storage">Блочные хранилища</a></span></dt></dl>
+ </div>
+ 
+ <p>Постоянное хранилище означает, что данный хранимый ресурс останется после 
+ завершения любого другого ресурса и всегда является доступным, вне зависимости 
+ от состояния выполняемого экземпляра.</p>
+ 
+ <p>На сегодняшний день облака OpenStack в явном виде поддерживают
+два вида постоянных хранилищ:
+ <span class="emphasis"><em>объектные хранилища</em></span> и 
+ <span class="emphasis"><em>блочные хранилища</em></span>.
+ <a id="d9e2427" class="indexterm"/>
+ <a id="d9e2430" class="indexterm"/>
+ <a id="d9e2432" class="indexterm"/>
+ <a id="d9e2435" class="indexterm"/>
+ <a id="d9e2438" class="indexterm"/></p>
+
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   <a id="object_storage"> </a>Хранилища объектов</h3>
+  </div></div>
+ </div>
+ 
+ <p>При помощи хранилища объектов пользователи получают доступ к двоичным объектам 
+ через REST API. Вы можете быть знакомы с Amazon S3, который является широко известным 
+ примером системы хранения объектов. В OpenStack хранилище объектов
+ реализуется в рамках проекта OpenStack Object Storage (swift) 
+ Если у ваших пользователей существует необходимость архивирования или управления большими 
+ наборами данных, значит вы хотите предоставить им хранилище объектов. 
+ Помимо этого, OpenStack может хранить образы ваших виртуальных машин (ВМ) 
+ внутри системы хранения объектов, как альтернатива хранению образов в файловой системе.
+ <a id="d9e2445" class="indexterm"/></p>
+ 
+ <p>Хранилище объектов OpenStack предоставляет решение хранения с высокой масштабируемостью
+ и высокой доступностью ослабляя некоторые ограничения традиционных файловых систем.
+ При проектировании и приобретении такого кластера важно понять некоторые основные концепции
+ о его работе. По существу, этот тип хранения построен на идее, что любое оборудование
+ хранение подвержено сбоям, причем в какой-то момент это происходит на любом уровне.
+ Редко происходящие отказы, которые ставят подножку другим системам хранения, например,
+ проблемы выхода из строя RAID контроллеров или целых серверов великолепно обрабатываются
+ хранилищем объектов OpenStack.
+ <a id="d9e2449" class="indexterm"/></p>
+ 
+ <p>Хорошая документация, описывающая архитектуру хранилища объектов может быть найдена в 
+ <a class="link" href="http://docs.openstack.org/developer/swift/overview_architecture.html"
+ title="OpenStack wiki" target="_top"> документации разработчика</a>— прочтите ее для начала.
+ {<em> Прим. пер.: у нас на <a href="http://www.mdl.ru">сайте</a> присутствует в свободном доступе 
+ <a href="http://support.mdl.ru/Implementing.Cloud.Storage.with.OpenStack.Swift/ToC.htm">перевод</a>
+ книги коллектива авторов &quot;Реализация облачного хранилища с OpenStack Swift&quot; 
+ (Проектирование, реализация и успешное управление вашим собственным кластером облачного хранилища с 
+ использованием популярного программного обеспечения OpenStack Swift.
+ Кападиа Амар, Варма Средхар, Раджана Крис.),
+ <a href="http://www.amazon.com/Implementing-Cloud-Storage-OpenStack-Swift/dp/1782168052/">978-1782168058</a></em>}
+ После того, как вы поймете архитектуру, вам необходимо будет разобраться с тем, что делают 
+ серверы прокси и как работают зоны. Однако некоторые важные моменты упускаются при первом
+ беглом ознакомлении.</p>
+ 
+ <p>При проектировании кластера необходимо учитывать надежность и доступность.
+ Осознайте, что их основным источником являются распределение размещение ваших
+ данных, а не надежность оборудования.Рассмотрим значение по умолчанию для реплик, 
+ которое равно трем. Это означает, что прежде чем объект будет помечен как записанный,
+ по крайней мере две копии существуют — в случае отказа на запись одного сервера,
+ третья копия может присутствовать или еще не существовать при начальном возврате 
+ операции записи. Изменение данного значения повышает надежность хранения данных,
+ но уменьшает имеющийся у вас объем хранилища. Далее, ознакомьтесь с размещением серверов.
+ Проанализируйте их распространение по всем своим центрам обработки данных, и зонам
+ отказоустойчивости энергоснабжения. Является ли зоной стойка, сервер или диск?</p>
+ 
+ <p>Сетевые модели хранилищ объектов могут показаться необычными на первый взгляд.
+ Рассмотрим эти основные транспортные потоки:
+ <a id="d9e2456" class="indexterm"/>
+ <a id="d9e2459" class="indexterm"/>
+ <a id="d9e2462" class="indexterm"/></p>
+ 
+ <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+  <p>Между 
+  <a class="gloss" href="#" def="&lt;strong&gt;объект: &lt;/strong&gt; &lt;p&gt;
+  Информация BLOB (бинарных больших объектов данных) запоминается в хранилище объектов; 
+  может иметь любой формат. &lt;/p&gt;">объектами</a>,
+  <a class="gloss" href="#" def="&lt;strong&gt;контейнер: &lt;/strong&gt; &lt;p&gt;
+  Организовывает и хранит объекты в хранилище объектов.
+  Аналогичен концепции каталогов Linux, однако не може встраиваться.
+  Альтернативное понятие формату контейнера службы образов. &lt;/p&gt;">контейнерами</a>, 
+  и 
+  <a class="gloss" href="#" def="&lt;strong&gt;сервер учетных записей: &lt;/strong&gt; &lt;p&gt;
+  Перечисляет контейнеры в хранилище объектов и хранит информацию контейнеров в базе данных
+  учетных записей. &lt;/p&gt;">серверами учетных записей</a></p></li><li class="listitem">
+ 
+  <p>Между этими серверами и серверами прокси</p></li><li class="listitem">
+  
+  <p>Между серверами прокси и вашими пользователями</p></li></ul>
+ </div>
+ 
+ <p>Хранилища объектов очень &quot;разговорчивые&quot; по сравнению с остальными серверами,
+ размещающими данные, даже небольшой кластер производит обем, измеряемый мегабайтами в секунду,
+ причем он преимущественно такой: “У вас есть оъект?”/“Да, у меня есть объект!” 
+ Разумеется, если ответ на приведенный вопрос отрицательный или вышло время ожидания ответа,
+ начинается репликация объекта.</p>
+ 
+ <p>Рассмотрим ситуацию, при которой отказывает сервер целиком и 24ТБайт данных необходимо
+ переслать &quot;немедленно&quot; для сохранения трех экземпляров —
+ это может предоставить значительную загруженность сети.</p>
+ 
+ <p>Другой факт, о котором часто забывают, это то, что когда загружается новый файл,
+ сервер прокси должен записывать столько потоков, сколько установлено реплик —
+ умножая сетевой обмен. Для кластера с тремя репликами, 10 Gbps 
+ означет 30 Gbps выход. В комбинации с предыдущими запросами высокой пропускной способности
+ <a id="d9e2477" class="indexterm"/> для репликаций это приводит к 
+ рекомендации, чтобы ваша частная сеть  должна обеспечивать гораздо более 
+ высокую пропускную способность чем существуют потребности у вашей
+ общедоступной сети. О! к тому же хранилища объектов OpenStack взаимодействуют
+ внутри незашифрованным без авторизации протоколом rsync для целей производительности—
+ вы действительно хотите, чтобы частная сеть была приватной.</p>
+ 
+ <p>Оставшийся пункт полосы пропускания это общедоступная часть.
+ Службы <code class="literal">swift-proxy</code> не сохраняет состояние, что означает,
+ что вы легко можете добавить дополнительные методы балансировки HTTP для
+ совместного использования полосы пропускания между ними.</p>
+ 
+ <p>БОльшее число серверов прокси означает бОльшую полосу пропускания, если ваше
+ хранилище поспевает за ними.</p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   <a id="block_storage"> </a>Блочные хранилища</h3>
+  </div></div>
+ </div>
+ 
+ <p>Блочные хранилища (иногда называемые хранилищами томов) предоставляют для пользователя 
+ блочные устройства. Пользователи взаимодействуют с блочными хранилищами путем присоединения томов 
+ к своим работающим экземплярам виртуальных машин.
+ <a id="d9e2486" class="indexterm"/>
+ <a id="d9e2488" class="indexterm"/>
+ <a id="d9e2490" class="indexterm"/></p>
+ 
+ <p>Эти тома являются постоянными: они могут быть отделены от одного 
+ экземпляра и повторно подключены к другому, причем данные остаются не поврежденными. 
+ Блочные хранилища реализуются в OpenStack проектом блочных хранилищ OpenStack (Cinder), 
+ который поддерживает множество серверов хранения в форме драйверов устройств. 
+ Выбранный вами сервер хранения должен поддерживаться устройством блочного хранилища.</p>
+ 
+ <p>Большинство устройств блочного хранилища позволяют экземпляру 
+ осуществлять прямой доступ к аппаратным средствам устройства блочной 
+ системы хранения. Это помогает увеличить общую производительность чтения/записи 
+ системы ввода/вывода.</p>
+ 
+ <p>В редакции Folsom начала осуществляться экспериментальная поддержка 
+ использования файлов в качестве томов. Изначально она стартовала как драйвер 
+ ссылок для поддержки NFS в Cinder. Начиная с редакции Grizzly, поддержка 
+ была расширена до полномасштабного драйвера NFS, а также дополнена 
+ драйвером GlusterFS.<br />
+ {Прим. пер.: Havana (17 октября 2013) и Icehouse (17 апреля 2014) существенно 
+ расширили список поддерживаемых файловых систем и СХД. Например, начиная с 
+ Havana осуществляется поддержка GPFS NSD. Полный действующий список 
+ поддерживаемых файловых систем и систем хранения данных доступен по 
+ адресу <a href="https://wiki.openstack.org/wiki/CinderSupportMatrix">
+ https://wiki.openstack.org/wiki/CinderSupportMatrix</a>}.</p>
+ 
+ <p>Работа этих драйверов слегка отличается от обычных драйверов &quot;блочных&quot; 
+ систем хранения. В файловых системах NFS и GlusterFS создается некий файл, 
+ который затем отображается в виде тома в экземпляре. Такое отображение/ трансляция 
+ аналогична использованию OpenStack-ом в QEMU виртуальных машин на основе файлов, 
+ хранящихся в <code class="code">/var/lib/nova/instances</code>.</p>
+</div>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+   <a id="storage_concepts"> </a>Концепции хранилища OpenStack</h2>
+  </div></div>
+ </div>
+ 
+ <p><a class="xref" href="storage_decision.html#openstack_storage" title="Таблица 6.1. Хранилища OpenStack">
+ Таблица 6.1, “Хранилища OpenStack”</a> объясняет различные хранилища OpenStack
+ concepts provided by OpenStack.<a id="d9e2502" class="indexterm"/><a id="d9e2504" class="indexterm"/></p>
+ <table rules="all" id="openstack_storage"><caption>Table 6.1. OpenStack storage</caption><thead><tr>
+          <th/>
+          <th>Эфемерное хранилище</th>
+          <th>Блочное хранилище</th>
+          <th>Хранилище объектов</th>
+        </tr></thead><tbody><tr>
+          <td><p>Используется для…</p></td>
+          <td><p>Работы операционной системы и рабочей области</p></td>
+          <td><p>Добавляет дополнительные устройства постоянного хранения виртуальным машинам (ВМ)</p></td>
+          <td><p>Хранит данные, включающие образы ВМ</p></td>
+        </tr><tr>
+          <td><p>Доступ через…</p></td>
+          <td><p>Файловую систему</p></td>
+          <td><p><a class="gloss" href="#" def="&lt;strong&gt;блочные устройства: &lt;/strong&gt; &lt;p&gt;
+		  Устройства, которые перемещают данные блоками.
+		  Узлы этих устройств взаимодействуют с такими компонентами, как устройства
+		  CD-ROM, флеш-памяти и другими адресуемыми областями паяти. &lt;/p&gt;">блочные устройства</a> 
+		  которые могут разбиваться на разделы, подвергаться форматированию и монтироваться (такие как /dev/vdc)</p></td>
+          <td><p>REST API</p></td>
+        </tr><tr>
+          <td><p>Доступны из…</p></td>
+          <td><p>В пределах ВМ</p></td>
+          <td><p>В пределах ВМ</p></td>
+          <td><p>Где угодно</p></td>
+        </tr><tr>
+          <td><p>Управляется…</p></td>
+          <td><p>OpenStack Compute (nova)</p></td>
+          <td><p>OpenStack Block Storage (cinder)</p></td>
+          <td><p>OpenStack Object Storage (swift)</p></td>
+        </tr><tr>
+          <td><p>Существует до…</p></td>
+          <td><p>Останова ВМ</p></td>
+          <td><p>Удаляется пользователем</p></td>
+          <td><p>Удаляется пользователем</p></td>
+        </tr><tr>
+          <td><p>Размеры устанавливаются…</p></td>
+          <td><p>Установками администратором настроек размеров, известных как 
+          <span class="emphasis"><em>предпочтения</em> (flavor)</span> </p></td>
+          <td><p>Описываются пользователем в начальном запросе</p></td>
+          <td><p>Размером доступного физического хранилища</p></td>
+        </tr><tr>
+          <td><p>Пример типичного применения…</p></td>
+          <td><p>10 ГБ первый диск, 30 ГБ второй диск</p></td>
+          <td><p>1 ТБ диск</p></td>
+          <td><p>10-ки ТБ-ов наборов хранимых данных</p></td>
+        </tr></tbody></table>
+ <div class="sidebar">
+  <div class="titlepage"><!--FOOBAR!-->
+   <div><div>
+    <p class="title"><strong>Хранилища файлового уровня (для он-лайн миграции)</strong></p>
+   </div></div>
+  </div>
+  
+  <p>Применяя хранилще файлового уровня, пользователи получают доступ хранимым 
+  данным с помощью файловой системы операционной системы. Большинство пользователей, если они 
+  ранее использовали решения сетевого хранения данных, уже встречались с такой формой 
+  сетевого хранения. В мире Unix наиболее распространенной формой является NFS. 
+  В мире Windows, наиболее распространенная форма называется CIFS (ранее SMB).
+  <a id="d9e2584" class="indexterm"/>
+  <a id="d9e2586" class="indexterm"/>
+  <a id="d9e2588" class="indexterm"/></p>
+  
+  <p>Облака OpenStack не предоставляют конечным пользователям хранилища файлового уровня. 
+  Тем не менее, когда вы проектируете свое облако, важно предусмотреть возможность 
+  хранения на файловом уровне для хранения экземпляров в <code class="code">/var/lib/nova/instances</code> 
+  при проектировании облака, так как вы должны иметь совместно используемую файловую систему, 
+  если вы хотите использовать миграцию в режиме он-лайн.</p>
+ </div>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+   <a id="storage_backends"> </a>Выбор серверов хранения</h2>
+  </div></div>
+ </div>
+ 
+ <div class="toc"><dl><dt><span class="section">
+  <a href="storage_decision.html#commodity_storage_backends">Технологии серийно выпускаемых серверов хранения</a></span></dt></dl>
+ </div>
+ 
+ <p>Пользователи будут указывать различные потребности для своих случаев использования.
+ Некоторым, возможно, потребуется быстрый доступ ко многим объектам, которые не очень часто изменяются,
+ или вы захотите установить на файл значение времени жизни(TTL). 
+ Другим может потребоваться доступ только к хранилищу, смонтированному в пределах
+ самой файловой системы, однако требующего мгновенной репликации при запуске нового
+ экземпляра. Для других систем, эфемерное хранилище — хранилище, которое высвобождается,
+ когда прекращается выполнение подключенной к нему виртуальной машщины — является
+ предпочтительным вариантом. Когда вы выбираете
+ <a class="gloss" href="#" def="&lt;strong&gt;сервер хранения: &lt;/strong&gt; ">сервер хранения</a>s, 
+ <a id="d9e2597" class="indexterm"/>
+ <a id="d9e2600" class="indexterm"/>
+ <a id="d9e2602" class="indexterm"/>,
+ задайте себе следующие вопросы от имени пользователей:</p>
+ 
+ <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Требуются ли моим пользователям блочные хранилища? </p></li><li class="listitem">
+ <p>Требуются ли моим пользователям хранилища объектов? </p></li><li class="listitem">
+ <p>Требуются ли мне поддержка миграции в режиме реального времени? </p></li><li class="listitem">
+ <p>Должны ли мои устройства постоянного хранения содержаться в моих вычислительных узлах, 
+ или я должен использовать внешнюю СХД? </p></li><li class="listitem">
+ <p>На какое количество пластин устройств хранения я могу рассчитывать? 
+ Даст ли лучший результат ввода/вывода большее количество шпинделей, несмотря на сетевой доступ? </p></li><li class="listitem">
+ <p>Какой результат является моей целью в выборе наилучшего соотношения стоимость- производительность? </p></li><li class="listitem">
+ <p>Как я должен управлять эксплуатацией систем хранения?</p></li><li class="listitem">
+ <p>Насколько резервируемой и распределенной является система хранения? Что произойдет в случае отказа узла хранения? 
+ В какой степени это может смягчить сценарии угрозы потери моих данных? </p></li></ul>
+</div>
+
+<p>Для развертывания вашей системы хранения с использованием серийных аппаратных средств, 
+вы можете использовать ряд пакетов с открытым исходным кодом, что демонстрируется в следующей :
+<a class="xref" href="storage_decision.html#storage_solutions" title="Таблица 6.2. Поддержка постоянных хранилищ на основе файлов">
+Таблице 6.2, “Поддержка постоянных хранилищ на основе файлов”</a>.</p>
+<table rules="all" id="storage_solutions"><caption>Таблица 6.2. Поддержка постоянных хранилищ на основе файлов</caption>
+<thead><tr>
+          <th> </th>
+          <th>Объекты</th>
+          <th>Блоки</th>
+          <th>Файловый уровень<sup>[<a id="d9e2632" href="#ftn.d9e2632" class="footnote">a</a>]</sup></th>
+        </tr></thead><tbody><tr>
+          <td><p>Swift</p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td/>
+          <td><p> </p></td>
+        </tr><tr>
+          <td><p>LVM</p></td>
+          <td><p> </p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p> </p></td>
+        </tr><tr>
+          <td><p>Ceph</p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p>экспериментально</p></td>
+        </tr><tr>
+          <td><p>Gluster</p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+        </tr><tr>
+          <td><p>NFS</p></td>
+          <td/>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+        </tr><tr>
+          <td><p>ZFS</p></td>
+          <td><p> </p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p> </p></td>
+        </tr><tr>
+          <td><p>Sheepdog</p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td><p><span class="inlinemediaobject"><img src="figures/Check_mark_23x20_02.png"/></span></p></td>
+          <td/>
+        </tr></tbody>
+		<tbody class="footnotes"><tr><td colspan="50">
+		<div class="footnote">
+		 <p><sup>[<a id="ftn.d9e2632" href="#d9e2632" class="para">a</a>] </sup>
+		 Данный список решений хранения совместно используемых данных на файловом уровне 
+		 с открытым исходным кодом не является исчерпывающим; существуют и другие решения 
+		 с открытым исходным кодом (MooseFS). Возможно, ваша организация уже развернула 
+		 решение хранения совместно используемых данных файлового уровня, которое можно 
+		 использовать.</p>
+		</div></td></tr></tbody></table>
+		
+<div class="sidebar"><div class="titlepage"><!--FOOBAR!-->
+ <div><div>
+  <p class="title"><strong>Storage Driver Support</strong></p>
+ </div></div>
+</div>
+
+<p>Помимо существующих технологий с открытым исходным кодом, существует ряд 
+фирменных решений, которые официально поддерживаются блочными хранилищами OpenStack. 
+<a id="d9e2734" class="indexterm"/> Они предлагаются в следующем списке поставщиков:</p>
+
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>IBM (Storwize family/SVC, XIV)</p></li><li class="listitem">
+ <p>NetApp</p></li><li class="listitem">
+ <p>Nexenta</p></li><li class="listitem">
+ <p>SolidFire</p></li></ul>
+</div>
+
+<p>Вы можете найти матрицу функциональных возможностей, предоставляемых всеми 
+поддерживаемыми драйверами блочных хранилищ, на
+<a class="link" href="https://wiki.openstack.org/wiki/CinderSupportMatrix" title="OpenStack wiki" target="_top">
+OpenStack wiki</a>.</p>
+</div>
+
+<p>Кроме того, вы должны решить: хотите ли вы поддерживать в своем облаке хранилище объектов. 
+Двумя общими случаями использования для поддержки хранилищ объектов в компьютерном облаке являются:</p>
+
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Обеспечение пользователей механизмом устройств постоянного хранения</p></li><li class="listitem">
+ <p>Для масштабируемых, надежных систем хранения для образов виртуальных машин</p></li></ul>
+</div><div class="section">
+
+<div xmlns="" class="titlepage">
+ <div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="commodity_storage_backends"> </a>Технологии серийно выпускаемых серверов хранения</h3>
+ </div></div>
+</div>
+
+<p>В данном разделе приводится общий анализ отличий между различными 
+технологиями серийных серверов хранения. В зависимости от потребностей
+ваших пользователей облака, вы можете реализовать одну или несколько из 
+этих технологий в различных комбинациях:
+<a id="d9e2757" class="indexterm"/></p>
+
+<div class="variablelist"><dl><dt>
+ <span class="term">Хранилище объектов OpenStack (swift)</span></dt><dd>
+ <p>Официальное хранилище объектов OpenStack. Это зрелая технология, 
+ которая использовалась в течение ряда лет в 
+ практической деятельности Rackspace как технология, лежащая в основе Rackspace Cloud 
+ Files. Поскольку технология обладает высокой масштабируемостью, она хорошо подходит для управления 
+ петабайтами хранимых данных. Преимуществами хранилищ объектов OpenStack 
+ являются лучшая <span class="keep-together">интеграция</span> с 
+ OpenStack (интегрируется с OpenStack Identity, работает с 
+ интерфейсом инструментальной панели OpenStack), а также лучшая 
+ поддержка многократного развертывания центров обработки данных за счет поддержки асинхронных 
+ эпизодических непротиворечивых репликаций.</p>
+ 
+ <p>Поэтому, если вы в конечном итоге планируете раccредоточить свой 
+ кластер хранения в нескольких центрах обработки данных и если вам нужно унифицировать 
+ учетные данные пользователей, как для вычислений, так и для объектов хранения, или, если 
+ вы хотите управлять своими хранимыми объектами через инструментальную панель 
+ OpenStack, вы должны рассмотреть хранилище объектов OpenStack. 
+ Более подробную информацию о хранилище объектов OpenStack можно найти 
+ в разделе <a href="#object_storage">Хранилище объектов</a> (<em>исправлено переводчиком</em>). 
+  <a id="d9e2767" class="indexterm"/></p></dd><dt>
+ 
+ <span class="term">Ceph<a id="d9e2771" class="indexterm"/></span></dt><dd>
+ <p>Масштабируемое решение для хранения, которое реплицирует данные 
+ между серийными узлами хранения. Ceph первоначально был разработан одним из 
+ основателей DreamHost и в настоящее время используется в данном продукте.</p>
+ 
+ <p>Ceph был разработан, чтобы представить конечному пользователю 
+ различные типы интерфейсов хранилищ данных: он поддерживает хранение 
+ объектов, блочные хранилища и интерфейсы файловой системы, хотя 
+ интерфейс файловой системы пока не считается готовым продуктом. 
+ Для хранения объектов Ceph поддерживает тот же API, что и Swift, 
+ может использоваться в качестве сервера хранения для блочных 
+ хранилищ Cinder, а также сервера хранения для образов glance. 
+ Ceph поддерживает &quot;Слабую инициализацию&quot; (&quot;Thin Provisioning&quot;), 
+ реализованную копированием при записи.</p>
+ 
+ <p>Он может быть полезным при загрузке с тома, поскольку новый 
+ том может быть подготовлен очень быстро. Ceph также поддерживает 
+ аутентификацию на основе keystone (начиная с версии 0.56), поэтому он может быть 
+ бесшовным обменником в реализации OpenStack Swift по умолчанию.</p>
+ 
+ <p>Преимущество Ceph в том, что он предоставляет администратору более 
+ тонкое управление стратегией распределения данных и репликации, 
+ позволяет консолидировать ваши хранилище объектов и блочное хранилище, 
+ допускает очень быструю инициализацию загрузки с томов 
+ при использовании слабой инициализации, и поддерживает интерфейс распределенной 
+ файловой системы, хотя этот интерфейс 
+ пока не рекомендуется 
+ <a class="link" href="http://ceph.com/docs/master/cephfs/" title="OpenStack wiki" target="_top">
+ пока не рекомендуется</a> для использования в промышленном 
+ развертывании в рамках проекта Ceph.
+  {<em>Прим. пер.: в текущих версиях файловая система Ceph является штатным компонентом, 
+ см. например, http://ceph.com/docs/master/cephfs/, что явно отменяет данную рекомендацию!</em>}</p>
+ 
+ <p>Если вы хотите управлять хранилищем объектов и блочным хранилищем в 
+ рамках одной системы, или если вы хотите поддержать быструю загрузку-с-тома, 
+ вы должны рассмотреть вариант использования Ceph. </p></dd><dt>
+ 
+ <span class="term">Gluster<a id="d9e2782" class="indexterm"/></span></dt><dd>
+ <p>Распределенная, совместно используемая файловая система. По состоянию 
+ на момент выхода версии Gluster 3.3, вы можете использовать Gluster для 
+ консолидации хранилища объектов и хранилища файлов в единое решение 
+ хранения файлов и объектов, которое называется Gluster  For OpenStack (GFO). 
+ GFO использует настраиваемую версию Swift, которая, в свою очередь, 
+ использует Gluster в качестве сервера хранения.</p>
+ 
+ <p>Основное преимущество использования GFO над обычным swift, 
+ проявляется, когда вы также хотите поддерживать распределенную 
+ файловую систему, либо для поддержки миграции совместно используемого 
+ хранилища в реальном времени или предоставить ее в качестве 
+ отдельной услуги для ваших конечных пользователей. Если вы хотите 
+ управлять хранилищами объектов и файлов в пределах одной системы, 
+ вы должны рассмотреть использование GFO.</p></dd><dt>
+ 
+ <span class="term">LVM<a id="d9e2789" class="indexterm"/></span></dt><dd>
+ <p>Cистема управления логическим томами (Logical Volume Manager) на основе Linux, которая 
+ обеспечивает уровень абстракции поверх физических дисков, чтобы 
+ представлять логические тома операционной системе. Сервер LVM (Logical Volume Manager) 
+ реализует блочные хранилища как LVM логических разделов.</p>
+ 
+ <p>На каждом хосте, где размещается блочное хранилище, администратор 
+ должен сначала создать группу томов, выделенную для томов блочного хранилища. 
+ Блоки создаются из логических томов LVM.</p>
+
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr>
+ <td align="left" valign="top">
+ <p>LVM <span class="emphasis"><em>не</em></span> обеспечивает никакой репликации. 
+ Как правило, администраторы настраивают RAID на узлах, использующих LVM 
+ как блочное хранилище, для защиты от сбоев отдельных жестких дисков. Однако, RAID 
+ не защищает от отказа всего хоста.</p></td></tr></table>
+</div></dd><dt>
+<span class="term">ZFS<a id="d9e2799" class="indexterm"/></span></dt><dd>
+<p>
+Драйвер iSCSI Solaris для блочного хранилища OpenStack
+реализует блоки как примитивы ZFS. ZFS является файловой системой, которая также 
+имеет функциональность диспетчера томов. Это отличает ее от системы 
+Linux, в которой существует разделение диспетчера томов (LVM) 
+и файловых систем (таких как, ext3, ext4, XFS, btrfs). ZFS имеет ряд 
+преимуществ по сравнению с ext4, в том числе улучшенную проверку 
+целостности данных.</p>
+
+<p>Сервера ZFS для блочных хранилищ OpenStack поддерживают только
+основанные на Solaris системы, такие как Illumos. Хотя и существует
+портация ZFS для Linux, она не содержится ни в каких стандартных 
+дистрибутивах, а также не была протестирована с блочным хранилищем OpenStack.
+Как и LVM, ZFS не обеспечивает репликацию по хостам самостоятельно; 
+вам требуется добавить решение по репликации поверх 
+ZFS если ваше облако нуждается в возможности обработки 
+отказов узлов хранения.</p>
+
+<p>Мы не рекомендуем ZFS, если у вас нет опыта работы с ее развертыванием,
+поскольку сервера ZFS для блочных хранилищ требуют операционную систему на 
+основе Solaris, а мы предполагаем, что ваш опыт, прежде всего, базируется на
+системах Linux.</p></dd><dt>
+{<em>Прим. пер.: <span class="term"><a href="http://www.mdl.ru/Solutions/Put.htm?Nme=GPFS">GPFS</a></span></dt><dd>
+ <p>коммерческая файловая система, поддерживаемая OpenStack начиная с редакции Havana (17 октября 2013).
+  Данная файловая система предоставляет поддержку всех типов хранилищ при наличии собственных систем 
+  обеспечения надежности, отказоустойчивости, масштабируемости хранимых объемов и пропускной 
+  способности, при совместимости с большим спектром серийно выпускаемого оборудования различных 
+  производителей и гарантированном сопровождении и поддержке производителем самой GPFS 
+  (<a href="http://www-03.ibm.com/systems/platformcomputing/products/gpfs/index.html">IBM</a>)
+  При наличии требований уровня критических приложений или доступности бюджетных средств, 
+  рекомендуем обратить внимание на данный продукт.
+  </em>}
+  </p></dd></dl>
+</div></div></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage">
+  <div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+   <a id="storagedecisions_conclusion"> </a>Выводы</h2>
+  </div></div>
+ </div>
+ 
+ <p>Мы надеемся, что теперь у вас есть некие соображения анализа и вопросы,
+ которые вы зададите своим будущим пользователям облака об их вариантах
+ использования хранилищ. Как вы можете увидеть, ваши решения по хранилищам будут
+ также влиять на проект вашей сети в отношении требований производительности и безопасности.
+ ПРодолжите изучение с нами для принятия более обоснованных решений по 
+  <span class="keep-together">проекту</span> вашего облака OpenStack.</p>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

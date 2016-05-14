@@ -1,0 +1,964 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Ceph изнутри - Изучаем Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningCeph"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем Ceph"/>
+<link rel="up" href="index.html" title="Изучаем Ceph"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Архитектура и компоненты Ceph"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Развертывание Ceph - дорога, которую вы обязаны знать"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningCeph/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Ceph изнутри';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Ceph изнутри</h1>
+  </div></div></div>
+  <p>В данной главе мы рассмотрим следующие пункты:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Объекты Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Алгоритм CRUSH</p>
+	 </li>
+	<li class="listitem">
+	 <p>Группы размещения</p>
+	 </li>
+	<li class="listitem">
+	 <p>Пулы Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Управление данными Ceph</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch04.html#under_hood">Под капотом Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#Object">Объект</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#Locating_objects">Местонахождение объектов</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#CRUSH">CRUSH</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#CRUSH_lookup">Нахождение CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#CRUSH_hierarchy">Иерархия CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Recovery_and_rebalancing">Восстановление и балансировка</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Editing_CRUSH_map">Изменение карты CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Customizing">Индивидуальная настройка компоновки кластера</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#PG">Группы размещения</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#Calculating_PG_numbers">Вычисление номеров PG</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#Modifying_PG_and_PGP">Изменение PG и PGP</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#peering_and_sets_up">Обмен между PG, наборы включенных и действующих</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#pools">Пулы Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#Pool_operations">Работа пула</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch04.html#Creating_and_listing">Создание пула и просмотр списка пулов</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#data_management">Управление данными Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="under_hood"> </a>Под капотом Ceph</h3>
+   </div></div></div>
+   <p>Теперь вы очень хорошо разбираетесь в архитектуре Ceph и ее основных компонентах; 
+   далее мы сосредоточимся на том, как Ceph выполняет свою магию в фоновом режиме.
+   Существует несколько элементов, которые работают под прикрытием и составляют основу 
+   кластера Ceph. Давайте узнаем о них подробнее.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Object"> </a>Объект</h3>
+   </div></div></div>
+   <p>Объект обычно содержит в себе компоненты данных и метаданных, которые связаны вместе и
+   снабжены глобальным уникальным идентификатором (ID). Такой уникальный идентификатор гарантирует, что 
+   не существует никакого другого объекта с таким же идентификатором объекта во всем кластере хранения 
+   и, таким образом, гарантирует уникальность объекта.</p>
+   <p>В отличие от основанного на файлах хранилища, в котором файлы ограничены в размере, объекты 
+   могут достигать огромных размеров, а также снабжаться метаданными переменного размера. В объектах 
+   данные хранятся совместно с обильными метаданными, запоминающими информацию о контексте и 
+   содержании данных. Метаданные хранилища объектов позволяют пользователям соответствующим образом 
+   управлять и осуществлять доступ к неструктурированным данным. Рассмотрим следующий пример хранения 
+   записи о пациенте в виде объекта:</p>
+   <div class="informalfigure"><div class="mediaobject">
+     <img src="figures/Fig0401.jpg"/> </div><br />
+   </div>
+   <p>Объект не ограничен никаким типом или объемом метаданных; это снабжает вас гибкостью добавления 
+   индивидуальных типов в метаданные и, таким образом, дает вам полное владение вашими данными. 
+   Он не использует иерархию каталогов или древовидную структуру для хранения; более того, он использует
+   линейное адресное пространство содержащее миллиарды объектов без какой- либо запутанности. 
+   Объекты могут храниться локально, или они могут быть географически разделены в пространстве линейных адресов, 
+   то есть в прилегающих пространствах хранилища. Такой механизм хранения помогает объектам уникально представлять 
+   себя во всем кластере. Любые приложения могут получать данные из объектов на основе их ID объекта через 
+   использование вызовов RESTful API. Аналогичным образом работают URL в интернете, ID объекта предоставляет 
+   уникальный указатель на объект. Такие объекты хранятся в устройствах хранения на основе объектов 
+   (<span class="term">OSD, Object Storage Device<code class="literal"></code></span>) в виде репликаций, 
+   которые обеспечивают высокую доступность. Когда кластер хранения получает от клиента запрос на 
+   запись данных, он сохраняет данные как объект. Демон OSD затем записывает данные в файл в файловой 
+   системе OSD.</p>
+   
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Locating_objects"> </a>Местонахождение объектов</h4>
+     </div></div></div>
+     <p>Каждый элемент данных в Ceph хранится в виде объекта внутри пула. Пул Ceph является логическим 
+	 разделом для хранения объектов, что обеспечивает организованный способ хранения. Позже в данной главе мы узнаем 
+	 больше подробностей о пулах. А сейчас мы обсудим объекты, которые являются наименьшей единицей хранения 
+	 данных в Ceph. После развертывания кластера Ceph, он создает некоторые пулы хранения по умолчанию в 
+	 качестве пулов данных, метаданных и RBD (блочного устройства RADOS).  После развертывания MDS (сервера 
+	 метаданных) на одном из узлов Ceph, он создает создает объекты внутри пула метаданных, которые требуются 
+	 CephFS для надлежащей функциональности. Поскольку ранее в нашей книге мы уже развернули кластер, 
+	 давайте исследуем эти объекты:</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+       <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+       <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+       <p>Начиная с редакции Ceph Giant, которая является следующей редакцией после Firefly, пулы 
+	   метаданных и данных не будут создаваться по умолчанию пока вы не настроите для своего кластера
+	   MDS. Единственным пулом по умолчанию будет пул RBD.</p></td></tr></table>
+     </div>
+	 <ol type="1" class="substeps"><li class="step">
+	   <p>Проверьте состояние вашего кластера Ceph с применением следующей команды в 
+	   <span class="term"><strong class="userinput"><code>pgmap</code></strong></span>. 
+	   Вы найдете три пула и некоторые объекты:</p>
+   	   <pre class="screen">
+# ceph -s</pre>
+   	   <pre class="screen">
+[root@ceph-node1 ceph]# ceph -s
+    cluster ffa7c0e4-6368-4032-88a4-5fb6a3fb383c
+     health HEALTH_OK
+     monmap e9: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,
+ceph-node3=192.168.57.103:6789/0}, election epoch 76, quorum 0,1,2 ceph-node1,ceph-node2,ceph
+-node3
+     mdsmap e25: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e281: 9 osds: 9 up, 9 in
+      pgmap v603: 192 pgs, 3 pools, 9470 bytes data, 21 objects
+            345 MB used, 45635 MB / 45980 MB avail
+                 192 active+clean</pre>
+				 </li><li class="step">
+	   <p>Выведите список имен пулов вашего кластера Ceph с помощью следующей команды.
+	   Она покажет вам пулы по умолчанию, поскольку вы не создавали пока никаких пулов.
+       Здесь будут перечислены три пула.</p>
+   	   <pre class="screen">
+# rados lspools</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]# rados 1 spools
+data
+metadata
+rbd
+[root@ceph node1 /]#</pre>
+	   <p>Наконец, выведите список объектов из пула метаданных.
+	   Вы найдете в этом пуле созданные системой объекты:</p>
+   	   <pre class="screen">
+# rados -p metadata ls</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]# rados -p metadata ls
+1.00000000.inode
+100.00000000
+100.00000000.inode
+1.00000000
+2.00000000
+200.00000000
+200.00000001
+600.00000000
+601.00000000
+602.00000000
+603.00000000
+604.00000000
+605.00000000
+606.00000000
+607.00000000
+608.00000000
+609.00000000
+mds0_inotable
+mds0_sessionmap
+mds_anchortable
+mds_snaptable
+[root@ceph-node1 /]#</pre>
+       </li>
+     </ol>
+    </div>
+  </div>
+
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CRUSH"> </a>CRUSH</h3>
+   </div></div></div>
+   <p>За последние три десятилетия механизмы хранения усложнили хранимые данные и их метаданные.
+   Метаданные, которые являются данными о данных, содержат информацию, например такую как местоположение 
+   где данные реально хранятся в наборе узлов хранения и дисковых массивов. При каждом добавлении новых 
+   данных в систему хранения вначале обновляются их метаданные сведениями о том, где физически будут 
+   сохранены данные, после чего происходит реальное сохранение данных. Этот процесс хорошо себя зарекомендовал 
+   на практике когда мы оперируем с небольшими объемами данных в масштабах от гигабайт до нескольких терабайт
+   информации, однако что можно сказать в случае хранения данных уровня петабайт или эксабайт? Определенно 
+   данный механизм не будет приемлем для хранилищ в будущем. Более того, он создает единую точку отказа для 
+   вашей системы хранения. К сожалению, если вы теряете метаданные вашего хранилища, вы теряете все ваши 
+   данные. Следовательно, крайне важно оберегать любыми средствами центральные данные в сохранности 
+   от происшествий, либо путем хранения множества копий на одном узле, либо путем репликации данных и 
+   метаданных целиком для бОльшей степени отказоустойчивости. Такое сложное управление метаданными является 
+   узким местом при масштабировании систем хранения, а также пр достижении высокой доступности и 
+   производительности.</p>
+   <p>Ceph совершил революцию, когда вышел на рынок систем хранения данных и управления ими. Он применяет 
+   алгоритм Управляемых масштабируемым хешированием репликаций (<span class="term"><code class="literal">CRUSH,
+   Controlled Replication Under Scalable Hashing</code></span>), интеллектуальный механизм 
+   распределения данных. Алгоритм CRUSH является одним из бриллиантов в короне Ceph; он является ядром 
+   всего механизма хранения данных Ceph. В отличие от традиционных систем которые полагаются на хранение и 
+   управление централизованными метаданными / индексными таблицами, Ceph использует алгоритм CRUSH для 
+   детерминированного (предопределенного) вычисления того, где должны быть записаны данные или откуда их 
+   необходимо считывать. Вместо хранения метаданных, CRUSH вычисляет метаданные по запросу, тем самым 
+   удаляя все ограничения, с которыми сталкиваются метаданные при традиционных подходах.</p>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CRUSH_lookup"> </a>Нахождение CRUSH</h4>
+     </div></div></div>
+     <p>Механизм CRUSH работает таким образом, что нагрузка вычислений метаданных распределена и выполняется 
+	 только при возникновении необходимости в них. Процесс вычисления метаданных также известен как нахождение (lookup) 
+	 CRUSH, а имеющаяся в настоящее время вычислительная аппаратура достаточно мощна для быстрого и эффективного 
+	 выполнения операций нахождения CRUSH. Уникальным моментом в нахождении CRUSH является то, что он системно- 
+	 независим. Ceph предоставляет клиентам достаточную гибкость для выполнения по запросу вычисления метаданных, 
+	 то есть, осуществления нахождения CRUSH на своих собственных системных ресурсах, тем самым исключая 
+	 централизованность нахождения.</p>
+     <p>Для выполнения операций чтения-и-записи в кластере Ceph, первоначально клиенты общаются с монитором Ceph 
+	 и получают копию карты кластера. Карта кластера помогает клиентам знать состояние и конфигурацию кластера 
+	 Ceph. Данные преобразуются в объекты с именами/ идентификаторами объектов и пулов. Затем объекты хешируются 
+	 номером группы размещения для создания окончательной группы размещения (PG, placement group) внутри 
+	 необходимого пула Ceph. Вычисленная группа размещения затем следует найденным CRUSH для определения местоположения 
+	 первичного OSD (устройства хранения объектов) для сохранения или получения данных. После вычисления точного
+	 идентификатора OSD, клиент взаимодействует с OSD напрямую и выполняет операцию с данными. Все эти операции 
+	 вычислений выполняются клиентами, следовательно они не влияют на производительность кластера. Когда данные 
+	 записаны на первичное OSD, этот же узел выполняет операцию нахождения CRUSH и вычисляет местоположение для 
+	 вторичных групп размещения (PG) и OSD, тем самым выполняя репликацию данных в кластере для высокой доступности. 
+	 Рассмотрим следующий пример нахождения CRUSH и размещения объекта в OSD.</p>
+     <p>Прежде всего к имени объекта и номеру группы размещения кластера применяется хеш- функция и степень (основание) 
+	 идентификатора пула; таким образом создается идентификатор группы размещения, PGID. Затем по этому PGID выполняется 
+	 нахождение CRUSH для поиска первичного и вторичных OSD для записи данных.</p>
+     <div class="informalfigure"><div class="mediaobject">
+       <img src="figures/Fig0405.jpg"/> </div><br />
+     </div>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CRUSH_hierarchy"> </a>Иерархия CRUSH</h4>
+     </div></div></div>
+     <p>CRUSH полностью осведомлен об инфраструктуре и является абсолютно настраиваемым со стороны пользователя; 
+	 он устанавливает вложенную иерархию для всех компонентов вашей инфраструктуры. Список устройств CRUSH обычно 
+	 содержит диск, узел, стойка, ряд, коммутатор, цепь электропитания, зал, центр обработки данных и тому подобное.
+	 Эти компонеты известны как зоны отказа или сегменты (bucket) CRUSH. Карта CRUSH содержит перечень доступных 
+	 сегментов для преобразования устройств в физические местоположения. Она также содержит список правил, которые 
+	 сообщают CRUSH как выполнять репликацию данных для различных пулов Ceph. Следующая диаграмма даст вам представление 
+	 о том, как выглядит CRUSH в вашей физической инфраструктуре:</p>
+     <div class="informalfigure"><div class="mediaobject">
+       <img src="figures/Fig0406.jpg"/> </div><br />
+     </div>
+     <p>В зависимости от вашей инфраструктуры CRUSH распределяет данные и их реплики по всем этим зонам отказа таким 
+	 образом, чтобы они были сохранены и доступны даже в случае отказов некоторых компонентов. Это то, как CRUSH 
+	 удаляет проблемы единых точек отказа из вашей инфраструктуры хранения, которая собрана из общедоступного 
+	 оборудования и, тем не менее, гарантирует высокую доступность. CRUSH равномерно записывает данные по всем дискам 
+	 кластера, что повышает производительность и надежность и заставляет все диски принимать участие в работе кластера.
+	 Он гарантирует, что все диски кластера используются в равной мере вне зависимости от их емкости. Для 
+	 осуществления этого CRUSH присваивает веса каждому OSD (устройству хранения объектов). Чем выше вес OSD, тем 
+	 большую физическую емкость хранения он имеет, и CRUSH будет записывать на такое OSD больше данных.
+	 Следовательно, в среднем, OSD с меньшим весом заполняются примерно в той же пропорции, что и OSD с бОльшим весом.</p>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Recovery_and_rebalancing"> </a>Восстановление и балансировка</h4>
+     </div></div></div>
+     <p>В случае отказа любого компонента из зоны отказа Ceph ожидает по умолчанию 300 секунд перед тем, чтобы пометить 
+	 OSD вышедшим из строя, после чего начинает операцию восстановления. Этой установкой можно управлять при помощи 
+	 параметра <span class="term"><code class="literal">mon osd down out interval</code></span> в файле настроек Ceph. 
+	 Во время операции восстановления Ceph запускает регенерацию утраченных данных, которые размещались отказавшем узле.</p>
+     <p>Поскольку CRUSH выполняет репликацию данных на различные диски, во время восстановления используются такие 
+	 реплицированные копии данных. CRUSH пытается перемещать минимальные объемы данных в процессе выполнения операций 
+	 восстановления и разрабатывает новую схему кластера, делая Ceph устойчивым к отказам даже после выхода из строя 
+	 некоторых компонентов.</p>
+     <p>Когда в кластер добавляется новый хост или диск, CRUSH запускает операцию повторной балансировки, в процессе 
+	 которой он перемещает данные с существующих хостов/ дисков на новые хосты/ диски. Ребалансировка выполняется для 
+	 сохранения заполненности дисков в одной пропорции, что увеличивает производительность кластера и сохраняет его 
+	 работоспособность. Например, если кластер Ceph содержит 2000 OSD (устройств хранения объектов) и добавляется новая 
+	 система с 20 новыми OSD, будет перемещен только один процент данных в процессе выполнения операции повторной балансировки,
+	 причем все существующие OSD будут выполнять работу по перемещению данных одновременно, помогая операции быстро 
+	 завершиться. Однако для кластеров Ceph, находящихся под высокой нагрузкой рекомендуется добавлять новые OSD 
+	 со значением параметра веса <span class="term"><code class="literal">0</code></span> и затем плавно увеличивать 
+	 их вес до наивысшего значения, соответствующего их размеру. При таком подходе новое OSD будет прилагать меньшую 
+	 нагрузку повторной балансировки на кластеры Ceph и избежит проблемы уменьшения производительности.</p>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Editing_CRUSH_map"> </a>Изменение карты CRUSH</h4>
+     </div></div></div>
+     <p>Когда мы развернули Ceph с использованием <span class="term"><code class="literal">ceph-deploy</code></span>,
+	 команда создала карту CRUSH по умолчанию для нашей конфигурации. Карта CRUSH по умолчанию идеальна при тестировании 
+	 и в среде песочницы, однако если вы планируете разворачивать кластер Ceph в большой промышленной среде, вам 
+	 следует проанализировать возможность разработки индивидуальной карты CRUSH для вашей среды. Следующий процесс 
+	 поможет вам скомпилировать новую карту CRUSH:</p>
+	 <ol type="1" class="substeps"><li class="step">
+	   <p>Выделите вашу существующую карту CRUSH. При помощи параметра <span class="term"><code class="literal">-o</code></span>
+	   Ceph выведет в указанный вами файл скомпилированную карту CRUSH:</p>
+   	   <pre class="screen">
+# ceph osd getcrushmap -o crushmap.txt</pre>
+       </li><li class="step">
+	   <p>Декомпилируйте вашу карту CRUSH. При помощи параметра <span class="term"><code class="literal">-d</code></span>
+	   Ceph декомпилирует вашу карту CRUSH и выведет в файл, указанный в <span class="term"><code class="literal">-o</code></span>:</p>
+   	   <pre class="screen">
+# crushtool -d crushmap.txt -o crushmap-decompile</pre>
+       </li><li class="step">
+	   <p>Отредактируйте карту CRUSH любым редактором:</p>
+   	   <pre class="screen">
+# vi crushmap-decompile</pre>
+       </li><li class="step">
+	   <p>Скомпилируйте новую карту CRUSH:</p>
+   	   <pre class="screen">
+# crushtool -c crushmap-decompile -o crushmap-compiled</pre>
+       </li><li class="step">
+	   <p>Установите новую карту CRUSH в кластер Ceph:</p>
+   	   <pre class="screen">
+# ceph osd setcrushmap -i crushmap-compiled</pre>
+       </li>
+     </ol>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Customizing"> </a>Индивидуальная настройка компоновки кластера</h4>
+     </div></div></div>
+     <p>Индивидуальная настройка компоновки кластера является одним из самых важных шагов к построению прочного и надежного 
+	 кластера хранения Ceph. Одинаково важно установить кластерное оборудование в отказоустойчивой зоне 
+	 и включить его в высоко доступную схему с точки зрения перспективы программного обеспечения Ceph. Развертыванию 
+	 Ceph по умолчанию ничего не известно о компонентах, не имеющих обратной связи, таких как стойки, ряды, центры обработки 
+	 данных. После проведения начальной установки нам необходимо выполнить индивидуальные настройки схемы компоновки в 
+	 соответствии с нашими требованиями. Например, если вы выполните команду 
+	 <span class="term"><code class="literal">ceph osd tree</code></span>, она уведомит вас только о  том, что она имеет 
+	 хосты и OSD, перечисленные под <span class="term"><code class="literal">root</code></span>, что является 
+	 поведением по умолчанию. Давайте попробуем разместить эти хосты по стойкам:</p>
+	 <ol type="1" class="substeps"><li class="step">
+	   <p>Выполните <span class="term"><code class="literal">ceph osd tree</code></span>
+	   для получения имеющейся в настоящее время схемы кластера:</p>
+   	   <pre class="screen">
+[root@ceph node1 ~]# ceph osd tree
+# id	weight	type name	up/down	reweight	
+-1	0	root default			
+-2	0	        host ceph-node1		
+0	0		        osd.O	up	1
+1	0		        osd.l	up	1
+2	0		        osd.2	up	1
+-3	0	        host ceph-node2		
+3	0		        osd.3	up	1
+4	0		        osd.4	up	1
+S	0		        osd.5	up	1
+-4	0	        host ceph-node3		
+6	0		        osd.6	up	1
+7	0		        osd.7	up	1
+8	0		        osd.8	up	1</pre>
+       </li><li class="step">
+	   <p>Добавьте несколько стоек в компоновку вашего кластера Ceph:</p>
+   	   <pre class="screen">
+# ceph osd crush add-bucket rack01 rack
+# ceph osd crush add-bucket rack02 rack
+# ceph osd crush add-bucket rack03 rack</pre>
+       </li><li class="step">
+	   <p>Переместите каждый хост в определенную стойку:</p>
+   	   <pre class="screen">
+# ceph osd crush move ceph-node1 rack=rack01
+# ceph osd crush move ceph-node2 rack=rack02
+# ceph osd crush move ceph-node3 rack=rack03</pre>
+       </li><li class="step">
+	   <p>Теперь переместите все стойки в root default:</p>
+   	   <pre class="screen">
+# ceph osd crush move rack03 root=default
+# ceph osd crush move rack02 root=default
+# ceph osd crush move rack01 root=default</pre>
+       </li><li class="step">
+	   <p>Проверьте вашу новую компоновку. Вы заметите, что все ваши хосты теперь размещены
+	   в определенных стойках. Таким образом вы можете индивидуально настраивать вашу компоновку
+	   CRUSH для приведения в соответствие с физическим размещением установленного оборудования:</p>
+   	   <pre class="screen">
+[root@ceph-node1 ~]# ceph osd tree
+# id	weight	type name	up/dcwn reweight			
+-1	0	root default				
+-7	0	        rack rack03			
+-4	0		        host ceph-node3		
+6	0			        osd.6   up	1
+7	0			        osd.7	up	1
+8	0			        osd.8	up	1
+-6	0	        rack rack02			
+-3	0		        host ceph-node2		
+3	0			        osd.3	up	1
+4	0			        osd.4	up	1
+5	0			        osd.5	up	1
+-5	0	        rack rack01			
+-2	0		        host ceph-nodel		
+0	0			        osd.O	up	1
+1	0			        osd.l	up	1
+2	0			        osd.2	up	1</pre>
+       </li>
+     </ol>
+    </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PG"> </a>Группы размещения</h3>
+   </div></div></div>
+   <p>Когда кластер Ceph получает запросы на хранение данных, он разделяет их на разделы, называемые 
+   группами размещения (<span class="term">PG, placement groups<code class="literal"></code></span>). 
+   Тем не менее, данные CRUSH сначала разбиваются на набор объектов и на основании хеш- операций с именами объектов, 
+   уровнями репликаций и общего числа групп размещения в системе создаются идентификаторы групп размещения.
+   Группа размещения является логической коллекцией объектов, которые реплицируются в OSD (устройства хранения объектов) 
+   для обеспечения надежности в системе хранения. В зависимости от уровня репликаций в вашем пуле Ceph, с каждой 
+   группой размещения выполняется репликация распространяемая на более чем одно OSD в кластере Ceph. Вы можете 
+   рассматривать группу размещения как логический контейнер, хранящий множество объектов таким образом, что этот 
+   логический контейнер отображается на множество OSD. Группы размещения имеют важное значение для масштабируемости и 
+   производительности системы хранения Ceph.</p>
+   <div class="informalfigure"><div class="mediaobject">
+     <img src="figures/Fig0409-2016.jpg"/> </div><br />
+   </div>
+   <p>Без групп размещения было бы трудно управлять и отслеживать десятки миллионов объектов, которые реплицируются и 
+   распространяются на сотни OSD. Управление этими объектами без групп размещения также имело бы в результате 
+   перерасход вычислительных ресурсов. Вместо индивидуального управления каждым объектом, система должна управлять 
+   группами размещения с большим количеством объектов в каждой. Это делает Ceph более управляемой и менее сложной 
+   функционально. Каждая группа размещения требует определенное количество системных ресурсов, процессоров и оперативной 
+   памяти, поскольку каждая группа размещения должна управлять множеством объектов. Число групп размещения в кластере должно
+   быть тщательно рассчитано. Обычно увеличение числа групп размещения в вашем кластере  уменьшает нагрузку на OSD, 
+   однако прирост всегда должен выполняться регулируемым образом. Рекомендуется от 50 до 100 групп размещения на OSD.
+   Это позволяет избегать высокой загруженности ресурсов узла OSD. По мере возникновения потребности увеличения данных, 
+   вам необходимо увеличивать масштаб вашего кластера регулируя число групп размещения. Когда устройства добавляются в кластер 
+   или удаляются из него, большинство групп размещения остаются в работе; CRUSH управляет перемещение групп размещения 
+   в кластерах.</p>
+   <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	 <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	 <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	 <p><span class="term">PGP<code class="literal"></code></span> является общим числом групп размещения 
+	 для целей расположения (placement groups for placement purposes). Оно должно равняться общему числу 
+	 групп размещения.</p></td></tr></table>
+   </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Calculating_PG_numbers"> </a>Вычисление номеров PG</h4>
+     </div></div></div>
+     <p>Принятие решения о правильном числе групп размещения является важным этапом при построении кластеров хранения Ceph 
+	 корпоративного уровня. Группы размещения могут в определенной степени улучшать или ухудшать производительность 
+	 системы хранения.</p>
+     <p>Формула для вычисления общего числа групп размещения для кластера Ceph следующая:</p>
+   	   <pre class="screen">
+		Total PGs = (Total_number_of_OSD * 100) / max_replication_count</pre>
+     <p>Результат должен быть округлен вверх до ближайшего числа степени 2. Например, если кластер Ceph имеет 160 OSD и 
+	 число репликаций равно 3, то общее число групп размещения получается 5333.3, и, округляя его вверх до ближайшей 
+	 степени 2 мы получаем конечное значение 8192 PG.</p>
+     <p>Мы также должны провести вычисления для того, чтобы найти общее число PG на пул в кластере Ceph. Формула для 
+	 такого вычисления следующая:</p>
+   	   <pre class="screen">
+		Total PGs = ((Total_number_of_OSD * 100) / max_replication_count)
+		/ pool count</pre>
+     <p>Мы рассмотрим тот же пример, который мы использовали ранее. Общее число OSD равно 160, уровень репликаций 3, а общее 
+	 число пулов равно трем. Исходя из этих предположений, формула выдает 1777.7. Наконец, округляя значение вверх 
+	 до степени 2 мы получаем 2048 PG на пул.</p>
+     <p>Важно сбалансировать число PG на пул с числом PG на OSD чтобы уменьшить вероятность изменений значений PG на OSD  
+	 и избежать процесса восстановления, который является медленным.</p>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Modifying_PG_and_PGP"> </a>Изменение PG и PGP</h4>
+     </div></div></div>
+     <p>Если вы управляете кластером Ceph, в определенный момент времени вам может потребоваться изменение значений 
+	 PG и PGP для вашего пула. Прежде чем приступить к изменению PG и PGP, давайте разберемся с тем, что такое PGP.</p>
+     <p>PGP это группы размещения для целей расположения (Placement Group for Placement purpose), которое должно 
+	 оставаться равным общему числу групп размещения (<span class="term"><code class="literal">pg_num</code></span>).
+	 Если вы увеличивает число групп размещения для пула Ceph, то есть <span class="term"><code class="literal">pg_num</code></span>,
+	 то вы должны также увеличить <span class="term"><code class="literal">pgp_num</code></span> до того же 
+	 целочисленного значения, равного <span class="term"><code class="literal">pg_num</code></span>, следовательно 
+	 кластер начнет процесс ребалансировки. Скрытый механизм ребалансировки можно пояснить следующим образом.</p>
+     <p>Значение <span class="term"><code class="literal">pg_num</code></span> определяет число групп размещения, которое 
+	 отображается на OSD (устройства хранения объектов). Когда значение <span class="term"><code class="literal">pg_num</code></span>
+	 увеличивается для любого пула, каждая PG этого пула разделяется пополам, однако они все по прежнему отображаются на свои 
+	 родительские OSD. До этого момента времени Ceph не начинает ребалансировку. Теперь, когда вы увеличиваете значение 
+	 <span class="term"><code class="literal">pgp_num</code></span> для того же самого пула, PG начинают миграцию с родительских 
+	 на некоторые другие OSD и начинается ребалансировка. Таким образом, PGP играет важную роль в ребалансировке кластера.
+	 Теперь давайте узнаем как изменить <span class="term"><code class="literal">pg_num</code></span> и 
+	 <span class="term"><code class="literal">pgp_num</code></span>:</p>
+	 <ol type="1" class="substeps"><li class="step">
+	   <p>Получите текущие значения числа PG и PGP:</p>
+   	   <pre class="screen">
+# ceph osd pool get data pg_num
+# ceph osd pool get data pgp_num</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# ceph osd pool get data pg_num
+pg_num: 64
+[root@ceph-node1 /]# ceph osd pool get data pgp_num
+pgp_num: 64
+[root@ceph-node1 /]#</pre>
+       </li><li class="step">
+	   <p>Определите уровень репликаций выполнив следующую команду и получив значение для 
+	   <span class="term"><code class="literal">rep size</code></span>:</p>
+   	   <pre class="screen">
+# ceph osd dump | grep size</pre>
+   	   <pre class="screen">
+[root@ceph node1 /]# ceph osd durp grep -i size
+pool 3 'rbd' rep size 2 min_size 1 crush_ruleset 0 object_hash rjenkins pg_num 64 pgp_num 64 last_change 452 owner 0
+pool 4 'data' rep size 2 min_size 1 crush_ruleset 0 object_hash rjenkins pg_num 64 pgp_num 64 last_change 454 owner 0
+pool 5 ’metadata' rep size 2 min_size 1 crush ruleset 0 object_hash rjenkins pg_num 64 pgp_num 64 last_change 456 owner 0
+[root@ceph-node1 /]#</pre>
+       </li><li class="step">
+	   <p>Вычислите новое число групп размещения для нашей установки с использованием {следующих значений}:</p>
+   	   <pre class="screen">
+Total OSD = 9, Replication pool level (rep size) = 2, pool
+count = 3</pre>
+       <p>Основываясь на предыдущей формуле мы получаем значение числа групп размещения для каждого пула равным 
+	   <span class="term"><code class="literal">150</code></span>, округление вверх до ближайшей степени 2 дает нам 
+	   <span class="term"><code class="literal">256</code></span>.</p>
+       </li><li class="step">
+	   <p>Изменяем PG и PGP для пула {данных}:</p>
+   	   <pre class="screen">
+# ceph osd pool set data pg_num 256
+# ceph osd pool set data pgp_num 256</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]# ceph osd pool set data pg_num 256
+set pool 6 pg_num to 256
+[root@ceph-node1 /]#
+[root@ceph-nodel /]# ceph osd pool set data pgp_num 256
+set pool 6 pgp_num to 2S6
+[root@ceph-node1 /]#</pre>
+       </li><li class="step">
+	   <p>Аналогично изменяем значения PG и PGP для пулов метаданных и RBD (блочного устройства RADOS, 
+	   Безотказного автономного распределенного хранилища объектов - Reliable Autonomic Distributed Object Store)):</p>
+   	   <pre class="screen">
+[root@ceph-node1 /]# ceph osd pool get data pg_num
+pg_num: 256				
+[root$ceph-node1 /]# ceph osd pool get data pgp_num
+pgp_num: 256				
+[root@ceph-node1 /]# ceph osd pool get metadata pg_num
+pg_num: 256				
+[root@ceph-node1 /]# ceph osd pool get metadata pgp_num
+pgp_num: 256				
+[rootQceph-node1 /]# ceph osd pool get rbd pg_num
+pg_num: 256				
+[rootOceph node1 /]# ceph osd pool get rbd pgp_num
+pgp_num: 256
+[root@ceph-node1 /]#</pre>
+       </li>
+     </ol>
+    </div>
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="peering_and_sets_up"> </a>Обмен между PG, наборы включенных и действующих</h4>
+     </div></div></div>
+     <p>Демон Ceph OSD выполняет равноправные операции обмена (peering operation) состояний всех объектов и их метаданных для конкретных 
+	 групп размещения, которые включают в себя согласование межу хранящими группу размещения OSD (устройствами хранения объектов).
+	 Кластер хранения Ceph сохраняет множество копий любых объектов во множестве PG (групп хранения), которые затем 
+	 записываются в множестве OSD. Эти OSD называются первичными, вторичными, третичными и т.д. Действующий (acting) набор относится 
+	 к группе OSD, ответственной за PG. Первичный OSD называется первым OSD из действующего набора и он отвечает за 
+	 операции равноправного обмена для каждой PG со своими вторичными / третичными OSD. Первичное OSD является единственным 
+	 OSD, которое принимает записывает операции от клиента. Находящееся в рабочем состоянии OSD остается в действующем 
+	 состоянии. Ели вдруг первичное OSD выходит из строя, оно сначала удаляется из набора включенных (up); вторичное OSD 
+	 повышается до первичного OSD. Ceph восстанавливает PG отказавшего OSD новым OSD и добавляет его в наборы 
+	 включенных (up) и действующих (acting) для обеспечения высокой доступности.</p>
+     <p>В кластере Ceph определенное OSD может быть первичным OSD для некоторой PG, и в то же самое время быть 
+	 вторичным или третичным OSD для другой PG.</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0414.jpg"/> </div><br />
+       </div>
+     <p>В предыдущем примере действующий набор содержит три OSD (<span class="term">osd.24, osd.72<code class="literal"></code></span>
+	 и <span class="term">osd.11<code class="literal"></code></span>). Из них 
+	 <span class="term">osd.24<code class="literal"></code></span> является первичным OSD, а 
+	 <span class="term">osd.72<code class="literal"></code></span> и <span class="term">osd.11<code class="literal"></code></span>
+	 являются вторичным и третичным OSD, соответственно. Поскольку <span class="term">osd.24<code class="literal"></code></span>
+	 является первичным OSD, оно заботится о равноправных операциях обмена для всех PG, существующих на этих трех OSD. 
+	 Таким образом Ceph гарантирует, что PG всегда доступны и непротиворечивы.</p>
+    </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="pools"> </a>Пулы Ceph</h3>
+   </div></div></div>
+   <p>Концепция пула не является новой для систем хранения. Системы хранения уровня предприятий управляются путем 
+   создания определенных пулов; Ceph также обеспечивает легкое управление хранением посредством пулов хранения.
+   Пул Ceph является логическим разделом для хранения объектов. Каждый пул в Ceph поддерживает определенное число 
+   групп размещения (PG), которые, в свою очередь, содержат ряд объектов, которые отображаются в OSD по всем кластерам.
+   Следовательно, каждый отдельный пул распределен по всем узлам кластера и это обеспечивает устойчивость.
+   Начальное развертывание Ceph создает пулы по умолчанию на основании ваших требований; вам настоятельно рекомендуется 
+   создавать пулы отличные от тех, которые создаются по умолчанию.</p>
+   <p>Пул обеспечивает доступность данных за счет создания желаемого числа копий объектов, то есть, реплик или 
+   кодов удаления. Свойство кода удаления <span class="term">EC, erasure coding<code class="literal"></code></span>
+   было добавлено в Ceph совсем недавно, начиная с редакции Ceph Firefly. Код удаления является методом защиты данных,
+   при котором данные разбиваются на фрагменты, кодируются, а затем сохраняются распределенным образом. Ceph, будучи 
+   распределенным по собственной природе, использует EC удивительно хорошо.</p>
+   <p>Во время создания пула мы можем определить размер реплик {<span class="emphasis"><em>Прим. пер.: 
+   из приводимых ниже примеров станет понятнее применение термина размер в применении к числу реплик: фактически это размер 
+   набора OSD в группе размещения</em></span>}; значением по умолчанию является 
+   <span class="term"><code class="literal">2</code></span>. Уровень репликации пула очень гибок; в любой момент времени 
+   мы можем изменить его. При создании пула мы также можем определить правила кода удаления, которые обеспечивают 
+   тот же уровень надежности, но требуют меньшего объема пространства по сравнению с методом репликаций.</p>
+   <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	 <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	 <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	 <p>Пул может быть создан либо с репликациями, либо с кодом удаления, но не с обоими одновременно.</p></td></tr></table>
+   </div>
+   <p>Пул Ceph отображается наборами правил CRUSH при записи данных в пул; он идентифицируется набором правил CRUSH 
+   для размещения объектов и их реплик внутри кластера. Набор правил CRUSH снабжают пулам Ceph новыми возможностями.
+   Например, мы можем создавать быстрый пул, также известный как пул кеширования, поверх дисковых устройств SSD, или 
+   гибридный пул из дисковых устройств SSD и SAS или SATA.</p>
+   <p>Пулы Ceph также поддерживают функциональность моментальных снимков. Мв можем воспользоваться командой 
+   <span class="term"><code class="literal">ceph osd pool mksnap</code></span> для создания моментального снимка 
+   определенного пула, и мы можем восстановить его при необходимости. Кроме того, пул Ceph позволяет нам установить 
+   права владения и правила доступа к объектам. Идентификатор пользователя может быть назначен на владение пулом. 
+   Это очень полезно при определенных условиях, когда мы должны обеспечить ограниченный доступ к пулу.</p>
+   
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Pool_operations"> </a>Работа пула</h4>
+     </div></div></div>
+     <p>Выполнение операций с пулом Ceph одна из повседневных работ для администратора Ceph. Ceph предоставляет 
+	 богатый инструментарий <span class="term"><code class="literal">cli</code></span> для создания пулов и 
+	 управления ими. В следующем разделе мы узнаем о работе с пулами Ceph.</p>
+      <div class="section">
+       <div xmlns="" class="titlepage"><div><div>
+        <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_and_listing"> </a>Создание пула и просмотр списка пулов</h5>
+       </div></div></div>
+       <p>Для создания пула требуется имя пула, число PG и PGP, а также тип пула, который может быть либо реплицируемым, 
+	   либо удаляемым. Значение по умолчанию - реплицируемый. Давайте начнем создание пула:</p>
+      <ol type="1" class="substeps"><li class="step">
+	   <p>Создадим пул <span class="term"><code class="literal">web-services</code></span> со 
+	   значением <span class="term"><code class="literal">128</code></span> для чисел PG и PGP.
+	   Приводимая команда создаст пул с репликациями, поскольку это параметр по умолчанию.</p>
+   	   <pre class="screen">
+# ceph osd pool create web-services 128 128</pre>
+       </li><li class="step">
+	   <p>Перечень пулов может быть получен двумя способами. Однако вывод результатов третьей команды 
+	   снабжает нас бОльшим объемом информации, такой как идентификатор пула, размер репликаций, набор правил 
+	   CRUSH, а также числами PG и PGP:</p>
+   	   <pre class="screen">
+# ceph osd lspools
+# rados lspools
+# ceph osd dump | grep -i pool</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]# ceph osd dump | grep -i pool
+pool 3 'rbd' rep size 2 mir_size 1 crush_ruleset 0 object_hash rjenkins pg_nun 256 pgp_num 256 last_change 428 owner 0
+pool 5 'metadata' rep size 2 min_size 1 crush_ruleset 0 object_hash rjenkins pg_nun 256 pgp_num 256 last_change 476 owner 0
+pool 6 'data' rep size 2 min_size 1 crush_ruleset 0 object_hash rjenkins pg_num 256 pgp_num 256 last_change 470 owner 0
+pool 8 'web-services' rep size 2 min_size 1 crush_ruleset 0 object_hasb rjenkins pg_num 128 pgp_num 128 last_change 503 owner 0
+[root@ceph-node1 /]#</pre>
+       </li><li class="step">
+	   <p>Значение по умолчанию для размера репликаций при создании пула Ceph для Ceph Emperor или более 
+	   {ранних} редакций является <span class="term"><code class="literal">2</code></span>; мы можем 
+	   изменить значение размера репликаций с использованием следующей команды:</p>
+   	   <pre class="screen">
+# ceph osd pool set web-services size 3
+# ceph osd dump | grep -i pool</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]# ceph osd pool set web-services size 3
+set pool 8 size to 3
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# ceph osd dump | grep -i pool
+pool 3 'rbd' rep size 2 min_size 1 crush_ruleset 0 object_hash rjenkins pg_num 256 pgp_num 256 last_change 478 owner 0
+pool S 'metadata' rep size 2 min_size 1 crush_ruleset 0 object_hash rjenkins pg_num 256 pgp_num 256 last_change 476 owner 0
+pool 6 'data' rep size 2 min_size 1 crush_ruleset 0 object_hash rjenkins pg_num 256 pgp_num 256 last_change 470 owner 0
+pool 8 'web-services' rep size 3 min_size 1 crush_ruleset 0 object_hash rjenkins pg_num 128 pgp_num 128 last_change 505 owner 0</pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Для Ceph Emperor и более ранних редакций значение размера репликаций для пула по умолчанию было
+		 <span class="term"><code class="literal">2</code></span>; это значение по умолчанию было изменено 
+		 на <span class="term"><code class="literal">3</code></span> начиная с Ceph Firefly.</p></td></tr></table>
+       </div>
+       </li><li class="step">
+	   <p>Переименуйте пул следующим образом:</p>
+   	   <pre class="screen">
+# ceph osd pool rename web-services frontend-services
+# ceph osd lspools</pre>
+       </li><li class="step">
+	   <p>Пулы Ceph поддерживают моментальные снимки; мы можем восстановить объекты из моментального снимка 
+	   в случае отказа. В следующем примере мы создадим в пуле объект и затем сделаем моментальный снимок пула.
+	   После этого мы умышленно удалим объект из пула и попытаемся восстановить объект из моментального снимка:</p>
+   	   <pre class="screen">
+# rados –p frontend-services put object1 /etc/hosts
+# rados –p frontend-services ls
+# rados mksnap snapshot01 -p frontend-services
+# rados lssnap -p frontend-services
+# rados -p frontend-services rm object1
+# rados -p frontend-services listsnaps object1
+# rados rollback -p frontend-services object1 snapshot01
+# rados -p frontend-services ls</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]#
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# rados -p frontend-services put object1 /etc/hosts
+[root@ceph-node1 /]# rados -p frontend-services ls
+object1
+[root@ceph-node1 /]# rados mksnap snapshot01 -p frontend-services
+created pool frontend-services snap snapshot01
+[root@ceph-node1 /]# rados lssnap -p frontend-services
+5	snapshot01	2014.05.12 13:20:58
+1 snaps
+[root@ceph-node1 /]# rados -p frontend-services rm object1
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# rados -p frontend-services listsnaps object1
+object1:
+cloneid snaps size	overlap
+5	5     237	[]
+
+[root@ceph-node1 /]# rados rollback -p frontend-services object1 snapshot01
+rolled back pool frontend-services to snapshot snapshot01
+[root@ceph-node1 /]# rados -p frontend-services ls
+object1
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# _</pre>
+       </li><li class="step">
+	   <p>Удаление пула удаляет также и все его моментальные снимки. После удаления пула вам следует удалить
+	   наборы правил CRUSH, если вы их создавали вручную. Если вы создавали пользователей с полномочиями исключительно
+	   для пула, который больше не существует, вам следует также проанализировать удаление таких пользователей:</p>
+   	   <pre class="screen">
+# ceph osd pool delete frontend-services frontend-services --
+yes-i-really-really-mean-it</pre>
+       </div>
+       </li>
+      </ol>
+    </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="data_management"> </a>Управление данными Ceph</h3>
+   </div></div></div>
+   <p>Управление данными внутри кластера Ceph включает в себя все компоненты, которые мы обсуждали до сих пор.
+   Координация между этими компонентами дает Ceph мощность для обеспечения надежной и отказоустойчивой системы хранения.
+   Управление данными начинается как только клиент записывает данные в пул Ceph. Сразу после того, как клиент записал 
+   данные в пул Ceph, данные сначала записываются в первичное OSD (устройство хранения объектов){. Далее,} основываясь на 
+   размере репликаций пула, первичное OSD выполняет репликацию тех же данных на свои вторичное и третичное{, а также, возможные 
+   последующие} и ожидает от них подтверждения. Как только вторичное и третичное OSD завершают запись данных, они посылают 
+   сигнал подтверждения первичному OSD и, наконец, первичное OSD возвращает подтверждение клиенту, утверждая завершение 
+   операции записи.</p>
+   <p>Таким образом Ceph непрерывно сохраняет каждую операцию записи и обеспечивает доступность данных из своих реплик в 
+   случае возникновения отказов. Давайте теперь рассмотрим как данные сохраняются в кластере.</p>
+      <ol type="1" class="substeps"><li class="step">
+	   <p>Вначале мы создадим тестовый файл, пул Ceph и установим репликации пула на 
+	   <span class="term"><code class="literal">3</code></span> копии:</p>
+   	   <pre class="screen">
+# echo "Hello Ceph, You are Awesome like MJ" > /tmp/helloceph
+# ceph osd pool create HPC_Pool 128 128
+# ceph osd pool set HPC_Pool size 3</pre>
+       </li><li class="step">
+	   <p>Поместим в этот пул какие-нибудь данные и проверим его содержимое:</p>
+   	   <pre class="screen">
+# rados -p HPC_Pool put object1 /tmp/helloceph
+# rados -p HPC_Pool ls</pre>
+       </li><li class="step">
+	   <p>Теперь файл был сохранен в пул Ceph. Как вы знаете, все в Ceph сохраняется в форме объектов, которые помещаются в 
+	   группы размещения (PG) а эти группы размещения располагаются во множестве OSD. Теперь рассмотрим эту концепцию 
+	   на практике:</p>
+   	   <pre class="screen">
+# ceph osd map HPC_Pool object1</pre>
+	   <p>Эта команда покажет вам карты OSD для <span class="term"><code class="literal">object1</code></span>, который
+	   находится внутри <span class="term"><code class="literal">HPC_Pool</code></span>:</p>
+   	   <pre class="screen">
+[root@ceph-node1 /]# ceph osd map HPC_Pool object1
+osdmap e566 pool ’HPC_Pool' (10) object 'object1' -> pg 10.bac5debc (10.3c) -> up [0,6,3] acting [0,6,3]
+[root@ceph-node1 /]#</pre>
+	   <div class="itemizedlist">
+	   <ul class="itemizedlist" type="circle">Давайте обсудим вывод результатов этой команды:
+	     <li class="listitem">
+	      <p><span class="term"><code class="literal">osdmap e566</code></span>: Это идентификатор версии карты OSD, или 
+	      OSD epoch 556.</p>
+	     </li>
+	     <li class="listitem">
+	      <p><span class="term"><code class="literal">pool 'HPC_Pool' (10)</code></span>: Это имя пула Ceph и идентификатор пула.</p>
+	     </li>
+	     <li class="listitem">
+	      <p><span class="term"><code class="literal">pg 10.bac5debc (10.3c) </code></span>: Это номер группы размещения, т.е. 
+	      <span class="term"><code class="literal">object1</code></span> который находится в PG 
+	      <span class="term"><code class="literal">10.3c</code></span>.</p>
+	     </li>
+		 <li class="listitem">
+		  <p><span class="term"><code class="literal">up [0,6,3]</code></span>: Это набор включенных (up) OSD, который содержит 
+		  <span class="term"><code class="literal">osd.0</code></span>, <span class="term"><code class="literal">osd.6</code></span>
+		  и <span class="term"><code class="literal">osd.3</code></span>. Поскольку пул имеет уровень репликаций, установленный в 
+		  значение <span class="term"><code class="literal">3</code></span>, каждая PG будет содержать три OSD. Это также означает, 
+		  что все три содержащиеся в PG <span class="term"><code class="literal">10.3c</code></span> OSD работают.
+		  Это упорядоченный список OSD, который соответствует для конкретных OSD в конкретных периодах (epoch), как это 
+		  указано в карте CRUSH. Обычно это ровно то, что содержит набор действующих PG.</p>
+	     </li>
+		 <li class="listitem">
+		  <p><span class="term"><code class="literal">acting [0,6,3]</code></span>:
+		  <span class="term"><code class="literal">osd.0</code></span>, 
+		  <span class="term"><code class="literal">osd.6</code></span>,
+		  <span class="term"><code class="literal">osd.3</code></span> являются действующим набором. 
+		  Причем <span class="term"><code class="literal">osd.0</code></span> является первичное OSD, 
+		  <span class="term"><code class="literal">osd.6</code></span> это вторичное OSD и
+		  <span class="term"><code class="literal">osd.3</code></span> третичное OSD. Этот набор действующих OSD является 
+		  упорядоченным списком, который соответствует определенным OSD.</p>
+	     </li>
+       </ul>
+       </div>
+       </li><li class="step">
+	   <p>Найдите физическое местоположение каждого из этих OSD. Вы обнаружите, что OSD <span class="term"><code class="literal">0</code></span>,
+	   <span class="term"><code class="literal">6</code></span> и <span class="term"><code class="literal">3</code></span> физически 
+	   разделены в хостах <span class="term"><code class="literal">ceph-node1</code></span>, 
+	   <span class="term"><code class="literal">ceph-node3</code></span> и <span class="term"><code class="literal">ceph-node2</code></span>
+	   соответственно:</p>
+   	   <pre class="screen">
+[root@ceph-node1 ~]# ceph osd tree
+* id	weight	type name	up/down reweight			
+-1	0	root default				
+-7	0	        rack rack03			
+-4	0		        host ceph-node3		
+6	0			        osd.6	up	1
+7	0			        osd.7	up	1
+8	0			        osd.8	up	1
+-6	0	        rack rack02			
+-3	0		        host ceph-node2		
+3	0			        osd.3	up	1
+4	0			        osd.4	up	1
+5	0			        osd.5	Up	1
+-5	0	        rack rack01			
+-2	0		        host ceph-node1		
+0	0			        osd.O	up	1
+1	0			        osd.1	Up	1
+2	0			        osd.2	Up	1</pre>
+       </li><li class="step">
+	   <p>Теперь зарегистрируемся на одном из этих узлов чтобы проверить на каких OSD расположены реальные данные.
+	   Вы обнаружите, что <span class="term"><code class="literal">object1</code></span> сохранен в PG 
+	   <span class="term"><code class="literal">10.3с</code></span> на <span class="term"><code class="literal">ceph-node2</code></span>,
+	   в разделе <span class="term"><code class="literal">sdb1</code></span>, который является <span class="term"><code class="literal">osd.3</code></span>;
+	   заметим, что указанные идентификаторы PG ID и OSD ID могут быть другими в вашей установке:</p>
+   	   <pre class="screen">
+# ssh ceph-node2
+# df -h | grep -i ceph-3
+# cd /var/lib/ceph/osd/ceph-3/current
+# ls -l | grep -i 10.3c
+# cd 10.3c_head/
+# ls -l</pre>
+   	   <pre class="screen">
+[root@ceph-node1 /]# ssh ceph-node2
+Last login: Wed May 14 12:45:59 2014 from ceph-node1
+[root@ceph-node2 ~]# df -h | grep -i ceph-3
+/dev/sdb1	      5.0G   54m  5.OG   2% /var/lib/ceph/osd/ceph-3
+[root@ceph-node2 ~]# cd /var/lib/ceph/osd/ceph-3/current
+[root@ceph-node2 current]# ls -l | grep -i 10.3c
+drwxr-xr-x. 2 root root    38 May 14 12:06 10.3c_head
+[root@ceph-node2 current]# cd 10.3c_head/
+[root@ceph-node2 10.3c_head]# ls -1
+total 64
+-rw-r--r--. 1 root root 35 May 14 12:06 object1__head_BAC5DEBC__a
+[root@ceph-node2 10.3c_head]#</pre>
+       </li>
+      </ol>
+   <p>Таким образом Ceph сохраняет каждый объект данных реплицируемым образом в различных областях отказов. 
+   Такой интеллектуальный механизм является ядром управления данных Ceph.
+   </p> 
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В данной главе мы изучили внутренние компоненты Ceph, включающие в себя объекты, алгоритм CRUSH, группы размещения 
+   и пулы, а также как они взаимодействуют друг с другом для обеспечения высоких показателей надежности и масштабируемости 
+   для кластера хранения. Эта глава основывается на практическом подходе для данных компонентов, следовательно вы можете 
+   понять каждый их бит.Мы также показываем как данные сохраняются в кластере, прямо начиная с того момента , как они 
+   приходят в виде запроса на запись в пул Ceph вплоть до того,как они достигают правильной файловой системы 
+   OSD (устройство хранения объектов) и сохраняются в виде объектов. Мы рекомендуем вам повторить эти практические примеры,
+   на вашем тестовом кластере; это даст вам более обширное понимание того, как Ceph сохраняет свои данные с высокой  
+   степенью реплицированности в легко доступной форме. Если вы являетесь системным администратором, вам следует 
+   сосредоточиться на обнаружении пулов Ceph и карт CRUSH, как это упоминалось в данной главе. Это то, что ожидается 
+   от системных администраторов как до, так и после подготовки кластера. В следующей главе мы узнаем о планировании 
+   оборудования кластера Ceph и различных методах его установки, а после этого с модернизацией кластера Ceph и его 
+   масштабированием.</p>
+  </div>
+
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

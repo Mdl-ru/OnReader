@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Глава 14. Резервное копирование и восстановление - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="operations.html" title="Эксплуатация"/>
+<link rel="prev" href="logging_monitoring.html" title="Глава 13. Ведение журналов и мониторинг"/>
+<link rel="next" href="customize.html" title="Глава 15. Индивидуальная настройка"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:08+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//backup_and_recovery.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 14. Резервное копирование и восстановление';
+PrevRef = 'logging_monitoring.html';
+UpRef = 'operations.html';
+NextRef = 'customize.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="chapter"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="backup_and_recovery"> </a>Глава 14. Резервное копирование и восстановление</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="backup_and_recovery.html#what_to_backup">Что подлежит резервному копированию</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#database_backups">Резервное копирование баз данных</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#file_system_backups">Резервное копирование файловой системы</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#recovering_backups">Восстановление резервных копий</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#ops-backup-recovery-summary">Резюме</a></span></dt></dl>
+</div>
+<p>При создании вашей политики резервного копирования вашего OpenStack лучшей практикой 
+будет стандартное резервное копирование. Например, проблема того, как часто вы должны 
+делать резервные копии своих данных тесно 
+связана с тем, как быстро вы должны восстановить утраченные данные.
+<a id="d9e6184" class="indexterm"/></p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>Если вы совсем не должны иметь никаких потерь данных, вам также 
+следует сосредоточиться на реализации высокой доступности (High Availability).
+If you cannot have any data loss at all, you should also focus on a
+<span class="emphasis"><em><a class="link" href="http://docs.openstack.org/high-availability-guide/content/" target="_top">
+Руководство по высокой доступности OpenStack</a></em></span> дает советы 
+для устранения единой точки отказа, которая может привести к 
+простою системы. Хотя этот докумнт и не дает исчерпывающих
+инструкций, он предлагает методы и техники, позволяющие 
+избежать простоев и потерь данных.
+<a id="d9e6191" class="indexterm"/></p></td></tr></table>
+</div>
+<p>Дополнительный анализ резервного копирования включают в себя:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Сколько резервных копий стоит хранить?</p></li><li class="listitem">
+<p>Должны ли резервные копии храниться за пределами площадки?</p></li><li class="listitem">
+<p>Как часто стоит проверять резервные копии?</p></li></ul>
+</div>
+<p>Политика восстановления (или, по крайней мере тестирование восстановления) 
+является не менее важной, чем политика резервного копирования.</p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="what_to_backup"> </a>Что подлежит резервному копированию</h2>
+</div></div></div>
+<p>Поскольку OpenStack состоит из многих компонентов и перемещающихся частей, 
+резервное копирование критически важных данных достаточно простое.
+<a id="d9e6206" class="indexterm"/></p>
+<p>В этой главе описывается только как выполнять резервное копирование файлов конфигурации и баз данных, 
+которые необходимы для работы различных компонентов OpenStack. В данном разделе 
+не описывается, как выполнять резервное копирование объектов внутри систем хранения объектов 
+или данных, содержащихся внутри систем блочного хранения. Как правило, эти области отдаются на откуп пользователю 
+для самостоятельного резервного копирования.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="database_backups"> </a>Резервное копирование баз данных</h2>
+</div></div></div>
+<p>Приводимый пример архитектуры OpenStack определяет контроллер облака 
+в качестве сервера MySQL. Этот сервер MySQL содержит базы данных для 
+nova, glance, cinder и keystone. Поскольку все эти базы данных находятся в одном месте, 
+создание резервной копии базы данных очень простое: 
+<a id="d9e6213" class="indexterm"/>
+<a id="d9e6216" class="indexterm"/></p>
+<pre class="programlisting brush: bash; "># mysqldump --opt --all-databases &gt; openstack.sql</pre>
+<p>Если вы хотите выполнить резервное копирование только одной базы данных, вы можете вместо приведенного выше 
+примера выполнить:</p>
+<pre class="programlisting brush: bash; "># mysqldump --opt nova &gt; nova.sql</pre>
+<p>где <code class="code">nova</code> база данных, резервную копию которой вы хотите сделать.</p>
+<p>Вы можете легко автоматизировать процесс путем создания задания cron, которое 
+ежедневно выполняет следующий сценарий: </p>
+<pre class="programlisting brush: bash; ">#!/bin/bash
+backup_dir="/var/lib/backups/mysql"
+filename="${backup_dir}/mysql-`hostname`-`eval date +%Y%m%d`.sql.gz"
+# Dump the entire MySQL database
+/usr/bin/mysqldump --opt --all-databases | gzip &gt; $filename
+# Delete backups older than 7 days
+find $backup_dir -ctime +7 -type f -delete</pre>
+<p>Приведенный сценарий выгружает всю базу данных MySQL и удаляет любые резервные копии 
+старше 7 дней.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="file_system_backups"> </a>Резервное копирование файловой системы</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="backup_and_recovery.html#compute">Вычислительная среда</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#image_catalog_delivery">Каталог образов и их доставка</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#identity">Идентификация</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#ops_block_storage">Блочное хранилище</a></span></dt><dt><span class="section">
+ <a href="backup_and_recovery.html#ops_object_storage">Хранилище объектов</a></span></dt></dl>
+</div>
+<p>В данном разделе обсуждается, какие файлы и каталоги должны подвергаться регулярному резервному копированию со стороны службы.
+<a id="d9e6230" class="indexterm"/>
+<a id="d9e6233" class="indexterm"/></p>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="compute"> </a>Вычислительная среда</h3>
+</div></div></div>
+<p>Каталог <code class="filename">/etc/nova</code> должен регулярно резервироваться
+и в контроллере облака и на вычислительных узлах.
+<a id="d9e6240" class="indexterm"/>
+<a id="d9e6243" class="indexterm"/></p>
+<p>Если все ваши журналы приходят в центральное место, 
+<code class="code">/var/log/nova</code> не должен резервироваться. 
+Настоятельно рекомендуется использовать центральный сервер протоколирования 
+или выполнять резервное копирование каталога журналов..</p>
+<p><code class="code">/var/lib/nova</code> является еще одним важным каталогом для резервного 
+копирования. Исключением из этого правила является подкаталог <code class="code">/var/lib/nova/instances</code> 
+на вычислительных узлах. Этот подкаталог содержит образы KVM запущенных 
+на исполнение экземпляров. Вам следует создавать резервную копию этого подкаталога 
+только если у вас есть необходимость создавать резервные копии всех экземпляров. В большинстве случаев 
+в этом нет необходимости, однако это может меняться от облака к облаку и ваших уровней служб. 
+Также имейте в виду, что создание резервной копии запущенного экземпляра KVM может привести к тому, 
+что он не сможет загружаться надлежащим образом, будучи восстановленным из резервной копии.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="image_catalog_delivery"> </a>Каталог образов и их доставка</h3>
+</div></div></div>
+<p><code class="code">/etc/glance</code> и <code class="code">/var/log/glance</code> 
+соблюдают те же правила, что и их аналоги в nova.
+<a id="d9e6256" class="indexterm"/></p>
+<p>Для <code class="code">/var/lib/glance</code> также необходимо создавать резервную копию.
+Примите к сведению особенности <code class="code">/var/lib/glance/images</code>. 
+Если вы используете сервера glance на основе файлов, <code class="code">/var/lib/glance/images</code> 
+является местом, где хранятся образы и необходимо быть аккуратным.</p>
+<p>Существует два способа обеспечить устойчивость этого каталога.
+Первый заключается в том, что этот каталог работает в RAID массиве.
+Если происходит сбой диска, каталог остается доступным.
+Второй способ заключается в использовании инструментов, например, rsync, 
+для репликации образов на другой сервер:</p>
+<pre class="programlisting"># rsync -az --progress /var/lib/glance/images \
+backup-server:/var/lib/glance/images/</pre>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="identity"> </a>Идентификация</h3>
+</div></div></div>
+<p><code class="code">/etc/keystone</code> и <code class="code">/var/log/keystone</code>
+соблюдают те же правила, что и их аналоги в других компонентах.
+<a id="d9e6270" class="indexterm"/></p>
+<p><code class="code">/var/lib/keystone</code>, 
+хотя он и не должен содержать никаких используемых данных, также может резервироваться на всякий случай.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="ops_block_storage"> </a>Блочное хранилище</h3>
+</div></div></div>
+<p><code class="code">/etc/cinder</code> и <code class="code">/var/log/cinder</code> 
+соблюдают те же правила, что и их аналоги в других компонентах.
+<a id="d9e6280" class="indexterm"/>
+<a id="d9e6282" class="indexterm"/></p>
+<p>
+<code class="code">/var/lib/cinder</code> также должен резервироваться.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="ops_object_storage"> </a>Хранилище объектов</h3>
+</div></div></div>
+<p><code class="code">/etc/swift</code> является очень важным и подлежит резервному копированию.
+Этот каталог содержит файлы настройки swift, а также файлы кольца и 
+<a class="gloss" href="#" def="&lt;strong&gt;файл- изготовитель: &lt;/strong&gt; &lt;p&gt;
+(builder file)- Содержит информацию о конфигурации, которую хранилище объектов использует для 
+реконфигурации кольца или для повторного его создания из рабочих областей (scratch) после серьезных отказов. &lt;/p&gt;">
+файлы- изготовитель</a> кольца, в случае их утраты предоставление данных в вашем кластере невозможно.
+Лучше всего копировать файлы-изготовители на все узлы хранения вместе с файлами кольца.
+Множество резервных копий в этом случае распределено по вашему кластеру хранения.
+<a id="d9e6292" class="indexterm"/>
+<a id="d9e6294" class="indexterm"/>
+<a id="d9e6297" class="indexterm"/></p>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="recovering_backups"> </a>Восстановление резервных копий</h2>
+</div></div></div>
+<p>Восстановление резервных копий является достаточно простым процессом.
+Для начала убедитесь, что службы, которые вы собираетесь восстанавливать, не
+запущены. Например, для полного восстановления <code class="literal">nova</code> 
+в контроллере облака вначале остановим все службы <code class="code">nova</code>:
+<a id="d9e6305" class="indexterm"/>
+<a id="d9e6308" class="indexterm"/></p>
+<pre class="programlisting brush: bash; "># stop nova-api
+# stop nova-cert
+# stop nova-consoleauth
+# stop nova-novncproxy
+# stop nova-objectstore
+# stop nova-scheduler</pre>
+<p>Теперь мы можем импортировать предварительно сохраненные базы данных:</p>
+<pre class="programlisting brush: bash; "># mysql nova &lt; nova.sql</pre>
+<p>Также вы можете восстановить резервные копии каталогов nova:</p>
+<pre class="programlisting brush: bash; "># mv /etc/nova{,.orig}
+# cp -a /path/to/backup/nova /etc/</pre>
+<p>Когда файлы восстановлены, запустите полное резервное копирование:</p>
+<pre class="programlisting brush: bash; "># start mysql
+# for i in nova-api nova-cert nova-consoleauth nova-novncproxy
+nova-objectstore nova-scheduler
+&gt; do
+&gt; start $i
+&gt; done</pre>
+<p>Другие службы следуют аналогичным процессом со своими соответствующими каталогами и 
+<span class="keep-together">базами данных</span>.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops-backup-recovery-summary"> </a>Резюме</h2>
+</div></div></div>
+<p>Резервное копирование и последующее восстановление является одной из наиважнейших задач, 
+которую изучают системные администраторы. Однако, каждая система имеет собственные элементы,
+требующие внимания. Заботясь о своей базе данных, обслуживании образов и соответствующих 
+местоположениях файловой системы, вы можете быть уверены, что вы сможете справиться с любым 
+требующим восстановления событием.</p>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

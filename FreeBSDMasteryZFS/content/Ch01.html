@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 1. Представление ZFS - Мастерство FreeBSD: ZFS</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="prev" href="Ch00.html" title="Глава 0. Введение"/>
+<link rel="next" href="Ch02.html" title="Глава 2. Виртуальные устройства"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 1. Представление ZFS';
+PrevRef = 'Ch00.html';
+UpRef = 'index.html';
+NextRef = 'Ch02.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 1. Представление ZFS</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Представление ZFS</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#ZFS_Datasets">Наборы данных ZFS</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#ZFS_Partitions_and_Properties">Разделы и свойства ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch01.html#ZFS_Limits">Пределы ZFS</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#Storage_Pools">Пулы хранения</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Virtual_Devices">Виртуальные устройства</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Blocks_and_Inodes">Блоки и индексные дескрипторы</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Начало обучения ZFS простое. Установите последнюю версию FreeBSD. Скажите установке, что вы хотите ZFS. Вы начали. 
+  Если вы никогда не работали с ZFS, воспользуйтесь моментом и установите новую FreeBSD с ZFS на тестовой системе или 
+  виртуальной машине. Не выбирайте шифрование или любой другой причудливый вариант настройки. Такая простейшая установка 
+  предложит возможность ознакомиться с некоторыми основами ZFS, прежде чем погрузиться в более сложные инсталляции.</p>
+  <p>ZFS объединяет в себе функции традиционных файловых систем и диспетчеров томов. Как таковая, она рассчитывает обрабатывать все 
+  начиная с допуска к отдельным файлам и с того, какие файлы в каких каталогах находятся, вплоть до отслеживания того, какие 
+  устройства хранения для каких целей используются привыкнуть и как эти хранилища можно систематизировать. Системный администратор 
+  поручает ZFS организацию дисков и файлов, но ZFS управляет всем стеком хранения, находящимся в его распоряжении.Данная 
+  глава разделяет стек ZFS на три слоя: файловые системы, пулы хранения и виртуальные устройства, применяя хост FreeBSD 10.1,
+  установленный с настройками по умолчанию ZFS.</p>
+  <p>Чтобы сориентировать вас, мы начнем в наиболее очевидных частей стека хранения и проработаем наш путь вниз. После того, 
+  как вы поймете как подогнаны уровни, остаток этой книги начнет с основ и проработает свой путь вверх.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Datasets"> </a>Наборы данных ZFS</h3>
+   </div></div></div>
+   <p>Файловые системы ZFS не являются полным аналогом обычных файловых систем, и поэтому называются 
+   <span class="term"><strong class="userinput"><code>наборами данных</code></strong></span> 
+   (<span class="term"><strong class="userinput"><code>dataset</code></strong></span>). Классическая файловая система 
+   Unix (UFS, Unix File System), а также ее производные и рабочие аналоги, подобные современной BSD UFS2 и Limux extfs, 
+   управляют файловой системой при помощи различных программ. Наверное, вы хорошо привыкли применять 
+   <span class="term"><code>df(1)</code></span>, <span class="term"><code>newfs(8)</code></span>, 
+   <span class="term"><code>mount(8)</code></span>, <span class="term"><code>umount(8)</code></span>, 
+   <span class="term"><code>dump(8)</code></span>, <span class="term"><code>restore(8)</code></span> и аналогичные команды,
+   ZFS впитала все эти функции в программу <span class="term"><code>zfs(8)</code></span>, которая позволяет создавать, ликвидировать,
+   просматривать и еще как либо насаживать на ось наборы данных ZFS.</p>
+   <p>Начнем с просмотра существующих наборов данных при помощи <span class="term"><code>zfs list</code></span>:</p>
+   <pre class="screen">
+# zfs list
+NAME               USED  AVAIL  REFER  MOUNTPOINT
+zroot              429M  13.0G    96K  none
+zroot/ROOT         428M  13.0G    96K  none
+zroot/ROOT/default 428M  13.0G   428M  /
+zroot/tmp          104K  13.0G   104K  /tmp
+zroot/usr          428K  13.0G    96K  /usr
+   </pre>
+   <p>Это объединяет вывод <span class="term"><code>mount(8)</code></span><span class="term"> и <code>df(1)</code></span>
+   и должен выглядеть очень знакомо всякому, кто управлял UFS или extfs.</p>
+   <p>Каждый набор данных имеет имя. Имя набора данных ZFS начинается с имени пула хранения, или 
+   <span class="term"><strong class="userinput"><code>zpool</code></strong></span>, в котором содержится этот набор данных. 
+   Наш первый элемент называется просто <span class="term"><code>zroot</code></span>. Этот элемент представляет корневой 
+   набор данных (<span class="term"><strong class="userinput"><code>root dataset</code></strong></span>), на который навешивается 
+   все остальное.</p>
+   <p>Следующие две колонки показывают объем используемого и доступного пространства. Пул 
+   <span class="term"><code>zroot</code></span> использует 429МБ, а 13ГБ свободно.</p>
+   <p>Колонка REFER является особенной для ZFS. Это объем доступных данных в наборе данных, который не обязательно тот же, 
+   что и объем используемого пространства. Некоторые функциональные возможности ZFS, например, такие как снимки, 
+   совместно используют данные. наш элемент <span class="term"><code>zroot</code></span> &quot;использует&quot; 429МБ, но обращается
+   только за 96КБ данных. Весь пул имеет свободными 13ГБ, однако 96КБ являются доступными посредством такого специфического 
+   набора данных. Это не так много. Остальная часть пространства используется для дочерних записей этого набора данных. 
+   <a class="link" href="Ch06.html" target="_top">Глава 6</a> предоставляет детальное обсуждение использования диска 
+   файловой системой ZFS. Дочерние наборы данных включают снимки, тома и дочерние наборы данных, как вы увидите в данной книге.</p>
+   <p>Наконец, у нас есть точка монтирования файловой системы. <span class="term"><code>zroot</code></span> ZFS не 
+   монтируется.</p>
+   <p>Обратите внимание на вторую запись с именем <span class="term"><code>zroot/ROOT</code></span>. Это набор данных ZFS,
+   созданный для корня файловой системы. Как и пул <span class="term"><code>zroot</code></span>, он не монтируется. Он обращается
+   за 96КБ данных. Он, по-видимому, не используется, что кажется странным для корня файловой системы.</p>
+   <p>Третья запись, <span class="term"><code>zroot/ROOT/default</code></span>, является текущим корнем файловой системы. Она 
+   использует 428МБ данных и монтируется в <span class="term"><code>/</code></span>, корне Unix. Она обращается за 428МБ, 
+   что означает, что в данном наборе данных существует такое количество данных.</p>
+   <p>Зачем ZFS выделяет это из корня файловой системы? ZFS позволяет легко делать выбор из многих 
+   корневых файловых систем. Данный хост работает под управлением FreeBSD 10.1, но предположим, что вы должны применить 
+   некоторые обновления безопасности и перезагузиться? Применение исправлений операционной системы всегда донимает 
+   системных администраторов кишечными расстройствами вперемешку со страхом и надеждой. Даже хорошо проверенные обновления 
+   могут пойти не так и разрушить планы на день любого сотрудника. Однако ZFS позволяет вам клонировать наборы данных 
+   и делать их снимки. Когда вы обновляетесь до FreeBSD 10.1-p1, вы можете создать новый набор данных, например, 
+   <span class="term"><code>zroot/ROOT/10.1-p1</code></span> и попросить FreeBSD использовать его в качестве корневого раздела.
+   Вы либо не монтируете <span class="term"><code>zroot/ROOT/default</code></span>, либо, как я, смонтировали его в другом месте,
+   например, <span class="term"><code>/oldroot</code></span>. Если обновление пошло не так, возврат будет простым.</p>
+   <p>Следующий набор данных, <span class="term"><code>zroot/tmp</code></span>, почти пустой. Он монтируется в 
+   <span class="term"><code>/tmp</code></span>. Этот набор данных является обычным временным каталогом.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Partitions_and_Properties"> </a>Разделы и свойства ZFS</h3>
+   </div></div></div>
+   <p>В ZFS отсутствуют обычные разделы. Раздел является логическим подразделением диска, заполняющим весьма специфичные 
+   адреса логических юлоков (LBA, Logical Block Addresses) в устройствах хранения. Разделы не имеют сведений о данных в разделе.
+   Изменение раздела означает уничтожение и (предположительно) восстановление файловой системы поверх него.</p>
+   <p>Первой мыслью Лукаса, когда он увидел файловую систему без разделов было: интересно, как вообще можно будет управлять
+   моим хранилищем. Это примерно равносильно тому замешательству, когда после длинной холодной зимы Мичигана он выходит на улицу
+   и ощущает естественный теплый воздух впервые за долгие месяцы. Смятение является частью освобождения. Мы научились управлять
+   хранилищами посредством разделов не потому, что разделы нам симпатичны или являются наилучшим решением. Работа обычной 
+   файловой системы без разделов является плохой практикой, однако ZFS не является обычной файловой системой.</p>
+   <p>ZFS тесно интегрирует файловую систему с нижними уровнями хранилища. Это означает, что можно динамично разделять пространство 
+   хранения между различными файловыми системами по мере необходимости. В то время как вы можете установить конкретные 
+   ограничения на размер файловой системы в файловой системе ZFS, наборы данных не имеют размеров в обычном их понимании.
+   Если пул имеет достаточно места для файла, вы можете использовать его. Там, где раньше вы предварительно выделяли ограниченный
+   объем дискового пространства, например, удерживая безумие журналов от переполнения вашего диска, вы теперь должны устанавливать
+   эти пределы на уровне ZFS.</p>
+   <p>Объем пространства, который может использовать набор данных является одним из примеров свойств 
+   (<span class="term"><strong class="userinput"><code>property</code></strong></span>) ZFS. ZFS поддерживает десятки свойств 
+   наборов данных - например, свойство квота (<span class="term"><code>quota</code></span>) управляет тем, насколько может 
+   возрастать набор данных. Воспользуйтесь <span class="term"><code>zfs(8)</code></span> для установки свойств ZFS.</p>
+	   <pre class="screen">
+# zfs set quota=2G zroot/var/log
+	   </pre>
+   <p>Просматривайте свойства командой <span class="term"><code>zfs get</code></span>.</p>
+	   <pre class="screen">
+# zfs get quota zroot/var/log
+NAME           PROPERTY  VALUE  SOURCE
+zroot/var/log  quota     2G     local
+	   </pre>
+   <p>Просмотрите все свойства при помощи <span class="term"><code>zfs get all</code></span> и имени набора данных ZFS.</p>
+   <p><a class="link" href="Ch04.html" target="_top">Глава 4</a> подробно анализирует свойств ZFS, а 
+   <a class="link" href="Ch06.html" target="_top">Глава 6</a> обсуждает ограничения на размер набора данных.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Limits"> </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пределы ZFS</span></h4>
+    </div></div></div>
+    <p>Файловая система всегда должна иметь максимальные размеры и пределы. Файловая система FAT, как мы все знаем и раздражались 
+	этим, потребовала множество версий для преодоления своего максимального рамера в 32МБ, затем 2ГБ, а потом 4ГБ. Предел FAT32 в 32ТБ 
+	начинает выглядеть слега тесным в наши дни. UFS и ext2/3/4fs имеют свои собственные, аналогично произвольные, пределы. Эти 
+	пределы существуют по той причине, что авторы файловой системы установили каким-то образом предел и выбрали для него значение, 
+	которое, как они ожидают, будет хорошим для ряда последующих лет. Популярные файловые системы будут оставаться в применении пока 
+	не будут достигнуты эти пределы, поэтому системные администраторы должны часто узнавать о них.</p>
+    <p>Апологеты ZFS утверждают, что ZFS имеет иммунитет от таких произвольных ограничений, однако это не так. ZFS использует 128бит 
+	для хранения большинства своих значений, что устанавливает пределы настолько высокие, что они никогда не будут встречаться 
+	ни у кого, кто работает системными администраторами сегодня. Один каталог может иметь 2<sup>48</sup> файлов с размером до 
+	16 экзабайт каждый. Отдельный пул может иметь до 256 зеттабайт, или 2<sup>78</sup>байт. Пул хранения может содержать 
+	2<sup>64</sup> устройств, а отдельный хост может иметь 2<sup>64</sup> пулов хранения.</p>
+    <p>Хорошей новостью является то, что мы не будем жить так долго, чтобы попасть в эти пределы. Плохая новость состоит в том, 
+	что мы имеем полные знания о миграции между файловыми системами. Когда технологии упрутся в пределы ZFS, эти бедные люди 
+	не будут приучены к миграции между файловыми системами. К счастью, они имеют слегка запоздавшие имеющиеся сегодня FAT/ UFS/ extfs
+	трансформирующиеся для практики.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Storage_Pools"> </a>Пулы хранения</h3>
+   </div></div></div>
+   <p>ZFS использует пулы хранения (<span class="term"><strong class="userinput"><code>storage pools</code></strong></span>) 
+   вместо дисков. Пул хранения является абстракцией поверх лежащего ниже поставщика хранилища, позволяя вам разделить 
+   физические носители и видимую пользователем файловую систему поверх них.</p>
+   <p>Воспользуйтесь <span class="term"><code>zpool(8)</code></span> для просмотра и управления системными пулами хранения. 
+   Вот пулы по умолчанию системы FreeBSD.</p>
+	   <pre class="screen">
+# zpool status
+  pool: zroot
+ state: ONLINE
+  scan: none requested
+config:
+
+NAME       STATE READ WRITE CKSUM
+zroot     ONLINE    0     0     0
+ gpt/zfs0 ONLINE    0     0     0
+
+ errors: No known data errors
+	   </pre>
+   <p>Вначале вы получаете имя пула и состояние. Система может иметь более одного пула - большие системы с 
+   десЯтками и десятками жестких дисков часто имеют множество пулов. Если данный хост имеет множество пулов, каждый из них 
+   будет появляться в отдельном описании как в приведенном выше примере.</p>
+   <p>ZFS может выполнять многие виды внутренних проверок в пулах хранения. Если выполняется некая проверка целостности, 
+   отображается состояние <span class="term"><strong class="userinput"><code>scan</code></strong></span> и результат самого 
+   последнего сканирования.</p>
+   <p>Последняя часть списка пулов показывает расположение виртуальных устройств в этом пуле.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Virtual_Devices"> </a>Виртуальные устройства</h3>
+   </div></div></div>
+   <p>Пул хранения содержит одно или более устройств, или <span class="term"><strong class="userinput"><code>VDEV</code></strong></span>,
+   VDEV аналогичен обычному устройству RAID. Большой RAID-5 преподносит себя файловой системе как единое громадное устройство, 
+   даже если системный администратор знает, что в действительности это целая куча мелких дисков. Виртуальные устройства позволяют 
+   вам назначать определенные устройства для определенных целей. При помощи VDEV вы можете организовывать физическое хранилище 
+   по мере ваших потребностей.</p>
+   <p>Виртуальные устройства это место, где происходит целая куча магии ZFS. Пул может быть организован для избыточности в 
+   RAID- стиле. Вы можете применять поставщиков как выделенные кэши чтения и записи, повышая производительность виртуального 
+   устройства. <a class="link" href="Ch02.html" target="_top">Глава 2</a> охватывает виртуальные устройства более подробно.</p>
+   <p>Избыточность данных ZFS и автоматическая коррекция ошибок также осуществляется на уровне VDEV. Все в ZFS имеет 
+   контрольные суммы для проверки целостности. Если ваш пул имеет достаточную избыточность, ZFS является самовосстанавливающейся. 
+   Если вашему пулу не хватает избыточности, ну, вы, по крайней мере, знаете какие данные повреждены и вы можете (надеемся) 
+   восстановить из резервной копии. (ZFS не исключает необходимости для резервных копий. Единственное, что устраняет 
+   резервное копирование это полное безразличие).</p>
+   <p>Команда <span class="term"><code>zpool status</code></span>, которая отображает состояние пула также показывает виртуальные 
+   устройства в этом пуле. Взгляните на пример в предыдущем разделе. Очень простой пул, 
+   <span class="term"><code>zroot</code></span>, содержит одного поставщика хранилища, 
+   <span class="term"><code>/dev/gpt/zfs0</code></span>. Этот поставщик является разделом GPT, не диском. ZFS может использовать 
+   любые виды используемых хранилищ, как это обсуждается в <a class="link" href="Ch02.html" target="_top">Главе 2</a>. 
+   Применение раздела GPT очень распространено, однако другие возможности включают диск целиком, файлы и любых других поставщиков 
+   GEOM. FreeBSD использует поставщиков GEOM для поддержки таких функциональных возможностей как шифрование.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Blocks_and_Inodes"> </a>Блоки и индексные дескрипторы</h3>
+   </div></div></div>
+   <p>Обычные файловые системы почти всегда используют некоторое разнообразие блоков данных для хранения данных и отображают 
+   содержимое этих блоков (<span class="term"><strong class="userinput"><code>block</code></strong></span>) 
+   индексными дескрипторами (<span class="term"><strong class="userinput"><code>inode</code></strong></span>). 
+   UFS BSD и extfs Linux называют их <span class="term"><strong class="userinput"><code>block</code></strong></span>) 
+   и <span class="term"><strong class="userinput"><code>inode</code></strong></span>. Даже файловая система FAT Microsoft 
+   имеет блоки хранения данных и индексные дескрипторы.</p>
+   <p>Как и эти файловые системы, ZFS применяет индексные блоки и блоки данных. В отличие от более старых файловых систем, 
+   однако, ZFS создает индексные дескрипторы по запросу. Пока это возможно, ZFS создает блоки хранения того размера, который
+   вмещает эти данные. Блоки переменного размера не всегда вмещают все возможные файлы, которые вы можете создать, однако они 
+   несомненно более гибки, чем обычные файловые системы.</p>
+   <p>В отличие от суперблоков UFS, динамически создаваемые индексные блоки могут быть размещены в известном месте на диске. 
+   Как ZFS справляется с повреждениями в индексных блоках? ZFS хранит несколько копий важных индексных блоков в алгоритмически 
+   прогнозируемых местах. Эти точные копии (<span class="term"><strong class="userinput"><code>ditto block</code></strong></span>)
+   реплицируются в несколько мест на данном диске. <a class="link" href="Ch03.html" target="_top">Глава 3</a> обсуждает блоки 
+   ZFS, uberblock, ditto блоки, группы транзакций и многое другое.</p>
+   <p>Теперь вы знаете обнаженные основы ZFS, оставшаяся часть данной книги в основном наполняет различные сотни мелких деталей.
+   Мы начнем с самого низа стека, с виртуальных устройств.</p>
+  </div>
+   
+</div>
+
+<script src="http://t1.extreme-dm.com/f.js" id="eXF-fbsdmsfs-0" async defer></script>
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

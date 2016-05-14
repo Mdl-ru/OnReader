@@ -1,0 +1,2436 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 3. Работа с хранилищем объектов Ceph - Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch02.html" title="Глава 2. Работа с блочными устройствами Ceph"/>
+<link rel="next" href="Ch04.html" title="Глава 4. Работа с файловой системой Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 3. Работа с хранилищем объектов Ceph';
+PrevRef = 'Ch02.html';
+UpRef = 'index.html';
+NextRef = 'Ch04.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 3. Работа с хранилищем объектов Ceph</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Понимание хранения объектов Ceph</p>
+	 </li><li class="listitem">
+	 <p>Стандартные наладку, установку и настройку шлюза RADOS</p>
+	 </li><li class="listitem">
+	 <p>Создание пользователя radosgw</p>
+	 </li><li class="listitem">
+	 <p>Доступ к хранилищу объектов Ceph с применением S3 API</p>
+	 </li><li class="listitem">
+	 <p>Доступ к хранилищу объектов Ceph с применением Swift API</p>
+	 </li><li class="listitem">
+	 <p>Интеграцию шлюза RADOS с OpenStack Keystone</p>
+	 </li><li class="listitem">
+	 <p>Настройку федеративных шлюзов Ceph</p>
+	 </li><li class="listitem">
+	 <p>Тестирование федеративных настроек radosgw</p>
+	 </li><li class="listitem">
+	 <p>Построение служб файловой синхронизации и совместного использования с применением RGW</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch03.html">3. Работа с хранилищем объектов Ceph</dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch03.html#0301">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0302">Понимание хранения объектов Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0303">Стандартные наладка, установка и настройка шлюза RADOS</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0304">Создание пользователя radosgw</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0305">Доступ к хранилищу объектов Ceph с применением S3 API</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0306">Доступ к хранилищу объектов Ceph с применением Swift API</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0307">Интеграция шлюза RADOS с OpenStack Keystone</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0308">Настройка федеративных шлюзов Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0309">Тестирование федеративных настроек radosgw</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0310">Построение служб файловой синхронизации и совместного использования с применением RGW</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>Введение</h3>
+   </div></div></div>
+   <p>Основанные на объектах хранилища получают всё больше внимания к себе, так как организации ищут гибкости для своих огромных 
+   данных. Системы хранения объектов являются подходом к сохранению данных в форме объектов как для обычных файлов и блоков, 
+   так и для и всех хранящих объекты данных, метаданных и уникальных идентификаторов. В данной главе мы получим представление о 
+   хранилище объектов как части Ceph и получим практические знания по настройке шлюза Ceph RADOS.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>Понимание хранения объектов Ceph</h3>
+   </div></div></div>
+   <p>Хранилище объектов не может быть доступно напрямую из операционной системы в качестве дисковой файловой системы. Наоборот, оно 
+   может быть доступно только через API на прикладном уровне. Ceph является распределённой системой системой хранения объектов, которая 
+   предоставляет интерфейс хранения объектов через шлюз объектов Ceph, также называемый интерфейсом 
+   <span class="term"><strong class="userinput">RADOS Gateway</strong></span> (<span class="term"><strong class="userinput">RGW</strong></span>, 
+   шлюза Безотказного автономного распределенного хранилища объектов), который строится поверх уровня Ceph RADOS. RGW использует 
+   <span class="term"><strong class="userinput">librgw</strong></span> (<span class="term"><strong class="userinput">RADOS Gateway 
+   Library</strong></span>) и <span class="term"><strong class="userinput">librados</strong></span>, позволяя приложениям устанавливать 
+   соединение с хранилищем объектов Ceph. RGW снабжает приложения API- интерфейсом совместимым с RESTful S3/ Swift для хранения данных в 
+   форме приложений в вашем кластере Ceph. Ceph также поддерживает доступное через RESTful API хранение объектов со множеством 
+   владельцев (multitenant). В дополнение к этому RGW также предоставляет API администрирования Ceph, который может применяться для 
+   управления кластером хранения Ceph с использованием внутренних API вызовов.</p>
+   <p>Библиотека программного обеспечения <span class="term"><strong class="userinput">librados</strong></span> является очень гибкой и 
+   позволяет пользовательским приложениям осуществлять прямой доступ к кластеру хранения Ceph из связываний (binding) C, C++, Java, Python 
+   и PHP. Хранилище объектов Ceph также имеет возможности множества площадок, то есть предоставляет решения для восстановления после 
+   сбоев.</p>
+   <p>Следующий рисунок представляет хранение объектов Ceph:</p>
+   <div class="figure"><a id="Fig0301"> </a>
+    <p class="title"><strong>Рисунок 3.1. Хранение объектов Ceph</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0301.jpg" width="302" height="252"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0303"> </a>Стандартные наладка, установка и настройка шлюза RADOS</h3>
+   </div></div></div>
+   <p>Для промышленных окружений рекомендуется чтобы вы настраивали свои RGW на физических, выделенных машинах. Однако, если рабочая 
+   нагрузка хранилища объектов не очень велика, вы можете рассмотреть возможность использования всех машин монитора в качестве узла 
+   RGW. RGW является отдельной службой, которая внутренне связана с кластером Ceph и предоставляет своим клиентам доступ к хранимым 
+   объектам. В промышленных средах рекомендуется чтобы вы выполняли более одного экземпляра своих RGW, маскируемых балансировщиком 
+   нагрузки, как показано на следующей схеме:</p>
+   <div class="figure"><a id="Fig0302"> </a>
+    <p class="title"><strong>Рисунок 3.2. Балансировка нагрузки</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0302.jpg" width="325" height="362"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Начиная с выпуска Ceph Firefly был введён новый интерфейс RGW: <span class="term"><strong class="userinput"><code>Civetweb</code></strong></span>, 
+   который является автономным лёгким веб сервером. <span class="term"><strong class="userinput"><code>Civetweb</code></strong></span> был 
+   непосредственно встроен в службу <span class="term"><code>ceph-radosgw</code></span>, делая развёртывание хранилища объектов Ceph более 
+   быстрым и простым.</p>
+   <p>В следующих рецептах мы продемонстрируем настройки RGW, применяющие <span class="term"><strong class="userinput"><code>Civetweb</code></strong></span>
+   на виртуальной машине, которая взаимодействует с тем же кластером Ceph, который мы создали в 
+   <a class="link" href="Ch01.html" target="_top">Главе 1. Введение и за его пределами</a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сборка узла шлюза RADOS </span></h4>
+   </div></div></div>
+   <p>Для выполнения службы хранения объектов нам необходим работающий кластер Ceph и узел RGW должен иметь доступ к сетевой среде Ceph.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Как это уже демонстрировалось в предыдущих главах, мы будем загружать виртуальную машину применяя Vagrant и настраивать её 
+   для нашего узла RGW.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Запустите <span class="term"><code>rgw-node1</code></span> с помощью <span class="term"><code>Vagrantfile</code></span>, как 
+	 мы это делали для узлов Ceph в <a class="link" href="Ch01.html" target="_top">Главе 1. Введение и за его пределами</a>. Убедитесь 
+	 что вы находитесь на машине хоста под репозиторием <span class="term"><code>ceph-cookbook</code></span> перед приведением в 
+	 действие <span class="term"><code>rgw-node1</code></span> с помощью Vagrant:</p>
+	   <pre class="screen"><code>
+# cd ceph-cookbook
+# vagrant up rgw-node1
+
+	teeri:ceph-cookbook ksinghS vagrant up rgw-node1 
+	Bringing machine 'rgw-node1' up with 'virtualbox' provider... 
+	rgw-node1: Importing base box 'centos7-standard'.... 
+	==&gt; rgw-node1: matching MAC address for NAT networking... 
+	==&gt; rgw-node1: Setting the name of the vm: rgw-node1 
+	==&gt; rgw-node1: Fixed port collision for 22 ==&gt; 2222. NOW on port 2202. 
+	==&gt; rgw-node1: Clearing any previously set network interfaces... 
+	==&gt; rgw-node1: Preparing network interfaces based on configuration... 
+	       rgw-node1: Adapter 1: nat 
+		   rgw-node1: Adapter 2: hostonly 
+	==&gt; rgw-node1: Forwarding ports... 
+	       rgw-node1: 22 =&gt; 2202 (adapter 1) 
+	==&gt; rgw-node1: Running 'pre-boot' VM customizations... 
+	==&gt; rgw-node1: Booting vm... 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Когда <span class="term"><code>rgw-node1</code></span> поднимется, проверьте состояние Vagrant и зарегистрируйтесь на этом 
+	 узле:</p>
+	   <pre class="screen"><code>
+$ vagrant status rgw-node1
+$ vagrant ssh rgw-node1
+
+	teeri:ceph-cookbook ksinghS vagrant status rgw-node1 
+	Current machine states: 
+	
+	rgw-node1                 running (virtualbox) 
+	
+	The vm is running. To stop this vm, you can run `vagrant halt` to 
+	shut it down forcefully, or you can run 'vagrant suspend' to simply 
+	suspend the virtual machine. In either case, to restart it again, 
+	simply run `vagrant up`. 
+	teeri:ceph-cookbook ksinghS vagrant ssh rgw-node1 
+	Last login: Sun Apr 5 19:31:52 2015 
+	[vagrant@rgw-node1 ~]$ 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Проверьте что <span class="term"><code>rgw-node1</code></span> может взаимодействовать с кластером Ceph:</p>
+	   <pre class="screen"><code>
+# ping ceph-node1 -c 3
+# ping ceph-node2 -c 3
+# ping ceph-node3 -c 3
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Удостоверьтесь в правильности записей локально файла <span class="term"><code>host</code></span>, имени хоста и FQDN для 
+	 <span class="term"><code>rgw-node1</code></span>:</p>
+	   <pre class="screen"><code>
+# cat /etc/hosts | grep -i rgw
+# hostname
+# hostname -f
+
+	[root@rgw-node1 ~]# cat /etc/hosts | grep rgw 
+	127.0.0.1 <strong>rgw</strong>-node1.cephcookbook.com <strong>rgw</strong>-node1 localhost localhost.localdomain localhost4 localhost4.localdomain4 
+	192.168.1.106 <strong>rgw</strong>-node1.cephcookbook.com <strong>rgw</strong>-node1 
+	[root@rgw-node1 ~]# 
+	[root@rgw-node1 ~]# hostname rgw-node1.cephcookbook.com 
+	[root@rgw-node1 ~]# 
+	[root@rgw-node1 ~]# hostname -f rgw-node1.cephcookbook.com 
+	[root@rgw-node1 ~]# 
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Установка шлюза RADOS </span></h4>
+   </div></div></div>
+   <p>Предыдущий рецепт был посвящён сборке виртуальной машины для RGW. В этом рецепте мы изучим как собрать на этом узле 
+   вашу службу <span class="term"><code>ceph-radosgw</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030304"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Как это уже демонстрировалось в предыдущих главах, мы будем загружать виртуальную машину применяя Vagrant и настраивать её 
+   для нашего узла RGW.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Вначале нам нужно установить пакеты Ceph на <span class="term"><code>rgw-node1</code></span>. Для этого мы воспользуемся
+	 инструментарием <span class="term"><code>ceph-deploy</code></span> с <span class="term"><code>ceph-node1</code></span>, 
+	 который является нашим узлом монитора Ceph. Зарегистрируйтесь на <span class="term"><code>ceph-node1</code></span> и выполните 
+	 следующие команды:</p>
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+	   <p>Проверьте что для <span class="term"><code>ceph-node1</code></span> доступен в сетевой среде 
+	   <span class="term"><code>rgw-node1</code></span> применив следующую команду:</p>
+	   <pre class="screen"><code>
+# ping rgw-node1 -c 1
+ 	   </code></pre>
+	   </li><li class="listitem">
+	   <p>Позвольте <span class="term"><code>ceph-node1</code></span> регистрацию SSH без пароля и проверьте соединение.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Пароль для <span class="term"><code>rgw-node1</code></span> тот же, что и ранее, то есть 
+	     <span class="term"><code>vagrant</code></span>.
+	     <pre class="screen"><code>
+# ssh-copy-id rgw-node1
+# ssh rgw-node1 hostname
+ 	     </code></pre>
+	     </p></td></tr></table>
+       </div>
+	   <pre class="screen"><code>
+	[root@ceph-node1 ceph]# ping rgw-node1 -c 1 
+	PING rgw-node1.cephcookbook.com (192.168.1.106) 56(84) bytes of data. 
+	64 bytes from rgw-node1.cephcookbook.com (192.168.1.106): icmp_seq.1 tt1.64 time.0.745 ms 
+	
+	--- rgw nodel.cephcookbook.com ping statistics ---
+	1 packets transmitted, 1 received, 0% packet loss, time Oms 
+	rtt min/avg/max/mdev = 0.745/0.745/0.745/0.000 ms 
+	[root@ceph-node1 ceph]# 
+	[root@ceph-node1 ceph]# ssh-copy-id rgw-node1 the authenticity of host 'rgw-node1 (192.168.1.106)' can't be established. 
+	ECDSA key fingerprint is af:2a:a5:74:a7:0b:f5:5b:ef:c5:4b:2a:fe:ld:30:8e. 
+	Are you sure you want to continue connecting (yes/no)? yes 
+	/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed 
+	/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys root@rgw-node1's password: 
+	
+	Number of key(s) added: 1 
+	Now try logging into the machine, with: &quot;ssh 'rgw-node1'&quot; 
+	and check to make sure that only the key(s) you wanted were added. 
+	
+	[root@ceph-node1 ceph]# ssh rgw-node1 hostname rgw-node1.cephcookbook.com 
+	[root@ceph-node1 ceph]# 
+ 	   </code></pre>
+	   </li><li class="listitem">
+	   <p>Применяя <span class="term"><code>ceph-node1</code></span> установите пакеты Ceph и скопируйте файл 
+	   <span class="term"><code>ceph.conf</code></span> на <span class="term"><code>rgw-node1</code></span>:
+	   </p>
+	   <pre class="screen"><code>
+# cd /etc/ceph
+# ceph-deploy install rgw-node1
+# ceph-deploy config push rgw-node1
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Наконец, зарегистрируйтесь на <span class="term"><code>rgw-node1</code></span> и установите пакет 
+	 <span class="term"><code>ceph-radosgw</code></span>:</p>
+	   <pre class="screen"><code>
+# yum install ceph-radosgw
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030305"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка шлюза RADOS </span></h4>
+   </div></div></div>
+   <p>Так как для RGW мы используем встроенный веб- сервер <span class="term"><strong class="userinput"><code>Civetweb</code></strong></span>, 
+   большинство вещей уже установлено службой <span class="term"><code>ceph-radosgw</code></span>. В этом рецепте мы создадим ключи 
+   аутентификации для пользователя Ceph RGW и обновим файл <span class="term"><code>ceph.conf</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030306"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Как это уже демонстрировалось в предыдущих главах, мы будем загружать виртуальную машину применяя Vagrant и настраивать её 
+   для нашего узла RGW.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Чтобы создать пользователя RGW и кольцо ключей выполните следующие команды с <span class="term"><code>ceph-node1</code></span>:</p>
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+	   <p>Создайте кольцо ключей при помощи следующей команды:</p>
+	   <pre class="screen"><code>
+# cd /etc/ceph
+# ceph-authtool --create-keyring \
+/etc/ceph/ceph.client.radosgw.keyring
+# chmod +r /etc/ceph/ceph.client.radosgw.keyring
+ 	   </code></pre>
+	   </li><li class="listitem">
+	   <p>Сгенерируйте пользователя шлюза и ключ для экземпляра RGW; имя нашего экземпляра RGW <span class="term"><code>gateway</code></span>:</p>
+	   <pre class="screen"><code>
+# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring \
+-n client.radosgw.gateway --gen-key
+ 	   </code></pre>
+	   </li><li class="listitem">
+	   <p>Добавьте ключу возможности:</p>
+	   <pre class="screen"><code>
+# ceph-authtool -n client.radosgw.gateway --cap osd 'allowrwx' \
+--cap mon 'allow rwx' /etc/ceph/ceph.client.radosgw.keyring
+ 	   </code></pre>
+	   </li><li class="listitem">
+	   <p>Добавьте ключ в свой кластер Ceph:</p>
+	   <pre class="screen"><code>
+# ceph auth add client.radosgw.gateway \
+-i /etc/ceph/ceph.client.radosgw.keyring
+ 	   </code></pre>
+	   </li><li class="listitem">
+	   <p>Распространите ключ на свой узел Ceph RGW:</p>
+	   <pre class="screen"><code>
+# scp /etc/ceph/ceph.client.radosgw.keyring \
+rgw-node1:/etc/ceph/ceph.client.radosgw.keyring
+
+	[root@ceph-node1 ceph]# ceph-authtool --create-keyring /etc/ceph/ceph.client.radosgw.keyring 
+	creating /etc/ceph/ceph.client.radosgw.keyring 
+	[root@ceph-node1 ceph]# [root@ceph-node1 ceph]# chmod +r /etc/ceph/ceph.client.radosgw.keyring 
+	[root@ceph-node1 ceph]# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client. radosgw.gateway --gen-key 
+	[root@ceph-node1 ceph]# ceph-authtool -n client.radosgw.gateway --cap osd 'allow rwx' --cap mon 'allow rwx' /etc/ceph ceph.client.radosgw.keyring 
+	[root@ceph-node1 ceph]# ceph auth add client. radosgw.gateway /etc/ceph/ceph.client.radosgw.keyring 
+	added key for client.radosgw.gateway 
+	[root@ceph-node1 ceph]# 
+	[root@ceph-node1 ceph]# scp /etc/ceph/ceph.client.radosgw.keyring rgw-node1:/etc/ceph/ceph.client.radosgw.keyring ceph.client.radosgw.keyring 
+	100% 121 0.1KB/s 00:00 
+	[root@ceph-node1 ceph]# 
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+	 <p>Добавьте раздел <span class="term"><code>client.radosgw.gateway</code></span> в <span class="term"><code>ceph.conf</code></span> 
+	 на <span class="term"><code>rgw-node1</code></span>. Убедитесь что имя хоста то же что и в выводе команды 
+	 <span class="term"><code># hostname -s</code></span>:</p>
+	   <pre class="screen"><code>
+[client.radosgw.gateway]
+host = rgw-node1
+keyring = /etc/ceph/ceph.client.radosgw.keyring
+rgw socket path = /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock
+log file = /var/log/ceph/client.radosgw.gateway.log
+rgw dns name = rgw-node1.cephcookbook.com
+rgw print continue = false
+
+	[root@rgw-node1 ceph]# tail -7 ceph.conf 
+	[client.radosgw.gateway] 
+	host = rgw-node1 
+	keyring = /etc/ceph/ceph.client.radosgw.keyring 
+	rgw socket path = /var/run/ceph/ceph.radosgw.gateway.fastcgi.sock 
+	log file = /var/log/ceph/client.radosgw.gateway.log 
+	rgw dns name = rgw-node1.cephcookbook.com 
+	rgw print continue = false 
+	[root@rgw-node1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+	 <p>По умолчанию сценарий запуска <span class="term"><code>ceph-radosgw</code></span> выполняется от пользователь по умолчанию, 
+	 <span class="term"><code>apache</code></span>. Измените пользователя по умолчанию с <span class="term"><code>apache</code></span>
+	 на <span class="term"><code>root</code></span>:</p>
+	   <pre class="screen"><code>
+# sed -i s&quot;/DEFAULT_USER.*=.*'apache'/DEFAULT_USER='root'&quot;/g /etc/rc.d/init.d/ceph-radosgw
+ 	   </code></pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>В промышленных средах не выполняйте <span class="term"><code>ceph-radosgw</code></span> от имени пользователя
+		 '<span class="term"><code>root</code></span>', вместо этого применяйте '<span class="term"><code>apache</code></span>' или другого 
+		 пользователя <span class="term"><code>не- root</code></span>.</p></td></tr></table>
+       </div>
+	 </li><li class="listitem">
+	 <p>Запустите службу Ceph <span class="term"><code>radosgw</code></span> и проверьте её состояние:</p>
+	   <pre class="screen"><code>
+# service ceph-radosgw start
+# service ceph-radosgw status
+ 	   </code></pre>
+	 </li><li class="listitem">
+	 <p>Веб-сервер <span class="term"><strong class="userinput"><code>Civetweb</code></strong></span> который встроен в ваш 
+	 демон <span class="term"><code>ceph-radosgw</code></span> теперь должен работать по порту по умолчанию, 7489:</p>
+	   <pre class="screen"><code>
+# netstat -nlp | grep -i 7480
+
+	[root@rgw-node1 ceph]# netstat -nlp | grep -i 7480 
+	tcp        0      0 0.0.0.0:<strong>7480</strong>            0.0.0.0:*                 LISTEN      3635/radosgw 
+	[root@rgw-node1 ceph]# 
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0304"> </a>Создание пользователя radosgw</h3>
+   </div></div></div>
+   <p>Для применения хранилища объектов Ceph нам необходимо создать начального пользователя шлюза объектов Ceph для интерфейса S3 и 
+   затем создать подпользователя для интерфейса Swift.</p>
+   <p></p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Проверьте что <span class="term"><code>rgw-node1</code></span> способен осуществлять доступ к кластеру Ceph:</p>
+	   <pre class="screen"><code>
+# ceph -s -k /etc/ceph/ceph.client.radosgw.keyring --name client.radosgw.gateway
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Создайте пользователя шлюза RADOS для S3 доступа:</p>
+	   <pre class="screen"><code>
+# radosgw-admin user create --uid=mona --display-name=&quot;MonikaSingh&quot; --email=mona@cephcookbook.com -k /etc/ceph/ceph.client.radosgw.keyring --name client.radosgw.gateway
+
+	[root@rgw-node1 ceph]# radosgw-admin user create --uid=mona --display-name=&quot;MonikaSingh&quot; --email=mona@cephcookbook.com -k /etc/ceph/ceph.client.radosgw.keyring --name client.radosgw.gateway 
+	{ &quot;user_id&quot;: &quot;mona&quot;, 
+	  &quot;display_name&quot;: &quot;Monika Singh&quot;, 
+	  &quot;email&quot;: &quot;mona@cephcookbook.com&quot;, 
+	  &quot;suspended&quot;: 0, 
+	  &quot;max_buckets&quot;: 1000, 
+	  &quot;auid&quot;: 0, 
+	  &quot;subusers&quot;: [], 
+	  &quot;keys&quot;: [ 
+	        { &quot;user&quot;: &quot;mona&quot;, 
+	    	  &quot;access_key&quot;: &quot;C162E2F8w98A0M3KK99&quot;, 
+	    	  &quot;secret_key&quot;: &quot;J21mow6EPs6Sz4xtT7h+piDmhQBv1gWqVeicSRMg&quot;}], 
+	  &quot;swift_keys&quot;: [), 
+	  &quot;caps&quot;: [], 
+	  &quot;op_mask&quot;: &quot;read, write, delete&quot;, 
+	  &quot;default_placement&quot;: &quot;&quot;,
+	  &quot;placement_tags&quot;: [], 
+	  &quot;bucket_quota&quot;: { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;user_quota&quot;: { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;temp_url_keys&quot;: []}
+	[root@rgw-node1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Ваши ключи значений (<span class="term"><code>access_key</code></span>) и ключи (<span class="term"><code>secret_key</code></span>) 
+	 понадобятся позже в данной главе для проверки подлинности доступа.</p>
+	 </li><li class="listitem">
+     <p>Чтобы применять хранилище объектов Ceph в API Swift нам необходимо создать подпользователя Swift в Ceph RGW:</p>
+	   <pre class="screen"><code>
+# radosgw-admin subuser create --uid=mona --subuser=mona:swift --access=full -k /etc/ceph/ceph.client.radosgw.keyring --name client.radosgw.gateway
+
+	[root@rgw-node1 ceph]# radosgw-admin subuser create --uid=mona --subuser=mona:swift --access=full -k /etc/ceph/ceph.client.radosgw.keyring --name client.radosgw.gateway 
+	{ &quot;user_id&quot;: &quot;mona&quot;, 
+	  &quot;display_name&quot;: &quot;Monika Singh&quot;, 
+	  &quot;email&quot;: &quot;mona@cephcookbook.com&quot;, 
+	  &quot;suspended&quot;: 0, 
+	  &quot;max_buckets&quot;: 1000, 
+	  &quot;auid&quot;: 0, 
+	  &quot;subusers&quot;: [ 
+	        { &quot;id&quot;: &quot;mona:swift&quot;, 
+	          &quot;permissions&quot;: &quot;full-control&quot;}], 
+	  &quot;keys&quot;: [ 
+	        { &quot;user&quot;: &quot;mona:swift&quot;, 
+	          &quot;access_key&quot;: &quot;580V73F5AXX3CGNEZ9HV&quot;, 
+	          &quot;secret_key&quot;: &quot;&quot;}, 
+	        { &quot;user&quot;: &quot;mona&quot;, 
+	          &quot;access_key&quot;: "C162E2F8WZ98A0M3KK99&quot;, 
+	          &quot;secret_key&quot;: &quot;J21mow6EPs6Sz4xtT7h+piDmhQBvlgWqVeicSRMg&quot;}], 
+	  &quot;swift_keys&quot;: [], 
+	  &quot;caps&quot;: [], 
+	  &quot;op_mask&quot;: &quot;read, write, delete&quot;, 
+	  &quot;default_placement&quot;: &quot;&quot;, 
+	  &quot;placement_tags&quot;: [], 
+	  &quot;bucket_quota&quot;: { &quot;enabled": false, 
+	       &quot;max_size_kb&quot;: -1, 
+	       &quot;max_objects&quot;: -1}, 
+	  &quot;user_quota&quot;: { &quot;enabled&quot;: false, 
+	       &quot;max_size_kb&quot;: -1, 
+	       &quot;max_objects&quot;: -1}, 
+	  &quot;temp_url_keys&quot;: [] } 
+	[root@rgw-node1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Создайте ключ безопасности для подпользователя <span class="term"><code>mona:swift</code></span>; они будут применяться 
+	 позже в этой главе:</p>
+	   <pre class="screen"><code>
+# radosgw-admin key create --subuser=mona:swift --key-type=swift --gen-secret -k /etc/ceph/ceph.client.radosgw.keyring --name client.radosgw.gateway
+
+	[root@rgw-node1 ceph]# radosgw-admin key create --subuser=mona:swift --key-type=swift --gen-secret -k /etc/ceph/ceph.client.radosgw.keyring --name client.radosgw.gateway 
+	{ &quot;user_id&quot;: &quot;mona&quot;, 
+	  &quot;display_name&quot;: &quot;monika Singh&quot;, 
+	  &quot;email&quot;: &quot;mona@cephcookbook.com&quot;, 
+	  &quot;suspended&quot;: 0, 
+	  &quot;max_buckets&quot;: 1000, 
+	  &quot;auid&quot;: 0, 
+	  &quot;subusers&quot;: [ 
+	        { &quot;id&quot;: &quot;mona:swift&quot;, 
+	          &quot;permissions&quot;: &quot;full-control&quot;}], 
+	  &quot;keys&quot;: [ 
+	        { &quot;user&quot;: &quot;mona:swift&quot;, 
+	          &quot;access_key&quot;: &quot;580V73FSAXX3CGNEz9Hv&quot;, 
+	          &quot;secret_key&quot;: &quot;&quot;}, 
+	        { &quot;user&quot;: &quot;mona&quot;, 
+	          &quot;access_key&quot;: &quot;C162E2F8WZ98A0M3KK99&quot;, 
+	          &quot;secret_key&quot;: &quot;J21mow6EPs6Sz4xtT7h+piDmhQBvlgWqVeic5RMg&quot;}], 
+	  &quot;swift_keys&quot;: [ 
+	        { &quot;user&quot;: &quot;mona:swift&quot;, 
+	          &quot;secret_key&quot;: &quot;6vxGDhuEBsPSyXlE7VYVFrTXLVqoJByMHT+jnXPV&quot;}], 
+	  &quot;caps&quot;: [], 
+	  &quot;op_mask&quot;: &quot;read, write, delete&quot;, 
+	  &quot;default_placement&quot;: &quot;&quot;, 
+	  &quot;placement_tags&quot;: [], 
+	  &quot;bucket_quota&quot;: { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+		  &quot;max_objects&quot;: -1}, 
+	  &quot;user_quota&quot;: { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+		  &quot;max_objects&quot;: -1}, 
+	  &quot;temp_url_keys&quot;: []}
+	[root@rgw-node1 ceph]# 
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+   <p>Рецепт <a class="link" href="Ch03.html#0306" target="_top">Доступ к хранилищу объектов Ceph с применением Swift API</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0305"> </a>Доступ к хранилищу объектов Ceph с применением S3 API</h3>
+   </div></div></div>
+   <p>Веб службы Amazon предлагают <span class="term"><strong class="userinput"><code>Simple Storage Service</code></strong></span> 
+   (<span class="term"><strong class="userinput"><code>S3</code></strong></span>), который предоставляет хранение через веб- интерфейс 
+   такой как REST. Ceph расширяет свою совместимость с S3 посредством RESTful API. Приложения клиента S3 могут получать доступ к
+   хранилищу объектов Ceph на основе ключей безопасности.</p>
+   <p>Для S3 также требуется присутствие службы DNS если она применяет соглашения именования ваших сегментов виртуальных хостов, 
+   т.е. <span class="term"><strong class="userinput"><code>&lt;object_name&gt;.&lt;RGW_Fqdn&gt;</code></strong></span>. Например, если 
+   у вас имеется сегмент с именем <span class="term"><strong class="userinput"><code>jupiter</code></strong></span>, то доступ к нему будет 
+   возможен поверх HTTP через URL <span class="term"><strong 
+   class="userinput"><code>http://jupiter.rgw-node1.cephcookbook.com</code></strong></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Для настройки DNS выполните следующие шаги на узле <span class="term"><code>rgw-node1</code></span>. Если у вас имеется работающий 
+   сервер DNS вы можете пропустить настройку DNS и использовать свой сервер DNS.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030502"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка DNS </span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Установите пакеты bind на вашем узле <span class="term"><code>ceph-rgw</code></span>:</p>
+	   <pre class="screen"><code>
+# yum install bind* -y
+ 	   </code></pre>
+	 </li><li class="listitem">
+	 <p>Исправьте <span class="term"><code>/etc/named.conf</code></span> и добавьте информацию для IP адресов, IP диапазонов и зон, 
+	 которые упоминаются далее. Вы можете следовать изменениям авторской версии файла <span class="term"><code>named.conf</code></span> 
+	 предоставляемого данной книгой:</p>
+	   <pre class="screen"><code>
+listen-on port 53 { 127.0.0.1;192.168.1.106; }; ### Add DNS IP ###
+allow-query { localhost;192.168.1.0/24; }; ### Add IP Range ###
+
+	options { 
+	        listen-on port 53 { 127.0.0.1;192.168.1.106; }; ### Add DNS IP ### 
+	        listen-on-v6 port 53 { ::1; }; 
+	        directory       &quot;/var/named&quot;; 
+	        dump-file       &quot;/var/named/data/cache_dump.db&quot;; 
+	        statistics-file &quot;/var/named/data/named_stats.txt&quot;; 
+	        memstatistics-file &quot;/var/named/data/named_mem_stats.txt&quot;; 
+	        allow-query     { localhost;192.168.1.0/24; }; ### Add IP Range ### 
+	        }
+
+### Add new zone for domain cephcookbook.com before EOF ###
+zone &quot;cephcookbook.com&quot; IN {
+type master;
+file &quot;db.cephcookbook.com&quot;;
+allow-update { none; };
+};
+
+	### Add new zone for domain cephcookbook.com before EOF ### 
+	zone &quot;cephcookbook.com&quot; IN { 
+	type master; 
+	file &quot;db.cephcookbook.com&quot;; 
+	allow-update { none; }; 
+	include &quot;/etc/named.rfc1912.zones&quot;; 
+	include &quot;/etc/named.root.key&quot;;
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Создайте файл зоны, <span class="term"><code>/var/named/db.cephcookbook.com</code></span> со следующим содержимым. Вы можете 
+	 следовать изменениям авторской версии файла <span class="term"><code>db.objectstore.com</code></span> предоставленного в том же 
+	 файле каталога с именем <span class="term"><code>named.conf.rtf</code></span> в котором содержится пакет кодов данной главы:</p> 
+	   <pre class="screen"><code>
+@ 86400 IN SOA cephcookbook.com. root.cephcookbook.com. (
+        20091028 ; serial yyyy-mm-dd
+        10800 ; refresh every 15 min
+        3600 ; retry every hour
+        3600000 ; expire after 1 month +
+        86400 ); min ttl of 1 day
+@ 86400 IN NS cephbookbook.com.
+@ 86400 IN A 192.168.1.106
+* 86400 IN CNAME @
+
+	[root@rgw-node1 ~]# cat /etc/db.cephcookbook.com 
+	@ 86400 IN SOA cephcookbook.com. root.cephcookbook.com. (
+	        20091028 ; serial yyyy-mm-dd 
+	    	10800 ; refresh every 15 min 
+	    	3600 ; retry every hour 
+	    	3600000 ; expire after 1 month + 
+	    	86400 ); min ttl of 1 day 
+	@ 86400 IN NS cephbookbook.com. 
+	@ 86400 IN A 192.168.1.106 
+	* 86400 IN CNAME @ 
+	[root@rgw-node1 ~]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Измените <span class="term"><code>/etc/resolve.conf</code></span> и добавьте следующее содержание:</p>
+	   <pre class="screen"><code>
+search cephcookbook.com
+nameserver 192.168.1.106
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Запустите службу <span class="term"><code>named</code></span>:</p>
+	   <pre class="screen"><code>
+# service named start
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Проверьте ваши файлы настройки DNS на наличие синтаксических ошибок:</p>
+	   <pre class="screen"><code>
+# named-checkconf /etc/named.conf
+# named-checkzone cephcookbook.com /var/named/db.cephcookbook.com
+
+	[root@rgw-node1 ~]# service named start 
+	Redirecting to /bin/systemctl start named.service 
+	[root@rgw-node1 ~]# 
+	[root@rgw-node1 ~]# named-checkconf /etc/named.conf 
+	[root@rgw-node1 ~]# named-checkzone cephcookbook.com /var/named/db.cephcookbook.com zone cephcookbook.com/IN: loaded serial 20091028 
+	OK 
+	[root@rgw-node1 ~]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Проверьте ваш сервер DNS:</p>
+	   <pre class="screen"><code>
+# dig rgw-node1.cephcookbook.com
+# nslookup rgw-node1.cephcookbook.com
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030503"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка вашего клиента s3cmd </span></h4>
+   </div></div></div>
+   <p>Для доступа к хранилищу объектов Ceph через API S3 вам необходимо настроить клиентскую машину при помощи 
+   <span class="term"><code>s3cmd</code></span> а также установки вашего клиента DNS. Выполните следующие шаги для настройки 
+   клиентской машины <span class="term"><code>s3cmd</code></span>:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Поднимите вашу виртуальную машину <span class="term"><code>client-node1</code></span> воспользовавшись Vagrant. 
+	 Эта виртуальная машина будет использоваться в качестве машины клиента для хранилища объектов S3:</p>
+	   <pre class="screen"><code>
+$ vagrant up client-node1
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>На вашей машине <span class="term"><code>client-node1</code></span> обновите записями сервера DNS 
+	 <span class="term"><code>/etc/resolve.conf</code></span>:</p>
+	   <pre class="screen"><code>
+search cephcookbook.com
+nameserver 192.168.1.106
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Проверьте настройки DNS на <span class="term"><code>client-node1</code></span>:</p>
+	   <pre class="screen"><code>
+# dig rgw-node1.cephcookbook.com
+# nslookup rgw-node1.cephcookbook.com
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p><span class="term"><code>client-node1</code></span> должен быть способен разрешать поддомены для 
+	 <span class="term"><code>rgw-node1.cephcookbook.com</code></span>:</p>
+	   <pre class="screen"><code>
+# ping mj.rgw-node1.cephcookbook.com -c 1
+# ping anything.rgw-node1.cephcookbook.com -c 1
+
+	root@client-node1:~# ping mj.rgw-nodel.cephcookbook.com -c 1 
+	PING cephcookbook.com (192.168.1.106) 56(84) bytes of data. 
+	64 bytes from 192.168.1.106: icmp_seq=1 tt1=64 time=0.475 ms 
+	
+	--- cephcookbook.com ping statistics --- 
+	1 packets transmitted, 1 received, 0% packet loss, time Oms 
+	rtt min/avg/max/mdev = 0.475/0.475/0.475/0.000 ms 
+	root@client-node1:~# 
+	root@client-node1:~# ping anything.rgN-nodeLcephcookbook.com -c 1 
+	PING cephcookbook.com (192.168.1.106) 56(84) bytes of data. 
+	64 bytes from 192.168.1.106: icmp_seq=1 tt1=64 time=0.413 ms 
+	
+	--- cephcookbook.com ping statistics ---
+	1 packets transmitted, 1 received, 0% packet loss, time Oms 
+	rtt min/avg/max/mdev = 0.413/0.413/0.413/0.000 ms 
+	root@client-node1:~# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Настройте клиента S3 (<span class="term"><code>s3cmd</code></span>) на <span class="term"><code>client-node1</code></span>:</p>
+
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Установите <span class="term"><code>s3cmd</code></span> используя следующую команду:</p>
+	   <pre class="screen"></code>
+# apt-get install -y s3cmd
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Настройте <span class="term"><code>s3cmd</code></span> предоставив <span class="term"><code>access_key</code></span> и 
+	   <span class="term"><code>secret_key</code></span> вашего пользователя <span class="term"><code>mona</code></span>, которого 
+	   мы создали ранее в этой главе. Выполните следующую команду и следуйте за приглашениями:</p>
+	   <pre class="screen"><code>
+# s3cmd --configure
+
+	root@client-node1:Ё# s3cmd --configure 
+	
+	Enter new values or accept defaults in brackets with Enter. 
+	Refer to user manual for detailed description of all options. 
+	{Введите новые значения или примите значения по умолчанию в скобках нажав Ввод.
+	За дополнительными пояснениями всех параметров обращайтесь к пользовательской документации.}
+	
+	Access key and secret key are your identifiers for Amazon S3 
+	{Ключ доступа и ключ безопасности являются вашими идентификаторами для Amazon S3}
+	Access Key: С162E2F8wZ98A0M3KK99 
+	Secret Key: 321mow6EPs6Sz4xtT7h+rpiDmhQBvlgwqVeic5RMg 
+	
+	Encryption password is used to protect your files from reading 
+	by unauthorized persons while in transfer to S3	
+	{Пароль шифрования применяется для защиты ваших файлов от чтения
+	неавторизованым персоналом при передаче на S3}
+	Encryption password: 
+	Path to GPG program [/usr/bin/gpg]: 
+	
+	When using secure HTTPS protocol all communication with Amazon S3 
+	servers is protected from 3rd party eavesdropping. This method is slower 
+	than plain HTTP and can't be used if you're behind a proxy 
+	{При использовании безопасного протокола HTTPS всё взаимодействие с серверами 
+	Amazon S3 защищено от подслушивания 3ми сторонами. Этот метод медленнее
+	чем простой HTTP и не может применяться если вы используете proxy}
+	use HTTPS protocol [No]: 
+	
+	On some networks all internet access must go through a HTTP proxy. 
+	Try setting it here if you can't connect to S3 directly 
+	{В некоторых сетевых средах весь доступ в интернет должен проходить сквозь HTTP proxy.
+	Попробуйте настроить его здесь если вы не можете соединиться с S3 напрямую}
+	HTTP Proxy server name: 
+	
+	New settings: 
+	 Access Key: C162E2F8wZ98A0M3KK99 
+	 Secret Key: 321mow6EPs6Sz4xtT7h+rpiDmhQBvlgwqVeic5RMg 
+	 Encryption password: 
+	 Path to GPG program: /usr/bin/gpg 
+	 Use HTTPS protocol: False 
+	 HTTP Proxy server name: 
+	 HTTP Proxy server port: 0 
+	
+	Test access with supplied credentials? [Y/n] n 
+	
+	Save settings? [y/N] y 
+	configuration saved to '/root/.s3cfg' 
+	root@client-node1:~# 
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Команда <span class="term"><code>~# s3cmd --configure command</code></span> создаст 
+	   <span class="term"><code>/root/.s3cfg</code></span>. Измените этот файл для внесения подробностей вашего хоста RGW. 
+	   Измените <span class="term"><code>host_base</code></span> и <span class="term"><code>host_bucket</code></span>, как 
+	   показано далее. Убедитесь что эти строки не имеют <a class="link" href="http://www.mdl.ru/Solutions/Put.htm?Nme=FixingFilenames#06" 
+	   target="_top">пробельных символов в конце</a>:</p>
+	   <pre class="screen"><code>
+host_base = rgw-node1.cephcookbook.com:7480
+host_bucket = %(bucket)s.rgw-node1.cephcookbook.com:7480
+ 	   </code></pre>
+	   <p>Вы можете взять за основу авторскую версию файла <span class="term"><code>/root/.s3cfg</code></span> предоставленного 
+	   в пакете кода данной главы.</p>
+	   <pre class="screen"><code>
+	root@client node1:~# cat /root/.s3cfg 
+	[default] access_key = C162E2F8WZ98A0M3KK99 
+	bucket_location = US 
+	cloudfront_host = cloudfront.amazonaws.com 
+	default_mime_type = binary/octet-stream 
+	delete_removed = False 
+	dry_run = False 
+	enable_multipart = True 
+	encoding = UTF-8 
+	encrypt = False 
+	follow_symlinks = False 
+	force = False 
+	get_continue = False 
+	gpg_command = /usr/bin/gpg 
+	gpg_decrypt = %(gpg_command)s -d --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s 
+	gpg_encrypt = %(gpg_command)s -c --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s 
+	gpg_passphrase = 
+	guess_mime_type = True 
+	host_base = rgw 
+	node1.cephcookbook.com:7480 
+	host_bucket = %(bucket)s.rgw 
+	node1.cephcookbook.com:7480 
+	human_readable_sizes = False 
+	invalidate_on_cf = False 
+	list_mdS = False 
+	log_target_prefix = 
+	mime_type = 
+	multipart_chunk_size_mb = 15 
+	preserve_attrs = True 
+	progress_meter = True 
+	proxy_host = 
+	proxy_port = 0 
+	recursive = False 
+	recv_chunk = 4096 
+	reduced_redundancy = False 
+	secret_key = 321mow6EPs6Sz4xtT7h+rpiDmhQBvlgwqVeic5RMg 
+	send_chunk = 4096 
+	simpledb_host = sdb.amazonaws.com 
+	skip_existing = False 
+	socket_timeout = 300 
+	urlencoding_mode = normal 
+	use_https = False 
+	verbosity = WARNING 
+	website_endpoint = http://%(bucket)s.s3-website-%(location)s.amazonaws.com/ 
+	website_error = 
+	website_index = index.html 
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Наконец мы создаём пакеты (buckets) и помещаем объекты в них:</p>
+	   <pre class="screen"><code>
+# s3cmd mb s3://first-bucket
+# s3cmd ls
+# s3cmd put /etc/hosts s3://first-bucket
+# s3cmd ls s3://first-bucket
+
+	root@client-node1:~# s3cmd mb s3://first-bucket 
+	Bucket 's3://first-bucket/' created 
+	root@client-node1:~# 
+	root@client-node1:~# s3cmd ls 
+	2015-04-11 23:55  s3://first-bucket 
+	root@client-node1:~# 
+	root@client-node1:~# s3cmd put /etc/hosts s3://first-bucket 
+	WARNING: Module python-magic is not available. Guessing MIME types based on file extensions. 
+	/etc/hosts -&gt; s3://first-bucket/hosts [1 of 1] 
+	601 of 601    100% in    ls   436.06 B/s  done 
+	root@client-node1:~# 
+	root@client-node1:~# 
+	root@client-node1:~# s3cmd ls s3://first-bucket 
+	2015-04-11 23:55       601   s3://first-bucket/hosts 
+	root@client-node1:~# 
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0306"> </a>Доступ к хранилищу объектов Ceph с применением Swift API</h3>
+   </div></div></div>
+   <p>Ceph поддерживает RESTful API который совместим с основной моделью доступа API <a class="link" 
+   href="http://onreader.mdl.ru/Implementing.Cloud.Storage.with.OpenStack.Swift/Ch01ru.htm#Ch0102" target="_top">Swift</a>. В последнем 
+   разделе мы рассказывали о доступе к кластеру Ceph через API S3; в этом разделе мы изучим доступ через 
+   <a class="link" href="http://onreader.mdl.ru/Implementing.Cloud.Storage.with.OpenStack.Swift/Ch04ru.htm" target="_top">API Swift</a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Чтобы использовать хранилище объектов Ceph при промощи API Swift нам необходим подпользователь Swift и ключ безопасности 
+   который мы создали ранее в этой главе. Эта информация о пользователе будет затем передана с применением интструментария 
+   Swift CLI чтобы осуществить доступ к хранилищу объектов Ceph:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>На <span class="term"><code>client-node1</code></span> виртуальная машина установит вашего клиента python Swift:</p>
+	   <pre class="screen"><code>
+# apt-get install python-setuptools
+# easy_install pip
+# pip install --upgrade setuptools
+# pip install --upgrade python-swiftclient
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Получите подпользователя Swift и ключи безопасности:</p>
+	   <pre class="screen"><code>
+# radosgw-admin user info --uid mona
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Получите доступ к хранилищу объектов Ceph просмотрев список сегмента (bucket) по умолчанию:</p>
+	   <pre class="screen"><code>
+# swift -A http://192.168.1.106:7480/auth/1.0 -U mona:swift -K 6vxGDhuEBsPSyX1E7vYvFrTXLVqoJByMHT+jnXPV list
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Добавьте новый сегмент, <span class="term"><code>second-bucket</code></span>:</p>
+	   <pre class="screen"><code>
+# swift -A http://192.168.1.106:7480/auth/1.0 -U mona:swift -K 6vxGDhuEBsPSyX1E7vYvFrTXLVqoJByMHT+jnXPV post second-bucket
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Выведите перечень сегментов (bucket); он также отобразит ваш новый <span class="term"><code>second-bucket</code></span>:</p>
+	   <pre class="screen"><code>
+# swift -A http://192.168.1.106:7480/auth/1.0 -U mona:swift -K 6vxGDhuEBsPSyX1E7vYvFrTXLVqoJByMHT+jnXPV list
+
+	root@client-node1:~# swift -A http://192.168.1.106:7480/auth/1.0 -U mona:swift -K 6vxGDhuEBsPSyX1E7vYvFrTXLVqoJByMHT+jnXPV list 
+	first-bucket 
+	root@client-node1:~# 
+	root@client-node1:~# swift -A http://192.168.1.106:7480/auth/1.0 -U mona:swift -K 6vxGDhuEBsPSyX1E7vYvFrTXLVqoJByMHT+jnXPV post second-bucket 
+	root@client-node1:~# swift -A http://192.168.1.106:7480/auth/1.0 -U mona:swift -K 6vxGDhuEBsPSyX1E7vYvFrTXLVqoJByMHT+jnXPV list 
+	first-bucket 
+	second-bucket 
+	root@client-node1:~#
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030602"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+   <p>Рецепт <a class="link" href="Ch03.html#0304" target="_top">Создание пользователя radosgw</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0307"> </a>Интеграция шлюза RADOS с OpenStack Keystone</h3>
+   </div></div></div>
+   <p>Ceph может быть интегрирован с вашей службой управления идентификацией OpenStack, 'Keystone'. При такой интеграции RGW Ceph 
+   настраивается принимать маркеры (token) Keystone для авторизации пользователей. Таким образом, все удостоверенные Keystone 
+   пользователи получат права для доступа к RGW.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030701"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Выполните следующие команды на вашем <span class="term"><code>openstack-node1</code></span>, если не предписано иное:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Настройте OpenStack для указания на Ceph RGW создав соответствующую службу и её терминалы:</p>
+	   <pre class="screen"><code>
+# keystone service-create --name swift --type object-store --description &quot;ceph object store&quot;
+# keystone endpoint-create --serviceid 6614554878344bbeaa7fec0d5dccca7f --publicurl
+http://192.168.1.106:7480/swift/v1 --internalurl
+http://192.168.1.106:7480/swift/v1 --adminurl
+http://192.168.1.106:7480/swift/v1 --region RegionOne
+
+	[root@os-node1 ~(keystone_admin)]# keystone service-create --name swift --type object-store --description &quot;ceph object store&quot; 
+	+-------------+----------------------------------+
+	|   Property  |              Value               | 
+	+-------------+----------------------------------+
+	| description |        ceph object store         | 
+	|   enabled   |               True               |
+	|      id     | 6614554878344bbeaa7fec0d5dccca7f |
+	|     name    |              swift               |
+	|     type    |           object-store           |
+	+-------------+----------------------------------+
+	[root@os-node1 ~(keystone_admin)]# 
+	[root@os-node1 ~(keystone_admin)]# keystone endpoint-create --service-id 6614554878344bbeaa7fec0d5dccca7f --publicurl http://192.168.1.106:7480 /swift/vl --internalurl http://192.168.1.106:7480/swift/v1 --adminurl http://192.168.1.106:7480/swift/v1 --region RegionOne 
+	+-------------+------------------------------------+
+	|  Property   |              Value                 |   
+	+-------------+------------------------------------+
+	|  adminurl   | http://192.168.1.106:7480/swift/v1 |
+	|      id     |  1f962773df6c438e9658fc8cc027d86f  |
+	| internalurl | http://192.168.1.106:7480/swift/v1 |
+	|  publicurl  | http://192.168.1.106:7480/swift/v1 |
+	|    region   |            RegionOne               |
+	|  service_id |  6614554878344bbeaa7fec0d5dccca7f  |
+	+-------------+------------------------------------+
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Получите свой маркер администратора Keystone, который будет использоваться для настройки RGW:</p>
+	   <pre class="screen"><code>
+# cat /etc/keystone/keystone.conf | grep -i admin_token
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Создайте каталог для сертификатов:</p>
+	   <pre class="screen"><code>
+# mkdir -p /var/ceph/nss
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Сгененрируйте сертификаты <span class="term"><code>openssl</code></span>:</p>
+	   <pre class="screen"><code>
+# openssl x509 -in /etc/keystone/ssl/certs/ca.pem -pubkey|certutil -d /var/ceph/nss -A -n ca -t &quot;TCu,Cu,Tuw&quot;
+# openssl x509 -in /etc/keystone/ssl/certs/signing_cert.pem -pubkey | certutil -A -d /var/ceph/nss -n signing_cert -t &quot;P,P,P&quot;
+
+	[root@os-node1 ~(keystone_admin)]# mkdir -p /var/ceph/nss 
+	[root@os-node1 ~(keystone_admin)]# openssl x509 -in /etc/keystone/ssl/certs/ca.pem -pubkey|certutil -d /var/ceph/nss -A -n ca -t &quot;TCu,Cu,Tuw&quot; 
+	Notice: Trust flag u is set automatically if the private key is present. 
+	[root@os-node1 ~(keystone_admin)]# 
+	[root@os-node1 ~(keystone_admin)]# openssl x509 -in /etc/keystone/ssl/certs/signing_cert.pem -pubkey | certutil -A -d /var/ceph/nss -n signing_cert -t &quot;P,P,P&quot; 
+	[root@os-node1 ~(keystone_admin)]# ls -1 /var/ceph/nss/ 
+	total 76 
+	-rw------- 1 root root 65536 Apr 17 00:40 cert8.db 
+	-rw------- 1 root root 16384 Apr 17 00:40 key3.db
+	-rw------- 1 root root 16384 Apr 17 00:38 secmod.db 
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Создайте <span class="term"><code>/var/ceph/nss directory</code></span> на <span class="term"><code>rgw-node1</code></span>:</p>
+	   <pre class="screen"><code>
+# mkdir -p /var/ceph/nss
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Скопируйте <span class="term"><code>openssl</code></span> сертификаты с <span class="term"><code>openstack-node1</code></span> 
+	 на <span class="term"><code>rgw-node1</code></span>. Если вы регистрируетесь в первый раз, вы получите кведомление SSH; 
+	 наберите <span class="term"><code>yes</code></span>, затем введите пароль <span class="term"><code>root</code></span>, который 
+	 установлен в значение <span class="term"><code>vagrant</code></span> для всех ваших машин:</p>
+	   <pre class="screen"><code>
+# scp /var/ceph/nss/* rgw-node1:/var/ceph/nss
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>На <span class="term"><code>rgw-node1</code></span> создайте каталоги и измените их владельца на 
+	 <span class="term"><code>Apache</code></span>:</p>
+	   <pre class="screen"><code>
+# mkdir /var/run/ceph
+# chown apache:apache /var/run/ceph
+# chown -R apache:apache /var/ceph/nss
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>На <span class="term"><code>client-node1</code></span>
+	 <span class="term"><code>rgw-node1</code></span>
+	 :</p>
+	   <pre class="screen"><code>
+# apt-get install python-setuptools
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Измените <span class="term"><code>/etc/ceph/ceph.conf</code></span> на <span class="term"><code>rgw-node1</code></span> 
+	 следующими записями в разделе <span class="term"><code>[client.radosgw.gateway]</code></span>:</p>
+	   <pre class="screen"><code>
+rgw keystone url = http://192.168.1.111:5000
+rgw keystone admin token = f72adb0238d74bb885005744ce526148
+rgw keystone accepted roles = admin, Member, swiftoperator
+        rgw keystone token cache size = 500
+        rgw keystone revocation interval = 60
+        rgw s3 auth use keystone = true
+nss db path = /var/ceph/nss
+ 	   </code></pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p><span class="term"><code>rgw keystone url</code></span> должен быть вашим URL управления кольцом ключей который 
+		 может быть получен командой <span class="term"><code># keystone endpoint-list</code></span>.</p>
+		 <p><span class="term"><code>rgw keystone admin token</code></span> является значением маркера который мы сохранили на 2 шаге 
+		 этого рецепта.</p></td></tr></table>
+       </div>
+	 </li><li class="listitem">
+     <p>Наконец запустите службу <span class="term"><code>ceph-radosgw</code></span>:</p>
+	   <pre class="screen"><code>
+# systemctl restart ceph-radosgw
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Теперь чтобы протестировать интеграцию Keystone и Ceph, переключимся назад на <span class="term"><code>openstack-node1</code></span>
+	 и выполним основные команды Swift, причём они не должны запрашивать у нас никаких ключей пользователей:</p>
+	   <pre class="screen"><code>
+# swift list
+# swift post swift-test-bucket
+# swift list
+
+	[root@os-node1 ~(keystone_admin)]# swift list 
+	[root@os-node1 ~(keystone_admin)]# swift post swift-test-bucket 
+	[root@os-node1 ~(keystone_admin)]# swift list swift-test-bucket 
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Вы должны быть в состоянии выполнять любые операции с сегментами (bucket) с применением как <span class="term"><code>swift 
+	 cli</code></span>, так и из инструментальной панели OpenStack Horizon, в разделе 
+	 <span class="term"><strong class="userinput"><code>Object storage</code></strong></span>, без каких- либо запросов полномочий 
+	 для пользователя RGW Ceph; это обусловлено выполненными нами изменениями настроек, проверяемые Keystone маркеры (token) теперь 
+	 принимаются вашим RGW Ceph.</p>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0308"> </a>Настройка федеративных шлюзов Ceph</h3>
+   </div></div></div>
+   <p>Ceph RGW может быть развёрнут в федеративных конфигурациях с множеством регионов, а также множеством зон для региона. 
+   Как показано на схеме ниже, множественные экземпляры Ceph radosgw могут быть развёрнуты географически разделяемым 
+   образом. Настройка регионов шлюзов объектов Ceph и агенты синхронизации метаданных помогают поддерживать единое пространство 
+   имён, даже если экземпляры <span class="term"><code>radosgw</code></span> работают в различных географических местоположениях 
+   или различных кластерах хранения Ceph.</p>
+   <div class="figure"><a id="Fig0303"> </a>
+    <p class="title"><strong>Рисунок 3.3. Гографически разделённое развёртывание экземпляров radosgw</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0303.jpg" width="639" height="456"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Другой подход состоит в размещении одного или более экземпляров <span class="term"><code>Ceph radosgw</code></span> которые 
+   ещё географически разделены в пределах региона в раздельных логических контейнерах, называемых зонами. В этом случае агент 
+   синхронизации данных также делает возможным вашей службе поддерживать одну или более копий данных вашей главной зоны в 
+   пределах региона в том же кластере Ceph. Эти дополнительные копии данных важны для вариантов применения резервного копирования 
+   или восстановления после отказов.</p>
+   <div class="figure"><a id="Fig0304"> </a>
+    <p class="title"><strong>Рисунок 3.4. </strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0304.jpg" width="635" height="568"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>В данном рецепте мы изучим как размещать последним методом федерации Ceph <span class="term"><code>radosgw</code></span>.
+   В соответствии с этим, мы создадим главный (master) регион, <span class="term"><code>US</code></span>,который будет размещать 
+   две зоны: <span class="term"><code>master zone</code></span>: <span class="term"><code>us-east</code></span>, содержащую 
+   экземпляр RGW <span class="term"><code>us-east-1</code></span>, и <span class="term"><code>secondary zone</code></span>:
+   <span class="term"><code>us-west</code></span>, содержащую экземпляр RGW <span class="term"><code>us-west-1</code></span>. 
+   Далее приводятся параметры и их значения, которые мы будем применять:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Главный Регион &#8594; Соединённые Штаты: <span class="term"><code>us</code></span></p>
+	 </li><li class="listitem">
+	 <p>Главная Зона &#8594; зона восточного региона Соединённых Штатов: <span class="term"><code>us-east</code></span></p>
+	 </li><li class="listitem">
+	 <p>Вторичная Зона &#8594; зона западного региона Соединённых Штатов: <span class="term"><code>us-west</code></span></p>
+	 </li><li class="listitem">
+	 <p>Экземпляр-1 <span class="term"><code>radosgw</code></span> &#8594; Экземпляр1 зоны восточного региона Соединённых Штатов: <span class="term"><code>us-east-1</code></span></p>
+	 </li><li class="listitem">
+	 <p>Экземпляр-2 <span class="term"><code>radosgw</code></span> &#8594; Экземпляр1 зоны западного региона Соединённых Штатов: <span class="term"><code>us-west-1</code></span></p>
+	 </li>
+   </ul>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030801"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>На вашей машине хоста поднимите виртуальные машины <span class="term"><code>us-east-1</code></span> и 
+	 <span class="term"><code>us-west-1</code></span> с применением Vagrant:</p>
+	   <pre class="screen"><code>
+$ cd ceph-cookbook
+$ vagrant status us-east-1 us-west-1
+$ vagrant up us-east-1 us-west-1
+$ vagrant status us-east-1 us-west-1setuptools
+
+	teeri:ceph-cookbook ksingh$ vagrant status us-east-1 us-west-1 
+	Current machine states: 
+	
+	us-east-1       running (virtualbox)
+	us-west-1       running (virtualbox)
+	
+	This environment represents multiple vms. The vms are all listed 
+	above with their current state. For more information about a specific 
+	VM, run `vagrant status NAME`. 
+	teeri:ceph-cookbook ksingh$ 
+ 	   </code></pre>
+	 <p>С этого момента мы будем выполнять все команды с любой из ваших машин монитора Ceph пока не определено иное. 
+	 В нашем случае мы будем применять <span class="term"><code>ceph-node1</code></span>. Далее мы создадим пулы Ceph, 
+	 которые будут применяться для хранения пучка критически важной информации о данных хранилища объектов, такие как сегмент 
+	 (bucket), индекс сегмента, глобального каталога, журналов, идентификаторов пользователя S3, учётных записей пользователя 
+	 Swift, адресов электронной почты и тому подобного.</p>
+	 </li><li class="listitem">
+     <p>Создайте пулы Ceph для вашей зоны <span class="term"><code>us-east</code></span>:</p>
+	   <pre class="screen"><code>
+# ceph osd pool create .us-east.rgw.root 32 32
+# ceph osd pool create .us-east.rgw.control 32 32
+# ceph osd pool create .us-east.rgw.gc 32 32
+# ceph osd pool create .us-east.rgw.buckets 32 32
+# ceph osd pool create .us-east.rgw.buckets.index 32 32
+# ceph osd pool create .us-east.rgw.buckets.extra 32 32
+# ceph osd pool create .us-east.log 32 32
+# ceph osd pool create .us-east.intent-log 32 32
+# ceph osd pool create .us-east.usage 32 32
+# ceph osd pool create .us-east.users 32 32
+# ceph osd pool create .us-east.users.email 32 32
+# ceph osd pool create .us-east.users.swift 32 32
+# ceph osd pool create .us-east.users.uid 32 32
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Создайте пулы Ceph для вашей зоны <span class="term"><code>us-west</code></span>:</p>
+	   <pre class="screen"><code>
+# ceph osd pool create .us-west.rgw.root 32 32
+# ceph osd pool create .us-west.rgw.control 32 32
+# ceph osd pool create .us-west.rgw.gc 32 32
+# ceph osd pool create .us-west.rgw.buckets 32 32
+# ceph osd pool create .us-west.rgw.buckets.index 32 32
+# ceph osd pool create .us-west.rgw.buckets.extra 32 32
+# ceph osd pool create .us-west.log 32 32
+# ceph osd pool create .us-west.intent-log 32 32
+# ceph osd pool create .us-west.usage 32 32
+# ceph osd pool create .us-west.users 32 32
+# ceph osd pool create .us-west.users.email 32 32
+# ceph osd pool create .us-west.users.swift 32 32
+# ceph osd pool create .us-west.users.uid 32 32
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Проверьте только что созданные пулы Ceph:</p>
+	   <pre class="screen"><code>
+# ceph osd lspools
+
+	[root@ceph-node1 ~]# ceph osd lspools 
+	0 rbd,1 images,2 volumes,3 vms,4 .rgw.root,5 .rgw.contro1,6 .rgw,7 .rgw.gc,8 .users.uid,9 .users.emai1,10 .users,11 .users.swift,12 .rgw.buckets.index,13 .rgw.buckets,14 .us-east.rgw.root,15 .us-east.rgw.contro1,16 .us-east.rgw.gc,1 7 .us-east.rgw.buckets,18 .us-east. rgw.buckets.index,19 .us-east.rgw.buckets.extra,20 .us-east.log,21 .us-east.inten t-log,22 .us-east.usage,23 .us-east.users,24 .us-east.users.emai1,25 .us-east.users.swift,26 .us-east.users.uid,27 . us-west.rgw.root,28 .us-west.rgw.contro1,29 .us-west.rgw.gc,30 .us-west.rgw.buckets,31 .us-west.rgw.buckets.index,32 .us-west.rgw.buckets.extra,33 .us-west.log,34 .us-west.intent-log,35 .us-west.usage,36 .us-west.users,37 .us-west.0 sers.emai1,38 .us-west.users.swift,39 .us-west.users.uid, 
+	[root@ceph-node1 ~]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Экземпляру RGW требуется пользователь и ключ для общения с вашим кластером хранения Ceph:</p>
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>При помощи следующей команды создайте кольцо ключей:</p>
+	   <pre class="screen"><code>
+# ceph-authtool --create-keyring /etc/ceph/ceph.client.radosgw.keyring
+# chmod +r /etc/ceph/ceph.client.radosgw.keyring
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Сгенерируйте имя пользователя и ключ шлюза для каждого экземпляра:</p>
+	   <pre class="screen"><code>
+# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.us-east-1 --gen-key
+# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.us-west-1 --gen-key
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Добавьте возможности ключам:</p>
+	   <pre class="screen"><code>
+# ceph-authtool -n client.radosgw.us-east-1 --cap osd 'allow rwx' --cap mon 'allow rwx' /etc/ceph/ceph.client.radosgw.keyring
+# ceph-authtool -n client.radosgw.us-west-1 --cap osd 'allow rwx' --cap mon 'allow rwx' /etc/ceph/ceph.client.radosgw.keyring
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Добавьте ключи в ваш кластер хранения Ceph:</p>
+	   <pre class="screen"><code>
+# ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.us-east-1 -i /etc/ceph/ceph.client.radosgw.keyring
+# ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.us-west-1 -i /etc/ceph/ceph.client.radosgw.keyring
+
+	[root@ceph-node1 ~]# ceph-authtool --create-keyring /etc/ceph/ceph.client.radosgw.keyring 
+	creating /etc/ceph/ceph.client.radosgw.keyring 
+	[root@ceph-node1 ~]# chmod +r /etc/ceph/ceph.client.radosgw.keyring 
+	[root@ceph-node1 ~]# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.us-east-1 --gen-key 
+	[root@ceph-node1 ~]# ceph-authtool /etc/ceph/ceph.client.radosgw.keyring -n client.radosgw.us-west-1 --gen-key 
+	[root@ceph-node1 ~]# ceph-authtool -n client.radosgw.us-east-1 --cap osd 'allow rwx' --cap mon 'allow rwx' /etc/ceph/ceph.client.radosgw.keyring 
+	[root@ceph-node1 ~]# ceph-authtool -n client.radosgw.us-west-1 --cap osd 'allow rwx' --cap mon 'allow rwx' /etc/ceph/ceph.client.radosgw.keyring 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.us-east-1 /etc/ceph/ceph.client.radosgw.keyring 
+	added key for client.radosgw.us-east-1 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# ceph -k /etc/ceph/ceph.client.admin.keyring auth add client.radosgw.us-west-1 	/etc/ceph/ceph .client.radosgw.keyring 
+	added key for client. radosgw.us-west-1 
+	[root@ceph-node1 ~]# 
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Добавьте экземпляры RGW в ваш файл настроек Ceph, то есть <span class="term"><code>/etc/ceph/ceph.conf</code></span>:</p>
+	   <pre class="screen"><code>
+[client.radosgw.us-east-1]
+host = us-east-1
+rgw region = us
+rgw region root pool = .us.rgw.root
+rgw zone = us-east
+rgw zone root pool = .us-east.rgw.root
+keyring = /etc/ceph/ceph.client.radosgw.keyring
+rgw dns name = rgw-node1
+rgw socket path = /var/run/ceph/client.radosgw.us-east-1.sock
+log file = /var/log/ceph/client.radosgw.us-east-1.log
+
+[client.radosgw.us-west-1]
+host = us-west-1
+rgw region = us
+rgw region root pool = .us.rgw.root
+rgw zone = us-west
+rgw zone root pool = .us-west.rgw.root
+keyring = /etc/ceph/ceph.client.radosgw.keyring
+rgw dns name = rgw-ndoe1
+rgw socket path = /var/run/ceph/client.radosgw.us-west-1.sock
+log file = /var/log/ceph/client.radosgw.us-west-1.log
+
+	[root@ceph-node1 ceph]# tail -22 ceph.conf 
+	
+	[client.radosgw.us-east-1] 
+	host = us-east-1 
+	rgw region = us 
+	rgw region root pool = .us.rgw.root 
+	rgw zone = us-east 
+	rgw zone root pool = .us-east.rgw.root 
+	keyring = /etc/ceph/ceph.client.radosgw.keyring 
+	rgw dns name = rgw-node1 
+	rgw socket path = /var/run/ceph/client.radosgw.us-east-1.sock log file = /var/log/ceph/client.radosgw.us-east-1.log 
+	
+	[client. radosgw.us-west-1] 
+	host = us-west-1 
+	rgw region = us 
+	rgw region root pool = .us.rgw.root 
+	rgw zone = us-west 
+	rgw zone root pool = .us-west.rgw.root 
+	keyring = /etc/ceph/ceph.client.radosgw.keyring 
+	rgw dns name = rgw-node1 
+	rgw socket path = /var/run/ceph/client.radosgw.us-west-1.sock log file = /var/log/ceph/client.radosgw.us-west-1.log 
+	[root@ceph-node1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Далее мы установим пакеты Ceph на узлы <span class="term"><code>us-east-1</code></span> и 
+	 <span class="term"><code>us-west-1</code></span> с помощью <span class="term"><code>ceph-deploy</code></span> с вашей 
+	 машины <span class="term"><code>ceph-node1</code></span>. Наонец, мы добавим файлы настроек на эти узлы:</p>
+
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Позволим <span class="term"><code>cep-node1</code></span> выполнять регистрацию на ваших узлах RGW без паролей. 
+	   Пароль <span class="term"><code>root</code></span> установлен по умолчанию, то есть <span class="term"><code>vagrant</code></span>:</p>
+	   <pre class="screen"><code>
+# ssh-copy-id us-east-1
+# ssh-copy-id us-west-1
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Установите пакеты Ceph на ваши экземпляры RGW:</p>
+	   <pre class="screen"><code>
+# ceph-deploy install us-east-1 us-west-1
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Когда пакеты Ceph установятся на ваш экземпляр RGW, поместите файлы настроек Ceph:</p>
+	   <pre class="screen"><code>
+# ceph-deploy --overwrite-conf config push us-east-1 uswest-1
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Скопируйте кольца ключей RGW с <span class="term"><code>ceph-node</code></span> на экземпляр шлюза:</p>
+	   <pre class="screen"><code>
+# scp ceph.client.radosgw.keyring us-east-1:/etc/ceph
+# scp ceph.client.radosgw.keyring us-west-1:/etc/ceph
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Далее установите пакеты <span class="term"><code>ceph-radosgw</code></span> и <span class="term"><code>radosgw-agent</code></span> 
+	   на экземпляры radosgw <span class="term"><code>us-east-1</code></span> и <span class="term"><code>us-west-1</code></span>:</p>
+	   <pre class="screen"><code>
+# ssh us-east-1 yum install -y ceph-radosgw radosgw-agent
+# ssh us-west-1 yum install -y ceph-radosgw radosgw-agent
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Для простоты мы запретим межсетевые экраны на ваших узлах:</p>
+	   <pre class="screen"><code>
+# ssh us-east-1 systemctl disable firewalld
+# ssh us-east-1 systemctl stop firewalld
+# ssh us-west-1 systemctl disable firewalld
+# ssh us-west-1 systemctl stop firewalld
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Создайте регион <span class="term"><code>us</code></span>. Зарегистрируйтесь на <span class="term"><code>us-east-1</code></span> 
+	 и выполните следующие команды:</p>
+
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Создайте infile региона с названием <span class="term"><code>us.json</code></span> в каталоге 
+	   <span class="term"><code>/etc/ceph</code></span> со следующим содержимым. Вы можете использовать для справки 
+	   авторскую версию вашего файла <span class="term"><code>us.json</code></span> поставляемого с пакетом кода данной 
+	   главы:</p>
+	   <pre class="screen"><code>
+{ &quot;name&quot;: &quot;us&quot;,
+  &quot;api_name&quot;: &quot;us&quot;,
+  &quot;is_master&quot;: &quot;true&quot;,
+  &quot;endpoints&quot;: [
+    &quot;http:\/\/us-east-1.cephcookbook.com:7480\/&quot;],
+  &quot;master_zone&quot;: &quot;us-east&quot;,
+  &quot;zones&quot;: [
+  { &quot;name&quot;: &quot;us-east&quot;,
+    &quot;endpoints&quot;: [
+      &quot;http:\/\/us-east-1.cephcookbook.com:7480\/&quot;],
+    &quot;log_meta&quot;: &quot;true&quot;,
+    &quot;log_data&quot;: &quot;true&quot;},
+  { &quot;name&quot;: &quot;us-west&quot;,
+    &quot;endpoints&quot;: [
+      &quot;http:\/\/us-west-1.cephcookbook.com:7480\/&quot;],
+    &quot;log_meta&quot;: &quot;true&quot;,
+    &quot;log_data&quot;: &quot;true&quot;}],
+  &quot;placement_targets&quot;: [
+  {
+    &quot;name&quot;: &quot;default-placement&quot;,
+    &quot;tags&quot;: []
+  }
+  ],
+  &quot;default_placement&quot;: &quot;default-placement&quot;}
+
+	[root@us-east-1 ceph]# cat us.json
+	{ &quot;name&quot;: &quot;us&quot;,
+	  &quot;api_name&quot;: &quot;us&quot;,
+	  &quot;is_master&quot;: &quot;true&quot;,
+	  &quot;endpoints&quot;: [
+	        &quot;http:\/\/us-east-1.cephcookbook.com:7480\/&quot;],
+	  &quot;master_zone&quot;: &quot;us-east&quot;,
+	  &quot;zones&quot;: [
+	       { &quot;name&quot;: &quot;us-east&quot;,
+	         &quot;endpoints&quot;: [
+	               &quot;http:\/\/us-east-1.cephcookbook.com:7480\/&quot;],
+	         &quot;log_meta&quot;: &quot;true&quot;,
+	         &quot;log_data&quot;: &quot;true&quot;},
+	       { &quot;name&quot;: &quot;us-west&quot;,
+	         &quot;endpoints&quot;: [
+	               &quot;http:\/\/us-west-1.cephcookbook.com:7480\/&quot;],
+	         &quot;log_meta&quot;: &quot;true&quot;,
+	         &quot;log_data&quot;: &quot;true&quot;}],
+	  &quot;placement_targets&quot;: [
+	  {
+	    &quot;name&quot;: &quot;default-placement&quot;,
+	    &quot;tags&quot;: []
+	  }
+	  ],
+	  &quot;default_placement&quot;: &quot;default-placement&quot;}
+	[root@us-east-1 ceph]#
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Создайте регион <span class="term"><code>us</code></span> с  только что созданным вами infile <span class="term"><code>us.json</code></span>:</p>
+	   <pre class="screen"><code>
+# cd /etc/ceph
+# radosgw-admin region set --infile us.json --name client.radosgw.us-east-1
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Удалите регион по умолчанию, если он существует:</p>
+	   <pre class="screen"><code>
+# rados -p .us.rgw.root rm region_info.default --name client.radosgw.us-east-1
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Установите регион <span class="term"><code>us</code></span> в качестве региона по умолчанию:</p>
+	   <pre class="screen"><code>
+# radosgw-admin region default --rgw-region=us --name client.radosgw.us-east-1
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Наконец, обновите карту региона:</p>
+	   <pre class="screen"><code>
+# radosgw-admin regionmap update --name client.radosgw.us-east-1
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Сгенерируйте <span class="term"><code>access_keys</code></span> и <span class="term"><code>secret_keys</code></span> 
+	 для зон <span class="term"><code>us-east</code></span> и <span class="term"><code>us-west</code></span>:</p>
+
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Сгенерируйте <span class="term"><code>access_keys</code></span> для вашей зоны <span class="term"><code>us-east</code></span>:</p>
+	   <pre class="screen"><code>
+# &lt; /dev/urandom tr -dc A-Z-0-9 | head -c${1:-20};echo;
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Сгенерируйте <span class="term"><code>secret_keys</code></span> для вашей зоны <span class="term"><code>us-east</code></span>:</p>
+	   <pre class="screen"><code>
+# &lt; /dev/urandom tr -dc A-Z-0-9-a-z | head -c${1:-40};echo;
+
+	[root@us-east-1 ceph]# &lt; /dev/urandom tr -dc A-Z-0-9 | head -c$11:-20};echo; 
+	XNK0ST8WXTMWZGN29NF9 
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# &lt; /dev/urandom tr -dc A-Z-0-9-a-z | head -c$11:-40};echo; 
+	7VJm8uAp7lxKQZkjoPZmHu4sACA1SY8jTjay9dP5 
+	[root@us-east-1 ceph]#
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Сгенерируйте <span class="term"><code>access_keys</code></span> для вашей зоны <span class="term"><code>us-west</code></span>:</p>
+	   <pre class="screen"><code>
+# &lt; /dev/urandom tr -dc A-Z-0-9 | head -c${1:-20};echo;
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Сгенерируйте <span class="term"><code>secret_keys</code></span> для вашей зоны <span class="term"><code>us-west</code></span>:</p>
+	   <pre class="screen"><code>
+# &lt; /dev/urandom tr -dc A-Z-0-9-a-z | head -c${1:-40};echo;
+
+	[root@us-east-1 ceph]# &lt; /dev/urandom tr -dc A-Z-0-9 | head -c${1:-20};echo; 
+	AAK0ST8WXTMWZGN29NF9 
+	[root@us-east-1 ceph]# &lt; /dev/urandom tr -dc A-Z-0-9-a-z | head -c${1:-40};echo; 
+	AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dPS 
+	[root@us-east-1 ceph]# 
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Создайте infile зоны с названием <span class="term"><code>us-east.json</code></span> для вашей зоны
+	 <span class="term"><code>us-east</code></span>. Вы можете применять для справки авторский файл <span class="term"><code>us-east.json</code></span> 
+	  предоставляемый пакетом кода данной главы:</p>
+	   <pre class="screen"><code>
+{ &quot;domain_root&quot;: &quot;.us-east.domain.rgw&quot;,
+  &quot;control_pool&quot;: &quot;.us-east.rgw.control&quot;,
+  &quot;gc_pool&quot;: &quot;.us-east.rgw.gc&quot;,
+  &quot;log_pool&quot;: &quot;.us-east.log&quot;,	
+  &quot;intent_log_pool&quot;: &quot;.us-east.intent-log&quot;,
+  &quot;usage_log_pool&quot;: &quot;.us-east.usage&quot;,
+  &quot;user_keys_pool&quot;: &quot;.us-east.users&quot;,
+  &quot;user_email_pool&quot;: &quot;.us-east.users.email&quot;,
+  &quot;user_swift_pool&quot;: &quot;.us-east.users.swift&quot;,
+  &quot;user_uid_pool&quot;: &quot;.us-east.users.uid&quot;,
+  &quot;system_key&quot;: { &quot;access_key&quot;: &quot; XNK0ST8WXTMWZGN29NF9&quot;, 
+                  &quot;secret_key&quot;: &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;},
+  &quot;placement_pools&quot;: [
+    { &quot;key&quot;: &quot;default-placement&quot;,
+      &quot;val&quot;: { &quot;index_pool&quot;: &quot;.us-east.rgw.buckets.index&quot;,
+               &quot;data_pool&quot;: &quot;.us-east.rgw.buckets&quot;}
+     } 
+  ] 
+}
+
+	[root@us-east-1 ceph]#  cat us-east.json
+	{ &quot;domain_root&quot;: &quot;.us-east.domain.rgw&quot;,
+	  &quot;control_pool&quot;: &quot;.us-east.rgw.control&quot;,
+	  &quot;gc_pool&quot;: &quot;.us-east.rgw.gc&quot;,
+	  &quot;log_pool&quot;: &quot;.us-east.log&quot;,
+	  &quot;intent_log_pool&quot;: &quot;.us-east.intent-log&quot;,
+	  &quot;usage_log_pool&quot;: &quot;.us-east.usage&quot;,
+	  &quot;user_keys_pool&quot;: &quot;.us-east.users&quot;,
+	  &quot;user_email_pool&quot;: &quot;.us-east.users.email&quot;,
+	  &quot;user_swift_pool&quot;: &quot;.us-east.users.swift&quot;,
+	  &quot;user_uid_pool&quot;: &quot;.us-east.users.uid&quot;,
+	  &quot;system_key&quot;: { &quot;access_key&quot;: &quot;XNK0ST8WXTMWZGN29NF9&quot;, 
+	                            &quot;secret_key&quot;: &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;},
+	  &quot;placement_pools&quot;: [
+        { &quot;key&quot;: &quot;default-placement&quot;,
+          &quot;val&quot;: { &quot;index_pool&quot;: &quot;.us-east.rgw.buckets.index&quot;,
+                             &quot;data_pool&quot;: &quot;.us-east.rgw.buckets&quot;}
+        } 
+	  ] 
+	}
+	[root@us-east-1 ceph]#
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Добавьте применение infile зоны <span class="term"><code>us-east</code></span> и в east, и в west пулы:</p>
+	   <pre class="screen"><code>
+# radosgw-admin zone set --rgw-zone=us-east --infile us-east.json --name client.radosgw.us-east-1
+
+	[root@us-east-1 ceph]# radosgw-admin zone set --rgw-zone.us-east --infile us-east.json --name client.radosgw.us-east-1 
+	2015-05-03 21:56:38.878117 7fc365bd5880 0 couldn't find old data placement pools config, setting up new ones for the zone 
+	{ &quot;domain_root&quot;: &quot;.us-east.domain.rgw&quot;, 
+	  &quot;control pool&quot;: &quot;.us-east.rgw.control&quot;, 
+	  &quot;gc_pool&quot;: &quot;.us-east.rgw.gc&quot;, 
+	  &quot;log_pool&quot;: &quot;.us-east.log&quot;, 
+	  &quot;intent_log_pool&quot;: &quot;.us-east.intent-log&quot;, 
+	  &quot;usage_log_pool&quot;: &quot;.us-east.usage&quot;, 
+	  &quot;user_keys_pool&quot;: &quot;.us-east. users&quot;, 
+	  &quot;user_email_pool&quot;: &quot;.us-east.users.email&quot;, 
+	  &quot;user_swift_pool&quot;: &quot;.us-east.users.swift&quot;, 
+	  &quot;user_uid_pool&quot;: &quot;.us-east.users.uid&quot;, 
+	  &quot;system_key&quot;: { 
+	    &quot;access_key&quot;: &quot;XNK0ST8WXTMWZGN29NF9&quot;, 
+	    &quot;secret_key&quot;: &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;, 
+	    &quot;placement_pools&quot;: [ 
+	      { &quot;key&quot;: &quot;default-placement&quot;, 
+	        &quot;van { &quot;index_pool&quot;: &quot;.us-east.rgw.buckets.index&quot;, 
+	                    &quot;data_pool&quot;: &quot;.us-east.rgw.buckets&quot;, 
+	                    &quot;data_extra_pool&quot;: &quot;&quot;}
+	      }]
+	}
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# 
+ 	  </code></pre>
+	 <p>Теперь выполните следующую команду:</p>
+	   <pre class="screen"><code>
+# radosgw-admin zone set --rgw-zone=us-east --infile us-east.json --name client.radosgw.us-west-1
+
+	[root@us-east-1 ceph]# radosgw-admin zone set --rgw-zone=us-east --infile us-east.json --name client.radosgw.us-west-1 
+	2015-05-03 21:58:58.982509 7f4b14f47880 0 couldn't find old data placement pools config, setting up new ones for the zone 
+	{ &quot;domain_root&quot;: &quot;.us-east.domain.rgw&quot;, 
+	  &quot;control_pool&quot;: &quot;.us-east.rgw.control&quot;, 
+	  &quot;gc_pool&quot;: &quot;.us-east.rgw.gc&quot;, 
+	  &quot;log_pool&quot;: &quot;.us-east.log&quot;, 
+	  &quot;intent_log_pool&quot;: &quot;.us-east.intent-log&quot;, 
+	  &quot;usage_log_pool&quot;: &quot;.us-east.usage&quot;, 
+	  &quot;user_keys_pool&quot;: &quot;.us-east.users&quot;, 
+	  &quot;user_email_pool&quot;: &quot;.us-east.users.email&quot;, 
+	  &quot;user_swift_pool&quot;: &quot;.us-east.users.swift&quot;, 
+	  &quot;user_uid_pool&quot;: &quot;.us-east.users.uid&quot;, 
+	  &quot;system_key&quot;: { 
+	    &quot;access_key&quot;: &quot;XNK0ST8WXTMWZGN29NF9&quot;, 
+	    &quot;secret_key&quot;: &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}, 
+	    &quot;placement_pools&quot;: [ 
+	      &quot;key&quot;: &quot;default-placement&quot;, 
+	      &quot;val&quot;: { &quot;index_pool&quot;: &quot;.us-east.rgw.buckets.index&quot;, 
+	               &quot;data_pool&quot;: &quot;.us-east.rgw.buckets&quot;, 
+	               &quot;data_extra_pool&quot;: &quot;&quot;}
+	             }]
+	}
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Аналогично, для зоны <span class="term"><code>us-west</code></span> создайте infile <span class="term"><code>us-west.json</code></span> 
+	 со следующим содержимым. Вы можете для справки использовать авторскую версию файла <span class="term"><code>us-west.json</code></span> 
+	 предоставляемую пакетом кода для данной главы:</p>
+	   <pre class="screen"><code>
+{ &quot;domain_root&quot;: &quot;.us-west.domain.rgw&quot;,
+  &quot;control_pool&quot;: &quot;.us-west.rgw.control&quot;,
+  &quot;gc_pool&quot;: &quot;.us-west.rgw.gc&quot;,
+  &quot;log_pool&quot;: &quot;.us-west.log&quot;,
+  &quot;intent_log_pool&quot;: &quot;.us-west.intent-log&quot;,
+  &quot;usage_log_pool&quot;: &quot;.us-west.usage&quot;,
+  &quot;user_keys_pool&quot;: &quot;.us-west.users&quot;,
+  &quot;user_email_pool&quot;: &quot;.us-west.users.email&quot;,
+  &quot;user_swift_pool&quot;: &quot;.us-west.users.swift&quot;,
+  &quot;user_uid_pool&quot;: &quot;.us-west.users.uid&quot;,
+  &quot;system_key&quot;: { 
+    &quot;access_key&quot;: &quot;AAK0ST8WXTMWZGN29NF9&quot;, 
+    &quot;secret_key&quot;: &quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;},
+    &quot;placement_pools&quot;: [
+    { &quot;key&quot;: &quot;default-placement&quot;,
+      &quot;val&quot;: { &quot;index_pool&quot;: &quot;.us-west.rgw.buckets.index&quot;,
+               &quot;data_pool&quot;: &quot;.us-west.rgw.buckets&quot;}
+    }]
+}
+
+	[root@us-east-1 ceph]# cat us-west.json 
+	{ &quot;domain_root&quot;: &quot;.us-west.domain.rgw&quot;, 
+	  &quot;control_pool&quot;: &quot;.us-west.rgw.control&quot;, 
+	  &quot;gc_pool&quot;: &quot;.us-west.rgw.gc&quot;, 
+	  &quot;log_pool&quot;: &quot;.us-west.log&quot;, 
+	  &quot;intent_logpool&quot;: &quot;.us-west.intent-log&quot;, 
+	  &quot;usage_log_pool&quot;: &quot;.us-west.usage&quot;, 
+	  &quot;user_keys_pool&quot;: &quot;.us-west.users&quot;, 
+	  &quot;user_email_pool&quot;: &quot;.us-west.users.email&quot;, 
+	  &quot;user_swift_pool&quot;: &quot;.us-west.users.swift&quot;, 
+	  &quot;user_uid_pool&quot;: &quot;.us-west.users.uid&quot;, 
+	  &quot;system_key&quot;: { 
+	    &quot;access_key&quot;: &quot;AAK0ST8WXTMWZGN29NF9&quot;, 
+	    &quot;secret_key&quot;: &quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}, 
+	    &quot;placement_pools&quot;: [ 
+	    {&quot;key&quot;: &quot;default-placement&quot;, 
+	     &quot;val: 
+	     {&quot;index_pool&quot;: &quot;.us-west.rgw.buckets.index&quot;, 
+	      &quot;data_pool&quot;: &quot;.us-west.rgw.buckets&quot;}
+	    }]
+	}
+	[root@us-east-1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Добавьте зону <span class="term"><code>us-west</code></span> с использованием infile в east и west пулы:</p>
+	   <pre class="screen"><code>
+# radosgw-admin zone set --rgw-zone=us-west --infile us-west.json --name client.radosgw.us-east-1
+
+	[root@us-east-1 ceph]# radosgw-admin zone set --rgw-zone=us-west --infile us-west.json --name client.radosgw.us-east-1 
+	2015-05-03 22:03:16.279758 7f4ac6bd4880 0 couldn't find old data placement pools config, setting up new ones for the zone 
+	{ &quot;domain_root&quot;: &quot;.us-west.domain.rge&quot;, 
+	  &quot;control_pool&quot;: &quot;.us-west.rgw.control&quot;, 
+	  &quot;gc_pool&quot;: &quot;.us-west.rgw.gc&quot;, 
+	  &quot;log_pool&quot;: &quot;.us-west.log&quot;, 
+	  &quot;intent_log_pool&quot;: &quot;.us-west.intent-log&quot;, 
+	  &quot;usage_log_pool&quot;: &quot;.us-west.usage&quot;, 
+	  &quot;user_keys_pool&quot;: &quot;.us-west.users&quot;, 
+	  &quot;user_email_pool&quot;: &quot;.us-west.users.email&quot;, 
+	  &quot;user_swift_pool&quot;: &quot;.us-west.users.swift&quot;, 
+	  &quot;user_uid_pool&quot;: &quot;.us-west.users.uid&quot;, 
+	  &quot;system_key&quot;: 
+	  {&quot;access_key&quot;: &quot;AAK0ST8WXTMWZGN29NF9&quot;, 
+	   &quot;secret_key&quot;: &quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}, 
+	  &quot;placement_pools&quot;: [ 
+	  { &quot;key&quot;: &quot;default-placement&quot;, 
+	    &quot;val&quot;: 
+	    { &quot;index_pool&quot;: &quot;.us-west.rgw.buckets.index&quot;, 
+	      &quot;data_pool&quot;: &quot;.us-west.rgw.buckets&quot;, 
+	      &quot;data_extra_pool&quot;: &quot;&quot;}
+	  }]
+	}
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# 
+
+# radosgw-admin zone set --rgw-zone=us-west --infile us-west.json --name client.radosgw.us-west-1
+
+	[root@us-east-1 ceph]# radosgw-admin zone set --rgw-zone=us-west --infile us-west.json --name client.radosgw.us-west-1 
+	2015-05-03 22:04:48.050644 7f74fd327880 0 couldn't find old data placement pools config, setting up new ones for the zone 
+	{ &quot;domain_root&quot;: &quot;.us-west.domain.rgw&quot;, 
+	  &quot;control_pool&quot;: &quot;.us-west.rgw.control&quot;, 
+	  &quot;gc_pool&quot;: &quot;.us-west.rgw.gc&quot;, 
+	  &quot;log_pool&quot;: &quot;.us-west.log&quot;, 
+	  &quot;intent_log_pool&quot;: &quot;.us-west.intent-log&quot;, 
+	  &quot;usage_log_pool&quot;: &quot;.us-west.usage&quot;, 
+	  &quot;user_keys_pool&quot;: &quot;.us-west.users&quot;, 
+	  &quot;user_email_pool&quot;: &quot;.us-west.users.email&quot;, 
+	  &quot;user_swift_pool&quot;: &quot;.us-west.users.swift&quot;, 
+	  &quot;user_uid_pool&quot;: &quot;.us-west.users.uid&quot;, 
+	  &quot;system_key&quot;: 
+	  { &quot;access_key&quot;: &quot;AAKOST8WXTMWZGN29NF9&quot;, 
+	    &quot;secret_key&quot;: &quot;AA3m8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}, 
+	    &quot;placement_pools&quot;: [ 
+	      { &quot;key&quot;: &quot;default-placement&quot;, 
+	        &quot;val&quot;: { &quot;index_pool&quot;: &quot;.us-west.rgw.buckets.index&quot;, 
+	        &quot;data_pool&quot;: &quot;.us-west.rgw.buckets&quot;, 
+	        &quot;data_extra_pool&quot;: &quot;&quot;}
+	      }]
+	}
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Удалите зону по умолчанию, если она существует:</p>
+	   <pre class="screen"><code>
+# rados -p .rgw.root rm zone_info.default --name client.radosgw.us-east-1
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Обновите карту региона:</p>
+	   <pre class="screen"><code>
+# radosgw-admin regionmap update --name client.radosgw.us-east-1
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>После настройки зон создайте пользователей зон:</p>
+
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Создайте своего пользователя зоны <span class="term"><code>us-east</code></span> для вашего экземпляра шлюза
+	   <span class="term"><code>us-east-1</code></span>. Применяйте те же <span class="term"><code>access_key</code></span> и 
+	   <span class="term"><code>secret_key</code></span>, которые мы сгенерировали ранее для зоны <span class="term"><code>us-east</code></span>:</p>
+	   <pre class="screen"><code>
+# radosgw-admin user create --uid=&quot;us-east&quot; --displayname=&quot;Region-US Zone-East&quot; --name client.radosgw.useast-1 --access_key=&quot;XNK0ST8WXTMWZGN29NF9&quot; --secret=&quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+ 	  
+	[root@us-east-1 ceph]# radosgw-admin user create --uid=&quot;us-east&quot; --displayname=&quot;Region-US Zone-East&quot; --name client.radosgw.useast-1 --access_key=&quot;XNK0ST8WXTMWZGN29NF9&quot; --secret=&quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+	{ &quot;user_id&quot;: &quot;us-east&quot;, 
+	  &quot;display_name&quot;: &quot;Region-US Zone-East&quot;, 
+	  &quot;email&quot;: &quot;&quot;, 
+	  &quot;suspended&quot;: 0, 
+	  &quot;max_buckets&quot;: 1000, 
+	  &quot;auid&quot;: 0, 
+	  &quot;subusers&quot;: [], 
+	  &quot;keys&quot;: [ 
+	    { &quot;user&quot;: &quot;us-east&quot;, 
+	      &quot;access_key&quot;: &quot;XNK0ST8WXTMWZGN29NF9&quot;, 
+	      &quot;secret_key&quot;: &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}], 
+	  &quot;swift_keys&quot;: [], 
+	  &quot;caps&quot;: [], 
+	  &quot;op_mask&quot;: &quot;read, write, delete&quot;, 
+	  &quot;system&quot;: &quot;true&quot;, 
+	  &quot;default_placement&quot;: &quot;&quot;, 
+	  &quot;placement_tags&quot; : [], 
+	  &quot;bucket_quota&quot;: 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;user_quota&quot;: 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;temp_url_keys&quot;: []
+	} 
+	[root@us-east-1 ceph]# 
+	  </code></pre>
+	   </li><li class="listitem">
+       <p>Создайте своего пользователя зоны <span class="term"><code>us-west</code></span> для вашего экземпляра шлюза
+	   <span class="term"><code>us-west-1</code></span>. Применяйте те же <span class="term"><code>access_key</code></span> и 
+	   <span class="term"><code>secret_key</code></span>, которые мы сгенерировали ранее для зоны <span class="term"><code>us-west</code></span>:</p>
+	   <pre class="screen"><code>
+# radosgw-admin user create --uid=&quot;us-west&quot; --displayname=&quot;Region-US Zone-West&quot; --name client.radosgw.uswest-1 --access_key=&quot;AAK0ST8WXTMWZGN29NF9&quot; --secret=&quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+
+	[root@us-east-1 ceph]# radosgw-admin user create --uid=&quot;us-west&quot; --displayname=&quot;Region-US Zone-West&quot; --name client.radosgw.uswest-1 --access_key=&quot;AAK0ST8WXTMWZGN29NF9&quot; --secret=&quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+	{ &quot;user_id&quot;: &quot;us-west&quot;, 
+	  &quot;display_name&quot;: &quot;Region-US zone-West&quot;, 
+	  &quot;email&quot;: &quot;&quot;, 
+	  &quot;suspended&quot;: 0, 
+	  &quot;max_buckets&quot;: 1000, 
+	  &quot;auid&quot;: 0, 
+	  &quot;subusers&quot;: [], 
+	  &quot;keys&quot;: [ 
+	    { &quot;user&quot;: &quot;us-west&quot;, 
+	      &quot;access_key&quot;: &quot;AAK0ST8WXTMWZGN29NF9&quot;, 
+	      &quot;secret_key&quot;: &quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}], 
+	  &quot;swift_keys&quot;: [], 
+	  &quot;caps&quot;: [], 
+	  &quot;op_mask&quot;: &quot;read, write, delete&quot;, 
+	  &quot;system&quot;: &quot;true&quot;, 
+	  &quot;default_placement&quot;: &quot;&quot;, 
+	  &quot;placement_tags&quot;: [], 
+	  &quot;bucket_quota&quot;: 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;user_quota&quot;: 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;temp_url_keys&quot;: []
+	} 
+	[root@us-east-1 ceph]#
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Создайте своего пользователя зоны <span class="term"><code>us-east</code></span> для вашего экземпляра шлюза
+	   <span class="term"><code>us-west-1</code></span>. Применяйте те же <span class="term"><code>access_key</code></span> и 
+	   <span class="term"><code>secret_key</code></span>, которые мы сгенерировали ранее для зоны <span class="term"><code>us-east</code></span>:</p>
+	   <pre class="screen"><code>
+# radosgw-admin user create --uid=&quot;us-east&quot; --displayname=&quot;Region-US Zone-East&quot; --name client.radosgw.uswest-1 --access_key=&quot;XNK0ST8WXTMWZGN29NF9&quot; --secret=&quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+
+	[root@us-east-1 ceph]# radosgw-admin user create --uid=&quot;us-east&quot; --displayname=&quot;Region-US Zone-East&quot; --name client.radosgw.uswest-1 --access_key=&quot;XNK0ST8WXTMWZGN29NF9&quot; --secret=&quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+	{ &quot;user_id&quot;: &quot;us-east&quot;, 
+	  &quot;display_name&quot; : &quot;Region-US zone-East&quot;, 
+	  &quot;suspended&quot;: 0, 
+	  &quot;max.buckets&quot; : 1000, 
+	  &quot;auid&quot; : 0, 
+	  &quot;subusers&quot;: [] , 
+	  &quot;keys&quot;: [ 
+	    { &quot;user&quot;: &quot;us-east&quot;, 
+	      &quot;access_key&quot; : &quot;XNK0ST8WXTMWZGN29NF9&quot;, 
+	      &quot;secret_key&quot; : &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}] , 
+	  &quot;swift-keys&quot;: [], 
+	  &quot;caps&quot;: [], 
+	  &quot;op_mask&quot; : &quot;read, write, delete&quot;, 
+	  &quot;system&quot; : &quot;true&quot;, 
+	  &quot;default_placement&quot; : &quot;&quot; , 
+	  &quot;placement_tags&quot;: [] , 
+	  &quot;bucket_guota&quot; : 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects, -1}&quot;, 
+	  &quot;user_guota&quot;: 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;temp_url_keys&quot;: [] 
+	} 
+	[root@us-east-1 ceph]#
+	   </code></pre>
+	   </li><li class="listitem">
+       <p>Создайте своего пользователя зоны <span class="term"><code>us-west</code></span> для вашего экземпляра шлюза
+	   <span class="term"><code>us-east-1</code></span>. Применяйте те же <span class="term"><code>access_key</code></span> и 
+	   <span class="term"><code>secret_key</code></span>, которые мы сгенерировали ранее для зоны <span class="term"><code>us-west</code></span>:</p>
+	   <pre class="screen"><code>
+# radosgw-admin user create --uid=&quot;us-west&quot; --displayname=&quot;Region-US Zone-West&quot; --name client.radosgw.useast-1 --access_key=&quot;AAK0ST8WXTMWZGN29NF9&quot; --secret=&quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+
+	[root@us-east-1 ceph]# radosgw-admin user create --uid=&quot;us-west&quot; --displayname=&quot;Region-US Zone-West&quot; --name client.radosgw.useast-1 --access_key=&quot;AAK0ST8WXTMWZGN29NF9&quot; --secret=&quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot; --system
+	{ &quot;user_id&quot;: &quot;us-west&quot;, 
+	  &quot;display_name&quot; : &quot;Region-US zone-west&quot;, 
+	  &quot;suspended&quot; : 0, 
+	  &quot;max_buckets&quot; : 1000, 
+	  &quot;auid&quot; : 0, 
+	  &quot;subusers&quot; : [] , 
+	  &quot;keys&quot;: [ 
+	    { &quot;user&quot; : &quot;us-west&quot;, 
+	      &quot;access_key&quot; : &quot;AAK0ST8WXTMWZGN29NF9&quot; , 
+	      &quot;secret_key&quot; : &quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}] , 
+	  &quot;swift_keys&quot; : [] , 
+	  &quot;caps&quot; : [] , 
+	  &quot;op_mask&quot; : &quot;read, write, delete&quot;, 
+	  &quot;system&quot; : &quot;true&quot;, 
+	  &quot;default_placement&quot; : &quot;&quot; , 
+	  &quot;placement_tags&quot; : [] , 
+	  &quot;bucket_guota&quot; : 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot; : -1} , 
+	  &quot;user_quota&quot; : 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot; : -1, 
+	      &quot;max_objects&quot; : -1} , 
+	  &quot;temp_url _keys&quot; : [] 
+	} 
+	[root@us-east-1 ceph]#
+ 	   </code></code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Обновите сценарий инициализации <span class="term"><code>ceph-radosgw</code></span> и установите пользователем по умолчанию  
+	 <span class="term"><code>root</code></span>. По умолчанию выполнение <span class="term"><code>ceph-radosgw</code></span> применяет 
+	 пользователя <span class="term"><code>Apache</code></span> и вы можете столкнуться с ошибками если пользователь 
+	 <span class="term"><code>Apache</code></span> отсутствует:</p>
+	   <pre class="screen"><code>
+# sed -i s"/DEFAULT_USER.*=.*'apache'/DEFAULT_USER='root'"/g /etc/rc.d/init.d/ceph-radosgw
+
+	[root@us-east-1 ceph]# cat /etc/rc.d/init.d/ceph-radosgw | grep -i root 
+	DEFAULT_USEIR = '<strong>root</strong>' 
+	[root@us-east-1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Зарегистрируйтесь на ваших узлах <span class="term"><code>us-east-1</code></span> и <span class="term"><code>us-west-1</code></span> 
+	 и перезапустите службу <span class="term"><code>ceph-radosgw</code></span>:</p>
+	   <pre class="screen"><code>
+# systemctl restart ceph-radosgw
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Проверьте что настройки региона, зоны и <span class="term"><code>ceph-radosgw</code></span> верны, выполните следующие 
+	 команды с узла <span class="term"><code>us-east-1</code></span>:</p>
+	   <pre class="screen"><code>
+# radosgw-admin regions list --name client.radosgw.us-east-1
+# radosgw-admin regions list --name client.radosgw.us-west-1
+# radosgw-admin zone list --name client.radosgw.us-east-1
+# radosgw-admin zone list --name client.radosgw.us-west-1
+# curl http://us-east-1.cephcookbook.com:7480
+# curl http://us-west-1.cephcookbook.com:7480
+
+	[root@us-east-1 ceph]# radosgw-admin regions list --name client.radosgw.us-east-1 
+	{ &quot;default_info&quot;: {&quot;default_region&quot;: &quot;us&quot;}, 
+	  &quot;regions&quot;: [ 
+	       &quot;us&quot;]} 
+	[root@us-east-1 ceph]# radosgw-admin regions list --name client.radosgw.us-west-1 
+	{ &quot;default_info&quot;: &quot;default_region&quot;: &quot;us&quot;}, 
+	  &quot;regions&quot;: [ 
+	       &quot;us&quot;]} 
+	[root@us-east-1 ceph]# radosgw-admin zone list --name client.radosgw.us-east-1 
+	{ &quot;zones&quot;: [ 
+	       &quot;us-west&quot;, 
+	       &quot;us-east&quot;]} 
+	[root@us-east-1 ceph]# radosgw-admin zone list --name client.radosgw.us-west-1 
+	{ &quot;zones&quot;: [ 
+	      &quot;us-west&quot;, 
+	      &quot;us-east&quot;]} 
+	[root@us-east-1 ceph]# curl http://us-east-1.cephcookbook.com:7480 
+	&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+	  &lt;ListAllMyBucketsResult xmlns=&quot;http://s3.amazona ws.com/doc/2006-03-01/&quot;&gt;
+	  &lt;Owner&gt;
+	  &lt;ID&gt;anonymous&lt;/ID&gt;
+	  &lt;DisplayName&gt;&lt;/DisplayName&gt;
+	  &lt;/Owner&gt;
+	  &lt;Buckets&gt;&lt;/Buckets&gt;
+	  &lt;/ListAllMyBucketsResult&gt;
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# curl http://us-west-1.cephcookbook.com:7480 
+	&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+	 &lt;ListAllMyBucketsResult xmlns=&quot;http://s3.amazona ws.com/doc/2006-03-01/&quot;&gt;
+	 &lt;Owner&gt;
+	 &lt;ID&gt;anonymous&lt;/ID&gt;
+	 &lt;DisplayName&gt;&lt;/DisplayName&gt;
+	 &lt;/Owner&gt;
+	 &lt;Buckets&gt;&lt;/Buckets&gt;
+	 &lt;/ListAllMyBucketsResult&gt;
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Настройте репликацию множества площадок создав файл <span class="term"><code>cluster-data-sync.conf</code></span> со 
+	 следующим содержимым:</p>
+	   <pre class="screen"><code>
+src_zone: us-east
+source: http://us-east-1.cephcookbook.com:7480
+src_access_key: XNK0ST8WXTMWZGN29NF9
+src_secret_key: 7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5
+dest_zone: us-west
+destination: http://us-west-1.cephcookbook.com:7480
+dest_access_key: AAK0ST8WXTMWZGN29NF9
+dest_secret_key: AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5
+log_file: /var/log/radosgw/radosgw-sync-us-east-west.log
+
+	[root@us-east-1 ceph]# cat cluster-data-sync.conf 
+	srczone: us-east 
+	source: http://us-east-1.cephcookbook.com:7480 
+	src_access_key: XNK0ST8WXTMWZGN29NF9 
+	src_secret_key: 7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5 
+	dest_zone: us-west 
+	destination: http://us-west-1.cephcookbook.com:7480 
+	dest_access_key: AAK0ST8WXTMWZGN29NF9 
+	dest_secret_key: AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5
+	/var/log/radosgw/radosgw-sync-us-east-west.log 
+	[root@us-east-1 ceph]# 
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Активируйте агента синхронизации данных. Когда синхронизация данных запустится, вы должны увидеть вывод аналогичный показанному ниже:</p>
+	   <pre class="screen"><code>
+# radosgw-agent -c cluster-data-sync.conf
+ 	   </code></pre>
+     <div class="figure"><a id="Fig0305"> </a>
+      <p class="title"><strong>Рисунок 3.5. </strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0305.jpg" width="1026" height="287"/><br />
+      <span></span>
+      </div></div>
+     </div><br class="figure-break"/>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0309"> </a>Тестирование федеративных настроек radosgw</h3>
+   </div></div></div>
+   <p>Для того, чтобы протестировать федеративную конфигурацию мы вначале добавим некоторые объекты в нашу зону 
+   <span class="term"><code>us-east</code></span> через экземпляр <span class="term"><code>radosgw</code></span>,
+   <span class="term"><code>us-east-1</code></span>, используя Swift. Затем, после синхронизации данных между зонами 
+   <span class="term"><code>us-east</code></span> и <span class="term"><code>us-west</code></span>, мы получим доступ к тем же объектам из зоны
+   <span class="term"><code>us-west</code></span> через интерфейс шлюза <span class="term"><code>us-west-1</code></span>.</p>
+   <p></p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030901"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Создайте подпользователя Swift для пользователя зоны <span class="term"><code>us-east</code></span>:</p>
+	   <pre class="screen"><code>
+# radosgw-admin subuser create --uid=&quot;us-east&quot; --subuser=&quot;useast:swift&quot; --access=full --name client.radosgw.us-east-1 --keytype swift --secret=&quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;
+# radosgw-admin subuser create --uid=&quot;us-east&quot; --subuser=&quot;useast:swift&quot; --access=full --name client.radosgw.us-west-1 --keytype swift --secret=&quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;
+
+	[root@us-east-1 ceph]# radosgw-admin subuser create --uid=&quot;us-east&quot; --subuser=&quot;useast:swift&quot; --access=full --name client.radosgw.us-east-1 --keytype swift --secret=&quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;
+	{ &quot;user_id&quot;: &quot;us-east&quot;, 
+	  &quot;display_name:&quot; &quot;Region-US Zone-East&quot;, 
+	  &quot;email&quot;: &quot;&quot;, 
+	  &quot;suspended&quot;: 0, 
+	  &quot;max_buckets&quot;: 1000, 
+	  &quot;avid&quot;: 0, 
+	  &quot;subusers&quot;: [ 
+	    { &quot;id&quot;: &quot;us-east:swift&quot;, 
+	      &quot;permissions&quot;: &quot;full-control&quot;}], 
+	  &quot;keys&quot;: [ 
+	    { &quot;user&quot;: &quot;us-east&quot;, 
+	      &quot;access_key&quot;: &quot;XNK0ST8WXTMWZGN29NF9&quot;, 
+	      &quot;secret_key&quot;: &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}], 
+	  &quot;swiftkeys&quot;: [ 
+	  { &quot;user&quot;: &quot;us-east:swift&quot;, 
+	    &quot;secret_key&quot;: &quot;7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;}], 
+	  &quot;caps&quot; : [], 
+	  &quot;op_mask&quot; : &quot;read, write, delete&quot;, 
+	  &quot;system&quot;: &quot;true&quot;, 
+	  &quot;default_placement&quot;: 
+	  &quot;placement_tags&quot;: [], 
+	  &quot;bucket_quota&quot;: 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;user_quota&quot;: 
+	    { &quot;enabled&quot;: false, 
+	      &quot;max_size_kb&quot;: -1, 
+	      &quot;max_objects&quot;: -1}, 
+	  &quot;temp_url_keys.: []
+	} 
+	[root@us-east-1 ceph]#
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Аналогично, создадим подпользователя Swift для пользователя зоны<span class="term"><code>us-west</code></span>:</p>
+	   <pre class="screen"><code>
+# radosgw-admin subuser create --uid=&quot;us-west&quot; --subuser=&quot;us-west:swift&quot; --access=full --name client.radosgw.us-east-1 --key-type swift --secret=&quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;
+# radosgw-admin subuser create --uid=&quot;us-west&quot; --subuser=&quot;us-west:swift&quot; --access=full --name client.radosgw.us-west-1 --key-type swift --secret=&quot;AAJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5&quot;
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Установите клиента <span class="term"><code>python-swift</code></span> на узлах <span class="term"><code>us-east-1</code></span> и 
+	 <span class="term"><code>us-west-1</code></span>:</p>
+	   <pre class="screen"><code>
+# yum install python-swift
+# yum install python-setuptools
+# easy_install pip
+# pip install --upgrade setuptools
+# pip install python-swiftclient
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Соберите <span class="term"><code>python-swiftclient</code></span> на узле <span class="term"><code>us-east-1</code></span>:</p>
+	   <pre class="screen"><code>
+# export ST_AUTH=&quot;http://us-east-1.cephcookbook.com:7480/auth/1.0&quot;
+# export ST_KEY=7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5
+# export ST_USER=us-east:swift
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Выведите перечень и создайте некоторые объекты на узле <span class="term"><code>us-east-1</code></span>:</p>
+	   <pre class="screen"><code>
+# swift list
+# swift upload container-1 us.json
+# swift list
+# swift list container-1
+
+	[root@us-east-1 ceph]# export ST_AUTH=&quot;http://us-east-l.cephcookbook.com:7480/auth/1.0&quot; 
+	[root@us-east-1 ceph]# export ST_KEY=7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5 
+	[root@us-east-1 ceph]# export ST_USER=us-east:swift 
+	[root@us-east-1 ceph]# swift list 
+	[root@us-east-1 ceph]# swift upload container-1 us.json 
+	us.json 
+	[root@us-east-1 ceph]# swift list 
+	container-1 
+	[root@us-east-1 ceph]# 
+	[root@us-east-1 ceph]# swift list container-1 
+	us.json 
+	[root@us-east-1 ceph]#
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Активируем агента синхронизации данных:</p>
+	   <pre class="screen"><code>
+# radosgw-agent -c cluster-data-sync.conf
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Когда синхронизация данных завершится, попытайтесь осуществить доступ из зоны <span class="term"><code>us-west</code></span> применяя 
+	 экземпляр шлюза <span class="term"><code>us-west-1</code></span>. На данном этапе данные должны быть доступными для вас из экземпляра
+	 шлюза <span class="term"><code>us-west-1</code></span>:</p>
+	   <pre class="screen"><code>
+# export ST_AUTH=&quot;http://us-west-1.cephcookbook.com:7480/auth/1.0&quot;
+# export ST_KEY=7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5
+# export ST_USER=us-east:swift
+# swift list
+
+	[root@us-west-1 ceph]# export ST_AUTH=&quot;http://us-west-1.cephcookbook.com:7480/auth/1.0&quot;
+	[root@us-west-1 ceph]# export ST_KEY=7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5
+	[root@us-west-1 ceph]# export ST_USER=us-east:swift
+	[root@us-west-1 ceph]# swift list
+	container-1
+	[root@us-west-1 ceph]# swift list container-1
+	us.json
+	[root@us-west-1 ceph]#
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0310"> </a>Построение служб файловой синхронизации и совместного использования с применением RGW</h3>
+   </div></div></div>
+   <p>Сслужбы синхронизации и совместного использования файлов, такие как Dropbox, Box, Google Drive и многие прочие, становятся чрезвычайно 
+   популярными в последние несколько лет. При помощи Ceph вы можете развёртывать локальную синхронизацию файлов и службы совместного использования 
+   применяя любые интерфейсы приложений на основе S3 или Swift, в этом рецепте мы продемонстрируем как построить синхронизацию файлов и службы 
+   совместного использования на основе Ceph и ownCloud.</p>
+   <p>Для построения такой службы нам понадобятся работающий кластер, экземпляр RGW, способный осуществлять дотуп к хранилищу Ceph через S3 и 
+   интерфейс среды ownClowd, как это показано ниже:</p>
+     <div class="figure"><a id="Fig0306"> </a>
+      <p class="title"><strong>Рисунок 3.6. Схема служб файловой синхронизации и совместного использования Ceph и ownCloud</strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0306.jpg" width="258" height="484"/><br />
+     <span></span>
+     </div></div>
+    </div><br class="figure-break"/>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="031001"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>В последнем рецепте мы настроили экземпляр <span class="term"><code>radosgw</code></span>, <span class="term"><code>us-east-1</code></span>; 
+   мы будем использовать тот же экземпляр шлюза в этом разделе для построения службы синхронизации файлоы и их совместного использования. Мы также
+   применяем службу DNS, которая настроена на <span class="term"><code>rgw-node1</code></span> для поддержки вызовов поддомена S3 для нашего 
+   экземпляра RGW <span class="term"><code>us-east-1</code></span>; однако, мы также можем применять любой другой DNS сервер если он позволяет 
+   разрешать поддомены для <span class="term"><code>us-east-1</code></span>.</p>
+ 
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="031002"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Зарегистриуйтесь на <span class="term"><code>rgw-node1</code></span>, который также является нашим сервером DNS и создайте файл 
+     <span class="term"><code>/var/named/us-east-1.cephcookbook.com</code></span> со следующим содержимым:</p>
+	   <pre class="screen"><code>
+@ 86400 IN SOA cephcookbook.com. root.cephcookbook.com. (
+	    20091028 ; serial yyyy-mm-dd
+	    10800 ; refresh every 15 min
+	    3600 ; retry every hour
+	    3600000 ; expire after 1 month +
+	    86400 ); min ttl of 1 day
+@ 86400 IN NS cephbookbook.com.
+@ 86400 IN A 192.168.1.107
+* 86400 IN CNAME @
+
+	[root@rgw-node1 ~]# cat /var/named/us-east-1.cephcookbook.com
+	@ 86400 IN SOA cephcookbook.com. root.cephcookbook.com. (
+	        20091028 ; serial yyyy-mm-dd
+	        10800 ; refresh every 15 min
+	        3600 ; retry every hour
+	        3600000 ; expire after 1 month +
+	        86400 ); min ttl of 1 day
+	@ 86400 IN NS cephbookbook.com.
+	@ 86400 IN A 192.168.1.107
+	* 86400 IN CNAME @
+	[root@rgw-node1 ~]#
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Настройте ваш узел <span class="term"><code>us-east-1</code></span> на применение вашего сервера DNS. Измените 
+	 <span class="term"><code>/etc/resolve.conf</code></span> своими адресами <span class="term"><code>rgw-node1</code></span> и выполните 
+	 ping любого поддомена; это должно разрешить адрес <span class="term"><code>us-east-1</code></span>.</p>
+	   <pre class="screen"><code>
+	[root@us-east-1 ~]# cat /etc/resolv.conf 
+	# Generated by NetworkManager 
+	search cephcookbook.com 
+	nameserver 192.168.1.106 
+	[root@us-east-1 ~]# 
+	[root@us-east-1 ~]# ping anything.us-east-l.cephcookbook.com -c 1 
+	PING us-east-l.cephcookbook.com (192.168.1.107) 56(84) bytes of data. 
+	64 bytes from us-east-l.cephcookbook.com (192.168.1.107): icmp_seq=1 tt1=64 time=0.038 ms 
+	
+	--- us east-1.cephcookbook.com ping statistics ---
+	1 packets transmitted, 1 received, 0% packet loss, time Oms 
+	rtt min/avg/max/mdev = 0.038/0.038/0.038/0.000 ms 
+	[root@us-east-1 ~]#
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Убедитесь, что ваш узел <span class="term"><code>us-east-1</code></span> может соединиться с кластером хранения Ceph поверх S3. 
+	 В последнем рецепте мы создали пользователя с именем <span class="term"><code>us-east</code></span> и воспользуемся его доступом и ключом
+	 безопасности с помощью <span class="term"><code>s3cmd</code></span>:</p>
+
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Установите <span class="term"><code>s3cmd</code></span>:</p>
+	   <pre class="screen"><code>
+# yum install -y s3cmd
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Настройте <span class="term"><code>s3cmd</code></span> и предоставьте <span class="term"><code>access_key</code></span>
+	   установленный в <span class="term"><code>XNK0ST8WXTMWZGN29NF9</code></span> и <span class="term"><code>secret_key</code></span>
+	   установленный в <span class="term"><code>7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5</code></span>:</p>
+	   <pre class="screen"><code>
+# s3cmd --configure
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Измените <span class="term"><code>/root/.s3cmd</code></span> подробностями хоста:</p>
+	   <pre class="screen"><code>
+host_base = us-east-1.cephcookbook.com:7480
+host_bucket = %(bucket)s.us-east-1.cephcookbook.com:7480
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Проверьте соединение <span class="term"><code>s3cmd</code></span>:</p>
+	   <pre class="screen"><code>
+# s3cmd ls
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Создайте сегмент (bucket) для ownCloud, который будет применяться для сохранения его объектов:</p>
+	   <pre class="screen"><code>
+# s3cmd mb s3://owncloud
+ 	   </code></pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Далее мы установим ownCloud, который снабдит нас внешним и пользовательским интерфейсами для службы синхронизации и совместного 
+	 применения файлов:</p>
+
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Поднимите виртуальную машину ownCloud с помощью Vagrant и зарегистрируйтесь на этой ВМ:</p>
+	   <pre class="screen"><code>
+# vagrant up owncloud
+# vagrant ssh owncloud
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Установите репозиторий ownCloud следующим образом:</p>
+	   <pre class="screen"><code>
+# cd /etc/yum.repos.d/
+# wget http://download.opensuse.org/repositories/isv:ownCloud:community/CentOS_CentOS-7/isv:ownCloud:community.repo
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Установите ownCloud как показано ниже:</p>
+	   <pre class="screen"><code>
+# yum install owncloud -y
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Поскольку это пробная сборка, запретим межсетевой экран:</p>
+	   <pre class="screen"><code>
+# systemctl disable firewalld
+# systemctl stop firewalld
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Попытайтесь получитьдоступ к веб- интерфейсу ownCloud набрав на своём хосте в веб браузере 
+	   <span class="term"><code>http://192.168.1.120/owncloud/</code></span>. Создайте учётную запись администратора с именем 
+       <span class="term"><code>owncloud</code></span> и паролем <span class="term"><code>owncloud</code></span>:</p>
+       <div class="figure"><a id="Fig0307"> </a>
+        <p class="title"><strong>Рисунок 3.7. </strong></p>
+        <div class="figure-contents"><div class="mediaobject">
+         <img src="figures/Fig0307.jpg" width="501" height="815"/><br />
+        <span></span>
+        </div></div>
+       </div><br class="figure-break"/>
+	   </li><li class="listitem">
+       <p>Первый экран регистрации будет выглядеть как это отображено ниже; в любое время мы можем применять ownClowd в качестве 
+	   рабочего стола или мобильного приложения:</p>
+       <div class="figure"><a id="Fig0308"> </a>
+        <p class="title"><strong>Рисунок 3.8. </strong></p>
+        <div class="figure-contents"><div class="mediaobject">
+         <img src="figures/Fig0308.jpg" width="1204" height="894"/><br />
+        <span></span>
+        </div></div>
+       </div><br class="figure-break"/>
+	   </li>
+     </ol>
+	 </li><li class="listitem">
+     <p>Настройте ownCloud для применения Ceph в качестве внешнего хранилища S3:</p>
+
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Из учётной записи администратора ownClowd сделайте доступным внешнее хранилище переместившись в 
+	   <span class="term"><strong class="userinput"><code>Files | Apps | Not enabled | External Storage</code></strong></span>
+	   и кликнув на <span class="term"><strong class="userinput"><code>Enable it</code></strong></span>.</p>
+	   </li><li class="listitem">
+       <p>Далее настройте внешнее хранилище на применение Ceph. Для этого переместитесь в правую сторону окна и выберите пользователя 
+	   ownCloud, затем выберите <span class="term"><strong class="userinput"><code>admin</code></strong></span>, а потом переместитесь в 
+	   панель с левой стороны и выберите <span class="term"><strong class="userinput"><code>External Storage</code></strong></span>.</p>
+	   </li><li class="listitem">
+       <p>Настройте Amazon S3 и соответствующее хранилище под ownCloud, выбрав <span class="term"><strong class="userinput"><code>Enable 
+	   User External Storage</code></strong></span>, а затем переместившись в <span class="term"><strong class="userinput"><code> Amazon S3 
+	   and compliant | Add Storage | Amazon S3 and Compliant</code></strong></span>.</p>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Снабдите пользователя Ceph <span class="term"><code>radosgw</code></span> подробностями ключей доступа и безопасности, а также имени 
+	 хоста:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Folder name</code></strong></span>: Введите имя вашей папки, которую вы хотите показывать 
+	 на своей странице файлов ownCloud.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Access key</code></strong></span>: Введите ваш код доступа S3, 
+	 <span class="term"><code>XNK0ST8WXTMWZGN29NF9</code></span></p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Secret key</code></strong></span>: Введите ваш код безопасности S3, 
+	 <span class="term"><code>7VJm8uAp71xKQZkjoPZmHu4sACA1SY8jTjay9dP5</code></span></p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Bucket</code></strong></span>: Введите имя вашего S3 сегмента, который мы создали на 3м 
+	 шаге</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code></code></strong></span>: Введите <span class="term"><code>us-east-1.cephcookbook.com</code></span></p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Port</code></strong></span>: Введите <span class="term"><code>7480</code></span></p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Region</code></strong></span> (не обязательно): Введите <span class="term"><code>US</code></span></p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Available for</code></strong></span>: Введите <span class="term"><code>owncloud</code></span>
+	 (не обязательно)</p>
+	 </li>
+   </ul>
+   </div>
+     <div class="figure"><a id="Fig0309"> </a>
+      <p class="title"><strong>Рисунок 3.9. </strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0309.jpg" width="1193" height="695"/><br />
+      <span></span>
+      </div></div>
+     </div><br class="figure-break"/>
+	 </li><li class="listitem">
+     <p>Как только вы введёте предыдущие подробности, ownCloud должен соединиться с кластер Ceph поверх S3 и вы должны увидеть зелёную 
+	 окружность сразу перед именем вашей папки, как это отображено на предыдущем снимке.</p>
+	 </li><li class="listitem">
+     <p>Далее загрузите файлы через ownCloud своим пользовательским веб- интерфейсом. Для выполнения этого переместитесь в 
+	 <span class="term"><strong class="userinput"><code>Files | External Storage</code></strong></span> и кликните на свой
+	 <span class="term"><strong class="userinput"><code>ceph-s3</code></strong></span>  загрузки файлов или каталогов.</p>
+	 </li><li class="listitem">
+     <p>Убедитесь что файлы были добавлены в ваш кластер хранения Ceph переключившись на узел <span class="term"><code>us-east-1</code></span>
+	 и выполнив команду <span class="term"><code>s3cmd ls s3://owncloud</code></span>; вы должны получить файл, который вы загрузили через 
+	 пользовательский веб- интерфейс ownCloud.</p>
+	   <pre class="screen"><code>
+	[root@us-east-1 ~]# s3cmd ls s3://owncloud 
+	                       DIR   s3://owncloud/mona/ 
+	2015-05-05 21:32    148481   s3://owncloud/eknumber.jpg 
+	[root@us-east-1 ~]#
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Поздравляем! Вы научились строить свои частные службы синхронизации и совместного применения файлов с использованием хранилища 
+	 объектов Ceph S3 и ownCloud.</p>
+	 </li>
+   </ol>
+   </div>
+
+  </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="031003"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+   <p>Для получения дополнительной информации по ownCloud, посетите <a class="link" href="https://owncloud.org/" target="_top">https://owncloud.org/</a>.</p>
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

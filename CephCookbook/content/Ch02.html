@@ -1,0 +1,1782 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 2. Работа с блочными устройствами Ceph - Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch01.html" title="Глава 1. Введение Введение и за его пределами"/>
+<link rel="next" href="Ch03.html" title="Глава 3. Работа с хранилищем объектов Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 2. Работа с блочными устройствами Ceph';
+PrevRef = 'Ch01.html';
+UpRef = 'index.html';
+NextRef = 'Ch03.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 2. Работа с блочными устройствами Ceph</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Работу с блочными устройствами Ceph</p>
+	 <li class="listitem">
+	 <p>Настройку клиента Ceph</p>
+	 </li><li class="listitem">
+	 <p>Создание блочного устройства Ceph</p>
+	 </li><li class="listitem">
+	 <p>Отображение блочного устройства Ceph</p>
+	 </li><li class="listitem">
+	 <p>Изменение размеров RBD Ceph</p>
+	 </li><li class="listitem">
+	 <p>Работу со снимками RBD</p>
+	 </li><li class="listitem">
+	 <p>Работу с клонами RBD</p>
+	 </li><li class="listitem">
+	 <p>Быстрый осмотр OpenStack</p>
+	 </li><li class="listitem">
+	 <p>Ceph - наилучшее соответствие OpenStack</p>
+	 </li><li class="listitem">
+	 <p>Настройку OpenStack</p>
+	 </li><li class="listitem">
+	 <p>Настройку OpenStack в качестве клиента Ceph</p>
+	 </li><li class="listitem">
+	 <p>Настройку Glance под поддержку Ceph</p>
+	 </li><li class="listitem">
+	 <p>Настройку Cinder под поддержку Ceph</p>
+	 </li><li class="listitem">
+	 <p>Настройку Nova для подключения Ceph RBD</p>
+	 </li><li class="listitem">
+	 <p>Настройку Nova для загрузки экземпляров из Ceph RBD</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch02.html">2. Работа с блочными устройствами Ceph</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#0201">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0202">Работа с блочными устройствами Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0203">Настройка клиента Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0204">Создание блочного устройства Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0205">Отображение блочного устройства Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0206">Изменение размеров RBD Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0207">Работа со снимками RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0208">Работа с клонами RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0209">Быстрый осмотр OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0210">Ceph - наилучшее соответствие OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0211">Настройка OpenStack</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0212">Настройка OpenStack в качестве клиента Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0213">Настройка Glance под поддержку Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0214">Настройка Cinder под поддержку Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0215">Настройка Nova для подключения Ceph RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0216">Настройка Nova для загрузки экземпляров из Ceph RBD</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0201"> </a>Введение</h3>
+   </div></div></div>
+   <p>Когда вы установили и настроили свой кластер хранения Ceph, следующей задачей является выполнение подготовки к хранению. Подготовка 
+   к хранению является процессом назначения пространства хранения или ёмкости физическим или виртуальным серверам в одной из форм: в 
+   виде хранения блоков, файлов или объектов. Обычная вычислительная система или сервер приходят с ограниченной ёмкостью локального 
+   хранения, которой может быть недостаточно для потребностей хранения ваших данных. Решения хранения подобные Ceph предоставляют 
+   виртуально неограниченную ёмкость хранения для этих серверов, предоставляя им возможность хранить все ваши данные и пребывать 
+   в уверенности что вы не выйдете за допустимые пределы. Применение выделенных систем хранения вместо локальных хранилищ даёт вам 
+   столь необходимую гибкость в терминах масштабируемости, надёжности и производительности.</p>
+   <p>Ceph может подготовить к применению ёмкость хранения единообразно, причём включая блочные хранилища, файловые системы и системы 
+   хранения объектов. Следующая схема отображает поддерживаемые Ceph форматы и зависимости для вариантов применения, причём вы 
+   можете выбрать один или более вариантов:</p>
+   <div class="figure"><a id="Fig0201"> </a>
+    <p class="title"><strong>Рисунок 2.1. Форматы хранения Ceph и варианты применения</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0201.jpg" width="294" height="512"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Мы обсудим в этой книге все варианты, однако в данной главе мы сосредоточимся на блочных хранилищах Ceph.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0202"> </a>Работа с блочными устройствами Ceph</h3>
+   </div></div></div>
+   <p><span class="term"><strong class="userinput">Блочные устройства Ceph</strong></span> (Ceph Block Device), ранее называвшиеся блочными 
+   устройствами RADOS, предоставляют клиентам надёжные распределённые и высокопроизводительные блочные диски хранения. Блочные устройства 
+   хранения RADOS применяют библиотеку <span class="term"><code>librbd</code></span> и хранят блоки данных в последовательном виде чередуя 
+   их по множеству OSD в кластере Ceph. RBD поддерживаются уровнем RADOS в Ceph, таким образом каждое блочное устройство распределяется 
+   по множеству узлов Ceph, поставляя высокую производительность и исключительную надёжность. RBD имеет встроенную поддержку для ядра 
+   Linux, что означает, что драйверы RBD хорошо интегрированы с ядром Linux на протяжении последних нескольких лет. Помимо надёжности и 
+   производительности RBD также предоставляет функциональность корпоративного уровня подобную полным и инкрементальным снимкам, 
+   динамичному выделению (thin provisioning), клонированию копированием при записи (copy on write), динамическое изменение размеров и 
+   тому подобное. RBD также поддерживает кэширование в памяти, которое драматично улучшает производительность.</p>
+   <div class="figure"><a id="Fig0202"> </a>
+    <p class="title"><strong>Рисунок 2.2. Форматы хранения Ceph и варианты применения</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0202.jpg" width="247" height="280"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Лидеры в индустрии гипервизоров с открытым исходным кодом, подобные KVM и Zen {<span class="emphasis"><em>Прим. пер.: а также, 
+   например, набирающий популярность <a class="link" href="onreader.mdl.ru/ProxmoxCookbook/content/Ch06.html#CephRBD" 
+   target="_top">Proxmox</a></em></span>}, предоставляют полную поддержку RBD и повышают мощь функциональности  своих гостевых 
+   виртуальных машин. Прочие проприетарные гипервизоры, например, VMWare и Microsoft HyperV будут поддерживать их в скором времени. 
+   Для поддержки этих гипервизоров в сообществе была проведена колоссальная работа. Блочные устройства Ceph предоставляют полную 
+   поддержку облачным платформам, таким как OpenStack, Cloud Stack и ряду других {<span class="emphasis"><em>Прим. пер.: например, 
+   <a class="link" href="onreader.mdl.ru/ProxmoxCookbook/content/Ch06.html#CephRBD" target="_top">Proxmox</a></em></span>}. Для этих 
+   облачных платформ были доказаны успешность и функциональная полнота. В OpenStack вы можете применять блочные устройства Ceph с 
+   компонентами cinder (для блоков) и glance (для образов). Работая таким образом вы можете раскручивать тысячи 
+   <span class="term"><strong class="userinput">Виртуальных Машин</strong></span> (<span class="term"><strong 
+   class="userinput">ВМ</strong></span>, <span class="term"><strong class="userinput">VM</strong></span>) за очень короткие 
+   промежутки времени, применяя преимущества функциональности копирования при записи блочных устройств Ceph.</p>
+   <p>Вся эта функциональность делает RBD идеальным кандидатом для облачных платформ OpenStack, CloudStack {<span class="emphasis"><em>Прим. 
+   пер.: <a class="link" href="onreader.mdl.ru/ProxmoxCookbook/content/Ch06.html#CephRBD" target="_top">Proxmox</a> и 
+   прочих</em></span>}. Теперь мы изучим как создавать блочные устройства Ceph и применять их.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0203"> </a>Настройка клиента Ceph</h3>
+   </div></div></div>
+   <p>Все обычные хосты Linux (RHEL или основанные на Debian) могут выступать в роли клиентов Ceph. Клиент взаимодействует с кластером 
+   хранения Ceph через сетевую среду для сохранения или выборки данных пользователя. Поддержка RBD Ceph была добавлена в магистральное ядро 
+   Linux, начиная с 2.6.34 и последующих версий.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Как мы это уже делали ранее, мы установим машину клиента Ceph с применением Vagrant и VirtualBox. Мы воспользуемся тем же самым 
+   <span class="term"><code>Vagrantfile</code></span>, который мы клонировали в нашей прошлой главе. Затем Vagrant запустит виртуальную 
+   машину Ubuntu 14.04, которую мы настроим в качестве клиента Ceph:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Из каталога, в который мы клонировали <span class="term"><code>ceph-cookbook git repository</code></span>, 
+	 запустим клиентскую машину с помощью Vagrant:</p>
+	   <pre class="screen">
+$ vagrant status client-node1
+$ vagrant up client-node1
+
+	HOST:ceph-cookbook ksinghS vagrant status client-node1 
+	Current machine states: 
+	
+	client-node1              not created (virtualbox)
+	
+	The environment has not yet been created. Run `vagrant up` to 
+	create the environment. If a machine is not created, only the 
+	default provider will be shown. so if a provider is not listed, 
+	then the machine is not created for that environment. 
+	HOST:ceph-cookbook ksinghS vagrant up client-node1 
+	Bringing machine 'client-node1' up with 'virtualhox' provider... 
+	==&gt; client-node1: Importing base box 'ubuntu/trusty64'... 
+	==&gt; client-node1: Matching MAC address for NAT networking... 
+	==&gt; client-node1: Checking if box 'ubuntu/trusty64' is up to date... 
+	==&gt; client-node1: setting the name of the vm: client-node1
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Зарегистрируйтесь на <span class="term"><code>ceph-node1</code></span>:</p>
+	   <pre class="screen">
+$ vagrant ssh client-node1
+ 	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Имя и пароль которые Vagrant применяет для настройки виртуальной машины <span class="term"><code>vagrant</code></span> и 
+	   Vagrant имеет права <span class="term"><code>sudo</code></span>. Пароль по умолчанию для пользователя 
+	   <span class="term"><code>root</code></span> установлен в <span class="term"><code>vagrant</code></span>.</p></td></tr></table>
+     </div>
+	 </li><li class="listitem">
+     <p>Проверьте редакции ОС и ядра (это не является обязательным):</p>
+	   <pre class="screen">
+$ lsb_release -a
+$ uname -r
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Убедитесь что RBD поддерживается ядром:</p>
+	   <pre class="screen">
+$ sudo modprobe rbd
+
+	vagrant@client-node1:~$ lsb_release -a 
+	No LSB modules are available. 
+	Distributor ID: Ubuntu 
+	Description: Ubuntu 14.04.2 LTS 
+	Release: 14.04 
+	Codename: trusty 
+	vagrant@client-node1:~$ 
+	vagrant@client-node1:~$ uname -r 
+	3.13.0-46-generic 
+	vagrant@client-node1:~$ 
+	vagrant@client-node1:~$ sudo modprobe rbd 
+	vagrant@client-node1:~$ echo $? 
+	0 
+	vagrant@client-node1:~$ 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Разрешите доступ машины монитора <span class="term"><code>ceph-node1</code></span> к <span class="term"><code>client-node1</code></span>
+	 через <span class="term"><strong class="userinput"><code>ssh</code></strong></span>. Для этого скопируйте ключи ssh root с 
+	 <span class="term"><code>ceph-node1</code></span> на <span class="term"><code>client-node1</code></span> пользователя Vagrant. 
+	 Выполните следующие команды на машине <span class="term"><code>ceph-node1</code></span> если не предписано другого:</p>
+	   <pre class="screen">
+## Login to ceph-node1 machine
+$ vagrant ssh ceph-node1
+$ sudo su -
+# ssh-copy-id vagrant@client-node1
+ 	   </pre>
+	 <p>Предоставьте одноразовый пароль пользователя Vagrant, т.е. <span class="term"><code>vagrant</code></span> для 
+	 <span class="term"><code>ceph-node1</code></span>. Когда ключи ssh скопированы с <span class="term"><code>ceph-node1</code></span>
+	 на <span class="term"><code>client-node1</code></span>, вы должны получить возможность регистрироваться на 
+	 <span class="term"><code>client-node1</code></span> без пароля.</p>
+	 </li><li class="listitem">
+     <p>Для установки исполняемых файлов Ceph на <span class="term"><code>client-node1</code></span> выполните 
+	 <span class="term"><code>ceph-deploy</code></span> на <span class="term"><code>ceph-node1</code></span>:</p>
+	   <pre class="screen">
+# cd /etc/ceph
+# ceph-deploy --username vagrant install client-node1
+
+	[root@client-node1 ceph]# ceph-deploy --username vagrant install client-node1 
+	[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf 
+	[ceph_deploy.cli][INFO ] Invoked (1.5.22): /bin/ceph-deploy --username vagrant install client-node1 
+	[ceph_deploy.install][DEBUG ] Installing stable version giant on cluster ceph hosts client-node1 
+	[ceph_deploy.install][DEBUG ] Detecting platform for host client-node1 
+	[client-node1][DEBUG ] connection detected need for sudo 
+	[client-node1][DEBUG ] connected to host: vagrant@client-node1 
+	[client-node1][DEBUG ] detect platform information from remote host 
+	[client-node1][DEBUG ] detect machine type 
+	[ceph_deploy.install][INFO ] Distro info: ubuntu 14.04 trusty 
+	[client-node1][INFO ] installing ceph on client-node1 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Скопируйте файл настроек (<span class="term"><code>ceph.conf</code></span>) на <span class="term"><code>client-node1</code></span>:</p>
+	   <pre class="screen">
+# ceph-deploy --username vagrant config push client-node1
+ 	   </pre>
+	 </li>
+	 </li><li class="listitem">
+     <p>Клиентской машине требуется ключ Ceph для доступа к кластеру Ceph. Ceph создёт пользователя по умолчанию, 
+	 <span class="term"><code>client.admin</code></span>, который имеет полный доступ к кластеру Ceph. Не рекомендуется применять 
+	 ключ <span class="term"><code>client.admin</code></span> совместно на клиентских узлах. Лучшим решением будет создать нового 
+	 пользователя Ceph с отдельным ключом и разрешить его доступ к определённым пулам Ceph.</p>
+	 <p>В нашем случае мы создадим пользователя Ceph <span class="term"><code>client.rbd</code></span> с правом доступа к пулу 
+	 <span class="term"><code>rbd</code></span>. По умолчанию, блочные устройства Ceph создаются в пуле <span class="term"><code>rbd</code></span>:</p>
+	   <pre class="screen">
+# ceph auth get-or-create client.rbd mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=rbd'
+
+	[root@ceph-node1 ceph]# ceph auth get-or-create client.rbd mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=rbd' 
+	[client.rbd] 
+	        key = AQCLEg5VeAbGARAAE4ULXC7M$Fwd3BGFDiHRTw== 
+	[root@client-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Добавьте ключ на машине <span class="term"><code>client-node1</code></span> для пользователя 
+	 <span class="term"><code>client.rbd</code></span>:</p>
+	   <pre class="screen">
+# ceph auth get-or-create client.rbd | ssh vagrant@client-node1 sudo tee /etc/ceph/ceph.client.rbd.keyring
+
+	[root@client-node1 ceph]# ceph auth get-or-create client.rbd | ssh vagrant@client-node1 sudo tee /etc/ceph/ceph.client.rbd.keyring 
+	[client.rbd] 
+	        key = AQCLEg5VeAbGARAAE4ULXC7M$Fwd3BGFDiHRTw== 
+	[root@client-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>На данном этапе <span class="term"><code>client-node1</code></span> должен быть готов к работе в качестве клиента Ceph. Проверьте 
+	 состояние на машине <span class="term"><code>client-node1</code></span> предоставив имя пользователя и ключ безопасности:</p>
+	   <pre class="screen">
+$ vagrant ssh client-node1
+$ sudo su -
+# cat /etc/ceph/ceph.client.rbd.keyring &gt;&gt; /etc/ceph/keyring
+### Since we are not using the default user client.admin we need
+to supply username that will connect to Ceph cluster.
+# ceph -s --name client.rbd
+
+	root@client-node1:~# ceph -s --name client.rbd 
+	    cluster 9609b429-eee2-4e23-af31-28a24fcf5cbc 
+		health HEALTH_OK 
+		monmap e3: 3 mons at {ceph-node1=192.168.1.101:6789/0,ceph-node2=192.168.1.102:6789/0, ceph-node3=192.168.1.103:6789/0}, election epoch 82, quorum 0,1,2 ceph-node1,ceph-node2,cep h-node3 
+		osdmap e142: 9 osds: 9 up, 9 in 
+		 pgmap v378: 180 pgs, 1 pools, 0 bytes data, 0 objects 
+		       322 MB used, 134 GB / 134 GB avail 
+	                180 active+clean 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0204"> </a>Создание блочного устройства Ceph</h3>
+   </div></div></div>
+   <p>На текущий момент у нас имеется настроенный клиент Ceph, и мы сейчас можем продемонстрировать создание блочного устройства Ceph с 
+   машины <span class="term"><code>client-node1</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Создайте блочное устройство RADOS с именем <span class="term"><code>rbd1</code></span> и размером 10240МБ:</p>
+	   <pre class="screen">
+# rbd create rbd1 --size 10240 --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Существует множество вариантов отображения списка образов RBD:</p>
+	   <pre class="screen">
+## The default pool to store block device images is &quot;rbd&quot;, you can
+also specify the pool name with the rbd command using -p option:
+# rbd ls --name client.rbd
+# rbd ls -p rbd --name client.rbd
+# rbd list --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Осмотрите подробности образа rbd:</p>
+	   <pre class="screen">
+# rbd --image rbd1 info --name client.rbd
+
+	root@client-node1:~# rbd create rbdl --size 10240 --name client.rbd 
+	root@client-node1:~# rbd is --name client.rbd 
+	rbdl 
+	root@client-node1:~# rbd --image rbdl info --name client.rbd 
+	rbd image 'rbdl': 
+	        size 10240 MB in 2560 objects 
+	        order 22 (4096 kB objects) 
+	        block_name_prefix: rb.0.14f1.238e1f29 
+	        format: 1 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0205"> </a>Отображение блочного устройства Ceph</h3>
+   </div></div></div>
+   <p>Теперь когда у нас есть созданное блочное устройство в кластере Ceph, чтобы воспользоваться этим блочным устройством нам надо 
+   отобразить его на клиентской машине. Чтобы достичь этого, выполните следующие команды на машине 
+   <span class="term"><code>client-node1</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Отобразите ваше блочное устройство на <span class="term"><code>client-node1</code></span>:</p>
+	   <pre class="screen">
+# rbd map --image rbd1 --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Проверьте отображённое блочное устройство:</p>
+	   <pre class="screen">
+# rbd showmapped --name client.rbd
+
+	root@client-node1:~# rbd map --image rbdl --name client.rbd /dev/rbdl 
+	root@client-node1:—# rbd showmapped --name client.rbd 
+	id pool image snap device 
+	1  rbd  rbdl  -    /dev/rbdl 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Чтобы воспользоваться этим блочным устройством, нам следует создать на нём файловую систему и смонтировать её:</p>
+	   <pre class="screen">
+# fdisk -l /dev/rbd1
+# mkfs.xfs /dev/rbd1
+# mkdir /mnt/ceph-disk1
+# mount /dev/rbd1 /mnt/ceph-disk1
+# df -h /mnt/ceph-disk1
+
+	root@client-node1:~# df -h /mnt/ceph-diskl 
+	Filesystem      Size  Used Avail Use% Mounted on 
+	/dev/rbdl        10G   33M   10G   1% /mnt/ceph-diskl 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Проверьте блочное устройство записав на него данные:</p>
+	   <pre class="screen">
+# dd if=/dev/zero of=/mnt/ceph-disk1/file1 count=100 bs=1M
+
+	root@client-node1:~# dd if=/dev/zero of=/mnt/ceph-disk1/file1 count=100 bs=1M 
+	100+0 records in 
+	100+0 records out 
+	104857600 bytes (105 MB) copied, 7.16309 s, 14.6 MB/s 
+	root@client-node1:~# df -h /mnt/ceph-disk1 
+	Filesystem      Size  Used Avail Use% Mounted on 
+	/dev/rbdl        10G  133M  9.9G   2% /mnt/ceph-disk1 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Чтобы отображать блочное устройство после перезагрузок, вам следует добавить сценарий <span class="term"><code>init-rbdmap</code></span> 
+	 в запуск системы, добавьте пользователя Ceph и подробности кольца ключей (keyring) в  <span class="term"><code>/etc/ceph/rbdmap</code></span>,
+	 и, наконец, обновите файл <span class="term"><code>/etc/fstab</code></span>:</p>
+	   <pre class="screen">
+# wget https://raw.githubusercontent.com/ksingh7/ceph-cookbook/master/rbdmap -O /etc/init.d/rbdmap
+# chmod +x /etc/init.d/rbdmap
+# update-rc.d rbdmap defaults
+
+## Make sure you use correct keyring value in /etc/ceph/rbdmap file, which is generally unique for an environment.
+# echo &quot;rbd/rbd1 id=rbd,keyring=AQCLEg5VeAbGARAAE4ULXC7M5Fwd3BGFDiHRTw==&quot; &gt;&gt; /etc/ceph/rbdmap
+# echo &quot;/dev/rbd1 /mnt/ceph-disk1 xfs defaults, _netdev 0 0 &quot; &gt;&gt; /etc/fstab
+# mkdir /mnt/ceph-disk1
+# /etc/init.d/rbdmap start
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0206"> </a>Изменение размеров RBD Ceph</h3>
+   </div></div></div>
+   <p>Ceph поддерживает динамично выделяемые (thin provisioned) блочные устройства, что означает, что физическое пространство хранения не 
+   занимается пока вы не начинаете сохранять данные на свои блочные устройства. Ваши блочные устройства Ceph очень гибки; вы можете 
+   увеличивать или уменьшать размер RBD на лету со стороны хранилища Ceph. Однако, лежащие в основе файловые системы должны поддерживать 
+   изменение размеров. Современные файловые системы, такие как XFS, Btrfs, EXT, <a class="link"
+   href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch06.html#Reservations" target="_top">ZFS</a> и другие поддерживают изменение размера 
+   файловой системы до определённой степени. Для получения дополнительной информации об изменении размера, пожалуйста, обратитесь к 
+   соответствующей документации по файловой системе.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Для увеличения или уменьшения размера образа RBD Ceph воспользуйтесь параметром <span class="term"><code>--size 
+   &lt;New_Size_in_MB&gt;</code></span> в команде <span class="term"><code>rbd resize</code></span>, она тогда установит новый 
+   размер для вашего образа RBD:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Первоначальный размер созданного нами ранее образа RBD составляло 10ГБ. Теперь мы увеличим его размер до 20ГБ:</p>
+	   <pre class="screen">
+# rbd resize --image rbd1 --size 20480 --name client.rbd
+# rbd info --image rbd1 --name client.rbd
+
+	rootgclient-node1:~# rbd resize --image rbdl --size 20480 --name client.rbd 
+	Resizing image: 100% complete...done. 
+	rootgclient-node1:~# rbd info --image rbdl --name client.rbd 
+	rbd image 'rbdl': 
+	        size 20480 MB in 5120 objects 
+	        order 22 (4096 kB objects) 
+	        block_name_prefix: rb.0.14f1.238e1f29 
+	        format: 1 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Увеличение файловой системы в размере приводит к тому, что мы используем больше пространства хранения. Следует знать, что изменение 
+	 размера файловой системы является функциональной особенностью как ОС, так и вашего устройства файловой системы. Вам следует прочитать 
+	 документацию по файловой системе перед изменением размера любого раздела. Файловая система XFS поддерживает изменение размера в 
+	 реальном масштабе времени. Проверьте системные сообщения чтобы узнать об изменениях размера файловой системы:</p>
+	   <pre class="screen">
+# dmesg | grep -i capacity
+# xfs_growfs -d /mnt/ceph-disk1
+
+	root@client-node1:~# xfs_growfs -d /mnt/ceph-diskl 
+	meta-data=/dev/rbd1              isize=256    agcount=17, agsize=162816 blks 
+	         =                       sectsz=512   attr=2 
+	data     =                       bsize=4096   blocks=2621440, imaxpct=25 
+	         =                       sunit=1024   swidth=1024 blks 
+	naming   =version 2              bsize=4096   ascii-ci=0 
+	log      =internal               bsize=4096   blocks=2560, version=2 
+	         =                       sectsz=512   sunit=8 blks, lazy-count=1 
+	realtime =none                   extsz=4096   blocks=0, rtextents=0 
+	data blocks changed from 2621440 to 5242880 
+	root@client-node1:~# df -h /mnt/ceph-disk1 
+	Filesystem      Size  Used Avail Use% Mounted on 
+	/dev/rbdl        20G  134M   20G   1% /mnt/ceph-disk1 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0207"> </a>Работа со снимками RBD</h3>
+   </div></div></div>
+   <p>Ceph распространяет полную поддержку на снимки, которые являются копией образа RBD в определённый момент времени доступной только для 
+   чтения. Вы можете сохранять состояние образа RBD сохраняя снимки и восстанавливая определённый снимок для получения первоначальных 
+   данных.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020701"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Давайте рассмотрим как работает снимок в Ceph.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Чтобы проверить функциональность снимка Ceph давайте создадим в сделанном нами ранее блочном устройстве некий файл:</p>
+	   <pre class="screen">
+# echo &quot;Hello Ceph This is snapshot test&quot; &gt; /mnt/ceph-disk1/snapshot_test_file
+
+	root@client-node1:~# echo &quot;Hello Ceph This is snapshot test&quot; &gt; /mnt/ceph-disk1/snapshot_test_file 
+	root@client-node1:~# is -1 /mnt/ceph-disk1 
+	total 102404 
+	rw r r 1 root root 104857600 Mar 22 16:07 file1 
+	rw r r 1 root root 33 Mar 22 21:45 snapshot_test_file 
+	root@client-node1:~# 
+	root@client-node1:~# cat /mnt/ceph-disk1/snapshot_test_file 
+	Hello Ceph This is snapshot test 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте снимок для блочного устройства Ceph:</p>
+	   <pre class="screen">
+<span class="term"><strong class="userinput">Синтаксис:</strong></span> rbd snap create &lt;pool-name&gt;/&lt;image-name&gt;@&lt;snap-name&gt;
+# rbd snap create rbd/rbd1@snapshot1 --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Для отображения списка снимков образов воспользуйтесь следующим:</p>
+	   <pre class="screen">
+<span class="term"><strong class="userinput">Синтаксис:</strong></span> rbd snap ls &lt;pool-name&gt;/&lt;image-name&gt;
+# rbd snap ls rbd/rbd1 --name client.rbd
+
+	root@client-node1:~# rbd snap create rbd/rbdl@snapshotl --name client.rbd 
+	root@client-node1:~# rbd snap is rbd/rbdl --name client.rbd 
+	SNAPID NAME              SIZE 
+	     2 snapshot1     20480 MB 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Чтобы проверить функциональность восстановления снимка Ceph давайте удалим в файловой системе файлы:</p>
+	   <pre class="screen">
+# rm -f /mnt/ceph-disk1/*
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Теперь мы восстановим снимок нашего RBD Ceph для возврата только что на последнем шаге удалённых файлов. Отметьте, пожалуйста, 
+	 что операция отката перепишет текущую версию вашего образа RBD и его данные версией из снимка. Вы должны аккуратно выполнять эту 
+	 операцию:</p>
+	   <pre class="screen">
+<span class="term"><strong class="userinput">Синтаксис:</strong></span> rbd snap rollback &lt;pool-name&gt;/&lt;image-name&gt;@&lt;snap-name&gt;
+# rbd snap rollback rbd/rbd1@snapshot1 --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>По окончанию операции отката снимка перемонтируйте файловую систему RBD Ceph для обновления состояния файловой системы. Вы должны 
+	 иметь возможность получить назад свои удалённые файлы:</p>
+	   <pre class="screen">
+# umount /mnt/ceph-disk1
+# mount /dev/rbd1 /mnt/ceph-disk1
+# ls -l /mnt/ceph-disk1
+
+	root@client-node1:~# rbd snap rollback rbd/rbd1@snapshot1 --name client.rbd 
+	Rolling back to snapshot: 100% complete...done. 
+	root@client-node1:~# umount /mnt/ceph-disk1 
+	root@client-node1:~# mount /dev/rbd1 /mnt/ceph-disk1 
+	root@client-node1:~# is /mnt/ceph-disk1 
+	total 102404 
+	-rw-r--r-- 1 root root 104857600 Mar 22 16:07 file1 
+	-rw-r--r-- 1 root root 33 Mar 22 21:45 snapshot_test_file 
+	root@client-node1:~# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Когда вам больше не нужны снимки, вы можете удалять определённый снимок с применением следующего синтаксиса. Удаление снимка 
+	 не удаляет текущие данные в вашем образе RBD Ceph:</p>
+	   <pre class="screen">
+<span class="term"><strong class="userinput">Синтаксис:</strong></span> rbd snap rm &lt;pool-name&gt;/&lt;image-name&gt;@&lt;snap-name&gt;
+# rbd snap rm rbd/rbd1@snapshot1 --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Если у вас имеется множество снимков образов RBD и вы хотите удалить их все одной командой, тогда применяйте подкоманду 
+	 <span class="term"><code>purge</code></span>:</p>
+	   <pre class="screen">
+<span class="term"><strong class="userinput">Синтаксис:</strong></span> rbd snap purge &lt;pool-name&gt;/&lt;image-name&gt;
+# rbd snap purge rbd/rbd1 --name client.rbd
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0208"> </a>Работа с клонами RBD</h3>
+   </div></div></div>
+   <p>Ceph поддерживает очень приятную возможность для создания копируемых- при- записи (<span class="term"><strong class="userinput">COW</strong></span>, 
+   <span class="term"><strong class="userinput">Copy-On-Write</strong></span>) клонов из снимков RBD. Эту операцию в Ceph также называют 
+   расслоением снимков (<span class="term"><strong class="userinput">Snapshot Layering</strong></span>). Расслоение делает возможным клиентам 
+   создавать множественные экземпляры клонов RBD Ceph. Данная функциональность чрезвычайно полезна для облачных и виртуальных платформ, таких 
+   как {<span class="emphasis"><em>Прим. пер.: например, <a class="link" href="http://onreader.mdl.ru/openstack-ops/content/architecture.html" 
+   target="_top">OpenStack</a></em></span>}, CloudStack, Qemu/KVM и тому подобных {<span class="emphasis"><em>Прим. пер.: например, 
+   <a class="link" href="http://onreader.mdl.ru/ProxmoxCookbook/content/Ch03.html#Cloning_VM" target="_top">Proxmox</a></em></span>}. Эти 
+   платформы обычно предохраняют содержащие отображение ОС/ВМ образы RBD Ceph в виде снимка. Позже этот снимок многократно клонируется для 
+   порождения новых виртуальных машин/ экземпляров. Снимки являются доступными только для чтения, однако COW клоны полностью доступны для 
+   записи; данная функциональность Ceph предоставляет более высокий уровень гибкости и чрезвычайно полезна в облачных платформах. В 
+   последующих главах мы дополнительно исследуем клоны COW при порождении экземпляров OpenStack:</p>
+   <div class="figure"><a id="Fig0203"> </a>
+    <p class="title"><strong>Рисунок 2.3. COW клоны снимка</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0203.jpg" width="618" height="333"/><br />
+     <span></span>
+    </div></div>
+   </div>
+   <p>Каждый клонируемый образ (дочерний образ) сохраняет ссылки своих родительских снимков для чтения данных образа. Следовательно, 
+   ваш родительский снимок должен быть защищён перед его применением для клонирования. В момент записи данных в клонируемый COW 
+   образ он сохраняет ссылочные данные на себя. Клонируемые COW образы так же хороши как RBD. Они точно так же гибки, как и RBD, что 
+   означает, что они доступны для записи, а также поддерживают снимки и дальнейшее клонирование.</p>
+   <p>Образы в Ceph бывают двух типов: <span class="term"><code>format-1</code></span> и <span class="term"><code>format-2</code></span>.
+   Функциональность RBD доступна в обоих типах, а именно, как в образах RBD <span class="term"><code>format-1</code></span>, так и в
+   образах RBD <span class="term"><code>format-2</code></span>. Однако, функциональность расслоения (свойство клонирования COW) доступна 
+   только для образа RBD в <span class="term"><code>format-2</code></span>. Форматом образа RBD по умолчанию является 
+   <span class="term"><code>format-1</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020801"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Для демонстрации клонирования RBD мы намеренно создадим образ RBD <span class="term"><code>format-2</code></span>, затем создадим и 
+   защитим его снимок и, наконец, создадим из него клоны COW.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Создайте образ RBD <span class="term"><code>format-2</code></span> и осмотрите его детали:</p>
+	   <pre class="screen">
+# rbd create rbd2 --size 10240 --image-format 2 --name client.rbd
+# rbd info --image rbd2 --name client.rbd
+
+	root@client-node1:/# rbd create rbd2 --size 10240 --image-format 2 --name client.rbd 
+	root@client-node1:/# 
+	root@client-node1:/# rbd info --image rbd2 --name client.rbd 
+	rbd image 'rbd2': 
+	        size 10240 MB in 2560 objects 
+	        order 22 (4096 kB objects) 
+	        block_name_prefix: rbd_data.20f42ae8944a 
+	        format: 2 
+	        features: layering 
+	root@client-node1:/# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте снимок этого образа RBD:</p>
+	   <pre class="screen">
+# rbd snap create rbd/rbd2@snapshot_for_cloning --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Для создания клона COW защитите снимок. Это важный шаг, мы должны предохранять снимок, так как если снимок будет удалён, 
+	 будут разрушены все присоединённые клоны:</p>
+	   <pre class="screen">
+# rbd snap protect rbd/rbd2@snapshot_for_cloning --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Далее при помощи этого снимка мы создадим клонированный образ RBD:</p>
+	   <pre class="screen">
+<span class="term"><strong class="userinput">Синтаксис:</strong></span> rbd clone &lt;pool-name&gt;/<parent-image&gt;@&lt;snap-name&gt; &lt;poolname&gt;/&lt;child-image-name&gt;
+# rbd clone rbd/rbd2@snapshot_for_cloning rbd/clone_rbd2 --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Созание клона является быстрым процессом. Как только он завершится, проверьте информацию вашего нового образа. Вы отметите, что 
+	 будут отображена информация о его родительском пуле, образе и снимке:</p>
+	   <pre class="screen">
+# rbd info rbd/clone_rbd2 --name client.rbd
+
+	root@client-node1:/# rbd snap create rbd/rbd2@snapshot_for_cloning --name client.rbd 
+	root@client-node1:/# rbd snap protect rbd/rbd2@snapshot_for_cloning --name client.rbd 
+	root@client-node1:/# rbd clone rbd/rbd2@snapshot_for_cloning rbd/clone_rbd2 --name client.rbd 
+	root@client-node1:/# rbd info rbd/clone_rbd2 --name client.rbd 
+	rbd image 'clone_rbd2': 
+	        size 10240 MB in 2560 objects 
+	        order 22 (4096 kB objects) 
+	        block_name_prefix: rbd_data.220b3d1b58ba 
+	        format: 2 
+	        features: layering 
+	        parent: rbd/rbd2@snapshot_for_cloning 
+	        overlap: 10240 MB 
+	root@client-node1:/# 
+ 	   </pre>
+	 <p>На данный момент у нас имеется клонированный образ RBD, который зависит от своего снимка образа родителя. Чтобы сделать клонированный 
+	 образ RBD независимым от его родителей нам нужно <span class="emphasis"><em>выровнять (flatten) этот образ</em></span>, которое выполнит 
+	 копирование данных из родительского снимка в его дочерний образ. Время, которое займет выполнение процесса выравнивания зависит от размера 
+	 данных, расположенных в родительском снимке. Когда процесс выравнивания завершится, зависимости между клонированным образом и его 
+	 родительским снимком больше не будет.</p>
+	 </li><li class="listitem">
+     <p>Чтобы начать процесс выравнивания воспользуйтесь следующим:</p>
+	   <pre class="screen">
+# rbd flatten rbd/clone_rbd2 --name client.rbd
+# rbd info --image clone_rbd2 --name client.rbd
+ 	   </pre>
+	 <p>После завершения процесса выравнивания, если вы проверите информацию об образе, вы отметите, что имя родительского образа/ снимка 
+	 отсутствует и клон является независимым.</p>
+	   <pre class="screen">
+	root@client-node1:/# rbd flatten rbd/clone_rbd2 --name client.rbd 
+	Image flatten: 100% complete...done. 
+	root@client-node1:/# rbd info --image clone_rbd2 --name client.rbd rbd 
+	image 'clone_rbd2': 
+	    size 10240 MB in 2560 objects 
+		order 22 (4096 kB objects) 
+		block_name_prefix: rbd_data.220b3d1b58ba 
+		format: 2 
+		features: layering 
+	root@client-node1:/# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Вы также можете удалить свой родительский снимок если он вам больше не требуется.  Перед удалением снимка вам сначала необходимо снять 
+	 с него защиту:</p>
+	   <pre class="screen">
+# rbd snap unprotect rbd/rbd2@snapshot_for_cloning --name client.rbd
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Когда со снимка снята защита, вы можете удалить его:
+	 <span class="term"><code>purge</code></span>:</p>
+	   <pre class="screen">
+<span class="term"><strong class="userinput">Синтаксис:</strong></span> rbd snap purge &lt;pool-name&gt;/&lt;image-name&gt;
+# rbd snap rm rbd/rbd2@snapshot_for_cloning --name client.rbd
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0209"> </a>Быстрый осмотр OpenStack</h3>
+   </div></div></div>
+   <p>OpenStack является платформой с открытым исходным кодом для построения и управления общедоступной и частной облачной инфраструктуры.
+   Он управляется независимым, некоммерческим фондом, называемым фондом OpenStack. Это самое большое и наиболее активное сообщество, 
+   которое поддерживается такими технологическими гигантами как HP, Red Hat, Dell, Cisco, IBM, Rackspace и многими другими. Идея 
+   OpenStack для облачных решений состоит в том, что оно должно быть простым в реализации и массивно масштабируемым.</p>
+   <p>OpenStack рассматривается как облачная операционная система в которой пользователи имеют возможность мгновенно развёртывать 
+   сотни виртуальных машин автоматизированным способом. Она также предоставляет эффективный способ заботы о бесплатном управлении 
+   этими машинами. OpenStack своим динамичным увеличения и уменьшения в масштабе, а также возможностями распределённой архитектуры, 
+   которые делают вашу облачную среду надёжной и готовой к будущему. OpenStack представляет платформу инфраструктуры- как- службы 
+   (<span class="term"><strong class="userinput">IaaS</strong></span>, 
+   <span class="term"><strong class="userinput">Infrastructure-as-a-Service</strong></span>) для любых ваших потребностей в 
+   облачных решениях.</p>
+   <div class="figure"><a id="Fig0204"> </a>
+    <p class="title"><strong>Рисунок 2.4. Компоненты OpenStack</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0204.jpg" width="388" height="203"/><br />
+     <span></span>
+    </div></div>
+   </div>
+   <p>Как показано на приведённой выше схеме, OpenStack состоит из отдельных различных программных компонентов, которые совместно 
+   работают для предоставления служб облака. В данной главе из всех этих компонент мы сосредоточимся на <span class="term"><strong class="userinput"><code>Cinder</code></strong></span> 
+   и <span class="term"><strong class="userinput"><code>Glance</code></strong></span>, которые соответственно предоставляют службы 
+   блочного хранения и образов. Для получения дополнительной информации по компонентам, пожалуйста, обращайтесь к 
+   <a class="link" href="http://www.openstack.org/" target="_top">http://www.openstack.org/</a> {<span class="emphasis"><em>Прим. пер.: 
+   у нас на сайте вы можете ознакомиться с <a class="link" href="http://onreader.mdl.ru/openstack-ops/content/architecture.html" 
+   target="_top">переводом</a> 2й редакции OpenStack Operations Guide (на момент перевода данной книги доступна 
+   3я редакция: 2016-03-03, последняя версия достуна <a class="link" href="http://docs.openstack.org/openstack-ops/content/index.html" 
+   target="_top">тут</a> )</em></span>}.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0210"> </a>Ceph - наилучшее соответствие OpenStack</h3>
+   </div></div></div>
+   <p>В последние несколько лет OpenStack приобрёл впечатляющую популярность благодаря своей основанной на программно определяемой 
+   поддержке широкого диапазона вычислений, сетевых сред и даже систем хранения. И когда вы рассуждаете о системах хранения для
+   OpenStack, Ceph привлекает всё внимание. Проведённый в сентябре 2015г опрос пользователей OpenStack показал, что Ceph доминирует 
+   на рынке устройств блочного хранения с колоссальными 62% применения.</p>
+   <p>Ceph предоставляет устойчивую, нодёжную основу хранения, которую искал OpenStack. Его бесшовная интеграция с компонентами 
+   OpenStack такими, как cinder, glance, nova и keystone предоставляет всю- в- одном основу хранения для OpenStack. Вот некоторые 
+   ключевые преимущества, делающие Ceph наилучшим соответствием для OpenStack:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Ceph предоставляет основу хранения уровня предприятия с богатым функционалом при очень умеренной стоимости за гигабайт, что 
+	 помогает сохранять снижению стоимости развёртывания облачного решения OpenStack.</p>
+	 </li><li class="listitem">
+	 <p>Ceph является унифицированным решением хранения для хранения Блоков, Файлов и Объектов для OpenStack, позволяя приложениям использовать 
+	 хранилище в соответствии со своими потребностями.</p>
+	 </li><li class="listitem">
+	 <p>Ceph обеспечивает современные возможности блочного хранения для облачных решений OpenStack, которые включают простое и быстрое 
+	 порождение экземпляров, а также их резервное копирование и клонирование виртуальных машин.</p>
+	 </li><li class="listitem">
+	 <p>Она предоставляет по умолчанию постоянные тома для экземпляров OpenStack, которые могут работать как традиционные серверы, в которых 
+	 данные не наполняются при загрузке.</p>
+	 </li><li class="listitem">
+	 <p>OpenStack сопровождение Ceph является независимой от хоста при поддержке миграции виртуальных машин, масштабировании компонентов 
+	 хранения без воздействия на ВМ.</p>
+	 </li><li class="listitem">
+	 <p>Она предоставляет томам OpenStack функциональность снимков, которая может также применяться как средство резервного копирования.</p>
+	 </li><li class="listitem">
+	 <p>Функциональность клонирования копированием- при- записи (COW) Ceph позволяет OpenStack раскручивать множество экземпляров за 
+	 один раз, что помогает быстрее работать механизму продвижения.</p>
+	 </li><li class="listitem">
+	 <p>Ceph поддерживает богатые API как для интерфейсов хранения объектов Swift, так и для S3.</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Сообщества Ceph и OpenStack в последние несколько лет тесно работали для создания интеграции ещё более бесшовной и применения 
+   новых функциональностей по мере их появления. В будущем мы ожидаем что OpenStack и Ceph будут ещё более тесно ассоциироваться 
+   благодаря приобретению Red Hat Inktank, компании, лежащей в основе Ceph; Red Hat один из основных вкладчиков в проекте OpenStack.</p>
+   <p>OpenStack является модульной системой, которая имеет уникальные компоненты для особых наборов задач. Существуют различные 
+   компоненты, которым требуется надёжная основа для хранения, подобная Ceph, и расширяющая полную интеграцию в неё, как отображено на 
+   следующей схеме. Все эти компоненты используют Ceph для своих собственных потребностей в хранении блочных устройств и объектов. 
+   Большинство основанных на OpenStack и Ceph облачных решений применяют интеграцию Cinder, Glance и Swift c Ceph. Интеграция с 
+   Keystone применяется когда вам нужна S3- совместимость хранения объектов в вашей поддержке Ceph. Интеграция Nova делает 
+   возможной загрузку с томов Ceph для ваших экземпляров OpenStack.</p>
+   <div class="figure"><a id="Fig0205"> </a>
+    <p class="title"><strong>Рисунок 2.5. Интегрированные в Ceph компоненты OpenStack</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0205.jpg" width="593" height="392"/><br />
+     <span></span>
+    </div></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0211"> </a>Настройка OpenStack</h3>
+   </div></div></div>
+   <p>Установка и настройка OpenStack выходят за пределы рассмотрения данной книги, однако, просто для демонстрации мы применим виртуальную 
+   машину с предустановленной редакцией OpenStack RDO Juno. Если вы захотите, вы можете использовать вашу собственную среду OpenStack и 
+   можете выполнить интеграцию Ceph. {<span class="emphasis"><em>Прим. пер.: отсылаем к нашему переводу <a class="link" 
+   href="http://onreader.mdl.ru/openstack-ops/content/section_arch_provision.html" target="_top">Руководства по эксплуатации 
+   OpenStack</a> за подробностями инициализации и развертывания</em></span>.}</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="021101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>В этом рецепте мы продемонстрируем как установить предварительно настроенную среду OpenStack с применением Vagrant и получить к ней 
+   доступ через CLI и GUI.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Запустите <span class="term"><code>openstack-node1</code></span> применив <span class="term"><code>Vagrantfile</code></span> 
+	 как мы это делали для узлов Ceph в предыдущей главе. Убедитесь, что вы находитесь на машине хоста и под репозиторием  
+	 <span class="term"><code>ceph-cookbook</code></span> прежде чем поднимете <span class="term"><code>openstack-node1</code></span>
+	 с помощью Vagrant:</p>
+	   <pre class="screen">
+# cd ceph-cookbook
+# vagrant up openstack-node1
+
+	HOST:ceph-cookbook ksingh$ vagrant up openstack-node1 
+	Bringing machine 'openstack-node1' up with 'virtualbox' provider... 
+	==&gt; openstack-node1: Clearing any previously set forwarded ports... 
+	==&gt; openstack-node1: Clearing any previously set network interfaces... 
+	=&gt; openstack-node1: Preparing network interfaces based on configuration... 
+	      openstack-node1: 
+	      Adapter 1: nat openstack-node1: 
+	      Adapter 2: hostonly 
+	=&gt; openstack-node1: Forwarding ports... 
+	      openstack-node1: 22 
+	=&gt; 2222 (adapter 1) 
+	=&gt; openstack-node1: Running 'pre-boot' VM customizations... 
+	=&gt; openstack-node1: Booting vm... 
+	=&gt; openstack-node1: waiting for machine to boot. This may take a few minutes... 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Когда <span class="term"><code>openstack-node1</code></span> запущен, проверьте состояние Vagrant, а затем зарегистрируйтесь 
+	 на этом узле:</p>
+	   <pre class="screen">
+$ vagrant status openstack-node1
+$ vagrant ssh openstack-node1
+
+	HOST:ceph-cookbook ksingh$ vagrant status openstack-node1 
+	Current machine states: 
+
+    openstack-node1           running (virtualbox)
+
+    The VM is running. To stop this vm, you can run `vagrant halt` to 
+	shut it down forcefully, or you can run `vagrant suspend` to simply 
+	suspend the virtual machine. In either case, to restart it again, 
+	simply run `vagrant up`. 
+	HOST:ceph-cookbook ksingh$ 
+	HOST:ceph-cookbook ksingh$ 
+	HOST:ceph-cookbook ksingh$ vagrant ssh openstack-node1 
+	Last login: Sat Mar 28 21:38:07 2015 from 10.0.2.2 
+	[vagrant@os-node1 ~]$ 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Мы предполагаем, что у вас есть некое понимание OpenStack и представление о его работе. Мы подключим файл
+	 <span class="term"><code>keystone_admin</code></span>, который был размещён в <span class="term"><code>/root</code></span>, а затем нам 
+	 нужно переключиться в корень:</p>
+	   <pre class="screen">
+$ sudo su -
+$ source keystone_admin
+ 	   </pre>
+	 <p>Теперь мы выполним некоторые внутренние команды OpenStack чтобы убедиться что OpenStack установлен надлежащим образом. Обратите 
+	 внимание, пожалуйста, что некоторые из этих команд не отображают никакой информации, поскольку это новая среда OpenStack, в которой 
+	 нет созданных экземпляров или томов:</p>
+	   <pre class="screen">
+# nova list
+# cinder list
+# glance image-list
+
+	[vagrant@os-node1 ~]$ sudo su -
+	Last login: Sat Mar 28 22:34:52 EET 2015 on pts/0 
+	[root@os-node1 ~]# source keystonerc_admin 
+	[root@os-node1 ~(keystone_admin)]# 
+	[root@os-node1 ~(keystone_admin)]# nova list 
+	+----+------+--------+------------+-------------+----------+ 
+	| ID | Name | Status | Task State | Power State | Networks |
+	+----+------+--------+------------+-------------+----------+ 
+	+----+------+--------+------------+-------------+----------+ 
+	[root@os-node1 ~(keystone_admin)]# 
+	[root@os-node1 ~(keystone_admin)]# cinder list 
+	+----+--------+--------------+------+-------------+----------+-------------+ 
+	| ID | Status | Display Name | Size | Volume Type | Bootable | Attached to | 
+	+----+--------+--------------+------+-------------+----------+-------------+ 
+	+----+--------+--------------+------+-------------+----------+-------------+ 
+	[root@os-node1 ~(keystone_admin)]# glance image-list 
+	+--------------------------------------+--------+-------------+------------------+----------+--------+ 
+	| ID                                   | Name   | Disk Format | Container Format | Size     | Status |
+	| Sc261af7-9388-44ad-a8ce-f9ebdad2e5cb | cirros I qcow2       | bare             | 13200896 | active | 
+	+--------------------------------------+--------+-------------+------------------+----------+--------+ 
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Вы можете также зарегистрироваться в веб- интерфейсе horizon OpenStack <span class="term"><code>https://192.168.1.111/dashboard</code></span>
+	 с именем пользователя <span class="term"><code>admin</code></span> и паролем <span class="term"><code>vagrant</code></span>.</p>
+     <div class="figure"><a id="Fig0206"> </a>
+      <p class="title"><strong></strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0206.jpg" width="262" height="367"/><br />
+       <span></span>
+      </div></div>
+     </div>
+	 </li><li class="listitem">
+     <p>После регистрации мы откроем страницу Общего обзора:</p>
+     <div class="figure"><a id="Fig0207"> </a>
+      <p class="title"><strong></strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0207.jpg" width="499" height="338"/><br />
+       <span></span>
+      </div></div>
+     </div>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0212"> </a>Настройка OpenStack в качестве клиента Ceph</h3>
+   </div></div></div>
+   <p>Узлы OpenStack должны быть настроены клиентами Ceph чтобы получить доступ к кластеру Ceph. Для этого установите пакеты Ceph на 
+   узлах OpenStack и проверьте что вы можете осуществить доступ к кластеру Ceph.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="021201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся настроить OpenStack в качестве клиента Ceph, который позжебудет использоваться для настройки 
+   cinder, glance и nova:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Мы воспользуемся <span class="term"><code>ceph-node1</code></span> для установки исполняемых файлов Ceph на 
+	 <span class="term"><code>os-node1</code></span> с использованием <span class="term"><code>ceph-deploy</code></span>, 
+	 как мы это уже делали ранее в <a class="link" href="Ch01.html" target="_top">Главе 1. Введение и за его пределами</a>. 
+	 Чтобы сделать это, мы должны установить регистрацию ssh без пароля для <span class="term"><code>os-node1</code></span>. 
+	 Пароль для <span class="term"><code>root</code></span> опять тот же (<span class="term"><code>vagrant</code></span> ):</p>
+	   <pre class="screen">
+$ vagrant ssh ceph-node1
+$ sudo su -
+# ping os-node1 -c 1
+# ssh-copy-id root@os-node1
+
+	HOST:ceph-cookbook ksingh$ vagrant ssh ceph-node1 
+	Last login: Sun mar 29 11:27:53 2015 from 10.0.2.2 
+	[vagrant@ceph-node1 ~]$ sudo su -
+	Last login: Sun Mar 29 11:27:57 EEST 2015 on pts/1 
+	[root@ceph-node1 ~]# ping os-node1 -c 1 
+	PING os-node1.cephcookbook.com (192.168.1.111) 56(84) bytes of data. 
+	64 bytes from os-node1.cephcookbook.com (192.168.1.111): icmp_seq=1 tt1=64 time=0.568 ms 
+	
+	--- os node1.cephcookbook.com ping statistics --- 
+	1 packets transmitted, 1 received, 0% packet loss, time 0ms 
+	rtt min/avg/max/mdev = 0.568/0.568/0.568/0.000 ms 
+	[root@ceph-node1 ~]# ssh-copy-id root@os-node1 
+	/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed 
+	/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys 
+	root@os-node1's password: 
+	
+	Number of key(s) added: 1
+	
+	Now try logging into the machine, with: &quot;ssh 'root@os-node1'&quot; 
+	and check to make sure that only the key(s) you wanted were added. 
+	
+	[root@ceph-node1 ~]# 	
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Далее мы установим пакеты Ceph на <span class="term"><code>os-node1</code></span> с применением 
+	 <span class="term"><code>ceph-deploy</code></span>:</p>
+	   <pre class="screen">
+# cd /etc/ceph
+# ceph-deploy install os-node1
+
+	[root@ceph-node1 ~]# cd /etc/ceph 
+	[root@ceph-node1 ceph]# ceph-deploy install os-node1 
+	[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf 
+	[ceph_deploy.cli][INFO ] Invoked (1.5.22): /bin/ceph-deploy install os-node1 
+	[ceph_deploy.install][DEBUG ] Installing stable version giant on cluster ceph hosts os-node1 
+	[ceph_deploy.install][DEBUG ] Detecting platform for host os-node1 
+	[os-node1][DEBUG ] connected to host: os-node1 
+	[os-node1][DEBUG ] detect platform information from remote host 
+	[os-node1][DEBUG ] detect machine type 
+	[ceph_deploy.install][INFO ] Distro info: centos Linux 7.0.1406 Core 
+	[os-node1][INFO ] installing ceph on os-node1 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Пропихните файл настрое Ceph, <span class="term"><code>ceph.conf</code></span> с 
+	 <span class="term"><code>ceph-node1</code></span> на <span class="term"><code>os-node1</code></span>. Этот файл настроек 
+	 поможет клиентам достигать мониторы Ceph и машины OSD. Заметьте, пожалуйста, что при желании вы также можете скопировать 
+	 файл <span class="term"><code>ceph.conf</code></span> вручную на <span class="term"><code>os-node1</code></span>:</p>
+	   <pre class="screen">
+# ceph-deploy config push os-node1
+ 	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Убедитесь что ваш помещённый на <span class="term"><code>os-node1</code></span> файл 
+	   <span class="term"><code>ceph.conf</code></span> имеет привилегии, установленные в значение 644.</p></td></tr></table>
+     </div>
+	   <pre class="screen">
+	[root@ceph-node1 ceph]# ceph-deploy config push os-node1 
+	[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf 
+	[ceph_deploy.cli][INFO ] Invoked (1.5.22): /bin/ceph-deploy config push os-node1 
+	[ceph_deploy.config][DEBUG ] Pushing config to os-node1 
+	[os-node1][DEBUG ] connected to host: os-node1 
+	[os-node1][DEBUG ] detect platform information from remote host 
+	[os-node1][DEBUG ] detect machine type 
+	[os-node1][DEBUG ] write cluster configuration to /etc/ceph/{cluster}.conf 
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте пулы для cinder, glance и nova. Вы можете применить любой доступный пул, однако для компонентов OpenStack 
+	 рекомендуется чтобы вы создавали отдельные пулы:</p>
+	   <pre class="screen">
+# ceph osd pool create images 128
+# ceph osd pool create volumes 128
+# ceph osd pool create vms 128
+
+	[root@ceph-node1 ceph]# ceph osd pool create images 128 
+	pool 'images' created 
+	[root@ceph-node1 ceph]# ceph osd pool create volumes 128 
+	pool 'volumes' created 
+	[root@ceph-node1 ceph]# ceph osd pool create vms 128 
+	pool 'vms' created 
+	[root@ceph-node1 ceph]# ceph osd lspools 
+	0 rbd,1 images,2 volumes,3 vms, 
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Установите аутентификацию клиента создав нового пользователя для cinder и glance:</p>
+	   <pre class="screen">
+# ceph auth get-or-create client.cinder mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rx pool=images'
+# ceph auth get-or-create client.glance mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=images'
+
+	[root@ceph-node1 ceph]# ceph auth get-or-create client.cinder mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rx pool=images' 
+	[client.cinder] 
+	        key = AQByVBhVMK2nLxAArOflyalhbc23N2kyZv0EXw== 
+	[root@ceph-node1 ceph]# ceph auth get-or-create client.glance mon 'allow r' osd 'allow class-read object_prefix rbd_children, allow rwx pool=images' 
+	[client.glance] 
+	        key = AQCBVBhVYJEEKBAAhXHTe9Z12O2YyhMOjpga2A== 
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Добавьте кольцо ключей на <span class="term"><code>os-node1</code></span> и измените его владельца:</p>
+	   <pre class="screen">
+# ceph auth get-or-create client.glance | ssh os-node1 sudo tee /etc/ceph/ceph.client.glance.keyring
+# ssh os-node1 sudo chown glance:glance /etc/ceph/ceph.client.glance.keyring
+# ceph auth get-or-create client.cinder | ssh os-node1 sudo tee /etc/ceph/ceph.client.cinder.keyring
+# ssh os-node1 sudo chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
+
+	[root@ceph-node1 ceph]# ceph auth get-or-create client.glance | ssh os-node1 sudo tee /etc/ceph/ceph.client.glance.keyring
+	[client.glance] 
+	        key = AQCBVBhVYJEEKBAAhXTe9Z12O2YyhM0jpga2A== 
+	[root@ceph-node1 ceph]# ssh os-node1 sudo chown glance:glance /etc/ceph/ceph.client.glance.keyring
+	[root@ceph-node1 ceph]# ceph auth get-or-create client.cinder | ssh os-node1 sudo tee /etc/ceph/ceph.client.cinder.keyring
+	[client.cinder] key = AQByVBhVMK2nLxAAr0f1yalhbc23N2kyZv0EXw== 
+	[root@ceph-node1 ceph]# ssh os-node1 sudo chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
+	[root@ceph-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Процеессу <span class="term"><code>libvirt</code></span> необходим доступ к кластеру Ceph для присоединения или отсоединения 
+	 блочных устройств от Cinder. Мы должны создать временную копию ключа <span class="term"><code>client.cinder</code></span>, 
+	 который будет нужен для настроек cinder и nova позже в данной главе:</p>
+	   <pre class="screen">
+# ceph auth get-key client.cinder | ssh os-node1 tee /etc/ceph/temp.client.cinder.key
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>На данный момент вы можете проверить предыдущую настройку осуществив доступ к кластеру Ceph с 
+	 <span class="term"><code>os-node1</code></span> применив пользователей Ceph <span class="term"><code>client.glance</code></span>
+	 и <span class="term"><code>client.cinder</code></span>. Зарегистрируйтесь на <span class="term"><code>os-node1</code></span> и 
+	 выполните следующие команды:</p>
+	   <pre class="screen">
+$ vagrant ssh openstack-node1
+$ sudo su -
+# cd /etc/ceph
+# ceph -s --name client.glance --keyring ceph.client.glance.keyring
+# ceph -s --name client.cinder --keyring ceph.client.cinder.keyring
+
+	HOST:ceph-cookbook ksingh$ vagrant ssh openstack-node1 
+	Last login: Sun Mar 29 22:55:20 2015 from 10.0.2.2 
+	[vagrant@os-node1 ~]$ sudo su -
+	Last login: Sun Mar 29 22:55:35 EEST 2015 on pts/0 
+	[root@os-node1 ~]# cd /etc/ceph 
+	[root@os-node1 ceph]# ceph -s --name client.glance --keyring ceph.client.glance.keyring 
+	    cluster 9609b429-eee2-4e23-af31-28a24fcf5cbc 
+		health HEALTH_OK 
+		monmap e3: 3 mons at {ceph-node1=192.168.1.101:6789/0,ceph-node2=192.168.1.102:6789/0,ceph-node3=192.1 68.1.103:6789/0}, election epoch 134, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3 
+		osdmap e248: 9 osds: 9 up, 9 in 
+		 pgmap v1189: 564 pgs, 4 pools, 114 MB data, 2629 objects 
+		      745 MB used, 134 GB / 134 GB avail 
+			       564 active+clean 
+	[root@os-node1 ceph]# 
+	[root@os-node1 ceph]# ceph -s --name client.cinder --keyring ceph.client.cinder.keyring 
+	    cluster 9609b429-eee2-4e23-af31-28a24fcf5cbc 
+		health HEALTH_OK 
+		monmap e3: 3 mons at {ceph-node1=192.168.1.101:6789/0,ceph-node2=192.168.1.102:6789/0,ceph-node3=192.1 68.1.103:6789/0}, election epoch 134, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3 
+		osdmap e248: 9 osds: 9 up, 9 in 
+		 pgmap v1189: 564 pgs, 4 pools, 114 MB data, 2629 objects 
+		       745 MB used, 134 GB / 134 GB avail 
+			        564 active+clean 
+	[root@os-node1 ceph]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Наконец создадим <span class="term"><code>uuid</code></span>, затем создадим, определим и установим ключ безопасности для 
+	 <span class="term"><code>libvirt</code></span> и удалим временные ключи:</p>
+
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Создайте <span class="term"><code>uuid</code></span> воспользовавшись следующим:</p>
+	   <pre class="screen">
+# cd /etc/ceph
+# uuidgen
+ 	   </pre>
+	   </li><li class="listitem">
+       <p>Создайте файл безопасности и установите это число <span class="term"><code>uuid</code></span> в нём:</p>
+	   <pre class="screen"><code>
+cat &gt; secret.xml &lt;&lt;EOF
+&lt;secret ephemeral='no' private='no'&gt;
+  &lt;uuid&gt;bb90381e-a4c5-4db7-b410-3154c4af486e&lt;/uuid&gt;
+  &lt;usage type='ceph'&gt;
+    &lt;name&gt;client.cinder secret&lt;/name&gt;
+  &lt;/usage&gt;
+&lt;/secret&gt;
+EOF
+ 	   </code></pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Убедитесь что вы используете свой собственный <span class="term"><code>uuid</code></span> сгенерированный для вашей 
+	   среды.</p></td></tr></table>
+     </div>
+	   </li><li class="listitem">
+       <p>Определите пароль и надёжно сохраните сгенерированное секретное значение. На последующих этапах нам понадобится это секретное	
+	   значение:</p>
+	   <pre class="screen">
+# virsh secret-define --file secret.xml
+
+	[root@os-node1 ~]# cd /etc/ceph 
+	[root@os-node1 ceph]# uuidgen 
+	bb90381e-a4c5-4db7-b410-3154c4af486e 
+	[root@os-node1 ceph]# cat &gt; secret.xml &lt;&lt;EOF 
+	&gt; &lt;secret ephemeral='no' private='no'&gt; 
+	&gt; &lt;uuid&gt;bb90381e-a4c5-4db7-b410-3154c4af486e&lt;/uuid&gt; 
+	&gt; &lt;usage type='ceph'&gt; 
+	&gt; &lt;name&gt;client.cinder secret&lt;/name&gt; 
+	&gt; &lt;/usage&gt; 
+	&gt; &lt;/secret&gt; 
+	&gt; EOF 
+	[root@os-node1 ceph]# virsh secret-define --file secret.xml 
+	Secret bb90381e-a4c5-4db7-b410-3154c4af486e created 
+	
+	[root@os-node1 ceph]# 
+ 	   </pre>
+	   </li><li class="listitem">
+       <p>Установите секретное значение которое было сгенерировано на последнем шаге в <span class="term"><code>virsh</code></span> 
+	   и удалите временные файлы. Удаление временных файлов не обязательно; оно выполняется просто для очистки системы:</p>
+	   <pre class="screen">
+# virsh secret-set-value --secret bb90381e-a4c5-4db7-b410-3154c4af486e --base64 $(cat temp.client.cinder.key) &amp;&amp; rm temp.client.cinder.key secret.xml
+# virsh secret-list
+
+	[root@os-node1 ceph]# virsh secret-set-value --secret bb90381e-a4c5-4db7-b410-3154c4af486e --base64 $(cat temp.client.cinder.key) &amp;&amp; rm temp.client.cinder.key secret.xml 
+	Secret value set 
+	
+	rm: remove regular file 'temp.client.cinder.key'? y 
+	rm: remove regular file 'secret.xml'? y 
+	[root@os-node1 ceph]# 
+	[root@os-node1 ceph]# virsh secret-list 
+	 UUID                                  Usage
+	----------------------------------------------------------------------------------
+	bb90381e-a4c5-4db7-b410-3154c4af486e       ceph client.cinder secret 
+	[root@os-node1 ceph]# 
+ 	   </pre>
+	   </li>
+     </ol>
+     </div>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0213"> </a>Настройка Glance под поддержку Ceph</h3>
+   </div></div></div>
+   <p>Мы выполнили настройку необходимую со стороны Ceph. В этом рецепте мы настроим OpenStack glance для применения поддержки хранения 
+   Ceph.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="021301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Этот рецепте расскажет о настройке компонентов glance OpenStack для хранения образов виртуальных машин в RBD Ceph:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Зарегистрируйтесь на <span class="term"><code>os-node1</code></span>, который является нашим узлом glance и отредактируйте 
+	 <span class="term"><code>/etc/glance/glance-api.conf</code></span> для следующих изменений:</p>
+
+     <div class="orderedlist">
+       <ol class="orderedlist" type="1"><li class="listitem">
+       <p>В разделе <span class="term"><code>[DEFAULT]</code></span> убедитесь в наличии следующих строк:</p>
+	   <pre class="screen">
+default_store=rbd
+show_image_direct_url=True
+ 	   </pre>
+	   </li><li class="listitem">
+       <p>Выполните следующую команду для проверки элементов:</p>
+	   <pre class="screen">
+# cat /etc/glance/glance-api.conf | egrep -i &quot;default_store|image_direct&quot;
+
+	[root@os-node1 ceph]# cat /etc/glance/glance-api.conf | egrep -i &quot;default_storelimage_direct&quot; 
+	<strong>default_store</strong>=rbd 
+	show_<strong>image_direct</strong>_ur1=True 
+	[root@os-node1 ceph]# 
+ 	   </pre>
+	   </li><li class="listitem">
+       <p>В разделе <span class="term"><code>[glance_store]</code></span> убедитесь что следующие строки присутствуют в 
+	   <span class="term"><strong class="userinput"><code>RBD Store Options</code></strong></span>:</p>
+	   <pre class="screen"><code>
+stores = rbd
+rbd_store_ceph_conf=/etc/ceph/ceph.conf
+rbd_store_user=glance
+rbd_store_pool=images
+rbd_store_chunk_size=8
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Выполните следующую команду для проверки предыдущих элементов:</p>
+	   <pre class="screen">
+# cat /etc/glance/glance-api.conf | egrep -v &quot;#|default&quot; | grep -i rbd
+
+	[root@os-node1 ceph]# cat /etc/glance/glance-api.conf | egrep -v &quot;#|default&quot; | grep -i rbd 
+	stores = <strong>rbd</strong>
+	<strong>rbd</strong>_store_ceph_conf=/etc/ceph/ceph.conf 
+	<strong>rbd</strong>_store_user=glance 
+	<strong>rbd</strong>_store_pool=images 
+	<strong>rbd</strong>_store_chunk_size=8 
+	[root@os-node1 ceph]# 
+ 	   </pre>
+	   </li>
+     </ol>
+     </div>
+	 </li><li class="listitem">
+     <p>Перезапустите службы glance OpenStack:</p>
+	   <pre class="screen">
+# service openstack-glance-api restart
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Получите файл <span class="term"><code>keystone_admin</code></span> для OpenStack и выведите список образов glance:</p>
+	   <pre class="screen">
+# source /root/keystonerc_admin
+# glance image-list
+
+	[root@os-node1 ~]# source keystonerc_admin 
+	[root@os-node1 ~(keystone_admin)]# 
+	[root@os-node1 ~(keystone_admin)]# glance image-list 
+	+--------------------------------------+--------+-------------+------------------+----------+--------+ 
+	| ID                                   | Name   | Disk Format | Container Format | Size     | Status |
+	+--------------------------------------+--------+-------------+------------------+----------+--------+ 
+	| 5c261af7-9388-44ad-a8ce-f9ebdad2eScb | cirros | qcow2       | bare             | 13200896 | active |
+	+--------------------------------------+--------+-------------+------------------+----------+--------+ 
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Загрузите из интернет образ <span class="term"><code>cirros</code></span>, который позже будет сохранён в Ceph:</p>
+	   <pre class="screen">
+# wget http://download.cirros-cloud.net/0.3.1/cirros-0.3.1-x86_64-disk.img
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Добавьте новый образ glance с помощью следующей команды:</p>
+	   <pre class="screen">
+# glance image-create --name cirros_image --is-public=true --diskformat=qcow2 --container-format=bare &lt; cirros-0.3.1-x86_64-disk.img
+
+	[root@os-node1 ~(keystone_admin)]# glance image-create --name cirros_image --is-public=true --disk-format=qcow2 --container-format=bare &lt; cirros-0.3.1-x86_64-disk.img 
+	+------------------+--------------------------------------+
+	| Property         | Value                                |
+	+------------------+--------------------------------------+
+	| checksum         | d972013792949d0d3ba628fbe8685bce     |
+	| container_format | bare                                 |
+	| created_at       | 2015-03-30T10:17:58                  |
+	| deleted          | False                                |
+	| deleted_at       | None                                 |
+	| disk_format      | qcow2                                |
+	| id               | b2d15e34-7712-4f1d-b48d-48b924e79b0c |
+	| is_public        | True                                 |
+	| min_disk         | 0                                    | 
+	| min_ram          | 0                                    |
+	| name             | cirros_image                         |
+	| owner            | c9f87abe43ea49239313565ca74ebaa0     |
+	| protected        | False                                |
+	| size             | 13147648                             |
+	| status           | active                               |
+	| updated_at       | 2015-03-30T10:18:01                  |
+	| virtual_size     | None                                 |
+	+------------------+--------------------------------------+
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Отобразим список образов glanse с использованием следующей команды; отметим, что сейчас существует два образа glance:</p>
+	   <pre class="screen">
+# glance image-list
+
+	[root@os-node1 ~(keystone_admin)]# glance image-list 
+	+--------------------------------------+--------------+-------------+------------------+----------+--------+ 
+	| ID                                   | Name         | Disk Format | Container Format | Size     | Status | 
+	+--------------------------------------+--------------+-------------+------------------+----------+--------+ 
+	| 5c261af7-9388-44ad-a8ce-f9ebdad2e5cb | cirros       | qcow2       | bare             | 13200896 | active | 
+	| b2d15e34-7712-4f1d-b48d-48b924e79b0c | cirros_image | qcow2       | bare             | 13147648 | active | 
+	+--------------------------------------+--------------+-------------+------------------+----------+--------+ 
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Вы можете проверить что новый образ сохранён в Ceph запросив ID образа в пуле образов вашего Ceph:</p>
+	   <pre class="screen">
+# rados -p images ls --name client.glance --keyring /etc/ceph/ceph.client.glance.keyring | grep -i id
+
+	[root@os-node1 ~]# rados -p images ls --name client.glance --keyring /etc/ceph/ceph.client.glance.keyring | grep -i id 
+	rbd_<strong style="color:#cc0000;">id</strong>.b2d15e34-7712-4f1d-b48d-48b924e79b0c 
+	[root@os-node1 ~]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Поскольку мы настроили glance использовать Ceph в качестве его хранилища по умолчанию, все образы glance будут теперь сохраняться 
+	 в Ceph. Вы также можете попытаться создавать образы из инструментальной панели OpenStack horizon.</p>
+	   <pre class="screen">
+$ vagrant ssh ceph-node1
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Наконец мы попытаемся запустить экземпляр с применением образа, который мы создали ранее:</p>
+	   <pre class="screen">
+ova boot --flavor 1 --image b2d15e34-7712-4f1d-b48d-48b924e79b0c vm1
+ 	   </pre>
+	 </li>
+   </ol>
+   </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Когда вы добавляете новые образы glance или создёте некий экземпляр из образа glance, сохранённого в Ceph, вы можете проверить 
+	   IO кластера Ceph выполнив его мониторинг с применением команды <span class="term"><code># watch ceph -s</code></span>.</p></td></tr></table>
+     </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0214"> </a>Настройка Cinder под поддержку Ceph</h3>
+   </div></div></div>
+   <p>Программа Cinder OpenStack предоставляет блочные устройства виртуальным машинам. В этом рецепте мы настроим Cinder OpenStack на 
+   применение Ceph для поддержки хранения. Для взаимодействия с нашим блочным устройством Ceph Cinder OpenStack требуется драйвер. 
+   На узле OpenStack измените файл настроек <span class="term"><code>/etc/cinder/cinder.conf</code></span> добавив приводимые в 
+   следующем разделе фрагменты кода.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="021401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>В последнем рецепте мы изучили настройку glance для применения Ceph. В этом рецепте мы изучим применение RBD Ceph в службе 
+   OpenStack Cinder:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Поскольку в данной демонстрации мы не применяем множественную поддержку настроек Cinder, закройте комментарием параметр
+	 <span class="term"><code>enabled_backends</code></span> в файле <span class="term"><code>/etc/cinder/cinder.conf</code></span>.</p>
+	 </li><li class="listitem">
+     <p>Переместитесь в раздел <span class="term"><strong class="userinput"><code>Options defined in 
+	 cinder.volume.drivers.rbd</code></strong></span> файла <span class="term"><code>/etc/cinder/cinder.conf</code></span>
+	 и добавьте следующее (замените секрет <span class="term"><code>uuid</code></span> значением вашей среды:</p>
+	   <pre class="screen"><code>
+volume_driver = cinder.volume.drivers.rbd.RBDDriver
+rbd_pool = volumes
+rbd_user = cinder
+rbd_secret_uuid = bb90381e-a4c5-4db7-b410-3154c4af486e
+rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_flatten_volume_from_snapshot = false
+rbd_max_clone_depth = 5
+rbd_store_chunk_size = 4
+rados_connect_timeout = -1
+glance_api_version = 2
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Выполните следующую команду для проверки предыдущих записей:</p>
+	   <pre class="screen">
+# cat /etc/cinder/cinder.conf | egrep &quot;rbd|rados|version&quot; | grep -v &quot;#&quot;
+
+	[root@os-node1 ~]# cat /etc/cinder/cinder.conf | egrep &quot;rbd|rados|version&quot; | grep -v &quot;#&quot; 
+	volume_driver = cinder.volume.drivers.rbd.RBDDriver 
+	rbd_pool = volumes 
+	rbd_user = cinder 
+	rbd_secret_uuid = bb90381e-a4c5-4db7-b410-3154c4af486e 
+	rbd_ceph_conf = /etc/ceph/ceph.conf 
+	rbd_flatten_volume_from_snapshot = false 
+	rbd_max_clone_depth = 5 
+	rbd_store_chunk_size =4 
+	rados_connect_timeout = -1 
+	glance_api_version = 2 
+	[root@os-node1 ~]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Перезапустите службы OpenStack Cinder:</p>
+	   <pre class="screen">
+# service openstack-cinder-volume restart
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Получите файлы <span class="term"><code>keystone_admin</code></span> для OpenStack:</p>
+	   <pre class="screen">
+# source /root/keystonerc_admin
+# cinder list
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Для проверки настроек создайте ваш первый 2ГБ том Cinder, который должен быть теперь создан в вашем кластере Ceph:</p>
+	   <pre class="screen">
+# cinder create --display-name ceph-volume01 --display-description &quot;Cinder volume on CEPH storage&quot; 2
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Проверьте ваш том выводом томов пула Cinder и Ceph:</p>
+	   <pre class="screen">
+# cinder list
+# rados -p volumes --name client.cinder --keyring ceph.client.cinder.keyring ls | grep -i id
+
+	[root@os-node1 ceph(keystone_admin)]# cinder list 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+-------------+ 
+	| ID                                   | Status    | Display Name  | Size | Volume Type | Bootable | Attached to | 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+-------------+ 
+	| 1337c866-6ff7-4a56-bfe5-b0b80abcb281 | available | ceph-volume01 |  2   |     None    |  false   |             | 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+-------------+ 
+	[root@os-node1 ceph(keystone_admin)]# 
+	[root@os-node1 ceph(keystone_admin)]# rados -p volumes --name client.cinder --keyring ceph.client.cinder.keyring is | grep -i id rbd_id.volume-1337c866-6ff7-4a56-bfe5-b0b80abcb281 
+	[root@os-node1 ceph(keystone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Аналогично попробуйте создать другой том с применением инструментальной панели OpenStack Horizon.</p>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0215"> </a>Настройка Nova для подключения Ceph RBD</h3>
+   </div></div></div>
+   <p>Чтобы подключать RBD Ceph к экземпляру OpenStack нам следует настроить компонент nova OpenStack добавив сведения о пользователе 
+   <span class="term"><code>rbd</code></span> и <span class="term"><code>uuid</code></span> информацию, поскольку они требуются для 
+   соединения с кластером Ceph. Для этого нам нужно изменить <span class="term"><code>/etc/nova/nova.conf</code></span> на нашем 
+   узле OpenStack и выполнить приводимые в следующем разделе шаги.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="021501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Настроенная нами в предыдущем рецепте служба Cinder создаёт тома в Ceph, однако для подключения этих томов к экземплярам 
+   OpenStack нам нужно настроить Nova:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Переместитесь в раздел <span class="term"><strong class="userinput"><code>Options defined in 
+	 nova.virt.libvirt.volume</code></strong></span> и измените следующие строки (замените секрет <span class="term"><code>uuid</code></span>
+	 значением вашего окружения):</p>
+	   <pre class="screen">
+rbd_user=cinder
+rbd_secret_uuid= bb90381e-a4c5-4db7-b410-3154c4af486e
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Перезапустите службы OpenStack Nova:</p>
+	   <pre class="screen">
+# service openstack-nova-compute restart
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Для проверки этих настроек мы подключим том Cinder к экземпляру OpenStack. Выведем перечни экземпляров и томов для получения 
+	 их ID:</p>
+	   <pre class="screen">
+# nova list
+# cinder list
+
+	[root@os-node1 ~(keystone_admin)]# nova list 
+	+--------------------------------------+------+--------+------------+-------------+---------------------+ 
+	| ID                                   | Name | Status | Task State | Power State | Networks            | 
+	+--------------------------------------+------+--------+------------+-------------+---------------------+ 
+	| lcadffc0-58b0-43fd-acc4-33764a02a0a6 | vm1  | ACTIVE | -          | Running     | public=172.24.4.229 | 
+	+--------------------------------------+------+--------+------------+-------------+---------------------+ 
+	[root@os-node1 ~(keystone_admin)]# cinder list 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+-------------+
+	|                  ID                  |   Status  |  Display Name | Size | Volume Type | Bootable | Attached to | 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+-------------+
+	| 1337c866-6ff7-4a56-bfe5-b0b80abcb281 | available | ceph-volume01 |  2   |     None    |  false   |             | 
+	| 67d76db0-f808-40d8-819b-Of0302df74a0 | available | ceph-volume02 |  1   |     None    |  false   |             | 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+-------------+
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Подключите свой том к вашему экземпляру:</p>
+	   <pre class="screen">
+# nova volume-attach 1cadffc0-58b0-43fd-acc4-33764a02a0a61337c866-6ff7-4a56-bfe5-b0b80abcb281
+# cinder list
+
+	[root@os-node1 ~(keystone_admin)]# nova volume-attach lcadffc0-58b0-43fd-acc4-33764a02a0a6 1337c866-6ff7-4a56-bfe5-b0b80abcb281 
+	+----------+--------------------------------------+
+	| Property | Value                                | 
+	+----------+--------------------------------------+
+	| device   | /dev/vdb                             |
+	| id       | 1337c866-6ff7-4a56-bfe5-b0b80abcb281 | 
+	| serverId | lcadffc0-58b0-43fd-acc4-33764a02a0a6 | 
+	| volumeid | 1337c866-6ff7-4a56-bfe5-b0b80abcb281 |
+	+----------+--------------------------------------+
+	[root@os-node1 -(keystone_admin)]# cinder list 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+--------------------------------------+ 
+	|                  ID                  |   Status  |  Display Name | Size | Volume Type | Bootable | Attached to                          | 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+--------------------------------------+ 
+	| 1337c866-6ff7-4a56-bfe5-b0b80abcb281 |   in-use  | ceph-volume01 |  2   |     None    |  false   | lcadffc0-58b0-43fd-acc4-33764a02a0a6 | 
+	| 67d76db0-f808-40d8-819b-Of0302df74a0 | available | ceph-volume02 |  1   |     None    |  false   |                                      | 
+	+--------------------------------------+-----------+---------------+------+-------------+----------+--------------------------------------+ 
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Теперь вы можете применять этот том как обычное блочное устройство из экземпляра OpenStack.</p>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0216"> </a>Настройка Nova для загрузки экземпляров из Ceph RBD</h3>
+   </div></div></div>
+   <p>Чтобы загружать все экземпляры OpenStack из Ceph, т.е. для функциональности загрузка- с- тома, нам следует настроить для Nova 
+   недолговечную (ephemeral) поддержку. Для этого отредактируйте <span class="term"><code>/etc/nova/nova.conf</code></span> на нашем 
+   узле OpenStack и выполните следующие изменения.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="021501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Этот рецепт имеет дело с настройкой Nova для хранения всех виртуальных машин в RBD Ceph:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Переместитесь в раздел <span class="term"><strong class="userinput"><code>Options defined in 
+	 nova.virt.libvirt.volume</code></strong></span> и измените следующие строки (замените секрет <span class="term"><code>uuid</code></span>
+	 значением вашего окружения):</p>
+	   <pre class="screen">
+rbd_user=cinder
+rbd_secret_uuid= bb90381e-a4c5-4db7-b410-3154c4af486e
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Переместитесь в раздел <span class="term"><strong class="userinput"><code>[libvirt]</code></strong></span> и добавьте следующее:</p>
+	   <pre class="screen">
+inject_partition=-2
+images_type=rbd
+images_rbd_pool=vms
+images_rbd_ceph_conf=/etc/ceph/ceph.conf
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Переместитесь в раздел <span class="term"><strong class="userinput"><code>Options defined in 
+	 nova.virt.libvirt.volume</code></strong></span> и измените следующие строки (замените секрет <span class="term"><code>uuid</code></span>
+	 значением вашего окружения):</p>
+	   <pre class="screen">
+rbd_user=cinder
+rbd_secret_uuid= bb90381e-a4c5-4db7-b410-3154c4af486e
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Проверьте свои изменения:</p>
+	   <pre class="screen">
+# cat /etc/nova/nova.conf|egrep &quot;rbd|partition&quot; | grep -v &quot;#&quot;
+
+	[root@os-node1 ~(keystone_admin)]# cat /etc/nova/nova.conf|egrep &quot;rbd|partition&quot; | grep -v &quot;#&quot; 
+	inject_partition=-2 
+	images_type=rbd 
+	images_rbd_pool=vms 
+	images_rbd_ceph_conf=/etc/ceph/ceph.conf 
+	rbd_user=cinder 
+	rbd_secret_uuid=bb90381e-a4c5-4db7-b410-3154c4af486e 
+	[root@os-node1 ~(kevstone admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Перезапустите службы OpenStack Nova:</p>
+	   <pre class="screen">
+# service openstack-nova-compute restart
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Для загрузки виртуальной машины из Ceph формат образа Glance должен быть RAW. Мы воспользуемся тем же образом 
+	 <span class="term"><strong class="userinput"><code>cirros</code></strong></span>, который мы загружали ранее в этой главе и 
+	 конвертируем этот образ из <a class="link" href="https://people.gnome.org/~markmc/qcow-image-format.html" 
+	 target="_top">QCOW</a> в формат <a class="link" href="http://www.linfo.org/raw_disk.html" target="_top">RAW</a>
+	 (это существенно). Вы также можете использовать любой другой образ если он в формате RAW:</p>
+	   <pre class="screen">
+# qemu-img convert -f qcow2 -O raw cirros-0.3.1-x86_64-disk.img cirros-0.3.1-x86_64-disk.raw
+
+	[root@os-node1 ~(keystone_admin)]# qemu-img convert -f qcow2 -0 raw cirros-0.3.1-x86_64-disk.img cirros-0.3.1-x86_64-disk.raw 
+	[root@os-node1 ~(keystone_admin)]# 
+	[root@os-node1 ~(keystone_admin)]# is -la cirros-0.3.1-x86_64-disk.raw 
+	-rw-r--r-- 1 root root 41126400 Apr 3 22:19 cirros-0.3.1-x86_64-disk.raw 
+	[root@os-node1 ~(keystone admin)]# file cirros-0.3.1-x86_64-disk.raw 
+	cirros-0.3.1-x86_64-disk.raw: x86 boot sector; GRand Unified Bootloader, stagel version 0x3, stage2 address 0x2000, stage2 segment 0x200; partition 1: ID=0x83, active, starthead 0, startsector 16065, 64260 sectors, code offset 0x48 
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте образ Glance при помощи образа RAW:</p>
+	   <pre class="screen">
+# glance image-create --name cirros_raw_image --is-public=true --disk-format=raw --container-format=bare < cirros-0.3.1-x86_64-disk.raw
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Создайте загружаемый том для проверки функциональности загрузки с вашего тома Ceph:</p>
+	   <pre class="screen">
+# nova image-list
+# cinder create --image-id ff8d9729-5505-4d2a-94ad-7154c6085c97 --display-name cirros-ceph-boot-volume 1
+
+	[root@os-node1 ~(keystoneadmin)]# nova image-list 
+	+--------------------------------------+------------------+--------+--------+
+	| ID                                   | Name             | Status | Server | 
+	+--------------------------------------+------------------+--------+--------+
+	| 5c261af7-9388-44ad-a8ce-f9ebdad2e5cb | cirros           | ACTIVE |        | 
+	| b2d15e34-7712-4f1d-b48d-48b924e79b0C | cirros_image     | ACTIVE |        | 
+	| ff8O9729-5505-4d2a-94ad-7154c6085c97 | cirros_raw_image | ACTIVE |        | 
+	+--------------------------------------+------------------+--------+--------+
+	[root@os-node1 ~(keystone_admin)]# 
+	[root@os-node1 ~(keystone_admin)]# cinder create --image-id ff8d9729-5505-4d2a-94ad-7154c6085c97 --display-name cirros-ceph-boot-volume 1
+	+---------------------+--------------------------------------+
+	|       Property      |                Value                 |
+	+---------------------+--------------------------------------+
+	|     attachments     |                  []                  |
+	|  availability_zone  |                 nova                 |
+	|       bootable      |                false                 |
+	|      created_at     |      2015-04-03T22:47:52.638434      |
+	| display_description |                 None                 |
+	|     display_name    |       cirros-ceph-boot-volume        |
+	|      encrypted      |                False                 |
+	|          id         | 3a0da68c-d00c-459f-8b52-88c45d6e3bfe |
+	|       image_id      | ff8d9729-5505-4d2a-94ad-7154c6085c97 |
+	|       metadata      |                 {}                   |
+	|         size        |                 1                    |
+	|     snapshot_id     |                None                  |
+	|     source_volid    |                None                  |
+	|        status       |              creating                |
+	|     volume_type     |                None                  |
+	+---------------------+--------------------------------------+
+	[root@os-node1 ~(keystone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Выведите перечень томов Cinder для проверки того что поле <span class="term"><strong class="userinput"><code>bootable</code></strong></span> 
+	 установлено в значение <span class="term"><code>true</code></span>:</p>
+	   <pre class="screen">
+# cinder list
+
+	[root@os-node1 ~(keystone_admin)]# cinder list 
+    +--------------------------------------+-----------+-------------------------+------+-------------+----------+--------------------------------------+ 
+	|                   ID                 |   Status  |       Display Name      | Size | Volume Type | Bootable |             Attached to              |
+    +--------------------------------------+-----------+-------------------------+------+-------------+----------+--------------------------------------+ 
+	| 1337c866-6ff7-4a56-bfe5-b0b80abcb281 |   in-use  |      ceph-volume01      |  2   |     None    |  false   | 1cadffc0-58b0-43fd-acc4-33764a02a0a6 | 
+	| 3a0da68c-d00c-459f-8b52-88c45d6e3bfe | available | cirros-ceph-boot-volume |  1   |     None    |   true   |                                      |
+	| 67d76db0-f808-40d8-819b-0f0302df74a0 | available |      ceph-volume02      |  1   |     None    |  false   |                                      |
+    +--------------------------------------+-----------+-------------------------+------+-------------+----------+--------------------------------------+ 
+	[root@os-node1 ~(keystone_admin)]#
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Теперь у нас есть сохранённый в Ceph загружаемый том, следовательно мы можем запустить сэтого тома экземпляр:</p>
+	   <pre class="screen">
+# nova boot --flavor 1 --block_device_mapping vda=fd56314be19b-4129-af77-e6adf229c536::0 --image 964bd077-7b43-46eb-8fe1-cd979a3370df vm2_on_ceph --block_device_mapping vda = &lt;cinder bootable volume id &gt; --image = &lt;Glance image associated with the bootable volume&gt;
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>Наконец, проверьте состояние экземпляра:</p>
+	   <pre class="screen">
+ nova list
+ 
+	[root@os-node1 ~(keystone_admin)]# nova list 
+	+--------------------------------------+--------------+---------+------------+-------------+---------------------+ 
+	| ID                                   | Name         | Status  | Task State | Power State | Networks            | 
+	+--------------------------------------+--------------+---------+------------+-------------+---------------------+ 
+	| 1cadffc0-58b0-43fd-acc4-33764a02a0a6 | vm1          | SHUTOFF | -          | Shutdown    | public=172.24.4.229 | 
+	| 2b35870e-9f7e-4e5f-bd12-9a625797355d | vm2_01n_ceph | ACTIVE  | -          | Running     | public=172.24.4.233 |
+	+--------------------------------------+--------------+---------+------------+-------------+---------------------+ 
+	[root@os-node1 ~(kevstone_admin)]# 
+ 	   </pre>
+	 </li><li class="listitem">
+     <p>На данный момент у нас выполняющийся с тома Ceph имеется экземпляр. Попытайтесь зарегистрироваться из инструментальной панели
+	 Horizon:</p>
+     <div class="figure"><a id="Fig0208"> </a>
+      <p class="title"><strong></strong></p>
+      <div class="figure-contents"><div class="mediaobject">
+       <img src="figures/Fig0208.jpg" width="852" height="521"/><br />
+       <span></span>
+      </div></div>
+     </div>
+	 </li>
+   </ol>
+   </div>
+
+  </div>
+
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

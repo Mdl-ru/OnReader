@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Создание маршрутизатора в Neutron</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningOpenStackNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="up" href="index.html" title="Изучаем сетевую среду OpenStack (Neutron)"/>
+<link rel="prev" href="Ch05.html" title="Глава 5. Создание сетевой среды с применением Neutron"/>
+<link rel="next" href="Ch07.html" title="Глава 7. Балансировка нагрузки обмена в Neutron"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//openstack-ops_preface.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Создание маршрутизатора в Neutron';
+PrevRef = 'Ch05.html';
+UpRef = 'index.html';
+NextRef = 'Ch07.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 6. Создание маршрутизатора в Neutron</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch06.html#config_L3">Настройка агента третьего уровня в Neutron</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#define_itf_driver">Определение драйвера интерфейса</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#external_network">Установка внешней сети</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#external_bridge">Установка внешнего моста</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#metadata_proxy">Включение прокси метаданных</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#start_Neutron_L3">Запуск агента Neutron L3</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#CLI_router_management">Управление маршрутизатором в командной строке</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#CLI_creating_routers">Создание маршрутизаторов в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_router_interfaces">Работа с интерфейсами маршрутизатора в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_attach_int_itf">Подключение внутренних интерфейсов к маршрутизатору</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_attach_gateway_itf">Подключение интерфейсов шлюза к маршрутизатору</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_list_itf">Просмотр интерфейсов, подключенных к маршрутизатору</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_delete_int_itf">Удаление внутренних интерфейсов</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_creating_gateway_itf">Создание интерфейсов шлюза</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_list_routers">Просмотр маршрутизаторов в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_display_router_attributes">Просмотр свойств маршрутизаторов в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#CLI_update_router_attributes">Модернизация свойств маршрутизаторов в командной строке</a></span></dt>
+	    <dd><dl>
+          <dt><span class="section"><a href="Ch06.html#delete_routers">Удаление маршрутизаторов в командной строке</a></span></dt>
+        </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#address_Translation">Трансляция сетевых адресов</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#floating_IP">Плавающие IP адреса</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch06.html#floating_IP_Management">Управление плавающими IP адресами</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch06.html#create_floating_IP">Создание плавающих IP адресов в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#floating_IP_toports">Привязывание плавающих IP адресов к портам в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#listing_floating_IP">Просмотр плавающих IP в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#floating_IP_attributes">Отображение свойств плавающих IP в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#floating_IP_fromports">Отсоединение плавающих IP в командной строке</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#delete_floating_IP">Удаление плавающих IP в командной строке</a></span></dt>
+      </dl></dd>
+    <dt><span class="section"><a href="Ch06.html#instance_traffic_toInternet">Демонстрация трафика от экземпляра в интернет</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch06.html#set_foundation">Установка основы</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#create_external">Создание сети внешнего провайдера</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#create_router">Создание маршрутизатора Neutron</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#router_to_ext_network">Присоединение маршрутизатора к внешней сети</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#test_gateway">Тестирование соединений шлюза</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#create_internal">Создание внутренней сети</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#router_to_int_network">Присоединение маршрутизатора к внутренней сети</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#create_instances">Создание экземпляров</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#verify_instance_connect">Проверка связей экземпляров</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#default_NAT_behavior">Наблюдение за поведением установленного по умолчанию NAT</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#assign_floating_IP">Назначение плавающих IP</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#reassign_floating_IP">Переназначение плавающих IP</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#dashboard_router_management">Управление маршрутизатором в инструментальной панели</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#dashboard_creating_router">Создание маршрутизатора в инструментальной панели</span></dt>
+        <dt><span class="section"><a href="Ch06.html#dashboard_attach_gateway_itf">Подключение интерфейсов шлюза к маршрутизатору в инструментальной панели</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#dashboard_attach_int_itf">Подключение внутреннего интерфейса к маршрутизатору в инструментальной панели</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#view_topology">Просмотр топологии сети в инструментальной панели</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#dashboard_floating_IP_to_instance">Привязывание плавающих IP к экземплярам в инструментальной панели</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#dashboard_floating_IP_from_instance">Отсоединение плавающих IP в инструментальной панели</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+  
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="config_L3"> </a>Настройка агента третьего уровня в Neutron</h2>
+   </div></div></div>
+   <p></p>
+ 
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="define_itf_driver"> </a>Определение драйвера интерфейса</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="external_network"> </a>Установка внешней сети</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="external_bridge"> </a>Установка внешнего моста</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="metadata_proxy"> </a>Включение прокси метаданных</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="start_Neutron_L3"> </a>Запуск агента Neutron L3</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_router_management"> </a>Управление маршрутизатором в командной строке</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_creating_routers"> </a>Создание маршрутизаторов в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_router_interfaces"> </a>Работа с интерфейсами маршрутизатора в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_attach_int_itf"> </a>Подключение внутренних интерфейсов к маршрутизатору</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_attach_gateway_itf"> </a>Подключение интерфейсов шлюза к маршрутизатору</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_list_itf"> </a>Просмотр интерфейсов, подключенных к маршрутизатору</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_delete_int_itf"> </a>Удаление внутренних интерфейсов</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_creating_gateway_itf"> </a>Создание интерфейсов шлюза</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_list_routers"> </a>Просмотр маршрутизаторов в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_display_router_attributes"> </a>Просмотр свойств маршрутизаторов в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+	<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_update_router_attributes"> </a>Модернизация свойств маршрутизаторов в командной строке</h3>
+    </div></div></div>
+    <p></p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="delete_routers"> </a>Удаление маршрутизаторов в командной строке</h4>
+      </div></div></div>
+      <p></p>
+     </div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="address_Translation"> </a>Трансляция сетевых адресов</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="floating_IP"> </a>Плавающие IP адреса</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="floating_IP_Management"> </a>Управление плавающими IP адресами</h2>
+   </div></div></div>
+   <p></p>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CLI_display_router_attributes"> </a>Просмотр свойств маршрутизаторов в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_floating_IP"> </a>Создание плавающих IP адресов в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="listing_floating_IP"> </a>Просмотр плавающих IP в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="floating_IP_attributes"> </a>Отображение свойств плавающих IP в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="floating_IP_fromports"> </a>Отсоединение плавающих IP в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="delete_floating_IP"> </a>Удаление плавающих IP в командной строке</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="instance_traffic_toInternet"> </a>Демонстрация трафика от экземпляра в интернет</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="set_foundation"> </a>Установка основы</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_external"> </a>Создание сети внешнего провайдера</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_router"> </a>Создание маршрутизатора Neutron</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="router_to_ext_network"> </a>Присоединение маршрутизатора к внешней сети</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="test_gateway"> </a>Тестирование соединений шлюза</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_internal"> </a>Создание внутренней сети</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="router_to_int_network"> </a>Присоединение маршрутизатора к внутренней сети</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="create_instances"> </a>Создание экземпляров</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="verify_instance_connect"> </a>Проверка связей экземпляров</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="default_NAT_behavior"> </a>Наблюдение за поведением установленного по умолчанию NAT</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="assign_floating_IP"> </a>Назначение плавающих IP</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="reassign_floating_IP"> </a>Переназначение плавающих IP</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_router_management"> </a>Управление маршрутизатором в инструментальной панели</h2>
+   </div></div></div>
+   <p></p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_creating_router"> </a>Создание маршрутизатора в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_attach_gateway_itf"> </a>Подключение интерфейсов шлюза к маршрутизатору в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_attach_int_itf"> </a>Подключение внутреннего интерфейса к маршрутизатору в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="view_topology"> </a>Просмотр топологии сети в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_floating_IP_to_instance"> </a>Привязывание плавающих IP к экземплярам в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="dashboard_floating_IP_from_instance"> </a>Отсоединение плавающих IP в инструментальной панели</h3>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h2 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h2>
+   </div></div></div>
+   <p></p>
+  </div>
+
+
+ </div>
+
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

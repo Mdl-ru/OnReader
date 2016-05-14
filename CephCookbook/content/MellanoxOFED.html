@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Стек протоколов Mellanox OFED - Книга рецептов Ceph - Приложения</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="UnderstandingErasureCodingOffload.html" title="Понимание разгрузки удаляющего кодирования"/>
+<link rel="next" href="iNetworkStack.html" title="Стек протоколов Intel"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:42:58+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Стек протоколов Mellanox OFED';
+PrevRef = 'UnderstandingErasureCodingOffload.html';
+UpRef = 'index.html';
+NextRef = 'iNetworkStack.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   <a id="architecture"> </a>Приложения</h1>
+  </div></div></div>
+
+  <div class="toc"><p class="title"><strong>Частичный перевод <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a>, Rev. 3.20 и связанных материалов.</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="UnderstandingErasureCodingOffload.html">Понимание разгрузки удаляющего кодирования</a></span></dt>
+   <dt><span class="chapter"><a href="MellanoxOFED.html">Стек протоколов Mellanox OFED</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="MellanoxOFED.html#01">Введение</a></span></dt>
+    <dd><dl>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0101">Обзор</a></span></dt>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0102">Архитектура стека</a></span></dt>
+      <dd><dl>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010201">Драйвер mlx4 VPI</a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010202">Драйвер mlx5</a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010203">Ядро среднего уровня</a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010204">ULP</a></span></dt>
+        <dd><dl>
+	      <dt><span class="section"><a href="MellanoxOFED.html#01020401">IP поверх IB (IPoIB)</a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#01020402">Расширения iSCSI для RDMA (iSER)</a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#01020403">Sockets Direct Protocol (SDP)</a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#01020404">SCSI RDMA Protocol (SRP)</a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#01020405">User Direct Access Programming Library (uDAPL)</a></span></dt>
+        </dl></dd>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010205">MPI</a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010206">InfiniBand Subnet Manager</a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010207">Утилиты диагностики</a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#010208">Инструменты встроенного ПО Mellanox</a></span></dt>
+      </dl></dd>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0103">Пакет Mellanox OFED<sup>{-}</sup></a></span></dt>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0104">Параметры модулей<sup>{-}</sup></a></span></dt>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0105">Возможности устройств</a></span></dt>
+    </dl></dd>
+	<dt><span class="section"><a href="MellanoxOFED.html#02">Установка<sup>{-}</sup></a></span></dt>
+	<dt><span class="section"><a href="MellanoxOFED.html#03">Обзор функциональности и настройка<sup>{~}</sup></a></span></dt>
+    <dd><dl>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0301">Сетевая среда Ethernet<sup>{-}</sup></a></span></dt>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0302">Сетевая среда InfiniBand<sup>{-}</sup></a></span></dt>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0303">Протоколы хранилищ<sup>{~}</sup></a></span></dt>
+      <dd><dl>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030301">Протокол SCSI RDMA (SRP)<sup>{~}</sup></a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030302">Sockets Direct Protocol (SDP)<sup>{~}</sup></a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030303">iSCSI Extensions for RDMA (iSER)<sup>{~}</sup></a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030304">Lustre<sup>{-}</sup></a></span></dt>
+      </dl></dd>
+	  <dt><span class="section"><a href="MellanoxOFED.html#0304">Виртуализация<sup>{~}</sup></a></span></dt>
+      <dd><dl>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030401">Single Root IO Virtualization (SR-IOV)<sup>{~}</sup></a></span></dt>
+        <dd><dl>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03040101">Системные требования<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03040102">Сборка SR-IOV<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03040103">Дополнительная настройка SR-IOV<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03040104">Деинсталяция SR-IOV<sup>{-}</sup></a></span></dt>
+        </dl></dd>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030402">Разрешение паравиртуализации<sup>{~}</sup></a></span></dt>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030403">Разгрузка оборудования VXLAN без запоминания состояния<sup>{~}</sup></a></span></dt>
+        <dd><dl>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03040301">Разрешение разгрузки оборудования VXLAN без запоминания состояния для ConnectX&reg;-3 и ConnectX&reg;-3 Pro<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03040302">Разрешение разгрузки оборудования VXLAN без запоминания состояния для семейства устройств ConnectX&reg;-4<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03040303">Важные замечания<sup>{-}</sup></a></span></dt>
+        </dl></dd>
+      </dl></dd>
+ 	  <dt><span class="section"><a href="MellanoxOFED.html#0305">Эластичность<sup>{~}</sup></a></span></dt>
+      <dd><dl>
+	    <dt><span class="section"><a href="MellanoxOFED.html#030501">Reset Flow<sup>{~}</sup></a></span></dt>
+        <dd><dl>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03050101">ULP ядра<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03050102">Приложения пространства пользователя (IB/RoCE)<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03050103">SR-IOV<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03050104">Принудительный сброс виртуального интерфейса (VF)<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03050105">Усовершенствованные сообщения об ошибках (AER) для ConnectX&reg;-3 и ConnectX&reg;-3 Pro<sup>{-}</sup></a></span></dt>
+	      <dt><span class="section"><a href="MellanoxOFED.html#03050106">Расширенная обработка ошибок (EEH) <sup>{~}</sup></a></span></dt>
+        </dl></dd>
+      </dl></dd>
+ 	  <dt><span class="section"><a href="MellanoxOFED.html#0306">HPC-X<sup>&#174;</sup></a></span></dt>
+    </dl></dd>
+	<dt><span class="section"><a href="MellanoxOFED.html#04">Утилиты системы коммуникации InfiniBand<sup>{-}</sup></a></span></dt>
+	<dt><span class="section"><a href="MellanoxOFED.html#05">Обнаружение неисправностей<sup>{-}</sup></a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="iNetworkStack.html">Стек протоколов Intel®</a></span></dt>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>Введение</h3>
+   </div></div></div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Обзор </span></h4>
+   </div></div></div>
+   <p>Mellanox OFED является единым программным стеком Virtual Protocol Interconnect (VPI), который работает на всех решениях сетевых 
+   адаптеров Mellanox для поддержания следующих восходящих связей с серверами:</p>
+        <table rules="all" width="500" style="text-align:center" id="SupportedUplinks">
+        <caption></caption><col width="40%"/><col width="60%"/><thead><tr valign="top">
+          <th>Восходящая связь/ HCA</th>
+          <th>Скорость восходящей линии</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ConnectX&reg;-4</code></strong></span></p></td>
+          <td style="text-align:left;"><li>InfiniBand: SDR, QDR, FDR, EDR
+		  <li>Ethernet: 1GigE, 10GigE, 25GigE, 40GigE, 50GigE, 56GigE и 100GigE
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ConnectX&reg;-4 Lx</code></strong></span></p></td>
+          <td style="text-align:left;"><li>Ethernet: 1GigE, 10GigE, 25GigE, 40GigE, 50GigE
+		  </td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Connect-IB&reg;</code></strong></span></p></td>
+          <td style="text-align:left;"><li>InfiniBand: SDR, QDR, FDR10, FDR
+		  </td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ConnectX&reg;-3/ ConnectX&reg;-3 Pro</code></strong></span></p></td>
+          <td style="text-align:left;"><li>InfiniBand: SDR, QDR, FDR10, FDR
+		  <li>Ethernet: 10GigE, 40GigE and 56GigE<sup>1</sup>
+		  </td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ConnectX&reg;-2</code></strong></span></p></td>
+          <td style="text-align:left;"><li>InfiniBand: SDR, DDR
+		  <li>Ethernet: 10GigE, 20GigE
+		  </td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>PCI Express 2.0</code></strong></span></p></td>
+          <td style="text-align:left;"><li>2.5 или 5.0 GT/s
+		  </td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>PCI Express 3.0</code></strong></span></p></td>
+          <td style="text-align:left;"><li>8 GT/s
+		  </td>
+        </tr><tr valign="top">
+          <td colspan="2"><p><sup>1</sup> 56 GbE является внутренним стандартом Mellanox и может быть получен при использовании плат 
+		  адаптеров Mellanox соединяемых коммутаторами серий Mellanox SX10XX или соединением плат адаптеров Mellanox друг с другом.</p>
+		  </td>
+        </tr></tbody></table>
+   <p>Все платы сетевых адаптеров Mellanox совместимы с протоколами на основе OpenFabrics RDMA и программного обеспечения, которое 
+   поддерживается основными дистрибутивами операционных систем.</p>
+   <p>Mellanox OFED сертифицирован со следующими продуктами:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Программное обеспечение Mellanox Messaging Accelerator (VMA<sup>&#174;</sup>): Библиотека ускорения сокетов которая выполняет проброс 
+		 операционной системы для приложений на основе стандартных сокетов.</p>
+		 <p>Заметьте, пожалуйста, что поддержка VMA осуществляется отдельно от поддержки Mellanox OFED. За дополнительной информацией, 
+		 пожалуйста, пользуйтесь документацией по VMA, расположенной на: <a class="link" href="http://www.mellanox.com/page/software_vma?mtag=vma" 
+		 target="_top">www.mellanox.com &gt; Accelerator Software &gt; VMA</a></p>
+		 </li><li class="listitem">
+		 <p>Программное обеспечение Mellanox Unified Fabric Manager (UFM<sup>&reg;</sup>): Мощная платформа для управления масштабирования 
+		 по запросу вычислительной сетевой среды окружения, построенный поверх механизма маршрутизации промышленного стандарта OpenSM.</p>
+		 </li><li class="listitem">
+		 <p>Fabric Collective Accelerator (FCA) - FCA является пакетом программного обеспечения Mellanox объединяемого при помощи MPI, 
+		 который применяет технологию CORE-Direct для реализации коллективного взаимодействия на уровне MPI.</p>
+		 </li>
+		</ul>
+		</div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0102"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Архитектура стека </span></h4>
+   </div></div></div>
+   <p><a href="FigOFED01">Рисунок 1</a> отображает стек Mellanox OFED и то, как протоколы верхнего уровня (ULP) взаимодейтсвуют 
+   с аппаратными средствами, а также с пространствами <a class="link" href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch05.html.html" 
+   target="_top">ядра</a> и <a class="link" href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch06.html.html" 
+   target="_top">пользователя</a>. Прикладной уровень также показывает универсальность рынков, к которым применим Mellanox OFED.</p>
+   <div class="figure"><a id="FigOFED01"> </a>
+    <p class="title"><strong>Рисунок 1. Стек Mellanox OFED для семейства плат адаптеров ConnectX<sup>&reg;</sup></strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/FigOFED01.jpg" width="782" height="439"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Последующие подразделы вкратце описывают различные компоненты стека Mellanox OFED.</p>
+
+   <a id="010201"> </a>
+   <p class="title"><strong>Драйвер mlx4 VPI</strong></p>
+   <p><span class="term"><code>mlx4</code></span> является реализацией драйвера нижнего уровня для семейства адаптеров ConnectX<sup>&reg;</sup>,
+   разработанных Mellanox Technologies. ConnectX<sup>&reg;</sup>2 и ConnectX<sup>&reg;</sup>3 могут работать как адаптеры InfiniBand или как 
+   NIC Ethernet. Драйвер OFED поддерживает конфигурации InfiniBand и Ethernet. Для обеспечения конфигураций данный драйвер разветвляется на 
+   следующие модули:</p>
+   <p class="title"><strong>mlx4_core</strong></p>
+   <p>Обрабатывает функции нижнего уровня, такие как инициализация устройства и выполнение команд встроенного ПО. Также управляет выделением 
+   ресурсов таким образом, что InfiniBand и Ethernet могут совместно использовать одно устройство без взаимодействия друг с лругом.</p>
+
+   <p class="title"><strong>mlx4_ib</strong></p>
+   <p>Обрабатывает специфичные для InfiniBand функции и встроен в средний уровень InfiniBand</p>
+
+   <p class="title"><strong>mlx4_en</strong></p>
+   <p>Драйвер 10/40GigE под drivers/net/ethernet/mellanox/mlx4, который обрабатывает специфичные для Ethernet функции и подключается к среднему 
+   уровню netdev</p>
+
+   <a id="010202"> </a>
+   <p class="title"><strong>Драйвер mlx5</strong></p>
+   <p><span class="term"><code>mlx5</code></span> является реализацией драйвера нижнего уровня для семейства адаптеров Connect-IB<sup>&reg;</sup>
+   и ConnectX<sup>&reg;</sup>-4, разработанных Mellanox Technologies. Connect-IB<sup>&reg;</sup> работает как адаптер InfiniBand, в то время как 
+   и ConnectX<sup>&reg;</sup>-4 работает как адаптер VPI (InfiniBand и Ethernet). Драйвер <span class="term"><code>mlx5</code></span> 
+   включает в себя следующие модули ядра:</p>
+   <p class="title"><strong>mlx5_core</strong></p>
+   <p>Действует как библиотека общих функций (т.е. инициализирует устройство после его сброса) необходимых платам адаптера Connect-IB<sup>&reg;</sup>
+   и ConnectX<sup>&reg;</sup>-4. Драйвер <span class="term"><code>mlx5_core</code></span> также реализует интерфейсы Ethernet для 
+   ConnectX<sup>&reg;</sup>-4. В отличие от <span class="term"><code>mlx4_en/core</code></span>, драйверам <span class="term"><code>mlx5</code></span>
+   не требуется модуль <span class="term"><code>mlx4_en</code></span>, поскольку функциональность Ethernet встроена в сам модуль 
+   <span class="term"><code>mlx5_core</code></span>.</p>
+
+   <p class="title"><strong>mlx5_ib</strong></p>
+   <p>Обрабатывает специфичные для InfiniBand функции и встроен в средний уровень InfiniBand</p>
+
+   <p class="title"><strong>libmlx5</strong></p>
+   <p><span class="term"><code>libmlx5</code></span> является поставщиком библиотеки, которая реализует аппаратную функциональность специфичную 
+   для <a class="link" href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch06.html.html" target="_top">пространства пользователя</a>. Если 
+   отсутствует совместимость между встроенным ПО и данным драйвером, драйвер не загрузится и в dmesg будет выведено некое сообщение.</p>
+   <p>Далее приводятся переменные окружения <span class="term"><code>libmlx5</code></span>:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p><span class="term"><code>MLX5_FREEZE_ON_ERROR_CQE</code></span>: </p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>В случае завершения с ошибкой вызывает обработку данного процесса в цикле, что не возбуждает ошибку или возникновения переполнения 
+		  повторов</p>
+		  </li><li class="listitem">
+		  <p>В противном случае запрещён</p>
+		  </li>
+		</ul></li><li class="listitem">
+		 <p><span class="term"><code>MLX5_POST_SEND_PREFER_BF</code></span>: </p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Настраивает каждый рабочий запрос, который может использовать голубую вспышку применять её</p>
+		  </li><li class="listitem">
+		  <p>В противном случае - голубая вспышка зависит от размера конкретного сообщения и индикации данного пакета в потоке</p>
+		  </li>
+		 </li>
+		</ul></li><li class="listitem">
+		 <p><span class="term"><code>MLX5_SHUT_UP_BF</code></span>: </p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Запрещает функцию голубой вспышки</p>
+		  </li><li class="listitem">
+		  <p>В противном случае не запрещает</p>
+		  </li>
+		 </li>
+		</ul></li><li class="listitem">
+		 <p><span class="term"><code>MLX5_SINGLE_THREADED</code></span>: </p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Любые циклы с ожиданием ресурса (spinlock) запрещены</p>
+		  </li><li class="listitem">
+		  <p>В противном случае spinlock разрешены</p>
+		  </li><li class="listitem">
+		  <p>Применяется приложениями, которые являются однопоточными и хотят сберечь накладные расходы получая циклы ожидания ресурсов.</p>
+		  </li>
+		 </li>
+		</ul></li><li class="listitem">
+		 <p><span class="term"><code>MLX5_CQE_SIZE</code></span>: </p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>64 - размер записи очереди выполнения (CQE, completion queue entry) установлен в 64 байта (по умолчанию)</p>
+		  </li><li class="listitem">
+		  <p>128 - размер записи очереди выполнения установлен в 128 байта</p>
+		  </li>
+		 </li>
+		</ul></li><li class="listitem">
+		 <p><span class="term"><code>MLX5_SCATTER_TO_CQE</code></span>: </p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Небольшие буферы рассеиваются по записи очереди выполнения и обрабатываются данным драйвером. Имеет силу для транспорта 
+		  с гарантированным соединением (RC, Reliable Connected).</p>
+		  </li><li class="listitem">
+		  <p>Значение по умолчанию 1, в противном случае запрещено</p>
+		  </li>
+		 </li>
+		</ul></li><li class="listitem">
+		 <p><span class="term"><code>MLX5_ENABLE_CQE_COMPRESSION</code></span>: </p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Сберегает пропускную способность PCIe сжимая несколько CQE в меньшее количество байт в PCIe. Установка в значение 1 делает 
+		  возможным сжатие CQE.</p>
+		  </li><li class="listitem">
+		  <p>Значение по умолчанию 0 (запрещёно)</p>
+		  </li>
+		 </li>
+		</ul>
+		</div>
+   
+   <a id="010203"> </a>
+   <p class="title"><strong>Ядро среднего уровня</strong></p>
+   <p>Службы центральной части (core) включают: интерфейс управления (MAD), интерфейс менеджера соединений (CM), а также интерфейс администратора подсети 
+   (SA). Стек включает компоненты приложений как для режима пользователя, так и ядра. Службы центральной части выполняются в ядре (kernel) и 
+   представляют интерфейс режиму пользователя для редактирования, CM и управления.</p>
+   
+   <a id="010204"> </a>
+   <p class="title"><strong>Протоколы верхнего уровня (ULP)</strong></p>
+
+     <a id="01020401"> </a>
+     <p class="title"><strong>IP поверх IB (IPoIB)</strong></p>
+     <p>Драйвер IP поверх IB (IPoIB) является реализацией сетевого интерфейса над InfiniBand. IPoIB инкапсулирует сетевые дейтаграммы в соединения  
+	 InfiniBand или в службу транспорта дейтаграмм. IPoIB предваряет дейтаграмму IP инкапсулирующим заголовком и отправляет сквозь имеющуюся 
+	 службу транспорта Infiniband. По умолчанию службой транспорта является ненадёжная доставка (UD, Unreliable Datagram), однако она может быть 
+	 настроена на надёжную доставку (RC, Reliable Connected). Данный интерфейс поддерживает индивидуальную (unicast), групповую 
+	 (multicast) и широковещательную (broadcast) передачи. Подробнее в <a class="link" href="MellanoxOFED.html#0302" 
+	 target="_top">разделе 3.5.2.1, &quot;IP over IB (IPoIB)&quot;</a>.</p>
+
+     <a id="01020402"> </a>
+     <p class="title"><strong>Расширения iSCSI для RDMA (iSER)</strong></p>
+     <p>Расширения iSCSI для RDMA (iSER) распространяют протокол ISCSI на RDMA. Это делает возможной пересылку данных напрямую в буферы SCSI и из 
+	 них без промежуточного копирования данных. Для дополнительных подробностей смотрите <a class="link" href="MellanoxOFED.html#030303" 
+	 target="_top">раздел 3.3.3, &quot;Расширения iSCSI для RDMA (iSER)&quot;</a>.</p>
+
+     <a id="01020403"> </a>
+     <p class="title"><strong>Sockets Direct Protocol (SDP)</strong></p>
+     <p>Протокол непосредственных сокетов (SDP, Sockets Direct Protocol) является транспортным протоколом потоков байт, который предоставляет 
+	 семантику потоков TCP. SDP использует возможности разгрузки современного протокола InfiniBand. Благодаря этому SDP может потреблять меньше 
+	 ресурсов пропускной способности ЦПУ и оперативной памяти в сравнении с обычными реализациями TCP при сохранении API и семантики TCP, которые 
+	 необходимы большинству современных сетевых приложений. Для дополнительных подробностей смотрите <a class="link" href="MellanoxOFED.html#030302" 
+	 target="_top">раздел 3.3.2, &quot;Sockets Direct Protocol (SDP)&quot;</a>.</p>
+
+     <a id="01020404"> </a>
+     <p class="title"><strong>SCSI RDMA Protocol (SRP)</strong></p>
+     <p>SCSI RDMA Protocol (SRP) разработан для получения всех преимуществ разгрузки данного протокола и функциональности RDMA предоставляемой 
+	 архитектурой InfiniBand. Драйвер SRP - называемый инициатором (Initiator) SRP - отличается от обычных драйверов нижнего уровня SCSI в Linux. 
+	 Инициатор (Initiator) SCSI не управляет локальным HBA; вместо этого он управляет соединением с контроллером ввода/ вывода - называемого 
+	 получателем (Target) SCSI - для предоставления доступа к удалённым устройствам хранения поверх среды коммутации InfiniBand. Получатель 
+	 (Target) SRP располагается в устройстве ввода/ вывода и предоставляет службы хранения. Для дополнительных подробностей смотрите 
+	 <a class="link" href="MellanoxOFED.html#030301" target="_top">раздел 3.3.1, &quot;SCSI RDMA Protocol (SRP)&quot;</a>.</p>
+
+     <a id="01020405"> </a>
+     <p class="title"><strong>User Direct Access Programming Library (uDAPL)</strong></p>
+     <p>Библиотека программирования непосредственного доступа пользователя (uDAPL, User Direct Access Programming Library) является стандартным 
+	 API, который предлагает приложениям центра обработки данных производительность, масштабируемость и надёжность обмена сообщениями данных 
+	 поверх интерконнекта RDMA: InfiniBand и RoCE. Интерфейс uDAPL определяется сообществом DAT.</p>
+	 <p>Данная редакция пакета эталонной реализации uDAPL для обеих спецификаций DAT, и для 1.2, и для 2.0 приурочена к выпуску 
+	 программного стека OFED для открытой среды коммутации (Open Fabrics <a class="link" href="http://www.openfabrics.org" 
+	 target="_top">www.openfabrics.org</a>). За дополнительной информацией о сообществе DAT обратитесь к его сайту:  
+	 <a class="link" href="http://www.datcollaborative.org" target="_top">http://www.datcollaborative.org</a>.</p>
+	 <p></p>
+
+   <a id="010205"> </a>
+   <p class="title"><strong>MPI</strong></p>
+   <p>Интерфейс обмена сообщениями (MPI, Message Passing Interface) является спецификацией библиотеки, которая делает возможной разработку 
+   библиотек параллельно выполняемого программного обеспечения для применения параллельных компьютеров, кластеров и разнородных сред. 
+   Mellanox OFED включает в себя следующие реализации MPI поверх InfiniBand:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Open MPI – реализацию MPI-2 с открытым исходным кодом в рамках проекта Open MPI</p>
+		 </li><li class="listitem">
+		 <p>OSU MVAPICH – реализацию MPI-1 государственного университета Огайо (Ohio State University)</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Также Mellanox OFED включает в себя эталонные тесты MPI, такие как OSU BW/LAT, Intel MPI Benchmark и Presta.</p>
+
+   <a id="010206"> </a>
+   <p class="title"><strong>InfiniBand Subnet Manager</strong></p>
+   <p>Всем протоколам верхнего уровня (ULP) совместимым с InfiniBand необходим соответствующим образом работающий менеджер подсети (SM, 
+   Subnet Manager), выполняющийся в среде коммутации InfiniBand, причём постоянно. SM может выполняться на любом узле или в коммутаторе 
+   IB. OpenSM является InfiniBand- совместимым менеджером подсети и поставляется как часть Mellanox OFED (По умолчанию OpenSM 
+   отключён. Подробности его подключения в <a class="link" href="MellanoxOFED.html#0302" target="_top">раздел 3.2.2, &quot;OpenSM&quot;</a>).</p>
+
+   <a id="010207"> </a>
+   <p class="title"><strong>Утилиты диагностики</strong></p>
+   <p>Mellanox OFED включает в себя два следующих диагностических пакета для применения менеджерами сети и центров обработки данных:</a></p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>ibutils – диагностические утилиты Mellanox Technologies</p>
+		 </li><li class="listitem">
+		 <p>infiniband-diags – диагностические утилиты OpenFabrics Alliance InfiniBand</p>
+		 </li>
+		</ul>
+		</div>
+
+   <a id="010208"> </a>
+   <p class="title"><strong>Инструменты встроенного ПО Mellanox</strong></p>
+   <p>Пакет Mellanox Firmware Tools (MFT) является набором инструментария управления встроенным ПО для отдельного узла InfiniBand. MFT 
+   может применяться для:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Создания стандартного или настроенного под пользователя образа встроенного ПО Mellanox</p>
+		 </li><li class="listitem">
+		 <p>Записи образа встроенного ПО на отдельном узле InfiniBand</p>
+		 </li>
+		</ul>
+   <p>MFT содержит следующие инструменты:</p>
+		</div>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>mlxburn – предоставляет такую функциональность:</p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Создания стандартного или настроенного под пользователя образа встроенного ПО Mellanox для его записи - в формате 
+		  .bin или .img</p>
+		  </li><li class="listitem">
+		  <p>Записи образа в Flash/EEPROM подключённого Mellanox HCA или устройства коммутации</p>
+		  </li><li class="listitem">
+		  <p>Запроса версии встроенного ПО, загруженного на плату HCA</p>
+		  </li><li class="listitem">
+		  <p>Отображение VPD (Vital Product Data) платы HCA</p>
+		  </li>
+		 </ul>
+		 </li><li class="listitem">
+		 <p>flint</p>
+		 <p>Данный инструмент записывает двоичный образ или расширение образа ROM в Flash устройства сетевого адаптера/ моста/ коммутатора Mellanox.
+		 Он содержит функции запроса прописанного образа встроенного ПО и к файлу двоичного образа.</p>
+		 </li><li class="listitem">
+		 <p>Утилиты отладки</p>
+		 <p>Набор утилит отладки (т.е. itrace, fwtrace, mlxtrace, mlxdump, mstdump, mlxmcg, wqdump, mcra, mlxi2c, i2c, mget_temp, and pckt_drop)</p>
+		 </li>
+		</ul>
+		</div>
+   <p>За дополнительными подробностями, пожалуйста, обращайтесь к руководству пользователя MFT в <span class="term"><code>docs/</code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0103"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пакет Mellanox OFED<sup>{-}</sup> </span></h4>
+   </div></div></div>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+   
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0104"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Параметры модулей<sup>{-}</sup> </span></h4>
+   </div></div></div>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+   
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0105"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Возможности устройств<sup>{-}</sup> </span></h4>
+   </div></div></div>
+   <p>Обычно приложениям необходимо создать очередь к возможностям устройства пред тем как оно попытается создать некий ресурс. Для приложений 
+   естественно иметь возможность работать с различными устройствами обладающими различными возможностями</p>
+   <p>В особенности, при создании QP пользователям необходимо определить максимальное число необработанных рабочих запросов, поддерживаемых QP 
+   {<span class="emphasis"><em>Прим. пер.: QP, читай: <a id="QP" class="link" href="http://www.osp.ru/os/2005/11/380520/" target="_top">пар очередей:</a> 
+   -цитата из osp.ru- &quot;В основе архитектуры IB лежит способность создавать очереди команд, которые выполняются IB-устройствами. 
+   Рабочие очереди всегда создаются парами (queue pair, QP): одна — для операций посылки, другая — для операций получения. 
+   Пары идентифицируются номером.&quot;, также см. <a id="QP" class="link" href="http://www.osp.ru/os/2008/07/5478314/" target="_top">Архитектура 
+   Infiniband и OFED</a> того же источника. Иллюстрация для наглядности:</em></span>}</p>
+   <div class="figure"><a id="FigOFED02"> </a>
+    <p class="title"><strong>Рисунок 2. Стек InfiniBand</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/FigOFED02.jpg" width="666" height="426"/><br />
+     <span>пара очередей (QP) транспортного уровня IB, источник: <a class="link" href="http://www.mellanox.com/pdf/whitepapers/IB_Intro_WP_190.pdf" 
+   target="_top">Introduction to InfiniBand</a> от Mellanox</span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Данное значение не должно превышать возможности обслуживания очередей. Однако, даже если вы определяете вы определяете значение, которое 
+   не превышает возможности, операций (verbs) могут всё ещё отвергаться, так как тербуются некоторые другие факторы наподобие записей 
+   рассеивания/ накопления (scatter/gather) или необходимого в реальном масштабе размера данных влияют на максимальное значение 
+   возможных запросов. Следовательно приложение должно попытаться уменьшить этот размер (хорошим новым значением будет уменьшение в два раза)
+   и повторять попытку до достижения результата.</p>
+   
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>Установка<sup>{-}</sup></h3>
+   </div></div></div>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>Обзор функциональности и настройка<sup>{~}</sup></h3>
+   </div></div></div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сетевая среда Ethernet<sup>{-}</sup> </span></h4>
+   </div></div></div>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+     <a id="030110"> </a>
+     <p class="title"><strong>Поддержка RSS<sup>{~}</sup></strong></p>
+       <a id="03011002"> </a>
+       <p class="title"><strong>Поддержка операций RSS для HCA ConnectX<sup>&reg;</sup>-4<sup>{~}</sup></strong></p>
+	   <p>Технология Масштабирование на стороне приема (RSS, Receive Side Scaling) позволяет распределять приходящую сетевую нагрузку между различными 
+	   принимающими очередями дескрипторов. Назначение каждой очереди различным ядрам ЦПУ улучшает балансировку входящей нагрузки и улучшает 
+	   производительность.</p>
+	   <p>Данная технология была расширена на пространство пользователя уровнем операций (verbs) и может применяться для RAW ETH QP.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сетевая среда InfiniBand<sup>{-}</sup> </span></h4>
+   </div></div></div>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Протоколы хранилищ<sup>{~}</sup> </span></h4>
+   </div></div></div>
+   <p>Существует несколько протоколов, которые используют преимущества Infiniband и RDMA по причинам производительности (высокая 
+   пропускная способность, низкая латентность и небольшая загрузка ЦПУ). В данной главе мы обсудим следующие протоколы:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p><span class="term"><strong class="userinput">SCSI RDMA Protocol (SRP)</strong></span>: разработан для получения всех преимуществ 
+		 разгрузки протокола и функциональности RDMA предоставляемых архитектурой InfiniBand.</p>
+		 </li><li class="listitem">
+		 <p><span class="term"><strong class="userinput">Sockets Direct Protocol (SDP)</strong></span>: является транспортным протоколом 
+		 потоков байт InfiniBand, предоставляющим семантику потоков TCP.</p>
+		 </li><li class="listitem">
+		 <p><span class="term"><strong class="userinput">iSCSI Extensions for RDMA (iSER)</strong></span>: является расширением модели 
+		 передачи данных iSCSI, сетевого стандарта хранилищ для TCP/IP. Применяет компоненты iSCSI, при том что получает все преимущества 
+		 комплекта протокола RDMA. ISER реализован на различных таргетах хранения, таких как TGT, LIO, SCST, но это выходит за пределы 
+		 данного руководства.</p>
+		 <p>Для этапов настройки, нахождения неисправностей и отладки различных таргетов ISER, а также прочих реализаций протоколов 
+		 хранения поверх RDMA (например, <a class="link" href="https://community.mellanox.com/docs/DOC-2132" target="_top">NFS поверх RDMA</a>, 
+		 <a class="link" href="https://community.mellanox.com/docs/DOC-2141" target="_top">Ceph поверх RDMA</a>, 
+		 <a class="link" href="https://community.mellanox.com/docs/DOC-1528" target="_top">nbdx</a>, 
+		 и прочих) отсылаем к <a class="link" href="https://community.mellanox.com/docs/DOC-2283" target="_top">решениям хранения</a>, 
+		 сообщества Mellanox</p>
+		 </li><li class="listitem">
+		 <p><span class="term"><strong class="userinput">Lustre</strong></span>: является параллельной распределённой файловой системой 
+		 с открытым исходным кодом, обычно применяется для крупномасштабных вычислительных кластеров, которые поддерживают многие 
+		 требования HPC сред моделирования ведущего уровня.</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Для получения дополнительной информации обращайтесь, пожалуйста, к решениям хранения сообщества Mellanox (<a class="link" 
+   href="https://community.mellanox.com/docs/DOC-2283" target="_top">https://community.mellanox.com</a>).</p>
+   
+   <a id="030301"> </a>
+   <p class="title"><strong>Протокол SCSI RDMA (SRP)<sup>{~}</sup></strong></p>
+   <p>Протокол SCSI RDMA (SRP) разработан для получения полного преимущества разгрузки этого протокола и функциональности RDMA, предоставляемых 
+   архитектурой Infiniband. SRP позволяет большой массе программного обеспечения SCSI легко применяться в архитектуре InfiniBand. Инициатор SRP 
+   управляет соединением с таргетом SRP для предоставления доступа к удалённым устройствам хранения через среду коммутации InfiniBand. Таргет 
+   kSRP располагается на устройстве ввода-вывода и предоставляет службы хранения.</p>
+   <a id="030301"> </a>
+   <p>Инициатор SRP основан на открытом программном коде OpenFabrics (<a class="link" href="http://www.openfabrics.org" 
+   target="_top">www.openfabrics.org</a>), который реализует SCSI RDMA Protocol-2 (SRP-2). SRP-2 описан в документе # T10/1524-D, доступном 
+   по адресу <a class="link" href="http://www.t10.org" target="_top">http://www.t10.org</a>.</p>
+   <p>Инициатор SRP поддерживает</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Основные SCSI Primary Commands -3 (SPC-3) (<a class="link" href="http://www.t10.org/ftp/t10/drafts/spc3/spc3r21b.pdf" 
+		 target="_top">www.t10.org/ftp/t10/drafts/spc3/spc3r21b.pdf</a>).</p>
+		 </li><li class="listitem">
+		 <p>Основные SCSI Block Commands -2 (SBC-2) (<a class="link" href="http://www.t10.org/ftp/t10/drafts/sbc2/sbc2r16.pdf" 
+		 target="_top">www.t10.org/ftp/t10/drafts/sbc2/sbc2r16.pdf</a>).</p>
+		 </li><li class="listitem">
+		 <p>Основную функциональность, управление задачами и ограниченную обработку ошибок.</p>
+         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Note030301"> </a>
+	       <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	       <p>Данный пакет, однако, не включает таргет SRP.</p></td></tr></table>
+         </div>
+		 </li>
+		</ul>
+		</div>
+   <p>Дальнейшие подробности, см. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+
+   <a id="030302"> </a>
+   <p class="title"><strong>Sockets Direct Protocol (SDP)<sup>{~}</sup></strong></p>
+         <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Note030302"> </a>
+	       <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	       <p>Поддерживается только в ConnectX<sup>&reg;</sup>3 и ConnectX<sup>&reg;</sup>3 Pro.</p></td></tr></table>
+         </div>
+   <p>Дальнейшие подробности, см. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+   
+   <a id="030303"> </a>
+   <p class="title"><strong>iSCSI Extensions for RDMA (iSER)<sup>{~}</sup></strong></p>
+   <p>iSCSI Extensions for RDMA (iSER) распространяет протокол iSCSI на RDMA. Он делает возможной передачу данных непосредственно в буферы SCSI и 
+   из них без промежуточного копирования данных.</p>
+   <p>iSER применяет комплект протокола RDMA для поддержки наивысшей пропускной способности для обмена данных блочных хранилищ (режим работы с 
+   нулевым временем копирования). Для этого обстоятельства он прекращает обработку накладных расходов TCP/IP при сохранении полной совместимости 
+   с протоколом SCSI.</p>
+   <div class="figure"><a id="FigOFED03"> </a>
+    <p class="title"><strong>Рисунок 3. Место iSER в стеке протоколов</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/FigOFED03.jpg" width="554" height="388"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Существует три реализации таргета ISER:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Linux SCSI target framework (tgt)</p>
+		 </li><li class="listitem">
+		 <p>Linux-IO target (LIO)</p>
+		 </li><li class="listitem">
+		 <p>Generic SCSI target subsystem for Linux (SCST)</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Каждый из этих таргетов может работать в транспортном режиме TCP или iSER.</p>
+   <p>iSER также поддерживает RoCE без каких либо дополнительных требований настройки. Для скрепления (bond) с интерфейсами RoCE установите 
+   параметр <span class="term"><code>fail_over_mac</code></span> в связываемом драйвере (см. раздел Section 3.2.5.1.5, 
+   &quot;Bonding IPoIB&quot; в <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a>)</p>
+   <p>RDMA/RoCE размещается ниже блока iSER в стеке сетевой среды. Для выполнения iSER уровень RDMA должен быть настроен и подтверждён (без разницы: 
+   поверх Ethernet или InfiniBand). Для поиска неисправностей RDMA, пожалуйста, обращайтесь к <a class="link" 
+   href="https://community.mellanox.com/docs/DOC-2086" target="_top">&quot;HowTo Enable, Verify and Troubleshoot RDMA&quot;</a> в сообществе Mellanox.</p>
+   
+   <a id="030304"> </a>
+   <p class="title"><strong>Lustre<sup>{-}</sup></strong></p>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0304"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Виртуализация<sup>{~}</sup> </span></h4>
+   </div></div></div>
+   <p></p>
+     <a id="030401"> </a>
+     <p class="title"><strong>Single Root IO Virtualization (SR-IOV)<sup>{~}</sup></strong></p>
+	 <p>Single Root IO Virtualization (SR-IOV) является технологией, которая позволяет физическим устройствам PCIe представлять себя многократно 
+	 через шину PCIe. Данная технология делает возможными множество экземпляров одного устройства с различными ресурсами. Адаптеры Mellanox 
+	 способны выставлять в платах адаптеров ConnectX&reg;-3 до 126 виртуальных экземпляров, называемых <a id=""VF> </a>виртуальными функциями 
+	 (VF, Virtual Functions), а платы адаптеров ConnectX&reg;-4/ConnectX-IB до 62 виртуальных экземпляров. Эти виртуальные функции далее могут 
+	 предоставляться раздельно. Каждая VF может рассматриваться как дополнительное устройство, подсоединённое к <a id=""VF> </a>физической функции 
+	 (PF, Physical Function). Они совместно используют одни и те же ресурсы в физической функции, а их общее число портов равно числу портов 
+	 физической функции.</p>
+	 <p>SR-IOV обычно используется совместно совместно с разрешающим SR-IOV гипервизором для предоставления виртуальным машинам прямого доступа 
+	 к сетевым ресурсам, тем самым увеличивая их производительность.</p>
+	 <p>В данном разделе мы продемонстрируем сборку и настройку SR-IOV в среде Red Hat с применением семейства плат адаптеров 
+	 ConnectX&reg; VPI.</p>
+
+       <a id="03040101"> </a>
+       <p class="title"><strong>Системные требования</a></strong></p>
+	   <p>Для установки окружения SR-IOV необходимы:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Драйвер MLNX_OFED</p>
+		 </li><li class="listitem">
+		 <p>Сервер/ блейд с BIOS материнской платы, поддерживающим SR-IOV</p>
+		 </li><li class="listitem">
+		 <p>Гипервизор, который поддерживает SR-IOV, например: Red Hat Enterprise Linux Server Version 6.*</p>
+		 </li><li class="listitem">
+		 <p>Плату адаптера семейства Mellanox ConnectX® VPI с возможностью SR-IOV</p>
+		 </li>
+		</ul>
+		</div>
+	   
+       <a id="03040102"> </a>
+       <p class="title"><strong>Сборка SR-IOV<sup>{-}</sup></a></strong></p>
+       <a id="03040103"> </a>
+       <p class="title"><strong>Дополнительная настройка SR-IOV<sup>{-}</sup></a></strong></p>
+       <a id="03040104"> </a>
+       <p class="title"><strong>Деинсталяция SR-IOV<sup>{-}</sup></a></strong></p>
+       <p>Подробности, см. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+       target="_top">Mellanox OFED for Linux User Manual</a></p>
+
+     <a id="030402"> </a>
+     <p class="title"><strong>Разрешение <a class="link" href="https://ru.wikipedia.org/wiki/Паравиртуализация" 
+     target="_top">паравиртуализации</a><sup>{-}</sup></strong></p>
+     <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+     target="_top">Mellanox OFED for Linux User Manual</a></p>
+
+     <a id="030403"> </a>
+     <p class="title"><strong>Разгрузка оборудования VXLAN без запоминания состояния<sup>{~}</sup></strong></p>
+	 <p>Технология VXLAN предоставляет бросающие вызов решения масштабируемости и безопасности. Она требует расширений для обычных разгружающих 
+	 процедур без запоминания состояния для исключения падения производительности. Семейства адаптеров ConnectX&reg;-3 Pro и 
+	 ConnectX&reg;-4 предлагают приводимые ниже процедуры разгрузки без запоминания состояния для пакетов VXLAN, аналогичные процедурам, предлагаемым 
+	 для не инкапсулируемых пакетов. Протокол VXLAN инкапсулирует свои пакеты используя внешний заголовок UDP.</p>
+	 <p>Доступные аппаратные процедуры разгрузки без запоминания состояния:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Генерация контрольной суммы (Inner IP и Inner TCP/UDP)</p>
+		 </li><li class="listitem">
+		 <p>Подтверждение контрольной суммы (Inner IP и Inner TCP/UDP). Это позволит применять <a class="link" href="https://ru.wikipedia.org/wiki/Large_segment_offload" 
+		 target="_top">GRO</a> (только для плат ConnectX&reg;-3 Pro) для 
+		 содержимого пакетов TCP</p>
+		 </li><li class="listitem">
+		 <p>Разгрузка сегментации TCP (<a class="link" href="https://ru.wikipedia.org/wiki/Large_segment_offload" 
+		 target="_top">TSO</a>, TCP Segmentation Offload) для содержимого пакетов TCP</p>
+		 </li><li class="listitem">
+		 <p>Масштабирование на стороне приема (<a class="link" href="MellanoxOFED.html#03011002" target="_top">RSS</a>, 
+		 Receive Side Scaling) в соответствии с внутренними атрибутами пакетов</p>
+		 </li><li class="listitem">
+		 <p>Выбор принимающей очереди - внутренние кадры могут направляться в специфические QP (
+		 <a class="link" href="MellanoxOFED.html#QP" target="_top">пары очередей</a>)</p>
+		 </li>
+		</ul>
+		</div>
+		<p>Для аппаратных процедур разгрузки VXLAN без запоминания состояния необходимо выполнение следующих предварительных требований:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>HCA и их минимальное встроенное ПО требуют:</p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>ConnectX-3 Pro - Firmware v2.32.5100</p>
+		  </li><li class="listitem">
+		  <p>ConnectX-4 - Firmware v12.14.xxxx</p>
+		  </li><li class="listitem">
+		  <p>ConnectX-4 Lx - Firmware v14.14.xxxx</p>
+		  </li>
+		 </ul>
+		 </li><li class="listitem">
+		 <p>Операционная система:</p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>RHEL7, Ubuntu 14.04 или восходящее ядро 3.12.10 (или выше)</p>
+		  </li>
+		 </ul>
+		 </li><li class="listitem">
+		 <p>Функции, поддерживаемые upstream kernel:</p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>DMFS enabled</p>
+		  </li><li class="listitem">
+		  <p>A0 static mode disabled</p>
+		  </li>
+		 </ul>
+		 </li>
+		</ul>
+		</div>
+
+	   <a id="03040301"> </a>
+       <p class="title"><strong>Разрешение разгрузки оборудования VXLAN без запоминания состояния для ConnectX&reg;-3 и ConnectX&reg;-3 Pro<sup>{-}</sup></strong></p>
+       <a id="03040302"> </a>
+       <p class="title"><strong>Разрешение разгрузки оборудования VXLAN без запоминания состояния для семейства устройств ConnectX&reg;-4<sup>{-}</sup></strong></p>
+       <a id="03040303"> </a>
+       <p class="title"><strong>Важные замечания<sup>{-}</sup></strong></p>
+       <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+       target="_top">Mellanox OFED for Linux User Manual</a></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0305"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Эластичность<sup>{~}</sup> </span></h4>
+   </div></div></div>
+   <p></p>
+     <a id="030501"> </a>
+     <p class="title"><strong>Reset Flow<sup>{~}</sup></strong></p>
+	 <p>Поток сброса (Reset Flow) активируется по умолчанию при обнаружении ошибки &quot;fatal device&quot; (а именно: это может быть 
+	 таймаут по команде втроенного ПО, ошибка закрытия команды встроенного ПО, отсутствие ответа коммуникационного канала в виртуальном интерфейсе -VF, 
+	 а также тому подобное). И HCA, и программное обеспечение выполняют сброс, а ULP и приложения пользователя получают об этом уведомления, после 
+	 чего выполняется процесс восстановления. &quot;Reset Flow&quot; активируется параметром модуля <span class="term"><code>mlx4_core</code></span>
+	 <span class="term"><code>'internal_err_reset'</code></span> и его значение по умолчанию установлено в 1.</p>
+      <a id="03050101"> </a>
+      <p class="title"><strong>ULP ядра<sup>{-}</sup></strong></p>
+      <a id="03050102"> </a>
+      <p class="title"><strong>Приложения пространства пользователя (IB/RoCE)<sup>{-}</sup></strong></p>
+      <a id="03050103"> </a>
+      <p class="title"><strong>SR-IOV<sup>{-}</sup></strong></p>
+      <a id="03050104"> </a>
+      <p class="title"><strong>Принудительный сброс виртуального интерфейса (VF)<sup>{-}</sup></strong></p>
+      <a id="03050105"> </a>
+      <p class="title"><strong>Усовершенствованные сообщения об ошибках (AER) для ConnectX&reg;-3 и ConnectX&reg;-3 Pro<sup>{-}</sup></strong></p>
+      <a id="03050106"> </a>
+      <p class="title"><strong>Расширенная обработка ошибок (EEH)<sup>{-}</sup></strong></p>
+      <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+      target="_top">Mellanox OFED for Linux User Manual</a></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0306"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">HPC-X<sup>&#174;</sup> </span></h4>
+   </div></div></div>
+   <p>Для получения информации отсылаем вас к руководству пользователя HPC-X<sup>&#174;</sup> <a class="link" 
+   href="http://www.mellanox.com/page/products_dyn?product_family=189&mtag=hpc-x" 
+   target="_top">www.mellanox.com &gt; Products &gt; Software &gt; HPC-X &gt; HPC-X toolkit</a></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04"> </a>Утилиты системы коммуникации InfiniBand<sup>{-}</sup></h3>
+   </div></div></div>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05"> </a>Обнаружение неисправностей<sup>{-}</sup></h3>
+   </div></div></div>
+   <p>См. источник, <a class="link" href="http://www.mellanox.com/related-docs/prod_software/Mellanox_OFED_Linux_User_Manual_v3.20.pdf" 
+   target="_top">Mellanox OFED for Linux User Manual</a></p>
+  </div>
+
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

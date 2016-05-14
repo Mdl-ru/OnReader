@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 2. Передача полномочий и джейлы - Мастерство FreeBSD: ZFS для профессионалов</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="AdvancedZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="prev" href="Ch01.html" title="Глава 1. Окружения загрузки"/>
+<link rel="next" href="Ch03.html" title="Глава 3. Совместное использование наборов данных"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "advanced-zfs";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 2. Передача полномочий и джейлы';
+PrevRef = 'Ch01.html';
+UpRef = 'index.html';
+NextRef = 'Ch03.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 2. Передача полномочий и джейлы</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch02.html">2. Передача полномочий и джейлы</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch02.html#01">Передача полномочий ZFS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch02.html#0101">Добавление передачи полномочий</a></span></dt>
+       <dt><span class="chapter"><a href="Ch02.html#0102">Изъятие передачи полномочий</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch02.html#02">Наследование передачи полномочий</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#03">Полномочия времени создания</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#04">Полномочия на изменение полномочий</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#05">Наборы полномочий</a></span></dt>
+     <dt><span class="chapter"><a href="Ch02.html#06">Передача полномочий и джейлы</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch02.html#0601">Заключение набора данных в джейл</a></span></dt>
+       <dt><span class="chapter"><a href="Ch02.html#0602">Построение ZFS передачи полномочий джейлу</a></span></dt>
+       <dt><span class="chapter"><a href="Ch02.html#0603">Определение пределов и ремни безопасности</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Разработчики ZFS сделали практически всё от них зависящее, чтобы облегчить управление хранением данных для 
+  системных администраторов. Один из лучших способов уменьшения объёма работы, который вы должны сделать, состоит 
+  в том, чтобы заставить кого- то ещё выполнить её для вас. ZFS имеет полностью функционирующую систему 
+  передачи полномочий, которая позволяет вам предписывать какие команды и функции пользователь или группа 
+  пользователей могут применять для каждого набора данных. Вы можете позволить пользователям создавать и 
+  разрушать их собственные снимки, создавать дочерние наборы данных, генерировать отчёты о потреблении 
+  пространства или управлять свойствами набора данных. ZFS строится на функциональности предоставления 
+  полномочий (delegation) для предоставления особой поддержки джейлам.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>Передача полномочий ZFS</h3>
+   </div></div></div>
+   <p>ZFS делает возможным предоставление полномочий (delegate) административных задач пользователям на основе 
+   отдельных свойств и отдельных команд для каждого набора данных. Вы можете предоставить администратору 
+   базы данных полное управление над пулом базы данных, или для администратора веб- сервера управление над 
+   снимками набора данных веб- сайта. Для предоставления полномочий применяйте команду <span class="term"><code>zfs 
+   allow</code></span>.</p>
+   <p>Предоставление <span class="term"><code>zfs allow</code></span> пул или набор данных в качестве аргумента, 
+   отображает полномочия на этом устройстве. Здесь я поучаю полномочия на пуле 
+   <span class="term"><code><em>remotepool</em></code></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow remotepool
+---- Permissions on remotepool -------------------------
+Local+Descendent permissions:
+ user replicator compression,create,destroy,mount,mountpoint,receive
+ 	   </code></pre>
+   <p>Данный пул имеет единственную запись полномоий, для пользователя 
+   <span class="term"><strong class="userinput"><code>replicator</code></strong></span>. Этот пользователь имеет 
+   права для свойств <span class="term"><strong class="userinput"><code>compression</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span>, а также для 
+   подкоманд <span class="term"><code>ZFS</code></span> <span class="term"><code>create</code></span>,
+   <span class="term"><code>destroy</code></span>, <span class="term"><code>mount</code></span> и
+   <span class="term"><code>receive</code></span>. (<a class="link" href="Ch04.html" target="_top">Глава 4</a> 
+   обсуждает важность этих определённых полномочий.)</p>
+   <p>Приложения и пользователи могут определять свои собственные свойтсва. Программы, подобные 
+   <span class="term"><code>zfstools</code></span> создают свойства для управления снимками. Также существует 
+   специальное свойство, <span class="term"><strong class="userinput"><code>userprop</code></strong></span>, 
+   для разрешения пользователям создавать определяемые пользователем свойства. Определяемые пользователем 
+   свойства назначаются как разовое полномочие: вы не можете назначать различные определяемые пользователем 
+   полномочия поодиночке.</p>
+   <p>Хотя <span class="term"><strong class="userinput"><code>root</code></strong></span> не перечислен как 
+   имеющий какие- то полномочия здесь, <span class="term"><strong class="userinput"><code>root</code></strong></span>
+   может делать всё, что он только чертовски не пожелает. Потому что это то, как вращается Unix.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Добавление передачи полномочий </span></h4>
+   </div></div></div>
+   <p>Передадим полномочия на пул или набор данных пользователю или группе. Флаг <span class="term"><code>-u</code></span>
+   позволяет вам определять имя пользователя для <span class="term"><code>zfs allow</code></span>, а 
+   <span class="term"><code>-g</code></span> предписывает группу.</p>
+	   <pre class="screen"><code>
+# zfs allow -u username permissions pool/dataset
+ 	   </code></pre>
+   <p>Допустим, у нас есть причиняющий беспокойство пользователь, назовём его Лукас. (Я нисколько <span class="emphasis"><em>не 
+   сомневаюсь</em></span>, что когда Джуд писал этот раздел, он думал о каком- то другом Лукасе, отличном от 
+   меня ==mwl). Он продолжает пытаться выполнять глупые трюки Unix, которые выжигают его домашний каталог. 
+   Давайте позволим Лукасу создавать его собственные снимки таким образом, чтобы он не мог беспокоить системного 
+   администратора всякий раз, когда он разрушает своё окружение.</p>
+	   <pre class="screen"><code>
+# zfs allow -u lucas snapshot,rollback \
+      mypool/usr/home/lucas
+ 	   </code></pre>
+   <p>Когда вы просмотрите полномочия этого набора данных, отобразятся два назначенных вами пономочия.</p>
+	   <pre class="screen"><code>
+# zfs allow mypool/usr/home/lucas
+---- Permissions on mypool/usr/home/lucas -------------
+Local+Descendent permissions:
+     user lucas rollback,snapshot
+ 	   </code></pre>
+   <p>Предоставление полномочий автоматически наследуется. Когда Лукас получает возможность делать снимок 
+   своего набора данных домашнего каталога, он также получает эти полномочия на все дочерние наборы данных 
+   в своём домашнем каталоге. По ряду причин он имеет набор данных с названием 
+   <span class="term"><code><em>blackmail</em></code></span>. Вероятно, это то место где он припрятывает 
+   все фотографии и записи, которые он использует для получения разработчиков BSD, которые помогают ему с 
+   научно- исследовательскими и техническими обзорами. (Не <span class="term"><code><em>все</em></code></span> 
+   такие материалы. И <span class="term"><code><em>определённо</em></code></span> какой-то другой 
+   Лукас ==mwl)</p>
+	   <pre class="screen"><code>
+# zfs allow mypool/usr/home/lucas/blackmail
+---- Permissions on mypool/usr/home/lucas --------------
+Local+Descendent permissions:
+     user lucas rollback,snapshot
+ 	   </code></pre>
+   <p>Лукас должен иметь доступ для создания снимка. Однако, перед тем как сообщим ему о его работе, 
+   выдадим себя за Лукаса и создадим некий снимок.</p>
+	   <pre class="screen"><code>
+# su lucas
+$ zfs snapshot \
+mypool/usr/home/lucas/blackmail@bsdcan_drunken_escapades
+$ zfs list -t all -r -o name mypool/usr/home/lucas
+NAME
+mypool/usr/home/lucas
+mypool/usr/home/lucas/blackmail
+mypool/usr/home/lucas/blackmail@bsdcan_drunken_escapades
+ 	   </code></pre>
+   <p>Мы знаем, это работает. Давайте избавимся от снимка до того, как у Лукаса появятся идеи, которых он уже 
+   не имеет.</p>
+	   <pre class="screen"><code>
+$ zfs destroy \
+mypool/usr/home/lucas/blackmail@bsdcan_drunken_escapades
+cannot destroy snapshots: permission denied
+ 	   </code></pre>
+   <p>Создание нового набора данных затрагивает его монтирование, а разрушение набора данных, очевидно, должно 
+   включать его размонтирование. Чтобы быть полезными, всем командам <span class="term"><code>clone</code></span>,
+   <span class="term"><code>create</code></span> и <span class="term"><code>destroy</code></span> необходимы 
+   полномочия <span class="term"><strong class="userinput"><code>mount</code></strong></span>. Чтобы предоставить 
+   <span class="term"><strong class="userinput"><code>lucas</code></strong></span> полномочия, выполните 
+   <span class="term"><code>zfs allow -u lucas</code></span> и выведите перечень требуемых полномочий и 
+   набора данных.</p>
+	   <pre class="screen"><code>
+# zfs allow -u lucas destroy,mount mypool/usr/home/lucas
+ 	   </code></pre>
+   <p>Проверка вашей работы теперь отображает все полномочия, которые вы назначили в обоих выполнениях 
+   <span class="term"><code>zfs allow</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow mypool/usr/home/lucas
+---- Permissions on mypool/usr/home/lucas --------------
+Local+Descendent permissions:
+     user lucas destroy,mount,rollback,snapshot
+ 	   </code></pre>
+   <p>Теперь Лукас может выстрелить себе в ногу разрушив свой домашний каталог расположенный там.
+   {<span class="emphasis"><em>Прим. пер.: &quot;<a class="link" 
+   href="http://www.gazeta.ru/politics/2015/12/29_a_8001455.shtml" target="_top">Он получил 
+   спортивную травму во время тренировки по гандболу на прошлой неделе, несколько дней был на 
+   больничном, вчера вышел на работу, сегодня провёл селекторное совещание по космодрому 
+   Восточный</a>&quot;.</em></span>} И конечно он волен {написать в instagramm} и поплакаться об этом.</p>
+   <p>Вы можете предоставить пользователю полномочия создавать и монтировать набор данных, однако 
+   операционная система также имеет своё мнение в этом вопросе. FreeBSD применяет <span class="term"><code>sysctl
+   vfs.usermount</code></span> для определения того, могут ли пользователи монтировать разделы. 
+   Установите этот <span class="term"><code>sysctl</code></span> в значение <span class="emphasis"><em>1</em></span> 
+   чтобы разрешить пользователю монтироать разделы.</p>
+   <p>Даже с таким <span class="term"><code>sysctl</code></span> дозволение обычному пользователю монтировать 
+   файловые системы поставляется в комплекте с ремнём безопасности, котрый блокирует пользователя в выполнении 
+   злонамеренных вещей. Пользователь должен быть владельцем каталога, в котором он хочет смонтировать что бы то 
+   ни было. Это предотвращает монтирование пользователями своих новых наборов данных в виде 
+   <span class="term"><code><em>/etc</em></code></span> с последующим взломом вашей системы. Набор данных может 
+   иметь строгие полномочия, однако только пользователь, который владеет точкой монтирования и имеет 
+   полномочия на монтирования в ней может выполнять её монтирование.</p>
+   <p>Чтобы разрешить пользователю <span class="term"><strong class="userinput"><code>lucas</code></strong></span>
+   создавать, клонировать и монтировать наборы данных в его домашнем каталоге, установите 
+   <span class="term"><code>sysctl</code></span> и убедитесь, что он владеет тем каталогом, которым вы 
+   позволите ему управлять.</p>
+	   <pre class="screen"><code>
+# sysctl vfs.usermount=1
+# zfs allow -u lucas create,clone,mount \
+      mypool/usr/home/lucas
+ 	   </code></pre>
+   <p>Зарегистрируйтесь в качестве <span class="term"><strong class="userinput"><code>lucas</code></strong></span> 
+   снова чтобы проверить что это работает.</p>
+	   <pre class="screen"><code>
+# su lucas
+$ zfs create mypool/usr/home/lucas/evil_plot
+$ zfs mount
+mypool/ROOT/default              /
+…
+mypool/usr/home                  /usr/home
+mypool/usr/home/lucas            /usr/home/lucas
+mypool/usr/home/lucas/blackmail  /usr/home/lucas/blackmail
+mypool/usr/home/lucas/evil_plot  /usr/home/lucas/evil_plot
+ 	   </code></pre>
+   <p>Не забудьте добавить <span class="term"><code>vfs.usermount=1</code></span> в его 
+   <span class="term"><code><em>/etc/sysctl.conf</em></code></span> чтобы он всё ещё мог монтировать наборы 
+   данных после перезагрузки, иначе он прдёт к вам поскулить.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0102"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Изъятие передачи полномочий </span></h4>
+   </div></div></div>
+   <p>Предоставление полномочий (и работы) на сторону другим людям может быть освобождением, но ничто 
+   не сравнится с ощущением от отнятия полномочий назад. Для удаления полномочий применяйте 
+   <span class="term"><code>zfs unallow </code></span>. Эта команда в точности соответствует синтаксису 
+   <span class="term"><code>zfs allow </code></span>.</p>
+   <p>Здесь <span class="term"><strong class="userinput"><code>lucas</code></strong></span> 
+   создал слишком много потомков и мы решили, что ему больше нельзя позволять деторождение. Давайте 
+   избавим его от полномочий <span class="term"><code>create</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs unallow -u lucas create mypool/usr/home/lucas
+# zfs allow mypool/usr/home/lucas
+---- Permissions on mypool/usr/home/lucas --------------
+Local+Descendent permissions:
+     user lucas clone,destroy,mount,rollback,snapshot
+ 	   </code></pre>
+   <p>Полномочия также могут удаляться рекурсивно, при помощи флага <span class="term"><code>-r</code></span>, 
+   что обеспечит гарантию того, что полномочия удаляются даже из тех отдалённых дочерних наборов данных, 
+   в которых вы могли бы вручную установить некие полномочия.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>Наследование передачи полномочий</h3>
+   </div></div></div>
+   <p>Передача полномочий ZFS автоматически наследуется. Если вы предоставите пользователю полномочия на 
+   <span class="emphasis"><em>zroot/db</em></span>, она автоматически получает те же самые полномочия на 
+   всех детей <span class="emphasis"><em>zroot/db</em></span>. Подкоманда 
+   <span class="term"><code>zfs allow</code></span> может также ограничить наследование полномочий. 
+   Наследование полномочий может быть локальным или применяться к потомкам.</p>
+   <p>Полномочия Лукас применены только к определённому набору данных. Мы можем позволить 
+   <span class="term"><strong class="userinput"><code>lucas</code></strong></span> полномочия на снимок
+   <span class="emphasis"><em>zroot/usr/home/lucas</em></span>, но не на снимок дочерних наборов данных.
+   Он должен управлять своими материалами шантажа старым способом. Установите привелегие только на 
+   локальные при помощи флага <span class="term"><code>-l</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow -lu lucas clone,destroy,mount,rollback,snapshot zroot/home/lucas
+ 	   </code></pre>
+   <p>Полномочия теперь отображаются только как локальные, вместо того чтобы быть локальными и наследуемыми.</p>
+	   <pre class="screen"><code>
+# zfs allow zroot/home/lucas
+---- Permissions on zroot/home/lucas -------------------
+Local permissions:
+     user lucas clone,destroy,mount,rollback,snapshot
+ 	   </code></pre>
+   <p>Вы можете также применить полномочия только к дочерним наборам данных, а не к набору данных в своей команде.
+   Флаг <span class="term"><code>-d</code></span> предписывает <span class="term"><code>zfs allow</code></span> 
+   что полномочия применяются только к потомственным наборам данных, а не к самому их родителю для которого 
+   эти полномочия были созданы.</p>
+   <p>Здесь я хочу разрешить <span class="term"><strong class="userinput"><code>lucas</code></strong></span> 
+   разрушать созданные им снимки, но при этом не разрушать весь его домашний каталог. Я применяю 
+   <span class="term"><code>-d</code></span> для предписания того, что эти полномочия применяются только к 
+   потомственным наборам данных его домашнего каталога, а не к самому домашнему каталогу. Я оставляю 
+   полномочия для команд <span class="term"><code>snapshot</code></span> и 
+   <span class="term"><code>rollback</code></span> на месте в его домашнем каталоге, поэтому он сможет 
+   спасти себя сам, если не закрутит слишком сильно.</p>
+	   <pre class="screen"><code>
+# zfs allow -d lucas destroy,mount mypool/usr/home/lucas
+# zfs allow mypool/usr/home/lucas
+---- Permissions on mypool/usr/home/lucas -------------
+Descendent permissions:
+     user lucas destroy,mount
+Local+Descendent permissions:
+     user lucas rollback,snapshot
+ 	   </code></pre>
+   <p>И вновь выдадим себя за Лукаса и проверим полномочия.</p>
+	   <pre class="screen"><code>
+$ zfs destroy -v mypool/usr/home/lucas/desc
+will destroy mypool/usr/home/lucas/desc
+$ zfs destroy -v mypool/usr/home/lucas
+cannot unmount ‘/home/lucas’: Operation not permitted
+ 	   </code></pre>
+   <p>Выполнение <span class="term"><code>zfs destroy</code></span> в домашнем каталоге Лукаса теперь с 
+   удовольствием зарезервировано для системного администратора.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>Полномочия времени создания</h3>
+   </div></div></div>
+   <p>ZFS позволяет вам создавать полномочия сегодня для наборов данных, которые не будут существовать вплоть 
+   до следующего вторника или какого- то другого времени. Полномочия времени создания (<span class="term"><code><em>Create 
+   time</em></code></span>)  применяются к пользователю, который создаёт набор данных.  Это просто как &quot;липкая 
+   наклейка&quot; для передачи полномочий. Определите полномочия <span class="term"><code><em>Create time</em></code></span> 
+   при помощи <span class="term"><code>-c</code></span>.</p>
+   <p>Обычное пожелание для этого вида полномочий состоит в предоставлении этих полномочий каждому, вместо того чтобы 
+   устанавливать каждого пользователя в системе или определять имя группы. Вместо того, чтобы определять 
+   <span class="term"><code>-u</code></span> или <span class="term"><code>-g</code></span> и имя пользователя 
+   или группы, воспользуйтесь флагом <span class="term"><code>-e</code></span> чтобы указать всех пользователей 
+   (everyone).</p>
+   <p>Применение полномочий времени создания требует аккуратного управления наследованием. Вы хотите полномочия 
+   времени создания для применения к дочерним наборам данных, не к родительским. Родительский набор данных должен 
+   иметь свои собственные полномочия, устанавливайте применяя <span class="term"><code>-l</code></span>.</p>
+   <p>Предположим, у вас есть набор данных рабочей области {<span class="term"><code><em>scratch</em></code></span>}, 
+   используемый всеми. Это как <span class="term"><code><em>/tmp</em></code></span>, но с функциональностью ZFS. 
+   Мы хотим чтобы все были способны создавать и монтировать наборы данных в этом пространстве, однако не иметь 
+   доступа к очистке от мусора всего набора данных. Такие полномочия могут быть ограничены (через флаг 
+   <span class="term"><code>-l</code></span>) этот набор данных и не наследоваться автоматически новыми 
+   потомками.</p>
+	   <pre class="screen"><code>
+# zfs allow -l -e create,mount mypool/scratch
+ 	   </code></pre>
+   <p>Теперь применим <span class="term"><code>-c</code></span> для определения полномочий времени создания, 
+   назначаемые вновь создаваемым наборам данных.</p>
+	   <pre class="screen"><code>
+# zfs allow -c snapshot,rollback,destroy mypool/scratch
+ 	   </code></pre>
+   <p>Проверка вашей работы покажет полномочия времени создания в наборе полномочий.</p>
+	   <pre class="screen"><code>
+# zfs allow mypool/scratch
+---- Permissions on mypool/scratch ---------------------
+Permission sets:
+     destroy,rollback,snapshot
+Local permissions:
+     everyone create,mount
+ 	   </code></pre>
+   <p>Действительный тест, конечно, состоит в выполнении этих команд обычным пользователем. Давайте 
+   предоставим <span class="term"><strong class="userinput"><code>lucas</code></strong></span> 
+   создать некие наборы данных в <span class="term"><code><em>mypool/scratch</em></code></span>.</p>
+	   <pre class="screen"><code>
+# su lucas
+$ zfs create mypool/scratch/lucas
+ 	   </code></pre>
+   <p>Это работает, но какие полномочия мы имеем?</p>
+	   <pre class="screen"><code>
+$ zfs allow mypool/scratch/lucas
+---- Permissions on mypool/scratch/lucas ---------------
+Local permissions:
+     user lucas destroy,rollback,snapshot
+---- Permissions on mypool/scratch ---------------------
+Permission sets:
+     destroy,rollback,snapshot
+Local permissions:
+     everyone create,mount
+ 	   </code></pre>
+   <p>Теперь <span class="term"><strong class="userinput"><code>lucas</code></strong></span>, и только 
+   <span class="term"><strong class="userinput"><code>lucas</code></strong></span>, может создавать снимки и 
+   разрушать свой набор данных. Другие пользователи могут создавать свои собственные наборы данных, к которым 
+   только они имеют доступ.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04"> </a>Полномочия на изменение полномочий</h3>
+   </div></div></div>
+   <p>Пользователь с доступом к команде <span class="term"><code>allow</code></span> может передавать 
+   любые другие полномочия, которые у него уже имеются. Это позволяет вам дать руководителю команды или 
+   управляющему проектом возможность делать запас полномочий для своей бригады.</p>
+   <p>Рассмотрим предыдущий пример набора рабочей области. Предположим, 
+   <span class="term"><strong class="userinput"><code>lucas</code></strong></span> хочет разрешить пользователю 
+   <span class="term"><strong class="userinput"><code>litz</code></strong></span> создание снимков в его новом 
+   наборе данных рабочей области.</p>
+   <p>Вначале дайте <span class="term"><strong class="userinput"><code>lucas</code></strong></span> возможность 
+   передавать полномочия разрешив ему команду <span class="term"><code>zfs allow</code></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow -u lucas allow mypool/scratch/lucas
+# zfs allow mypool/scratch/lucas
+---- Permissions on mypool/scratch/lucas ---------------
+Local permissions:
+     user lucas destroy,snapshot
+Local+Descendent permissions:
+     user lucas allow
+---- Permissions on mypool/scratch ---------------------
+Permission sets:
+     destroy,snapshot
+Local permissions:
+     everyone create,mount
+ 	   </code></pre>
+   <p>Теперь Лукас может предоставлять любые имеющиеся у него полномочия учётной записи 
+   <span class="term"><strong class="userinput"><code>litz</code></strong></span>. Проверим, 
+   зарегистрировавшись под его именем.</p>
+	   <pre class="screen"><code>
+# su lucas
+$ zfs allow -u liz snapshot mypool/scratch/lucas
+$ zfs allow mypool/scratch/lucas
+---- Permissions on mypool/scratch/lucas ---------------
+Local permissions:
+     user lucas destroy,snapshot
+Local+Descendent permissions:
+     user lucas allow
+     user liz snapshot
+---- Permissions on mypool/scratch ---------------------
+Permission sets:
+     destroy,snapshot
+Local permissions:
+     everyone create,mount
+ 	   </code></pre>
+   <p>Однако Лукас не может выдать полномочия, которых у него нет:</p>
+	   <pre class="screen"><code>
+$ zfs allow -u liz clone mypool/scratch/lucas
+cannot set permissions on ‘mypool/scratch/lucas’:
+permission denied
+ 	   </code></pre>
+   <p>Только системный администратор может предоставлять полномочия пользователю и делать этого пользователя 
+   ответственным за дальнейшее предоставление его собственного набора данных.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05"> </a>Наборы полномочий</h3>
+   </div></div></div>
+   <p>Выполнение <span class="term"><code>zfs allow</code></span> предоставляет список из белее чем 60 полномочий,
+   которые вы можете предоставлять пользователю. Мы не хотим перечислять здесь их все, однако вы можете 
+   предоставлять доступ к каждой подкоманде <span class="term"><code>zfs(8)</code></span>, а также у свойствам 
+   каждого пула и набора данных индивидуально.</p>
+   <p>Вместо того, чтобы предоставлять длинный перечень полномочий каждому пользователю, и при этом неизбежно 
+   забыть одно, ZFS делает возможным вам определять наборы полномочий. Примените флаг 
+   <span class="term"><code>-s</code></span> и определите имя набора полномочий, начинающееся со знака 
+   <span class="term"><code>@</code></span>. Затем перечислите полномочия в этом наборе и имя набора данных, 
+   для которого будет действительным этот набор полномочий.</p>
+	   <pre class="screen"><code>
+# zfs allow -s @permissionset \
+      permission,permission,permission… dataset
+ 	   </code></pre>
+   <p>Здесь мы создадим набор полномочий с именем <span class="term"><code><em>@dataset</em></code></span>,
+   который содержит полномочия для управления наборами данных. Он применяется к набору данных
+   <span class="term"><code><em>mypool/teams</em></code></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow -s @dataset create,destroy,mount,rename,
+snapshot,rollback,clone,promote,hold,release \
+      mypool/teams
+ 	   </code></pre>
+   <p>Приведём набор полномочий с именем <span class="term"><code><em>@replication</em></code></span>, который 
+   предлагает необходимые привилегии для репликации на том же самом наборе данных.</p>
+	   <pre class="screen"><code>
+# zfs allow -s @replication send,receive mypool/teams
+ 	   </code></pre>
+   <p>Набор полномочий <span class="term"><code><em>@billing</em></code></span> предоставляет доступ к 
+   обычно недоступным свойствам <span class="term"><strong class="userinput"><code>userused</code></strong></span>
+   и <span class="term"><strong class="userinput"><code>groupused</code></strong></span> на этом наборе 
+   данных.</p>
+	   <pre class="screen"><code>
+# zfs allow -s @billing userused,groupused mypool/teams
+ 	   </code></pre>
+   <p>Ниже определяется набор полномочий <span class="term"><code><em>@quotas</em></code></span>, который позволит 
+   кому- то управлять квотами пространства.
+   </p>
+	   <pre class="screen"><code>
+# zfs allow -s @quotas userquota,groupquota,quota,refquota,reservation,refreservation mypool/teams
+ 	   </code></pre>
+   <p>Наконец, здесь мы задаём набор полномочий для того, чтобы позволить персоналу регулировать некоторые 
+   основные свойства набора данных. Предполагается, что системный администратор установих их в разумные 
+   значения по умолчанию, однако пользователи могут иметь специфические наборы данных с особенными 
+   требованиями.</p>
+	   <pre class="screen"><code>
+# zfs allow -s @basic_properties compression,copies,atime,primarycache,secondarycache mypool/teams
+ 	   </code></pre>
+   <p>Когда вы установите наборы полномочий, вы можете назначать их польльзователям и группам.
+   Здесь управляющие группами получают доступ к привилегиям <span class="term"><code><em>@dataset</em></code></span> 
+   и <span class="term"><code><em>@basic_properties</em></code></span> в своих наборах данных.</p>
+	   <pre class="screen"><code>
+# zfs allow -g managers @dataset,@basic_properties \
+      mypool/teams
+ 	   </code></pre>
+   <p>А здесь мы разрешаем пользователю <span class="term"><strong class="userinput"><code>lucas</code></strong></span>, 
+   который выполняет доступ к системе биллинга, полномочия биллинга на <span class="term"><code><em>mypool/teams</em></code></span>.</p>
+	   <pre class="screen"><code>
+# zfs allow -u billbot @billing mypool/teams
+ 	   </code></pre>
+   <p>Выполнение <span class="term"><code>zfs allow</code></span> отобразит вам наборы полномочий и назначенные 
+   на наборе данных полномочия.</p>
+	   <pre class="screen"><code>
+# zfs allow mypool/teams
+---- Permissions on mypool/teams -----------------------
+Permission sets:
+@basic_properties atime,compression,copies,
+     primarycache,secondarycache
+@billing groupused,userused
+@dataset clone,create,destroy,hold,mount,promote,
+     release,rename,rollback,snapshot
+@quotas groupquota,quota,refquota,refreservation,
+     reservation,userquota
+@replication receive,send
+Local+Descendent permissions:
+     user billbot @billing
+     group managers @basic_properties,@dataset
+ 	   </code></pre>
+   <p>Передача полномочий ZFS может быстро стать сложной. Как и в случае многих прочих схемами полномочий, 
+   применение групп может помочь упростить управление. Назначайте полномочия только когда они необходимы, 
+   а не потому, что вы думаете, что вы знаете как система будет развиваться.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06"> </a>Передача полномочий и джейлы</h3>
+   </div></div></div>
+   <p>FreeBSD поддерживает метод виртуализации с небольшим весом, именуемый джейлами (<span class="emphasis"><em>jail</em></span>,
+   дословно: клетками). По применению джейлов вы найдёте большое число руководств, поэтому мы не будем вдаваться в 
+   сложности джейлов. (Лукас продолжает настаивать, что он собирается написать книгу &quot;Мастерская джейлов&quot;.
+   Печально, но книги по хранилищам находятся где- то между предысторией и предпосылками.) Реализация ZFS FreeBSD 
+   имеет специальную поддержку для джейлов.</p>
+   <p>Набор данных может быть помечен для применения только в джейле. Пользователь 
+   <span class="term"><strong class="userinput"><code>root</code></strong></span> этого джейла имеет полное 
+   управление над этим набором данных. Она может создавать дочерние наборы данных и изменять любые свйства 
+   как она захочет.</p>
+   <p>Заключённый в джейл набор данных не может быть смонтирован в вашей хост системе. Набор данных джейла 
+   не имеет подтверждённых доверенностей и может иметь установки свойств, которые не совместимы с  - или даже 
+   активно неприязненны к - хосту. В качестве простейшего примера, джейл может иметь набор данных с 
+   <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span> в 
+   <span class="term"><code><em>/etc</em></code></span>. Запомните, что файловые системы BSD выстраиваются в стек. 
+   Если ваш хост монтирует такой набор данных джейла, <span class="term"><code><em>/etc</em></code></span> 
+   джейла будет в стеке с <span class="term"><code><em>/etc</em></code></span> хоста. Хост, несомненно, 
+   должен иметь <span class="term"><code><em>/etc/password</em></code></span>, 
+   <span class="term"><code><em>rc.conf</em></code></span>, <span class="term"><code><em>sshd_config</em></code></span>
+   джейла и прочие жизненно важные файлы. В худшем случае системный администратор джейла может заявить свои права 
+   на управление вашим хостом. В лучшем случае, системный администратор хоста будет в действительности 
+   иметь несчастливый день.</p>
+   <p>Что касается пользователя <span class="term"><strong class="userinput"><code>root</code></strong></span> 
+   джейла, он может сказать, что он практически полностью управляет набором данных. Единственное свойство, 
+   которое он н может изменить, это квота. Изменение квоты может дать ему больший доступ, чем выделял ему 
+   системный администратор.</p>
+   <p>Однако, учётная запись заключённого в джейл <span class="term"><strong class="userinput"><code>root</code></strong></span> 
+   может видеть что он существует в рамках джейла. Учётная запись 
+   <span class="term"><strong class="userinput"><code>root</code></strong></span> может видеть видеть каждый из 
+   своих родительских наборов данных вверх до корня пула. Если у вас имеется пул <span class="term"><code><em>jails</em></code></span>, 
+   скажем, <span class="term"><code><em>jails/customers/lucas</em></code></span>, тогда пользователь 
+   <span class="term"><strong class="userinput"><code>root</code></strong></span>  может просматривать этот путь. 
+   Однако, ни не могут видеть другие наборы данных за пределами джейла. Прочие настроенные под пользователей наборы 
+   данных являются невидимыми.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Заключение набора данных в джейл </span></h4>
+   </div></div></div>
+   <p>Чтобы заключить набор данных в джейл, установите свойство 
+   <span class="term"><strong class="userinput"><code>jailed</code></strong></span> в значение 
+   <span class="emphasis"><em>on</em></span>. Хост более не будет способен монтировать это набор данных.</p>
+   <p>Чтобы построить джейл для Лукаса, создайте новый набор данных, который будет служить корнем его места 
+   заключения. Здесь мы используем для такого джейла набор данных 
+   <span class="term"><code><em>zroot/jails/lucas/jail</em></code></span>.</p>
+	   <pre class="screen"><code>
+# zfs create -o jailed=on -o mountpoint=/jail \
+      zroot/jails/lucas/jail
+ 	   </code></pre>
+   <p>Когда у вас получите набор данных, запустите временный джейл с корнем в этом наборе данных.</p>
+	   <pre class="screen"><code>
+# jail -c path=/zroot/jails/lucas mount.devfs \
+allow.mount allow.mount.zfs host.hostname=lucas \
+ip4.addr=&quot;lo0|127.0.0.2&quot; exec.poststart = \
+&quot;/sbin/zfs jail lucas zroot/jails/lucas/jail&quot; \
+command=/bin/sh
+ 	   </code></pre>
+   <p>Теперь войдите в джейл.</p>
+	   <pre class="screen"><code>
+# jexec lucas sh
+ 	   </code></pre>
+   <p>Поскольку мы находимся в джейле, мы можем создать новый набор данных.</p>
+	   <pre class="screen"><code>
+jail# zfs create zroot/jails/lucas/jail/foo
+ 	   </code></pre>
+   <p>Этот новый набор данных, а также наборы данных предков джейла, являются видимыми.</p>
+	   <pre class="screen"><code>
+jail# zfs list -o name,mountpoint
+NAME                        MOUNTPOINT
+zroot                       /zroot
+zroot/jails                 /zroot/jails
+zroot/jails/lucas           /zroot/jails/lucas
+zroot/jails/lucas/jail      /jail
+zroot/jails/lucas/jail/foo  /jail/foo
+ 	   </code></pre>
+   <p>Имеются ли другие наборы данных в <span class="term"><code><em>zroot/jails</em></code></span> или, 
+   на самом деле, в хосте, являющемся основой для данного джейла? Пользователи в этом джейле никогда этого 
+   не узнают.</p>
+   <p>Пользователь <span class="term"><strong class="userinput"><code>lucas</code></strong></span> 
+   теперь может устанавливать точки монтирования, создавать и разрушать наборы данных, передавать полномочия 
+   на наборы данных обычным пользователям внутри джейла и тому подобное. Вот бы и в реальном мире так легко 
+   было бы удерживать пользователей Лукас от поломки {окружающих их} вещей...</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0602"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Построение ZFS передачи полномочий джейлу </span></h4>
+   </div></div></div>
+   <p>Возможно, ваши пользователи не захотят пустого скелетного джейла показанного выше. Вероятно, они хотят 
+   реальной пользовательской земли обетованной с программами и возможностями выполнения служб. Это означает 
+   установку FreeBSD в набор данных вашего джейла. Джейлы могут быть чрезвычайно сложными, поэтому мы не хотим 
+   полностью обсуждать их здесь. Мы выполним базовую установку FreeBSD на набор данных в джейле, поэтому мы 
+   можем добавить ZFS в ваши существующие процессы джейла.</p>
+   <p>Для начала создадим набор данных джейла.</p>
+	   <pre class="screen"><code>
+# zfs create -p mypool/jails/lucas/zroot
+ 	   </code></pre>
+   <p>Теперь установим в этот набор данных операционную систему. Вы можете выполнить установку с сайта FTP, 
+   поскольку мы имеем здесь дело с версией amd64 FreeBSD 10.3.</p>
+	   <pre class="screen"><code>
+# fetch -o - ftp://ftp.freebsd.org/pub/FreeBSD/
+releases/amd64/10.3-RELEASE/base.txz | \
+      tar -xJf - -C /mypool/jails/lucas/
+ 	   </code></pre>
+   <p>Если вы собираетесь устанавливать множество джейлов, загрузите <span class="term"><code><em>base.txz</em></code></span>
+   для вашей версии и извлеките его в каждый свой джейл.</p>
+	   <pre class="screen"><code>
+# tar -xf base.txz -C /mypool/jails/lucas/
+ 	   </code></pre>
+   <p>Когда вы скопируете операционую систему в набор данных джейла, отметьте этот набор данных как не имеющий 
+   доверия (untrusted). Это сделает это набор данных недоступным для вашего хоста.</p>
+	   <pre class="screen"><code>
+# zfs set mountpoint=/zroot mypool/jails/lucas/zroot
+# zfs set jailed=on mypool/jails/lucas/zroot
+ 	   </code></pre>
+   <p>В готовом наборе данных сделайте запись для такого джейла в файле настроек джейла, 
+   <span class="term"><code><em>/etc/jail.conf</em></code></span>Здесь мы определяем такой джейл.</p>
+	   <pre class="screen"><code>
+no.gelato.for.michaelwlucas.com.
+ nogelatoforyou {
+ host.hostname = &quot;no.gelato.for.michaelwlucas.com&quot;;
+ ip4.addr = &quot;em0|198.51.100.200&quot;;
+ path = &quot;/mypool/jails/lucas&quot;;
+ persist = true;
+ mount.devfs = true;
+ allow.mount = true;
+ allow.mount.zfs = true;
+ enforce_statfs = 1;
+ exec.poststart = &quot;/sbin/zfs jail nogelatoforyou mypool/jails/lucas/zroot&quot;;
+ exec.poststop = &quot;/sbin/zfs unjail nogelatoforyou mypool/jails/lucas/zroot&quot;;
+}
+ 	   </code></pre>
+   <p>(Хорошо. Теперь Джуд просто скуп. ==mwl)</p>
+   <p>Имея такую запись <span class="term"><code><em>jail.conf</em></code></span> на своём месте, 
+   мы cможем запускать джейл с применением стандартных инструментов FreeBSD.</p>
+   <p>Последняя часть установки должна случиться в пределах клетки (джейла). В противном случае вы можете 
+   сделать нечто безумное и сумасшедшее наподобие того как спланировать заранее когда устанавливать вашу 
+   операционную систему, однако вы бы не получили удовольствия от подобных вещей. Давайте войдём в джейл 
+   и просмотрим наши наборы данных.</p>
+	   <pre class="screen"><code>
+# jexec nogelatoforyou /bin/sh
+jail# zfs list
+NAME                      USED  AVAIL  REFER  MOUNTPOINT
+mypool                   5.21G  13.1G    96K  none
+mypool/jails              180M  13.1G    96K  /mypool/jails
+mypool/jails/lucas        180M  13.1G   180M  /mypool/jails/lucas
+mypool/jails/lucas/zroot   96K  13.1G    96K  /zroots
+ 	   </code></pre>
+   <p>Этот новый джейл не имеет ZFS разрешённой в <span class="term"><code><em>rc.conf</em></code></span>, 
+   поэтому новый набор данных не монтируется по умолчанию. Разрешим ZFS и перезапустим данный джейл.</p>
+	   <pre class="screen"><code>
+jail# sysrc zfs_enable=&quot;YES&quot;
+ 	   </code></pre>
+   <p>Выполнив изменения настройки, перезапустите джейл и войдите в него повторно.</p>
+	   <pre class="screen"><code>
+# service jail onerestart nogelatoforyou
+# jexec nogelatoforyou /bin/sh
+ 	   </code></pre>
+   <p>Вы увидите заново созданные наборы данных.</p>
+	   <pre class="screen"><code>
+jail# zfs create mypool/jails/lucas/zroot/test
+jail# zfs list
+NAME                          USED  AVAIL  REFER  MOUNTPOINT
+mypool                       5.21G  13.1G    96K  none
+mypool/jails                  180M  13.1G    96K  /mypool/jails
+mypool/jails/lucas            180M  13.1G   180M  /mypool/jails/lucas
+mypool/jails/lucas/zroot      192K  13.1G    96K  /zroot
+mypool/jails/lucas/zroot/test  96K  13.1G    96K  /zroot/test
+ 	   </code></pre>
+   <p>Для создания новых наборов данных администратор джейла должен применять полный путь, включая ту его часть, 
+   которая находится за пределами данного джейла.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0603"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Определение пределов и ремни безопасности </span></h4>
+   </div></div></div>
+   <p>Но что, если Лукас некомпетентен или является исчадием ада? Мы дали ему доступ для выполнения его 
+   собственных снимков, а он попытается создать миллионы снимков &quot;просто чтобы посмотреть что произойдёт&quot;.
+   Вы знаете таких людей.</p>
+   <p>ZFS прикрывает вам тыл, когда вы имеете дело с такими трудными пользователями.
+   ZFS предоставляет свойства <span class="term"><strong class="userinput"><code>snapshot_limit</code></strong></span>
+   и <span class="term"><strong class="userinput"><code>filesystem_limit</code></strong></span>, которые 
+   позволяют вам ограничивать число снимков или дочерних файловых систем, которые могут быть созданы в 
+   определённом наборе данных. Установите эти свойства в значения, большее чем число снимков или наборов данных,
+   которые вы хотите чтобы создавали пользователи. То есть, если вы установите 
+   <span class="term"><strong class="userinput"><code>snapshot_limit</code></strong></span> в значение 10, 
+   ваш пользователь сможет создавать девять снимков. Десятый сгенерирует ошибку.</p>
+   <p>Чтобы держать в узде абсолютное зло, которым является Лукас, ограничьте число снимков, которое он сможет 
+   создавать, двумя.</p>
+	   <pre class="screen"><code>
+# zfs set snapshot_limit=3 zroot/usr/home/lucas
+# su lucas
+$ zfs snapshot zroot/usr/home/lucas@three
+$ zfs snapshot zroot/usr/home/lucas@four
+cannot create snapshot ‘zroot/usr/home/lucas’: out of space
+ 	   </code></pre>
+   <p>Доступные только для чтения свойства <span class="term"><strong class="userinput"><code> filesystem_count</code></strong></span>
+   и <span class="term"><strong class="userinput"><code>snapshot_count</code></strong></span> позволят вам быстро 
+   отслеживать сколько существует файловых систем и снимков, а также сравнивать это число с его пределом.</p>
+   <p>Предоставление полномочий и джейлы являются мощными инструментами для административного управления 
+   пространством хранения. Теперь давайте обсудим совместное использование данных в ZFS.</p>
+  </div>
+   
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

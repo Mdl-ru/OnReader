@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Среда тестирования предварительного обновления - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="ch_ops_upgrades.html" title="Глава 18. Модернизации"/>
+<link rel="prev" href="ch_ops_upgrades.html" title="Глава 18. Модернизации"/>
+<link rel="next" href="ops_upgrades-prepare-roll-back.html" title="Подготовка к откату"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:10+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//ops_upgrades-pre-testing.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Среда тестирования предварительного обновления';
+PrevRef = 'ch_ops_upgrades.html';
+UpRef = 'ch_ops_upgrades.html';
+NextRef = 'ops_upgrades-prepare-roll-back.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops_upgrades-pre-testing"> </a>Среда тестирования предварительного обновления</h2>
+</div></div></div>
+<p>Наиболее важным шагом является тестирование перед обновлением. 
+Если вы проводите модернизацию сразу после выпуска новой версии, 
+скрытые ошибки могут помешать вашему продвижению вперед. Некоторые операторы,
+ответственные за развертывание, предпочитают подождать, пока не появится первая редакция с точкой. 
+Тем не менее, если у вас есть важная реализация, вы можете следовать 
+за разработкой и тестировать редакции, чтобы гарантировать, что ошибки 
+для ваших вариантов использования устранены.
+<a id="d9e7218" class="indexterm"/></p>
+<p>Даже если у вас есть то, что кажется почти идентичным архитектуре, 
+которая описана в данном руководстве, каждое облако OpenStack имеет свои особенности. 
+В результате, вы все равно должны проверить обновления между версиями 
+в своей среде. Для этого вам необходим похожий клон вашей среды.</p>
+<p>Однако, это не означает, что эта среда должна быть такого же 
+размера или использовать идентичное оборудованию производственной среды — 
+немногие из нас имеют такую роскошь. Учитывать аппаратуру и масштаб обновляемого 
+облака важно, но приводимые здесь советы помогут вам избежать 
+таких невероятных стоимостных затрат::
+<a id="d9e7223" class="indexterm"/></p>
+<div class="variablelist"><dl><dt><span class="term">Используйте свое собственное облако.</span></dt><dd>
+<p>Простейшим местом для начала тестирования следующей версии OpenStack 
+является создание новой среды внутри вашего собственного облака. 
+Это может показаться странным, в особенности двойная виртуализация, используемая 
+для управления вычислительными узлами, но это верный способ 
+очень быстро проверить вашу конфигурацию.</p></dd><dt>
+<span class="term">Используйте общедоступное облако</span></dt><dd>
+ <p>В особенности по той причине, что свое собственное облако вряд ли будет иметь 
+ достаточно места для масштабирования теста на уровень всего облака, 
+ рассмотрите возможность использования общедоступных облаков для испытания 
+ пределов масштабируемости конфигурации облака контроллера. 
+ Большинство общедоступных облаков выставляют почасовые счета, а значит, могут быть 
+ недорогими для выполнения даже тестирования со многими узлами.
+<a id="d9e7235" class="indexterm"/></p></dd><dt><span class="term">Сделайте еще одну конечную точку хранения в той же системе</span></dt><dd>
+<p>Если вы используете внешнее подключаемое устройство хранения или 
+совместно используемую файловую систему в вашем облаке, то во многих случаях вы можете проверить, 
+работает ли оно, создав второй совместно используемый ресурс или конечную точку. 
+Это действие позволяет проверить систему, прежде чем доверить новой версии свою систему хранения.</p></dd><dt><span class="term">Следите за сетью</span></dt><dd>
+ <p>Даже при маломасштабном тестировании, поиск избыточных сетевых 
+ пакетов для определения того, не происходит ли что-то страшное, 
+ будет неправильно для взаимодействия между компонентами.</p></dd></dl>
+</div>
+<p>Чтобы настроить тестовую среду, вы можете использовать один из нескольких способов:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+<p>Выполните полное руководство по установке, с использованием 
+<a class="link" href="http://docs.openstack.org/" target="_top"><em class="citetitle">
+Руководство по установке OpenStack</em></a>  для вашей платформы. Проверьте 
+окончательные файлы настройки и установленные пакеты.</p></li><li class="listitem">
+<p>Создайте клон своей автоматизированной инфраструктуры настройки с измененными 
+URL-адресами репозитория пакетов.</p>
+<p>Изменяйте конфигурацию, пока она еще работает.</p></li></ul>
+</div>
+<p>Любой подход справедлив. Используйте подход, который соответствует 
+вашему опыту.</p>
+<p>Предварительное тестирование модернизации системы отлично подходит для получения 
+рабочей настройки; однако, важно отметить, что 
+историческое использование системы и различий во взаимодействия с пользователем может также влиять 
+на успех обновления. Мы наблюдали опыты, при которых миграции базы данных сталкивались 
+с ошибкой (позже исправленной!) из-за небольших различий в таблицах между 
+новой установкой Grizzly и установками, которые мигрировали с 
+Folsom на Grizzly.</p>
+<p>Искусственное масштабное тестирование может идти только до сих пор. 
+После того, облако будет обновлено, необходимо обратить 
+пристальное внимание на аспекты производительности вашего облако.</p>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

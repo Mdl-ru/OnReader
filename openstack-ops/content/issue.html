@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>&#34;Проблема&#34; - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="app_crypt.html" title="Дополнение B. Байки из зашиф^H^H^H^H облака"/>
+<link rel="prev" href="double_vlan.html" title="Двойная VLAN"/>
+<link rel="next" href="disappear_images.html" title="Пропадающие образы"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:19+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//issue.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Проблема';
+PrevRef = 'double_vlan.html';
+UpRef = 'app_crypt.html';
+NextRef = 'disappear_images.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="issue"> </a>&quot;Проблема&quot;</h2>
+</div></div></div>
+<p>В конце августа 2012, высшая школа в Альберте, Канада, выполняла миграцию своей
+инфраструктуры на облако OpenStack. Как нарочно, через один или два дня его 
+работы один из их серверов просто пропал из сети. Би-и-и-п. Все, ушел.</p>
+<p>После перезапуска этого экземпляра все вернулось на место и заработало. 
+Мы просмотрели журналы и увидели, что в некоторой точке сетевое взаимодействие 
+остановилось, а затем все перешло в режим ожидания. Мы списали это на случайные
+обстоятельства.</p>
+<p>Через несколько ночей это повторилось.</p>
+<p>Мы просмотрели оба набора журналов. Единственная вещь, которая сильно 
+выделялась, это был DHCP. В то время, как по умолчанию OpenStack устанавливает 
+выделение DHCP на одну минуту, оно, в нашем случае, равнялось двум минутам.
+Это означало,что каждый экземпляр связывается с контроллером облака  (сервером DHCP) 
+для обновления своего фиксированного IP. По некой причине этот экземпляр не может 
+обновить свой IP. Мы скоррелировали журналы экземпляра с журналами в контроллере облака 
+и собрались вместе на обсуждение:</p>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<p>Экземпляр пытается обновить IP.</p></li><li class="listitem">
+<p>Контроллер облака получает запрос на обновление и отсылает ответ.</p></li><li class="listitem">
+<p>Экземпляр &quot;игнорирует&quot; ответ и повторно посылает запрос на обновление.</p></li><li class="listitem">
+<p>Контроллер облака получает второй запрос и посылает новый ответ.</p></li><li class="listitem">
+<p>Экземпляр начинает посылать запрос на обновление на <code class="code">255.255.255.255</code>,
+поскольку не слышит ответа от контроллера облака.</p></li><li class="listitem">
+<p>Контроллер облака получает запрос отправленный на <code class="code">255.255.255.255</code> 
+и отправляет третий ответ.</p></li><li class="listitem">
+<p>Экземпляр, наконец, сдается.</p></li></ol>
+</div>
+<p>Имея на руках эту информацию, мы были уверены, что проблема должна быть 
+связана с DHCP. Мы предположили, что по некой причине экземпляр не может получить 
+новый IP адрес, а не имея IP, он отключает себя от сети.</p>
+<p>Быстрый поиск в Google выводит следующее: 
+<a class="link" href="https://lists.launchpad.net/openstack/msg11696.html" target="_top">
+DHCP lease errors in VLAN mode</a> (ошибки выделения DHCP в режиме VLAN, https://lists.launchpad.net/openstack/msg11696.html),
+что еще больше укрепляет нашу теорию DHCP.</p>
+<p>Первоначально идея сводилась просто к увеличению времени выделения. 
+Если экземпляр обновляется только раз в неделю, вероятность возникновения данной проблемы 
+будет чрезвычайно ниже чем раз в минуту. Однако, это не решило проблему. Это было только 
+выявлением вершины проблемы..</p>
+<p>Мы решили иметь запущенный <span class="command"><strong>tcpdump</strong></span> 
+на данном экземпляре и попробовать поймать проблему снова.
+Естественно, мы ее получили.</p> 
+<p>Вывод результатов <span class="command"><strong>tcpdump</strong></span> 
+выглядел очень, очень странно. Короче говоря, это выглядело так, как будто 
+сетевое взаимодействие прекращалось перед тем, как экземпляр пытался обновить 
+свой IP. Поскольку при выделении на одну минуту существует очень много болтовни,
+очень трудно подтвердить эту гипотезу, однако, даже при разнице только в одну 
+миллисекунду между пакетами, если один пакет приходит первым, он возникает 
+первым, и если это пакет сообщает о сетевой проблеме, то это 
+произойдет до DHCP.</p>
+<p>Кроме того, данный экземпляр в обсуждаемом вопросе был ответственен за очень,
+очень большой объем работы резервного копирования каждую ночь. 
+Вместе с тем, &quot;Проблема&quot; (как мы теперь начали ее называть) 
+не произошла во время выполнения резервного копирования, хотя это время 
+было достаточно близко (в пределах нескольких часов) и мы не могли игнорировать это.</p>
+<p>Шли дни, и мы сталкивались с Проблемой снова и снова. Мы увидели, 
+что dhclient не выполняется после возникновения Проблемы. Теперь мы вернулись, 
+чтобы обдумать ее вопросы,связанные с DHCP. Выполнение перезапуска 
+<code class="filename">/etc/init.d/networking</code> 
+возвращает все назад и приводит в рабочее состояние.</p>
+<p>Был ли у вас день, когда вы вдруг получает результаты Google поиска, 
+которые вы ожидали найти? Ну, это то, что произошло. Я искал информацию о 
+dhclient, а также о том, почему он умирает, когда не может возобновить ее выделение, 
+и все: внезапно я нашел кучу OpenStack и dnsmasq обсуждений, которые были 
+идентичны наблюдаемой нами проблеме!</p>
+<p><a class="link" href="http://www.gossamer-threads.com/lists/openstack/operators/18197" target="_top">
+Problem with Heavy Network IO and Dnsmasq</a>
+(Проблема с нагруженным сетевым вводом/выводом и Dnsmasq, http://www.gossamer-threads.com/lists/openstack/operators/18197)</p>
+<p><a class="link" href="http://www.gossamer-threads.com/lists/openstack/dev/14696" target="_top">
+instances losing IP address while running, due to No DHCPOFFER</a>
+(экземпляры теряют IP адрес во время работы вследствие No DHCPOFFER http://www.gossamer-threads.com/lists/openstack/dev/14696)</p>
+<p>В самом деле, Google.</p>
+<p>Вот это сообщение было ключом ко всему:
+<a class="link" href="https://bugs.launchpad.net/ubuntu/+source/qemu-kvm/+bug/997978" target="_top">
+KVM images lose connectivity with bridged network</a>
+(образы KVM теряют связь с соединенными через мост сетями https://bugs.launchpad.net/ubuntu/+source/qemu-kvm/+bug/997978)</p>
+<p>Было забавно читать этот отчет. Присутствовало много людей, которые испытывали какую-то 
+странную проблему в сети, но они не могли ее четко описать таким образом.</p>
+<p>Итак, это было ошибкой qemu/kvm.</p>
+<p>Одновременно с находкой четкого отчета о проблеме, наш коллега смог 
+успешно воспроизвести Проблему! Как? Он воспользовался  
+<span class="command"><strong>iperf</strong></span> 
+выжимания тонны пропускной способности из экземпляра. В пределах 
+30 минут экземпляр просто пропал в сети.</p>
+<p>Вооружившись исправленным qemu и способом воспроизведения ошибки, 
+мы начали изучать смогли ли мы разрешить Проблему. После 48 часов 
+прямого забивания экземпляра нагрузкой с высокой пропускной способностью 
+мы были уверены в себе. Остальное история. Вы можете найти сообщение об ошибке для 
+&quot;joe&quot;, чтобы найти мои комментарии и фактические испытания.</p>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

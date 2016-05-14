@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Следующее поколение сетевого стека для Docker: libnetwork - Изучение построения сетей Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningDockerNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="up" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="prev" href="Ch05.html" title="Глава 5. Безопасность и QoS для контейнеров Docker"/>
+<link rel="next" href="Ix01.html" title="Указатель"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-docker-networking";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningDockerNetworking/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Следующее поколение сетевого стека для Docker: libnetwork';
+PrevRef = 'Ch05.html';
+UpRef = 'index.html';
+NextRef = 'Ix01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 6. Следующее поколение сетевого стека для Docker: libnetwork</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+   <p></p>
+   <p></p>
+   <p></p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch06.html">6. Следующее поколение сетевого стека для Docker: libnetwork</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#0601">Цель</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0602">Разработка</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0603">Объекты CNM</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060301">Песочница</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060302">Терминал</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060303">Сетевая среда</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060304">Контроллер сети</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060305">Атрибуты CNM</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060306">Жизненный цикл CNM</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0604">Драйвер</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060401">Драйвер моста</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060402">Драйвер оверлейной сетевой среды</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0605">Применение оверлейной сетевой среды при помощи Vagrant</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060501">Сборка Vagrant развёртывания оверлейной сетевой среды</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0606">Оверлейная сетевая среда машины Dodcker и Docker Swarm</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060601">Предварительные условия</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060602">Установка хранилища ключ-значение</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060603">Создание кластера Swarm из двух узлов</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060604">Создание оверлейной сетевой среды</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0607">Создание контейнеров с применением оверлейной сетевой среды</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060701">Интерфейс сети контейнера</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0608">Встраиваемый модуль CNI</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060801">Настройка сетевой среды</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060802">Выделение IP</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060803">Интерфейс управления IP адресами</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0609">Драйвер libnetwork проекта Calico</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#0610">Заключение</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0601"> </a>Цель</h3>
+   </div></div></div>
+   <p></p>
+
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0602"> </a>Разработка</h3>
+   </div></div></div>
+   <p></p>
+
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0603"> </a>Объекты CNM</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Песочница </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Терминал </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сетевая среда </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060304"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Контроллер сети </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060305"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Атрибуты CNM </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060306"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Жизненный цикл CNM </span></h4>
+   </div></div></div>
+   <p></p>
+
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0604"> </a>Драйвер</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Драйвер моста </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Драйвер оверлейной сетевой среды </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0605"> </a>Применение оверлейной сетевой среды при помощи Vagrant</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сборка Vagrant развёртывания оверлейной сетевой среды </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0606"> </a>Оверлейная сетевая среда машины Dodcker и Docker Swarm</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Предварительные условия </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060602"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Установка хранилища ключ-значение </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060603"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание кластера Swarm из двух узлов </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060604"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание оверлейной сетевой среды </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0607"> </a>Создание контейнеров с применением оверлейной сетевой среды</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060701"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Интерфейс сети контейнера </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0608"> </a>Встраиваемый модуль CNI</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060801"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка сетевой среды </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060802"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Выделение IP </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="060803"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Интерфейс управления IP адресами </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0609"> </a>Драйвер libnetwork проекта Calico</h3>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0610"> </a>Заключение</h3>
+   </div></div></div>
+   <p></p>
+
+  </div> 
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

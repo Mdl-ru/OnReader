@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 8. Подробнее об использовании процессов и ресурсов - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch07.html" title="Глава 7. Настройка системы: ведение журналов, время системы, пакетные задания и пользователи"/>
+<link rel="next" href="Ch09.html" title="Глава 9. Понимание вашей сетевой среды и ее настройки"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 8. Подробнее об использовании процессов и ресурсов';
+PrevRef = 'Ch07.html';
+UpRef = 'index.html';
+NextRef = 'Ch09.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 8. Подробнее об использовании процессов и ресурсов</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch08.html">8. Подробнее об использовании процессов и ресурсов</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch08.html#08.1">8.1 Отслеживание процессов</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.2">8.2 Поиск открытых фалов с помощью lsof</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch08.html#08.2.1">8.2.1 Чтение вывода lsof</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#08.2.2">8.2.2 Использование lsof</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.3">8.3 Отслеживание выполнения программы и системных вызовов</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch08.html#08.3.1">8.3.1 strace</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#08.3.2">8.3.2 ltrace</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.4">8.4 Потоки</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch08.html#08.4.1">8.4.1 Процессы с одним и множеством потоков</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#08.4.2">8.4.2 Просмотр потоков</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.5">8.5 Введение в отслеживанием за ресурсами</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.6">8.6 Измерение времени ЦПУ</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.7">8.7 Регулирование приоритетов процессов</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.8">8.8 Средние нагрузки</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch08.html#08.8.1">8.8.1 Применение uptime</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#08.8.2">8.8.2 Пиковые нагрузки</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.9">8.9 Оперативная память</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch08.html#08.9.1">8.9.1 Как работает память</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#08.9.2">8.9.2 Ошибки страниц</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.10">8.10 Отслеживание производительности процессора и памяти посредством vmstat</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.11">8.11 Отслеживание ввода/ вывода</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch08.html#08.11.1">8.11.1 Применение iostat</a></span></dt>
+      <dt><span class="section"><a href="Ch08.html#08.11.2">8.11.2 Применение и отслеживание ввода/ вывода на процесс: iotop</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.12">8.12 Отслеживание по- процессам pidstat</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.13">8.13 Дальнейшие темы</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p></p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.1"> </a>8.1 Отслеживание процессов</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.2"> </a>8.2 Поиск открытых фалов с помощью lsof</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.2.1 Чтение вывода lsof</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.2.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.2.2 Использование lsof</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.3"> </a>8.3 Отслеживание выполнения программы и системных вызовов</h3>
+   </div></div></div>
+   <p>.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.3.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.3.1 strace</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.3.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.3.2 ltrace</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.4"> </a>8.4 Потоки</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.4.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.4.1 Процессы с одним и множеством потоков</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.4.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.4.2 Просмотр потоков</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.5"> </a>8.5 Введение в отслеживание ресурсов</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.6"> </a>8.6 Измерение времени ЦПУ</h3>
+   </div></div></div>
+   <p>.</p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.7"> </a>8.7 Регулирование приоритетов процессов</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.8"> </a>8.8 Средние нагрузки</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.8.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.8.1 Применение uptime</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.8.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.8.2 Пиковые нагрузки</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.9"> </a>8.9 Оперативная память</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.9.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.9.1 Как работает память</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.9.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.9.2 Ошибки страниц</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.10"> </a>8.10 Отслеживание производительности процессора и памяти посредством vmstat</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.11"> </a>8.11 Отслеживание ввода/ вывода</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.11.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.11.1 Применение iostat</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.11.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">8.11.2 Применение и отслеживание ввода/ вывода на процесс: iotop</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.12"> </a>8.12 Отслеживание по- процессам pidstat</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="08.13"> </a>8.13 Дальнейшие темы</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

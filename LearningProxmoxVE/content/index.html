@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Proxmox, FreeNAS, NAS4Free, Nexenta, napp-it, TrueNAS, TurnKey, VirtIO, NUMA, noVNC, ZFS, Gluster, GlusterFS, Ceph, CephFS, CRUSH, RADOS, RBD, OSD, Placement Group, LXC, Linux Container, OpenVZ, UBC, KVM-based, pfSense, VZdump, Zabbix, pmxcfs, Infiniband, Suricata">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Изучение Proxmox VE</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningProxmoxVE"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Познайте силу Proxmox VE собрав выделенную виртуальную среду для обслуживания как контейнеров, так и виртуальных машин"/>
+<link rel="home" href="index.html" title="Изучение Proxmox VE"/>
+<link rel="next" href="Ch01.html" title="Глава 1. Основы Proxmox VE"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-proxmox-ve";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningProxmoxVE/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Изучение Proxmox VE';
+PrevRef = 'Ix01.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="Learning-Proxmox-VE"/>Изучение Proxmox VE</h1>
+ </div>
+ <div xmlns="http://www.w3.org/1999/xhtml" class="abstract">
+  <p>Познайте силу Proxmox VE собрав выделенную виртуальную среду для обслуживания как контейнеров, так и виртуальных машин.</p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Рик Голдман</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2016 Packt Publishing</p>
+<p>Все права защищены. Никакая часть этой книги не может быть воспроизведена, сохранена в поисковой системе или 
+передана в любой форме или любыми средствами без предварительного письменного разрешения издателя, 
+за исключением случаев кратких цитат, встроенных в критических статьях и обзорах.</p>
+<p>При подготовке этой книги были предприняты все усилия чтобы гарантировать точность представленной информации.
+Тем не менее, информация, содержащаяся в этой книге, продается без гарантии в явном или неявном виде.
+Ни авторы, ни Packt Publishing, ни у их дилеры и дистрибьюторы не будут нести ответственность за любые убытки, 
+вызванные или предположительно вызванные прямо или косвенно этой книгой.</p>
+<p>Packt Publishing пыталась предоставить информацию о товарных знаках обо всех компаниях и продуктов, 
+упомянутых в данной книге для надлежащего использования капиталов.
+Тем не менее, Packt Publishing не может гарантировать точность этой информации.</p>
+  <p>Первая публикация на английском языке: 31 марта 2016</p>
+<p>Ссылка на продукт: 1290316</p>
+<p>Опубликовано Packt Publishing Ltd.</p>
+<p>Packt Publishing Ltd.</p>
+<p>35 Livery Street</p>
+<p>Birmingham B3 2PB, UK.</p>
+<p>ISBN 978-1-78398-178-6</p>
+<p>www.packtpub.com</p>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Перевод: ООО &quot;Модуль- Проекты&quot; (&quot;Modue- Pojects&quot; Ltd.)<br/></span>
+   </div>
+  </div>
+ </div>
+ <div>
+  <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright ©&nbsp;2016 &nbsp;
+  <img alt="mdl.ru" src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;"></p>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="legalnotice">
+   <a id="d9e16"/>
+   <table frame="void" id="d9e17"><col width="10%"/><col width="90%"/><tbody><tr><td>
+   <a class="link" href="https://www.packtpub.com/books/info/packt/terms-and-conditions" alt="Постановления и условия" target="_top">
+   <div class="informalfigure">
+    <div class="mediaobject" align="center">
+     <img src="../favicon.ico" align="middle"/>
+    </div>
+   </div></a></td><td>
+   <p>Данный документ предоставляется по лицензии
+   <a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top"><span class="bold"><strong>
+   Creative Commons Attribution 3.0 License</strong></span>, 
+   за исключением разделов со специальными оговорками. </a></p>
+   <p><a class="link" href="http://creativecommons.org/licenses/by/3.0/legalcode" target="_top">
+   http://creativecommons.org/licenses/by/3.0/legalcode</a></p></td></tr></tbody></table>
+  </div>
+</div>
+</div>
+<div>
+<p xmlns="http://www.w3.org/1999/xhtml" class="pubdate">2016-03-31</p>
+</div>
+<div>
+</div></div><hr/></div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Credits"> </a>Состав исполнителей</h3>
+   Первого издания на английском языке
+ </div></div></div>
+ <dl><dt><strong>Автор</strong></dt>
+  <dd><dl>
+   <dt>Рик Голдман</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Рецензент</strong></dt>
+  <dd><dl>
+   <dt>Людовик Л'Уар</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор выпуска</strong></dt>
+  <dd><dl>
+   <dt>Сонали Вернекар</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Редактор разработки содержания</strong></dt>
+  <dd><dl>
+   <dt>Аниш Дхурат</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Технический редактор</strong></dt>
+  <dd><dl>
+   <dt>Райан Кочери</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Литературный редактор</strong></dt>
+  <dd><dl>
+   <dt>Мерилин Перейра</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор проекта</strong></dt>
+  <dd><dl>
+   <dt>Бижал Патель</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Корректор</strong></dt>
+  <dd><dl>
+   <dt>Сафис Едитинг</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Составитель указателя</strong></dt>
+  <dd><dl>
+   <dt>Марьяммаль Четтьяр</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Графика</strong></dt>
+  <dd><dl>
+   <dt>Кирк Д'Пенха</dt>  
+   <dt>Диша Харья</dt>  
+  </dl></dd>
+ </dl>
+ <dl><dt><strong>Координатор производства</strong></dt>
+  <dd><dl>
+   <dt>Арвиндкумар Гупта</dt>  
+  </dl></dd>
+ </dl>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Об авторе</h3>
+ </div></div></div>
+ <p><strong>Рик Голдман</strong>
+ </p>
+</div>
+<div class="section">
+
+<div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Authors"> </a>Благодарности</h3>
+ </div></div></div>
+ <p></p>
+</div>
+
+
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reviewers"> </a>О рецензенте</h3>
+ </div></div></div>
+ <p><strong>Людовик Л'Уар</strong>
+ </p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PacktPub"> </a>www.PacktPub.com</h3>
+ </div></div></div>
+</div>
+
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+	<dt><span class="section"><a href="index.html#Credits">Состав исполнителей</a></span></dt>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#Reviewers">Рецензенты</a></span></dt>
+	<dt><span class="section"><a href="index.html#PacktPub">www.PacktPub.com</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+	<dt><span class="section"><a href="index.html#Preface">Предисловие</a></span></dt>
+	<dd><dl>
+	 <dt><span class="section"><a href="index.html#Covers">Что охватывает эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#You_need">Что вам нужно для этой книги</a></span></dt>
+	 <dt><span class="section"><a href="index.html#For_Who">Для кого эта книга</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Sections">Разделы</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Conventions">Соглашения</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Feedback">Обратная связь с читателями</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Support">Поддержка пользователей</a></span></dt>
+	 <dt><span class="section"><a href="index.html#DLcode">Загрузка кода примеров</a></span></dt>
+	 <dt><span class="section"><a href="index.html#DLImages">Загрузка цветных изображений этой книги</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Errata">Опечатки</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Piracy">Незаконное тиражирование</a></span></dt>
+	 <dt><span class="section"><a href="index.html#Questions">Вопросы</a></span></dt>
+	</dl></dd>
+  </dl></dd>
+ </dl>
+ <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Основы Proxmox VE</a></span></dt>
+    <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#0101">Proxmox VE в двух словах</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#0102">Виртуализация при помощи Proxmox VE</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#010201">KVM</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010202">QEMU</a></span></dt>
+     <dt><span class="section"><a href="Ch01.html#010203">Виртуализация ОС при помощи Proxmox VE</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch01.html#0103">Заключение</a></span></dt>
+    </dl></dd>
+    <dt><span class="chapter"><a href="Ch02.html">2. Установка Proxmox VE</a></span></dt>
+    <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#0201">Требования и рекомендации к оборудованию для Proxmox VE</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0202">Скачивание Proxmox VE</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0203">Проверка загруженного образа</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0204">Проверка наличия аппаратных расширений виртуализации</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch01.html#020401">Разрешение аппаратных расширений виртуализации</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#0205">Подготовка установщика Proxmox VE</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0206">Установка Proxmox VE</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0207">Обновление PVE из командной строки</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch02.html#020701">Отключение репозитория уровня предприятия</a></span></dt>
+     <dt><span class="section"><a href="Ch02.html#020702">Разрешение репозитория без подписки</a></span></dt>
+     <dt><span class="section"><a href="Ch02.html#020703">Обновление и модернизация Proxmox VE</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch02.html#0208">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch03.html">3. Создание контейнеров</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#0301">Осознание преимуществ контейнера</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030101">Proxmox VE и шанс для LXC</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0302">Шаблоны контейнера</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0303">Скачивание шаблонов</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030301">Регистрация в веб- интерфейсе Proxmox VE</a></span></dt>
+     <dt><span class="section"><a href="Ch03.html#030302">Просмотр доступных шаблонов контейнеров</a></span></dt>
+     <dt><span class="section"><a href="Ch03.html#030303">Скачивание контейнера</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0304">От шаблона к контейнеру</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0305">Запуск и останов контейнеров</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030501">Изменение состояний контейнера при помощи командной строки</a></span></dt>
+     <dt><span class="section"><a href="Ch03.html#030502">Доступ к контейнеру</a></span></dt>
+     </dl></dd>
+    <dt><span class="section"><a href="Ch03.html#0306">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch04.html">4. Создание виртуальных машин</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch04.html#0401">Отличительные особенности виртуальных машин</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#040101">Сценарии для виртуализации систем</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0402">Создание виртуальной машины</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch04.html#040201">Носитель установки</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#04020101">Выгрузка файла ISO на локальное хранилище PVE</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch04.html#040202">Подготовка виртуальной машины</a></span></dt>
+      <dd><dl>
+       <dt><span class="section"><a href="Ch04.html#0402020101">Предупреждая вкладки настройки</a></span></dt>
+        <dd><dl>
+        <dt><span class="section"><a href="Ch04.html#040202010101">General</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#040202010102">OS</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#040202010103">CD/DVD</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#040202010104">Hard Disk</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#040202010105">CPU</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#040202010106">Memory</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#040202010107">Network</a></span></dt>
+        <dt><span class="section"><a href="Ch04.html#040202010108">Confirm</a></span></dt>
+        </dl></dd>
+       </dl></dd>
+      <dt><span class="section"><a href="Ch04.html#04020202">Управление состоянием виртуальной машины</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#04020203">Управление ВМ из командной строки PVE</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0403">Практика создания виртуальных машин</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch04.html#040301">Виртуализация Windows Server 2012r2 при помощи Proxmox VE</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040302">Настройка и создание вашей виртуальной машины</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040303">Запуск вашей ВМ и установка Windows Server</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040304">Создание ВМ для сервера Fedora</a></span></dt>
+     <dt><span class="section"><a href="Ch04.html#040305">Создание виртуальной машины в командной строке</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#0404">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch05.html">5. Работа с виртуальными дисками</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#0501">Понимание виртуальных дисков</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050101">Договоримся о соглашениях</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050102">Понимание настройки виртуального диска</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05010201">Выбор формата виртуального диска</a></span></dt>
+       <dd><dl>
+       <dt><span class="section"><a href="Ch05.html#0501020101">QCOW2</a></span></dt>
+       <dt><span class="section"><a href="Ch05.html#0501020102">RAW</a></span></dt>
+       <dt><span class="section"><a href="Ch05.html#0501020103">VMDK</a></span></dt>
+      </dl></dd>
+      <dt><span class="section"><a href="Ch05.html#05010202">Выбор шины</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05010203">Понимание параметров кэша</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#0502">Узнать больше</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0503">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch06.html">6. Работа с сетевой средой Proxmox VE</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#0601">Модель сетевой среды Proxmox VE</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060101">Конфигурация с мостами</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060102">Конфигурация NAT</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060103">Конфигурация с маршрутизацией</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060104">Поддержка VLAN</a></span></dt>
+     <dt><span class="section"><a href="Ch06.html#060105">Связывание NIC</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0602">Сетевые настройки для виртуальных серверов</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch06.html#060201">Предоставление основной связности</a></span></dt>
+       <dd><dl>
+       <dt><span class="section"><a href="Ch06.html#06020101">Из ВМ и vNIC</a></span></dt>
+        <dd><dl>
+        <dt><span class="section"><a href="Ch06.html#0602010101">Настройка моста</a></span></dt>
+        <dt><span class="section"><a href="Ch06.html#0602010102">Настройка с применением NAT</a></span></dt>
+        </dl></dd>
+       </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#0603">Заключение</a></span></dt>
+	</dl></dd>
+	<dt><span class="chapter"><a href="Ch07.html">7. Обеспечение безопасности Proxmox VE</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch07.html#0701">Преимущества безопасности от виртуализации</a></span></dt>
+	  <dd><dl>
+	  <dt><span class="section"><a href="Ch07.html#070101">Уменьшение поверхности атак</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070102">Изоляция</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070103">Доступность предыдущих состояний</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070104">Аппаратная абстракция</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070105">Сегментация</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070106">Инкапсуляция и переносимость</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070107">Физическая безопасность</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070108">Тонкая регулировка привилегий</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070109">Функциональность межсетевого экрана PVE</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#0702">Усугубляемая уязвимость</a></span></dt>
+	  <dd><dl>
+	  <dt><span class="section"><a href="Ch07.html#070201">Атаки отказа в службе</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070202">Выход из ВМ и гипер прыжки</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070203">Расползание виртуализации</a></span></dt>
+	  <dt><span class="section"><a href="Ch07.html#070204">В войне со сложностью</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#0703">Принятие мер</a></span></dt>
+	  <dd><dl>
+	  <dt><span class="section"><a href="Ch07.html#070301">Защита процесса загрузки</a></span></dt>
+	   <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#07030101">Блокирование загрузчика</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#07030102">Блокирование BIOS/UEFI</a></span></dt>
+       </dl></dd>
+	  <dt><span class="section"><a href="Ch07.html#070302">Упрочнение ОС и гипервизора</a></span></dt>
+	   <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#07030201">Запрет удалённого доступа к гипервизору</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#07030202">Упрочнение SSH</a></span></dt>
+	     <dd><dl>
+	     <dt><span class="section"><a href="Ch07.html#0703020201">Запрет доступа учётной записи root через SSH</a></span></dt>
+	     <dt><span class="section"><a href="Ch07.html#0703020202">Предотвращение грубых силовых атак против SSH</a></span></dt>
+	     <dt><span class="section"><a href="Ch07.html#0703020203">Расчёт на аутентификацию на основе ключей</a></span></dt>
+         </dl></dd>
+	    <dt><span class="section"><a href="Ch07.html#07030203">Управление исправлениями</a></span></dt>
+	     <dd><dl>
+	     <dt><span class="section"><a href="Ch07.html#0703020301">Подписки корпоративного уровня</a></span></dt>
+         </dl></dd>
+       </dl></dd>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#0704">Заключение</a></span></dt>
+	</dl></dd>
+ </dl>
+	<dt><span class="index"><a href="ix01.html">Указатель</a></span></dt>
+
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preface"> </a>Предисловие</h3>
+ </div></div></div>
+ <p>.</p>
+</div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Covers"> </a>Что охватывает эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="You_need"> </a>Что вам нужно для этой книги</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="For_Who"> </a>Для кого эта книга</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Sections"> </a>Разделы</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Conventions"> </a>Соглашения</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Обратная связь с читателями</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Feedback"> </a>Загрузка кода примеров</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Support"> </a>Поддержка пользователей</h4>
+  </div></div></div>
+ </div>
+ 
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DLImages"> </a>Загрузка цветных изображений этой книги</h4>
+  </div></div></div>
+  <p>Также мы предоставляем вам файл pdf, который содержит цветные изображения используемых в этой книге снимков экранов/ схем.
+  Цветные изображения помогут вам лучше понять изменения в выводе. Вы можете загрузить этот файл с 
+  <a class="link" href="http://www.packtpub.com/sites/default/files/downloads/LearningProxmoxVE_ColorImages.pdf" 
+  target="_top">http://www.packtpub.com/sites/default/files/downloads/LearningProxmoxVE_ColorImages.pdf</a>
+  </p>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Errata"> </a>Опечатки</h4>
+  </div></div></div>
+ </div>
+ <p></p>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Piracy"> </a>Незаконное тиражирование</h4>
+  </div></div></div>
+ </div>
+
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Questions"> </a>Вопросы</h4>
+  </div></div></div>
+ </div>
+
+</div>
+
+<p> </p>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

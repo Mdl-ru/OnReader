@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class="wf-ptsans-n4-active wf-ptsans-i4-active wf-sourcecodepro-n4-active wf-ptsans-n7-active wf-sourcecodepro-n7-active wf-active" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" dir="" itemscope="" itemtype="http://schema.org/Article" lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <meta name="csrf-token" content="3c10b66e8edf955db3753f9755f69f87"><meta name="robots" content="index,follow"><meta name="generator" content="MindTouch 4 15.4.23.1018"><link rel="search" type="application/opensearchdescription+xml" title="Ceph Wiki Search" href="https://wiki.ceph.com/@api/deki/site/opensearch/description"><link rel="apple-touch-icon" href="https://a.mtstatic.com/skins/common/logo/apple-touch-icon.png?_=472f77b4:site_4517"><link rel="shortcut icon" href="https://a.mtstatic.com/skins/common/logo/favicon.ico?_=472f77b4:site_4517">
+
+        <title>Shingled Erasure Code (SHEC) - Ceph Wiki</title>
+
+        <style type="text/css">body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:400;}ol,ul{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:400;}q:before,q:after{content:'';}caption{margin-bottom:.5em;text-align:center;}fieldset,img,abbr,acronym{border:0;}</style>
+
+    
+
+        <link media="screen" type="text/css" rel="stylesheet" href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/anonymous.css" id="mt-screen-css">
+
+    
+        <link media="print" type="text/css" rel="stylesheet" href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/print.css" id="mt-print-css">
+
+        <!--[if IE 8]><link type="text/css" rel="stylesheet" href="https://a.mtstatic.com/skins/styles/cedar/out/ie8.min.css?_=472f77b4:site_4517"/><![endif]-->
+        <!--[if IE 9]><link type="text/css" rel="stylesheet" href="https://a.mtstatic.com/skins/styles/cedar/out/ie9.min.css?_=472f77b4:site_4517"/><![endif]-->
+
+    <script async="" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/rollbar.js"></script><script type="text/javascript">
+    var _rollbarConfig = {"accessToken":"4b9f4143765a4ba1a3caf2a826c145ab","captureUncaught":false,"verbose":false,"payload":{"environment":"production","person":{"id":"site_4517:2"},"client":{"javascript":{"source_map_enabled":true,"guess_uncaught_frames":true,"code_version":"472f77b4"}},"server":{"branch":"release_20150423","host":"app-production-release_20150423-54_162_2_48"}},"scrubFields":["accountpassword","password","authpassword","apikey","authtoken","csrf_token"]};
+    _rollbarConfig.transform = function(payload) {
+        var trace = payload.data.body.trace;
+        if(trace && trace.frames) {
+            for(var i = 0; i < trace.frames.length; i++) {
+                var filename = trace.frames[i].filename;
+                if(filename) {
+                    var url = document.createElement('a');
+                    url.href = filename;
+                    if((url.hostname === 'wiki.ceph.com' || ('a.mtstatic.com' !== '' && url.hostname === 'a.mtstatic.com')) && filename.indexOf('.js', filename.length - 3) !== -1) {
+                        url.hostname = 'mindtouch.sourcemap'
+                        trace.frames[i].filename = url.href;
+                    }
+                }
+            }
+        }
+    };
+</script><script type="text/javascript">!function(a,b){function c(b){this.shimId=++h,this.notifier=null,this.parentShim=b,this.logger=function(){},a.console&&void 0===a.console.shimId&&(this.logger=a.console.log)}function d(b,c,d){a._rollbarWrappedError&&(d[4]||(d[4]=a._rollbarWrappedError),d[5]||(d[5]=a._rollbarWrappedError._rollbarContext),a._rollbarWrappedError=null),b.uncaughtError.apply(b,d),c&&c.apply(a,d)}function e(b){var d=c;return g(function(){if(this.notifier)return this.notifier[b].apply(this.notifier,arguments);var c=this,e="scope"===b;e&&(c=new d(this));var f=Array.prototype.slice.call(arguments,0),g={shim:c,method:b,args:f,ts:new Date};return a._rollbarShimQueue.push(g),e?c:void 0})}function f(a,b){if(b.hasOwnProperty&&b.hasOwnProperty("addEventListener")){var c=b.addEventListener;b.addEventListener=function(b,d,e){c.call(this,b,a.wrap(d),e)};var d=b.removeEventListener;b.removeEventListener=function(a,b,c){d.call(this,a,b&&b._wrapped?b._wrapped:b,c)}}}function g(a,b){return b=b||this.logger,function(){try{return a.apply(this,arguments)}catch(c){b("Rollbar internal error:",c)}}}var h=0;c.init=function(a,b){var e=b.globalAlias||"Rollbar";if("object"==typeof a[e])return a[e];a._rollbarShimQueue=[],a._rollbarWrappedError=null,b=b||{};var h=new c;return g(function(){if(h.configure(b),b.captureUncaught){var c=a.onerror;a.onerror=function(){var a=Array.prototype.slice.call(arguments,0);d(h,c,a)};var g,i,j="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(g=0;g<j.length;++g)i=j[g],a[i]&&a[i].prototype&&f(h,a[i].prototype)}return a[e]=h,h},h.logger)()},c.prototype.loadFull=function(a,b,c,d,e){var f=g(function(){var a=b.createElement("script"),e=b.getElementsByTagName("script")[0];a.src=d.rollbarJsUrl,a.async=!c,a.onload=h,e.parentNode.insertBefore(a,e)},this.logger),h=g(function(){var b;if(void 0===a._rollbarPayloadQueue){var c,d,f,g;for(b=new Error("rollbar.js did not load");c=a._rollbarShimQueue.shift();)for(f=c.args,g=0;g<f.length;++g)if(d=f[g],"function"==typeof d){d(b);break}}"function"==typeof e&&e(b)},this.logger);g(function(){c?f():a.addEventListener?a.addEventListener("load",f,!1):a.attachEvent("onload",f)},this.logger)()},c.prototype.wrap=function(b,c){try{var d;if(d="function"==typeof c?c:function(){return c||{}},"function"!=typeof b)return b;if(b._isWrap)return b;if(!b._wrapped){b._wrapped=function(){try{return b.apply(this,arguments)}catch(c){throw c._rollbarContext=d(),c._rollbarContext._wrappedSource=b.toString(),a._rollbarWrappedError=c,c}},b._wrapped._isWrap=!0;for(var e in b)b.hasOwnProperty(e)&&(b._wrapped[e]=b[e])}return b._wrapped}catch(f){return b}};for(var i="log,debug,info,warn,warning,error,critical,global,configure,scope,uncaughtError".split(","),j=0;j<i.length;++j)c.prototype[i[j]]=e(i[j]);var k="//d37gvrvc0wt4s1.cloudfront.net/js/v1.1/rollbar.min.js";_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||k;var l=c.init(a,_rollbarConfig);l.loadFull(a,b,!1,_rollbarConfig)}(window,document);</script><script type="text/javascript">var Deki = {"BaseHref":"https:\/\/wiki.ceph.com","PageId":781,"PageTitle":"Planning\/Blueprints\/Hammer\/Shingled Erasure Code (SHEC)","PageName":"Shingled Erasure Code (SHEC)","PageIsRedirect":false,"PageLanguageCode":"en-US","FollowRedirects":1,"PathSkin":"\/skins\/styles\/cedar","PathCommon":"\/skins\/common","UserName":"Anonymous","UserSystemName":"Anonymous","UserIsAnonymous":true,"UserPermissions":["LOGIN","BROWSE","READ","SUBSCRIBE"],"PageEditable":false,"PageNamespace":"","CDNHostname":"a.mtstatic.com","CacheFingerprint":"472f77b4:site_4517","WebFontConfig":{"google":{"families":["PT Sans:r,b,i","Source Code Pro:r,b"]}},"isF1Request":false};</script><script type="text/javascript">if(!window.matchMedia){document.write('<script type="text/javascript" src="https://a.mtstatic.com/deki/javascript/out/matchMedia.min.js?_=472f77b4:site_4517"><\/script><script type="text/javascript" src="https://a.mtstatic.com/deki/javascript/out/matchMedia.addListener.min.js?_=472f77b4:site_4517"><\/script>');}</script><script type="text/javascript" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/community.js"></script><style type="text/css"></style><script type="text/javascript">if(typeof Deki.jsLibLoaded === "undefined"){document.write('<script type="text/javascript" src="/deki/javascript/out/community.min.js"><\/script>');!function(){"use strict";Deki._disableCdn=function(e){if(Deki.CDNHostname){var t=e.indexOf(Deki.CDNHostname);if(-1!==t)return e.substr(t+Deki.CDNHostname.length)}return e};var e=function(e){var t=e.getAttribute("href");t&&e.setAttribute("href",Deki._disableCdn(t))},t=document.getElementById("mt-screen-css");t&&e(t);var n=document.getElementById("mt-print-css");n&&e(n)}();}</script><script type="text/javascript">!function(e){"use strict";e(function(){var t=function(){var t=e(".trayframe"),i=e(".traybody"),a=e(".mt-content-container").height(),s=t.height()+30;if(s>a){var n=a-10+"px";i.css({"max-height":n,"overflow-y":"auto"}),i.addClass("traybody-wider"),t.addClass("trayframe-wider")}else i.removeClass("traybody-wider"),t.removeClass("trayframe-wider")};t();var i=function(){e("#login-link").hide(),e("#forgot-password-link").css("display","inline-block"),e(".mt-user-nav form").fadeIn(function(){e("#username").focus()})},a="placeholder"in document.createElement("input");a||e(".login-form-label").css("display","block"),e("[resetval]").each(function(){var t=e(this).val(),i=e(this).attr("resetval");""===t&&e(this).val(i)}).focus(function(){var t=e(this).attr("resetval"),i=e(this).val();i===t&&e(this).val("")}).blur(function(){var t=e(this).attr("resetval"),i=e(this).val();(i===t||""===i)&&e(this).val(t)});var s=e("#pageText");s.find("img").css("max-width",s.width()),e("body").click(function(t){e(t.target).hasClass("drop-link")||e(".dropdown").hide()}),e(".drop-link").click(function(t){t.preventDefault(),e(".dropdown").hide(),e(this).next(".dropdown").show()}),e(".content-rate-up, .content-rate-down").addClass("ui-button"),e(".page a.disabled").parent().hide(),e(document).on("click",".in-page-sign-in",function(t){t.preventDefault(),i(),e("html, body").animate({scrollTop:0},"fast")});var n=e("#widget-comments");n.on("click",function(){e(".widget-comments").show(),e(".widget-tabs > ul > li").removeClass("active"),e(this).parent("li").addClass("active"),e(".widget-files").hide()});var l=e("#widget-files");l.on("click",function(){e(".widget-files").show(),e(".widget-tabs > ul > li").removeClass("active"),e(this).parent("li").addClass("active"),e(".widget-comments").hide()}),e("#tab-files").hasClass("active")&&e(".widget-files").show(),"#widget-comments"===window.location.hash?n.trigger("click"):"#widget-files"===window.location.hash&&l.trigger("click"),e(".file-link a").each(function(){var t=e(this);t.text().length>25&&t.text(t.text().slice(0,25)).append("...")}),e("#live-tag-normal-tags").bind(Deki.Ui.Events.Tags.TagAdded,function(){t()}).bind(Deki.Ui.Events.Tags.TagRemoved,function(){t()});var o=e(".nav-icon:visible");if(o.length||e("#site-hierarchy").hasClass("show")){o.find("a").addClass("active");var r=new Deki.Site;r._sitePlug.at("nav",Deki.PageId,"full").get(function(t){var i=e('<div id="siteNavTree"></div>').html(JSON.parse(t.responseText));e("#site-hierarchy").append(i).show()})}e(".nav-icon a").click(function(t){t.preventDefault(),e(this).toggleClass("active"),e("#site-hierarchy").toggle()}),e(".systemmsg:visible")&&e(".systemmsg:first-of-type").find(".delete-msg").focus()})}(jQuery);</script><script type="text/javascript">var aLt=_.extend(aLt||[], {"adding-tags":"Adding Tags...","advanced-search":"Advanced Search","attach-no-description":"No description","cancel":"Cancel","close":"Close","comment-delete":"Are you sure you want to delete this comment?","error":"Error","error-permission-denied":"Permission denied","error-permission-details":"Your account does not have sufficient permissions to perform that action.","file-moved":"Your file was successfully moved.","gallery-close":"close","gallery-next":"next","gallery-prev":"prev","grant-type-group":"(Group)","internal-error":"Sorry, but there was an internal problem - please try again soon.","js-label_cancel":"Cancel","js-label_save":"Save","js-tooltip_cancel":"Exit Without Saving Changes","js-tooltip_save":"Save and Exit (Alt+S)","ldap-provide-credentials":"Please provide external service sign in credentials.","loading":"Loading...","menu-confirm-delete":"Are you sure you want to delete this file?","menu-delete-file":"Delete","menu-edit-description":"Edit description","menu-move-file":"Move","menu-previous-versions":"Previous versions","menu-view-original":"View original","ready":"Ready","remove-tag":"Remove tag","restore-tag":"Restore tag","save":"Save","standard-search":"Standard Search","submit":"Submit","wikibits-attach-another":"Attach another file","wikibits-attach-file":"Attach File","wikibits-cant-attach-editing":"Sorry, you can\\'t attach files while editing a page. Please close the editor first.","wikibits-edit-section":"Edit section","wikibits-remove-file":"Remove file","login-required":"You must be <a href=\"https:\/\/wiki.ceph.com\/?title=Special%3AUserLogin&returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29\" class=\"in-page-sign-in \" rel=\"nofollow\" tabindex=\"1\">signed in<\/a> to perform that action"});var wfMsg=function(){Deki.Logger.deprecatedFunction('wfMsg()');return Deki.loc.apply(null,arguments);};</script><link href="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/css.css" rel="stylesheet">
+
+    
+
+</head><body class="yui-skin-sam action-view">
+<noscript><div class="noscript">This application requires Javascript to be enabled.</div></noscript>
+<!-- START Unseated user navigation -->
+<div class="mt-wrapper mt-header">
+	<div class="mt-user-nav">
+		<ul class="mt-login-links">
+		<!-- START Logged out user nav -->
+												<li id="login-link" class="last">
+												<a href="https://wiki.ceph.com/?title=Special%3AUserLogin&amp;returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" class="in-page-sign-in login-link" rel="nofollow" tabindex="1">Sign In</a>					</li>
+					<li id="forgot-password-link" class="last"><a title="Forgot Password" class="" href="https://wiki.ceph.com/Special:UserLogin#?tab=password" rel="nofollow" tabindex="6">Forgot Password</a>
+</li>
+									<!-- END Logged out user nav -->
+
+		<!-- START Logged in user nav -->
+					<!-- END Logged in user nav -->
+		</ul>
+
+		<!-- START Login form -->
+		<form action="https://wiki.ceph.com/?title=Special%3AUserLogin&amp;returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" method="POST" id="quick-login">
+	<div class="row">
+            <span class="col">
+                <input autocomplete="off" name="username" class="reset" tabindex="3" placeholder="username" id="username" type="text">
+                <label class="title login-form-label" for="username">
+                    username
+                </label>
+            </span>
+            <span class="col">
+            <input name="password" autocomplete="off" id="password" tabindex="4" placeholder="password" type="password">
+                <label class="title login-form-label" for="password">
+                    password
+                </label>
+            </span>
+		<span class="col col-btn">
+            <input tabindex="5" value="Sign In" class="primary btn" type="submit">
+		</span>
+	</div>
+</form>
+		<!-- END Login form -->
+	</div>
+</div>
+<!-- END Unseated user navigation -->
+
+<div class="mt-wrapper">
+	<div class="mt-logo"><a class="logo-anonymous" href="https://wiki.ceph.com/" title="Ceph Wiki">
+    <img class="mt-cdn" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/logo.png" alt="Ceph Wiki" title="Ceph Wiki">
+</a></div>
+    <div class="mt-content">
+
+    <!-- START Site navigation -->
+	<div class="mt-site-nav">
+        		    <!-- START Content navigation -->
+		    <ul><li class="home"><a class="help-center" title="Home" rel="internal" href="https://wiki.ceph.com/"></a></li><li><div class="product-menu quick-more" title="Planning"><a class="drop-link" href="#" title="Planning">Planning</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Clustering_a_few_NAS_into_a_Ceph_cluster">Clustering a few NAS into a Ceph cluster</a></li><li><a rel="custom" href="https://wiki.ceph.com/Community">Community</a></li><li><a rel="custom" href="https://wiki.ceph.com/Development">Development</a></li><li><a rel="custom" href="https://wiki.ceph.com/FAQs">FAQs</a></li><li><a rel="custom" href="https://wiki.ceph.com/Guides">Guides</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning">Planning</a></li></ul></div></li><li><div class="article-menu quick-more" title="Blueprints"><a class="drop-link" href="#" title="Blueprints">Blueprints</a><ul style="display: none;" class="dropdown"><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints">Blueprints</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/CDS">Ceph Developer Summit</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Roadmap">Roadmap</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Sideboard">Sideboard</a></li></ul></div></li><li class="divider"><div class="article-menu quick-more" title="Hammer"><a class="drop-link" href="#" title="Hammer">Hammer</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/%3CSIDEBOARD%3E">&lt;SIDEBOARD&gt;</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Dumpling">Dumpling</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Emperor">Emperor</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Firefly">Firefly</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Giant">Giant</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer">Hammer</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Infernalis">Infernalis</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Submissions">Submissions</a></li></ul></div></li><li class="divider"><div class="article-menu quick-more" title="Shingled Erasure Code (SHEC)"><a class="drop-link" href="#" title="Shingled Erasure Code (SHEC)">Shingled Erasure Code (SHEC)</a><ul style="display: none;" class="dropdown"><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Accelio_RDMA_Messenger">Accelio RDMA Messenger</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Calamari_localization">Calamari localization</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Calamari_RESTful_API">Calamari RESTful API</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS%3A_Forward_Scrub">CephFS: Forward Scrub</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS%3A_Hadoop_Support">CephFS: Hadoop Support</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/CephFS_quota_support_discussion">CephFS quota support discussion</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Ceph_Security_hardening">Ceph Security hardening</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Clustered_SCSI_target_using_RBD">Clustered SCSI target using RBD</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Diff%3A_integrity___local_import">Diff: integrity   local import</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Fixed_memory_layout_for_Message%2F%2FOp_passing">Fixed memory layout for Message/Op passing</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/How_to_make_Ceph_enterprise_ready">How to make Ceph enterprise ready</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/kerberos_authn%2C_AD_authn%2F%2Fauthz">kerberos authn, AD authn/authz</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librados%3A_expose_checksums">librados: expose checksums</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librados%3A_support_parallel_reads">librados: support parallel reads</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/librbd%3A_shared_flag%2C_object_map">librbd: shared flag, object map</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/monitor%3A_reweight_near_full_osd_autonomicly">monitor: reweight near full osd autonomicly</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/OSD%3A_add_flexible_cache_control_of_object_data">OSD: add flexible cache control of object data</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_opportunistic_whole-object_checksums">osd: opportunistic whole-object checksums</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_prepopulate_pg_temp">osd: prepopulate pg temp</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_Scrub%2F%2FSnapTrim_IO_prioritization">osd: Scrub/SnapTrim IO prioritization</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_tiering%3A_fine-grained_promotion_unit">osd: tiering: fine-grained promotion unit</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_tiering%3A_reduce_read%2F%2Fwrite_latencies_on_cache_tier_miss">osd: tiering: reduce read/write latencies on cache tier miss</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/osd%3A_update_Transaction_encoding">osd: update Transaction encoding</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/quotas_vs_subtrees">quotas vs subtrees</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rados%3A_improve_ex-%2F%2Fimport_functionality">rados: improve ex-/import functionality</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rbd%3A_Copy-on-read_for_clones_in_kernel_rbd_client">rbd: Copy-on-read for clones in kernel rbd client</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/RBD%3A_Mirroring">RBD: Mirroring</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_bucket_index_scalability">rgw: bucket index scalability</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_object_versioning">rgw: object versioning</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_Snapshots">rgw: Snapshots</a></li><li class="mt-list-selected"><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29">Shingled Erasure Code (SHEC)</a></li><li><a rel="custom" href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Towards_Ceph_Cold_Storage">Towards Ceph Cold Storage</a></li></ul></div></li></ul>		    <!-- END Content navigation -->
+        	</div>
+	<!-- END Site navigation -->
+
+	    <!-- START Page Content -->
+	<div class="mt-content-container">
+		<div id="flash-messages"><div class="dekiFlash"></div></div>		<span class="product-portfolio-hidden"><span class="dw-hierarchy"><a href="https://wiki.ceph.com/" class="deki-ns">Home</a> &gt; <a href="https://wiki.ceph.com/Planning" class="deki-ns">Planning</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints" class="deki-ns">Blueprints</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints/Hammer" class="deki-ns">Hammer</a> &gt; <a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29" class="deki-ns current">Shingled Erasure Code (SHEC)</a></span></span>                            <script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['MindTouch.IDF3.help-link-page-settings'] = 'Learn more about the "Page Settings" controls';aLt['MindTouch.IDF3.label.image.placeholder'] = 'Add page thumbnail';aLt['MindTouch.IDF3.label.overview.edit'] = 'Edit overview';aLt['MindTouch.IDF3.label.overview.placeholder'] = 'Add page summary';aLt['MindTouch.IDF3.label.summary.toggle'] = 'Page Settings';aLt['MindTouch.IDF3.label.thumbnail.delete'] = 'Delete thumbnail';aLt['MindTouch.IDF3.label.thumbnail.edit'] = 'Edit thumbnail';aLt['MindTouch.IDF3.label.overview.max.count'] = '{0} characters remaining.';aLt['MindTouch.IDF3.label.overview.max.count.over'] = 'Warning.  {0} characters will be truncated.';aLt['MindTouch.IDF3.message.overview.changed'] = 'Change has been saved, page may need to be <a href="{0}">refreshed</a> to see updated overview.';aLt['MindTouch.IDF3.message.overview.unsaved'] = 'This page summary is leveraged by search and LightSpeed Framework to show a preview of an article.  Previously, overviews were used to perform this function.  Once you\'ve modified this summary, you can not go back to the old format.';aLt['MindTouch.IDF3.message.overview.unsaved.link'] = 'Learn more about Page Settings';aLt['MindTouch.IDF3.message.overview.unsaved.button'] = 'Update summary';aLt['MindTouch.IDF3.message.thumbnail.delete.title'] = 'Delete page thumbnail?';aLt['MindTouch.IDF3.message.thumbnail.delete.message'] = 'This will delete this page\'s thumbnail image. Are you sure you wish to proceed?';aLt['MindTouch.IDF3.message.thumbnail.delete.submit'] = 'Yes';aLt['MindTouch.IDF3.message.thumbnail.delete.cancel'] = 'Cancel';/*]]>*/</script><script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Dialog.Attach.max-size'] = 'Maximum upload file size: {0}';/*]]>*/</script><script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Article.Attach.file.upload.notAllowed'] = 'The selected file can not be uploaded because you do not have permission to upload files of that type.';aLt['Article.Attach.file.upload.fileExtension'] = 'You picked a file with an unsupported extension.  Please try again with a valid file.';/*]]>*/</script>        		<h1 style="visibility: visible;" id="title">
+    <div id="deki-page-title">
+        <div class="state-view">
+            <span class="title">Shingled Erasure Code (SHEC)</span>
+        </div>
+    </div>
+</h1>
+		<div id="page-top">
+        <div id="pageToc"><div class="pageToc"><h5>Table of Contents</h5><div class="tocdata"><ol><li><a href="#Summary" rel="internal">Summary</a></li><li><a href="#Owners" rel="internal">Owners</a></li><li><a href="#Interested_Parties" rel="internal">Interested Parties</a></li><li><a href="#Current_Status" rel="internal">Current Status</a></li><li><a href="#Detailed_Description" rel="internal">Detailed Description</a></li><li><a href="#Work_items" rel="internal">Work items</a><ol><li><a href="#Coding_tasks" rel="internal">Coding tasks</a></li><li><a href="#Build_.2F_release_tasks" rel="internal">Build / release tasks</a></li><li><a href="#Documentation_tasks" rel="internal">Documentation tasks</a></li><li><a href="#Deprecation_tasks" rel="internal">Deprecation tasks</a></li></ol></li></ol></div></div></div>
+    <div id="topic">
+        <div id="pageText">
+                <div id="section_1"> <div id="section_1" class="mt-page-section"><span id="Summary"></span><h3 style="visibility: visible;" class="editable">Summary</h3>  <p style="visibility: visible;">Shingled
+ Erasure Code (SHEC or original SHEC) [1] is a recovery-efficient and 
+highly-configurable erasure code. Moreover, SHEC is extended to 
+multiple&nbsp;SHEC (mSHEC), whose layout is automatically combined from 
+several original SHEC layouts in response to durability and space 
+efficiency each&nbsp;user specifies and, as a result, recovery 
+efficiency is improved from the original SHEC.</p> </div></div> <div id="section_2"> <div id="section_2" class="mt-page-section"><span id="Owners"></span><h3 style="visibility: visible;" class="editable">Owners</h3>  <ul> <li> <p style="visibility: visible;">Takeshi Miyamae (Fujitsu Laboratories Ltd., <a class="link-mailto" href="mailto:miyamae.takeshi@jp.fujitsu.com" rel="freeklink" title="mailto:miyamae.takeshi@jp.fujitsu.com">miyamae.takeshi@jp.fujitsu.com</a>)</p> </li> <li> <p style="visibility: visible;">Takanori Nakao (Fujitsu Laboratories Ltd., <a class="link-mailto" href="mailto:nakao.takanori@jp.fujitsu.com" rel="freeklink" title="mailto:nakao.takanori@jp.fujitsu.com">nakao.takanori@jp.fujitsu.com</a>)</p> </li> <li> <p style="visibility: visible;">Kensuke Shiozawa (Fujitsu Laboratories Ltd.,&nbsp;<a class="link-mailto" href="mailto:shiozawa.kennsu@jp.fujitsu.com" rel="freeklink" title="mailto:shiozawa.kennsu@jp.fujitsu.com">shiozawa.kennsu@jp.fujitsu.com</a>)</p> </li> </ul> </div></div> <div id="section_3"> <div id="section_3" class="mt-page-section"><span id="Interested_Parties"></span><h3 style="visibility: visible;" class="editable">Interested Parties</h3>  </div></div> <div id="section_4"> <div id="section_4" class="mt-page-section"><span id="Current_Status"></span><h3 style="visibility: visible;" class="editable">Current Status</h3>  <p style="visibility: visible;" align="left"><span><span>We have a working prototype of SHEC for Firefly/Giant, and all of its local tests are finished.</span></span></p> <p style="visibility: visible;"><span><span>(Both SHEC and mSHEC work on Firefly because Firefly's erasure code plugin API and CRUSH algorithm are sufficient for them.)</span></span></p> </div></div> <div id="section_5"> <div id="section_5" class="mt-page-section"><span id="Detailed_Description"></span><h3 style="visibility: visible;" class="editable">Detailed Description</h3>  <p style="visibility: visible;">&nbsp;</p> <ol> <li> <p style="visibility: visible;"><span>Original SHEC</span></p> </li> </ol> <p style="visibility: visible;"><span><span>SHEC
+ is an erasure code with local parity groups, and the calculation ranges
+ of local parities are shifted and partly overlap with each other, 
+similar to arranging shingles on the roof of a house. An instance of 
+SHEC’s parity layout is shown in Figure 1.</span></span></p> <p style="visibility: visible;">&nbsp;</p> </div></div> <p style="visibility: visible;"><img alt="figure21.png" class="internal default" style="width: 574px; height: 274px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure21.png" height="274px" width="574px"></p> <p style="visibility: visible;"><span><span>&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Figure 1 &nbsp;Instance 
+of SHEC’s Parity Layout</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;"><span><span>SHEC(k,m,c)
+ means a SHEC’s layout which has k data chunks, m parity chunks and 
+durability estimator c. Durability estimator is the average number of 
+parity chunks which cover each data chunk.</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;" align="left"><span><span>SHEC
+ has several advantages. First, SHEC is recovery efficient because SHEC 
+always uses local parities in order to recover failed chunks even in 
+case of multiple disk failures.</span></span></p> <p style="visibility: visible;"><span><span>Next,
+ SHEC is highly-configurable because SHEC’s specific layouts are densely
+ plotted in recovery efficient area of three dimensional (space 
+efficiency, recovery efficiency and durability) property map as Figure 2
+ shows. Reed Solomon code layouts are depicted as circled plots and are 
+sparse, compared to the SHEC’s layouts.</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;"><img alt="figure22.png" class="internal center" style="width: 600px; height: 354px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure22.png" height="354px" width="600px"></p> <p style="visibility: visible;">&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span><span>Figure 2</span></span><span><span>&nbsp;&nbsp;SHEC’s Property&nbsp;Map</span></span></p> <p style="visibility: visible;">&nbsp;</p> <ol start="2"> <li><span>Multiple SHEC (mSHEC)</span></li> </ol> <p style="visibility: visible;" align="left"><span><span>However,
+ original SHEC can obtain higher recovery efficiency only at the 
+sacrifice of durability or space efficiency. In order to reach higher 
+recovery efficiency without the sacrifices, we combine multiple 
+different original SHEC layouts into one (mSHEC, Figure 3).</span></span></p> <p style="visibility: visible;" align="left">mSHEC(k,m,c) automatically selects the most recovery efficient layout&nbsp;among all that satisfy m=m1+m2 and c=c1+c2.&nbsp;<span><span>This is the main source of mSHEC's recovery efficiency.</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;"><img alt="figure23.png" class="internal center" style="width: 690px; height: 317px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure23.png" height="317px" width="690px"></p> <p style="visibility: visible;"><span><span>&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Figure 
+3&nbsp;&nbsp;Layout of Multiple SHEC</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;" align="left"><span><span>In
+ contrast with original SHEC, whose recovery efficiency was almost the 
+same as Reed Solomon code (Figure 2), mSHEC’s recovery efficiency is 
+improved as shown in Figure 4.</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;"><img alt="figure24.png" class="internal center" style="width: 562px; height: 425px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure24.png" height="425px" width="562px"></p> <p style="visibility: visible;"><span><span>&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Figure 4 
+&nbsp;mSHEC’s Property Map</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;" align="left">At
+ a glance, mSHEC's&nbsp;layouts&nbsp;look&nbsp;complicated, 
+but&nbsp;mSHEC's layouts are also&nbsp;automatically generated in 
+response to durability and space efficiency and users are not required 
+to know details of the&nbsp;layouts.</p> <p style="visibility: visible;" align="left">&nbsp;</p> <p style="visibility: visible;" align="left"><span><span>In
+ conclusion, mSHEC should be used in case where recovery efficiency is 
+most important. Figure 5&nbsp;is a diagram in order to select an 
+appropriate EC plugin for users.</span></span></p> <p style="visibility: visible;">&nbsp;</p> <p style="visibility: visible;"><img alt="figure25.png" class="internal default" style="width: 501px; height: 421px; max-width: 748px;" src="Shingled%20Erasure%20Code%20%28SHEC%29%20-%20Ceph%20Wiki_files/figure25.png" height="421px" width="501px"></p> <p style="visibility: visible;"><span><span>&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+&nbsp; &nbsp; &nbsp;Figure 5 &nbsp;Diagram for EC Plugin Selection</span></span></p> <p style="visibility: visible;">&nbsp;</p> <hr> <p style="visibility: visible;">References</p> <p style="visibility: visible;">[1]&nbsp;Erasure Code with Shingled Local Parity Groups for Efficient Recovery from Multiple Disk Failures (HotDep'14)</p> <p style="visibility: visible;">&nbsp; &nbsp;&nbsp;<a class="link-https" rel="external nofollow" href="https://www.usenix.org/conference/hotdep14/workshop-program/presentation/miyamae" title="https://www.usenix.org/conference/hotdep14/workshop-program/presentation/miyamae" target="_blank">https://www.usenix.org/conference/hotdep14/workshop-program/presentation/miyamae</a></p> <p style="visibility: visible;">​ &nbsp; &nbsp;<a class="external" href="http://www.slideshare.net/miyamae1994/shec-hotdep14-slides021slideshare" rel="freeklink" title="http://www.slideshare.net/miyamae1994/shec-hotdep14-slides021slideshare">http://www.slideshare.net/miyamae199...s021slideshare</a> (presentation slides)</p> <p style="visibility: visible;">&nbsp;</p> <div id="section_6"> <div id="section_6" class="mt-page-section"><span id="Work_items"></span><h3 style="visibility: visible;" class="editable">Work items</h3>  <ul> <li>Testing on Giant/Hammer releases&nbsp;</li> </ul> <div id="section_7"> <div id="section_7" class="mt-page-section"><span id="Coding_tasks"></span><h4 style="visibility: visible;" class="editable">Coding tasks</h4> <ol> <li>Task 1</li> <li>Task 2</li> <li>Task 3</li> </ol> </div></div> <div id="section_8"> <div id="section_8" class="mt-page-section"><span id="Build_.2F_release_tasks"></span><h4 style="visibility: visible;" class="editable">Build / release tasks</h4> <ol> <li>Task 1</li> <li>Task 2</li> <li>Task 3</li> </ol> </div></div> <div id="section_9"> <div id="section_9" class="mt-page-section"><span id="Documentation_tasks"></span><h4 style="visibility: visible;" class="editable">Documentation tasks</h4> <ol> <li>Task 1</li> <li>Task 2</li> <li>Task 3</li> </ol> </div></div> <div id="section_10"> <div id="section_10" class="mt-page-section"><span id="Deprecation_tasks"></span><h4 style="visibility: visible;" class="editable">Deprecation tasks</h4> <ol> <li>Task 1</li> <li>Task 2</li> <li>Task 3</li> </ol> </div></div> </div></div>
+        </div>
+    </div>
+</div>
+
+			<ul class="mt-pagination">
+			<li><a title="Previous" class="prev  " href="https://wiki.ceph.com/Planning/Blueprints/Hammer/rgw%3A_Snapshots" onclick="">Previous</a>
+</li>
+			<li><a title="Next" class="next  " href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Towards_Ceph_Cold_Storage" onclick="">Next</a>
+</li>
+		</ul>
+	    			<div class="widget">
+            			<div class="widget-tabs">
+				<ul>
+										<li id="tab-comments" class="active"><a href="#widget-comments" id="widget-comments">Comments</a><span></span></li>
+														</ul>
+			</div>
+
+			<!-- START Comments -->
+						<div class="widget-comments">
+				<div id="comments"><div class="comments"><div class="commentMore">Viewing 6 of 6 comments: view all</div><div class="comment" id="comment1"><div class="commentNum"><a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29#comment1">#1</a></div><div class="commentText"><div class="commentMetaData"><span>sage says:</span></div><div id="commentTextForm1"></div><div class="commentContent" id="commentText1">Have
+ you looked at the existing erasure code plugin API? Is it sufficient 
+for your purposes?  
+https://github.com/ceph/ceph/blob/master/src/erasure-code/ErasureCodeInterface.h<div class="commentPosted">Posted 21:39, 21 Oct 2014</div></div></div><div class="br"></div></div><div class="comment" id="comment2"><div class="commentNum"><a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29#comment2">#2</a></div><div class="commentText"><div class="commentMetaData"><span>miyamae says:</span></div><div id="commentTextForm2"></div><div class="commentContent" id="commentText2">Because
+ our erasure code layouts (including extended SHEC) are always 
+constructed in a single layer, Firefly's erasure code plugin API and 
+CRUSH algorithm are sufficient.<br>
+We are rather anxious about their backward compatibility, because we have not tested SHEC on Giant nor Hammer yet. <span class="commentUpdated">Edited 02:10, 22 Oct 2014</span><div class="commentPosted">Posted 02:08, 22 Oct 2014</div></div></div><div class="br"></div></div><div class="comment" id="comment3"><div class="commentNum"><a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29#comment3">#3</a></div><div class="commentText"><div class="commentMetaData"><span>scuttlemonkey says:</span></div><div id="commentTextForm3"></div><div class="commentContent" id="commentText3">What
+ time zone are you guys located in? I want to make sure I have this 
+session on the correct day of the summit so you aren't up in the middle 
+of the night.<div class="commentPosted">Posted 18:36, 22 Oct 2014</div></div></div><div class="br"></div></div><div class="comment" id="comment4"><div class="commentNum"><a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29#comment4">#4</a></div><div class="commentText"><div class="commentMetaData"><span>miyamae says:</span></div><div id="commentTextForm4"></div><div class="commentContent" id="commentText4">Thank you for scheduling our session. Our time zone is JST(UTC+9). So, we are happy if our session would be held on Oct. 29. <span class="commentUpdated">Edited 00:29, 23 Oct 2014</span><div class="commentPosted">Posted 00:28, 23 Oct 2014</div></div></div><div class="br"></div></div><div class="comment" id="comment5"><div class="commentNum"><a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29#comment5">#5</a></div><div class="commentText"><div class="commentMetaData"><span>scuttlemonkey says:</span></div><div id="commentTextForm5"></div><div class="commentContent" id="commentText5">I have moved the session to the APAC day. Look forward to hearing from you guys.  Thanks!<div class="commentPosted">Posted 21:29, 24 Oct 2014</div></div></div><div class="br"></div></div><div class="comment" id="comment6"><div class="commentNum"><a href="https://wiki.ceph.com/Planning/Blueprints/Hammer/Shingled_Erasure_Code_%28SHEC%29#comment6">#6</a></div><div class="commentText"><div class="commentMetaData"><span>miyamae says:</span></div><div id="commentTextForm6"></div><div class="commentContent" id="commentText6">Thank you, Patrick. The time is OK for us. We are also looking forward to meeting you.<div class="commentPosted">Posted 00:42, 27 Oct 2014</div></div></div><div class="br"></div></div><div class="commentMore">Viewing 6 of 6 comments: view all</div></div><div class="comment-flash-messages" id="flash-messages"><div class="dekiFlash"></div></div><div class="commentForm">You must <a href="https://wiki.ceph.com/?title=Special%3AUserLogin&amp;returntotitle=Planning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" class="in-page-sign-in " rel="nofollow" tabindex="1">sign in</a> to post a comment.</div></div>			</div>
+						<!-- END Comments -->
+
+			<!-- START File attachments -->
+						<!-- END File attachments -->
+		</div>
+      </div>
+	</div>
+    <!-- END Page Content -->
+
+	<!--START Right Tray -->
+	<div class="tray" id="tray">
+	<div class="trayframe">
+		<div class="mt-tray-header">
+			<!-- START Search field -->
+			<div class="mt-site-search">
+			    <form action="https://wiki.ceph.com/Special:Search">
+        <input name="search" placeholder="Search" class="search-field" type="text">
+        <input name="qid" id="mt-qid-skin" value="" type="hidden">
+        <input name="path" id="mt-search-path" value="" type="hidden">
+        <input name="fpid" id="mt-search-filter-id" value="781" type="hidden">
+        <input name="fpth" id="mt-search-filter-path" value="" type="hidden">
+        <input class="search-button" value="Search" type="submit">
+            </form>
+    			</div>
+			<!-- END Search field -->
+		</div>
+		<div class="traybody">
+						
+			<!-- START Page controls -->
+			<div class="section no-line" id="controls">
+				<ul class="page-controls">
+					<li class="nav-icon hide"><a title="" class="" href="#"></a>
+</li>
+            								<li class="pdf"><a title="Save as PDF" class=" page-pdf-export-launcher" href="https://wiki.ceph.com/@api/deki/pages/781/pdf/Shingled%2bErasure%2bCode%2b%28SHEC%29.pdf" onclick="" rel="nofollow">Save as PDF</a>
+</li>
+					<li class="email"><a title="Email page" class=" " href="mailto:?subject=Anonymous%20wants%20to%20share%20a%20link%20%7C%20Ceph%20Wiki&amp;body=Anonymous%20wants%20to%20share%20a%20link%20on%20Ceph%20Wiki%3A%20https%3A%2F%2Fwiki.ceph.com%2FPlanning%2FBlueprints%2FHammer%2FShingled_Erasure_Code_%28SHEC%29" onclick="">Email page</a>
+</li>
+				</ul>
+			</div>
+			<!-- END Page controls -->
+
+			<!-- START Social sharing -->
+						<!-- END Social sharing -->
+
+			<!-- START Page history -->
+			<div class="section" id="page-version-tags">
+				<div class="updated-label">Last modified</div> <div class="modified">03:22, 17 Feb 2015</div>			</div>
+			<!-- END Page history -->
+
+			<!-- START Home content -->
+						<!-- END Home content -->
+
+			
+			<!-- START Related articles -->
+			<div class="section" id="related">
+				<h2 style="visibility: visible;">Related Articles</h2>
+				<div class="noindex"><div class="mt-related-pages"><ul><li><a rel="internal" href="https://wiki.ceph.com/Planning/Blueprints/Hammer" title="Planning/Blueprints/Hammer">Hammer</a></li></ul></div></div>			</div>
+			<!-- END Related Articles-->
+			
+			 				<div class="section hide" id="site-hierarchy">
+					<!-- dynamically injected -->
+				</div>
+			
+			<!-- START Tags -->
+			<div class="tags section" id="anchor-tags">
+				<h2 style="visibility: visible;">Tags</h2>
+				<div id="live-tags-edit-area">
+					<script type="text/javascript">/*<![CDATA[*/var aLt = aLt || [];aLt['Page.LiveTags.error.custom'] = 'Tag not found';aLt['Page.LiveTags.error.custom.detail'] = 'The tag you entered is not valid for the "{0}" tag type';aLt['Page.LiveTags.error.updating'] = 'Could not update tags for the following pages (check permissions):';aLt['Page.LiveTags.error.updating-failed'] = 'There was an error updating tags:';aLt['Page.LiveTags.error.skipped-showall'] = 'Show all';/*]]>*/</script><div class="live-tag-section" id="live-tag-normal-tags"><div id="live-tag-entries"><span class="live-tag-message">This page has no custom tags.</span></div></div>					<div class="br"></div>
+				</div>
+            </div>
+            <!-- END Tags -->
+
+            <!-- START Classifications -->
+            <div class="classifications section" id="classifications">
+                <h2 style="visibility: visible;">Classifications</h2>
+				<span class="live-tag-message">This page has no classifications.</span>            </div>
+            <!-- END Classifications -->
+
+		            <div class="custom-tray">
+                            </div>
+		</div>
+	</div>
+    </div>
+    <!--END Right Tray -->
+
+	<!--START Footer -->
+	<div class="mt-foot">
+	<ul class="mt-site-info">
+		<li class="last">© Copyright 2015 Ceph Wiki</li>
+	</ul>
+	<div class="poweredBy"><a href="http://www.mindtouch.com/" class="mt-poweredby product " title="MindTouch 4 v.15.4" target="_blank">Powered by MindTouch <span class="mt-registered">®</span></a></div>	</div>
+	<!--END Footer -->
+</div>
+
+<script type="text/javascript">$(function(){$.getScript("https://cdn.mindtouch.us/f1.js",function(){});});</script>
+<div id="menuFiller"></div><div id="bodyHeight"></div>
+<script type="text/javascript">
+	(function($) {
+		$(function() {
+			if(Deki.Fonts.getFontElements().length <= 0) {
+				Deki.Fonts.setFontElements([ ".product-links .title a", "p", "h1", "h2", "h3", "h4", "h5", "h6", ".sub-guides .title", "pre.script-css", ".code", ".pre", "fieldset legend" ]);
+			}
+		});
+	})(jQuery);
+</script>
+<script type="text/javascript">/*<![CDATA[*/new Deki.Page(Deki.PageId).logPageView();/*]]>*/</script><script type="text/javascript">$(function(){Deki.Fonts.loadFonts();});</script><script type="text/javascript">Deki.CssPreview.getCustomCss('anonymous:custom-css-preview', 'CSS PREVIEW MODE', 'The CSS preview link is either invalid or has expired. Please close this browser window.');</script><script type="text/javascript">Deki.Stats={"stats":{"totals":{"api":"288.68","cache":"1.21","other":"77.01","elapsed":"366.89"},"requests":{"api":{"0":{"verb":"GET","path":"\/@api\/deki\/site\/settings?include=anonymous%2Clicense%2Cproperties&names=urn%3Aui.deki.mindtouch.com%23%2A%2Cmindtouch.prince.stylesheet%23%2A","time":"61.38","stats":"request-time-ms=50; cache-hit=4; cache-ratio=1.00; mysql-queries=3; mysql-time-ms=24.84; permission-hit=1; permission-ratio=1.00; role-hit=1; role-ratio=1.00; user-hit=2; user-ratio=1.00;"},"1":{"verb":"GET","path":"\/@api\/deki\/pages\/=Planning%252FBlueprints%252FHammer%252FShingled%2BErasure%2BCode%2B%2528SHEC%2529?mode=view&redirects=0&exclude=files%2Cinbound%2Coutbound&include=contents%2Cprevnext&Target%3Acedar-related-pages=Template%3AMindTouch%2FControls%2FRelatedPages&Target%3Acedar-tray-tips=Template%3AMindTouch%2FCedar%2FControls%2FTrayTips&Target%3Acedar-content-nav=Template%3AMindTouch%2FCedar%2FControls%2FContentNavigation&Target%3Acedar-page-summary-controls=Template%3AMindTouch%2FControls%2FPageOverviewEditor&Target%3Acedar-feedback-rating=Template%3AMindTouch%2FControls%2FFeedbackRating&Target%3Amt-live-tags=Template%3AMindTouch%2FControls%2FLiveTags&Target%3Acedar-side-tray=Template%3ACustom%2FViews%2FSidetray&Target%3Apagefooter=Template%3ACustom%2FViews%2FFooter&Target%3Apageheader=Template%3ACustom%2FViews%2FHeader","time":"215.14","stats":"request-time-ms=212; cache-hit=116; cache-miss=105; cache-ratio=0.52; hs-queries=25; hs-time-ms=23.20; mysql-queries=84; mysql-time-ms=76.27; page-hit=10; page-miss=34; pagenode-hit=23; pagenode-miss=23; pagenode-ratio=0.50; page-ratio=0.23; permission-hit=36; permission-miss=38; permission-ratio=0.49; ratings-miss=2; ratings-ratio=0.00; request-hit=1; request-miss=4; request-ratio=0.20; role-hit=1; role-ratio=1.00; tag-hit=2; tag-miss=2; tag-ratio=0.50; user-hit=43; user-miss=2; user-ratio=0.96;"},"2":{"verb":"GET","path":"\/@api\/deki\/pages\/781\/comments?sortby=-date.posted&limit=15&redirects=0","time":"12.15","stats":"request-time-ms=10; cache-hit=21; cache-miss=2; cache-ratio=0.91; mysql-queries=3; mysql-time-ms=2.47; page-hit=6; pagenode-hit=7; pagenode-ratio=1.00; page-ratio=1.00; permission-hit=1; permission-ratio=1.00; user-hit=7; user-miss=2; user-ratio=0.78;"}},"_cache":{"0":{"cache":"cache.apc","time":"0.04","hit":0},"1":{"cache":"cache.memcache.content","time":"1.17","hit":0}}}}};</script>
+</body></html>

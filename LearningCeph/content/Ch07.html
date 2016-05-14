@@ -1,0 +1,1290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 7. Эксплуатация и обслуживание Ceph - Изучаем Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningCeph"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем Ceph"/>
+<link rel="up" href="index.html" title="Изучаем Ceph"/>
+<link rel="prev" href="Ch06.html" title="Глава 6. Подготовка хранилища к работе в Ceph"/>
+<link rel="next" href="Ch08.html" title="Глава 8. Наблюдение за вашим кластером Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningCeph/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 7. Эксплуатация и обслуживание Ceph';
+PrevRef = 'Ch06.html';
+UpRef = 'index.html';
+NextRef = 'Ch08.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 7. Эксплуатация и обслуживание Ceph</h1>
+  </div></div></div>
+  <p>Как администратору системы хранения Ceph, вам будет очень полезно эффективно управлять вашим кластером Ceph уровня предприятия.
+  В данной главе мы рассмотрим следующие темы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Управление службой Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Увеличение в масштабе кластера Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Сокращение кластера Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Замена отказавшего диска</p>
+	 </li>
+	<li class="listitem">
+	 <p>Управление картой CRUSH (Управляемых масштабируемым хешированием репликаций, Controlled Replication Under Scalable Hashing)</p>
+	 </li>
+   </ul>
+   </div>
+
+   <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch07.html#service_management">Управление службой Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch07.html#Ceph_with_sysvinit">Выполнение Ceph с использованием sysvinit</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_by_type">Запуск демонов по типам</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Stop_by_type">Останов демонов по типам</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_all">Запуск и останов всех демонов</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_specifiс">Запуск и останов определенного демона</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Running_CaaS">Выполнение Ceph как службы</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_all_byCaaS">Запуск и останов всех демонов</a></span></dt>
+        <dt><span class="section"><a href="Ch07.html#Start_and_stop_specifiс_byCaaS">Запуск и останов определенного демона</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Scaling_out">Увеличение масштаба кластера Ceph</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#Adding_OSD">Добавление узлов OSD в кластер Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Scaling_down">Уменьшение масштаба кластера Ceph</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#Bringing_OSD_out_and_down">Вывод OSD и отключение из кластера Ceph</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#Removing_OSD">Удаление OSD из кластера Ceph</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Replacing_failed_disk">Замена отказавшего диска</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Manipulating_CRUSH_maps">Обработка карт CRUSH</a></span></dt>
+	  <dd><dl>
+		<dt><span class="section"><a href="Ch07.html#Identifying_CRUSH_locations">Определение местоположений CRUSH</a></span></dt>
+		<dt><span class="section"><a href="Ch07.html#CRUSH_map_internals">Таблицы соответствий CRUSH изнутри</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Different_pools">Разнообразные пулы на различных OSD</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="service_management"> </a>Управление службой Ceph</h3>
+   </div></div></div>
+   <p>Поскольку у вас есть первый установленный кластер Ceph, вам необходимо управлять им. Вам, как администратору системы хранения 
+   Ceph, необходимо иметь знания о службах Ceph и их использовании. В дистрибутивах на основе Red Hat демонами Ceph можно управлять двумя 
+   способами, а именно: традиционным <span class="term"><code>sysvinit</code></span> или как службой. Теперь давайте узнаем больше 
+   об этих методах управления службой.</p>
+   
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_with_sysvinit"> </a>Выполнение Ceph с использованием sysvinit</h4>
+     </div></div></div>
+     <p><span class="term"><code>sysvinit</code></span> является традиционным, но все еще рекомендуемым способом управления 
+	 демонами в системах на основе Red Hat, а также в некоторых более старых дистрибутивах на основе Debian/Ubuntu.
+	 Общий синтаксис управления демонами Ceph с использованием <span class="term"><code>sysvinit</code></span> выглядит 
+	 следующим образом:</p>
+	    <pre class="screen"><code>
+/etc/init.d/ceph [options] [command] [daemons]</code></pre>
+     <p>Параметры (options) Ceph включают в себя:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="disc">
+	  <li class="listitem">
+	   <p><span class="term"><code>--verbose (-v)</code></span>: Используется при регистрации с подробными листингами</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>--allhosts (-a)</code></span>: Выполняется на всех узлах, отмеченных в 
+	   <span class="term"><code>ceph.conf</code></span>, в противном случае на локальном хосте.</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>--conf (-c)</code></span>: Использовать альтернативный файл настройки</p>
+	  </li>
+     </ul>
+     </div>
+     <p>Команды Ceph содержат:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="disc">
+	  <li class="listitem">
+	   <p><span class="term"><code>status</code></span>: Отображает состояние демона</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>start</code></span>: Запускает демон</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>stop</code></span>: Останавливает демон</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>restart</code></span>: Останавливает, а затем вновь запускает демон</p>
+	  </li>
+     </ul>
+     </div>
+     <p>Демоны Ceph включают в себя:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="disc">
+	  <li class="listitem">
+	   <p><span class="term"><code>mon</code></span> {монитор}</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>osd</code></span> {устройство хранения объектов, Object Storage Device}</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>mds</code></span> {сервер метаданных, Metadata Server}</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>ceph-radosgw</code></span> {шлюз безотказного автономного распределенного хранилища объектов, 
+	   Reliable Autonomic Distributed Object Store}</p>
+	  </li>
+     </ul>
+     </div>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Start_by_type"> </a>Запуск демонов по типам</h4>
+     </div></div></div>
+     <p>При выполнении задач администрирования вашего кластера, вам может понадобиться управлять службами Ceph по их 
+	 типам. В данном разделе мы изучим как запускать демоны по их типам.</p>
+     <p>Для запуска демонов монитора Ceph на локальном хосте выполните Ceph с командой <span class="term"><code>start</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph start mon</pre>
+     <p>Для запуска демонов монитора Ceph как на локальном хосте, так и на удаленных хостах выполните Ceph с командой 
+	 <span class="term"><code>start</code></span> и параметром <span class="term"><code>-a</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph -a start mon</pre>
+     <p>Параметр <span class="term"><code>-a</code></span> выполнит запрошенную операцию на всех узлах, отмеченных в файле 
+	 <span class="term"><code>ceph.conf</code></span>. Давайте посмотрим на следующий снимок экрана:</p>
+	    <pre class="screen">
+[root@ceph-node1 ~]# /etc/init.d/ceph -a start mon
+=== mon.ceph-node1 ===
+Starting Ceph mon.ceph-node1 on ceph-node1...
+Starting ceph-create-keys on ceph-node1...
+=== mon.ceph-node2 ===
+Starting Ceph mon.ceph-node2 on ceph-node2...
+Starting ceph-create-keys on ceph-node2...
+=== mon.ceph-node3 ===
+Starting Ceph mon.ceph-node3 on ceph-node3...
+Starting ceph-create-keys on ceph-node3...
+[root@ceph-node1 ~]#</pre>
+     <p>Аналогично вы можете запускать демоны других типов, например, <span class="term"><code>osd</code></span> и 
+	  <span class="term"><code>mds</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph start osd
+# /etc/init.d/ceph start mds</pre>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+       <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+       <p>Перед использованием параметра <span class="term"><code>-a</code></span> при запуске служб какого- либо типа,
+	   убедитесь, что ваш файл  <span class="term"><code>ceph.conf</code></span> содержит все хосты Ceph, определенные здесь.
+	   Если параметр <span class="term"><code>-a</code></span> не используется, команда будет выполнена только на локальном 
+	   хосте.</p></td></tr></table>
+      </div>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Stop_by_type"> </a>Останов демонов по типам</h4>
+     </div></div></div>
+     <p>В данном разделе мы ознакомимся с остановом демонов по их типам.</p>
+     <p>Для останова демонов монитора Ceph на локальном хосте выполните Ceph с командой 
+	 <span class="term"><code>stop</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph stop mon</pre>
+     <p>Для останова демонов монитора Ceph на всех хостах выполните Ceph с командой 
+	 <span class="term"><code>stop</code></span> и параметром <span class="term"><code>-a</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph -a stop mon</pre>
+     <p>Параметр <span class="term"><code>-a</code></span> выполнит запрошенную операцию на всех узлах, отмеченных в файле 
+	 <span class="term"><code>ceph.conf</code></span>. Давайте посмотрим на следующий снимок экрана:</p>
+	    <pre class="screen">
+[root@ceph-node1 ~]# /etc/init.d/ceph -a stop mon
+=== mon.ceph-node3 ===
+Stopping Ceph mon.ceph-node3 on ceph-node3...kill 9679...done
+=== mon.ceph-node2 ===
+Stopping Ceph mon.ceph-node2 on ceph-node2...kill 12758...done
+=== mon.ceph-node1 ===
+Stopping Ceph mon.ceph-node1 on ceph-node1...kill 12331...done
+[root@ceph-node1 ~]#</pre>
+     <p>Аналогично вы можете запускать демоны других типов, например, <span class="term"><code>osd</code></span> и 
+	  <span class="term"><code>mds</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph stop osd
+# /etc/init.d/ceph stop mds</pre>
+		<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+		<table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+		  <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+		  <p>Перед использованием параметра <span class="term"><code>-a</code></span> при запуске служб какого- либо типа,
+	   убедитесь, что ваш файл <span class="term"><code>ceph.conf</code></span> содержит все хосты Ceph, определенные здесь.
+	   Если хосты не определены в файле <span class="term"><code>ceph.conf</code></span>, команда будет выполнена только на локальном 
+	   хосте.</p></td></tr></table>
+		</div>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Start_and_stop_all"> </a>Запуск и останов всех демонов</h4>
+     </div></div></div>
+     <p>Для запуска вашего кластера Ceph, выполните Ceph с командой <span class="term"><code>start</code></span>. Данная команда 
+	 запустит все службы Ceph которые вы развернули для всех хостов, перечисленных в файле <span class="term"><code>ceph.conf</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph -a start</pre>
+     <p>Для останова вашего кластера Ceph, выполните Ceph с командой<span class="term"><code>stop</code></span>. Данная команда 
+	 остановит все службы Ceph которые вы развернули для всех хостов, перечисленных в файле <span class="term"><code>ceph.conf</code></span>:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph -a stop</pre>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Start_and_stop_specifiс"> </a>Запуск и останов определенного демона</h4>
+     </div></div></div>
+     <p>Для запуска определенного демона в вашем кластере Ceph, выполните Ceph с командой <span class="term"><code>start</code></span> и 
+	 идентификатором (ID) демона:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph start osd.0</pre>
+     <p>Для проверки состояния определенного демона в вашем кластере Ceph выполните Ceph с командой <span class="term"><code>status</code></span> и 
+	 идентификатором (ID) демона:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph status osd.0</pre>
+     <p>Для останова определенного демона в вашем кластере Ceph выполните Ceph с командой <span class="term"><code>stop</code></span> и 
+	 идентификатором (ID) демона:</p>
+	    <pre class="screen">
+# /etc/init.d/ceph stop osd.0</pre>
+     <p>Данный снимок экрана отображает вывод всех предыдущих команд:</p>
+	    <pre class="screen">
+[root@ceph-node1 -]# /etc/init.d/ceph start osd.0
+=== osd.0 ===
+create-or-move updated item name 'osd.0' weight 0.01 at location {host=ceph-node1,root=default} to crush map
+Starting Ceph osd.0 on ceph-node1...
+starting osd.0 at :/0 osd_data /var/lib/ceph/osd/ceph-0 /var/lib/ceph/osd/ceph-0/journal
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# /etc/init.d/ceph status osd.0
+=== osd.0 ===
+osd.0: running {&quot;version&quot;:&quot;0.80.1&quot;}
+[root@ceph-node1 -]#
+[root@ceph-node1 ~]# /etc/init.d/ceph stop osd.0
+=== osd.O ===
+Stopping Ceph osd.0 on ceph-node1...kill 20792...done
+[root@ceph-node1 ~]#</pre>
+     <p>Аналогично вы можете управлять определенными демонами <span class="term"><code>osd</code></span> и 
+	 <span class="term"><code>mds</code></span> в вашем кластере Ceph.
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Running_CaaS"> </a>Выполнение Ceph как службы</h3>
+   </div></div></div>
+     <p>В зависимости от вашего стиля работы в Linux вы можете выбирать управление вашими службами Ceph либо через 
+	 <span class="term"><code>sysvinit</code></span>, либо с применением команды Linux <span class="term"><code>service</code></span>.
+	 Начиная с Ceph Argonaut и Bobtail вы можете управлять демонами Ceph с применением команды Linux 
+	 <span class="term"><code>service</code></span>:</p>
+	    <pre class="screen"><code>
+service ceph [options] [command] [daemons]</code></pre>
+     <p>Параметры (options) Ceph включают в себя:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="disc">
+	  <li class="listitem">
+	   <p><span class="term"><code>--verbose (-v)</code></span>: Используется при регистрации с подробными листингами</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>--allhosts (-a)</code></span>: Выполняется на всех узлах, отмеченных в 
+	   <span class="term"><code>ceph.conf</code></span>, в противном случае на локальном хосте.</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>--conf (-c)</code></span>: Использовать альтернативные файлы настройки</p>
+	  </li>
+     </ul>
+     </div>
+     <p>Команды Ceph содержат:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="disc">
+	  <li class="listitem">
+	   <p><span class="term"><code>status</code></span>: Отображает состояние демона</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>start</code></span>: Запускает демон</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>stop</code></span>: Останавливает демон</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>restart</code></span>: Останавливает, а затем вновь запускает демон</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>forcestop</code></span>: Принудительно останавливает демон; это аналогично 
+	   <span class="term"><code>kill -9</code></span></p>
+	  </li>
+     </ul>
+     </div>
+     <p>Демоны Ceph включают в себя:</p>
+  	 <div class="itemizedlist">
+	 <ul class="itemizedlist" type="disc">
+	  <li class="listitem">
+	   <p><span class="term"><code>mon</code></span> {монитор}</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>osd</code></span> {устройство хранения объектов, Object Storage Device}</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>mds</code></span> {сервер метаданных, Metadata Server}</p>
+	  </li>
+	  <li class="listitem">
+	   <p><span class="term"><code>ceph-radosgw</code></span> {шлюз безотказного автономного распределенного хранилища объектов, 
+	   Reliable Autonomic Distributed Object Store}</p>
+	  </li>
+     </ul>
+     </div>
+   
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Start_and_stop_all_byCaaS"> </a>Запуск и останов всех демонов</h4>
+     </div></div></div>
+     <p>Для запуска вашего кластера Ceph, выполните Ceph с командой <span class="term"><code>start</code></span>. Данная команда 
+	 запустит все службы Ceph которые вы развернули для всех хостов, перечисленных в файле <span class="term"><code>ceph.conf</code></span>:</p>
+	    <pre class="screen">
+# service ceph -a start</pre>
+     <p>Для останова вашего кластера Ceph, выполните Ceph с командой<span class="term"><code>stop</code></span>. Данная команда 
+	 остановит все службы Ceph которые вы развернули для всех хостов, перечисленных в файле <span class="term"><code>ceph.conf</code></span>:</p>
+	    <pre class="screen">
+# service ceph -a stop</pre>
+    </div>
+
+    <div class="section">
+     <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Start_and_stop_specifiс_byCaaS"> </a>Запуск и останов определенного демона</h4>
+     </div></div></div>
+     <p>Для запуска определенного демона в вашем кластере Ceph, выполните Ceph с командой <span class="term"><code>start</code></span> и 
+	 идентификатором (ID) демона:</p>
+	    <pre class="screen">
+# service ceph start osd.0</pre>
+     <p>Для проверки состояния определенного демона в вашем кластере Ceph выполните Ceph с командой <span class="term"><code>status</code></span> и 
+	 идентификатором (ID) демона:</p>
+	    <pre class="screen">
+# service ceph status osd.0</pre>
+     <p>Для останова определенного демона в вашем кластере Ceph выполните Ceph с командой <span class="term"><code>stop</code></span> и 
+	 идентификатором (ID) демона:</p>
+	    <pre class="screen">
+# service ceph stop osd.0</pre>
+     <p>Данный снимок экрана отображает вывод всех предыдущих команд:</p>
+	    <pre class="screen">
+[root@ceph-node1 ~]# service ceph start osd.0
+=== osd.0 ===
+create-or-move updated item name 'osd.0' weight 0.01 at location {host=ceph-node1,root=default} to crush map
+Starting ceph osd.0 on ceph-node1...
+starting osd.O at :/0 osd_data /var/lib/ceph/osd/ceph-0 /var/lib/ceph/osd/ceph-0/journal
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# service ceph status osd.0
+=== osd.0 ===
+osd.0: running {"version":"0.80.1"}
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# service ceph stop osd.0
+=== osd.0 ===
+Stopping Ceph osd.0 on ceph-node1...kill 22435...done
+[root@ceph-node1 ~]#</pre>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Scaling_out"> </a>Увеличение масштаба кластера Ceph</h3>
+   </div></div></div>
+   <p>При построении решения для системы хранения масштабируемость является одним из наиболее важных аспектов проекта. Ваше решение 
+   системы хранения данных должно быть масштабируемыми, чтобы удовлетворить Ваши будущим потребностям в данных. Как правило, 
+   система хранения данных начинается с размеров от малого и среднего и постепенно растет в течение некоторого периода времени. 
+   Традиционные системы хранения основываются на решениях с расширением масштаба и ограничены некоторой емкостью. Если вы попытаетесь 
+   расширить вашу систему хранения данных за определенные рамки, вам придется идти на компромисс между производительностью и надежностью.
+   Методы решений расширения (scale-up) для систем хранения включают в себя добавление дисковых ресурсов в существующее устройство, которое 
+   становится узким местом в производительности, емкости и управляемости при достижении определенного предела.</p>
+   <p>С другой стороны, увеличиваемые в масштабе (scale-out) проекты сосредотачиваются на добавлении нового узла целиком, 
+   содержащего диски, процессоры и память, в существующий кластер. При таком типе проекта вы не будете в конечном итоге ограничены 
+   в объеме хранения; более того, вы получите дополнительный рост производительности и надежности. 
+   Давайте взглянем на следующую архитектуру:</p>
+        <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0705.jpg"/></div><br />
+        </div>
+   <p>Ceph является бесшовно масштабируемой системой хранения на основе увеличивающегося в масштабе решения, при котором вы можете 
+   добавить любой готовый к использованию узел сервера в кластер Ceph и расширить вашу систему хранения далеко за пределы 
+   традиционной системы. Ceph позволяет добавлять на лету узлы мониторов и OSD (устройств хранения объектов) в существующий 
+   кластер Ceph. Теперь, давайте узнаем как добавлять узлы в кластер Ceph.</p>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Adding_OSD"> </a>Добавление узлов OSD в кластер Ceph</h4>
+   </div></div></div>
+   <p>Добавление узлов OSD (устройств хранения объектов) в кластер Ceph является процессом реального времени. Чтобы продемонстрировать 
+   это нам понадобится новая виртуальная машина с именем <span class="term"><code>ceph-node4</code></span> с тремя дисками; мы 
+   добавим этот узел в наш существующий кластер Ceph.</p>
+   <p>Создадим новый узел <span class="term"><code>ceph-node4</code></span> стремя дисками (OSD). Вы можете повторить процесс 
+   создания новой виртуальной машины с дисками, настройки операционной системы и установки Ceph как это описано в 
+   <a class="xref" href="Ch02.html" title="Глава 2. Моментальное развертывание Ceph"><em>Главе 2. Моментальное развертывание Ceph</em></a>
+   и в <a class="xref" href="Ch05.html" title="Глава 5. Развертывание Ceph - дорога, которую вы обязаны знать"><em>Главе 5. 
+   Развертывание Ceph - дорога, которую вы обязаны знать</em></a>.</p>
+   <p>Когда у вас появится новый узел, готовый к добавлению в кластер Ceph, проверьте подробности Ceph OSD на текущий момент:</p>
+	    <pre class="screen">
+# ceph osd tree</pre>
+   <p>Вот что вы должны получить в результате выполнения данной команды:</p>
+	    <pre class="screen">
+[root@ceph-node1 ceph]# ceph osd tree
+# id    weight  type name       up/down reweight
+-1      0.08995 root default
+-2      0.02998         host ceph-node1
+0       0.009995                        osd.O   up     1
+1       0.009995                        osd.l   up     1
+2       0.009995                        osd.2   up     1
+-3      0.02998         host ceph-node2
+3       0.009995                        osd.3   up     1
+5       0.009995                        osd.5   up     1
+4       0.009995                        osd.4   up     1
+-4      0.02998         host ceph-node3
+6       0.009995                        osd.6   up     1
+7       0.009995                        osd.7   up     1
+8       0.009995                        osd.8   up     1
+
+[root@ceph-node1 ceph]#</pre>
+   <p>Расширение кластера Ceph является интерактивным процессом и, чтобы продемонстрировать этот факт, мы выполним некоторые действия 
+   в нашем кластере Ceph; параллельно мы будем расширять кластер. В <a class="xref" href="Ch05.html" title="Глава 5. 
+   Развертывание Ceph - дорога, которую вы обязаны знать"><em>Главе 5. Развертывание Ceph - дорога, которую вы обязаны знать</em></a>, 
+   мы развернули блочное устройство RADOS (Безотказное автономное распределенное хранилище объектов - Reliable Autonomic Distributed 
+   Object Store) на машине <span class="term"><code>ceph-client1</code></span>. Мы будем использовать эту же машину для создания 
+   операций обмена в нашем кластере Ceph. Убедимся, что <span class="term"><code>ceph-client1</code></span> смонтировал RBD (блочное 
+   устройсто RADOS):</p>
+	    <pre class="screen">
+# df -h /mnt/ceph-vol1</pre>
+	    <pre class="screen">
+[root@ceph-client1 ~]# df -h /mnt/ceph-vol1
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/rbdO              10G   33M   10G   1% /mnt/ceph-vol1
+[root@ceph-client1 ~]#</pre>
+   <p>Зарегистрируемся на <span class="term"><code>ceph-client1</code></span> с отдельного терминала <span class="term"><code>cli</code></span> 
+   и выведем список дисков, доступных для добавления в качестве OSD для <span class="term"><code>ceph-node4</code></span>.
+   Машина <span class="term"><code>ceph-node4</code></span> должна иметь установленный Ceph, а также скопированный на нее файл 
+   <span class="term"><code>ceph.conf</code></span>. Вы увидите три диска <span class="term"><code>sdb</code></span>, 
+   <span class="term"><code>sdc</code></span> и <span class="term"><code>sdd</code></span> в списке, выводимым в результате выполнения 
+   следующей команды:</p>
+	    <pre class="screen">
+# ceph-deploy disk list ceph-node4</pre>
+   <p>Как уже отмечалось ранее, увеличение масштаба кластера Ceph является безшовным и интерактивным процессом. Чтобы показать это, 
+   мы создадим некоторую нагрузку на кластер и одновременно выполним операцию увеличения масштаба. Заметим, что это является 
+   необязательным шагом.</p>
+   <p>Убедимся что хост с работающей на нем средой VirtualBox имеет соответствующее дисковое пространство, поскольку мы будем 
+   записывать данные в кластер Ceph. Как только вы запустите создание трафика в наш кластер, запустите его расширение путем выполнения 
+   последующих шагов.</p>
+	    <pre class="screen">
+# dd if=/dev/zero of=/mnt/ceph-vol1/file1 count=10240 bs=1M</pre>
+   <p>Переключитесь на терминал <span class="term"><code>cli ceph-node1</code></span> и расширьте кластер путем добавления 
+   дисков <span class="term"><code>ceph-node4</code></span> в качестве новых OSD Ceph:</p>
+	    <pre class="screen">
+# ceph-deploy disk zap ceph-node4:sdb ceph-node4:sdc ceph-node4:sdd
+# ceph-deploy osd create ceph-node4:sdb c eph-node4:sdc ceph-node4:sdd</pre>
+   <p>Во время выполнения добавления OSD вам следует отслеживать состояние вашего кластера Ceph из отдельного терминального окна. 
+   Вы заметите, что кластер Ceph выполняет операцию записи при одновременном увеличении масштаба свое емкости:</p>
+	    <pre class="screen">
+# watch ceph status</pre>
+   <p>Наконец, когда добавление дисков <span class="term"><code>ceph-node4</code></span> завершено, вы сможете проверить состояние 
+   своего кластера Ceph с применением предыдущей команды. Ниже приводится то, что вы увидите после выполнения этой команды:</p>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph status
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_OK
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,
+ceph-node3=192.168.57.103:6789/0}, election epoch 938, quorum 0,1,2 ceph-node1,ceph-node2,cep
+h-node3
+     mdsmap e61: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e807: 12 osds: 12 up, 12 in
+      pgmap v3998: 1472 pgs, 13 pools, 78568 kB data, 2687 objects
+            828 MB used, 107 GB / 107 GB avail
+                1472 active+clean
+[root@ceph-node1 /]#</pre>
+   <p>В данной точке если вы выведите список всех OSD, он даст вам лучшее понимание:</p>
+	    <pre class="screen">
+# ceph osd tree</pre>
+   <p>Данная команды выводит некоторую ценную информацию, связанную с OSD, такую как вес OSD, а также какой узел Ceph содержит их.
+   OSD, состояние OSD (рабочее/выключенное, up/down), а также состояние IN/OUT OSD представляются 1 или 0. Обратим 
+   внимание на следующий снимок экрана:</p>
+	    <pre class="screen">
+[root@ceph-node1 tmp]# ceph osd tree
+# id    weight  type name       up/down reweight
+-1      0.12    root default
+-2      0.009995                host ceph-node1
+0       0.009995                        osd.0    up      1
+1       0.009995                        osd.l    up      1
+2       0.009995                        osd.2    up      1
+-3      0.03             host ceph-node2
+3       0.009995                        osd.3    up      1
+5       0.009995                        osd.5    up      1
+4       0.009995                        osd.4    up      1
+-4      0.03             host ceph-node3
+6       0.009995                        osd.6    up      1
+7       0.009995                        osd.7    up      1
+8       0.009995                        osd.8    up      1
+-5      0.04999          host ceph-node4
+9       0.009995                        osd.9    up      1
+10      0.009995                        osd.10   up      1
+11      0.009995                        osd.11   up      1
+[root@ceph-node1 tmp]#</pre>
+  </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Scaling_down"> </a>Уменьшение масштаба кластера Ceph</h3>
+   </div></div></div>
+   <p>Решения для хранения данных оцениваются на основе их гибкости; хорошее решение для хранения должно быть достаточно гибким 
+   чтобы поддерживать его расширение и уменьшение, не вызывая при этом каких-либо простоев в обслуживании. Традиционные системы 
+   хранения очень ограничены, когда дело касается гибкости; они поддерживают добавление емкости хранения, но в очень малой степени, 
+   а также не существует никакой поддержки для интерактивного уменьшения емкости. Вы блокированы емкостью хранения и не можете 
+   выполнять изменения в соответствии с вашими потребностями.</p>
+   <p>Ceph является абсолютно гибкой системой хранения, обеспечивающей интерактивное изменение и изменение на лету емкости как 
+   в отношении ее увеличения, так и в отношении ее уменьшения. В последнем разделе мы увидели как легко выполнять увеличение 
+   масштаба Ceph. Мы добавили новый узел <span class="term"><code>ceph-node4</code></span> с тремя OSD в кластер Ceph. Теперь 
+   мы покажем операцию уменьшения масштаба кластера Ceph, без какого-либо влияния на его доступность, путем удаления 
+   <span class="term"><code>ceph-node4</code></span> из кластера Ceph.</p>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Bringing_OSD_out_and_down"> </a>Вывод OSD и отключение из кластера Ceph</h4>
+   </div></div></div>
+   <p>Перед выполнением процесса сокращения размера кластера или уменьшения его масштаба необходимо удостовериться, что кластер имеет 
+   достаточно свободного пространства для размещения всех данных, расположенных на узле, который вы собираетесь удалить. Кластер 
+   не должен быть близок состоянию почти заполненного.</p>
+   <p>На узле <span class="term"><code>ceph-node1</code></span> создайте некую нагрузку на кластер Ceph. Это необязательный шаг, 
+   призванный продемонстрировать выполнимость на лету операции уменьшения масштаба кластера Ceph. Убедитесь, что хост, поддерживающий 
+   среду VirtualBox имеет соответствующее дисковое пространство, поскольку мы будем записывать данные в кластер Ceph.</p>
+	    <pre class="screen">
+# dd if=/dev/zero of=/mnt/ceph-vol1/file1 count=3000 bs=1M</pre>
+   <p>Поскольку нам необходимо уменьшить масштаб кластера, мы удалим <span class="term"><code>ceph-node4</code></span> и все 
+   связанные с ним OSD (устройства хранения объектов) из нашего кластера. OSD Ceph должны быть настроены таким образом, чтобы 
+   Ceph мог выполнять восстановление данных. С любого из узлов Ceph выведите OSD из состава кластера:</p>
+	    <pre class="screen">
+# ceph osd out osd.9
+# ceph osd out osd.10
+# ceph osd out osd.11</pre>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph osd out osd.9
+marked out osd.9.
+[root@ceph-node1 /]# ceph osd out osd.10
+marked out osd.10.
+[root@ceph-node1 /]# ceph osd out osd.11
+marked out osd.11.</pre>
+   <p>Как только вы отметите OSD находящимися вне кластера, Ceph запустит ребалансировку нашего кластера путем миграции групп 
+   размещения с OSD, которые мы вывели из состава кластера на другие OSD в пределах кластера. Состояние вашего кластера на какое- то 
+   время станет неисправным, однако он останется в состоянии обслуживать данные клиентов. В зависимости от числа удаленных OSD может 
+   возникнуть некий провал в производительности кластера пока не завершится время восстановления. Как только кластер станет 
+   вновь работоспособным, он долже заработать как прежде. Давайте взглянем на следующий снимок экрана:</p>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph -s
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_WARN 517 pgs peering; 16 pgs recovering; 4 pgs recovery_wait; 363 pgs stuck
+ inactive; 379 pgs stuck unclean; 43 requests are blocked > 32 sec; recovery 1401/5290 objects
+ degraded (26.484%)
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,c
+eph-node3=192.168.57.103:6789/0}, election epoch 938, quorum 0,1,2 ceph-node1,ceph-node2,ceph-
+node3
+     mdsmap e61: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e824: 12 osds: 12 up, 9 in
+     pgmap v4077: 1472 pgs, 13 pools, 161 MB data, 2618 objects
+           748 MB used, 82095 MB / 82844 MB avail
+           1401/5290 objects degraded (26.484%)
+                437 inactive
+                 10 active
+                511 peering
+                  4 active+recovery_wait
+                487 active+clean
+                 16 active+recovering
+                  1 remapped
+                  6 remapped+peering
+recovery io 0 B/s, 52 objects/s
+  client io 517 B/s rd, 78962 kB/s wr, 398 op/s
+[root@ceph-node1 /]#</pre>
+   <p>В предыдущем скриншоте вы можете увидеть что кластер находится в режиме восстановления, хотя в то же время он продолжает 
+   обслуживать данные клиентов. Вы можете наблюдать за процессом восстановления при помощи следующей команды:</p>
+	    <pre class="screen">
+# ceph -w</pre>
+   <p>Поскольку мы отметили для вывода из состава кластера <span class="term"><code>osd.9</code></span>,
+    <span class="term"><code>osd.10</code></span> и  <span class="term"><code>osd.11</code></span>, они не являются участниками 
+	кластера, однако их службы все еще работают. Наконец, зарегистрируйтесь на машине <span class="term"><code>ceph-node4</code></span> 
+	и остановите службы OSD:</p>
+	    <pre class="screen">
+# service ceph stop osd.9
+# service ceph stop osd.10
+# service ceph stop osd.11</pre>
+   <p>После выключения OSD проверьте дерево OSD, как это показано на следующем снимке экрана. Вы увидите, что соответствующие 
+   OSD выключены и выведены:</p>
+	    <pre class="screen">
+[root@ceph-node4 ~]# ceph osd tree
+# id    weight  type name       up/down reweight
+-1      0.12    root default
+-2      0.009995                host ceph-node1
+0       0.009995                        osd.O   up      1
+1       0.009995                        osd.1   up      1
+2       0.009995                        osd.2   up      1
+-3      0.03            host ceph-node2
+3       0.009995                        osd.3   up      1
+5       0.009995                        osd.5   up      1
+4       0.009995                        osd.4   up      1
+-4      0.03            host ceph-node3
+6       0.009995                        osd.6   up      1
+7       0.009995                        osd.7   up      1
+8       0.009995                        osd.8   up      1
+-5      0.04999         host ceph-node4
+9       0.009995                        osd.9   down    0
+10      0.009995                        osd.10  down    0
+11      0.009995                        osd.11  down    0
+[root@ceph-node4 ~]#</pre>
+  </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Removing_OSD"> </a>Удаление OSD из кластера Ceph</h4>
+   </div></div></div>
+   <p>Процесс удаления OSD (устройства хранения объектов) из кластера Ceph затрагивает удаление всех записей этих OSD из карт кластера.</p>
+   <p>Удалите OSD из карты CRUSH (Управляемых масштабируемым хешированием репликаций, Controlled Replication Under Scalable Hashing).
+   Для этого зарегистрируйтесь на любом узле кластера и выполните следующие команды:</p>
+	    <pre class="screen">
+# ceph osd crush remove osd.9
+# ceph osd crush remove osd.10
+# ceph osd crush remove osd.11</pre>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph osd crush remove osd.9
+removed item id 9 name 'osd.9' from crush map
+[root@ceph-node1 ~]# ceph osd crush remove osd.10
+removed item id 10 name 'osd.10' from crush map
+[root@ceph-node1 ~]# ceph osd crush remove osd.11
+removed item id 11 name 'osd.11' from crush map
+[root@ceph-node1 ~]#</pre>
+   <p>Как только OSD удалены из карты CRUSH, кластер Ceph становится работоспособным. Вам следует просмотреть карту OSD; 
+   поскольку мы не удалили OSD, она покажет <span class="term"><code>12 OSD, 9 UP, 9 IN</code></span>:</p>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph status
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_OK
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:
+6789/0,ceph-node3=192.168.57.103:6789/0}, election epoch 938, quorum 0,1,2 ceph-node1,
+ceph-node2,ceph-node3
+     mdsmap e61: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e898: 12 osds: 9 up, 9 in
+      pgmap v4400: 1472 pgs, 13 pools, 683 MB data, 2838 objects
+            1876 MB used, 80968 MB / 82844 MB avail
+                1472 active+clean
+[root@ceph-node1 /]#</pre>
+   <p>Удалите ключ аутентификации OSD:</p>
+	    <pre class="screen">
+# ceph auth del osd.9
+# ceph auth del osd.10
+# ceph auth del osd.11</pre>
+   <p>Наконец, удалите OSD и проверьте состояние вашего кластера. Вы должны увидеть <span class="term"><code>9 OSD, 9 UP, 
+   9 IN</code></span> и работоспособность (health) кластера должна быть <span class="term"><code>OK</code></span>:</p>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph osd rm osd.9
+removed osd.9
+[root@ceph-node1 /]# ceph osd rm osd.10
+removed osd.10
+[root@ceph-node1 /]# ceph osd rm osd.11
+removed osd.11
+[root@ceph-node1 /]# ceph status
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_OK
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0fceph-node2=192.168.57.102:
+6789/0,ceph-node3=192.168.57.103:6789/0}, election epoch 938, quorum 0,1,2 ceph-node1,
+ceph-node2,ceph-node3
+     mdsmap e61: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e901: 9 osds: 9 up, 9 in
+      pgmap v4413: 1472 pgs, 13 pools, 683 MB data, 2838 objects
+            1879 MB used, 80965 MB / 82844 MB avail
+           1472 active+clean
+[root@ceph-node1 /]#</pre>
+   <p>Чтобы оставить кластер в чистом состояни, выполите некоторую работу по хозяйству. Поскольку мы удалили все OSD из 
+   карты CRUSH, <span class="term"><code>ceph-node4</code></span> больше не имеет никаких элементов. Удалите 
+   <span class="term"><code>ceph-node4</code></span> из карты CRUSH, чтобы удалить все следы этого узла из кластера Ceph:</p>
+	    <pre class="screen">
+# ceph osd crush remove ceph-node4</pre>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Replacing_failed_disk"> </a>Замена отказавшего диска</h3>
+   </div></div></div>
+   <p>Если вы администратор системы хранения Ceph, вам нужно будет управлять кластером Ceph с множеством физических дисков. 
+   По мере увеличения количества физических диске в вашем кластере Ceph частота отказов дисков также может увеличиваться. Таким образом, 
+   замена отказавших дисков может стать повторяющейся задачей для администратора системы хранения Ceph. Rак правило, нет нужды 
+   беспокоиться, если в кластере Ceph вышел из строя один или несколько дисков, поскольку Ceph будет заботиться о данных, 
+   их репликации и функции высокой доступности. Процесс удаления OSD из кластера Ceph основан на репликации данных Ceph и 
+   удалении всех записей об отказавших OSD из карт CRUSH кластера. Теперь мы рассмотрим процесс замены отказавшего диска 
+   в <span class="term"><code>ceph-node1</code></span> и <span class="term"><code>osd.0</code></span>.</p>
+   <p>Вначале проверим состояние вашего кластера Ceph. Покольку в кластере нет оказавших дисков, его состояние 
+   будет <span class="term"><code>HEALTH_OK</code></span>:</p>
+	    <pre class="screen">
+# ceph status</pre>
+   <p>Поскольку мы демонстрируем это упражнение на виртуальных машинах, нам нужно принудительно вывести из строя диск путем вывода 
+   из рабочего состояния <span class="term"><code>ceph-node1</code></span>, отсоединения диска и последующего включения виртуальной 
+   машины:</p>
+	    <pre class="screen">
+# VBoxManage controlvm ceph-node1 poweroff
+# VBoxManage storageattach ceph-node1 --storagectl "SATA Controller" --port 1 --device 0 --type hdd --medium none
+# VBoxManage startvm ceph-node1</pre>
+   <p>На следующем снимке экрана вы увидите, что <span class="term"><code>ceph-node1</code></span> содержит отказавший 
+   <span class="term"><code>osd.0</code></span>, подлежащий замене:</p>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph osd tree
+# id    weight  type name       up/down reweight
+-1      0.06999 root default
+-2      0.009995                host ceph-node1
+0       0.009995                        osd.0  down     1
+1       0.009995                        osd.1  up       1
+2       0.009995                        osd.2  up       1
+-3      0.03            host ceph-node2
+3       0.009995                        osd.3  up       1
+5       0.009995                        osd.5  up       1
+4       0.009995                        osd.4  up       1
+-4      0.03            host ceph-node3
+6       0.009995                        osd.6  up       1
+7       0.009995                        osd.7  up       1
+8       0.009995                        osd.8  up       1
+[root@ceph-node1 ~]#</pre>
+   <p>Поскольку данный OSD не работает, Ceph помечает этот OSD вышедшим из кластера в некоторый момент времени; по 
+   умолчанию, через 300 секунд. Если нет, мы можем сделать это вручную:</p>
+	    <pre class="screen">
+# ceph osd out osd.0</pre>
+   <p>Удалим отказавший OSD из карты CRUSH:</p>
+	    <pre class="screen">
+# ceph osd crush rm osd.0</pre>
+   <p>Уничтожим ключ аутентификации Ceph для этого OSD:</p>
+	    <pre class="screen">
+# ceph auth del osd.0</pre>
+   <p>Наконец, удалим этот OSD из кластера Ceph:</p>
+	    <pre class="screen">
+# ceph osd rm osd.0</pre>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph osd out osd.0
+marked out osd.0.
+[root@ceph-node1 ~]# ceph osd crush rm osd.0
+removed item id 0 name 'osd.0' from crush map
+[root@ceph-node1 ~]# ceph auth del osd.0
+updated
+[root@ceph-node1 ~]# ceph osd rm osd.0
+removed osd.0
+[root@ceph-node1 ~]#</pre>
+   <p>Поскольку одно из ваших OSD недоступно, состояние работоспособности кластера не будет <span class="term"><code>OK</code></span>,
+   и он выполнит восстановление; не стоит беспокоиться об этом, это обычная операция Ceph</p>
+   <p>Теперь мы должны физически заменить отказавший диск овым в вашем узле Ceph. На сегодняшний день практически все серверное 
+   оборудование и все операционные системы поддерживают горячую замену дисков, следовательно у вас нет нужды в каком бы то ни было 
+   простое для замены диска. Так как мы используем виртуальную машину, нам нужно выключить эту виртуальную машину, добавить новый 
+   диск и перезапустить эту виртуальную машину. Поскольку данный диск вставлен, сделаем замечание о его идентификаторе устройства 
+   операционной системы:</p>
+	    <pre class="screen">
+# VBoxManage controlvm ceph-node1 poweroff
+# VBoxManage storageattach ceph-node1 --storagectl "SATA Controller" --port 1 --device 0 --type hdd --medium ceph-node1-osd1.vdi
+# VBoxManage startvm ceph-node1</pre>
+   <p>Выполним следующие команды для вывода списка дисков; новый диск в общем случае не имеет никакого раздела:</p>
+	    <pre class="screen">
+# ceph-deploy disk list ceph-node1</pre>
+   <p>Перед добавлением диска в кластер Ceph, выполним полное стирание (zap) диска:</p>
+	    <pre class="screen">
+# ceph-deploy disk zap ceph-node1:sdb</pre>
+   <p>Наконец, создадим на этом диске OSD и Ceph добавит его как <span class="term"><code>osd.0</code></span>:</p>
+	    <pre class="screen">
+# ceph-deploy --overwrite-conf osd create ceph-node1:sdb</pre>
+   <p>Поскольку OSD создан, Ceph выполнит операцию восстановления и запустит перемещение групп размещения со вторичных 
+   OSD на новый OSD. Операция восстановления может занять некоторое время, по истечению которого кластер Ceph придет опять 
+   в состояние <span class="term"><code>HEALTHY_OK</code></span>:</p>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph status
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_OK
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:
+6789/0,ceph-node3=192.168.57.103:6789/0}, election epoch 938, quorum 0,1,2 ceph-node1,
+ceph-node2,ceph-node3
+     mdsmap e61: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e901: 9 osds: 9 up, 9 in
+      pgmap v4413: 1472 pgs, 13 pools, 683 MB data, 2838 objects
+            1879 MB used, 80965 MB / 82844 MB avail
+                1472 active+clean
+[root@ceph-node1 /]#</pre>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Manipulating_CRUSH_maps"> </a>Обработка карт CRUSH</h3>
+   </div></div></div>
+   <p>Мы уже рассматривали карты CRUSH (Управляемых масштабируемым хешированием репликаций, Controlled Replication Under Scalable Hashing) 
+   в <a class="xref" href="Ch04.html" title="Глава 4. Ceph изнутри"><em>Главе 4. Ceph изнутри</em></a>. В данном разделе мы погрузимся в 
+   детали карт CRUSH, включающие их макеты, а также определение пользовательских карт CRUSH. При развертывании кластера Ceph с помощью 
+   процедуры, описанной в данном руководстве, для вашего кластера Ceph создаются карты CRUSH по умолчанию. Такие карты по умолчанию 
+   хорошо подходят для окружений песочницы и тестирования. Однако если вы запускаете кластеры Ceph в промышленности или в большом 
+   масштабе, рассмотрите возможность разработки пользовательской карты CRUSH для вашей среды, чтобы обеспечить более высокую 
+   производительность, надежность и безопасность данных.</p>
+  
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Identifying_CRUSH_locations"> </a>Определение местоположений CRUSH</h4>
+    </div></div></div>
+    <p>Локализация CRUSH является метоположением OSD в карте CRUSH. Например, организация с названием 
+	<span class="term"><code>mona-labs.com</code></span> имеет кластер с местоположением <span class="term"><code>osd.156</code></span>, 
+	которое располагается  в хосте <span class="term"><code>ceph-node15</code></span>. Этот хост физически представляет 
+	<span class="term"><code>chassis-3</code></span>, которое установлено в <span class="term"><code>rack-16</code></span>, 
+	являющемся частью <span class="term"><code>room-2</code></span> и <span class="term"><code>datacentre-1-north-FI</code></span></p>
+    <p>Такой <span class="term"><code>osd.156</code></span> будет частью карты CRUSH, как это показано на следующем рисунке:</p>
+        <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0719.jpg"/></div><br />
+        </div>
+    <p>На предыдущем рисунке ключи показаны с левой стороны от =; они также называются типами CRUSH. Карта по умолчанию содержит 
+	<span class="term"><code>root</code></span>, <span class="term"><code>datacentre</code></span>, 
+	<span class="term"><code>room</code></span>, <span class="term"><code>row</code></span>, 
+	<span class="term"><code>pod</code></span>, <span class="term"><code>pdu</code></span>, 
+	<span class="term"><code>rack</code></span>, <span class="term"><code>chassis</code></span> и 
+	<span class="term"><code>host</code></span>. Не обязательно использовать все типы CRUSH при определении карты CRUSH, однако 
+	используемые типы CRUSH должны быть допустимыми, иначе вы можете получить ошибки компиляции. CRUSH является достаточно гибким; 
+	вы даже можете определять ваши собственные типы и использовать их в картах CRUSH по-своему.</p>
+   </div>
+  
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CRUSH_map_internals"> </a>Карты соответствий CRUSH изнутри</h4>
+    </div></div></div>
+    <p>Чтобы понять что находится внутри карты CRUSH, мы должны извлечь ее и декомпилировать в человеко- читаемую форму для легкого 
+	редактирования. На этом этапе мы можем выполнить все необходимые изменения в карте CRUSH и, чтобы изменения вступили в силу, 
+	мы должны скомпилировать и внедрить ее назад в кластер Ceph. Изменения в кластере Ceph, выполняемые такой новой картой CRUSH, 
+	т.е. как только новая карта CRUSH внедрена в кластер Ceph, изменения имеют эффект немедленно, на лету. Теперь мы взглянем на 
+	карту CRUSH нашего кластера Ceph который мы развернули в данном руководстве.</p>
+    <p>Извлечем карту CRUSH из любого нашего узла монитора:</p>
+	    <pre class="screen">
+# ceph osd getcrushmap -o crushmap_compiled_file</pre>
+    <p>Когда мы получим карту CRUSH, декомпилируем ее чтобы сделать ее человечески читаемой и редактируемой:</p>
+	    <pre class="screen">
+# crushtool -d crushmap_compiled_file -o crushmap_decompiled_file</pre>
+    <p>Начиная с этого момента файл выдачи, <span class="term"><code>crushmap_decompiled_file</code></span>, может 
+	просматриваться/ редактироваться в предпочитаемом вами редакторе.</p>
+    <p>В следующем разделе мы изучим как выполнять изменения в карте CRUSH.</p>
+    <p>После внесения необходимых изменений вам следует скомпилировать изменения с параметром команды <span class="term"><code>-c</code></span></p>
+	    <pre class="screen">
+# crushtool -c crushmap_decompiled_file -o newcrushmap</pre>
+    <p>Наконец, внедрим заново скомпилированную карту CRUSH в кластер Ceph с параметром команды </p>
+	    <pre class="screen">
+# ceph osd setcrushmap -i newcrushmap</pre>
+    <p>Файл карты CRUSH содержит четыре раздела; они следующие:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>Устройства карты CRUSH</em></span></span>:
+	 Раздел устройств содержит список всех OSD представленных в кластере Ceph. Как только любое новое OSD добавляется в кластер Ceph 
+	 или удаляется из него, раздел устройств карт CRUSH обновляется автоматически. Обычно у вас нет нужды вносить изменения в данный 
+	 раздел; Ceph заботится об этом. Однако, если вам нужно добавить новое устройство, добавьте новую строку в конце раздела 
+	 устройств уникальным номером устройства, идущим за OSD. Приводимый далее снимок экрана показывает раздел устройств карты 
+	 CRUSH из нашего кластера песочницы:</p>
+	    <pre class="screen">
+# devices
+device 0 osd.O
+device 1 osd.1
+device 2 osd.2
+device 3 osd.3
+device 4 osd.4
+device 5 osd.5
+device 6 osd.6
+device 7 osd.7
+device 8 osd.8</pre>
+	<li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>Типы сегментов карты CRUSH</em></span></span>:
+	 Этот раздел определяет типы сегментов (bucket), которые могут использоваться в карте CRUSH. Карта CRUSH по умолчанию содержит 
+	 определенные типы сегментов, которых обычно достаточно для большинства кластеров Ceph. Однако, основываясь на ваших требованиях, 
+	 вы можете добавлять или удалять типы сегментов в данном разделе. Чтобы добавить тип сегмента добавьте новую строку в разделе типов 
+	 сегментов файла карты CRUSH, введите type и идентификатор (ID) типа (следующее численное значение) с последующим именем сегмента.
+	 Список сегментов по умолчанию из нашего кластера песочницы выглядит следующим образом:</p>
+	    <pre class="screen">
+# types
+type 0 osd
+type 1 host
+type 2 rack
+type 3 row
+type 4 room
+type 5 datacenter
+type 6 root</pre>
+	 </li>
+	<li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>Определение сегмента карты CRUSH</em></span></span>:
+	 Поскольку тип сегмента (bucket) объявлен, он должен быть определен для хостов и других доменов отказа. В данном разделе 
+	 вы можете иерархически изменять архитектуру вашего кластера Ceph, например, определять хосты, ряды, стойки, шасси, комнаты и 
+	 центры обработки данных. Вы также может определять какие типы алгоритмов сегментов необходимо использовать. Определение сегмента 
+	 содержит определенные параметры; вы можете использовать следующий синтаксис для создания определения сегмента:</p>
+	    <pre class="screen"><code>
+[bucket-type] [bucket-name] {
+	id [a unique negative numeric ID]
+	weight [the relative capacity/capability of the
+	item(s)]
+	alg [the bucket type: uniform | list | tree | straw
+	]
+	hash [the hash type: 0 by default]
+	item [item-name] weight [weight]
+}</code></pre>
+	 <p>Далее приводится определение раздела сегмента из нашего кластера Ceph песочницы:</p>
+	    <pre class="screen"><code>
+# buckets
+host ceph-node1 {
+        id -2           # do not change unnecessarily
+        # weight 0.030
+        alg straw
+        hash 0  # rjenkins1
+        item osd.1 weight 0.010
+        item osd.2 weight 0.010
+        item osd.0 weight 0.010
+}
+host ceph-node2 {
+        id -3           # do not change unnecessarily
+        # weight 0.030
+        alg straw
+        hash 0  # rjenkins1
+        item osd.3 weight 0.010
+        item osd.5 weight 0.010
+        item osd.4 weight 0.010
+}
+host ceph-node3 {
+        id -4           # do not change unnecessarily
+        # weight 0.030
+        alg straw
+        hash 0  # rjenkins1
+        item osd.6 weight 0.010
+        item osd.7 weight 0.010
+        item osd.8 weight 0.010
+>
+root default {
+        id -1           # do not change unnecessarily
+        # weight 0.090
+        alg straw
+        hash 0  # rjenkins1
+        item ceph-node1 weight 0.030
+        item ceph-node2 weight 0.030
+        item ceph-node3 weight 0.030
+}</pre>
+	 </li>
+	<li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>Правила карты CRUSH</em></span></span>:
+	 Они определяют способ для выбора соответствующего сегмента (bucket) для размещения данных в пуле. Для большого кластера Ceph 
+	 должно быть много пулов, причем каждый пул должен иметь собственный набор правил CRUSH. Правилам карты CRUSH необходим ряд 
+	 параметров; вы можете использовать следующий синтаксис для создания набора правил CRUSH:</p>
+	 </li>
+	    <pre class="screen"><code>
+rule &lt;rulename&gt; {
+ruleset &lt;ruleset&gt;
+	type [ replicated | raid4 ]
+	min_size <&lt;min-size&gt;
+	max_size &lt;max-size&gt;
+	step take &lt;bucket-type&gt;
+	step [choose|chooseleaf] [firstn|indep] &lt;N&gt;
+	&lt;bucket-type&gt;
+	step emit
+}</code></pre>
+	    <pre class="screen"><code>
+# rules
+rule data {
+         ruleset 0
+         type replicated
+         min_size 1
+         max_size 10
+         step take default
+         step chooseleaf firstn 0 type host
+         step emit
+}
+rule metadata {
+         ruleset 1
+         type replicated
+         min_size 1
+         max_size 10
+         step take default
+         step chooseleaf firstn 0 type host
+         step emit
+}
+rule rbd {
+         ruleset 2
+         type replicated
+         min_size 1
+         max_size 10
+         step take default
+         step chooseleaf firstn 0 type host
+         step emit
+}
+
+# end crush map</pre>
+   </ul>
+   </div>
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Different_pools"> </a>Разнообразные пулы на различных OSD</h3>
+   </div></div></div>
+   <p>Ceph легко работает на разнородной общедоступной вычислительной технике. Существуют возможности чтобы вы могли использовать 
+   ваши существующие аппаратные системы для Ceph и разработать кластер хранения с различными типами оборудования. Для вас, как 
+   администратора хранилища Ceph, ваш вариант использования может потребовать создание множества пулов Ceph на множестве типов устройств.
+   Наиболее распространенный вариант использования заключается в предоставлении пула быстрого хранилища на основе дисков типа  SSD, 
+   с которыми вы можете получить высокую производительность для вашего кластера хранения. Данные, которые не требуют навысшего 
+   уровня ввода/вывода, как правило, хранятся в пулах на более медленных магнитных устройствах.</p>
+   <p>Наша следующая практическая демонстрация будет направлена на создание двух пулов Ceph, а именно SSD-пулов с более быстрыми дисками 
+   SSD и SATA-пулов, хранящих данные на более медленных дисках SATA. Чтобы сделать это мы отредактируем карты CRUSH и 
+   выполним необходимые настройки.</p>
+   <p>Кластер Ceph песочницы, который мы развернули в предыдущих главах, размещается на виртуальных машинах и не имеет реальных дисков 
+   SSD в своем распоряжении. Следовательно мы будем рассматривать несколько дисков как SSD диски для целей обучения. Если вы выполняете 
+   это упражнение в кластерах Ceph с реальными дисками SSD в их основе, не потребуется никаких изменений в последовательности, 
+   которую мы будем выполнять.</p>
+   <p>В следующей демонстрации мы предполагаем, что <span class="term"><code>ceph-node1</code></span> является нашим узлом SSD 
+   с размещенными на нем тремя SSD. <span class="term"><code>ceph-node2</code></span> и <span class="term"><code>ceph-node3</code></span> 
+   содержат диски SATA. Основная копия пула SSD привязана к <span class="term"><code>ceph-node1</code></span>, в то время как 
+   вторичная и третичная копии будут находиться на других узлах. Аналогично, первичная копия пула SATA будет находиться либо на 
+   <span class="term"><code>ceph-node2</code></span>, либо на <span class="term"><code>ceph-node3</code></span>, поскольку у нас 
+   есть два узла для поддержки SATA пула. На любом шаге данной демонстрации вы можете обратиться к скорректированному файлу карты CRUSH, 
+   поддерживаемому данным руководством на веб- сайте Packt Publishing.</p>
+   <p>Извлеките карту CRUSH из любого узла монитора и декомпилируйте ее:</p>
+	    <pre class="screen">
+# ceph osd getcrushmap -o crushmap-extract
+# crushtool -d crushmap-extract -o crushmap-decompiled</pre>
+	    <pre class="screen">
+[root@ceph-node1 tmp]# ceph osd getcrushmap -o crushmap-extract
+got crush map from osdmap epoch 1045
+[root@ceph-node1 tmp]# crushtool -d crushmap-extract -o crushmap-decompiled
+[root@ceph-nodel tmp]# ls -l crushmap-decompiled
+-rw-r-— r—-. 1 root root 1591 Jul 25 00:18 crushmap-decompiled
+[root@ceph-node1 tmp]#</pre>
+   <p>Воспользуйтесь предпочитаемым вами редактором и внесите изменения в карту CRUSH по умолчанию:</p>
+	    <pre class="screen">
+# vi crushmap-decompiled</pre>
+   <p>Замените сегмент (bucket) по умолчанию <span class="term"><code>root</code></span> на <span class="term"><code>root ssd</code></span> 
+   и  <span class="term"><code>root sata</code></span>. В нашем случае <span class="term"><code>root ssd</code></span> содержит 
+   один элемент, а сегмент <span class="term"><code>root sata</code></span> имеет два описанных хоста. Взглянем на следующий 
+   моментальный снимок:</p>
+	    <pre class="screen">
+root ssd {
+         id -1
+         alg straw
+         hash 0
+         item ceph-node1 weight 0.030
+}
+root sata {
+         id -5
+         alg straw
+         hash 0
+         item ceph-node2 weight 0.030
+         item ceph-node3 weight 0.030
+}</pre>
+   <p>Отрегулируйте существующие правила для работы с новыми сегментами. Для этого измените <span class="term"><code>step take 
+   default</code></span> на <span class="term"><code>step take sata</code></span> для правил данных, метаданных и RBD. Это даст 
+   команду данным правилам использовать сегмент <span class="term"><code>root sata</code></span> вместо используемого по умолчанию 
+   сегмента <span class="term"><code>root</code></span>, поскольку мы его удалили на предыдущем шаге.</p>
+   <p>Наконец добавим новые правила для пулов <span class="term"><code>ssd</code></span> и <span class="term"><code>sata</code></span> 
+   как это показано на следующем экранном снимке:</p>
+	    <pre class="screen">
+rule sata {
+        ruleset 3
+        type replicated
+        min_size 1
+        max_size 10
+        step take sata
+        step chooseleaf firstn 0 type host
+        step emit
+&gt;
+rule ssd {
+        ruleset 4
+        type replicated
+        min_size 1
+        max_size 10
+        step take ssd
+        step chooseleaf firstn 0 type host
+        step emit
+&gt;</pre>
+   <p>Поскольку изменения выполнены, скомпилируем файл CRUSH и внедрим его назад в кластер Ceph:</p>
+	    <pre class="screen">
+# crushtool -c crushmap-decompiled -o crushmap-compiled
+# ceph osd setcrushmap -i crushmap-compiled</pre>
+   <p>Как только мы внедрили новую карту CRUSH в наш кластер Ceph, кластер проведет перестановку данных и их восстановление и должен 
+   будет вскоре получить состояние <span class="term"><code>HEALTH_OK</code></span>. Проверьте состояние кластера следующим образом:</p>
+	    <pre class="screen">
+[root@ceph-node1 tmp]# ceph -s
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_WARN 18 pgs recovering; 1309 pgs stuck unclean; recovery 1670/5738 objects degraded (29.104%)
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,ceph-node3=192.168.57.103
+:6789/0}, election epoch 1040, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3
+     mdsmap e93: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap el079: 9 osds: 9 up, 9 in
+      pgmap v4804: 1472 pgs, 13 pools, 683 MB data, 2838 objects
+            2106 MB used, 80738 MB / 82844 MB avail
+            1670/5738 objects degraded (29.104%)
+                  11 active
+                1280 active+remapped
+                 163 active+clean
+                  18 active+recovering
+recovery io 17308 kB/s, 134 objects/s
+[root@ceph-node1 tmp]#</pre>
+   <p>Как только ваш кластер примет рабочеспособное состояние, создайте два пула для <span class="term"><code>ssd</code></span> 
+   и <span class="term"><code>sata</code></span>:</p>
+	    <pre class="screen">
+# ceph osd pool create sata 64 64
+# ceph osd pool create ssd 64 64</pre>
+   <p>Отрегулируйте <span class="term"><code>crush_ruleset</code></span> для правил <span class="term"><code>sata</code></span>
+   и <span class="term"><code>ssd</code></span>, как это определено в карте CRUSH:</p>
+	    <pre class="screen">
+# ceph osd pool set sata crush_ruleset 3
+# ceph osd pool set ssd crush_ruleset 4
+# ceph osd dump | egrep -i &quot;ssd|sata&quot;</pre>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph osd pool create sata 64 64
+pool 'sata' created
+[root@ceph-node1 /]# ceph osd pool create ssd 64 64
+pool 'ssd' created
+[root@ceph-node1 /]# ceph osd pool set sata crush_ruleset 3
+set pool 16 crush_ruleset to 3
+[root@ceph-node1 /]# ceph osd pool set ssd crush_ruleset 4
+set pool 17 crush_ruleset to 4
+[root@ceph-node1 /]# ceph osd dump | egrep -i &quot;ssd|sata&quot;
+pool 16 'sata' replicated size 3 min_size 2 crush_ruleset 3 object_hash rjenkins pg_num 64 pgp_num 64 last^change 1093
+ owner 0 flags hashpspool stripe_width 0
+pool 17 'ssd' replicated size 3 min_size 2 crush_ruleset 4 object_hash rjenkins pg_num 64 pgp_num 64 last_change 1094
+owner 0 flags hashpspool stripe_width 0
+[root@ceph-node1 /]#</pre>
+   <p>Чтобы проверить эти вновь созданные пулы мы поместим в них некоторые данные и проверим какие OSD сохранили данные. Создадим 
+   некие файлы данных:</p>
+	    <pre class="screen">
+# dd if=/dev/zero of=sata.pool bs=1M count=32 conv=fsync
+# dd if=/dev/zero of=ssd.pool bs=1M count=32 conv=fsync</pre>
+	    <pre class="screen">
+[root@ceph-node1 /]# dd if=/dev/zero of=sata.pool bs=lM count=32 conv=fsync
+32+0 records in
+32+0 records out
+33554432 bytes (34 MB) copied, 0.240931 s, 139 MB/s
+[root@ceph-nodel /]# dd if=/dev/zero of=ssd.pool bs=lM count=32 conv=fsync
+32+0 records in
+32+0 records out
+33554432 bytes (34 MB) copied, 0.179995 s, 186 MB/s
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# ls -l *.pool
+-rw-r-—r-—. 1 root root 33554432 Jul 25 01:00 sata.pool
+-rw-r—-r—-. 1 root root 33554432 Jul 25 01:01 ssd.pool
+[root@ceph-node1 /]#</pre>
+   <p>Поместим эти данные в хранилище Ceph в соответствующие пулы:</p>
+	    <pre class="screen">
+# rados -p ssd put ssd.pool.object ssd.pool
+# rados -p sata put sata.pool.object sata.pool</pre>
+   <p>Наконец, проверим карту OSD для пула объектов</p>
+	    <pre class="screen">
+# ceph osd map ssd ssd.pool.object
+# ceph osd map sata sata.pool.object</pre>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph osd map ssd ssd.pool.object
+osdmap e1097 pool 'ssd' (17) object 'ssd.pool.object' -&gt; pg 17.82fd0527 (17.27) -&gt; up ([2], p2) acting ([2,5,6], p2)
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# ceph osd map sata sata.pool.object
+osdmap e1097 pool 'sata' (16) object 'sata.pool.object' -&gt; pg 16.f71bcbc2 (16.2) -&gt; up ([4,8], p4) acting ([4,8], p4)
+[root@ceph-node1 /]#</pre>
+   <p>Давайте проверим предыдущий вывод. Первый вывод результатов для пула <span class="term"><code>ssd</code></span> представляет 
+   основную копию объекта, который расположен на <span class="term"><code>osd.2</code></span>; другие копии расположены на 
+   <span class="term"><code>osd.5</code></span> и <span class="term"><code>osd.6</code></span>. Это объясняется способом, которым 
+   мы настроили нашу карту CRUSH. Мы предписали пулу <span class="term"><code>ssd</code></span> использовать 
+   <span class="term"><code>ceph-node1</code></span>, который содержит <span class="term"><code>osd.0</code></span>, 
+   <span class="term"><code>osd.1</code></span> и <span class="term"><code>osd.2</code></span>.</p>
+   <p>Это только демонстрация основных возможностей пользовательской настройки карт CRUSH. Вы можете делать много разных вещей 
+   с помощью CRUSH. Существует масса возможностей для эффективного и результативного управления всеми данными вашего кластера 
+   Ceph с применением карт CRUSH.</p>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В этой главе мы рассмотрели задачи эксплуатации и обслуживания, которые должны выполняться в кластере Ceph. Эта глава дает 
+   понимание служб Ceph, а также увеличение и уменьшение масштаба работающего кластера. ПОследующая часть главы посвящена процедуре 
+   замены вышедших из строя дисков в вашем кластере Ceph, которая является общим местом для кластеров среднего и крупного размера.
+   Наконец, мы знакомимся с мощью карт CRUSH и тем, как настраивать карты CRUSH для своих нужд. Изменение и настройка карт CRUSH 
+   довольно интересная и важная часть Ceph; с ней приходит получение решения хранения уровня предприятия. Вы всегда можете получить 
+   дополнительную информацию относительно карт CRUSH Ceph на странице <a class="xref" 
+   href="http://ceph.com/docs/master/rados/operations/crush-map/" 
+   title="Ceph Documentation » Ceph Storage Cluster » Cluster Operations » CRUSH Maps">
+   http://ceph.com/docs/master/rados/operations/crush-map/</a></p>
+   <p>В следующей главе мы изучим мониторинг Ceph, а также регистрацию в вашем кластере Ceph и его отладку с рядом советов по 
+   устранению неполадок.</p>
+  </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

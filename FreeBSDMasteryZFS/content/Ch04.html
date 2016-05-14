@@ -1,0 +1,1121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Наборы данных ZFS - Мастерство FreeBSD: ZFS</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Пулы"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Восстановление и реконструкция"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Наборы данных ZFS';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Наборы данных ZFS</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch04.html">4. Наборы данных ZFS</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch04.html#Datasets">Наборы данных</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#DatasetTypes">Типы наборов данных</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#WhyDoIWantDatasets">Зачем мне нужны наборы данных?</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#ViewingDatasets">Просмотр наборов данных</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#CreatingMovingAndDestroyingDatasets">Создание, перемещение и ликвидация наборов данных</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#CreatingFilesystems">Создание файловых систем</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#CreatingVolumes">Создание томов</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#RenamingDatasets">Переименование наборов данных</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#MovingDatasets">Перемещение наборов данных</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#DestroyingDatasets">Ликвидация наборов данных</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#ZFS_Properties">Свойства ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#ViewingProperties">Просмотр свойств</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#ChangingProperties">Изменение свойств</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#Read-OnlyProperties">Свойства, доступные только для чтения</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#FilesystemProperties">Свойства файловой системы</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#atime">atime</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#exec">exec</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#readonly">readonly</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#setuid">setuid</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#User-DefinedProperties">Определяемые пользователем свойства</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#ParentChildRelationships">Взаимосвязи родительский/ дочерний</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#InheritanceAndRenaming">Наследование и переименование</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#RemovingProperties">Удаление свойств</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#MountingZFS_Filesystems">Монтирование файловых систем ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#DatasetsWithoutMountPoints">Наборы данных без точки монтирования</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#MultipleDatasetsWithSameMountPoint">Множественные наборы данных с одной и той же точкой монтирования</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#PoolsWithoutMountPoints">Пулы без точки монтирования</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#ManuallyMountingAndUnmountingFilesystems">Монтирование и демонтирование файловых систем вручную</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#ZFS_and_etc_fstab">ZFS и /etc/fstab</a></span></dt>
+	<dt><span class="section"><a href="Ch04.html#TweakingZFS_Volumes">Тонкая настройка томов ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#SpaceReservations">Резервирование пространства</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#ZvolMode">Режим Zvol</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch04.html#DatasetIntegrity">Целостность наборов данных</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch04.html#Checksums">Контрольные суммы</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#Copies">Копии</a></span></dt>
+      <dt><span class="section"><a href="Ch04.html#MetadataRedundancy">Избыточность метаданных</a></span></dt>
+	 </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>В обычных файловых системах вы создаете разделы для разделения различных типов данных, применения различных видов оптимизации для них, а также 
+  для ограничения в объеме пространства, который может потреблять данный раздел. Каждый раздел получает определенный объем дискового пространства.
+  Вы все бывали на этом месте. Мы делаем наши лучшие догадки о том, как много дискового пространства понадобится в следующем месяце, следующем году,
+  и через пять лет каждому разделу в данной системе. Быстро перенесемся в будущее и окажется, что объем пространства, которое вы решили выделить 
+  каждому разделу скорее всего не правильный. Раздел без достаточного пространства для всех его данных извещает вас о добавлении дисков или 
+  перемещении данных, усложняя управление системой. Когда раздел имеет слишком много пространства вы пеняете на себя и используете его в качестве 
+  свалки для хлама, который вы предпочли бы иметь в другом месте. Не одна система UFS2 Лукаса имеет <span class="term"><code>/usr/ports</code></span>
+  в качестве символической ссылки на что- то в <span class="term"><code>/home</code></span>. Джуд обычно получает в конце концов какую- либо 
+  часть <span class="term"><code>/var</code></span>, проживающую в <span class="term"><code>/usr/local/var</code></span></p>
+  <p>ZFS решает эту проблему собирая свободное пространство в <span class="term"><strong class="userinput"><code>пулы</code></strong></span>, 
+  привнося в ваше разбиение на разделы гибкость, невозможную для большинства других файловых систем. Каждый создаваемый вами набор данных ZFS 
+  потребляет только объем пространства, необходимый для хранения файлов внутри него. Каждый набор данных имеет доступ ко всему свободному пространству 
+  в данном пуле прекращая ваше беспокойство о размере вашего раздела. Вы можете ограничить размер набора данных при помощи квотирования или 
+  гарантировать ему минимальный объем пространства путем резервирования, как это обсуждается в <a class="link" href="Ch06.html" target="_top">Главе 6</a>.</p>
+  <p>Обычные файловые системы используют отдельные разделы для установления различных политики оптимизации для различных типов данных. 
+  <span class="term"><code>/var</code></span> содержит часто изменяемые файлы наподобие журналов и баз данных. Корневой файловой системе, помимо 
+  производительности, нужны согласованность и безопасность. В <span class="term"><code>/home</code></span> попадает все что угодно. Однако, после 
+  установления политики для традиционной файловой системы, действительно трудно вносить изменения. Утилита <span 
+  class="term"><code>tunefs(8)</code></span> для UFS требует размонтирования файловой системы для внесения изменений. Некоторые характеристики, 
+  например количество индексных дескрипторов, просто не могут быть изменены после создания файловой системы.</p>
+  <p>Основная проблема традиционных файловых систем перегоняется в негибкость. Наборы данных ZFS практически бесконечно гибки.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Datasets"> </a>Наборы данных</h3>
+   </div></div></div>
+   <p>Порции данных называются наборами данных (dataset). Эти данные могут напоминать традиционную файловую систему с файлами, каталогами, а также 
+   допусками и всем, что радует персонал. Это может быть блочное устройство или копия других данных, или что-то что вы сможете впихнуть на диск.</p>
+   <p>ZFS использует наборы данных во многом подобно тому, как традиционная файловая система может использовать разделы. Нужна некая политика для 
+   <span class="term"><code>/usr</code></span> и отдельная политика для <span class="term"><code>/home</code></span>? Сделайте каждый из них 
+   набором данных. Нужно блочное устройство для приемника iSCSI? Это набор данных. Нужна копия какого-то набора данных? Это другой набор данных.</p>
+   <p>Наборы данных имеют иерархические взаимосвязи. Отдельный пул хранения является родительским для каждого набора данных верхнего уровня.
+   Каждый набор данных может иметь дочерние наборы данных. Наборы данных наследуют многие характеристики от своих родителей, как мы увидим по 
+   ходу данной главы.</p>
+   <p>Вы можете выполнять все операции с наборами данных воспользовавшись командой <span class="term"><code>zfs(8)</code></span>. Данная 
+   команда имеет все виды подкоманд.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DatasetTypes"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Типы наборов данных</span></h4>
+    </div></div></div>
+    <p>В настоящее время ZFS имеет пять типов наборов данных: файловые системы, тома, снимки, клоны и закладки.</p>
+    <p>Набор данных <span class="term"><strong class="userinput"><code>filesystem</code></strong></span> повторяет традиционную файловую систему.
+	Он хранит файлы и каталоги. Файловая система ZFS имеет точку монтирования и поддерживает свойства традиционных файловых систем, такие как 
+	доступность только на чтение, исполняемые файлы с ограничением на setuid {повышение прав до уровня владельца} и другие. Наборы данных 
+	файловой системы также содержат другую информацию, включающую права доступа, временные метки создания и изменения файла, флаги управления 
+	доступом NFSv4, <span class="term"><code>chflags(2)</code></span> и тому подобное.</p>
+    <p><span class="term"><strong class="userinput"><code>Том ZFS</code></strong></span>, или <span class="term"><strong 
+	class="userinput"><code>zvol</code></strong></span> является блочным устройством. В обычной файловой системе вы можете создать файловую 
+	систему на основе файловой системы для iSCSI или раздела UFS со специальным назначением. В ZFS эти блочные устройства обходят все накладные 
+	расходы файлов и каталогов и располагаются непосредственно в основном пуле. Zvol получает файл устройства (device node), пропуская устройства памяти данной 
+	FreeBSD, используемые для монтирования образов дисков.</p>
+    <p><span class="term"><strong class="userinput"><code>Snapshot</code></strong></span> является копией набора данных в определенный момент времени.
+	Снимки позволяют вам сохранять предыдущие версии вашей файловой системы и файлы в ней для дальнейшего использования. Снимки используют 
+	свободное пространство на основе разниц между текущей файловой системой и той, что в снимке.</p>
+    <p><span class="term"><strong class="userinput"><code>Clone</code></strong></span> является новым набором данных основанном на снимке существующего 
+	набора данных, позволяющий вам разветвлять файловую систему. Вы получаете дополнительную копию всего в данном наборе данных. Вы можете 
+	клонировать набор данных, содержащий ваш промышленный веб- сайт, предоставляя вам копию вашего сайта, которую ломать без боязни задеть промышленный 
+	сайт. Клон потребляет только пространство для хранения приращений от первоначального снимка, из которого он создан. <a class="link" href="Ch07.html" 
+	target="_top">Глава 7</a> обсуждает снимки, клоны и закладки.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="WhyDoIWantDatasets"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Зачем мне нужны наборы данных?</span></h4>
+    </div></div></div>
+    <p>Очевидно, вам нужны наборы данных. Помещение файлов на диск требует набора данных файловой системы. И вам, вероятно, потребуется по набору 
+	данных для традиционных разделов Unix, наподобие <span class="term"><code>/usr</code></span> или <span class="term"><code>/var</code></span>. 
+	Однако, в ZFS вы хотите много наборов данных. Много- много- много- данных. Это было бы беспощадным безумием в традиционной файловой системе с 
+	жестко заданными ограничениями на число разделов и негибкость этих разделов. Однако применение большого числа наборов данных увеличивает 
+	имеющийся у вас контроль над данными.</p>
+    <p>Каждый набор данных ZFS имеет ряд свойств, которые управляют его работой, позволяя администратору контролировать то как представляются 
+	наборы данных и насколько тщательно они защищают свои данные. Вы можете подстраивать каждый набор данных в точности так, как вы можете 
+	в обычной файловой системе. Свойства наборов данных работают во многом похоже на свойства пула.</p>
+    <p>Системный администратор может делегировать управление отдельными наборами данных другому пользователю, позволяя этому пользователю 
+	управлять им без привилегий root. Если ваша организация имеет большое количество проектных команд, вы можете дать каждому управляющему 
+	проектом его собственную порцию данных и сказать: &quot;Вот, обустраивайте ее как хотите.&quot; Все что уменьшает нашу рабочую нагрузку 
+	является хорошей вещью.</p>
+    <p>Многие свойства ZFS, такие как репликации и снимки работают на базе отдельных наборов данных. Выделение ваших данных в одну 
+	логическую группу облегчает применение этих свойств для сопровождения вашей организации.</p>
+    <p>Возьмем к примеру веб- сервер с десятками сайтов, причем каждый поддерживается отдельной командой. Некоторые команды отвечают за 
+	несколько сайтов, в то время как остальные имеют только один. Некоторые команды относятся ко многим командам. Если вы будете следовать 
+	традиционной модели файловой системы, вы можете создать набор данных <span class="term"><code>/webserver</code></span> поместите в него 
+	все и управляйте доступом при помощи групповых прав доступа и команды <span class="term"><code>sudo(8)</code></span>. Вы жили так 
+	на протяжении десятилетий и это работает, так зачем все менять?</p>
+    <p>Однако создание набора данных для каждой команды, а затем предоставление каждому сайту его собственного набора данных в пределах 
+	данного родительского набора данных, и возможности размножаются.</p>
+    <p>Команде нужна копия веб-сайта для тестирования? Клонируйте его! В традиционной файловой системе вам придется копировать весь каталог 
+	этого сайта, удваивая необходимое дисковое пространство и дожидаясь намного более длительного выполнения. Клон использует только 
+	пространство для разниц между сайтами и появляется мгновенно.</p>
+    <p>Команда собирается развернуть новую версию сайта, но хочет иметь резервную копию старого сайта? Создайте снимок. Этот новый сайт, 
+	вероятно, использует целую кучу тех же файлов, что и старый, так что вы сократите использование дискового пространства. Плюс, 
+	когда развертывание идет ужасно неправильно, можно восстановить старую версию откатив к снимку.</p>
+    <p>Определенному веб-сайту требуются хитрости производительности на уровне файловой системы, или сжатие, или какое-либо локально 
+	созданное свойство? Установите его для этого сайта.</p>
+    <p>Вы можете создать набор данных для каждой команды, а затем пусть команды создают свои собственные дочерние наборы данных для их 
+	собственных сайтов. Вы можете организовать ваши наборы данных, чтобы они соответствовали вашему персоналу, вместо организации ваших 
+	людей, чтобы они соответствовали вашей технологии.</p>
+    <p>Когда необходимо изменить настройки (свойства) файловой системы на всех этих сайтах, сделайте изменения в родительском наборе данных, 
+	и пусть дети наследуют их.</p>
+    <p>Те же преимущества распространяются на домашние каталоги пользователей.</p>
+    <p>Также вы можете перемещать данные между машинами. Ваши веб- сайты переполнили ваш веб- сайт? Отправьте на новый сервер половину 
+	наборов данных совместно с их пользовательскими настройками, а также с их клонами и снимками.</p>
+    <p>Существует один недостаток при использовании многих наборов данных файловых систем. Когда вы перемещаете файл в пределах файловой 
+	системы, файл переименовывается. Перемещение файла между различными файловыми системами требует копирование файла в новое 
+	местоположение и удаление его в старом, вместо простого его переименования. Копирование файла между наборами данных отнимает больше 
+	времени и требует больше свободного пространства. Однако это незначительно по сравнению со всеми преимуществами, которые дает вам ZFS
+	посредством множественности наборов данных. Эта проблема также существует в других файловых системах, однако у хостов, использующих 
+	большинство других файловых систем есть только несколько разделов, что делает эту проблему менее очевидной.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingDatasets"> </a>Просмотр наборов данных</h3>
+   </div></div></div>
+   <p>Команда <span class="term"><code>zfs list</code></span> отображает все наборы данных и некоторую основную информацию о них.</p>
+	   <pre class="screen">
+# zfs list
+NAME                 USED  AVAIL  REFER  MOUNTPOINT
+mypool               420M  17.9G    96K  none
+mypool/ROOT          418M  17.9G    96K  none
+mypool/ROOT/default  418M  17.9G   418M  /
+...
+	   </pre>
+   <p>Первое поле показывает иена наборов данных.</p>
+   <p>Под USED и REFER вы найдете информацию о том сколько дискового пространства использует набор данных. Одним из недостатков невероятной 
+   гибкости и эффективности ZFS является то, что интерпретация использования ей дискового пространства кажется несколько сюрреалистичной, 
+   если вы ее не понимаете.  <a class="link" href="Ch06.html" target="_top">Глава 6</a> обсуждает дисковое пространство и стратегии его 
+   использования.</p>
+   <p>Колонка AVAIL отображает сколько пространства остается свободным в пуле или наборе данных.</p>
+   <p>Наконец, MOUNTPOINT показывает где должен быть смонтирован набор данных. Это не означает, что набор данных смонтирован, а только то,
+   что если бы он был смонтирован, то это то место, где он должен быть. (Для просмотра всех смонтированных файловых систем ZFS воспользуйтесь
+   <span class="term"><code>zfs mount</code></span>)</p>
+   <p>Если вы дадите набор данных в качестве аргумента, <span class="term"><code>zfs list</code></span> отобразит только этот определенный 
+   набор данных.</p>
+   	   <pre class="screen">
+# zfs list mypool/lamb
+NAME         USED  AVAIL  REFER  MOUNTPOINT
+mypool/lamb  192K  17.9G    96K  /lamb
+	   </pre>
+   <p>Ограничьте отображаемый тип набор данных флагом <span class="term"><code>-t</code></span> и этим типом. Вы можете отображать filesystem, 
+   volume или snapshot. Вот мы отображаем снимки и только снимки.</p>
+	   <pre class="screen">
+# zfs list -t snapshot
+NAME                     USED  AVAIL  REFER  MOUNTPOINT
+zroot/var/log/db@backup  0         -  10.0G  -
+	   </pre>
+   <p>Теперь вы можете увидеть файловые системы, давайте посмотрим на некоторые.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CreatingMovingAndDestroyingDatasets"> </a>Создание, перемещение и ликвидация наборов данных</h3>
+   </div></div></div>
+   <p>Воспользуйтесь командой <span class="term"><code>zfs create</code></span> для создания какого- либо набора данных. Мы рассмотрим снимки, 
+   клоны и закладки в <a class="link" href="Ch07.html" target="_top">Главе 7</a>, а сейчас давайте рассмотрим файловые системы и тома.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CreatingFilesystems"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание файловых систем</span></h4>
+    </div></div></div>
+    <p>Файловые системы являются наиболее общим типом набором данных для большинства систем. Всем требуется место для хранения и упорядочения 
+	файлов. Создайте набор данных файловой системы описав пул и имя файловой системы.</p>
+	   <pre class="screen">
+# zfs create mypool/lamb
+	   </pre>
+    <p>Это создает новый набор данных, <span class="term"><code>lamb</code></span> в пуле ZFS с именем <span class="term"><code>mypool</code></span>.
+	Если этот пул имеет точку монтирования по умолчанию, новый набор данных монтируется в указанном месте по умолчанию. (см. &quot;<a class="link" 
+	href="#MountingZFS_Filesystems" target="_top">Монтирование файловых систем ZFS</a>&quot; далее в данной главе).</p>
+	   <pre class="screen">
+# mount | grep lamb
+mypool/lamb on /lamb (zfs, local, noatime, nfsv4acls)
+	   </pre>
+    <p>Заключенные в скобки установки монтирования, как правило, являются свойствами ZFS, наследуемыми от родительского набора данных. Чтобы 
+	создать дочернюю файловую систему, задайте полный путь к родительской файловой системе.</p>
+	   <pre class="screen">
+# zfs create mypool/lamb/baby
+	   </pre>
+    <p>Набор данных наследует многие из своих свойств, включая свою точку монтирования, от родителя, как мы увидим позже в &quot;<a class="link" 
+	href="#ParentChildRelationships" target="_top">Взаимосвязи родительский/ дочерний</a>&quot; в данной главе.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CreatingVolumes"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание томов</span></h4>
+    </div></div></div>
+    <p>Воспользуйтесь флагом <span class="term"><code>-V</code></span> и размером тома для сообщения <span class="term"><code>zfs create</code></span>
+	того, что вы хотите создать том. Задайте полный путь к набору данных тома.</p>
+	   <pre class="screen">
+# zfs create -V 4G mypool/avolume
+	   </pre>
+    <p>Zvol отображаются в списке наборов данных наряду с любыми другими наборами данных. Вы можете попросить <span 
+	<span class="term"><code>zfs list</code></span> отображать только zvol добавив параметр <span class="term"><code>-t volume</code></span>.</p>
+	   <pre class="screen">
+# zfs list mypool/avolume
+NAME            USED   AVAIL  REFER  MOUNTPOINT
+mypool/avolume  4.13G  17.9G    64K  -
+	   </pre>
+    <p>Zvol автоматически резервирует объем пространства эквивалентный размеру тома плюс метаданные ZFS. Данный zvol с 4ГБ использует 
+	4.13ГБ пространства.</p>
+    <p>Будучи блочным устройством, zvol не имеют точки монтирования. Они получают файл устройства (device node) в <span class="term"><code>/dev/zvol</code></span>,
+	следовательно вы можете осуществлять к ним доступ, как вы это делаете с любым другим блочным устройством.</p>
+	   <pre class="screen">
+# ls -al /dev/zvol/mypool/avolume
+crw-r----- 1 root operator 0x4d Mar 27 20:22 /dev/zvol/mypool/avolume
+	   </pre>
+    <p>Вы можете выполнить <span class="term"><code>newfs(8)</code></span> в этом файле устройства (device node), скопировать в нее образ диска и 
+	применять ее обычным образом как любое другое блочное устройство.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RenamingDatasets"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Переименование наборов данных</span></h4>
+    </div></div></div>
+    <p>Вы можете переименовать набор данных, причем, как ни странно, командой <span class="term"><code>zfs rename</code></span>. Задайте 
+	имя текущего набора данных в качестве первого аргумента, а новое местоположение в качестве второго.</p>
+	   <pre class="screen">
+# zfs rename db/production db/old
+# zfs rename db/testing db/production
+	   </pre>
+    <p>Применяйте флаг <span class="term"><code>-f</code></span> для принудительного переименования данного набора данных. Вы не можете размонтировать 
+	файловую систему с запущенными на ней процессами, однако флаг <span class="term"><code>-f</code></span> принудит размонтирование с ликованием. 
+	Все процессы, использующие этот набор данных потеряют любой используемый ими доступ и взаимодействуют как будто он все еще есть (вероятно, 
+	не лучшим образом).</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MovingDatasets"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Перемещение наборов данных</span></h4>
+    </div></div></div>
+    <p>Вы можете перемещать наборы данных с одной части дерева ZFS на другую, делая набор данных дочерним для его нового родителя. Это может вызвать 
+	изменение многих свойств набора данных, поскольку дети наследуют свойства своих родителей. Все свойства, специфичные для данного набора 
+	данных не будут изменены.</p>
+    <p>Здесь мы перемещаем базу данных из под набора данных <span class="term"><code>zroot/var/db</code></span> к новому родителю, где вы 
+	должны установить некоторые свойства для улучшения устойчивости к отказам.</p>
+	   <pre class="screen">
+# zfs rename zroot/var/db/mysql zroot/important/mysql
+	   </pre>
+<p>Отметим, что поскольку точка монтирования унаследована, по всей вероятности это изменит точку монтирования набора данных. 
+	Добавление флага <span class="term"><code>-u</code></span> в команду <span class="term"><code>rename</code></span> приведет к тому, 
+	что ZFS не изменит немедленно данную точку монтирования, предоставляя вам время для на перенастройку свойства для намеченного значения.
+	Отметим, что если машина перезапускается, или набор данных размонтируется вручную, он использует свою новую точку монтирования.</p>
+    <p>Вы можете переименовать снимок, однако вы не можете переместить снимок за пределы его родительского набора данных. Снимки подробно 
+	обсуждаются в <a class="link" href="Ch07.html" target="_top">Главе 7</a>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DestroyingDatasets"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ликвидация наборов данных</span></h4>
+    </div></div></div>
+    <p>Данный набор данных плох? Утащите его за сарай и удалите его прочь от ваших страданий при помощи <span class="term"><code>zfs(8)</code></span>.</p>
+	   <pre class="screen">
+# zfs destroy db/old
+	   </pre>
+    <p>Если вы добавите флаг <span class="term"><code>-r</code></span>, вы рекурсивно уничтожите всех детей (наборы данных, снимки и т.п.) из этого 
+	набора данных. Чтобы уничтожить все клонированные наборы данных, пока вы находитесь в них, воспользуйтесь <span class="term"><code>-R</code></span>.
+	При рекурсивном уничтожении наборов данных будьте предельно осторожны, поскольку вы зачастую можете быть удивлены тем, что собственно, является 
+	потомком набора данных.</p>
+    <p>Вы можете применить флаги <span class="term"><code>-v</code></span> и <span class="term"><code>-n</code></span> чтобы увидеть, что
+	в точности произойдет, когда вы уничтожите набор данных. Флаг <span class="term"><code>-v</code></span> выдает подробные сведения о том, что
+	будет уничтожено, в то время как <span class="term"><code>-n</code></span> сообщает <span class="term"><code>zfs(8)</code></span>, что выполнение
+	должно производиться вхолостую. Будучи объединены, они показывают что уничтожит команда на самом деле, прежде чем вы нажмете на спусковой крючок.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Properties"> </a>Свойства ZFS</h3>
+   </div></div></div>
+   <p>Наборы данных ZFS имеют множество установок, называемые свойствами (<span 
+   class="term"><strong class="userinput"><code>properties</code></strong></span>). Хотя некоторые из них вы можете установить только при создании 
+   набора данных, большинство из них можно настраивать при работающих наборах данных. ZFS также предоставляет ряд свойств доступных только на 
+   чтение, которые снабжают вас такой информацией, как потребляемый набором данных объем пространства, соотношения сжатия или дедупликации, а 
+   также время создания набора данных.</p>
+   <p>Каждый набор данных наследует свои свойства от его родителя, если данное свойство не устанавливается специально для данного набора данных.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingProperties"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр свойств</span></h4>
+    </div></div></div>
+    <p>Инструмент <span class="term"><code>zfs(8)</code></span> может возвращать определенное свойство или все свойства для некоего набора данных.
+	Примените команду <span class="term"><code>zfs get</code></span>, нужное свойство и, если вы пожелаете, имя набора данных.</p>
+	   <pre class="screen">
+# zfs get compression mypool/lamb
+NAME         PROPERTY     VALUE  SOURCE
+mypool/lamb  compression  lz4    inherited from mypool
+	   </pre>
+    <p>Под NAME вы видите запрошенный вами набор данных, а PROPERTY отображает ограниченное вами свойство. VALUE является тем, во что установлено 
+	данное свойство.</p>
+    <p>SOURCE слегка сложнее. Источник по умолчанию означает, что данное свойство установлено на значения ZFS по умолчанию. Локальный источник 
+	означает, что кто-то намеренно установил данное свойство для этого набора данных. Временное свойство было установлено при монтировании 
+	набора данных и это свойство возвращается к своему обычному значению после размонтирования набора данных. Наследуемое свойство приходит 
+	от родительского набора данных, как это обсуждается в разделе &quot;<a class="link" href="#ParentChildRelationships" target="_top">Взаимосвязи 
+	родительский/ дочерний</a>&quot; позже в данной главе.</p>
+    <p>Некоторые свойства не имеют источник, либо потому, что он неуместен, либо он по существу очевиден. Свойство создания, регистрирующее дату 
+	и время создания, не имеет источника. Значение получается от системных часов.</p>
+    <p>Если вы не укажете имя данных, <span class="term"><code>zfs get</code></span> отобразит свойства для всех наборов данных. Специальное 
+	ключевое слово свойств <span class="term"><strong class="userinput"><code>all</code></strong></span> возвращает все свойства набора данных.</p>
+	   <pre class="screen">
+# zfs get all mypool/lamb
+NAME         PROPERTY  VALUE                  SOURCE
+mypool/lamb  type      filesystem             -
+mypool/lamb  creation  Fri Mar 27 20:05 2015  -
+mypool/lamb  used      192K                   -
+...
+	   </pre>
+    <p>Если вы воспользуетесь <span class="term"><strong class="userinput"><code>all</code></strong></span> и не укажите имя набора данных, 
+	вы получите все свойства всех наборов данных. Это очень большой объем информации.</p>
+    <p>Отображайте несколько свойств разделяя имена свойств запятыми.</p>
+	   <pre class="screen">
+# zfs get quota,reservation zroot/home
+NAME        PROPERTY     VALUE  SOURCE
+zroot/home  quota        none   local
+zroot/home  reservation  none   default
+	   </pre>
+    <p>Также вы можете просмотреть свойства при помощи <span class="term"><code>zfs list</code></span> и модификатора 
+	<span class="term"><code>-o</code></span>. Это более удобно, когда вы хотите просмотреть несколько свойств от множества наборов данных.
+	Для отображения имени набора данных используйте специальное свойство <span class="term"><strong class="userinput"><code>name</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs list -o name,quota,reservation
+NAME                QUOTA  RESERV
+db                   none    none
+zroot                none    none
+zroot/ROOT           none    none
+zroot/ROOT/default   none    none
+...
+zroot/var/log        100G     20G
+	   </pre>
+    <p>Для просмотра в данном формате для набора данных вы также можете добавить имя набора данных.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ChangingProperties"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Изменение свойств</span></h4>
+    </div></div></div>
+    <p>Изменяйте свойства при помощи команды <span class="term"><code>zfs set</code></span>. Задайте имя свойства, новую установку и имя набора данных.
+	Вот изменение свойства <span class="term"><strong class="userinput"><code>compression</code></strong></span> в
+	<span class="term"><code>off</code></span>.</p>
+	   <pre class="screen">
+# zfs set compression=off mypool/lamb/baby
+	   </pre>
+    <p>Подтвердите свои изменения посредством <span class="term"><code>zfs get</code></span>.</p>
+	   <pre class="screen">
+# zfs get compression mypool/lamb/baby
+NAME              PROPERTY     VALUE  SOURCE
+mypool/lamb/baby  compression  off    local
+	   </pre>
+    <p>Большинство свойств применяются только к данным, записанным после изменения свойств. Свойство <span class="term"><strong class="userinput"><code>compression</code></strong></span>
+	сообщает ZFS о сжатии данных до их записи на диск. Мы обсудим сжатие в <a class="link" href="Ch06.html" target="_top">Главе 6</a>. Отключение
+	сжатия не разуплотнит никакие данные, пока не будут выполнены изменения. Аналогично, разрешение сжатия не сожмет магическим образом уже 
+	записанные на диск данные. Чтобы получить преимущества от разрешения сжатия, вы должны переписать каждый файл. Вам лучше создать новый набор данных,
+	скопировав данные посредством <span class="term"><code>zfs send</code></span> и уничтожив первоначальный набор данных.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Read-OnlyProperties"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Свойства, доступные только для чтения</span></h4>
+    </div></div></div>
+    <p>ZFS использует доступные только для чтения свойства для предоставления основной информации о наборе данных. Использование дискового 
+	пространства отображается как свойство. Вы не можете изменить то, как много данных вы используете путем изменения свойства, которое 
+	сообщает &quot;ваш диск наполовину заполнен&quot; (<a class="link" href="Ch06.html" target="_top">Глава 6</a> описывает 
+	использование дискового пространства ZFS). Вы можете изменять многие доступные только на чтение свойства добавляя данные на диск или удаляя 
+	их. Но вы не можете изменять их напрямую.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FilesystemProperties"> </a>Свойства файловой системы</h3>
+   </div></div></div>
+   <p>Одним из ключевых инструментов для управления производительностью и поведением традиционных файловых систем являются параметры монтирования.
+   Вы можете смонтировать файловую систему с доступом только на чтение или воспользоваться флагом <span class="term"><strong 
+   class="userinput"><code>noexec</code></strong></span> для запрета выполнения с нее программ. ZFS использует свойства для достижения тех же 
+   самых результатов. Вот свойства, для достижения этих привычных целей.
+   </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="atime"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">atime</span></h4>
+    </div></div></div>
+    <p>atime файла отображает когда был осуществлен последний доступ к 
+	файлу. Свойство ZFS	<span class="term"><strong class="userinput"><code>atime</code></strong></span> управляет тем отслеживать ли времена 
+	доступа к набору данных. Значение по умолчанию, <span class="term"><code>on</code></span>, обновляет метаданные atime файла при каждом доступе 
+	к файлу. Применение <span class="term"><strong class="userinput"><code>atime</code></strong></span> означает запись на диск каждый раз при его
+	чтении.</p>
+    <p>Переключение этого свойства в <span class="term"><code>off</code></span> избавляет от записи на диск при каждом чтении файла и,как результат,
+	значительный выигрыш производительности. Это может путать почтовые программы и другие подобные утилиты, которые полагаются на способность 
+	определения последнего чтения файла.</p>
+    <p>Оставление <span class="term"><strong class="userinput"><code>atime</code></strong></span> увеличивает размер снимка. При первом доступе 
+	к файлу его atime обновляется. Снимок оставляет первоначальное время доступа к файлу, хотя живая файловая система обновила время доступа.
+	Таково поведение по умолчанию.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="exec"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">exec</span></h4>
+    </div></div></div>
+    <p>Свойство <span class="term"><strong class="userinput"><code>exec</code></strong></span> определяет, может ли кто-нибудь выполнять двоичные 
+	файлы и команды в этой файловой системе. Значение по умолчанию устанавливается в <span class="term"><code>on</code></span>, что допускает 
+	исполнение. Некоторые среды не разрешают пользователям выполнять программы из их персональных или временных каталогов. Установите свойство 
+	<span class="term"><strong class="userinput"><code>exec</code></strong></span> в <span class="term"><code>off</code></span> чтобы 
+	запретить исполнение программ в данной файловой системе.</p>
+    <p>Однако, свойство <span class="term"><strong class="userinput"><code>exec</code></strong></span> не препятствует людям выполнять 
+	интерпретируемые сценарии. Если пользователь может выполнять <span class="term"><code>/bin/sh</code></span>, они могут исполнять 
+	<span class="term"><code>/bin/sh /home/mydir/script.sh</code></span>. Именно оболочка является тем, кто в действительности исполняет - 
+	пользователь только выбирает инструкции из сценария.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="readonly"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">readonly</span></h4>
+    </div></div></div>
+    <p>Если вы не хотите, чтобы что-то записывалось в этот набор данных, установите свойство <span class="term"><strong 
+	class="userinput"><code>readonly</code></strong></span> в <span class="term"><code>on</code></span>. Значение по умолчанию,
+	<span class="term"><code>off</code></span>, позволяет пользователям изменять набор данных в пределах установленных администратором допусков.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="setuid"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">setuid</span></h4>
+    </div></div></div>
+    <p>Многие люди считают setuid программы опасными. (Правильно написанные setuid программы не опасны. Именно поэтому настоящие situid программы 
+	опасны.) Хотя некоторые setuid программы должны оставаться setuid, например, <span class="term"><code>passwd(1)</code></span>
+	и <span class="term"><code>login(1)</code></span>, редко существует необходимость иметь setuid программы в файловых системах наподобие
+	<span class="term"><code>/home</code></span> или <span class="term"><code>/tmp</code></span>. Многие системные администраторы запрещают 
+	setuid программы везде кроме определенных файловых систем.</p>
+    <p>Свойство <span class="term"><strong class="userinput"><code>setuid</code></strong></span>
+	переключает поддержку setuid. Если оно установлено в <span class="term"><code>on</code></span>, то файловая система поддерживает setuid.
+	Если установлено <span class="term"><code>off</code></span>, флаг <span class="term"><strong class="userinput"><code>setuid</code></strong></span>
+	игнорируется.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="User-DefinedProperties"> </a>Определяемые пользователем свойства</h3>
+   </div></div></div>
+   <p>Свойства ZFS прекрасны, но вы не можете получить их в достаточном объеме, так? Ну,начните добавлять собственные. Возможность 
+   хранить собственные метаданные совместно с наборами данных позволяет разрабатывать совершенно новые сферы автоматизации. Тот факт,что 
+   потомки автоматически наследуют эти свойства делает жизнь еще проще.</p>
+   <p>Чтобы убедиться, что пользовательские свойства остаются вашими и не вступают в конфликт с пользовательскими свойствами других людей, 
+   создайте пространство имен. Большинство людей выделяют префиксом свои пользовательские свойства при помощи организационного идентификатора 
+   и точки. Например, специфичные для FreeBSD свойства имеют формат &quot;org.freebsd:propertyname&quot;, 
+   наподобие <span class="term"><strong class="userinput"><code>org.freebsd:swap</code></strong></span>. Если проект illumos создаст своё 
+   собственное свойство с именем <span class="term"><code>swap</code></span>, он назовёт его <span class="term"><strong 
+   class="userinput"><code>org.illumos:swap</code></strong></span>. Два значения не будут конфликтовать.</p>
+   <p>Например, предположим, что Джуд хочет управлять тем, какие наборы данных должны резервироваться посредством свойств наборов данных. 
+   Он создает пространство имен <span class="term"><strong class="userinput"><code>com.allanjude</code></strong></span>.
+   (Когда свойство ZFS носит ваше имя, вы увековечиваетесь своей работой. Будет это хорошо или плохо - зависит от вашей работы.) В пределах 
+   данного пространства имен он создает свойство <span class="term"><strong class="userinput"><code>backup_ignore</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs set com.allanjude:backup_ignore=on mypool/lamb
+	   </pre>
+   <p>Сценарии резервного копирования Джуда проверяют значение данного свойства. Если оно установлено в <span class="term"><code>true</code></span>,
+   процесс резервного копирования игнорирует данный набор данных.</p>
+</div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ParentChildRelationships"> </a>Взаимосвязи родительский/ дочерний</h3>
+   </div></div></div>
+   <p>Наборы данных наследуют свои свойства от родительских наборов данных. Когда вы устанавливаете свойство в наборе данных, это свойство 
+   применяется к этому набору данных и ко всем его потомкам. Для удобства вы можете выполнить команды <span class="term"><code>zfs(8)</code></span>
+   на наборах данных и всех их потомках добавляя флаг <span class="term"><code>-r</code></span>. Вот мы опрашиваем свойство 
+   <span class="term"><strong class="userinput"><code>compression</code></strong></span> на наборе данных и всех его потомках.</p>
+	   <pre class="screen">
+# zfs get -r compression mypool/lamb
+NAME              PROPERTY     VALUE  SOURCE
+mypool/lamb       compression  lz4    inherited from mypool
+mypool/lamb/baby  compression  off    local
+	   </pre>
+   <p>Взглянем на значения источника. Первый набор данных, <span class="term"><code>mypool/lamb</code></span>, наследует данное свойство из
+   родительского пула. Во втором наборе данных это свойство имеет отличное значение. Источник является локальным, что означает, что данное 
+   свойство было установлено специально для этого набора данных.</p>
+   <p>Мы можем восстановить первоначальную установку при помощи команды <span class="term"><code>zfs inherit</code></span>.</p>
+	   <pre class="screen">
+# zfs inherit compression mypool/lamb/baby
+# zfs get -r compression mypool/lamb
+NAME              PROPERTY     VALUE  SOURCE
+mypool/lamb       compression  lz4    inherited from mypool
+mypool/lamb/baby  compression  lz4    inherited from mypool
+	   </pre>
+   <p>Потомок теперь наследует свойство <span class="term"><strong class="userinput"><code>compression</code></strong></span> от родителя, 
+   которое наследуется от старшего предка.</p>
+   <p>Когда вы изменяете свойства родителя, эти новые свойства распространяются вниз на потомков.</p>
+	   <pre class="screen">
+# zfs set compression=gzip-9 mypool/lamb
+# zfs get -r compression mypool/lamb
+NAME              PROPERTY     VALUE   SOURCE
+mypool/lamb       compression  gzip-9  local
+mypool/lamb/baby  compression  gzip-9  inherited from mypool/lamb
+	   </pre>
+   <p>Я попросил родительский набор данных использовать сжатие <span class="term"><code>gzip-9</code></span>. Это проникло вниз к потомкам.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="InheritanceAndRenaming"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Наследование и переименование</span></h4>
+    </div></div></div>
+    <p>Когда вы перемещаете или переименовываете набор данных таким образом, что он получает нового родителя, свойства родителя автоматически 
+	распространяются вниз на потомков. Локально установленные свойства остаются неизменными, однако наследуемые переключаются на значения от 
+	нового родителя.</p>
+    <p>Вот мы создаем новый родительский набор данных и проверяем его свойство <span class="term"><strong 
+	class="userinput"><code>compression</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs create mypool/second
+# zfs get compress mypool/second
+NAME           PROPERTY     VALUE  SOURCE
+mypool/second  compression  lz4    inherited from mypool
+	   </pre>
+    <p>Наш набор данных <span class="term"><code>baby</code></span> использует сжатие <span class="term"><code>gzip-9</code></span>.
+	Он наследует это свойство от <span class="term"><code>mypool/lamb</code></span>. Теперь давайте переместим 
+	<span class="term"><code>baby</code></span> на место потомка <span class="term"><code>second</code></span> и посмотрим что 
+	произойдет со свойством <span class="term"><strong class="userinput"><code>compression</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs rename mypool/lamb/baby mypool/second/baby
+# zfs get -r compression mypool/second
+NAME                PROPERTY     VALUE  SOURCE
+mypool/second       compression  lz4    inherited from mypool
+mypool/second/baby  compression  lz4    inherited from mypool
+	   </pre>
+    <p>Дочерний набор данных теперь относится к другому родителю и наследует свои свойства от нового предка. Потомок сохраняет все 
+	локальные свойства.</p>
+    <p>Данные в дочернем наборе данных, однако, слегка перепутаются. Данные, записанные до включения <span class="term"><strong 
+	class="userinput"><code>compression</code></strong></span> являются не сжатыми. Данные, записанные во время,когда набор данных применял 
+	сжатие <span class="term"><code>gzip-9</code></span> сжаты при помощи <span class="term"><code>gzip-9</code></span>. Теперь все 
+	данные сжимаются при помощи <span class="term"><code>lz4</code></span>. ZFS сортирует всеэто для вас автоматически, но представлять 
+	себе о том как она это делает - голова пойдет кругом.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RemovingProperties"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Удаление свойств</span></h4>
+    </div></div></div>
+    <p>Когда вы устанавливаете свойство назад в значение по умолчанию, это совсем не очевидно как изменить источник назад в
+	<span class="term"><code>inherit</code></span> или <span class="term"><code>default</code></span>, или как переместить пользовательские 
+	свойства, раз уж они были установлены.</p>
+    <p>Чтобы удалить пользовательские свойства, наследуйте их.</p>
+	   <pre class="screen">
+# zfs inherit com.allanjude:backup_ignore mypool/lamb
+	   </pre>
+    <p>Это работает даже если вы установили свойство на корневой набор данных.</p>
+    <p>Чтобы установить свойство вего значение по умолчанию в наборе данных и всех его потомках или полностью удалить пользовательские 
+	свойства, воспользуйтесь командой <span class="term"><code>zfs inherit</code></span> в корневом наборе данных пула.</p>
+	   <pre class="screen">
+# zfs inherit -r compression mypool
+	   </pre>
+    <p>Это противоречит здравому смыслу, но это сбрасывает пользовательские настройки в вашем корневом наборе данных.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MountingZFS_Filesystems"> </a>Монтирование файловых систем ZFS</h3>
+   </div></div></div>
+   <p>В традиционной файловой системе вы перечисляете все разделы, их типы и место их монтирования в <span class="term"><code>/etc/fstab</code></span>.
+   Вы даже перечисляете временные монтирования, такие как устройства гибких дисков и CD ROM, просто для удобства. ZFS позволяет вам создавать
+   такое большое число файловых систем, что это быстро возрастает до лишенного практического смысла состояния.</p>
+   <p>Каждая файловая система имеет свойство <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span>, которое 
+   определяет где она должна монтироваться. Значение <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span> 
+   по умолчанию строится из <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span> вашего пула. Если пул не имеет точки
+   монтирования, вы должны назначать точку монтирования для каждого набора данных, который вы хотите монтировать.</p>
+	   <pre class="screen">
+# zfs get mountpoint zroot/usr/home
+NAME            PROPERTY    VALUE      SOURCE
+zroot/usr/home  mountpoint  /usr/home  inherited from zroot/usr
+	   </pre>
+   <p>Файловая система обычно монтируется в <span class="term"><code>/usr/home</code></span>. Вы можете переназначить это при монтировании
+   файловой системы вручную.</p>
+   <p>Ваш пул <span class="term"><code>zroot</code></span>, используемый для установки FreeBSD по умолчанию, не имеет установки точки монтирования.
+   Если вы создаете новые наборы данных непосредственно под <span class="term"><code>zroot</code></span>, они не будут иметь точек монтирования. 
+   Наборы данных , созданные в <span class="term"><code>zroot</code></span>, скажем, под <span class="term"><code>/usr</code></span>
+   унаследуют точку монтирования от своего родительского набора данных.</p>
+   <p>Любой пул, отличный от пула с корневой файловой системой обычно имеет точку монтирования с именем после этого пула. Если вы создали пул с 
+   именем <span class="term"><code>db</code></span>, он будет смонтирован в <span class="term"><code>/db</code></span>. Все потомки будут 
+   наследовать свои точки монтирования из этого пула, пока вы не измените их.</p>
+   <p>Когда вы изменяете свойство <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span> для файловой системы,
+   файловая система и все потомки, которые унаследовали точку монтирования становятся размонтированными. Если новое значение - 
+   <span class="term"><code>legacy</code></span>, то они остаются не монтированными. В противном случае они автоматически монтируются в новом 
+   местоположении, если свойство первоначально было <span class="term"><code>legacy</code></span> или
+   <span class="term"><code>none</code></span>, или если были смонтированы перед изменением свойства. Кроме того, все совместно используемые 
+   файловые системы прекращают быть таковыми и возвращаются к совместному использованию в новом местоположении.</p>
+   <p>Вточности как и обычные файловые системы, файловые системы ZFS не должны быть обязательно смонтированными. Свойство 
+   <span class="term"><strong class="userinput"><code>canmount</code></strong></span> управляет поведением монтирования файловой системы. Если
+   <span class="term"><strong class="userinput"><code>canmount</code></strong></span> установлено в значение <span class="term"><code>yes</code></span>,
+   выполнение <span class="term"><code>zfs mount -a</code></span> смонтирует файловую систему, в точности как 
+   <span class="term"><code>mount -a</code></span>. Когда вы разрешаете ZFS в <span class="term"><code>/etc/rc.conf</code></span>, 
+   FreeBSD выполняет <span class="term"><code>zfs mount -a</code></span> при запуске.</p>
+   <p>Когда свойство <span class="term"><strong class="userinput"><code>canmount</code></strong></span> установлено в значение 
+   <span class="term"><code>noauto</code></span>, набор данных может быть смонтирован или размонтирован только в явном виде. Набор данных 
+   не монтируется автоматически ни при создании или импортировании, а также не монтируется посредством команды 
+   <span class="term"><code>zfs mount -a</code></span> или не демонтируется с помощью <span class="term"><code>zfs unmount -a</code></span>.</p>
+   <p>Интересные вещи могут происходить, когда вы устанавливаете <span class="term"><strong class="userinput"><code>canmount</code></strong></span>
+   в значение <span class="term"><code>off</code></span>. Вы можете иметь два не смонтированных набора данных с одной и той же точкой монтирования.
+   Набор данных может существовать исключительно в целях того, чтобы быть предком для наборов данных в будущем, но на самом деле не хранить
+   файлы, как мы увидим это ниже.</p>
+   <p>Дочерние наборы данных не наследуют свойство <span class="term"><strong class="userinput"><code>canmount</code></strong></span>.</p>
+   <p>Изменение свойства <span class="term"><strong class="userinput"><code>canmount</code></strong></span> не выполняет автоматическое монтирование
+   или размонтирование файловой системы. Если вы сделаете запрет на смонтированной или размонтированной файловой системе, вам необходимо 
+   размонтировать файловую систему вручную или выполнить перезагрузку.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DatasetsWithoutMountPoints"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Наборы данных без точки монтирования</span></h4>
+    </div></div></div>
+    <p>Наборы данных ZFS имеют иерархию. Вам может понадобиться создать набор данных, который никогда не будет содержать никаких файлов только 
+	для того, чтобы он мог быть общим предком для ряда других наборов данных. Рассмотрим установки по умолчанию FreeBSD 10.1 или новее.</p>
+	   <pre class="screen">
+# zfs mount
+zroot/ROOT/default    /
+zroot/tmp             /tmp
+zroot/usr/home        /usr/home
+zroot/usr/ports       /usr/ports
+zroot/usr/src         /usr/src
+...
+	   </pre>
+    <p>У нас имеются все виды наборов данных под <span class="term"><code>/usr</code></span>, однако не существует никакого смонтированного 
+	набора данных <span class="term"><code>/usr</code></span>. Что происходит?</p>
+    <p><span class="term"><code>zfs list</code></span> отображает,что набор данных существует, и что он имеет тоску монтирования 
+	<span class="term"><code>/usr</code></span>. Однако давайте проверим наши свойства <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span>
+	и <span class="term"><strong class="userinput"><code>canmount</code></strong></span> для <span class="term"><code>zroot/usr</code></span>
+	и всех его потомков.</p>
+	   <pre class="screen">
+# zfs list -o name,canmount,mountpoint -r zroot/usr
+NAME           CANMOUNT  MOUNTPOINT
+zroot/usr           off  /usr
+zroot/usr/home      on   /usr/home
+zroot/usr/ports     on   /usr/ports
+zroot/usr/src       on   /usr/src
+	   </pre>
+    <p>При <span class="term"><strong class="userinput"><code>canmount</code></strong></span> установленном в 
+	<span class="term"><code>off</code></span>, набор данных <span class="term"><code>zroot/usr</code></span> никогда не монтируется. 
+	Все файлы, записанные в <span class="term"><code>/usr</code></span>, например, команды в <span class="term"><code>/usr/bin</code></span>
+	и пакеты в <span class="term"><code>/usr/local</code></span> попадают в корневую файловую систему. Точки монтирования нижнего уровня, 
+	такие как <span class="term"><code>/usr/src</code></span>, имеют свои собственные наборы данных, которые монтируются.</p>
+    <p>Набор данных существует только чтобы быть родительским для его дочерних наборов данных. Вы можете увидеть нечто аналогичное 
+	в вашем разделе <span class="term"><code>/var</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MultipleDatasetsWithSameMountPoint"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Множественные наборы данных с одной и той же точкой монтирования</span></h4>
+    </div></div></div>
+    <p>Установка <span class="term"><strong class="userinput"><code>canmount</code></strong></span> в значение 
+	<span class="term"><code>off</code></span> позволяет наборам данных использоваться исключительно в качестве механизма наследования свойств.
+	Одна из причин установки <span class="term"><strong class="userinput"><code>canmount</code></strong></span> в 
+	<span class="term"><code>off</code></span> заключается в наличии двух наборов данных с одной и той же точкой монтирования, с тем, чтобы 
+	потомки обоих наборов данных появлялись в одном и том же каталоге, но имели бы различные наследуемые свойства.</p>
+    <p>Установщик FreeBSD не имеет <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span> в пуле по умолчанию,  
+	<span class="term"><code>zroot</code></span>. Когда вы создаете новый набор данных, вы должны назначить точку монтирования для него.</p>
+    <p>Если вы не хотите назначать точку монтирования для каждого создаваемого вами непосредственно в пуле набора данных, можете назначить 
+	<span class="term"><strong class="userinput"><code>mountpoint</code></strong></span> для <span class="term"><code>/</code></span> на
+	пул <span class="term"><code>zroot</code></span> и оставить установку <span class="term"><strong 
+	class="userinput"><code>canmount</code></strong></span> в <span class="term"><code>off</code></span>. Таким образом вы можете создать 
+	новый набор данных, причем он должен наследовать <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span>.
+	Это очень простой пример применения множества наборов данных с одной и той же точкой монтирования.</p>
+    <p>Представим, что вам нужен каталог <span class="term"><code>/opt</code></span> с двумя наборами подкаталогов. Некоторые из этих 
+	подкаталогов содержат программы и никогда не должны перезаписываться после их установки. Другие каталоги содержат данные. Вы должны 
+	ограничить функциональность возможности выполнения программ только на уровне файловой системы.</p>
+	   <pre class="screen">
+# zfs create db/programs
+# zfs create db/data
+	   </pre>
+    <p>Теперь дадим этим двум наборам данных нашу <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span>
+	в <span class="term"><code>/opt</code></span> и сообщим им, что они не могут монтироваться.
+	</p>
+	   <pre class="screen">
+# zfs set canmount=off db/programs
+# zfs set mountpoint=/opt db/programs
+	   </pre>
+    <p>Установим ваши программы в этот набор данных и затем сделаем его доступным только для чтения.</p>
+	   <pre class="screen">
+# zfs set readonly=on db/programs
+	   </pre>
+    <p>Вы не можете запускать программы из набора данных <span class="term"><code>db/data</code></span>, поэтому выключим 
+	<span class="term"><code>exec</code></span> и <span class="term"><code>setuid</code></span>. Тем не менее, нам нужно записывать данные в 
+	эти каталоги.</p>
+	   <pre class="screen">
+# zfs set canmount=off db/data
+# zfs set mountpoint=/opt db/data
+# zfs set setuid=off db/data
+# zfs set exec=off db/data
+	   </pre>
+    <p>Теперь создадим дочерние наборы данных. Потомок набора данных <span class="term"><code>db/programs</code></span> унаследует эти 
+	свойства набора данных, в то время как потомки набора данных <span class="term"><code>db/data</code></span> унаследуют другой 
+	набор свойств.</p>
+	   <pre class="screen">
+# zfs create db/programs/bin
+# zfs create db/programs/sbin
+# zfs create db/data/test
+# zfs create db/data/production
+	   </pre>
+    <p>Теперь у нас есть четыре набора данных, смонтированных внутри <span class="term"><code>/opt</code></span>, два для бинарных {исполняемых} 
+    и два для данных. Насколько известно пользователям, это обычные каталоги. Независимо от того, что говорят разрешения файлов, тем не 
+	менее, никто не сможет писать в два из этих каталогов. Вне зависимости от того, что будут пихать туда злые люди, система не сможет 
+	распознавать исполняемые файлы и файлы с назначением индентификатора на время исполнения (setuid) в двух других. Когда вам нужны 
+	другие наборы данных для данных или программ, создавайте их как потомков наборов данных с нужными вам свойствами. Изменение свойств 
+	родительских наборов данных немедленно распространяется на всех потомков.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PoolsWithoutMountPoints"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пулы без точки монтирования</span></h4>
+    </div></div></div>
+    <p>Хотя обычно пул монтируется в каталог с именем после этого пула, это не обязательно должно быть так.</p>
+	   <pre class="screen">
+# zfs set mountpoint=none mypool
+	   </pre>
+    <p>Данный пул больше не монтируется. Никакие наборы данных в пуле не доступны, пока вы не зададите точку монтирования. Ровно так 
+	установщик FreeBSD создает пул для операционной системы.</p>
+	   <pre class="screen">
+# zfs set mountpoint=/someplace mypool/lamb
+	   </pre>
+    <p>Каталог будет создан, если необходимо, и файловая система смонтируется.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ManuallyMountingAndUnmountingFilesystems"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Монтирование и демонтирование файловых систем вручную</span></h4>
+    </div></div></div>
+    <p>Чтобы смонтировать файловую систему вручную, воспользуйтесь <span class="term"><code>zfs mount</code></span> и именем нужного 
+	набора данных. Это наиболее обычное применение для файловой системы с <span class="term"><strong class="userinput"><code>canmount</code></strong></span>
+	установленным в <span class="term"><code>noauto</code></span>.</p>
+	   <pre class="screen">
+# zfs mount mypool/usr/src
+	   </pre>
+    <p>Для размонтирования файловой системы и всех ее потомков применяйте <span class="term"><code>zfs unmount</code></span>.</p>
+	   <pre class="screen">
+# zfs unmount mypool/second
+	   </pre>
+    <p>Если вы хотите временно смонтировать набор данных в другом местоположении, воспользуйтесь флагом <span class="term"><code>-o</code></span>
+	для определения новой точки монтирования. Эта точка монтирования сохранится только пока вы не размонтируете этот набор данных.</p>
+	   <pre class="screen">
+# zfs mount -o mountpoint=/mnt mypool/lamb
+	   </pre>
+    <p>Вы можете монтировать набор данных только если он имеет определенную <span class="term"><strong 
+	class="userinput"><code>mountpoint</code></strong></span>. Определение временной точки монтирования при не заданной точке монтирования 
+	вернет вам ошибку.</p>
+   </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_and_etc_fstab"> </a>ZFS и /etc/fstab</h3>
+   </div></div></div>
+   <p>Если вам нравится, вы можете выбрать управление некоторыми или даже всеми точками монтирования вашей файловой системы ZFS при помощи
+   <span class="term"><code>/etc/fstab</code></span>. Установите свойство <span class="term"><strong class="userinput"><code>mountpoint</code></strong></span>
+   в <span class="term"><code>legacy</code></span>. Это размонтирует вашу файловую систему.
+	</p>
+	   <pre class="screen">
+# zfs set mountpoint=legacy mypool/second
+	   </pre>
+   <p>Теперь вы можете смонтировать этот набор данных при помощи команды <span class="term"><code>mount(8)</code></span>:</p>
+	   <pre class="screen">
+# mount -t zfs mypool/second /tmp/second
+	   </pre>
+   <p>Вы также можете добавить наборы данных ZFS в <span class="term"><code>/etc/fstab</code></span> вашей системы. Используйте полное имя набора 
+   данных в качестве файлов устройств (device node). Установите тип в <span class="term"><code>zfs</code></span>. Вы можете использовать стандартные параметры
+   файловой системы <span class="term"><code>noatime</code></span>, <span class="term"><code>noexec</code></span>,
+   <span class="term"><code>readonly</code></span> или <span class="term"><code>ro</code></span> и <span class="term"><code>nosuid</code></span>.
+   (Вы также можете в явном виде задать поведение по умолчанию для <span class="term"><code>atime</code></span>, 
+   <span class="term"><code>exec</code></span>, <span class="term"><code>rw</code></span> и <span class="term"><code>suid</code></span>, но они
+   являются определениями ZFS по умолчанию.) Порядок монтирования обычный, однако поле fsck игнорируется. Вот запись 
+   <span class="term"><code>/etc/fstab</code></span>, которая монтирует набор данных <span class="term"><code>scratch/junk nosuid</code></span> 
+   в <span class="term"><code>/tmp</code></span>.</p>
+	   <pre class="screen">
+scratch/junk /tmp nosuid 2 0
+	   </pre>
+   <p>Однако, мы рекомендуем применять свойства ZFS для управления вашими монтированиями. Свойства могут делать почти все, что делает 
+   <span class="term"><code>/etc/fstab</code></span> и даже больше.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="TweakingZFS_Volumes"> </a>Тонкая настройка томов ZFS</h3>
+   </div></div></div>
+   <p>Zvol достаточно просты - вот кусок пространства в виде блочного устройства, используйте его. Вы можете настроить как том использует 
+   пространство и какой вид файлов устройств (devce node) </p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SpaceReservations"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Резервирование пространства</span></h4>
+    </div></div></div>
+    <p>Свойство <span class="term"><strong class="userinput"><code>volsize</code></strong></span> zvol определяет логический размер тома.
+	По умолчанию создание тома резервирует объем пространства для набора данных, равное размеру тома. (Если вы заглянете вперед в 
+	<a class="link" href="Ch06.html" target="_top">Главу 6</a>, оно устанавливает refreservation равного размера.) Изменение 
+	<span class="term"><strong class="userinput"><code>volsize</code></strong></span> изменяет выделение. 
+	<span class="term"><strong class="userinput"><code>volsize</code></strong></span> может быть установлен только кратным свойству
+	<span class="term"><strong class="userinput"><code>volblocksize</code></strong></span> и не может быть нулем.</p>
+    <p>Без резервирования том может работать за пределами пространства, что приведет в результате к неопределенному поведению или 
+	разрушению данных, в зависимости от того, как используется том. Подобные результаты могут получиться также когда размер тома 
+	изменяется при его использовании, в особенности при усечении размера. Корректировка размера тома может запутать приложения, использующие 
+	блочное устройство.</p>
+    <p>Zvols также поддерживает разреженные тома (<span class="term"><strong class="userinput"><code>sparse volumes</code></strong></span>), 
+	также называемые динамическим выделением (<span class="term"><strong class="userinput"><code>thin provisioning</code></strong></span>).
+	Разреженные тома, это тома в которых резервируется объем меньше размера тома. По сути, разреженный том позволяет выделять больше пространства, 
+	чем доступно в наборе данных. При помощи разреженных томов вы можете, скажем, создать десять разреженных томов по 1ТБ в вашем наборе данных 
+	5ТБ. Пока ваши тома не используются в режиме сильного заполнения, никто не заметит что вы вышли за пределы допустимого.</p>
+    <p>Разреженные тома не рекомендуются. Запись в разреженный том может завершиться отказом &quot;out of space&quot;, даже если ваш том 
+	сам по себе выглядит только частично заполненным.</p>
+    <p>Определение разреженного тома во время создания задается параметром <span class="term"><code>-s</code></span> в команде 
+	<span class="term"><code>zfs create -V</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZvolMode"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режим Zvol</span></h4>
+    </div></div></div>
+    <p>FreeBSD обычно выдает zvol для операционной системы как поставщиков <span class="term"><code>geom(4)</code></span>, предоставляя им 
+	максимальную гибкость. Вы можете изменить это при помощи свойства <span class="term"><strong class="userinput"><code>volmode</code></strong></span>.</p>
+    <p>Установка <span class="term"><strong class="userinput"><code>volmode</code></strong></span> тома в 
+	<span class="term"><code>dev</code></span> выдает тома только как символьные устройства в <span class="term"><code>/dev</code></span>. 
+	Доступ к таким томам может быть осуществлен только как к сырым файлам дисковых устройств. Они не могут разбиваться на разделы или монтироваться, а 
+	также они не могут принимать участие в RAID или других функциональностях GEOM. Они быстрее. В некоторых случаях, когда вы не доверяете устройству, 
+	использующему том, режим dev может быть безопаснее.</p>
+    <p>Установка <span class="term"><strong class="userinput"><code>volmode</code></strong></span> в <span class="term"><code>none</code></span>
+	означает, что том не выдается за пределы ZFS. Такие тома, однако, могут выдавать снимки, быть клонированными и реплицироваться. Эти тома 
+	могут быть удобными для целей резервного копирования.</p>
+    <p>Установка <span class="term"><strong class="userinput"><code>volmode</code></strong></span> в <span class="term"><code>default</code></span>
+	означает, что выдача тома управляется вашим <span class="term"><code>sctl vfs.zfs.vol.mode</code></span>. Вы можете установить режим zvol 
+	по умолчанию по всей системе. Значение <span class="term"><code>1</code></span> означает, что значение по умолчанию это <span class="term"><code>geom</code></span>, 
+	<span class="term"><code>2</code></span> означает <span class="term"><code>dev</code></span>, а <span class="term"><code>3</code></span> 
+	означает <span class="term"><code>none</code></span>.</p>
+    <p>Когда вы изменяете свойство на томе, находящемся в работе, это не имеет результата. Это свойство обрабатывается только при создании 
+	тома и импорте пула. Вы можете повторно создать устройство zvol путем переименования тома с помощью <span class="term"><code>zfs rename</code></span>.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DatasetIntegrity"> </a>Целостность наборов данных</h3>
+   </div></div></div>
+   <p>Основная защита ZFS работает на уровне VDEV. Это именно то место, где блоки и диски становятся плохими в конце концов. Некоторые аппаратные 
+   пределы, однако, ограничивают резервирование пула. Очень мало портативных компьютеров имеют достаточное число жестких дисков для применения 
+   зеркалирования, не говоря уж об RAID-Z.Однако вы можете кое-что сделать на уровне данных для предоставления некоторой избыточности путем 
+   применения контрольных сумм, избыточности метаданных и копий. Большинство пользователей никогда не должны касаться первых двух, а 
+   пользователи с избыточными виртуальными устройствами, вероятно, хотят оставить исключительно все три.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Checksums"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Контрольные суммы</span></h4>
+    </div></div></div>
+    <p>ZFS вычисляет и сохраняет контрольные суммы для каждого записываемого ею блока. Это гарантирует,что когда блок считывается 
+	обратно, ZFS может удостовериться, что он тот же, что были при записи, а не был втихую испорчен тем или иным способом. Свойство 
+	<span class="term"><strong class="userinput"><code>checksum</code></strong></span> управляет какой алгоритм контрольных сумм 
+	использует набор данных. Разрешенными установками являются <span class="term"><strong class="userinput"><code>on</code></strong></span>,
+	<span class="term"><strong class="userinput"><code>fletcher2</code></strong></span>,
+	<span class="term"><strong class="userinput"><code>fletcher4</code></strong></span>,
+	<span class="term"><strong class="userinput"><code>sha256</code></strong></span>,
+	<span class="term"><strong class="userinput"><code>off</code></strong></span> и
+	<span class="term"><strong class="userinput"><code>noparity</code></strong></span>.</p>
+    <p> Значение по умолчанию, <span class="term"><strong class="userinput"><code>on</code></strong></span>, использует алгоритм, 
+	выбранный разработчиком OpenZFS. В 2015 году таким алгоритмом был <span class="term"><strong 
+	class="userinput"><code>fletcher4</code></strong></span>, однако в последующих выпусках могут быть изменения.</p>
+    <p>Стандартный алгоритм, <span class="term"><strong class="userinput"><code>fletcher4</code></strong></span>, является 
+	алгоритмом контрольных сумм по умолчанию. Он достаточно хорош для большинства применений и очень быстрый. Если вы хотите 
+	применять <span class="term"><strong class="userinput"><code>fletcher4</code></strong></span> повсюду и всегда, вы можете 
+	установить данное свойство в <span class="term"><strong class="userinput"><code>fletcher4</code></strong></span>. Однако, мы рекомендуем 
+	оставить значение по умолчанию в <span class="term"><strong class="userinput"><code>on</code></strong></span> и позволить ZFS 
+	обновить алгоритм контрольных сумм вашего пула, когда придет его время.</p>
+    <p>Значение <span class="term"><strong class="userinput"><code>off</code></strong></span> запрещает проверку целостности данных 
+	пользователя.</p>
+    <p>Значение <span class="term"><strong class="userinput"><code>noparity</code></strong></span> не только запрещает проверку 
+	целостности данных, но также запрещает сопровождение контрольных сумм для пользовательских данных. Эта установка используется внутренне  
+	для устройства дампа, расположенного в пуле RAID-Z и не должна применяться ни в каких других наборах данных. Запрещение контрольных сумм 
+	не рекомендуется.</p>
+    <p>Старые версии ZFS применяли алгоритм <span class="term"><strong class="userinput"><code>fletcher2</code></strong></span>. Хотя он и 
+	поддерживается для более старых пулов, он, несомненно, не поощряется.</p>
+    <p>Алгоритм <span class="term"><strong class="userinput"><code>sha256</code></strong></span> медленнее чем
+	<span class="term"><strong class="userinput"><code>fletcher4</code></strong></span>, однако вероятность противоречий меньше. 
+	В большинстве случаев противоречия не вредоносные. Алгоритм <span class="term"><strong class="userinput"><code>sha256</code></strong></span> 
+	часто рекомендуется при выполнении дедупликации.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copies"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Копии</span></h4>
+    </div></div></div>
+    <p>ZFS хранит две или три копии важных метаданных и может предоставить такие же средства для важных данных пользователя. Свойство 
+	<span class="term"><strong class="userinput"><code>copies</code></strong></span> сообщает ZFS сколько сохранять копий пользовательских 
+	данных. ZFS пытается разместить эти копии на разных дисках или, если это возможно, размещать их так далеко на физическом диске, как это 
+	возможно, чтобы помочь защититься от аппаратных сбоев. Когда вы увеличиваете свойство <span class="term"><strong class="userinput"><code>copies</code></strong></span>,
+	ZFS также увеличивает число копий метаданных для набора данных, до максимального значения три.</p>
+    <p>Если ваш пул работает на двух зеркалированных дисках и установите значение <span class="term"><strong class="userinput"><code>copies</code></strong></span>
+	в <span class="term"><code>3</code></span>, вы будете иметь шесть копий ваших данных. Одна из них должна пережить свое опрометчивое 
+	применение <span class="term"><code>dd(1)</code></span> на сыром устройстве поставщика или подобный прыжок с крыши.</p>
+	<p>Увеличение или уменьшение числа копий оказывает воздействие только на данные, записываемые после такого изменения установок. Изменение 
+	<span class="term"><strong class="userinput"><code>copies</code></strong></span> с <span class="term"><code>1</code></span> до
+	<span class="term"><code>2</code></span>,несомненно, не создаст дублирующие копии всех ваших данных, как мы видим здесь. Создайте файл с 10МБ
+	случайных данных:</p>
+	   <pre class="screen">
+# dd if=/dev/random of=/lamb/random1 bs=1m count=10
+10+0 records in
+10+0 records out
+10485760 bytes transferred in 0.144787 secs (72421935 bytes/sec)
+# zfs set copies=2 mypool/lamb
+	   </pre>
+    <p>Теперь каждый блок сохранен дважды. Если одна из копий будет разрушена, ZFS будет все еще в состоянии читать ваш файл. Он будет знать 
+	какой из блоков конкретно разрушен, поскольку он не будет соответствовать своей контрольной сумме. Однако взглянем на пространство, 
+	потребляемое нашим пулом (пространство  REFER в списке пула).</p>
+	   <pre class="screen">
+# zfs list mypool/lamb
+NAME         USED   AVAIL  REFER  MOUNTPOINT
+mypool/lamb  10.2M  13.7G  10.1M  /lamb
+	   </pre>
+    <p>Используются только 10МБ, которые мы записали. Никакая дополнительная копия для этого файла не была создана, поскольку мы записали его 
+	до изменения свойства <span class="term"><strong class="userinput"><code>copies</code></strong></span>.</p>
+    <p>При <span class="term"><strong class="userinput"><code>copies</code></strong></span> установленных в <span class="term"><code>2</code></span>,
+	однако, если мы запишем другой файл или повторно запишем первоначальный файл, мы увидим другое использование диска.</p>
+	   <pre class="screen">
+# dd if=/dev/random of=/lamb/random2 bs=1m count=10
+10+0 records in
+10+0 records out
+10485760 bytes transferred in 0.141795 secs (73950181 bytes/sec)
+	   </pre>
+    <p>Взглянем на использование диска теперь.</p>
+	   <pre class="screen">
+# zfs list mypool/lamb
+NAME         USED   AVAIL  REFER  MOUNTPOINT
+mypool/lamb  30.2M  13.7G  30.1M  /lamb
+	   </pre>
+    <p>Общий объем используемого пространства 30МБ, 10 для первого файла случайных данных и 20 для 2 копий второго файла 10МБ.</p>
+    <p>Когда мы посмотрим на файлы с помощью <span class="term"><code>ls(1)</code></span>, она отобразит только реальный размер:</p>
+	   <pre class="screen">
+# ls -l /lamb/random*
+-rw-r--r-- 1 root wheel 10485760 Apr 6 15:27 /lamb/random1
+-rw-r--r-- 1 root wheel 10485760 Apr 6 15:29 /lamb/random2
+	   </pre>
+    <p>Если вы хотите действительно унавозить устойчивость вашего набора данных, </p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MetadataRedundancy"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Избыточность метаданных, рассмотрите избыточность метаданных.</span></h4>
+    </div></div></div>
+    <p>Каждый набор данных хранит свою внутреннюю копию метаданных, так что если какой-то отдельный блок поврежден, объем утраченных 
+	пользовательских данных ограничен. Такая дополнительная копия является добавлением к любой избыточности предоставленной на уровне VDEV (например, 
+	посредством зеркалирования или RAID-Z). Она также добавляется ко всем другим дополнительным копиям, определяемым свойством 
+	<span class="term"><strong class="userinput"><code>copies</code></strong></span> (ниже), до трех копий в сумме.</p>
+    <p>Свойство <span class="term"><strong class="userinput"><code>redundant_metadata</code></strong></span> позволяет вам решить насколько 
+	избыточными вы хотите сделать свои метаданные. Большинство пользователей никогда не должно изменять это свойство.</p>
+    <p>Когда <span class="term"><strong class="userinput"><code>redundant_metadata</code></strong></span> установлено в
+	<span class="term"><code>all</code></span> (значение по умолчанию), ZFS хранит дополнительную копию всех метаданных. Если один блок на диске 
+	разрушен, в худшем случае будет утрачен один блок пользовательских данных.</p>
+    <p>Когда <span class="term"><strong class="userinput"><code>redundant_metadata</code></strong></span> установлен в 
+	<span class="term"><code>most</code></span>, ZFS хранит дополнительную копию только большинства метаданных. Это может повысить 
+	производительность операций случайных записей, поскольку должно записываться меньше метаданных. Когда только большинство метаданных 
+	является избыточными, в худшем случае примерно 100 блоков пользовательских данных может быть утрачено при разрушении отдельного блока данных.
+	Точное поведение того, какие блоки метаданных хранятся избыточно может изменяться в последующих выпусках.</p>
+    <p>Если вы установили <span class="term"><strong class="userinput"><code>redundant_metadata</code></strong></span> в
+	<span class="term"><code>most</code></span> и <span class="term"><strong class="userinput"><code>copies</code></strong></span>
+	в значение <span class="term"><code>3</code></span>, а данные обитают в зеркалированном пуле, то ZFS сохраняет 6 копий большинства 
+	метаданных и по четыре копии данных и остальных метаданных.</p>
+    <p>Данное свойство было разработано для конкретных случаев применения, которые часто обновляют метаданные, например, для баз данных.
+	Если данные уже защищены достаточно сильной отказоустойчивостью, уменьшение числа копий метаданных, которые должны быть записаны 
+	при каждом изменении базы данных, может улучшить производительность. Изменяйте это значение только если вы знаете что делаете.</p>
+    <p>Теперь у вас есть контроль над наборами данных, давайте поговорим о сопровождении пула.</p>
+   </div>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

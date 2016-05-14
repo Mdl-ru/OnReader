@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Пропадающие образы - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="app_crypt.html" title="Дополнение B. Байки из зашиф^H^H^H^H облака"/>
+<link rel="prev" href="issue.html" title="&#34;Проблема&#34;"/>
+<link rel="next" href="valentines.html" title="Массовое уничтожение вычислительных узлов в день всех влюбленных"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:19+00:00"/><script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//disappear_images.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Пропадающие образы';
+PrevRef = 'issue.html';
+UpRef = 'app_crypt.html';
+NextRef = 'valentines.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="disappear_images"> </a>Пропадающие образы</h2>
+</div></div></div>
+<p>В конце 2012 года, Cybera (некоммерческая организация с мандатом на 
+наблюдение за развитием киберинфраструктуры в Альберте, Канада) 
+развернула модернизированное облако OpenStack для своего 
+<a class="link" href="http://www.canarie.ca/en/dair-program/about" title="DAIR project" target="_top">проекта DAIR</a>
+(http://www.canarie.ca/en/dair-program/about). 
+Через несколько дней работы один вычислительный узел завис. 
+После перезагрузки узла, я проверил какие экземпляры были 
+размещены на этом узле, чтобы я мог загрузить их от имени клиента. 
+К счастью, там был только один экземпляр.</p>
+<p>Команда <span class="command"><strong>nova reboot</strong></span>
+не работала, поэтому я воспользовался <span class="command"><strong>virsh</strong></span>, 
+но она сразу же вернула с ошибку заявив, что не смогла найти диска поддержки (backing disk). 
+В данном случае, диском поддержки являлся образ  Glance, который копируется в 
+<code class="filename">/var/lib/nova/instances/_base</code> 
+при первом использовании образа. Почему не возможно его найти? 
+Я проверил каталог и убедился, что он был на месте.</p>
+<p>Я рассмотрел базу данных <code class="code">nova</code> 
+и увидел запись для данного экземпляра в таблице <code class="code">nova.instances</code>.
+Образ, который использовал экземпляр соответствовал тому, о котором сообщал virsh, 
+следовательно никакого не соответствия не существует.</p>
+<p>Я проверил Glance и заметил, что этот образ был созданным 
+пользователем моментальным снимком. По крайней мере, это была хорошая новость, 
+что только этот один пользователь был затронут.</p>
+<p>Наконец, я проверил StackTach и рассмотрел события пользователя. 
+Это были создания и удаления нескольких моментальных снимков, 
+скорее всего, экспериментальных. Хотя временные метки не совпадали, мой вывод
+состоял в том, что они запускали свой экземпляр, а затем удаляли снимок, 
+и он был каким-то образом удален из 
+<code class="filename">/var/lib/nova/instances/_base</code>.</p>
+<p>Оказывается, причина того, что это вычислительный узел зависал, 
+была в проблеме с аппаратурой. Мы удалили ее из облака DAIR и 
+вызвали Dell для обслуживания. Dell приехал и начал работать. 
+Так или иначе (или кривые руки), но другой вычислительный узел 
+был вставлен и загружен. Отлично.</p>
+<p>Когда этот узел полностью загрузится, я выполнил тот же сценарий, 
+просмотра того, какие экземпляры были запущены, чтобы я мог 
+включить их опять. В общей сложности было четыре экземпляра. 
+Три загрузились, а один выдал сообщение об ошибке. 
+Это была та же ошибка, что и прежде: не удалось найти 
+диск поддержки. Серьезно, что ли?</p>
+<p>Вновь оказалось, что образ был моментальным снимком. Три других 
+экземпляра, которые запустились успешно, были стандартными образами облака. 
+Была ли это проблема с образами? Это не имеет смысла.</p>
+<p>Примечание об архитектуре DAIR: <code class="filename">/var/lib/nova/instances</code> 
+является подключением совместно используемой NFS. Это означает, что все вычислительные узлы имеют к 
+нему доступ, причем он включает в себя каталог <code class="code">_base</code>.
+Другой централизованной областью является <code class="filename">/var/log/rsyslog</code>
+в контроллере облака. Этот каталог содержит все журналы OpenStack со всех вычислительных узлов. 
+Я задался вопросом, существуют ли какие-либо записи для файла, о котором сообщает
+<span class="command"><strong>virsh</strong></span>:</p>
+<pre class="screen">dair-ua-c03/nova.log:Dec 19 12:10:59 dair-ua-c03
+2012-12-19 12:10:59 INFO nova.virt.libvirt.imagecache
+[-] Removing base file:
+/var/lib/nova/instances/_base/7b4783508212f5d242cbf9ff56fb8d33b4ce6166_10
+            </pre>
+<p> </p>
+<p>А-ага! Так OpenStack удалил его. Но почему?</p>
+<p>В Essex была введена функция для периодической проверки и поиска того, 
+существуют ли какие-либо не используемые файлы <code class="code">_base</code>. 
+Если бы они существовали, Nova бы удалила их. Эта идея звучит вполне невинно 
+и имеет некоторые хорошие свойства. Но как эта функция в конечном итоге включилась? 
+По умолчанию она была выключена в Essex. Как это и должно быть. 
+В Folsom было <a class="link" href="https://bugs.launchpad.net/nova/+bug/1029674" target="_top">
+decided to be turned on in Folsom</a>
+(принято решение включить ее https://bugs.launchpad.net/nova/+bug/1029674). 
+Я не могу не подчеркнуть, что:</p>
+<p><span class="emphasis"><em>
+Действия, которые удаляют что-то не должны быть включены по умолчанию.</em></span></p>
+<p>В настоящее время дисковое пространство дешево. А восстановление данных нет.</p>
+<p>Во-вторых, совместно используемый каталог 
+<code class="filename">/var/lib/nova/instances</code> в случае DAIR 
+способствовал проблеме. Так как все вычислительные узлы имеют доступ к этому каталогу, 
+все вычислительные узлы периодически просматривают каталог 
+_base. Если существует только один экземпляр, использующий образ, 
+и единственный узел, на котором находится экземпляр, отключится на 
+несколько минут, он не сможет пометить образ как все еще используемый. 
+Таким образом, образ кажется не используемым и удаляется. 
+Когда вычислительный узел возвращается во включенное состояние, экземпляр, размещенный 
+на этом узле не в может запуститься.</p>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

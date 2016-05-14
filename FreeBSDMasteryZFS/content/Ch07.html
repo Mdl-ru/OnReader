@@ -1,0 +1,1280 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 7. Снимки и клоны - Мастерство FreeBSD: ZFS</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="prev" href="Ch06.html" title="Глава 6. Управление дисковым пространством"/>
+<link rel="next" href="Ch08.html" title="Глава 8. Установка на ZFS"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 7. Моментальные снимки и клоны';
+PrevRef = 'Ch06.html';
+UpRef = 'index.html';
+NextRef = 'Ch08.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 7. Моментальные снимки и клоны</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch07.html">7. Снимки и клоны</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch07.html#Copy-on-Write">Копирование при записи</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#HowSnapshotsWork">Как работает снимок</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#UsingSnapshots">Применение снимков</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#CreatingSnapshot">Создание снимка</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#DatasetChangesAndSnapshotSpace">Изменения набора данных и пространство снимка</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#RecursiveSnapshots">Рекурсивные снимки</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#AdvancedDatasetAndSnapshotViewing">Расширенный набор данных и просмотр снимка</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#ViewDatasetsByType">Просмотр наборов данных по типу</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#ModifyingZfsListOutput">Изменение списка вывода zfs</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#ListingSnapshotsByDefault">Вывод списков снимков по умолчанию</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#ScriptsAndZFS">Сценарии и ZFS</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Per-SnapshotSpaceUse">Использование пространства на снимок</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#AccessingSnapshots">Доступ к снимкам</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#SecretSnapdir">Скрытый Snapdir</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#MountingSnapshots">Монтирование снимков</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#DeletingSnapshots">Удаление снимков</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#DestructionDryRuns">Выполнения уничтожения вхолостую</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#RecursionAndRanges">Рекурсия и диапазоны</a></span></dt>
+	 </dl></dd>
+    <dt><span class="section"><a href="Ch07.html#RollingBack">Откат</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#DiffingSnapshots">Нахождение разницы снимков</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#AutomaticSnapshotRegimen">Автоматический режим снимка</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#RotationSchedule">Циклическое расписание</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#ZFS_Tools">Инструменты ZFS</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#zfs-auto-snapshot">zfs-auto-snapshot</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#EnablingAutomaticSnapshots">Разрешение автоматического снимка</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#ViewingAutomaticSnapshots">Просмотр автоматического снимка</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#GettingClever">Получение остроумных вариантов при помощи zfs-auto-snap</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#Holds">Захваты</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Bookmarks">Закладки</a></span></dt>
+	<dt><span class="section"><a href="Ch07.html#Clones">Клоны</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#CreatingClone">Создание клона</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#ViewingClones">Просмотр клонов</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#DeletingClonesAndSnapshots">Удаление клонов и снимков</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#PromotingClones">Продвижение клонов</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch07.html#SafelyManaging">Безопасное управление клонами, снимками и рекурсией</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Одной из самых мощных функциональностей ZFS являются снимки. Снимок файловой системаы или zvol позволяет получить доступ к копии 
+  набора данных, как будто бы она существовала в определенный момент. Снимки доступны только для чтения, и никогда не изменяются. Снимок 
+  является замороженным образом ваших файлов, к которым вы можете получить доступ на досуге. В то время как резервное копирование, 
+  как правило, фиксирует систему на протяжении минут или часов, выполнение резервного копирования снимке означает, что резервная копия 
+  получает один последовательный образ системы, устраняя сообщения типа: <span class="term"><code>tar: file changed as we read 
+  it</code></span> и их двоюродных собратьев.</p>
+  <p>Хотя снимки доступны только на чтение, вы можете откатить данные назад в состояние снимка. Сделайте снимок перед обновлением системы, 
+  и, если обновление идет ужасно неправильно, вы можете вернуться к снимку, а потом кричать на своего поставщика.</p>
+  <p>Снимки являются корнем многих специализированных функциональностей ZFS, например, клонов. Клон является разветвлением файловой 
+  системы на основе снимков. Новые клоны не требуют дополнительного пространства, поскольку они совместно со снимком используют все свои 
+  блоки набора данных. По мере изменения клона ZFS выделяет новое место хранения для размещения изменений. Это позволяет вам 
+  раскручивать несколько слегка различающихся копий набора данных без применения полной порции дискового пространства для каждого из них.
+  Вы хотите знать что тестовая среда полностью отражает производственную? Клонируйте вашу производственную файловую систему и тестируйте
+  полученный клон.</p>
+  <p>Снимки также лежат в основе репликации, позволяя отправлять наборы данных с одного хоста на другой.</p>
+  <p>Лучше всего, что внутренне присущее ZFS копирования-при-записи (COW, copy-on-write) означает, что снимки &quot;бесплатны&quot;.
+  Создание снимка мгновенно и не требует дополнительного пространства.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copy-on-Write"> </a>Копирование при записи</h3>
+   </div></div></div>
+   <p>И в обычных файловых системах, и в ZFS файлы присутствуют в виде блоков на вашем диске. В традиционной файловой системе изменение 
+   файла означает изменения блоков файла. В случае краха системы или отключения электропитания при активном из изменении системой этих 
+   блоков получающееся в результате обрезание записи создаст файл, в котором половина будет старой версией, а половина новой и к тому же, 
+   вероятно, недоступной.</p>
+   <p>ZFS никогда не перезаписывает существующие блоки файла. Когда нечто изменяет файл, ZFS определяет блоки подлежащие изменению и 
+   записывает их в новое местоположение на диске. Это называется копированием-при-записи, или COW 
+   (<span class="emphasis"><em>copy-on-write</em></span>). Старые блоки остаются нетронутыми. Обрезанная запись может потерять самые 
+   новые изменения в вашем файле, однако предыдущая версия вашего файла все еще остается нетронутой.</p>
+   <p>Невозможность утраты файла является великим преимуществом копирования-при-ззаписи, однако COW открывает и ряд других 
+   возможностей. ZFS создает снимки с помощью отслеживания старых версий измененных блоков. Это звучит обманчиво просто, не так ли? 
+   Да,так. Но, как и во всем простом, черт кроется в деталях. Мы обсуждали то, как данные ZFS хранит данные в 
+   <a class="link" href="Ch03.html" target="_top">Главе 3.</a>, но давайте углубимся.</p>
+   <p>ZFS является почти объектно- ориентированной файловой системой. Метаданные, индексация и данные - все они являются различными 
+   типами объектов, которые могут указывать на другие объекты. Пул ZFS является гигантским деревом объектов с корнем в метках пула.</p>
+   <p>Каждый диск в пуле содержит четыре копии меток своей ZFS: две в начале диска и две в конце. 
+   {<span class="emphasis"><em>Прим. пер.: каждая метка является 256кБ блоком - см. 
+   <a class="link" href="http://onreader.mdl.ru/DesignAndImplementationFreeBSD/content/Ch10.html#10.3" target="_top">10.3. 
+   Структура ZFS</a> в нашем переводе <a class="link" href="http://onreader.mdl.ru/DesignAndImplementationFreeBSD/content/Ch10.html" 
+   target="_top">Главы 10. ZFS: Зеттабайт файловая система</a> 2й редакции книги Маршала Кирка МакКузика, Джорджа В. Невил-Нейла 
+   и Роберта Н.М. Ватсона &quot;Архитектура и реализация операционной системы FreeBSD&quot; (ISBN-13: <a class="link" 
+   href="http://www.informit.com/store/design-and-implementation-of-the-freebsd-operating-9780321968975" 
+   target="_top">978-0-321-96897-5</a>)</em></span>.} Каждая метка содержит имя пула, глобальный уникальный идентификатор, 
+   GUID (Globally Unique ID) и информацию по каждому участнику VDEV. Каждая метка также содержит 128кБ для уберблоков.</p>
+   <p>Каждый уберблок является объектом фиксированного размера, который содержит указатель на набор мета объекта, MOS (Meta Object Set).
+   номер группы транзакций, которая создала уберблок и контрольную сумму.</p>
+   <p>MOS записывает информацию верхнего уровня обо всем в данном пуле, включая указатель на список всех корневых наборов данных в этом 
+   пуле. В свою очередь, каждый из этих списков указывает на аналогичный список для своих потомков, а также на блоки, которые описывают 
+   хранимые в данном наборе данных файлы и каталоги. ZFS выстраивает в цепи эти списки и объекты указателей в соответствии с потребностями 
+   ваших данных. В нижней части дерева листовые блоки содержат фактические данные хранимые в пуле.</p>
+   <p>Каждый блок содержит контрольную сумму и время порождения. Контрольная сумма применяется для гарантии того,что блок правильный. 
+   Время порождения является номером группы транзакций (txg), которая создала данный блок. Время порождения является ответственной деталью 
+   инфраструктуры снимка.</p>
+   <p>Изменение блока данных затрагивает все дерево. Модифицированный блок данных записывается на новое место, поэтому обновляется 
+   указывающий на него блок. Этот блок указателя также записывается в новом месте, так что необходимо обновить и следующий объект 
+   вверх по дереву. Эта процедура проходит весь путь вплоть до уберблока.</p>
+   <p>Уберблок является корнем всего дерева. Все исходит из него. ZFS не может изменить уберблок не прерывая правила копирования-при-записи,
+   следовательно она замещает уберблоки по кругу. Каждая метка выделяет 128кБ для уберблоков. Диски с 512-байтовыми секторами имеют 
+   128 уберблоков {<span class="emphasis"><em>Прим. пер.: так по тексту, на самом деле 256?</em></span>}, в то время как диски с 4кБ секторами 
+   имеют 32 уберблока. Если у вас есть диск с 16кБ секторами, он будет иметь только восемь уберблоков. Каждое обновление файловой системы 
+   добавляет новый уберблок в этот массив. Когда массив заполняется, перезаписывается самый старший уберблок.</p>
+   <p>Когда система стартует, ZFS сканирует все свои уберблоки, находит самый новый из них с верной контрольной суммой и применяет его 
+   для импорта вашего пула. Даже если самое последнее обновление каким-то образом было испорчено, система может импортировать непротиворечивую
+   версию того, каким пул был за несколько секунд до этого. Если система отказала при записи, самые последние данные оказываются потерянными - 
+   но эти данные все равно так и не попали бы на диск. Они утрачены, ZFS не может помочь вам. Применение копирования-при-записи означает, 
+   что ZFS не страдает от проблем, которые делают <span class="term"><code>fsck(8)</code></span> необходимым для традиционных файловых систем.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="HowSnapshotsWork"> </a>Как работает снимок</h3>
+   </div></div></div>
+   <p>Когда администратор просит ZFS создать снимок, ZFS копирует блок метаданных верхнего уровня нашей файловой системы. Активная система 
+   применяет копию, оставляя оригинал для использования снимком. Создание снимка требует копирования только одного блока, что означает, что 
+   ZFS может создавать снимки почти моментально. ZFS не может изменять данные или метаданные внутри снимка, делая их доступными только на чтение.
+   ZFS также записывает и другие метаданные об этом снимка, например, время порождения.</p>
+   <p>Снимкам также требуется новая порция метаданных ZFS, а именно список неиспользуемых (<span class="emphasis"><em>dead list</em></span>).
+   Список неиспользуемых набора данных записывает все блоки набора данных, которые использовались самым последним снимком, но больше не 
+   являются частью этого набора данных. Когда вы удаляете файл из набора данных, используемые этим файлом блоки добавляются в список 
+   неиспользуемых этого набора данных. Когда вы создаете снимок, список неиспользуемых активного набора данных передается создаваемому снимку, 
+   а активный набор данных получает новый, пустой список неиспользуемых.</p>
+   <p>Удалений, изменение или перезапись файла в активном наборе данных означает выделение новых блоков для новых данных и отсоединние 
+   содержащих устаревшие данные блоков. Однако, снимкам нужны некоторые из этих устаревших блоков. Перед отбрасыванием некоего старого 
+   блока система делает проверку, чтобы обнаружить, что блок все еще нужен снимку.</p>
+   <p>ZFS сравнивает время порождения этого устаревшего блока данных с временем порождения самого последнего снимка, более молодые по отношению 
+   к снимку блоки никак не могут использоваться этим снимком и могут быть выброшены в корзину. Более старые чем время порождения этого снимка 
+   блоки все еще используются этим снимком и поэтому они добавляются в список неиспользуемых активного набора данных.</p>
+   <p>После всего этого снимок является просто списком того, какие блоки использовались в активном наборе данных во время получения 
+   снимка. Создание снимка просит ZFS сохранять эти блоки даже если из активной файловой системы удаляются использующие эти блоки файлы.</p>
+   <p>Это означает, что ZFS не сохраняет копии всех версий каждого файла. Когда вы создаете новый файл и удаляете его до взятия снимка, 
+   файл исчезает. Каждый снимок содержит копии всех файлов, если они присутствовали на момент создания снимка. ZFS не сохраняет историю 
+   подобно HAMMER-у DragonFly.</p>
+   <p>Для удаления снимка необходимо сравнивать времена порождения блоков для определения того, какие из блоков могут теперь быть 
+   освобождены, а какие все еще используются. Если вы удаляете самый последний снимок, список неиспользуемых текущего набора данных 
+   обновляется для удаления блоков, необходимых только удаляемому снимку.</p>
+   <p>Снимки означают, что данные могут находиться поблизости длительное время. Если вы сделали снимок год назад, все блоки с временем 
+   порождения более одного года все еще используются, вне зависимости от того, удалили ли вы их 11 месяцев назад или перед обедом 
+   сегодня. Удаление шестимесячного снимка не может освободить много места если годовалому снимку требуется большинство этих блоков.
+   (Снимки принуждают вас делать ваши данные накапливаемыми для возможного барыжничества ими. Постарайтесь не зарыться в ворохе старых газет.)</p>
+   <p>Некий блок может быть удален, только если никакие файловые системы, тома или снимки не используют его.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="UsingSnapshots"> </a>Применение снимков</h3>
+   </div></div></div>
+   <p>Чтобы поэкспериментировать со снимками, давайте создадим новый набор данных файловой системы и наполним его некоторыми файлами.</p>
+	   <pre class="screen">
+# zfs create -o mountpoint=/sheep mypool/sheep
+# cd /sheep
+# dd if=/dev/random of=randomfile bs=1m count=1
+# fetch -o zfsbook.html http://www.zfsbook.com/
+# date &gt; date.txt
+	   </pre>
+   <p>Это предоставит нам некоторые данные для манипуляций с ними.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CreatingSnapshot"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание снимка</span></h4>
+    </div></div></div>
+    <p>Воспользуйтесь <span class="term"><code>zfs snapshot</code></span> для создания снимка. Определите набор данных его полным путем, 
+	а заетм добавьте @ и имя снимка.</p>
+	   <pre class="screen">
+# zfs snapshot mypool/sheep@snap1
+	   </pre>
+    <p>Просматривайте снимки посредством <span class="term"><code>zfs list -t snapshot</code></span>. Чтобы просмотреть снимки определенного 
+	набора данных добавьте флаг <span class="term"><code>-r</code></span> и имя набора данных.</p>
+	   <pre class="screen">
+# zfs list -t snapshot -r mypool/sheep
+NAME                USED  AVAIL  REFER  MOUNTPOINT
+mypool/sheep@snap1     0      -  1.11M  -
+	   </pre>
+    <p>Отметим, что используемый снимком объем пространства (колонка USED) равен 0. Каждый блок снимка все еще используется активным 
+	набором данных, следовательно снимки не используют дополнительное пространство.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DatasetChangesAndSnapshotSpace"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Изменения набора данных и пространство снимка</span></h4>
+    </div></div></div>
+    <p>Теперь внесем изменения в наш набор данных и посмотри как это повлияет на наши снимки. Ниже мы добавляем мегабайт новой чепухи в 
+	файл случайных данных и обновляем этот файл данных.</p>
+	   <pre class="screen">
+# dd if=/dev/random of=randomfile bs=1m count=1 oseek=1
+# date &gt; date.txt
+	   </pre>
+    <p>Давайте опять задумаемся о том, как работают снимки. Файл со случайными данными вырос на один мегабайт, но это не происходит в 
+	старом снимке. Файл данных был заменен, следовательно снимок должен был быть зафиксирован в блоках, используемых более старыми 
+	файлами. Файл данных был заменен, следовательно снимок должен быть сохранен в блоках, используемых более старым файлом. Давайте 
+	посмотрим что это должно сделать с использованием пространства снимка.</p>
+	   <pre class="screen">
+# zfs list -t snapshot -r mypool/sheep
+NAME                USED  AVAIL  REFER  MOUNTPOINT
+mypool/sheep@snap1   72K      -  1.11M  -
+	   </pre>
+    <p>Снимок теперь использует 72кБ. Пространство потребляемое снимком было задействовано только для замены блоков в файле данных. 
+	Снимок не получил новое пространство поглощенное бОльшим файлом случайных данных, поскольку никакие блоки не перезаписывались.</p>
+    <p>Теперь давайте создадим второй снимок и посмотрим сколько пространства использует он.</p>
+	   <pre class="screen">
+# zfs snapshot mypool/sheep@second
+# zfs list -t snapshot -r mypool/sheep
+NAME                 USED  AVAIL  REFER  MOUNTPOINT
+mypool/sheep@snap1    72K      -  1.11M  -
+mypool/sheep@second     0      -  2.11M  -
+	   </pre>
+    <p>Колонка REFER показывает, что первый снимок предоставляет вам доступ к 1.11МБ данных, в то время как второй позволяет вам 
+	видеть 2.11МБ данных. Первый снимок использует 72кБ пространства, в то время как второй не потребляет ничего совсем. Второй 
+	снимок все еще идентичен активным данным.</p>
+    <p>Однако, не на долго. Давайте изменим активный набор данных перезаписав часть файла случайных данных и пронаблюдав как 
+	изменится использование пространства.</p>
+	   <pre class="screen">
+# dd if=/dev/random of=randomfile bs=1m count=1 oseek=1
+# zfs list -t snapshot -r mypool/sheep
+NAME                  USED  AVAIL  REFER  MOUNTPOINT
+mypool/sheep@snap1     72K      -  1.11M  -
+mypool/sheep@second  1.07M      -  2.11M  -
+	   </pre>
+    <p>Мы перезаписали один мегабайт файла случайных данных. Использование пространства первого снимка не изменилось. Наш второй 
+	снимок показывает, что он использует 1МБ для сохранения перезаписанных данных плюс некоторые накладные расходы метаданных.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RecursiveSnapshots"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Рекурсивные снимки</span></h4>
+    </div></div></div>
+    <p>ZFS позволяет вам создавать рекурсивные снимки, которые принимают снимок описанного вами набора данных и всех его потомков. 
+	Все снимки имеют схожие имена. Применяйте флаг <span class="term"><code>-r</code></span> для рекурсивного изготовления снимков.</p>
+    <p>Вот мы создаем снимок загрузочного пула при помощи одной команды.</p>
+	   <pre class="screen">
+# zfs list -t snapshot
+NAME                              USED  AVAIL  REFER  MOUNTPOINT
+zroot@beforeupgrade                  0      -   144K  -
+zroot/ROOT@beforeupgrade             0      -   144K  -
+zroot/ROOT/default@beforeupgrade     0      -  1.35G  -
+zroot/usr@beforeupgrade              0      -   454M  -
+zroot/usr/local@beforeupgrade        0      -  1.54G  -
+...
+	   </pre>
+    <p>Теперь мы имеем по отдельному снимку для каждого набора данных в этом пуле, причем каждый помечен посредством @beforeupgrade.</p>
+	   <pre class="screen">
+# dd if=/dev/random of=randomfile bs=1m count=1 oseek=1
+# date &gt; date.txt
+	   </pre>
+    <p>Теперь мы можем злоупотреблять с данной системой диким образом, причем безопасно, зная что хорошая версия системы существует в виде 
+	снимка.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="AdvancedDatasetAndSnapshotViewing"> </a>Расширенный набор данных и просмотр снимка</h3>
+   </div></div></div>
+    <p>После того, как вы привыкните к ZFS, вы обнаружите, что вы создали много наборов данных и что каждый набор имеет массу снимков.
+	Попытка найти именно тот снимок,который нужен вам, становится хлопотной. Хотя вы всегда можете опереться на 
+	<span class="term"><code>grep(1)</code></span>, инструменты командной строки ZFS имеют очень мощные средства для просмотра и управления 
+	вашими снимками и наборами данных. Сочетание альтернативных вариантов позволяет сосредоточиться на том что вы хотите увидеть. Мы начали 
+	со <span class="term"><code>zfs list</code></span> в <a class="link" href="Ch024.html" target="_top">Главе 4</a>, но давайте теперь 
+	решительно пройдем весь путь.</p>
+    <p>Многие из этих параметров работают помимо снимков и с другими типами наборов данных. Если вы выстраиваете стеки файловых систем вглубь 
+	до 19 уровней, вы, скорее всего, захотите ограничивать то что вы видите. Однако, для большинства из нас именно со снимков начинается реальная 
+	польза от этих параметров. Большая часть функциональности также работает с <span class="term"><code>zpool(8)</code></span> и пулами, хотя пулы 
+	и не становятся такими сложными как наборы данных.</p>
+    <p>Простой <span class="term"><code>zfs list</code></span> отображает нобоы данных файловой системы и zvol, но никаких снимков.</p>
+	   <pre class="screen">
+# zfs list
+NAME                 USED  AVAIL  REFER  MOUNTPOINT
+mypool              4.62G  13.7G    96K  none
+mypool/ROOT          469M  13.7G    96K  none
+mypool/ROOT/default  469M  13.7G   469M  /
+mypool/avolume      4.13G  17.8G    64K  -
+...
+	   </pre>
+    <p>При помощи имени вы можете рассмотреть отдельный набор данных.</p>
+	   <pre class="screen">
+# zfs list mypool/sheep
+NAME           USED  AVAIL  REFER  MOUNTPOINT
+mypool/sheep  2.11M  13.7G  2.11M  /mypool/sheep
+	   </pre>
+    <p>Чтобы просматривать пул или набор данных и всех их потомков используйте флаг <span class="term"><code>-r</code></span> и имя 
+	пула или набора данных.</p>
+	   <pre class="screen">
+# zfs list -r mypool/var
+NAME              USED  AVAIL  REFER  MOUNTPOINT
+mypool/var       22.6G  854G   1.70G  /var
+mypool/var/crash  355M  854G    355M  /var/crash
+mypool/var/db     224M  854G    187M  /var/db
+	   </pre>
+    <p>Раз уж вы получили большое число наборов данных, в дальнейшем вы захотите их сузить.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewDatasetsByType"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр наборов данных по типу</span></h4>
+    </div></div></div>
+    <p>Чтобы просматривать наборы данных только определенного типа, воспользуйтесь флаом <span class="term"><code>-t</code></span> и типом 
+	набора данных. Вы можете просматривать файловые системы, тома, снимки и закладки.</p>
+	   <pre class="screen">
+# zfs list -t snapshot -r mypool
+NAME                   USED  AVAIL  REFER  MOUNTPOINT
+mypool@all                0      -    96K  -
+mypool/ROOT@all           0      -    96K  -
+mypool/ROOT/default@all 84K      -   419M  -
+mypool/avolume@all        0      -    64K  -
+...
+	   </pre>
+    <p>Вы можете рассматривать определенные снимки, задав полное имя снимка.</p>
+	   <pre class="screen">
+# zfs list -t snapshot mypool/sheep@all
+NAME            USED  AVAIL  REFER  MOUNTPOINT
+mypool/sheep@all   0      -  2.11M  -
+	   </pre>
+    <p>Убедитесь, что вы задали полное имя, включающее часть снимка. Здесь мы просим <span class="term"><code>zfs list</code></span> отобразить 
+	только снимки, а затем передаем ему имя набора данных файловой системы; <span class="term"><code>zfs(8)</code></span>  очень вежливо просит нас 
+	быть последовательным в том, о чем мы просим.</p>
+	   <pre class="screen">
+# zfs list -t snapshot mypool/sheep
+cannot open 'mypool/sheep': operation not applicable to datasets of this type
+{<span class="emphasis"><em>не могу открыть 'mypool/sheep': операция на применима к наборам данных этого типа</em></span>}
+	   </pre>
+    <p>Ранее мы применяли флаг <span class="term"><code>-r</code></span> для отображения набора данных и всех его потомков. Он также работает 
+	со списком снимков.</p>
+	   <pre class="screen">
+# zfs list -r -t snapshot mypool/second
+NAME                  USED  AVAIL  REFER  MOUNTPOINT
+mypool/second@all        0      -    96K  -
+mypool/second/baby@all   0      -    96K  -
+
+	   </pre>
+    <p>Для просмотра абсолютно всего применяйте <span class="term"><code>-t all</code></span>.</p>
+	   <pre class="screen">
+# zfs list -r -t all mypool/second
+NAME                  USED  AVAIL  REFER  MOUNTPOINT
+mypool/second         192K  13.5G    96K  legacy
+mypool/second@all        0      -    96K  -
+mypool/second/baby     96K  13.5G    96K  legacy
+mypool/second/baby@all   0      -    96K  -
+
+	   </pre>
+    <p>Если у вас есть много уровней наборов данных вы можете хотеть частичный рекурсивный просмотр. В то время как <span class="term"><code>-r</code></span>
+	показывает всех потомков, параметр <span class="term"><code>-d</code></span> ограничивает число уровней вашего просмотра. Ограничим глубину до 1
+	и вы получите только снимки отдельного набора данных.</p>
+	   <pre class="screen">
+# zfs list -d 1 -t snapshot mypool/sheep
+NAME                 USED  AVAIL  REFER  MOUNTPOINT
+mypool/sheep@all        0      -  2.11M  -
+mypool/sheep@snap2      0      -  2.11M  -
+mypool/sheep@moresnap   0      -  2.11M  -
+mypool/sheep@evenmore   0      -  2.11M  -
+	   </pre>
+    <p>Ограничение глубины до 2 отобразит определенный нами набор данных, снимки определенного набора данных, а также дочерних наборов данных, 
+	однако не покажет внучатые файловые системы или их потомственные снимки.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ModifyingZfsListOutput"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Изменение списка вывода zfs</span></h4>
+    </div></div></div>
+   <p>Вы можете управлять тем, какую информацию отображает <span class="term"><code>zfs list</code></span> при помощи параметра
+   <span class="term"><code>-o</code></span> и списка колонок или свойств. Когда вы используете <span class="term"><code>-o</code></span>,
+   <span class="term"><code>zfs list</code></span> отображает только запрошенную вами информацию.</p>
+   <p>Взглянем на любой предыдущий вывод <span class="term"><code>zfs list</code></span>, и мы увидим, что колонка NAME (предсказуемо) 
+   отображает имя набора данных. Отобразим только эту колонку при помощи <span class="term"><code>-o</code></span>. Здесь мы рекурсивно 
+   отображаем список всех снимков в <span class="term"><code>mypool</code></span>, выводя только их имена.</p>
+	   <pre class="screen">
+# zfs list -r -t snapshot -o name mypool
+NAME
+mypool@all
+mypool/ROOT@all
+mypool/sheep@snap2
+mypool/sheep@moresnap
+mypool/sheep@evenmore
+...
+	   </pre>
+   <p>Кроме того вы можете отображать в колонке любое свойство. Здесь мы отображаем некоторые общие свойства файловой системы для 
+   каждого набора данных.</p>
+	   <pre class="screen">
+# zfs list -o name,atime,exec,setuid
+NAME        ATIME  EXEC  SETUID
+mypool         on    on      on
+mypool/sheep   on    on      on
+zroot         off    on      on
+zroot/ROOT    off    on      on
+	   </pre>
+   <p>Да, свойства файловой системы не имеют ничего общего со снимками. Однако они являются хорошим примером данной функциональности.</p>
+   <p>Наконец, вы можете изменять порядок, которым <span class="term"><code>zfs list</code></span> отображает наборы данных. Используйте 
+   <span class="term"><code>-s</code></span> и свойство для сортировки по значению свойства. Для обратного порядка сортировки по этому 
+   свойству вывода используйте <span class="term"><code>-S</code></span> и свойство. Перечисляйте несколько свойств по порядку, 
+   разделяя их запятыми.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ListingSnapshotsByDefault"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Вывод списков снимков по умолчанию</span></h4>
+    </div></div></div>
+    <p>Команда <span class="term"><code>zfs list</code></span> по умолчанию скрывает снимки и закладки. Если по умолчанию вы хотите видеть 
+	эти наборы данных, установите свойство пула <span class="term"><strong class="userinput"><code>listsnapshots</code></strong></span> в
+	значение <span class="emphasis"><em>on</em></span>.</p>
+	   <pre class="screen">
+# zpool set listsnapshots=on zroot
+	   </pre>
+    <p>Раз уж вы выполните это, какое- то время оно будет работать, однако, мы абсолютно уверены, что вы выключите это свойство опять 
+	(<span class="emphasis"><em>off</em></span>). Накапливающиеся снимки быстро подавят все остальное.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ScriptsAndZFS"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сценарии и ZFS</span></h4>
+    </div></div></div>
+    <p>Системные администраторы любят автоматизацию. Одна из раздражающих вещей в автоматизации, это когда необходимо выполнять команду 
+	и разбирать ее вывод. Создание вывода более дружелюбного для человека часто делает его менее доступным для автоматизации.В ZFS 
+	все разработчики слишком хорошо знакомы с этой проблемой, и включили параметры командной строки для устранения большинства таких
+	проблем.</p>
+    <p>Параметр <span class="term"><code>-p</code></span> просит <span class="term"><code>zfs(8)</code></span> и
+	<span class="term"><code>zpool(8)</code></span> печатать точные значения, а не удобные для пользователя их интерпретации. Пул в 
+	действительности не может иметь свободными 2ТБ - это просто число, до которого округляется значение. Использование 
+	<span class="term"><code>-p</code></span> печатает действительное значение вовсей его красе.</p>
+    <p>Параметр <span class="term"><code>-H</code></span> просит <span class="term"><code>zfs(8)</code></span> и 
+	<span class="term"><code>zpool(8)</code></span> не печатать заголовки и разделять колонки единичным символом табуляции, вместо их 
+	красивого выстраивания, нравящегося людям. Вы человек, не так ли?</p>
+    <p>Объединенные совместно, эти параметры преобразуют вывод из чего-то легко воспринимаемого людьми в нечто, что вы можете напрямую 
+	передать какому-нибудь сценарию.</p>
+	   <pre class="screen">
+# zfs list -t all -pH -r mypool
+mypool 2670592 96529122918498304 /mypool
+mypool/sheep 2351104 965291229184 2273280 /sheep
+mypool/sheep@snap1 77824 - 1224704 -
+mypool/sheep@second 0 - 2273280 -
+...
+	   </pre>
+    <p>Да, это реальные пробелы. Аккуратные колонки предназначены людям, глупо.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Per-SnapshotSpaceUse"> </a>Использование пространства на снимок</h3>
+   </div></div></div>
+   <p>Особенно полезным свойством для снимков является свойство <span class="term"><strong class="userinput"><code>written</code></strong></span>, 
+   которое дает вам представление о том, сколько новых данных содержит снимок.</p>
+	   <pre class="screen">
+# zfs list -d 1 -t all -o name,used,refer,written mypool/sheep
+NAME                   USED  REFER  WRITTEN
+mypool/sheep          10.3M  6.11M    2.07M
+mypool/sheep@all          0  2.11M    2.11M
+mypool/sheep@snap2        0  2.11M        0
+mypool/sheep@evenmore     0  2.11M        0
+mypool/sheep@later    2.07M  5.11M    4.07M
+mypool/sheep@rewrite  1.07M  5.11M    2.07M
+	   </pre>
+   <p>Помните, снимки появляются в порядке по дате создания. Актуальный набор данных появится первым - поскольку он, по- видимому, имеет более 
+   новые данные чем любой снимок, который был создан прежде любого из его снимков. Снимок @all является старейшим, затем идует @snap2 и 
+   так далее.</p>
+   <p>Первый снимок, @all, позволяет получить доступ к 2.11МБ данных (столбец REFER). Этот снимок также содержит 2.11МБ вновь записанных 
+   данных. Это разница между данным снимком и снимком до него.</p>
+   <p>Снимки @snap2 и @evenmore не имеют новых данных. Они являются неизменными начиная с первого снимка. </p>
+   <p>Данные выросли где-то между нашими снимками @evenmore и @later. Снимок @later позволяет вам получить доступ к 5.11МБ данных. Он имеет 
+   4.07МБ новых данных.</p>
+   <p>Снимок @rewrite также позволяет получить вам доступ к 5.11МБ данных, однако он записал 2.07МБ новых данных. Поскольку объем данных, 
+   к которым вы можете осуществить доступ тот же, что и у предыдущего снимка, какие-то из старых данных должны были быть переписаны.</p>
+   <p>Актуальная файловая система также переписала 1МБ данных. Эти данные теперь содержатся только в снимке @rewrite.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="AccessingSnapshots"> </a>Доступ к снимкам</h3>
+   </div></div></div>
+   <p>Наиболее удобный способ доступа к содержимому снимка состоит в доступе через каталог снимка 
+   (<span class="emphasis"><em>snapshot directory</em></span>), или <span class="emphasis"><em>snapdir</em></span>. Корень 
+   каждого набора данных имеет скрытый каталог <span class="term"><code>.zfs</code></span>. Этот каталог содержит каталог снимка, 
+   который, в свою очередь имеет каталог для каждого снимка.</p>
+	   <pre class="screen">
+# ls /mypool/sheep/.zfs
+total 1
+dr-xr-xr-x  2  root  wheel  2 Mar 29 00:30 shares
+dr-xr-xr-x  2  root  wheel  2 Mar 30 16:27 snapshot
+# ls -l /mypool/sheep/.zfs/snapshot
+total 1
+drwxr-xr-x  2  root  wheel  5 Mar 29 00:40 snap1
+drwxr-xr-x  2  root  wheel  5 Mar 29 00:40 second
+	   </pre>
+   <p>Перейдите в этот каталог, и вы окажетесь внутри корневого каталога снимка. Каждый файл в этом снимке сохраняется точно так, как это 
+   было когда снимок был создан, вплоть до времени доступа к файлам. Чтобы восстановить отдельные файлы из снимка, скопируйте их 
+   обратно в основную файловую систему.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SecretSnapdir"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Скрытый Snapdir</span></h4>
+    </div></div></div>
+    <p>Каталог снимка <span class="term"><code>.zfs</code></span> скрыт по умолчанию. Он не будет отображаться даже если вы 
+	выполните <span class="term"><code>ls -lA</code></span>. Это предотвращает от обхода по нему программ резервного копирования,
+	<span class="term"><code>rsync</code></span> и аналогичных. Если вы хотите отображать каталог <span class="term"><code>.zfs</code></span>,
+	установите значение свойства <span class="term"><strong class="userinput"><code>snapdir</code></strong></span> в 
+	<span class="emphasis"><em>visible</em></span>.</p>
+	   <pre class="screen">
+# zfs set snapdir=visible mypool/sheep
+	   </pre>
+    <p>Теперь если кто-то выполнит <span class="term"><code>cp -R</code></span> на наборе данных, рекурсивно копируя все ваши снимки в 
+	вашу файловую систему и раздув абсолютно все, скройте его назад, установив свойство <span class="term"><strong class="userinput"><code>snapdir</code></strong></span>
+	в <span class="emphasis"><em>hidden</em></span>.
+	</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MountingSnapshots"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Монтирование снимков</span></h4>
+    </div></div></div>
+    <p>Вы можете смонтировать снимок очень похоже на то, как вы монтируете какую-нибудь файловую систему.</p>
+	   <pre class="screen">
+# mount -t zfs mypool/sheep@snap1 /mnt
+	   </pre>
+    <p>Вы не можете получать доступ к снимку через скрытый каталог <span class="term"><code>.zfs</code></span> пока он смонтирован 
+	вручную. Даже смонтированный снимок все еще доступен только на чтение.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DeletingSnapshots"> </a>Удаление снимков</h3>
+   </div></div></div>
+   <p>Снимки препятствуют освобождению используемых ими блоков. Это означает, что вы не получите назад пространство, пока вы не 
+   прекратите использовать эти блоки удаляя все ссылающиеся на них снимки.</p>
+   <p>Создадим новый снимок, а затем удалим его.</p>
+	   <pre class="screen">
+# zfs snapshot mypool/sheep@deleteme
+# zfs destroy mypool/sheep@deleteme
+	   </pre>
+   <p>Это было не так трудно, не так ли?</p>
+   <p>Вы также можете добавить флаг подробностей (<span class="term"><code>-v</code></span>) для  получения дополнительных подробностей о том 
+   что уничтожается. Хотя режим с подробностями не сильно помогает когда вы уничтожаете отдельный снимок, он становится более ценным когда 
+   вы уничтожаете больше наборов данных или если вы хотите увидеть что сделает команда без ее реального выполнения.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DestructionDryRuns"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Выполнения уничтожения вхолостую</span></h4>
+    </div></div></div>
+    <p>Флаг холостой операции <span class="term"><code>noop</code></span>, <span class="term"><code>-n</code></span>, выполняет
+	&quot;холостое выполнение&quot; процесса удаления. Он описывает что должно произойти если вы удаляете снимок без его реального 
+	удаления. Давайте вернемся к тем нескольким первым снимком, которые мы сделали, и посмотрим что бы произошло, если бы мы удалили 
+	первый.</p>
+	   <pre class="screen">
+# zfs destroy -vn mypool/sheep@snap1
+would destroy mypool/sheep@snap1
+would reclaim 72K
+	   </pre>
+    <p>Удаление этого снимка вернет только 72кБ пространства. Составляющие этот снимок все еще используются активной файловой системой 
+	и/ или другим снимком.</p>
+    <p>Наш второй снимок переписал некоторые данные из первого снимка. Это изменяет эффект от удаления снимка.</p>
+	   <pre class="screen">
+# zfs destroy -vn mypool/sheep@second
+would destroy mypool/sheep@second
+would reclaim 1.07M
+	   </pre>
+    <p>Мы освободим пространство используемое для хранения перезаписанной версии файлов.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RecursionAndRanges"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Рекурсия и диапазоны</span></h4>
+    </div></div></div>
+    <p>Рекурсивное создание снимков может создать полный беспорядок снимков. К счастью вы также можете рекурсивно уничтожать снимки.</p>
+	   <pre class="screen">
+# zfs destroy -rv mypool@all
+will destroy mypool@all
+will destroy mypool/second@all
+will destroy mypool/second/baby@all
+will destroy mypool/lamb@all
+will destroy mypool/ROOT@all
+...
+will reclaim 84K
+	   </pre>
+    <p>Рекурсивное удаление снимков является лучшим случаем использования <span class="term"><code>-n</code></span> перед реальным 
+	уничтожением каких либо данных (При стрельбе себе в ногу прицеливайтесь тщательнее. Безопасность прежде всего!). Неоднократно мы 
+	понимали, что нам нужен снимок через две секунды после его удаления.</p>
+    <p>Еще одна удобная функция разрушает диапазон снимков. Вы определяете два снимка одного набора данных, и ZFS стирает их и все снимки 
+	взятые между ними. Выполните <span class="term"><code>zfs destroy</code></span>, но задайте полное имя вашего снимка &quot;с&quot;, 
+	знак процента и имя снимка &quot;до&quot;. Эти два и все снимки между ними уничтожены.</p>
+    <p>Флаг <span class="term"><code>-n</code></span> удобен для гарантирования того, что команда будет делать то что вы ожидаете, 
+	прежде чем вы на самом деле выполните ее. Кроме того, вы узнаете, сколько пространства вы получите назад.</p>
+    <p>Здесь мы уничтожаем два тестовых снимка. Заметим, что первый снимок определяется его полным именем включающим набор данных:
+	<span class="term"><code>mypool/sheep@myfirstsnapshot</code></span>. Второй снимок должен быть частью того же самого набора 
+	данных и он должен быть снимком, поэтому вам нужно только краткое имя самого снимка: <span class="term"><code>second</code></span>.</p>
+	   <pre class="screen">
+# zfs destroy -vn mypool/sheep@snap1%second
+would destroy mypool/sheep@snap1
+would destroy mypool/sheep@second
+would reclaim 1.14M
+	   </pre>
+    <p>Если вы уверены, опустите флаги <span class="term"><code>-vn</code></span> и вы точно уничтожите ваши снимки:</p>
+	   <pre class="screen">
+# zfs destroy mypool/sheep@snap1%second
+	   </pre>
+    <p>Снимки удалены. Ваши пользователи свободно могут говорить вам теперь что им были нужны эти данные.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RollingBack"> </a>Откат</h3>
+   </div></div></div>
+   <p>Снимки не просто отображают вам как существовала файловая система в определенный момент в прошлом. Вы можете вернуть весь ваш набор данных 
+   в его состояние снимка. Собираетесь выполнять обновление? Вначале создайте снимок. Если обновление не работает - просто откатите назад. 
+   Воспользуйтесь командой <span class="term"><code>zfs rollback</code></span> для возврата файловой системы к снимку. Однако когда вы 
+   вернетесь назад, вы не сможете пройти вперед снова.</p>
+   <p>Здесь мы создаем файловую систему с рядом изменений, делая снимок каждой из них.</p>
+	   <pre class="screen">
+# zfs create -o mountpoint=/delorean mypool/delorean
+# echo &quot;this is the past&quot; &gt; /delorean/timecapsule.txt
+# zfs snapshot mypool/delorean@thepast
+# echo &quot;this is the present&quot; &gt; /delorean/timecapsule.txt
+# zfs snapshot mypool/delorean@thepresent
+# echo &quot;I broke the future&quot; &gt; /delorean/timecapsule.txt
+	   </pre>
+   <p>Файл <span class="term"><code>/delorean/timecapsule.txt</code></span> получил вовнутрь три различных набора текста. Две версии 
+   этого текста фиксируются в снимках. Третья не содержится в снимке.</p>
+	   <pre class="screen">
+# cat /delorean/timecapsule.txt
+&quot;I broke the future&quot;
+	   </pre>
+   <p>О, нет, будущее испорчено. Давайте вернемся к настоящему. Выполним <span class="term"><code>zfs rollback</code></span> и 
+   зададим имя снимка, который вы хотите применить.</p>
+	   <pre class="screen">
+# zfs rollback mypool/delorean@thepresent
+	   </pre>
+   <p>Это займет меньше времени, чем вы могли бы подумать. Помните, что все эти данные и метаданные уже находятся на диске. ZFS только 
+   переключает какой из наборов метаданных используется. Когда откат завершится, актуальная файловая система содержит все файлы из 
+   выбранного нами снимка.</p>
+	   <pre class="screen">
+# cat /delorean/timecapsule.txt
+&quot;this is the present&quot;
+	   </pre>
+   <p>Ваши новые изменения в наборе данных утрачены и не подлежат восстановлению.</p>
+   <p>Хотя это простой пример, вы можете сделать то же самое для обновления программного обеспечения, миграции базы данных или 
+   любой другой рискованной операции. Операции, которые когда-то требовали досадные восстановления из автономных резервных копий, 
+   теперь могут быть обработаны одной командой.</p>
+   <p>Вы можете просто откатить файловую систему к самому последнему снимку. Невозможно путешествовать вперед и назад как в фильмах.
+   Если вы хотите вернуться к какому-нибудь более раннему снимку, &quot;прошлому&quot;, вы должны уничтожить все более новые по отношению 
+   к целевому снимки.</p>
+	   <pre class="screen">
+# zfs rollback mypool/delorean@thepast
+cannot rollback to 'mypool/delorean@thepast': more recent snapshots or bookmarks exist
+use '-r' to force deletion of the following snapshots and bookmarks:
+{не могу откатить к 'mypool/delorean@thepast': существуют более современные снимки или закладки
+применяйте '-r' для принудительного удаления следующих снимков или закладок:}
+mypool/delorean@thepresent
+	   </pre>
+   <p>Команда <span class="term"><code>zfs rollback</code></span> может уничтожить для вас все промежуточные снимки если вы воспользуетесь 
+   рекурсивным флагом <span class="term"><code>-r</code></span>. Это не тот же самый вид рекурсии множественных наборов данных, который 
+   применяется при создании и уничтожении снимков. Применение <span class="term"><code>rollback -r</code></span> не откатит назад потомков.
+   Вы должны выполнять откат каждого набора данных отдельно.</p>
+	   <pre class="screen">
+# zfs rollback -r mypool/delorean@thepast
+# cat /delorean/timecapsule.txt
+&quot;this is the past&quot;
+	   </pre>
+   <p>Вы вернулись назад во времени и можете теперь попробовать повторить снова рискованное и болезненное обновление. 
+   Наши поздравления!</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DiffingSnapshots"> </a>Нахождение разницы снимков</h3>
+   </div></div></div>
+   <p>Иногда вы действительно хотите знать что изменилось между сделанным в определенное время снимком и текущим состоянием. Если сервер базы 
+   данных начал разваливаться сегодня в полдень, вы, скорее всего, захотите сравнить состояние файловой системы прямо сейчас со снимком в
+   11 утра (AM) чтобы увидеть изменения. Вы можете применить <span class="term"><code>find(1)</code></span> для поиска измененных после 
+   создания снимка файлов, или можете воспользоваться <span class="term"><code>diff(1)</code></span> для сравнения файлов из снимка с 
+   файлами в актуальной файловой системе. Однако, ZFS уже имеет эту информацию и делает ее доступной посредством 
+   <span class="term"><code>zfs diff</code></span>.</p>
+   <p>Чтобы посмотреть на разницу между снимком и актуальной файловой системой выполните <span class="term"><code>zfs diff</code></span> 
+   и задайте в ней имя снимка.</p>
+	   <pre class="screen">
+# zfs diff mypool/sheep@later 
+M /mypool/sheep/randomfile
+	   </pre>
+   <p>Файлы могут быть в четырех состояниях. &quot;-&quot; означает что данный файл был удален. &quot;+&quot; означает, что файл был 
+   добавлен. &quot;M&quot; идентифицирует, что файл был изменен. &quot;R&quot; показывает,что файл был переименован. Наш пример здесь
+   показывает, что файл <span class="term"><code>/mypool/sheep/randomfile</code></span> был изменен после создания снимка.</p>
+   <p>Вы также можете сравнить два снимка.</p>
+	   <pre class="screen">
+# zfs diff mypool/sheep@later @muchlater
+M /mypool/sheep/
++ /mypool/sheep/newfile
+- /mypool/sheep/zfsbook.html
+R /mypool/sheep/date.txt -&gt; /mypool/sheep/olddate.txt
+M /mypool/sheep/randomfile
+	   </pre>
+   <p>Каталог <span class="term"><code>/mypool/sheep</code></span> был изменен. Был добавлен файл 
+   <span class="term"><code>/mypool/sheep/newfile</code></span>, а файл <span class="term"><code>/mypool/sheep/zfsbook.html</code></span>
+   был удален. У нас есть переименованный файл и, опять же, файл <span class="term"><code>randomfile</code></span> был изменен.</p>
+   <p>Вы можете даже получить дополнительные подробности. Если вы добавите флаг <span class="term"><code>-t</code></span>, вывод будет 
+   содержать метки времени (timestamp) inode. Флаг <span class="term"><code>-F</code></span> включает тип данного файла. Проверьте
+   <span class="term"><code>zfs(8)</code></span> для получения полного списка типов файлов.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="AutomaticSnapshotRegimen"> </a>Автоматический режим снимка</h3>
+   </div></div></div>
+   <p>Снимки полезны даже если вы создает их только для специальных событий. Однако, если вы создаете их автоматически по расписанию, они 
+   становятся исключительно полезными. Достаточно просто сделать расписание рекурсивного создания снимков вашей системы каждые 15 минут. 
+   Однако, если вы сохраняете все эти снимки, ваш пул переполнится. Автоматизированные снимки нуждаются в цикличности и отбраковке 
+   в точности как это происходит с ленточными накопителями.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RotationSchedule"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Циклическое расписание</span></h4>
+    </div></div></div>
+    <p>Трудная часть планирования создания и уничтожения снимков выясняет как вы могли бы использовать снимки. Кто ваши пользователи? 
+	Каким приложениям скорее всего потребуются снимки? Мы не можем ответить на эти вопросы за вас.</p>
+    <p>Одна из общих установок построена вокруг еженедельных, ежедневных, почасовых и каждые 15 минут снимков. Вы делаете еженедельные 
+	снимки, которые храните два месяца. Ежедневные снимки хранятся в течение двух недель. Ваши почасовые снимки сохраняются в течение 
+	трех дней. Затем вы делаете снимки каждые 15 минут и храните их в течение шести часов.</p>
+    <p>Возможно вам нужны только четыре снимка через 15 минут. Или вы должны хранить ежемесячные снимки в течение года. Ваш личный 
+	режим зависит от многих факторов. Насколько важны ваши данные? Как далеко назад вы может захотеть вернуться? В каком объёме 
+	пространства вы ограничены? Как часто изменяются ваши файлы и какой объём данных записывается ежедневно? Существует ли у вас 
+	управление ревизией ИТ, которое определяет как долго должны сохраняться определенные данные? Поговорите с другим персоналом
+	вашей команды и составьте расписание, которое работает для вашей организации.</p>
+    <p>Если у вас существует нужное вам расписание, инструменты ZFS могут помочь вам организовать его.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Tools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Инструменты ZFS</span></h4>
+    </div></div></div>
+    <p>Многие сценарии и пакты программного обеспечения могут управлять в ваших целях снимками ZFS. Мы рекомендуем 
+	<a class="link" href="https://github.com/bdrewery/zfstools" target="_top">ZFS tools</a> 
+	(https://github.com/bdrewery/zfstools), поскольку он не использует файл настройки. Ему требуется 
+	<span class="term"><code>cron(8)</code></span>, но вам не нужно путаться ни с какими 
+	<span class="term"><code>zfstools.conf</code></span>. ZFS tools получают свои настройки из свойств определенных 
+	пользователем, установленных в пределах ZFS. Это означает,что новые наборы данных автоматически наследуют свой 
+	снимок настроек от своих родителей. Когда система имеет десятки наборов данных, а вы постоянно создаете и удаляете их, 
+	наследование настроек сохраняет много времени.</p>
+    <p>Установим ZFS tools из пакета.</p>
+	   <pre class="screen">
+# pkg install zfstools
+	   </pre>
+    <p>ZFS tools приходит со многими сценариями и приложениями, но в настоящий момент мы сосредоточимся на 
+	<span class="term"><code>zfs-auto-snapshot</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="zfs-auto-snapshot"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">zfs-auto-snapshot</span></h4>
+    </div></div></div>
+    <p>Сценарий Ruby <span class="term"><code>zfs-auto-snapshot</code></span> создает и удаляет снимки. Он получает два аргумента, 
+	а именно: имя снимка и число таких снимков, которые нужно хранить. Например, выполнение 
+	<span class="term"><code>zfs-auto-snapshot frequent 4</code></span> создаст рекурсивный снимок с именем 
+	<span class="emphasis"><em>frequent</em></span> и будет хранить четыре снимка каждого набора данных.</p>
+    <p>В комбинации с <span class="term"><code>cron(8)</code></span> ,<span class="term"><code>zfs-auto-snapshot</code></span>
+	позволяет вам создавать любые снимки, которые вы хотите, с любым нужным вам интервалом времени, а затем сбрасывать его по мере
+	его старения.</p>
+    <p>ZFS tools приходит с crontab по умолчанию для создания снимков по расписанию, который, как надеются разработчики, будет 
+	отвечать потребностям большинства людей. Он начинает с установки $PATH, стем, чтобы <span class="term"><code>zfs-auto-snapshot</code></span>
+	мог находить Ruby. Далее он имеет записи, чтобы создавать снимки каждые 15минут, каждый час, ежедневно, еженедельно и ежемесячно.
+	Давайте рассмотрим все их.</p>
+	   <pre class="screen">
+15,30,45 * * * * root /usr/local/sbin/zfs-auto-snapshot frequent 4
+	   </pre>
+    <p>	<span class="term"><code>zfs-auto-snapshot</code></span> выполняется каждую 15<sup>ю</sup>, 30<sup>ю</sup> и 45<sup>ю</sup>
+	минуты каждого часа, он создает для каждого набора данных снимок с именем <span class="emphasis"><em>frequent</em></span>.
+	Когда набор данных имеет более четырех снимков <span class="emphasis"><em>frequent</em></span>, более старые удаляются, 
+	оставляя только четыре снимка.</p>
+	   <pre class="screen">
+0 * * * * root /usr/local/sbin/zfs-auto-snapshot hourly 24
+	   </pre>
+    <p>На почасовой основе, ровно в каждый час, <span class="term"><code>zfs-auto-snapshot</code></span> создает снимок с именем 
+	<span class="emphasis"><em>hourly</em></span>. Он оставляет 24 таких снимка, удаляя самые старые.</p>
+	   <pre class="screen">
+7 0 * * * root /usr/local/sbin/zfs-auto-snapshot daily 7
+	   </pre>
+    <p>Каждый день,через 7 минут после полуночи, <span class="term"><code>zfs-auto-snapshot</code></span> создает 
+	ежедневный снимок. Он оставляет семь ежедневных снимков.</p>
+	   <pre class="screen">
+14 0 * * 7 root /usr/local/sbin/zfs-auto-snapshot weekly 4
+	   </pre>
+    <p>На 7<sup>й</sup> день каждой недели, в полночь, <span class="term"><code>zfs-auto-snapshot</code></span> получает 
+	еженедельный снимок. Он сохраняет четыре еженедельных снимка.</p>
+	   <pre class="screen">
+28 0 1 * * root /usr/local/sbin/zfs-auto-snapshot monthly 12
+	   </pre>
+    <p>Ежемесячные снимки случаются в первый день каждого месяца, через 28 минут после полуночи. Мы храним 12 таких снимков.</p>
+    <p>Данные записи crontab разработаны для <span class="term"><code>/etc/crontab</code></span>. Если вы используете их в 
+	crontab root, вы должны переместить записи пользователя (root) для каждого из них. В любом случае убедитесь, что 
+	вы включили переменную PATH чтобы <span class="term"><code>zfs-auto-snapshot</code></span> мог найти Ruby.</p>
+    <p>Подгоните имена и расписания для соответствия вашему окружению и предубеждениям. Лукас всегда переименовывает
+	<span class="emphasis"><em>frequent</em></span> в <span class="emphasis"><em>15min</em></span>, поскольку слово 
+	<span class="emphasis"><em>frequent</em></span> двусмысленное. Однако это его личные заморочки, так что можете 
+	игнорировать его мысли.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="EnablingAutomaticSnapshots"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Разрешение автоматического снимка</span></h4>
+    </div></div></div>
+    <p>Сценарий <span class="term"><code>zfs-auto-snapshot</code></span> создает только снимки наборов данных, которые имеют свойство
+	<span class="term"><strong class="userinput"><code>com.sun:auto-snapshot</code></strong></span> установленное в значение
+	<span class="emphasis"><em>true</em></span>. Наборы данных без этого свойства или при любом установленном для него значении, 
+	отличном от <span class="emphasis"><em>true</em></span>, не будут получать снимки. Установка этого свойства на некий набор данных 
+	позволяет потомкам этого набора данных наследовать его.</p>
+    <p>Здесь мы устанавливаем <span class="term"><strong class="userinput"><code>com.sun:auto-snapshot</code></strong></span> в корне
+	набора данных нашего пула <span class="term"><code>mypool</code></span>.</p>
+	   <pre class="screen">
+# zfs set com.sun:auto-snapshot=true mypool
+	   </pre>
+    <p>При работе <span class="term"><code>zfs-auto-snapshot</code></span>, он создает снимки каждого набора данных в 
+	<span class="term"><code>mypool</code></span>, причем имя и интервалы предписываются <span class="term"><code>/etc/crontab</code></span>.</p>
+    <p>Возможно, некоторым наборам данных не нужны снимки. Например, мы никогда неделаем снимки дерева портов. Чтобы выключить 
+	снимки для набора данных и его потомков установите <span class="term"><strong class="userinput"><code>com.sun:auto-snapshot</code></strong></span>
+	в значение <span class="emphasis"><em>false</em></span>.</p>
+	   <pre class="screen">
+# zfs set com.sun:auto-snapshot=false mypool/usr/ports
+	   </pre>
+    <p>Также вы можете запрещать только определенные классы снимков. Не изменяющемуся часто набору данных, вероятно, не нужны снимки 
+	<span class="emphasis"><em>frequent</em></span> и <span class="emphasis"><em>hourly</em></span>.
+	<span class="term"><code>zfs-auto-snapshot</code></span> проверяет на наличие под-свойств
+	<span class="term"><strong class="userinput"><code>com.sun:auto-snapshot</code></strong></span> именуемых после {двоеточия}. Например, 
+	свойство, которое управляет вашими почасовыми снимками, называется
+	<span class="term"><strong class="userinput"><code>com.sun:auto-snapshot:hourly</code></strong></span>. Установите значение этого 
+	свойства в <span class="emphasis"><em>false</em></span> для запрета таких снимков.</p>
+	   <pre class="screen">
+# zfs set com.sun:auto-snapshot:frequent=false mypool/delorean
+# zfs set com.sun:auto-snapshot:hourly=false mypool/delorean
+	   </pre>
+    <p>Теперь <span class="term"><code>zfs-auto-snapshot</code></span> делает только ежедневные, еженедельные и ежемесячные снимки для этого 
+	набора данных и всех его потомков. Вы можете повторно разрешить более частые снимки для определенных потомков установив для них 
+	значение данного свойства в <span class="emphasis"><em>true</em></span>.</p>
+    <p>Вы также можете решить, что поскольку вам нужны более частые копии <span class="term"><code>/usr/src</code></span>, поскольку вы
+	работаете с неким важным кодом, вам не нужно сохранять копии старше месяца дерева источника:</p>
+	   <pre class="screen">
+# zfs set com.sun:auto-snapshot:monthly=false mypool/usr/src
+	   </pre>
+    <p><span class="term"><code>zfs-auto-snapshot</code></span> ZFS Tools обрабатывает все циклические замены снимков для вас.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingAutomaticSnapshots"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр автоматического снимка</span></h4>
+    </div></div></div>
+    <p>Автоматические снимки имеют имена, начинающиеся с zfs-auto-snap с последующим промежутком и штампом времени.</p>
+	   <pre class="screen">
+# zfs list -t all -r db/db
+NAME                                          USED  AVAIL  REFER  MOUNTPOINT
+db/db                                         587M  13.5G   561M  /
+db/db@zfs-auto-snap_hourly-2015-04-08-16h00   224K  -       561M  -
+db/db@zfs-auto-snap_hourly-2015-04-08-17h00   220K  -       561M  -
+db/db@zfs-auto-snap_hourly-2015-04-08-18h00   200K  -       561M  -
+db/db@zfs-auto-snap_frequent-2015-04-08-18h45 188K  -       561M  -
+db/db@zfs-auto-snap_hourly-2015-04-08-19h00   172K  -       561M  -
+db/db@zfs-auto-snap_frequent-2015-04-08-19h15 172K  -       561M  -
+db/db@zfs-auto-snap_frequent-2015-04-08-19h30 180K  -       561M  -
+db/db@zfs-auto-snap_frequent-2015-04-08-19h45 180K  -       561M  -
+db/db@zfs-auto-snap_hourly-2015-04-08-20h00   180K  -       561M  -
+	   </pre>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="GettingClever"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Получение преимуществ при помощи zfs-auto-snap</span></h4>
+    </div></div></div>
+    <p>Не существует ничего магического в именах снимках или расписаниях, используемых <span class="term"><code>zfs-auto-snapshot</code></span>.
+	Лукас как-то выполнил в командной строке <span class="term"><code>zfs-auto-snapshot hourly 2</code></span> и случайно удалил кучу 
+	почасовых снимков. Вы можете именовать свои почасовые снимки <span class="emphasis"><em>monthly</em></span>, а ваши ежегодные снимки 
+	<span class="emphasis"><em>daily</em></span>. Если вы решили отстреливать ненавидящих вас людей и все что вы отстаиваете, то 
+	это прекрасный способ решить данную проблему.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Holds"> </a>Захваты</h3>
+   </div></div></div>
+   <p>Иногда вы хотите сохранить определенный снимок несмотря на автоматическое расписание сохранений или отчаянные ночные усилия по 
+   очистке пула. Может быть произошел инцидент, или это будет отправной точкой некоторой репликации. Если вам нужно оставить снимок,
+   выполните захват, как это делает ваш банк, когда он не хочет чтобы вы тратили свои деньги.</p>
+   <p>Используйте <span class="term"><code>zfs hold</code></span>, имя тега и имя снимка. Имя тега является читаемой человеком меткой 
+   для этого определенного захвата.</p>
+	   <pre class="screen">
+# zfs hold tag dataset@snapshot
+	   </pre>
+   <p>Это фиксирует снимок и назначает ваше имя тега. Один снимок может иметь много захватов поверх себя, поэтому вы можете создавать 
+   захваты для различных целей.</p>
+   <p>Захваты также могут быть рекурсивными. Чтобы фиксировать все снимки с тем же именем в дочерних наборах данных с применением общего тега,
+   используйте <span class="term"><code>-r</code></span>.</p>
+	   <pre class="screen">
+# zfs hold -r hostages mypool/test@holdme
+	   </pre>
+   <p>Команда <span class="term"><code>zfs holds</code></span> отобразит список захватов на снимке или рекурсивно списки всех захватов в
+   иерархии снимков.</p>
+	   <pre class="screen">
+# zfs holds -r mypool/test@holdme
+NAME                     TAG       TIMESTAMP
+mypool/test@holdme       hostages  Fri Apr 3 19:13 2015
+mypool/test/sub1@holdme  hostages  Fri Apr 3 19:13 2015
+mypool/test/sub2@holdme  hostages  Fri Apr 3 19:13 2015
+	   </pre>
+   <p>Снимок с захватом на нем не может быть уничтожен.</p>
+	   <pre class="screen">
+# zfs destroy mypool/test@holdme
+cannot destroy snapshot mypool/test@holdme: dataset is busy
+{не могу уничтожить снимок mypool/test@holdme: набор данных занят}
+	   </pre>
+   <p>Освобождайте захват набора данных при помощи <span class="term"><code>zfs release</code></span>, задавая имена тега и набора данных.</p>
+	   <pre class="screen">
+# zfs release hostages mypool/test@holdme
+	   </pre>
+   <p>Теперь вы можете уничтожить снимок. Если бы так просто было с высвобождением ваших фондов с получившим их банком!</p>
+   <p>Однако, освобождение захвата снимка не освобождает захваты на его потомках.</p>
+	   <pre class="screen">
+# zfs destroy -r mypool/test@holdme
+cannot destroy snapshot mypool/test/sub1@holdme: dataset is busy
+cannot destroy snapshot mypool/test/sub2@holdme: dataset is busy
+	   </pre>
+   <p>Чтобы рекурсивно освободить все захваты снимка и его потомков воспользуйтесь флагом <span class="term"><code>-r</code></span>.</p>
+	   <pre class="screen">
+# zfs release -r hostages mypool/test@holdme
+# zfs destroy -r mypool/test@holdme
+	   </pre>
+   <p>Теперь вы можете уничтожать дочерние наборы данных.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Bookmarks"> </a>Закладки</h3>
+   </div></div></div>
+   <p>Более новые версии ZFS поддерживают <span class="emphasis"><em>закладки</em></span>. Закладки аналогичны снимкам, за исключением того, 
+   что они не заботятся об окружающих старых данных. Закладка является простым временным штампом снимка на котором она была создана.
+   Закладки строятся на основе нового флага функциональности <span class="term"><strong 
+   class="userinput"><code>extensible_dataset</code></strong></span>.</p>
+   <p>Временные штампы требуется ZFS для выполнил инкрементальной репликации. ZFS может легко получить все измененные блоки начиная с 
+   временного штампа закладки. Это делает возможными репликации приращением без необходимости сохранять вокруг старые снимки, как это 
+   требовалось ранее.</p>
+   <p>Закладки являются набором данных, относящимся к снимкам, поэтому мы упомянули о них здесь. Они будут полностью охвачены в книге 
+   <span class="emphasis"><em>FreeBSD Mastery: Advanced ZFS</em></span>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Clones"> </a>Клоны</h3>
+   </div></div></div>
+   <p>Клон являтся новой файловой системой, созданной из снимка. Первоначально он не использует никакого нового пространства, совместно 
+   используя все свои блоки со снимком, из которого он был создан. В то время как снимки являются доступными только на чтение, 
+   клоны перезаписываемые как и любая нормальная файловая система.</p>
+   <p>Клон можно рассматривать как &quot;развилку&quot; или &quot;разветвление&quot; файловой системы. Если у вас есть файловая система, 
+   которая содержит ваши веь- приложения, вы можете создать снимок и клонировать это снимок. Клонированная файловая система может быть 
+   вашим тестовым экземпляром приложения, делая возможным для вас применение исправлений и изменений без затрагивания вашего промышленного 
+   экземпляра, а такжебез потребления дополнительного дискового пространства. Вы можете выполнить тестирования на клонированной версии, 
+   одновременно сохраняя работающей актуальную версию.</p>
+   <p>Клоны не получают обновления, выполняемые на первоначальных данных. Они основываются на статичном снимке. Если вам нужен клон, 
+   который имеет ваши последние обновления первоначальных данных, вы должны сделать новый снимок и создать новый клон.</p>
+   <p>В начале клоны не используют дисковое пространство. По мере отклонения клона от снимка все выполненные над клоном изменения 
+   сохраняются как часть клона и начинают потреблять пространство.</p>
+   <p>Возможно у вас есть набор данных со многими терабайтами для вашего приложения управления ресурсами предприятия (ERP, 
+   Enterprise Resource Planning), однако полностью перезаписываемая копия этого набора данных совсем не требует пространства 
+   за исключением ваших изменений.</p>
+   <p>Дисковое пространство уже не дорого, но клоны делают его еще более доступным.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CreatingClone"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание клона</span></h4>
+    </div></div></div>
+    <p>Воспользуйтесь <span class="term"><code>zfs clone</code></span> для создания клона. Задайте ей два аргумента, исходный снимок 
+	и получателя. Если ваш пул не имеет точки монтирования, вы должны установить ее для вашего клона для доступа к его содержимому.</p>
+	   <pre class="screen">
+# zfs clone mypool/sheep@evenmore mypool/dolly
+	   </pre>
+    <p>Взглянем на наши наборы данных теперь.</p>
+	   <pre class="screen">
+# zfs list
+NAME                USED  AVAIL  REFER  MOUNTPOINT
+mypool             4.74G  13.5G    96K  none
+...
+mypool/sheep       10.3M  13.5G  6.10M  /mypool/sheep
+mypool/dolly          8K  13.5G  2.11M  /mypool/dolly
+mypool/second       192K  13.5G    96K  legacy
+mypool/second/baby   96K  13.5G    96K  legacy
+	   </pre>
+    <p>Набор данных <span class="term"><code>dolly</code></span> выглядит как обычный набор данных за исключением его использования 
+	пространства. Колонка КEFER показывает, что он имеет 2МБ данных, однако в USED он занимает только 8кБ. Содержащиеся в нем данные 
+	берутся из первоначального снимка. Клон потребляет данные только для вновь записываемых данных вне зависимости, будь то новые 
+	файлы или перезапись старых.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingClones"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр клонов</span></h4>
+    </div></div></div>
+    <p>Клоны возникают аналогично обычным наборам данных. В <span class="term"><code>zfs list</code></span> вы не заметите никакой 
+	разницы между клономи любымдругим набором данных. (Клоны выглядят как их исходный материал. Это именно то, почему они делают 
+	таких хороших ассасинов- убийц. Нет,постойте - плохие клоны. Примите мои извинения.) Однако, клоны записывают свой исходный 
+	снимок в свойство <span class="term"><strong class="userinput"><code>origin</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs get type,origin mypool/dolly
+NAME          PROPERTY  VALUE                  SOURCE
+mypool/dolly  type      filesystem             -
+mypool/dolly  origin    mypool/sheep@evenmore  -
+	   </pre>
+    <p>Таким образом, клон во всех отношениях появляется просто как обычный набор данных. Свойство 
+	<span class="term"><strong class="userinput"><code>origin</code></strong></span> является единственным способом узнать что 
+	это клон. Первоисточник является снимком, из которого был создан данный клон.</p>
+    <p>Для отслеживания всех клонов в вашей системе воспользуйтесь <span class="term"><code>zfs list</code></span> и
+	проверьте свойство <span class="term"><strong class="userinput"><code>origin</code></strong></span>. Мы выделяем все записи, 
+	не заканчивающиеся тире.</p>
+	   <pre class="screen">
+# zfs list -o name,origin | grep -ve '-$'
+NAME          ORIGIN
+mypool/dolly  mypool/sheep@evenmore
+	   </pre>
+    <p>Это выдает список всех наборов данных, которые происходят из снимков.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DeletingClonesAndSnapshots"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Удаление клонов и снимков</span></h4>
+    </div></div></div>
+    <p>Клоны зависят от блоков, хранимых в снимке- источнике. Наличие клона предотвращает удаления исходного снимка. Если 
+	вы попытаетесь удалить снимок, <span class="term"><code>zfs destroy</code></span> сообщит вам, что существует проблема.</p>
+	   <pre class="screen">
+# zfs destroy mypool/sheep@evenmore
+cannot destroy 'mypool/sheep@evenmore': snapshot has dependent clones
+use '-R' to destroy the following datasets:
+{не могу уничтожить 'mypool/sheep@evenmore': снимок имеет зависящие от него клоны
+применяйте '-R' для уничтожения следующих наборов данных:}
+mypool/dolly@zfs-auto-snap_frequent-2015-04-08-16h15
+mypool/dolly
+	   </pre>
+    <p>Добавьте флаг <span class="term"><code>-R</code></span> и уничтожение вашего снимка заберет с собой все зависящие от него клоны.
+	Вы можете удалять клон сам по себе, как и любые другие наборы данных файловой системы.</p>
+	   <pre class="screen">
+# zfs destroy mypool/dolly
+cannot destroy 'mypool/dolly': filesystem has children
+use '-r' to destroy the following datasets:
+{не могу уничтожить 'mypool/dolly': файловая система имеет потомков
+используйте '-r' для уничтожения следующих наборов данных:}
+mypool/dolly@zfs-auto-snap_frequent-2015-04-08-16h15
+	   </pre>
+    <p>Ой, подождите. Клон унаследовал свойство <span class="term"><strong class="userinput"><code>zfs-auto-snapshot</code></strong></span>
+	от своего родителя, так что наша автоматизация снимка уловила его. Если вы не хотите чтобы над клоном создавались снимки, вы должны 
+	выключить это свойство. Вы можете удалять снимки вашего клона вручную, однако 
+	<span class="term"><strong class="userinput"><code>zfs-auto-snapshot</code></strong></span> продолжит создание новых снимков. Вы 
+	также можете использовать флаг <span class="term"><code>-r</code></span> (рекурсии) для уничтожения клона и всех его снимков.</p>
+	   <pre class="screen">
+# zfs destroy -rv mypool/dolly
+will destroy mypool/dolly@zfs-auto-snap_frequent-2015-04-08-16h15
+will destroy mypool/dolly
+	   </pre>
+    <p>Теперь мы можем удалить первоначальный снимок.</p>
+	   <pre class="screen">
+# zfs destroy -v mypool/sheep@evenmore
+will destroy mypool/sheep@evenmore
+will reclaim 0
+	   </pre>
+    <p>Клоны очень мощны, однако они усложняют управление снимками.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PromotingClones"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Продвижение клонов</span></h4>
+    </div></div></div>
+    <p>Теперь, когда вы закончили тестирование версии разработки вашего веб-приложения, вы хотите сделать клон актуальной версией 
+	и отбросить предыдущую версию. Но это вызывает проблемы. Вы не можете уничтожить исходный набор данных, поскольку клон зависит от 
+	снимка этого набора данных.</p>
+    <p>Чтобы решить эту проблему вы &quot;продвигаете&quot; клон, прося ZFS поменять связь родитель/ потомок между исходным набором данных и 
+	клоном.  Клон становится файловой системой. Предыдущий родитель становится клоном. Учащийся становится магистром. Любые снимки, 
+	которые требует перемещать клон, превращаются вместо этого в клон. Снимки, созданные после первоначального снимка клона все 
+	еще относятся к первоначальным родителям.</p>
+    <p>После того, как клон успешно переключает расположения родительских наборов данных, вы можете устранить исходный набор данных.</p>
+    <p>ZFS также изменяет пространство используемое новым родителем и новым клоном. Наборы данных не забирают никакого дополнительного 
+	пространства, однако ведут учет этих изменений пространства. Клоны получают счета только за объёмы пространства, в которых они 
+	отличаются от своего первоначального снимка. Новые родительские наборы данных получают счета практически на все, в точности 
+	как люди- родители.</p> 
+	<p>Давайте пройдем продвижение клона. Вот мы клонируем набор данных <span class="term"><code>mypool/wooly</code></span> в 
+	набор данных с именем <span class="term"><code>mypool/bonnie</code></span> и изменяем клон.</p>
+	   <pre class="screen">
+# zfs clone mypool/wooly@later mypool/bonnie
+# date > /mypool/bonnie/date.txt
+# dd if=/dev/random of=/mypool/bonnie/randomfile bs=1m count=8 oseek=4
+	   </pre>
+    <p>Взглянем на использование диска клоном.</p>
+	   <pre class="screen">
+# zfs list mypool/bonnie
+NAME            USED  AVAIL  REFER  MOUNTPOINT
+mypool/bonnie  8.07M  13.5G  12.1M  /mypool/bonnie
+	   </pre>
+    <p>Колонка USED показывает 8МБ новых данных, которые мы записали в наш клон. Колонка REFER показывает набор данных, который содержит 
+	12МБ данных - 4МБ из первоначального снимка плюс новые 8МБ, добавленные нами.</p>
+    <p>Мы хотим сохранять набор данных <span class="term"><code>bonnie</code></span> и получить освобождение первоначального набора данных
+	<span class="term"><code>wooly</code></span>:</p>
+	   <pre class="screen">
+# zfs destroy -rv mypool/wooly
+cannot destroy 'mypool/wooly': filesystem has dependent clones
+use '-R' to destroy the following datasets:
+mypool/bonnie@zfs-auto-snap_frequent-2015-04-08-16h30
+mypool/bonnie
+	   </pre>
+    <p>ZFS знает, что набор данных <span class="term"><code>mypool/bonnie</code></span> и его снимки первоисточника основываются на
+	наборе данных <span class="term"><code>mypool/wooly</code></span>. Следовательно, мы применяем команду 
+	<span class="term"><code>zfs promote</code></span> для создания файловой системы <span class="term"><code>bonnie</code></span>
+	и возвращаем старые наборы данных в наш клон.</p>
+    <p>Перед продвижением клона выполните <span class="term"><code>zfs list</code></span> и проверьте использование пространства и 
+	происхождение обоих вовлеченных наборов данных.</p>
+	   <pre class="screen">
+# zfs list -t all -r mypool/wooly mypool/bonnie
+NAME                    USED   AVAIL REFER   MOUNTPOINT
+mypool/bonnie           8.07M  13.5G  12.1M  /mypool/bonnie
+mypool/wooly            10.3M  13.5G  6.10M  /mypool/sheep
+mypool/wooly@all            0      -  2.11M  -
+mypool/wooly@moresnap       0      -  2.11M  -
+mypool/wooly@later      2.07M      -  5.11M  -
+mypool/wooly@rewrite    1.07M      -  5.11M  -
+mypool/wooly@muchlater      0      -  6.10M  -
+	   </pre>
+    <p>Мы вернемся к этому списку позже. А сейчас продвинем <span class="term"><code>mypool/bonnie</code></span>.</p>
+	   <pre class="screen">
+# zfs promote mypool/bonnie
+	   </pre>
+    <p>Продвижение должно работать бесшумно. Давайте опять взглянем на эти два набора данных.</p>
+	   <pre class="screen">
+# zfs list -t all -r mypool/wooly mypool/bonnie
+NAME                    USED   AVAIL  REFER  MOUNTPOINT
+mypool/bonnie           14.3M  13.5G  12.1M  /mypool/bonnie
+mypool/bonnie@all           0      -  2.11M  -
+mypool/bonnie@moresnap      0      -  2.11M  -
+mypool/bonnie@later     1.07M      -  5.11M  -
+mypool/wooly            4.14M  13.5G  4.10M  /mypool/sheep
+mypool/wooly@rewrite    1.07M      -  5.11M  -
+mypool/wooly@muchlater      0      -  6.10M  -
+	   </pre>
+    <p>Снимок, на котором основан <span class="term"><code>mypool/bonnie</code></span> и все более старшие чем первоначальный снимки теперь 
+	относятся к <span class="term"><code>mypool/bonnie</code></span>. Более новые снимки <span class="term"><code>mypool/wooly</code></span>,
+	сделанные после создания снимка <span class="term"><code>mypool/bonnie</code></span> все еще относятся к 
+	<span class="term"><code>mypool/wooly</code></span>.</p>
+    <p>Теперь вы можете уничтожить старые наборы данных и все их снимки.</p>
+	   <pre class="screen">
+# zfs destroy -rv mypool/wooly
+will destroy mypool/wooly@muchlater
+will destroy mypool/wooly@rewrite
+will destroy mypool/wooly
+	   </pre>
+    <p>Помните, что раз клон разветвляется от главной файловой системы, он не получает никаких обновлений от родительского снимка. Любые 
+	постоянные данные необходимые вашим приложениям должны перейти в другой набор данных. Это может быть дочерний набор данных, 
+	как это предпочитает Джуд. Лукас говорит, что постоянные данные должны помещаться в совершенно не связанный набор данных, именно так, 
+	чтобы рекурсивное <span class="term"><code>remove</code></span> не затрагивало их. Следите за вашими постоянными данными любым 
+	удобным для вас способом.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SafelyManaging"> </a>Безопасное управление клонами, снимками и рекурсией</h3>
+   </div></div></div>
+   <p>Вы можете делать снимки данных. Вы можете создать клоны на основе этих снимков. Вы можете потом делать снимки клонов и создавать еще 
+   больше клонов. Несмотря на все ваши усилия, вы, скорее всего создадите массивный беспорядок взаимосвязанных клонов и снимков, 
+   которые превышают любые способности человека к осмысленному отслеживанию. ZFS дает вам целую кучу мощностей и удобств, но клоны 
+   делают возможным совершенно новые типы беспредела, который будет болезненно скручивать ваши внутренности. (Правда, большие ботинки и 
+   красный нос не помогают. Нет, подождите-ка: это клоуны. К сожалению, не возражаю.)</p>
+   <p>Флаги <span class="term"><code>-nv</code></span> являются жизненно важными для  безопасного администрирования систем. 
+   Всякий раз, когда малейший мысль уничтожить набор данных начинает рассматривать возможность прохождения в вашем рассудке, 
+   сделайте холостое выполнение с <span class="term"><code>-nv</code></span>. Ознакомьтесь с тем, что команда 
+   <span class="term"><code>destroy</code></span> фактически устранит. Прочитайте весь список. Вы можете обнаружить, что ваш рекурсивный 
+   <span class="term"><code>destroy</code></span> протянется по потоку клонов, который простирается по всему пути вдоль пула.</p>
+   <p>Проверяйте переде своим прыжком. Всегда.</p>
+   <p>ZFS изменит то, как вы используете дисковое пространство, однако все еще остаются задачи управления системного администратора. 
+   Давайте обсудим их далее.</p>
+  </div>   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

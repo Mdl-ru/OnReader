@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 5. Безопасность и QoS для контейнеров Docker - Изучение построения сетей Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningDockerNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="up" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="prev" href="Ch04.html" title="Глава 4. Построение сетей в кластере Docker"/>
+<link rel="next" href="Ch06.html" title="Глава 6. Следующее поколение сетевого стека для Docker: libnetwork"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-docker-networking";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningDockerNetworking/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 5. Безопасность и QoS для контейнеров Docker';
+PrevRef = 'Ch04.html';
+UpRef = 'index.html';
+NextRef = 'Ch06.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 5. Безопасность и QoS для контейнеров Docker</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+   <p></p>
+   <p></p>
+   <p></p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch05.html">5. Безопасность и QoS для контейнеров Docker</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#0501">Ограничения файловой системы</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050101">Точки монтирования, доступные только для чтения</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05010101">sysfs</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05010102">procfs</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05010103">/dev/pts</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05010104">/sys/fs/cgroup</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch05.html#050102">Копирование при записи</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0502">Возможности Linux</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0503">Безопасность контейнеров в AWS ECS</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#0504">Понимание безопасности Docker I - пространства имён ядра</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050401">Пространство имён pid</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050402">Пространство имён net</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05040201">Управление основным пространством имён сетевой среды</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05040202">Настройка пространства имён сетевой среды</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch05.html#050403">Пространство имён User</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05040301">Создание нового пространства имён пользователя</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#0505">Понимание безопасности Docker II - cgroup</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050501">Определение cgroup</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050502">Зачем нужны cgroup?</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050503">Создание cgroup вручную</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050504">Docker и cgroup</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#0506">Применение AppArmor для безопасности контейнеров Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch05.html#050601">AppArmor и Docker</a></span></dt>
+     <dt><span class="section"><a href="Ch05.html#050602">Эталонное тестирование безопасности Docker</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#05060201">Регулярный аудит демона Docker</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05060202">Создание пользователя для определённого контейнера</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05060203">Не монтируйте конфиденциальные каталоги системы хоста в контейнеры</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#05060204">Не применяйте привилегированные контейнеры</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#0507">Заключение</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0501"> </a>Безопасность и QoS для контейнеров Docker</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Точки монтирования, доступные только для чтения </span></h4>
+   </div></div></div>
+   <p></p>
+	
+	<a id="05010101"> </a>
+    <p class="title"><strong>sysfs</strong></p>
+    <p></p>
+	
+	<a id="05010102"> </a>
+    <p class="title"><strong>procfs</strong></p>
+    <p></p>
+	
+	<a id="05010103"> </a>
+    <p class="title"><strong>/dev/pts</strong></p>
+    <p></p>
+	
+	<a id="05010104"> </a>
+    <p class="title"><strong>/sys/fs/cgroup</strong></p>
+    <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050102"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Копирование при записи </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0502"> </a>Возможности Linux</h3>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0503"> </a>Безопасность контейнеров в AWS ECS</h3>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0504"> </a>Понимание безопасности Docker I - пространства имён ядра</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пространство имён pid </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пространство имён net </span></h4>
+   </div></div></div>
+   <p></p>
+	
+	<a id="05040201"> </a>
+    <p class="title"><strong>Управление основным пространством имён сетевой среды</strong></p>
+    <p></p>
+	
+	<a id="05040202"> </a>
+    <p class="title"><strong>Настройка пространства имён сетевой среды</strong></p>
+    <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050403"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пространство имён User </span></h4>
+   </div></div></div>
+   <p></p>
+	
+	<a id="05040301"> </a>
+    <p class="title"><strong>Создание нового пространства имён пользователя</strong></p>
+    <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0505"> </a>Понимание безопасности Docker II - cgroup</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Определение cgroup </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050502"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Зачем нужны cgroup? </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050503"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Создание cgroup вручную </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050504"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Docker и cgroup </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0506"> </a>Применение AppArmor для безопасности контейнеров Docker</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">AppArmor и Docker </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="050602"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Эталонное тестирование безопасности Docker </span></h4>
+   </div></div></div>
+   <p></p>
+	
+	<a id="05060201"> </a>
+    <p class="title"><strong>Регулярный аудит демона Docker</strong></p>
+    <p></p>
+	
+	<a id="05060202"> </a>
+    <p class="title"><strong>Создание пользователя для определённого контейнера</strong></p>
+    <p></p>
+	
+	<a id="05060203"> </a>
+    <p class="title"><strong>Не монтируйте конфиденциальные каталоги системы хоста в контейнеры</strong></p>
+    <p></p>
+	
+	<a id="05060204"> </a>
+    <p class="title"><strong>Не применяйте привилегированные контейнеры</strong></p>
+    <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0507"> </a>Заключение</h3>
+   </div></div></div>
+   <p></p>
+
+  </div>
+   
+ 
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

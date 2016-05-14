@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 5. Восстановление и реконструкция - Мастерство FreeBSD: ZFS</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="prev" href="Ch04.html" title="Глава 4. Наборы данных ZFS"/>
+<link rel="next" href="Ch06.html" title="Глава 6. Управление дисковым пространством"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 5. Восстановление и реконструкция';
+PrevRef = 'Ch04.html';
+UpRef = 'index.html';
+NextRef = 'Ch06.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 5. Восстановление и реконструкция</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch05.html">5. Восстановление и реконструкция</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch05.html#Resilvering">Перенос актуальных данных</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#ExpandingPools">Расширение пулов</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#VDEVtoStriped">Добавление VDEV в пулы с чередованием</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#VDEVtoMirror">Добавление VDEV в пулы с зеркалами</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#VDEVtoRAID-Z">Добавление VDEV в пулы RAID-Z</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#HardwareStatus">Состояние аппаратуры</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#Online">Интерактивный</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Degraded">Деградировавший</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Faulted">Отказавший</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Unavail">Недоступный</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Offline">Не подключенный</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Removed">Удаленный</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Errors">Ошибки в стеке ZFS</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#RestoringDevices">Восстановление устройств</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#MissingDrives">Пропавшие диски</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#ReplacingDrives">Замена дисков</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#FaultedDrives">Отказавшие диски</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#ReplacingTheSameSlot">Замена в тех же слотах</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#ReplacingUnavailDrives">Замена недоступных дисков</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#ReplacingMirrorProviders">Замена поставщиков зеркал</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#Reattaching">Повторное подключение недоступных и удаленных дисков</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#LogAndCacheDevice">Сопровождение устройств журнала и кэша</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#AddingLogOrCache">Добавление устройств журнала и кэша</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#RemovingLogAndCache">Удаление устройств журнала и кэша</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#ReplacingFailedLogAndCache">Замена устройств журнала и кэша</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#ExportingAndImporting">Экспорт и импорт дисков</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#ExportingPools">Экспорт пулов</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#ImportingPools">Импорт пулов</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#RenamingImportedPools">Переименование импортированных пулов</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#IncompletePools">Незавершенные пулы</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#SpecialImports">Специальный импорт</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#LargerProviders">Увеличение поставщиков</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#ZpoolVersions">Версии и обновления Zpool</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch05.html#ZFS_Versions">Версии ZFS и флаги свойств</a></span></dt>
+      <dt><span class="section"><a href="Ch05.html#ZpoolUpgrades">Обновление Zpool и начальный загрузчик</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch05.html#FreeBSDZFSPoolLimitations">Ограничения пулов FreeBSD ZFS</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+   <p>Диски заполняются. Это именно то,для чего они предназначены. Аппаратные средства отказывают по той же причине. Иногда вам нужно вынуть 
+   диски из одной машины и поместить их в другую, или заместить отказавшие жесткие диски, или предоставить вашей базе данных больше пространства.
+   Данная глава обсуждает то, как вы можете изменять, обновлять и восстанавливать ваши пулы хранения.</p>
+   <p>Прежде чем перейти к этому, давайте обсудим как ZFS перестраивает разрушенные VDEV.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Resilvering"> </a>Перенос актуальных данных</h3>
+   </div></div></div>
+   <p>Виртуальные устройства, такие как зеркала и RAID-Z специально созданы для повторного построения утраченных данных на разрушенных 
+   дисках. Если диск в вашей паре зеркал умер, вы заменяете диск и ZFS скопирует выжившее зеркало на него. Если в вашем RAID-Z отказал 
+   VDEV, вы заменяете вышедший из строя диск и ZFS перестраивает этот диск из данных контрольных сумм. Такой вид восстановления данных 
+   является ключевой функциональностью любой реализации RAID.</p>
+   <p>Однако, ZFS понимает как файловую систему, так и лежащие в основе хранилища. Это предоставляет ZFS свободу и преимущества над 
+   обычными недостатками управления RAID.</p>
+   <p>Повторное построение диска, зеркалированного программным или аппаратным RAID требует копирования всех секторов по отдельности с 
+   хорошего диска на диск замены. Устройство RAID дожно скопировать таблицу разделов, файловую систему, все индексные дескрипторы, 
+   все ваши блоки (даже все свободное пространство) и все данные с одного на другое устройство.</p>
+   <p>Мы все сделали опечатку в <span class="term"><code>/etc/rc.conf</code></span>, которая не позволяет системе загружаться. Исправление 
+   этой опечатки в системе, зеркалированной посредством UFS2 и <span class="term"><code>gmirror(8)</code></span> потребует загрузки в 
+   однопользовательском режиме, исправления опечатки и перезагрузки. Это выведет один из дисков из процесса синхронизации с другим.
+   При перезагрузка FreeBSD заметит неточность и перенесет резервный диск на синхронизируемый копированием всех секторов по отдельности 
+   текущего диска на резервную копию. Вероятно,вы изменили один или два сектора на этом диске, однако 
+   <span class="term"><code>gmirror(8)</code></span> должна скопировать все целиком. Это может занять часы, или даже дни.</p>
+   <p>ZFS знает в точности какой объем диска используется. Когда ZFS пересобирает замененного поставщика хранения, она копирует только 
+   данные, которые действительно нужны этому поставщику. Если вы замените диск ZFS, который был заполнен данными только на треть, 
+   ZFS скопирует только эту треть данных для восстановления диска.</p>
+   <p>Исправление опечатки в <span class="term"><code>rc.conf</code></span> в зеркалированном ZFS диске потребует вмешательства системного 
+   администратора,очень похожее на необходимое вмешательство в системе <span class="term"><code>gmirror(8)</code></span>. Вы войдете в 
+   однопользовательский режим. Вы исправите опечатку. Вы перезагрузитесь. Разница заключается в том, что ZFS в точности знает какие 
+   блоки были изменены на диске. Если только один диск был в работе в процессе однопользовательского режима (невероятно, но такое может
+   случаться), оба диска будут рассогласованы. Вместо того, чтобы копировать диск целиком, ZFS обновит только те блоки, которые 
+   необходимы для повторной синхронизации дисков. Скорее всего, система восстановит зеркало еще до того, как вы введете команду для 
+   просмотра как она поживает.</p>
+   <p>Восстановление ZFS называется переносом актуальных данных (<span class="emphasis"><em>resilvering</em></span>). Как и другие операции 
+   целостности, перенос актуальных данных имеет место только на актуальной файловой системе. Вы можете выполнить перенос актуальных данных в 
+   однопользовательском режиме, но это имеет тот же смысл как и установка программного обеспечения в однопользовательском режиме.</p>
+   <p>Перенос актуальных данных автоматически происходит при замене вами поставщика хранения. Оно также случается, когда диск временно 
+   отказывает и затем восстанавливается, например, при перезапуске контроллера или перезагрузке внешнего диска. В то время как процесс 
+   переноса актуальных данных замененного поставщика хранения может занять продолжительное время, перенос актуальных данных после короткого 
+   простоя, скорее всего, потребует всего нескольких секунд.</p>
+   <p>Если вы используете пул RAID-Z обычным образом  во время выполнения переноса актуальных, перенос актуальных может значительно 
+   замедлиться. Перенос актуальных данных и очистка выполняются в порядке групп транзакций, в то время как нормальные операции 
+   чтения и записи довольно- таки случайные. Скорость переноса актуальных данных ZFS дросселируется с тем, чтобы она не влияла на 
+   нормальную функциональность системы.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ExpandingPools"> </a>Расширение пулов</h3>
+   </div></div></div>
+   <p>Данные расширяются, занимая все свободное пространство. Вне зависимости от того, сколько дискового пространства вы выделите пулу, 
+   в конце концов, вы захотите больше. Чтобы увеличить размер пула добавьте VDEV в этот пул. Для пулов с избыточностью вы можете заменить 
+   поставщиков хранения на поставщиков с большим размером.</p>
+   <p>Когда вы расширите пул ZFS автоматически начнет записывать данные в новое пространство. По мере роста пула ZFS пытается 
+   равномерно балансировать доступное пространство между различными поставщиками. ZFS смещает запись по дискам, поэтому они могут 
+   заполниться одновременно. У пула с одним пустым VDEV и тремя почти заполненными, однако, мало выбора кроме как помещать данные 
+   на пустое VDEV. Если вы часто создаете и удаляете файлы, загруженность дисков, в конце концов, выровняется.</p>
+   <p>Все VDEV внутри пула должны быть идентичными. Если пул построен из набора зеркал, не добавляете в него RAID-Z3.</p>
+   <p>Добавляете поставщиков в VDEV при помощи команды <span class="term"><code>zpool attach</code></span>, а VDEV в пул 
+   командой <span class="term"><code>zpool add</code></span>.</p>
+   <p>Вы не можете удалять устройства из VDEV без {избыточности} или любые VDEV из пула. Флаг 	<span class="term"><code>-n</code></span>
+   в <span class="term"><code>zpool add</code></span> производит &quot;холостое выполнение&quot;, показывая вам результаты работы команды, 
+   которые она бы получила, без реального изменения пула. Выполнение вашей команды <span class="term"><code>zpool add</code></span>
+   с флагом <span class="term"><code>-n</code></span> и изучение получающегося пула может дать вам предостережения о ваших выстрелах 
+   себе в ногу.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="VDEVtoStriped"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Добавление VDEV в пулы с чередованием</span></h4>
+    </div></div></div>
+    <p>Чередующиеся пулы, не имеющие никакой избыточности, могут расширяться вплоть до пределов аппаратных средств. Каждое добавляемое 
+	вами VDEV без избыточности, однако, увеличивает вероятность катастрофического отказа,в точности с тем,какэто происходит в RAID-0. 
+	Помните, что отказ одного VDEV в пуле разрушит весь пул. В пуле с чередованием каждый диск является автономным VDEV.</p>
+    <p>Вот пул с чередованием с тремя поставщиками.</p>
+    <p></p>
+	   <pre class="screen">
+# zpool status scratch
+...
+config:
+NAME      STATE  READ WRITE CKSUM
+scratch   ONLINE    0     0     0
+gpt/zfs0  ONLINE    0     0     0
+gpt/zfs1  ONLINE    0     0     0
+gpt/zfs2  ONLINE    0     0     0
+	   </pre>
+    <p>Воспользуйтесь командой <span class="term"><code>zpool add</code></span> для добавления поставщика хранения в пул с 
+	чередованием./p>
+	   <pre class="screen">
+# zpool add scratch gpt/zfs3
+	   </pre>
+    <p>Теперь состояние пул покажет четырех поставщиков услуг, а вы имеете дополнительное дисковое пространство.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="VDEVtoMirror"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Добавление VDEV в пулы с зеркалами</span></h4>
+    </div></div></div>
+    <p>Вы можете добавить поставщика в зеркалированное VDEV, однако дополнительные диски не увеличат доступное пространство. Они станут 
+	дополнительными зеркалами друг друга. Чтобы добавить пространство в пул, которое использует VDEV с зеркалами, добавьте новое 
+	зеркалированное VDEV в ваш пул.</p>
+    <p>Сейчас zpool <span class="term"><code>db</code></span> имеет два зеркалированных VDEV.</p>
+	   <pre class="screen">
+# zpool status db
+...
+NAME      STATE READ WRITE CKSUM
+db        ONLINE   0     0 0
+mirror-0  ONLINE   0     0 0
+gpt/zfs0  ONLINE   0     0 0
+gpt/zfs1  ONLINE   0     0 0
+mirror-1  ONLINE   0     0 0
+gpt/zfs2  ONLINE   0     0 0
+gpt/zfs3  ONLINE   0     0   0
+	   </pre>
+    <p>Нам нужно дополнительное пространство, поэтому мы хотим добавить третье зеркалированное VDEV. Воспользуйтесь командой 
+	<span class="term"><code>zpool add</code></span> для создания нового зеркального устройства и добавьте его в пул. Здесь мы используем
+	<span class="term"><code>gpt/zfs4</code></span> и <span class="term"><code>gpt/zfs5</code></span> для создания нового устройства и 
+	добавления его в пул.</p>
+	   <pre class="screen">
+# zpool add db mirror gpt/zfs4 gpt/zfs5
+	   </pre>
+    <p>Теперь состояние пула отобразит новое зеркалированное VDEV, mirror-2, содержащее двух поставщиков хранения. По мере записи и удаления 
+	вами данных, пул постепенно выровняет загруженность по трем VDEV. Чтобы посмотреть как пул распределяет данные по всем VDEV используйте 
+	<span class="term"><code>zpool list -v</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="VDEVtoRAID-Z"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Добавление VDEV в пулы RAID-Z</span></h4>
+    </div></div></div>
+    <p>Вы не можете добавлять поставщиков ни к какому RAID-Z VDEV. Чтобы расширить пул на основе RAID-Z, вы должны добавить дополнительное 
+	VDEV в этот пул или заменить все участвующие в пуле диски дисками большего размера. Лучшей практикой является исполнение всех 
+	RAID-Z VDEV с применением одинакового числа дисков.</p>
+    <p>Вот пул RAID-Z, который мы хотим расширить дополнительным VDEV.</p>
+	   <pre class="screen">
+config
+NAME      STATE READ WRITE CKSUM
+db        ONLINE   0     0     0
+raidz1-0  ONLINE   0     0     0
+gpt/zfs0  ONLINE   0     0     0
+gpt/zfs1  ONLINE   0     0     0
+gpt/zfs2  ONLINE   0     0     0
+	   </pre>
+    <p>Мы опять используем команду <span class="term"><code>zpool add</code></span> для создания нового VDEV и добавления его в пул.</p>
+	   <pre class="screen">
+# zpool add db raidz1 gpt/zfs3 gpt/zfs4 gpt/zfs5
+	   </pre>
+    <p>Проверка состояния пула показывает, что новое VDEV, raidz1-1, содержит трех поставщиков. ZFS немедленно запускает чередование 
+	данных и по новым поставщикам.</p>
+    <p>Ели вы хотите добавить новое VDEV в пул на основе RAID-Z2 или RAID-Z3, используйте ту же команду с нужным вам типом RAID-Z и 
+	соответствующим числом поставщиков.</p>
+    <p>Помните, вы не можете добавлять поставщиков в RAID-Z VDEV - настройка RAID-Z VDEV зацементирована. Многие люди пытаются добавлять 
+	диски в RAID-Z VDEV при помощи <span class="term"><code>zpool add</code></span>. Команда <span class="term"><code>zpool add</code></span>
+	добавляет новые VDEV в пул. Если вы примените <span class="term"><code>-f</code></span> для запроса на помещение в ваш пул на основе 
+	RAID-Z одного нового диска командой <span class="term"><code>zpool add</code></span>, вы получите деформированный пул с одним 
+	участником RAID-Z и одним участником чередования. Получившийся в результате пул не будет монтироваться и будет неисправим. Его 
+	восстановление потребует резервного копирования данных с последующим уничтожением и повторным созданием пула.</p>
+    <p>Вы можете применять <span class="term"><code>zpool attach</code></span> для расширения зеркалированных и чередующихся VDEV, 
+	однако эта команда не работает с пулами RAID-Z. Вы не можете добавлять поставщиков в RAID-Z VDEV.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="HardwareStatus"> </a>Состояние аппаратуры</h3>
+   </div></div></div>
+   <p>Большинство настроек ZFS допускают определенное число отказов аппаратных средств. Когда лежащие в основе поставщики хранения 
+   выходят из строя, ZFS делает все возможное чтобы предупредить вас. Прислушивайтесь к ней.</p>
+   <p>Команда <span class="term"><code>zpool status</code></span> отображает условия аппаратура хранения в поле STATE. Вы получаете одно 
+   поле STATE для всего вашего пула, рядом с вершиной. Далее вниз, где <span class="term"><code>zpool status</code></span> приводит список 
+   всех VDEV и поставщиков хранения колонка STATE позволяет вам сузить поиск виновника.</p>
+   <p>Ошибки просачиваются вверх. Если отказывает отдельный поставщик хранения, пул вырабатывает соответствующий отказ. Большое кричащее 
+   сообщение об ошибке в вершине <span class="term"><code>zpool status</code></span> является ориентиром для вас просмотреть конкретных 
+   поставщиков для выявления лежащей в основе ошибки.</p>
+   <p>Пулы и VDEV могут иметь шесть состояний. Лежащие в основе поставщики могут иметь по крайней мере три из этих состояний.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Online"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Интерактивный</span></h4>
+    </div></div></div>
+    <p>Если пул, VDEV или поставщик в интерактивном режиме (<span class="emphasis"><em>Online</em></span>), то они работают нормально.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Degraded"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Деградировавший</span></h4>
+    </div></div></div>
+    <p>Деградировавший (<span class="emphasis"><em>Degraded</em></span>) пул утратил, по крайней мере, одного поставщика хранения. Этот 
+	поставщик либо полностью выключен, либо утрачен, либо вырабатывает ошибки намного чаще, чем это допускает ZFS. Деградировавший 
+	пул сохраняет достаточную устойчивость для продолжения работы, однако еще один отказ может закрыть его.</p>
+    <p>Если поставщик хранения имеет слишком много ошибок ввода/ вывода, ZFS предпочитает полностью выключить (перевести в состояние отказа) 
+	это устройство. Однако, в действительности ZFS пытается избегать перевода в аварийное состояние устройств, которые обеспечивают 
+	необходимую уустойчивость пула. Если последний рабочий поставщик в зеркале начинает показывать слишком много ошибок или  
+	отказывает поставщик в уже имеющем аварийного поставщика хранения RAID-Z1 VDEV, тогда ZFS помещает этого поставщика в деградировавший 
+	режим, хотя он должен был бы поместить его в аварийное состояние.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Faulted"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отказавший</span></h4>
+    </div></div></div>
+    <p>Отказавший (<span class="emphasis"><em>Faulted</em></span>) поставщик хранения либо разрушен, либо вырабатывает слишком много ошибок 
+	по сравнению с допустимым ZFS значением. Отказавший поставщик хранения берется из самой последней известной хорошей копии ваших данных. 
+	Если ваше зеркало с двумя дисками утратило оба диска, или ваш RAID-Z1 потерял оба диска, ваше VDEV отказывает. Отказавшее VDEV забирает 
+	ссобой весь пул.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Unavail"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Недоступный</span></h4>
+    </div></div></div>
+    <p>Недоступный (<span class="emphasis"><em>Unavail</em></span>) означает, что ZFS не может открыть поставщика хранения. Возможно 
+	устройство больше не подключено, или вероятно оно было плохо импортировано (см. <a class="link" href="#ImportingPools" target="_top">{Импорт} 
+	пулов</a> далее в этой главе). В любом случае, его здесь нет, поэтому ZFS не может его использовать. Недоступное устройство может 
+	затронуть все VDEV и, следовательно, весь пул.</p>
+    <p>Недоступное устройство воздействует на состояние VDEV в зависимости от устойчивости этого VDEV. Если пул все еще имеет достаточно 
+	устойчивости для продолжения работы, пул становится деградировавшим. Если VDEV не может больше работать, оно становится отказавшим.</p>
+    <p>Недоступные устройства появляются в состоянии пула по назначенному им GUID, а не в узле устройства поставщика.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Offline"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Не подключенный</span></h4>
+    </div></div></div>
+    <p>Не подключенное (<span class="emphasis"><em>Offline</em></span>) устройство было намеренно выключено системным администратором. 
+	У вас нет целевых причин для выключения устройства в большом массиве.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Removed"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Удаленный</span></h4>
+    </div></div></div>
+    <p>Некоторые аппаратные средства могут обнаруживать физическое удаление диска из системы при работающей системе. Такое оборудование 
+	позволяет ZFS устанавливать состояние удаленный (<span class="emphasis"><em>Removed</em></span>) при вытаскивании устройства. Когда 
+	вы повторно подключаете устройство, ZFS пытается ввести поставщика обратно в интерактивный режим.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Errors"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ошибки в стеке ZFS</span></h4>
+    </div></div></div>
+    <p>Рассмотрим сервер с парой отключенных поставщиков хранилищ. Это не относится к системе Лукаса или Джуда, это было в системе друга Лукаса.
+	(А теперь Лукас имеет хороший пример проблемы, он может сказать, что друг с этим zpool был ранен. Хотя, чтобы быть уверенным, 
+	что он имеет хорошие примеры, он, наверное, должен подождать пока он не закончит эту книгу. Хоть они друг Лукаса, но молокосос.)
+	Обратите внимание на ошибки ваших поставщиков, тип VDEV, и состояние пула в целом.</p>
+	   <pre class="screen">
+# zpool status
+ pool: FreeNAS02
+state: DEGRADED
+status: One or more devices could not be opened. Sufficient replicas exist for
+    the pool to continue functioning in a degraded state.
+action: Attach the missing device and online it using 'zpool online'.
+   see: http://illumos.org/msg/ZFS-8000-2Q
+  scan: scrub repaired 0 in 15h57m with 0 errors on Sun Feb 8 15:57:55 2015
+config:
+NAME          STATE  READ WRITE CKSUM
+FreeNAS02     DEGRADED  0     0     0
+raidz2-0      DEGRADED  0     0     0
+15881942844…  UNAVAIL   0     0     0  was /dev/gpt/zfs0
+gpt/zfs1      ONLINE    0     0     0
+gpt/zfs2      ONLINE    0     0     0
+gpt/zfs3      ONLINE    0     0     0
+gpt/zfs4      ONLINE    0     0     0
+gpt/zfs5      ONLINE    0     0     0
+gpt/zfs6      ONLINE    0     0     0
+gpt/zfs7      ONLINE    0     0     0
+gpt/zfs8      ONLINE    0     0     0
+gpt/zfs9      ONLINE    0     0     0
+14768135092…  UNAVAIL   0     0     0  was /dev/gpt/zfs10
+gpt/zfs11     ONLINE    0     0     0
+gpt/zfs12     ONLINE    0     0     0
+gpt/zfs13     ONLINE    0     0     0
+	   </pre>
+    <p>Этот RAID-Z2 пул находится в состоянии деградации. Он утратил двух поставщиков, <span class="term"><code>/dev/gpt/zfs0</code></span>
+	и <span class="term"><code>/dev/gpt/zfs10</code></span>. RAID-Z2 VDEV может обрабатывать до двух отказов дисков и продолжать свою работу
+	несмотря на утрату дисков.</p>
+    <p>Однако, деградировавший пул имеет ограничения по самовосстановлению. Пул без избыточности не имеет информации, необходимой ZFS для 
+	восстановления файлов. Наш пример приведенного выше пула имеет утраченными два диска в своем RAID-Z2 VDEV. Он имеет нулевую избыточность. 
+	Если файл испытывает битовую деградацию, ZFS может ее исправить. Когда вы пытаетесь получить доступ к этому файлу, ZFS возвращает ошибку. 
+	Избыточность на уровне набора данных (со свойством <span class="term"><strong class="userinput"><code>copies</code></strong></span>) 
+	может позволить ZFS вылечить файл.</p>
+    <p>Если пул испытает отказ другого диска, тогда пул не сможет завершить копию своих данных и откажет.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RestoringDevices"> </a>Восстановление устройств</h3>
+   </div></div></div>
+   <p>Раз уж ZFS столь любезен, что предупреждает о своих проблемах, то меньшее из того что вы можете сделать, это попытаться 
+   исправить их. Процесс восстановления зависит от того, является ди диск утраченным или отказавшим.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MissingDrives"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Пропавшие диски</span></h4>
+    </div></div></div>
+    <p>Привод, отключенный в процессе работы отображается либо как удаленный, либо как отказавший. МОжет быть, вы вынули диск чтобы посмотреть 
+	его серийный номер. Возможно, отсоединился кабель. Это могли быть гремлины. В любом случае, вы скорее всего захотите подключить его назад.</p>
+    <p>Если аппаратура замечает, что диск удален, вместо того чтобы просто сообщить, что он пропал, оборудование также заметит и возвращение диска.
+	ZFS попытается повторно активировать восстановленный диск.</p>
+    <p>Аппаратура, которая не оповещает операционную систему о добавлении или удалении требует вмешательства системного администратора для 
+	восстановления службы. Воспользуйтесь командой <span class="term"><code>zfs online</code></span> для повторного подключения привода назад 
+	в службу.</p>
+	   <pre class="screen">
+# zfs online gpt/zfs5
+	   </pre>
+    <p>Если диск не доступен по причине его отказа, тогда вы должны заменить его, а не просто снова включить его.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ReplacingDrives"> </a>Замена дисков</h3>
+   </div></div></div>
+   <p>Самая трудная часть замены диска часто не имеет ничего общего с ZFS: вы должны найти плохой диск. Мы рекомендуем применять физическое 
+   местоположение диска в GPT метке диска при первичной установке диска для более простой замены впоследствии. Если вам необходимо 
+   определить неисправный диск без подобной информации, используйте <span class="term"><code>gpart list</code></span> и
+   <span class="term"><code>smartctl</code></span> для получения серийного номера диска и информации о производителе, а затем 
+   найдите шасси этого диска. Это тот же самый процесс, который обсуждался в <a class="link" href="Ch00.html" target="_top">Главе 0.</a>,
+   только в обратном направлении и с дополнительным давлением незапланированных простоев. В худшем случае, вы можете найти серийный номер 
+   всех еще работающих дисков, а методом исключения вы получите отсутствующий диск.</p>
+   <p>Теперь вы не жалеете, что не сделали эту работу заранее?</p>
+   <p>Когда вы определите отказавший диск и выполните его замены, мы можем начать использовать ZFS.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FaultedDrives"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отказавшие диски</span></h4>
+    </div></div></div>
+    <p>Используйте команду <span class="term"><code>zpool replace</code></span> для удаления привода из демпфирующего VDEV и замените в нем диск 
+	на новый. Диск не обязательно должен быть отказавшим - это может быть совершенно рабочий диск, который вы хотите заменить, поскольку, например,
+	вы выполняете обслуживание дисковой полки. Вот пул RAID-Z1 с плохим диском.</p>
+	   <pre class="screen">
+NAME      STATE   READ WRITE CKSUM
+db        DEGRADED   0     0     0
+raidz1-0  DEGRADED   0     0     0
+gpt/zfs1  ONLINE     0     0     0
+gpt/zfs2  ONLINE     0     0     0
+gpt/zfs3  FAULTED    0     0     0
+gpt/zfs4  ONLINE     0     0     0
+	   </pre>
+    <p>Журнал <span class="term"><code>/var/log/messages</code></span> содержит много предостережений о физическом диске, лежащем в основе 
+	<span class="term"><code>gpt/zfs3</code></span>. Это диск должен быть удален из нашего несчастья. Используйте 
+	<span class="term"><code>zpool replace</code></span> для удаления отказавшего поставщика из VDEV и замены его новым устройством. Задайте 
+	имя пула, отказавшего поставщика и нового поставщика.</p>
+	   <pre class="screen">
+# zpool replace db gpt/zfs3 gpt/zfs5
+	   </pre>
+    <p>Эта команда может отнять много времени в зависимости от емкости диска и его скорости, а также от объема данных на нем. Вы можете 
+	наблюдать за состояние замены проверяя состояние пула.</p>
+	   <pre class="screen">
+# zpool status db
+  pool: db
+ state: DEGRADED
+status: One or more devices is currently being resilvered. The pool will
+continue to function, possibly in a degraded state.
+action: Wait for the resilver to complete.
+  scan: resilver in progress since Mon Mar 16 12:04:50 2015
+195M scanned out of 254M at 19.5M/s, 0h0m to go
+47.3M resilvered, 76.56% done
+config:
+NAME         STATE READ WRITE CKSUM
+db           ONLINE   0     0     0
+raidz1-0     ONLINE   0     0     0
+gpt/zfs1     ONLINE   0     0     0
+gpt/zfs2     ONLINE   0     0     0
+replacing-2  ONLINE   0     0     0
+gpt/zfs3     FAULTED  0     0     0
+gpt/zfs5     ONLINE   0     0     0  (resilvering)
+gpt/zfs4     ONLINE   0     0     0
+	   </pre>
+    <p>Оценки времени переноса актуальных данных (resilvering) предполагает что активность диска довольно постоянна. Старт большого дампа 
+	базы данных в середине процесса переноса актуальных данных задерживает все.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ReplacingTheSameSlot"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Замена в тех же слотах</span></h4>
+    </div></div></div>
+    <p>Допустим, ваш массив жестких дисков заполнился и у вас больше нет места для размещения новых жестких дисков с новым узлом устройства.
+	Вы должны физически удалить отказавший диск, выполнить замену в его местоположении, сделать раздел и создать метку диска, а также 
+	заменить поставщика. Это лишь чуть более сложно.</p>
+    <p>Однако, этот подход имеет больше рисков. При <span class="term"><code>zpool replace</code></span> отказавший поставщик остается 
+	в работающем состоянии, поскольку он может управлять до завершения переноса актуальных данных. Если вы утратите второй диск в вашем 
+	RAID-Z1 в процессе переноса актуальных данных, есть шансчто пулу хватит целостности данных для выживания. Когда вы заменяете 
+	отказавшего поставщика до начала перепостроения, вы теряете такоую возможность безопасности. Если ваше оборудование не предоставляет 
+	вам достаточной для безопасной замены гибкости, ну что же, проверьте свои резервные копии и вперед.</p>
+    <p>Начните с вывода отказавшего устройство в офлайн. Данная команда попросит ZFS остановить попытки чтения и записи на данное 
+	устройство.</p>
+	   <pre class="screen">
+# zpool offline gpt/zfs3
+	   </pre>
+    <p>Теперь вы можете извлечь отказавший диск из массива и установить его замену. В случае необходимости, создайте раздел 
+	поставщика. Ели вы не уверены в разбиении, вы можете скопировать таблицу разделов существующих дисков чем-то навроде 
+	<span class="term"><code>gpart backup da0 | gpart restore da9</code></span>. Используйте новую метку поставщика в
+	<span class="term"><code>zpool replace</code></span>. Если метка нового поставщика идентична метке удаленного диска, у вас нет 
+	нужды повторять имя поставщика. В нашем случае мы заменяем <span class="term"><code>gpt/zfs3</code></span> новым диском, также
+	имеющим метку <span class="term"><code>gpt/zfs3</code></span>.</p>
+	   <pre class="screen">
+# zpool replace db gpt/zfs3
+	   </pre>
+    <p>Если вы помечаете ваши диски серийными номерами, как мы рекомендовали в <a class="link" href="Ch00.html" target="_top">Главе 
+	0.</a>, у вас не будет этой проблемы.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ReplacingUnavailDrives"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Замена недоступных дисков</span></h4>
+    </div></div></div>
+    <p>Если состояние диска UNAVAIL, ZFS идентифицирует утраченное устройство по его GUID и откладывает предыдущее имя устроства в сторону.
+	Zpool все еще может работать, на вам действительно необходимо заменить диск.</p>
+	   <pre class="screen">
+NAME                  STATE   READ WRITE CKSUM
+db                    DEGRADED   0     0     0
+RAID-Z1-0             DEGRADED   0     0     0
+gpt/zfs1              ONLINE     0     0     0
+gpt/zfs2              ONLINE     0     0     0
+13792229702739533691  UNAVAIL    0     0     0 was /dev/gpt/zfs3
+gpt/zfs4              ONLINE     0     0     0
+	   </pre>
+    <p>Я установил новый диск, который отображается в <span class="term"><code>/var/run/dmesg.boot</code></span>  как da5 
+	и создал на нем раздел freebsd-zfs. Этот новый поставщик получил метку zfs3. Пул не может автоматически идентифицировать данного 
+	поставщика как его заместителя - он знает, что предыдущим поставщиком был <span class="term"><code>gpt/zfs3</code></span>,
+	однако новому <span class="term"><code>gpt/zfs3</code></span> не хватает метаданных на диске, которые идентифицируют его в 
+	качестве тома ZFS.</p>
+    <p>Чтобы плавно влить нового поставщика в zpool, снова примените <span class="term"><code>zpool replace</code></span>. Используйте 
+	GUID вместо предыдущего имени устройства.</p>
+	   <pre class="screen">
+# zpool replace db 13792229702739533691 gpt/zfs3
+	   </pre>
+    <p>Проверка состояния zpool покажет, что пул перенес актуальные данные. Когда перенос актуальных данных (resilvering) завершен, 
+	пул полностью восстановлен.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ReplacingMirrorProviders"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Замена поставщиков зеркал</span></h4>
+    </div></div></div>
+    <p>Иногда бывает, что диск не отказал полностью, но вырабатывает так много ошибок, что совершенно ясно, что его смерть близка.
+	Когда этот диск находится в зеркалированном виртуальном устройстве, лучше может оказаться оставить отказавшего поставщика на 
+	месте, пока вы добавляете диск на замену. Это максимизирует избыточность в процессе замены. Также требуется, чтобы ваши аппаратные 
+	средства могли использовать три диска вместо обычных двух. Если ваша система может обрабатывать только два диска, тогда продолжайте 
+	работать с <span class="term"><code>zpool replace</code></span></p>
+	<p>В нашем случае мы имеем отдельное зеркалированное VDEV содержащее двух поставщиков, <span class="term"><code>gpt/zfs0</code></span>
+	и <span class="term"><code>gpt/zfs1</code></span>. Мы должны заместить умерший <span class="term"><code>gpt/zfs0</code></span> на
+	<span class="term"><code>gpt/zfs2</code></span>. Вместо того, чтобы напрямую перейти к <span class="term"><code>zpool replace</code></span>,
+	начнем с присоединения диска замены к пулу. Команда <span class="term"><code>zpool attach</code></span> попросит данный пул 
+	добавить другой уровень зеркалирования в данный пул. Задайте имя пула, устройство, которое необходимо зеркалировать и новое 
+	устройство.</p>
+	   <pre class="screen">
+# zpool detach db gpt/zfs0
+	   </pre>
+    <p>Теперь мы подключили поставщика к нашему пулу <span class="term"><code>db</code></span>. Одним из существующих поставщиков  
+	является <span class="term"><code>gpt/zfs1</code></span>, а мы подключили <span class="term"><code>gpt/zfs2</code></span>.
+	Просмотрим <span class="term"><code>zpool status db</code></span>, и мы увидим, что пул переносит актуальные данные для синхронизации 
+	нового поставщика с другими дисками в зеркале. Когда новый поставщик синхронизируется с нашим пулом, удалите отказавшего поставщика 
+	из виртуального устройства.</p>
+	   <pre class="screen">
+# zpool replace db 13792229702739533691 gpt/zfs3
+	   </pre>
+     <p>Отказавший диск под <span class="term"><code>gpt/zfs0</code></span> больше не используется.</p>
+   <p>Также выможете воспользоваться данным методом для трансформации пула с одним диском в зеркалированное виртуальное устройство.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reattaching"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Повторное подключение недоступных и удаленных дисков</span></h4>
+    </div></div></div>
+    <p>Диск в состоянии UNAVAIL может не быть отказавшим окончательно. Он может оказаться отключенным. Если вы подойдете к серверу и увидите,
+	что пошевеливание корзины диска заставляет помигивать лампочки, вы можете попросить zpool повторно активировать этот диск 
+	{<span class="emphasis"><em>Прим. пер.: конечно, перед этим желательно убедиться в надежности контактов и соединений</em></span>}.
+	Вы также можете повторно активировать диск с состоянием REMOVED. В любом случае воспользуйтесь командой 
+	<span class="term"><code>zpool online</code></span>, именем пула, а также GUID утраченного поставщика.</p>
+	   <pre class="screen">
+# zpool online db 718035988381613979
+	   </pre>
+    <p>ZFS перенесет актуальные данные (resilver) повторно активированного диска и возобновит нормальную работу.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="LogAndCacheDevice"> </a>Сопровождение устройств журнала и кэша</h3>
+   </div></div></div>
+   <p>Мы предложили использовать SSD с большим циклом перезаписей для ваших ZFS журналов преднамеренного протоколирования (кэша 
+   записи, Intent Log) и L2ARC (кэша чтения). Очень часто все обнаруживают, что высокая стойкость (&quot;high endurance&quot;) 
+   совсемне то же самое, что и достаточно высокая стойкость (&quot;high enough endurance&quot;) и вам может понадобиться 
+   замена этого устройства. {<span class="emphasis"><em>Прим. пер.: подливает масла в огонь и разница в стоимости между т.н.
+   устройствами SSD с большим циклом перезаписи (<span class="term"><strong class="userinput">eMLC</strong></span>) и 
+   &quot;стандартными&quot; (<span class="term"><strong class="userinput">MLC</strong></span>) SSD, достигающая порядков.
+   В настоящее время мы проводим последовательность тестирований, которая, как мы надеемся, даст нам более глубокое понимание 
+   необходимости (или отсутствия таковой) дополнительных затрат на eMLC- 
+   <a href="javascript:tocall()" onmouseover="this.href=mail">обращайтесь</a> за дополнительной информацией!. Однако, 
+   достаточно очевидно, что при наличии четкой процедуры замены дисков кэширования, да еще и при наличии четкой тенденции 
+   снижения стоимости SSD, данная статья расходов однаиз первых в рассмотрении на сокращение!</em></span>}
+   Устройства протоколирования используют те же ключевые слова состояний, что и обычные поставщики 
+   хранения - <span class="emphasis"><em>faulted</em></span>, <span class="emphasis"><em>offline</em></span> и тому подобные.
+   Вам также может понадобиться вставка устройства журнала или, что менее применимо, удаление устройства журнала.</p>
+   <p>Хотя приводимые примеры отображают устройства журналирования, устройства кэширования работают в точности так же.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="AddingLogOrCache"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Добавление устройств журнала и кэша</span></h4>
+    </div></div></div>
+    <p>Чтобы добавить устройство журнала или кэша в существующий пул, воспользуйтесь <span class="term"><code>zpool add</code></span>,
+	именем пула а также типом устройства и поставщиками. Вот пример добавления устройства журнала <span class="term"><code>gpt/zlog0</code></span>
+	в пул <span class="term"><code>db</code></span>.</p>
+	   <pre class="screen">
+# zpool add db log gpt/zlog0
+	   </pre>
+    <p>Пул немедленно начнет использовать новое устройство журнала или кэша.</p>
+    <p>Чтобы добавить зеркалированное устройство журнала примените ключевое слово <span class="emphasis"><em>mirror</em></span> и
+	соответствующих поставщиков. Зеркалирование ZIL (ZFS Intent Log) предоставляет избыточность для записи, помогая гарантировать, 
+	что записанные на диск данные выдержат аппаратный сбой. В нашем случае мы добавляем устройства журнала 
+	<span class="term"><code>gpt/zlog0</code></span> и 	<span class="term"><code>gpt/zlog1</code></span>, а также просим пул
+	<span class="term"><code>db</code></span> использовать в качестве журнала зеркало.</p>
+	   <pre class="screen">
+# zpool add db log mirror gpt/zlog0 gpt/zlog1
+	   </pre>
+    <p>Обычно зеркалирование устройств кэширования не является наилучшим использованием быстрого диска. ZFS очень хорошо обрабатывает 
+	выход из строя устройства кэшированя. Чередование же кэша о нескольким устройствам снижает загруженность всех устройств и, следовательно,
+	уменьшает выхода из строя.</p></div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RemovingLogAndCache"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Удаление устройств журнала и кэша</span></h4>
+    </div></div></div>
+    <p>Когда вы удаляете устройство журнала или кэша из пула ZFS, ZFS останавливает запись новых данных в ваш журнал, 
+	очищает буфер данных в журнале и освобождает устройствою</p>
+    <p>Чтобы удалить автономное устройство журнала или кэша, примените <span class="emphasis"><em>zpool remove</em></span>, 
+	имя пула, а также имя устройства. Ранее мы добавили устройство <span class="term"><code>gpt/zlog0</code></span> в 
+	качестве устройства журнала для пула <span class="term"><code>db</code></span>. Давайте удалим его.</p>
+	   <pre class="screen">
+# zpool remove db gpt/zlog0
+	   </pre>
+    <p>Удаление зеркалированного устройства журнала слегк более сложное. Перед удалением зеркала вы должны знать его имя. 
+	Посмотрите состояние пула.</p>
+	   <pre class="screen">
+# zpool status db
+...
+NAME       STATE READ WRITE CKSUM
+db         ONLINE   0     0     0
+mirror-0   ONLINE   0     0     0
+gpt/zfs0   ONLINE   0     0     0
+gpt/zfs1   ONLINE   0     0     0
+mirror-1   ONLINE   0     0     0
+gpt/zfs2   ONLINE   0     0     0
+gpt/zfs3   ONLINE   0     0     0
+logs
+mirror-2   ONLINE   0     0     0
+gpt/zlog0  ONLINE   0     0     0
+gpt/zlog1  ONLINE   0     0     0
+	   </pre>
+    <p>Устройство журналирования называется mirror-2. Удалите его, как если бы вы это делали с автономным устройством.</p>
+	   <pre class="screen">
+# zpool remove db mirror-2
+	   </pre>
+    <p>Пул очищает журнал и удаляет устройства из пула.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ReplacingFailedLogAndCache"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Замена устройств журнала и кэша</span></h4>
+    </div></div></div>
+    <p>Замените неисправное устройство журнала или кэша, даже если оно участник зеркала точно так же, как вы поступаете с 
+	любым другим неисправным устройством. Здесь мы заменяем устройство <span class="term"><code>gpt/zlog0</code></span>
+	на <span class="term"><code>gpt/zlog1</code></span>.</p>
+	   <pre class="screen">
+# zpool replace db gpt/zlog0 gpt/zlog2
+	   </pre>
+    <p>Устройство журнала перенесет актуальные данные и продолжит работу.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ExportingAndImporting"> </a>Экспорт и импорт дисков</h3>
+   </div></div></div>
+   <p>Вы можете перемещать диски файловой системы ZFS между машинами, даже между машинами работающими под различными операционными 
+   системами. У вас нет ограничений на аналогичную архитектуру, или - ZFS даже позволяет вам перемещать диски между различным 
+   конечным оборудованием! Это предлагает, например, легкий путь миграции между, скажем, Sparc OpenSolaris и FreeBSD. ZFS использует
+   свои собственные метаданные на диске для отслеживания роли каждого поставщика в пуле, следовательно вам нет нужды отслеживать 
+   порядок дисков, узлы устройств или решать любые другие обычные проблемы дисков. Отключите ваши диски, сложите их в сумку, 
+   проедьте на другой конец города и вставьте их снова. Пиведение пула обратно в работающее состояние называется импортированием
+   (<span class="emphasis"><em>importing</em></span>).</p>
+   <p>Однако, ZFS может работать с поставщиками хранения отличными от дисков. Предположим, вы используете разделы GPT на ваших дисках, 
+   как вы рекомендовали. Вы можете затем решить переместить эти диски с вашего хоста FreeBSD в другую операционную систему или на 
+   другую аппаратную архитектуру. Если новые операционная система или оборудование не распознают разделы GPT, новый хост не сможет 
+   найти ваши пулы для их импорта!</p>
+   <p>Перед импортом пула вы все-таки должны его экспортировать.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+	<h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ExportingPools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Экспорт пулов</span></h4>
+    </div></div></div>
+    <p>Экспорт примерно аналогичен аккуратному размонтированию традиционной файловой системы. ZFS помечает поставщиков неактивными
+	и завершает все отложенные транзакции. Если у вас есть журнал преднамеренного протоколирования ZFS 
+	(<a class="link" href="Ch02.html#SLOG_ZIL" target="_top">ZFS Intent Log, Главе 2</a>), журнал очищается. Все записывается на 
+	поставщика, файловая система демонтируется и система будет уведомлена, что эти поставщики теперь свободны для повторного 
+	использования. </p>
+    <p>Используйте <span class="term"><code>zpool export</code></span> и имя пула для экспорта пула. Здесь мы экспортируем 
+	пул <span class="term"><code>db</code></span>.</p>
+	   <pre class="screen">
+# zpool export db
+	   </pre>
+    <p>Эта команда работает без оповещений. Выполните <span class="term"><code>zpool list</code></span> для проверки того, что пул 
+	больше не в системе.</p>
+    <p>Система откажется экспортировать активную файловую систему. Отключите на наборе данных все демоны, осуществляющие запись 
+	в этот набор данных и изменения рабочего каталога вашей оболочки. Остановите хвостовые (tailing) файлы. Вы можете 
+	использовать <span class="term"><code>fstat(1)</code></span> или <span class="term"><code>lsof(8)</code></span> 
+	чтобы определить процессы, использующие файловые системы этого набора данных.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+	<h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ImportingPools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Импорт пулов</span></h4>
+    </div></div></div>
+    <p>Чтобы увидеть неактивные пулы присоединенные к системе, выполните <span class="term"><code>zpool import</code></span>. 
+	Это не будет действительным импортом пулов, а только покажет что доступно для импорта.</p>
+	   <pre class="screen">
+# zpool import
+  pool: db
+    id: 8407636206040904802
+ state: ONLINE
+action: The pool can be imported using its name or numeric identifier.
+config:
+db        ONLINE
+raidz1-0  ONLINE
+gpt/zfs1  ONLINE
+gpt/zfs2  ONLINE
+gpt/zfs3  ONLINE
+gpt/zfs4  ONLINE
+	   </pre>
+    <p>Здесь показано, что наш пул <span class="term"><code>db</code></span>, также именуемый длинным цифровым идентификатором, может 
+	быть импортирован. Вы видите внизу конфигурацию пула в точности как это было для активного пула.</p>
+    <p>Состояние ONLINE не означает что пул активен, а только то, что все поставщики готовы для использования. Поскольку ZFS 
+	информирован, пул готов к работе.</p>
+    <p>Импортируйте пул при помощи <span class="term"><code>zpool import</code></span> и имени пула или цифрового идентификатора.</p>
+	   <pre class="screen">
+# zpool import db
+	   </pre>
+    <p>Если у вас есть множество неактивных пулов с одинаковым именем, импортируйте вместо этого пул по идентификационному номеру.</p>
+	   <pre class="screen">
+# zpool import 8407636206040904802
+	   </pre>
+    <p>Вы не можете импортировать пул если уже существует пул с этим именем пока не переименуете пул.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+	<h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="RenamingImportedPools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Переименование импортированных пулов</span></h4>
+    </div></div></div>
+    <p>Некоторые из нас повторно используют имена пулов на различных машинах. Когда Лукасу нужно выделить пул для баз данных 
+	он всегда называет его <span class="term"><code>db</code></span>, потому что это коротко а он ленивый. Это великолепно 
+	для стандартизации - все знают где обитают файлы баз данных. Однако это раздражает при перемещении дисков на другую машину.
+	Каждая машина может иметь только один пул с уникальным именем.</p>
+    <p>ZFS позволяет вам окончательно переименовать пул заданием нового имени после существующего имени пула. Вот мы импортируем 
+	пул с именем <span class="term"><code>db</code></span> под именем <span class="term"><code>olddb</code></span>.</p>
+	   <pre class="screen">
+# zpool import db olddb
+	   </pre>
+    <p>Наборы данных импортированного пула могут быть найдены в <span class="term"><code>/olddb</code></span>. Такое переименование 
+	окончательное. Вы можете экспортировать пул и повторно импортировать этот пул с его новым именем навсегда.</p>
+    <p>Для временного монтирования пула в местоположении, отличном от обычной точки монтирования, применяйте флаг 
+	<span class="term"><code>-R</code></span> и альтернативный путь корня.</p>
+	   <pre class="screen">
+# zpool import -R /dunno data
+	   </pre>
+    <p>Это временно добавит путь <span class="term"><code>/dunno</code></span> ко всем наборам данных в импортируемом пуле. Экспорт 
+	вашего пула удаляет дополнительный путь и сбрасывает свое свойство 
+	<span class="term"><strong class="userinput"><code>altroot</code></strong></span>.</p>
+    <p>Используйте свойство <span class="term"><strong class="userinput"><code>altroot</code></strong></span> когда вы не знаете что 
+	есть в пуле и не хотите случайно наложить его на ваши существующие наборы данных или файловые системы. Помните, файловые системы 
+	BSD стекируются! Вы также можете применять альтернативную среду загрузки, при которой импортируемый пул может перекрывать 
+	активную корневую файловую систему и скрывать нужные вам для управления пулом инструменты.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+	<h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="IncompletePools"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Незавершенные пулы</span></h4>
+    </div></div></div>
+    <p>Вы не можете импортировать пул, если он не имеет достаточного числа участников для поддержки всех необходимых данных.
+	Аналогично тому, что вы не можете применять RAID-Z1 если у вас нет двух дисков, точно так же вы не можете импортировать 
+	RAID-Z1 с более чем одним утраченным диском.</p>
+	   <pre class="screen">
+# zpool import
+  pool: db
+    id: 8407636206040904802
+ state: UNAVAIL
+status: One or more devices are missing from the system.
+action: The pool cannot be imported. Attach the missing
+devices and try again.
+   see: http://illumos.org/msg/ZFS-8000-3C
+config:
+
+db                     UNAVAIL  insufficient replicas
+ RAID-Z1-0             UNAVAIL  insufficient replicas
+  gpt/zfs1             ONLINE
+  4300284214136283306  UNAVAIL  cannot open
+  gpt/zfs3             ONLINE
+  3061272315720693424 UNAVAIL cannot open
+	   </pre>
+    <p>Это RAID-Z1 с четырьмя поставщиками, однако два поставщика утрачены. Проверьте что все повторно установленные диски 
+	правильно подключены и попробуйте снова.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+	<h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SpecialImports"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Специальный импорт</span></h4>
+    </div></div></div>
+    <p>Импорт пулов чрезвычайно полезен при восстановлении разрушенных систем. Применяя импорт пулов, ZFS позволяет вам обойти 
+	многие ошибки и проблемы. Этот раздел проведет вас по ряду специальных случаев применения импорта.</p>
+    <p>Разрушение пула не разрушает на самом деле никакие данные. Система отмечает пул разрушенным, однако пул и все его метаданные 
+	остаются на диске пока их не перезапишут. Для того,чтобы попросить ZFS найти разрушенный, но пригодный к импорту пул, добавьте 
+	флаг <span class="term"><code>-D</code></span>.</p>
+	   <pre class="screen">
+# zpool import -D
+	   </pre>
+    <p>Состояние пула будет отображено как 	ONLINE (DESTROYED). ONLINE означает, что пул имеет все необходимое для работы. 
+	Используйте флаг <span class="term"><code>-D</code></span> с именем пула или его идентификационным номером для его воскрешения.</p>
+	   <pre class="screen">
+# zpool import -D 8407636206040904802
+	   </pre>
+    <p>Если пул утратил слишком большое число поставщиков хранения, вы не можете импортировать его. Вы не можете 
+	<span class="term"><code>zpool online</code></span> для отсоединенных дисков. Проверьте дисковые корзины и убедитесь, что диски, 
+	которые вы хотите импортировать, подключены и запитаны. При следующем запуске <span class="term"><code>zpool import</code></span>
+	вновь подключенные диски будут отображены.</p>
+    <p>Если пул утратил своё устройство журнала, добавьте флаг <span class="term"><code>-m</code></span> для его импорта без этого 
+	устройства. Экспортируемый пул должен иметь все на поставщиках хранения.</p>
+	   <pre class="screen">
+# zpool import -m db
+	   </pre>
+    <p>При выполнении вами импорта вы можете устанавливать свойства пула с применением флага <span class="term"><code>-o</code></span>.
+	Здесь мы импортируем и переименовываем пул баз данных, а также делаем его доступным только на чтение.</p>
+	   <pre class="screen">
+# zpool import -o readonly=on db olddb
+	   </pre>
+    <p>Теперь мы можем копировать файлы из старого пула без разрушения первоначальной копии наших данных.</p>
+    <p>Вы можете захотеть импортировать разрушенный пул чтобы попытаться восстановить хоть какую-то часть данных в нем. Флаг
+	<span class="term"><code>-F</code></span> просит <span class="term"><code>zpool import</code></span> откатить назад несколько транзакций. 
+	Это может вернуть пул в состояние, доступное для импорта. Вы потеряете содержимое транзакций, которые вы пропустили, однако если 
+	это сработало, в любом случае, данные транзакции, судя по всему, и вызвали проблемы.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="LargerProviders"> </a>Увеличение поставщиков</h3>
+   </div></div></div>
+   <p>Один интересный факт об ZFS заключается в том, что она позволяет заменять поставщиков бОльшими по размеру поставщиками. Если ваш 
+   пул хранения с избыточностью использует диски 4ТБ, вы можете заменить их на диски, скажем, моделей 10ТБ и увеличить размер вашего пула.
+   Это потребует замены успешных поставщиков поставщиками бОлшего размера.</p>
+   <p>Пул вычисляет свой размер по наименьшему диску в каждом VDEV. Если ваше зеркало имеет диск 4ТБ и диск 10ТБ в одном VDEV, то 
+   зеркалированное VDEV будет иметь пространство 4ТБ. Не существует разумного способа зеркально отобразить 10ТБ данных на диске в 
+   4ТБ! Однако, если вы замените ваш 4ТБ диск, вы будете способны расширить зеркало до размера наименьшего диска.</p>
+   <p>Единственный вопрос заключается в том, хотите ли вы чтобы ваши пулы автоматически расширялись,когда у них есть такая возможность, 
+   или вы хотите активировать расширение вручную? ZFS может автоматически выполнять работу по расширению, однако для начала вам нужно 
+   установить свойство <span class="term"><strong class="userinput"><code>autoexpand</code></strong></span> для каждого пула. ZFS 
+   оставляет его значение по умолчанию off, поскольку вы никогда не можете уменьшать никакой пул. (Наличие включенным в on 
+   <span class="term"><strong class="userinput"><code>autoexpand</code></strong></span> не повредит вам, однако наличие его включенным 
+   по умолчанию может оставить вас со слишком большим пулом для всех ваших других дисков.)</p>
+	   <pre class="screen">
+# zpool set autoexpand=on db
+	   </pre>
+   <p>Без установки этого свойства вы должны выполнить команду для расширения пула после замены поставщика.</p>
+   <p>Замена всех поставщиков в пуле не является сложной, но она связана с определенным занудством. Возьмем данный RAID-Z1 с тремя 
+   поставщиками.</p>
+	   <pre class="screen">
+NAME        STATE READ WRITE CKSUM
+db          ONLINE   0     0     0
+ raidz1-0   ONLINE   0     0     0
+  gpt/zfs1  ONLINE   0     0     0
+  gpt/zfs2  ONLINE   0     0     0
+  gpt/zfs3  ONLINE   0     0     0
+	   </pre>
+   <p>Каждый из этих поставщиков является одним маленьким диском.</p>
+	   <pre class="screen">
+# zpool list db
+NAME  SIZE   ALLOC   FREE   FRAG  EXPANDSZ  CAP  DEDUP  HEALTH  ALTROOT
+db    59.5G   1.43G  58.1G  1%           -   2%  1.00x  ONLINE  -
+	   </pre>
+   <p>Если оборудование имеет достаточно физического пространства {для размещения новых устройств}, добавьте новые диски и создайте 
+   поставщиков для замены. Если вы ограничены в физическом пространстве, выведите заменяемого поставщика в офлайн и поменяйте диски 
+   местами. Здесь мы выводим диски в офлайн и меняем их местами.</p>
+   <p>Данный пул имеет трёх поставщиков: <span class="term"><code>gpt/zfs1</code></span>, <span class="term"><code>gpt/zfs2</code></span>
+   и <span class="term"><code>gpt/zfs3</code></span>. Первым мы заменяем <span class="term"><code>gpt/zfs1</code></span>. Выполнение 
+   <span class="term"><code>gpart show -l</code></span> показывает, что поставщик находится на диске da1.</p>
+   <p>Если вам нужно вывести ваш диск в офлайн для добавления диска на замену, начните с идентификации физического местоположения 
+   диска da1. Подготовьте заменяющий диск в соответствии с требованиями вашего оборудования, затем выведите поставщика в пуле в 
+   автономное состояние.</p>
+	   <pre class="screen">
+# zpool offline db gpt/zfs1
+	   </pre>
+   <p>Это должно произойти без отображения. Проверка <span class="term"><code>zpool status</code></span> покажет данного поставщика в 
+   автономном состоянии. Вы можете извлечь этот диск из вашей системы.</p>
+   <p>Вставьте диск замены либо на место размещения старого диска, либо в новый слот. В <span class="term"><code>/var/run/dmesg.boot</code></span>
+   появится новый диск. В данной системе новый диск отображается как <span class="term"><code>/dev/da4</code></span>.
+   Создайте на этом диске требуемый раздел и маркируйте его меткой. Если вы не используете серийные номера в своих метках и используете 
+   только физическое местоположение, вы можете применить ту же метку. (Опять же, мы применяем такие короткие метки здесь, поскольку их 
+   легче читать при обучении.)</p>
+	   <pre class="screen">
+# gpart create -s gpt da4
+da4 created
+# gpart add –a 1m -t freebsd-zfs -l zfs1 da4
+	   </pre>
+   <p>Теперь попросите пул заменить отказавший диск.</p>
+	   <pre class="screen">
+# zpool offline db gpt/zfs1
+	   </pre>
+   <p>Позвольте пулу завершить перенос актуальных данных прежде чем продолжить замену других поставщиков. Замена устройств не обеспеченных 
+   избыточностью данных в процессе переноса актуальных данных (resilvering) вызовет только головную боль. Если вы используете RAID-Z2
+   или RAID-Z3, существует возможность одновременной замены множества дисков, но это рискованно. Дополнительный отказ диска может вызвать 
+   отказ VDEV. Без предоставляемой дополнительными поставщиками избыточности ZFS не способна к самовосстановлению. Пределы операций 
+   ввода/ вывода каждого диска, скорее всего, придушат скорость переноса актуальных данных.</p>
+   <p>После того, как ваш первый поставщик перенесет актуальные данные, замените ваш следующий меньший диск. Вы не увидите изменений в 
+   дисковом пространстве, пока вы не замените всех поставщиков в VDEV. Чтобы гарантировать, что вы заменили всех поставщиков на бОльших, 
+   выполните проверку <span class="term"><code>zpool list</code></span>.</p>
+	   <pre class="screen">
+# zpool list db
+NAME    SIZE   ALLOC   FREE   FRAG  EXPANDSZ  CAP  DEDUP  HEALTH  ALTROOT
+db      59.5G   1.70G  57.8G    0%      240G   2%  1.00x  ONLINE  -
+	   </pre>
+   <p>Отметим, что у нас теперь новый размер пространства в EXPANDSZ. Данный пул может быть увеличен.</p>
+   <p>Если вы установили пул в режим авторасширения перед началом ваших операций, он должен расшириться самостоятельно. Если нет, 
+   расширьте каждое устройство в вашем пуле вручную при помощи <span class="term"><code>zpool online -e</code></span>.</p>
+	   <pre class="screen">
+# zpool online -e db gpt/zfs1
+# zpool online -e db gpt/zfs2
+# zpool online -e db gpt/zfs3
+	   </pre>
+   <p>Полученный пул имеет теперь бОльшее пространство.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZpoolVersions"> </a>Версии и обновления Zpool</h3>
+   </div></div></div>
+   <p>Команды FreeBSD и OpenZFS постоянно улучшают свое программное обеспечение, добавляя новую функциональность в ZFS и поддержку 
+   ZFS в FreeBSD. Некоторые из этих улучшений требуют изменений или добавлений в zpool -ах. Когда вы обновляете операционную 
+   систему хоста, хост может получить свойства, которые не поддерживаются данным существующим пулом. Перед использованием этих 
+   новых функций вы должны обновить ваши пулы хранения. Пулы продолжат работать и в случае, если вы не обновите их, однако они 
+   не получат преимуществ новой функциональности, которая требует изменений дисковых форматов.</p>
+   <p>Однако, вы можете выбрать отказ от обновлений ваших пулов когда вы обновляете свою операционную систему. Если вы обновляете 
+   систему с FreeBSD 11 на FreeBSD 12, вы можете оставить диски в формате пула для  FreeBSD 11. Если вам понадобится откатить 
+   выполненное обновление, операционная система все еще будет в состоянии читать эти пулы. Обновления системы могут выполняться в 
+   различных направлениях. Обновления пула нет.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Versions"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Версии ZFS и флаги свойств</span></h4>
+    </div></div></div>
+    <p>Изначально ZFS использовала номера версий для индикации того, какие версии функций пула или операционной системы поддерживаются. 
+	Номера версий начинались с 1 и увеличивались по одной при каждом улучшении ZFS, которое затрагивало дисковый формат. Когда 
+	Sun Microsystems выступала центральным координатором всего развития ZFS, имел смысл единый инкрементальный номер версий. 
+	Номер версии в OpenZFS установлен в значение 5000, а пулы используют вместо этого флаги функциональности. Мы подробно обсуждали 
+	флаги функциональности в <a class="link" href="Ch03.html" target="_top">Главе 3</a>.</p>
+    <p>Основными двумя вопросами для флагов функциональности являются: &quot;Какую функциональность поддерживает ваш пул в настоящее 
+	время?&quot; и &quot;Какую функциональность поддерживает ваша операционная система?&quot; Проверьте свойства вашего пула, чтобы 
+	посмотреть что имеется на вашем диске, как обсуждалось в <a class="link" href="Ch03.html" target="_top">Главе 3</a>. Чтобы 
+	посмотреть все установленные флаги функциональности, поддерживаемые выпуском вашей FreeBSD, выполните
+	<span class="term"><code>zpool upgrade -v</code></span>.</p>
+	   <pre class="screen">
+# zpool upgrade -v
+This system supports ZFS pool feature flags.
+{Данная система поддерживает флаги функциональности пула ZFS.}
+The following features are supported:
+(Поддерживаются следующие функции:)
+FEAT DESCRIPTION
+-------------------------------------------------------------
+async_destroy                     (read-only compatible)
+  Destroy filesystems asynchronously.
+  {Асинхронное уничтожение файловых систем.}
+empty_bpobj                       (read-only compatible)
+  Snapshots use less space.
+  {Снимки используют меньшее пространство.}
+lz4_compress
+  LZ4 compression algorithm support.
+  {Поддержка алгоритма сжатия LZ4.}
+...
+	   </pre>
+    <p>Свойства, отмеченные как &quot;read-only compatible&quot;, означают, что хосты, которые не поддерживают эти флаги 
+	функциональности, могут импортировать данные пулы, но в режиме доступности только для чтения. Смотрите раздел 
+	&quot;<a class="link" href="#ExportingAndImporting" target="_top">Экспорт и импорт дисков</a>&quot; ранее в данной главе 
+	по поводу обсуждения перемещения пулов между хостами.</p>
+    <p>Замечания по выпускам FreeBSD для каждой версии обозначают новую функциональность ZFS. Вам действительно нужно внимательно 
+	читать эти замечания к выпуску перед обновлением, не так ли? Если вы каким-то образом пропустите эту часть документации,
+	<span class="term"><code>zpool status</code></span> сообщит вам, какие пулы могут использовать обновления. (Помните, что 
+	только потому, что пул может принять некое обновление не означает, что вы должны выполнять это обновление. Если вам, вероятно, 
+	потребуется вернуть обновление операционной системы назад, оставьте функциональность вашего пула в покое!)
+	</p>
+	   <pre class="screen">
+# zpool status db
+  pool: db
+ state: ONLINE
+status: Some supported features are not enabled on the pool. The pool can
+        still be used, but some features are unavailable.
+        {Некоторые поддерживаемые функции не разрешены в данном пуле. Это пул 
+        все еще может использоваться, однако некоторая функциональность недоступна.}
+action: Enable all features using 'zpool upgrade'. Once this is done,
+        the pool may no longer be accessible by software that does not support
+        the features. See zpool-features(7) for details.
+        {Разрешите всю функциональность при помощи 'zpool upgrade'. Если вы сделаете это,
+        пул может больше не быть доступным для программного обеспечения, которое не поддерживает
+        эти функции. За подробностями обращайтесь к zpool-features(7).}
+...
+	   </pre>
+    <p>Вы также получите список всех новых функций, поддерживаемых обновлением. Обновите ваши пулы выполнив   
+	<span class="term"><code>zpool upgrade</code></span> на этих пулах.</p>
+	   <pre class="screen">
+# zpool upgrade zroot
+	   </pre>
+    <p>Обновления пула безвозвратно добавляют новые поля в существующее расположение пула. Однако, обновление не переписывает существующие 
+	данные. Даже если новая функциональность может иметь проблемы, простое наличие такого флага на диске дает очень низкую вероятность риска.</p>
+    <p>Если у вас есть планы перемещать диски на систему, работающую с более старыми версиями операционной системы, или на операционную 
+	систему, выполняющую более старую версию OpenZFS, вы можете разрешать функциональность пула более избирательно. Перемещение 
+	дисков с системы FreeBSD 11 на систему FreeBSD 10 требует аккуратной проверки функциональностей пулов. Разрешайте отделную 
+	функциональность установкой ее свойства в <span class="emphasis"><em>enabled</em></span>.</p>
+	   <pre class="screen">
+# zpool set feature@large_blocks=enabled data
+	   </pre>
+    <p>Данный пул теперь поддерживает функциональность large_blocks.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZpoolUpgrades"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Обновление Zpool и начальный загрузчик</span></h4>
+    </div></div></div>
+    <p>Загрузчик FreeBSD должен понимать ваш пул ZFS, с которого вы загружаетесь. Это означает, что он должен распознавать 
+	функции пула. Всякий раз, когда вы обновляете пул, содержащий вашу файловую систему <span class="term"><code>/boot</code></span>, 
+	вы должны обновлять и начальный загрузчик на этих дисках. Для обновления начального загрузчика используйте 
+	<span class="term"><code>gpart(8)</code></span>. Если вы загружаетесь с зеркала ZFS на дисках da0 и da1, вы обновите 
+	ваши загрузчики на обоих дисках как-то наподобие:</p>
+	   <pre class="screen">
+# gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 da0
+# gpart bootcode -b /boot/pmbr -p /boot/gptzfsboot -i 1 da1
+	   </pre>
+    <p>Система может не загрузиться без этого обновления. Команда <span class="term"><code>zpool upgrade</code></span> напечатает 
+	вам напоминание, но вы вольны проигнорировать его, если захотите. Если вы приведете вашу систему в незагружаемое состояние, 
+	вы можете попытаться загрузиться с ISO с самой последней на текущий момент версией FreeBSD, или с liveCD и скопировать их 
+	начальные загрузчики в вашу систему.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FreeBSDZFSPoolLimitations"> </a>Ограничения пулов FreeBSD ZFS</h3>
+   </div></div></div>
+   <p>FreeBSD не поддерживает все функции ZFS. Большинство неподдерживаемых функций не работают из-за фундаментальных 
+   различий между архитектурами FreeBSD и Solaris. Люди активно разрабатывает решения, которые позволят FreeBSD поддерживает 
+   все особенности ZFS. Мы ожидаем, что некоторые из них станут поддерживаемыми после того, как эта книга будет опубликована.</p>
+   <p>На момент написания книги не работает горячее резервирование. Горячее резервирование позволяет ZFS автоматически заменять 
+   неисправный диск с назначенным запасным диском в системе. Это зависит от предстоящей реализации 
+   <span class="term"><code>zfsd(8)</code></span>, которая до сих пор находится в стадии разработки.</p>
+   <p>Теперь, вы можете заполнить пул данными и восстанавливать оборудования, давайте поиграем с парой более полезными функциями ZFS, 
+   клонами и снимками.</p>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Возврат с неудавшейся модернизации - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="OpenStack Operations Guide"/>
+<link rel="up" href="ch_ops_upgrades.html" title="Глава 18. Модернизации"/>
+<link rel="prev" href="ops_upgrades-final-steps.html" title="Очистка и окончательная модификация файла настроек"/>
+<link rel="next" href="use-cases.html" title="Appendix A. Use Cases"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:13+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//ops_upgrades-roll-back.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script><script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script><script type="text/javascript" src="search/nwSearchFnt.js"><!----></script><script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script><script type="text/javascript" src="search/index-1.js"><!----></script><script type="text/javascript" src="search/index-2.js"><!----></script><script type="text/javascript" src="search/index-3.js"><!----></script><script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Возврат с неудавшейся модернизации';
+PrevRef = 'ops_upgrades-final-steps.html';
+UpRef = 'ch_ops_upgrades.html';
+NextRef = 'use-cases.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="ops_upgrades-roll-back"> </a>Возврат с неудавшейся модернизации</h2>
+</div></div></div>
+<p>В модернизацию вовлечены сложные операции, и оно может потерпеть неудачу. 
+В этом разделе содержится руководство по возврату к предыдущей редакции 
+OpenStack. Хотя возврат протестирован только на Ubuntu, 
+другие дистрибутивы следуют аналогичной <span class="keep-together">процедуре</span>.
+<a id="d9e8061" class="indexterm"/>
+<a id="d9e8064" class="indexterm"/></p>
+<p>В этом разделе мы рассмотрим только самый безотлагательный случай: 
+вы снесли службы управления промышленной установкой в рамках подготовки к модернизации, 
+завершили часть процесса обновления, обнаружили одну или несколько проблем 
+не встречавшиихся во время тестирования, и теперь вы должны вернуться 
+к первоначальной среде в &quot;заведомо хорошее&quot; состояние. 
+Убедитесь, что вы не делали никаких изменений состояния после попытки процесса 
+модернизации: нет новых экземпляров, сетей, томов хранения, и таму подобного.</p>
+<p>Чтобы успешно выполнить возврат вашей среды, в данном контексте 
+необходимо выполнить следующие шаги:</p>
+<div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem">
+<p>Возврат файлов конфигурации.</p></li><li class="listitem">
+<p>Возврат баз данных.</p></li><li class="listitem">
+<p>Возврат  пакетов.</p></li></ol></div>
+<p>В инструкциях по модернизации, предусмотренных в предыдущих разделах, 
+предполагается, что вы создали соответствующие резервные копии баз данных 
+и конфигурационных файлов. Прочитайте этот раздел очень внимательно и 
+убедитесь, что у вас есть необходимые резервные копии для восстановления. 
+Из-за распределенности возврат обновления является сложным процессом, 
+имеющий расположенность к затратам гораздо больших усилий на тестирование 
+модернизаций, чем простые понижения уровня. Испорченные понижения уровня 
+часто отнимают значительно больше усилий для устранения неисправности и, 
+следует надеяться, решают такие разрушенные модернизации. Только вы 
+можете взвесить риски попытки протолкнуть неудачное обновление вперед 
+в сравненис с возвратом его назад. Как правило, возврат рассматривается 
+как самый последний вариант.</p>
+<p>Следующие шаги, описанные для Ubuntu были испробованы, 
+по крайней мере, в одной промышленной среде, но они могут не работать 
+для всех сред.</p>
+<div class="procedure">
+<a id="d9e8078"> </a>
+<p class="title"><strong>Для выполнения возврата с Havana на Grizzly</strong></p><ol class="procedure" type="1"><li class="step">
+<p>Остановите все OpenStack службы.</p></li><li class="step">
+<p>Скопируйте содержимое резервной копии настроек каталогов 
+<code class="filename">/etc/&lt;service&gt;.grizzly</code>, 
+которые вы создали в процессе обновления назад в 
+<code class="filename">/etc/&lt;service&gt;</code>:</p></li><li class="step">
+<p>Восстановите базы данных из файла резервной копии 
+<code class="filename">grizzly-db-backup.sql</code>, 
+который вы создали с помощью команды <span class="command"><strong>mysqldump</strong></span>
+в процессе обновления::</p>
+<pre class="screen"># mysql -u root -p &lt; grizzly-db-backup.sql</pre>
+<p>Если вы создали эту резервную копию в соответствии с указаниями с помощью флага 
+<code class="option">--add-drop-database</code>, 
+вы можете переходить к следующему шагу. 
+Если вы опустили этот флаг, MySQL возвращает все таблицы, которые 
+существовали в Grizzly, но не удаляет все таблицы, 
+созданные в ходе миграции базы данных на Havana. 
+В этом случае, вы должны вручную определить, 
+какие таблицы необходимо пропустить, и удалить их, 
+чтобы предотвратить проблемы с вашей следующей 
+<span class="keep-together">attempt</span> модернизации.</p></li><li class="step">
+<p>Понижение уровня пакетов OpenStack.</p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Понижение уровня пакетов на сегодняшний день является самой сложной стадией; 
+ она сильно зависит от распределености и общего управления системой.</p></td></tr></table>
+</div><ol type="a" class="substeps"><li class="step">
+<p>Определите какие пакеты OpenStack установлены в вашей системе. Используйте команду 
+<span class="command"><strong>dpkg --get-selections</strong></span>. 
+Фильтруйте на наличие пакетов OpenStack, фильтруйте снова, пропуская пакеты, 
+явно помеченные в состояние <code class="code">deinstall</code>, 
+и сохраните конечный результат в файл. Например, следующая команда охватывает 
+контроллер узла с keystone, glance, nova, neutron и cinder:</p>
+<pre class="screen"># dpkg --get-selections | grep -e keystone -e glance -e nova -e neutron \
+-e cinder | grep -v deinstall | tee openstack-selections
+cinder-api                                      install
+cinder-common                                   install
+cinder-scheduler                                install
+cinder-volume                                   install
+glance                                          install
+glance-api                                      install
+glance-common                                   install
+glance-registry                                 install
+neutron-common                                  install
+neutron-dhcp-agent                              install
+neutron-l3-agent                                install
+neutron-lbaas-agent                             install
+neutron-metadata-agent                          install
+neutron-plugin-openvswitch                      install
+neutron-plugin-openvswitch-agent                install
+neutron-server                                  install
+nova-api                                        install
+nova-cert                                       install
+nova-common                                     install
+nova-conductor                                  install
+nova-consoleauth                                install
+nova-novncproxy                                 install
+nova-objectstore                                install
+nova-scheduler                                  install
+python-cinder                                   install
+python-cinderclient                             install
+python-glance                                   install
+python-glanceclient                             install
+python-keystone                                 install
+python-keystoneclient                           install
+python-neutron                                  install
+python-neutronclient                            install
+python-nova                                     install
+python-novaclient                               install
+</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>В зависимости от типа сервера, содержание и порядок вашего списка пакетов могут 
+ отличаться от данного примера.</p></td></tr></table></div></li><li class="step">
+ <p>Вы можете определить версии пакетов для возврата с помощью команды 
+ <span class="command"><strong>apt-cache policy</strong></span>. Если вы удалили 
+ репозитории Grizzly, необходимо сначала повторно установить их и 
+ запустить <span class="command"><strong>apt-get update</strong></span>:</p>
+<pre class="screen"># apt-cache policy nova-common
+nova-common:
+  Installed: 1:2013.2-0ubuntu1~cloud0
+  Candidate: 1:2013.2-0ubuntu1~cloud0
+  Version table:
+ *** 1:2013.2-0ubuntu1~cloud0 0
+        500 http://ubuntu-cloud.archive.canonical.com/ubuntu/
+            precise-updates/havana/main amd64 Packages
+        100 /var/lib/dpkg/status
+     1:2013.1.4-0ubuntu1~cloud0 0
+        500 http://ubuntu-cloud.archive.canonical.com/ubuntu/
+            precise-updates/grizzly/main amd64 Packages
+     2012.1.3+stable-20130423-e52e6912-0ubuntu1.2 0
+        500 http://us.archive.ubuntu.com/ubuntu/
+            precise-updates/main amd64 Packages
+        500 http://security.ubuntu.com/ubuntu/
+            precise-security/main amd64 Packages
+     2012.1-0ubuntu2 0
+        500 http://us.archive.ubuntu.com/ubuntu/
+            precise/main amd64 Packages</pre>
+<p>Это сообщает нам установленную версию пакета, 
+новейшие версии кандидата, а также все версии в репозитории, 
+который содержит каждую из этих версий. В данном случае найдите 
+подходящую version—<code class="code">1:2013.1.4-0ubuntu1~cloud0</code> Grizzly.
+Процесс ручного сбора по этому списку пакетов довольно утомителен и расположен к 
+наличию ошибок. Вы должны рассмотреть вопрос об использовании следующего сценария 
+для помощи в данном процессе:</p>
+<pre class="screen"># for i in `cut -f 1 openstack-selections | sed 's/neutron/quantum/;'`;
+  do echo -n $i ;apt-cache policy $i | grep -B 1 grizzly |
+  grep -v Packages | awk '{print "="$1}';done | tr '\n' ' ' |
+  tee openstack-grizzly-versions
+cinder-api=1:2013.1.4-0ubuntu1~cloud0
+cinder-common=1:2013.1.4-0ubuntu1~cloud0
+cinder-scheduler=1:2013.1.4-0ubuntu1~cloud0
+cinder-volume=1:2013.1.4-0ubuntu1~cloud0
+glance=1:2013.1.4-0ubuntu1~cloud0
+glance-api=1:2013.1.4-0ubuntu1~cloud0
+glance-common=1:2013.1.4-0ubuntu1~cloud0
+glance-registry=1:2013.1.4-0ubuntu1~cloud0
+quantum-common=1:2013.1.4-0ubuntu1~cloud0
+quantum-dhcp-agent=1:2013.1.4-0ubuntu1~cloud0
+quantum-l3-agent=1:2013.1.4-0ubuntu1~cloud0
+quantum-lbaas-agent=1:2013.1.4-0ubuntu1~cloud0
+quantum-metadata-agent=1:2013.1.4-0ubuntu1~cloud0
+quantum-plugin-openvswitch=1:2013.1.4-0ubuntu1~cloud0
+quantum-plugin-openvswitch-agent=1:2013.1.4-0ubuntu1~cloud0
+quantum-server=1:2013.1.4-0ubuntu1~cloud0
+nova-api=1:2013.1.4-0ubuntu1~cloud0
+nova-cert=1:2013.1.4-0ubuntu1~cloud0
+nova-common=1:2013.1.4-0ubuntu1~cloud0
+nova-conductor=1:2013.1.4-0ubuntu1~cloud0
+nova-consoleauth=1:2013.1.4-0ubuntu1~cloud0
+nova-novncproxy=1:2013.1.4-0ubuntu1~cloud0
+nova-objectstore=1:2013.1.4-0ubuntu1~cloud0
+nova-scheduler=1:2013.1.4-0ubuntu1~cloud0
+python-cinder=1:2013.1.4-0ubuntu1~cloud0
+python-cinderclient=1:1.0.3-0ubuntu1~cloud0
+python-glance=1:2013.1.4-0ubuntu1~cloud0
+python-glanceclient=1:0.9.0-0ubuntu1.2~cloud0
+python-quantum=1:2013.1.4-0ubuntu1~cloud0
+python-quantumclient=1:2.2.0-0ubuntu1~cloud0
+python-nova=1:2013.1.4-0ubuntu1~cloud0
+python-novaclient=1:2.13.0-0ubuntu1~cloud0
+</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Если вы решите продолжить этот шаг вручную, не забудьте изменить <code class="code">neutron</code> 
+ на <code class="code">quantum</code>, где это применимо.</p></td></tr></table>
+</div></li><li class="step">
+<p>Воспользуйтесь командой <span class="command"><strong>apt-get install</strong></span>
+для установки определенных вами версий для каждого пакета, указав 
+<code class="code">&lt;package-name&gt;=&lt;version&gt;</code>. 
+Сценарий из предыдущего шага удобно создает для вас список 
+пар <code class="code">package=version</code>:</p>
+<pre class="screen"># apt-get install `cat openstack-grizzly-versions`</pre>
+<p>Данный шаг завершает процедуру возврата. 
+Вы должны удалить ваш репозиторий Havana и выполнить 
+<span class="command"><strong>apt-get update</strong></span> 
+для предотвращения случайных модернизаций пока вы не определите
+что явилось проблемой, побудившей вас выполнить возврат вашей среды.</p></li></ol></li></ol>
+</div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

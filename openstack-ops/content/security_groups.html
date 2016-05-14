@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Группы безопасности - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="user_facing_operations.html" title="Глава 10. Операции стороны пользователя"/>
+<link rel="prev" href="private-flavors.html" title="Частные шаблоны виртуального ресурса"/>
+<link rel="next" href="user_facing_block_storage.html" title="Блочные хранилища"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:04+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//security_groups.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Группы безопасности';
+PrevRef = 'private-flavors.html';
+UpRef = 'user_facing_operations.html';
+NextRef = 'user_facing_block_storage.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="security_groups"> </a>Группы безопасности</h2></div>
+</div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="security_groups.html#general-security-group-config">Настройка общих групп безопасности</a></span></dt><dt><span class="section">
+ <a href="security_groups.html#end-user-config-sec-group">Настройка групп безопасности конечного пользователя</a></span></dt></dl>
+</div>
+<p>Один из наиболее распространенных вопросов начинающих работу с OpenStack пользователей является сбой 
+установки соответствующей группы безопасности при запуске экземпляра. 
+В результате пользователи не могут взаимодействовать с экземпляром по сети.
+<a id="d9e4147" class="indexterm"/>
+<a id="d9e4149" class="indexterm"/></p>
+<p>Группы безопасности являются наборами правил фильтрации IP, которые применяются к 
+сетевым средствам экземпляра. Они являются специфическими для проектов и, следовательно, члены проекта могут 
+редактировать установленные по умолчанию правила для своей группы, а также добавлять новые множества правил. Все 
+проекты имеют &quot;установленную по умолчанию&quot; группу безопасности, которая применяется к экземплярам, 
+для которых не определена никакая другая группа безопасности. Пока она не изменена, эта группы безопасности 
+отклоняет весь входящий трафик.</p>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="general-security-group-config"> </a>Настройка общих групп безопасности</h3>
+ </div></div></div>
+ <p>Параметр <code class="code">nova.conf</code> <code class="code">allow_same_net_traffic</code>
+ (по умолчанию имеющий значение <code class="literal">true</code>) глобально управляет тем, применяются ли 
+ правила к совместно использующим сеть хостам. Будучи установленным в значение 
+ <code class="literal">true</code> (истинно), хосты из той же подсети не фильтруются и разрешены 
+ все типы обмена данными между ними. В однородной сети это разрешает нефильтруемое взаимодействие 
+ всем экземплярам всех проектов. При использовании сетевого окружения с виртуальными сетями это 
+ делает возможным взаимодействие между экземплярами в пределах одного проекта. 
+ Когда значение <code class="code">allow_same_net_traffic</code> установлено в 
+ <code class="literal">false</code>, ко всем соединениям применяются группы безопасности. 
+ В данном случае проекты могут имитировать <code class="code">allow_same_net_traffic</code> путем 
+ настройки своих групп безопасности по умолчанию, разрешая весь трафик в своей подсети.</p>
+ <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+  <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+  <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+  <p>Как отмечено в предыдущей главе,число правил в группе безопасности управляется
+  <code class="code">quota_security_group_rules</code>, 
+  а число доступных для проекта групп управляется квотой
+  <code class="code">quota_security_groups</code>.</p></td></tr></table>
+ </div>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="end-user-config-sec-group"> </a>Настройка групп безопасности конечного пользователя</h3>
+ </div></div></div>
+ <p>Группы безопасности для данного конкретного проекта могут быть найдены в инструментальной панели 
+ OpenStack в разделе <span class="guilabel"><strong>Access &amp; Security</strong></span>. 
+ Для просмотра деталей существующей группы выберите действие <span class="guilabel"><strong>edit</strong></span>
+ (редактирование) для данной группы безопасности. Понятно, что изменение существующих групп может быть 
+ выполнено из этого интерфейса <span class="guilabel"><strong>edit</strong></span>. Существует 
+ на главной странице <span class="guilabel"><strong>Access &amp; Security</strong></span> для 
+ создания новых групп кнопка <span class="guibutton"><strong>Create Security Group</strong></span>. 
+ Мы обсудим используемые в этих полях термины по мере объяснения эквивалентов командной строки.</p>
+ <p>Вы можете получить список групп безопасности для определенного проекта, с которым вы работаете 
+ в настоящее время, выполнением команды <code class="literal">nova</code> в командной строке:</p>
+ <pre class="screen">$ nova secgroup-list
++---------+-------------+
+| Name    | Description |
++---------+-------------+
+| default | default     |
+| open    | all ports   |
++---------+-------------+</pre>
+ <p>Для просмотра деталей группы безопасности &quot;open&quot;:</p>
+ <pre class="screen">$ nova secgroup-list-rules open
++-------------+-----------+---------+-----------+--------------+
+| IP Protocol | From Port | To Port | IP Range  | Source Group |
++-------------+-----------+---------+-----------+--------------+
+| icmp        | -1        | 255     | 0.0.0.0/0 |              |
+| tcp         | 1         | 65535   | 0.0.0.0/0 |              |
+| udp         | 1         | 65535   | 0.0.0.0/0 |              |
++-------------+-----------+---------+-----------+--------------+</pre>
+ <p>Все приводимые правила являются правилами &quot;разрешающего&quot; (allow) типа, хотя по умолчанию 
+ установлены запрещающие (deny). Первый столбец является типом протокола IP (один из icmp, tcp или udp), 
+ а второй и третий столбцы описывают подвергаемый действию диапазон портов. Четвертый 
+ столбец определяет диапазон IP в формате CIDR. Данный пример демонстрирует 
+ полный диапазон портов для всех протоколов, разрешаемых всем IP адресам.</p>
+ <p>При добавлении новой группы безопасности вы должны выбрать описательное, 
+ но краткое имя. Это имя появляется в кратких описаниях экземпляров, 
+ которые используют его там, где большие поля описания часто не доступны. 
+ Видя, что экземпляр использует группу безопасности <code class="literal">http</code>, 
+ будет гораздо легче понять ее назначение, чем в случае ее именования <code class="literal">bobs_group</code>
+ или <code class="literal">secgrp1</code>.</p>
+ <p>В качестве примера, давайте создадим группу безопасности, которая позволяет веб-трафик 
+ повсеместно в интернете. Мы будем называть ее <code class="literal">global_http</code>, 
+ что ясно и разумно кратко и при этом содержит информацию о том, что разрешено и откуда. 
+ В командной строке выполните:</p>
+ <pre class="screen">$ nova secgroup-create \
+ global_http "allow web traffic from the Internet"
++-------------+-------------------------------------+
+| Name        | Description                         |
++-------------+-------------------------------------+
+| global_http | allow web traffic from the Internet |
++-------------+-------------------------------------+</pre>
+ <p>Это создает пустую группу безопасности. Чтобы заставить ее выполнять то, что нужно нам, 
+ мы должны добавить некоторые правила:</p>
+ <pre class="screen">$ nova secgroup-add-rule &lt;secgroup&gt; &lt;ip-proto&gt; &lt;from-port&gt; &lt;to-port&gt; &lt;cidr&gt;
+$ nova secgroup-add-rule global_http tcp 80 80 0.0.0.0/0
++-------------+-----------+---------+-----------+--------------+
+| IP Protocol | From Port | To Port | IP Range  | Source Group |
++-------------+-----------+---------+-----------+--------------+
+| tcp         | 80        | 80      | 0.0.0.0/0 |              |
++-------------+-----------+---------+-----------+--------------+</pre>
+ <p>Обратите внимание, что все аргументы являются позиционными, а аргумент 
+ <code class="literal">from-port</code> и аргумент <code class="literal">to-port</code> 
+ определяют диапазон разрешенных соединений локальных портов. Эти аргументы
+ не обозначают порты источника и получателя в соединении. Более 
+ сложные наборы правил могут быть построены посредством множественных вызовов 
+ <code class="literal">nova secgroup-add-rule</code>. Например, если вы хотите 
+ обмениваться и http, и https трафиком, выполните следующее:</p>
+ <pre class="screen">$ nova secgroup-add-rule global_http tcp 443 443 0.0.0.0/0
++-------------+-----------+---------+-----------+--------------+
+| IP Protocol | From Port | To Port | IP Range  | Source Group |
++-------------+-----------+---------+-----------+--------------+
+| tcp         | 443       | 443     | 0.0.0.0/0 |              |
++-------------+-----------+---------+-----------+--------------+</pre>
+<p>Несмотря на вывод только вновь добавленного правила последняя операция аддитивная:</p>
+<pre class="screen">$ nova secgroup-list-rules global_http
++-------------+-----------+---------+-----------+--------------+
+| IP Protocol | From Port | To Port | IP Range  | Source Group |
++-------------+-----------+---------+-----------+--------------+
+| tcp         | 80        | 80      | 0.0.0.0/0 |              |
+| tcp         | 443       | 443     | 0.0.0.0/0 |              |
++-------------+-----------+---------+-----------+--------------+</pre>
+ <p>Обратная операция называется <code class="literal">secgroup-delete-rule</code> 
+ и использует тот же формат. C помощью <code class="literal">secgroup-delete</code> 
+ могут быть удалены группы безопасности целиком.</p>
+ <p>Чтобы создать правила группы безопасности для кластера экземпляров вы
+ захотите воспользоваться <span class="keep-together">SourceGroups</span>.</p>
+ <p>SourceGroup представляют собой особый динамический способ определения в формате CIDR 
+ разрешенных источников. Пользователь описывает SourceGroup (имя группы безопасности) 
+ и все другие использующие определенную SourceGroup экземпляры пользователя выбираются динамически. 
+ Такой динамический выбор избавляет от необходимости в индивидуальных правилах 
+ для каждого нового члена <span class="keep-together">cluster</span>. 
+ <p>Код коструируется подобно такому: <code class="code">nova
+ secgroup-add-group-rule &lt;secgroup&gt; &lt;source-group&gt;
+ &lt;ip-proto&gt; &lt;from-port&gt; &lt;to-port&gt;</code>. 
+ Ниже приводится пример использования:</p>
+ <pre class="screen">$ nova secgroup-add-group-rule cluster global-http tcp 22 22</pre>
+ <p>Правило &quot;cluster&quot; делает возможным SSH доступ из любого другого экземпляра, который 
+ использует группу <code class="literal">global-http</code>.</p>
+ </div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

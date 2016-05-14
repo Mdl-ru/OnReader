@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 7. Настройка системы: ведение журналов, время системы, пакетные задания и пользователи - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch06.html" title="Глава 6. Как запускается пользовательское пространство"/>
+<link rel="next" href="Ch08.html" title="Глава 8. Подробнее об использовании процессов и ресурсов"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 7. Настройка системы: ведение журналов, время системы, пакетные задания и пользователи';
+PrevRef = 'Ch06.html';
+UpRef = 'index.html';
+NextRef = 'Ch08.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 7. Настройка системы: ведение журналов, время системы, пакетные задания и пользователи</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch07.html">7. Настройка системы: ведение журналов, время системы, пакетные задания и пользователи</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch07.html#07.1">7.1 Структура /etc</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.2">7.2 Ведение журналов системы</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#07.2.1">7.2.1 Системный регистратор</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.2.2">7.2.2 Файлы настройки</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.3">7.3 Файлы управления пользователем</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#07.3.1">7.3.1 Файл /etc/passwd</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.3.2">7.3.2 Специальные пользователи</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.3.3">7.3.3 Файл /etc/shadow</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.3.4">7.3.4 Обработка пользователей и паролей</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.3.5">7.3.5 Работа с группами</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.4">7.4 getty и login</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.5">7.5 Установка времени</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#07.5.1">7.5.1 Представление времени ядра и временные зоны</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.5.2">7.5.2 Сетевое время</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.6">7.6 Планирование повторяющихся задач посредством cron</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#07.6.1">7.6.1 Установка файлов crontab</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.6.2">7.6.2 Системные файлы crontab</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.6.3">7.6.3 Будущее cron</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.7">7.7 Планирование одноразовых задач посредством at</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.8">7.8 Понимание идентификаторов пользователей и переключения пользователей</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#07.8.1">7.8.1 Владелец процесса, эффективный UID, действительный UID и сохраненный UID</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.9">7.9 Идентификация и аутентификация пользователей</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#07.9.1">7.9.1 Использование библиотек для информации о пользователе</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.10">7.10 PAM</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch07.html#07.10.1">7.10.1 Настройка PAM</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.10.2">7.10.2 Примечания по PAM</a></span></dt>
+      <dt><span class="section"><a href="Ch07.html#07.10.3">7.10.3 PAM и пароли</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.11">7.11 Дальнейшие темы</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p></p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.1"> </a>7.1 Структура /etc</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.2"> </a>7.2 Ведение журналов системы</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.2.1 Системный регистратор</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.2.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.2.2 Файлы настройки</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.3"> </a>7.3 Файлы управления пользователем</h3>
+   </div></div></div>
+   <p>.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.3.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.3.1 Файл /etc/passwd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.3.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.3.2 Специальные пользователи</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.3.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.3.3 Файл /etc/shadow</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.3.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.3.4 Обработка пользователей и паролей</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.3.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.3.5 Работа с группами</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.4"> </a>7.4 getty и login</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.5"> </a>7.5 Установка времени</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.5.1 Представление времени ядра и временные зоны</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.5.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.5.2 Сетевое время</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.6"> </a>7.6 Планирование повторяющихся задач посредством cron</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.6.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.6.1 Установка файлов crontab</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.6.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.6.2 Системные файлы crontab</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.6.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.6.3 Будущее cron</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.7"> </a>7.7 Планирование одноразовых задач посредством at</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.8"> </a>7.8 Понимание идентификаторов пользователей и переключения пользователей</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.8.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.8.1 Владелец процесса, эффективный UID, действительный UID и сохраненный UID</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.9"> </a>7.9 Идентификация и аутентификация пользователей</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.9.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.9.1 Использование библиотек для информации о пользователе</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.10"> </a>7.10 PAM</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.10.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.10.1 Настройка PAM</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.10.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.10.2 Примечания по PAM</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.10.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">7.10.3 PAM и пароли</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07.11"> </a>7.11 Дальнейшие темы</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

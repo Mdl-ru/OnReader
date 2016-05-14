@@ -1,0 +1,1873 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 3. Управление кластером и виртуальными машинами - Книга рецептов Proxmox</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="ProxmoxCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="up" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="prev" href="Ch02.html" title="Глава 2. Знакомство с графическим интерфейсом Proxmox"/>
+<link rel="next" href="Ch04.html" title="Глава 4. Настройка сети"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 3. Управление кластером и виртуальными машинами';
+PrevRef = 'Ch02.html';
+UpRef = 'index.html';
+NextRef = 'Ch04.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 3. Управление кластером и виртуальными машинами</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим следующие разделы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Создание кластера Proxmox</p>
+	 </li>
+	<li class="listitem">
+	 <p>Добавление узлов в кластер</p>
+	 </li>
+	<li class="listitem">
+	 <p>Удаление узлов из кластера</p>
+	 </li>
+	<li class="listitem">
+	 <p>Повторное подключение удаленных узлов в кластер</p>
+	 </li>
+	<li class="listitem">
+	 <p>Понимание файловой системы Proxmox</p>
+	 </li>
+	<li class="listitem">
+	 <p>Управление ISO и шаблонами OpenVZ</p>
+	 </li>
+	<li class="listitem">
+	 <p>Создание виртуальной машины на базе KVM</p>
+	 </li>
+	<li class="listitem">
+	 <p>Создание контейнера OpenVZ</p>
+	 </li>
+	<li class="listitem">
+	 <p>Миграцию виртуальных машин</p>
+	 </li>
+	<li class="listitem">
+	 <p>Клонирование виртуальных машин</p>
+	 </li>
+	<li class="listitem">
+	 <p>Управление образами виртуальных дисков</p>
+	 </li>
+	<li class="listitem">
+	 <p>Управление контейнерами OpenVZ</p>
+	 </li>
+	<li class="listitem">
+	 <p>Понимание OpenVZ счетчиков пользовательских компонентов</p>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch03.html">3. Управление кластером и виртуальными машинами</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Creating_cluster">Создание кластера Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Adding_nodes">Добавление узлов в кластер</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Removing_nodes">Удаление узлов из кластера</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Rejoining_removed">Повторное подключение удаленных узлов в кластер</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Understanding_pmxcfs">Понимание файловой системы Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Managing_ISO_and_OpenVZ">Управление ISO и шаблонами OpenVZ</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Creating_KVM_VM">Создание виртуальной машины на базе KVM</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Creating_OpenVZ_container">Создание контейнера OpenVZ</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Migrating_VM">Миграция виртуальных машин</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Cloning_VM">Клонирование виртуальных машин</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Managing_VDI">Управление образами виртуальных дисков</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Managing_OpenVZ_containers">Управление контейнерами OpenVZ</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#Understanding_UBC">Понимание OpenVZ счетчиков пользовательских компонентов</a></span></dt>
+	</dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+   </div></div></div>
+   <p>Кластер является суммой множества узлов компьютеров соединенных вместе посредством сетевой среды. Одним из основных 
+   преимуществ кластеризации является перемещение виртуальных машин на различные узлы по мере необходимости, обеспечивая максимальное 
+   время работы без отказов. Кластер делает возможным централизованное управление всеми узлами участниками и виртуальными машинами в 
+   пределах этих узлов. Хотя узлы в кластере работаю совместно, они не обеспечивают высокой доступности после сразу начальной установки. 
+   Для того чтобы получить полностью автоматизированную высокую доступность, нам придется вначале выполнить настройку. Подробнее о 
+   настройке высокой доступности можно ознакомиться в <a class="link" href="Ch04.html" target="_top">Главе 4. 
+   Настройка сети</a>. Кластеры Promox используют ряд определенных портов для различных функций. Важно обеспечить доступность этих портов 
+   и отсутствие их блокировки межсетевыми экранами. Данная таблица показывает используемые порты и их функции:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="70%"/><thead><tr valign="top">
+          <th>Порт</th>
+          <th>Функция</th>
+        </tr></thead><tr valign="top">
+          <td><p>TCP <span class="term"><code>8006</code></span></p></td>
+          <td><p>Proxmox WebGUI</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>TCP <span class="term"><code>5900-5999</code></span></p></td>
+          <td><p>Доступ к консоли VNC</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>TCP <span class="term"><code>3128</code></span></p></td>
+          <td><p>Доступ к консоли SPICE</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>TCP <span class="term"><code>22</code></span></p></td>
+          <td><p>SSH доступ</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>UDP <span class="term"><code>5404</code></span>, <span class="term"><code>5405</code></span></p></td>
+          <td><p>Широковещательный CMAN для применения настроек кластера</p></td>
+        </tr></tbody></table>
+   <p>Следующий рисунок показывает базовую схему кластера Proxmox с тремя узлами Proxmox:</p> 
+   <div class="informalfigure"><div class="mediaobject">
+     <img src="figures/Fig0301.jpg"/> </div><br />
+   </div>
+   <p>В предыдущей схеме сети присутствуют все три узла Proxmox. Межсетевые экраны, совместно используемые хранилища на основе 
+   NFS и компьютер для административных целей соединены <span class="term"><strong class="userinput"><code>физическим коммутатором</code></strong></span>. 
+   Узел Proxmox 1 содержит одну виртуальную машину KVM и один контейнер VZ. Каждая виртуальная машина соединяется с узлом 
+   мостом с именем <span class="term"><code>vmbr0</code></span>. Каждый из этих мостов соединяется с физическим сетевым интерфейсом 
+   каждого узла Proxmox. Конечно, это черезчур упрощенная схема того, какмим образом различные компоненты включаются в кластер.</p>
+   <p>Большинство сетевых компонентов может быть найдено в <a class="link" href="Ch04.html" target="_top">Главе 4. Настройка сети</a>.
+   В данной главе мы собираемся изучить базовые настройки кластера и управление виртуальными машинами в кластере Proxmox VE.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_cluster"> </a>Создание кластера Proxmox</h3>
+   </div></div></div>
+   <p>Кластер не создается автоматически на только что установленном узле Proxmox. Он должен быть создан через интерфейс командной строки
+   с любого из узлов Proxmox, который собирается стать частью нашего кластера. После того как кластер создан и узлы добавлены в этот 
+   кластер, большая часть управления может выполняться через графический интерфейс.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Зарегистрируйтесь на узле Proxmox в качестве root через SSH или опцию <span class="term"><strong class="userinput"><code>Shell</code></strong></span> 
+   графического интерфейса Proxmox как показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0302.jpg"/> </div><br />
+      </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Чтобы создать новый кластер, воспользуйтесь следующим форматом команды:</p>
+	   <pre class="screen">
+# pvecm create &lt;cluster_name&gt;
+	   </pre>
+	  <p>Например, в окружении Proxmox мы собираемся создать кластер с именем <span class="term"><code>pmx</code></span>:</p>
+	   <pre class="screen">
+# pvecm create &lt;cluster_name&gt;
+	   </pre>
+	 </li><li class="listitem">
+      <p>После выполнения команды создания кластера убедитесь в том, что он создан воспользовавшись следующей командой:</p>
+	   <pre class="screen">
+#pvecm status
+	   </pre>
+	  <p>Команда должна отобразить информацию подобную следующему коду:</p>
+	   <pre class="screen">
+Version: 6.2.0
+Config Version: 1
+Cluster Name: pmx
+Cluster Id: 786
+Cluster Member: Yes
+Cluster Generation: 51
+Membership state: Cluster-Member
+Nodes: 1
+Expected votes: 3
+Total votes: 3
+Node votes: 1
+Quorum: 1
+Active subsystems: 5
+Flags:
+Ports Bound: 0
+Node name: pmx1
+Node ID: 1
+Multicast addresses: 239.192.3.21
+Node addresses: 172.16.0.71
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Команда создания кластера создает файл настройки в пути каталога <span class="term"><code>/etc/pve/cluster.conf</code></span>.
+   Содержимое файла настройки должно выглядеть примерно аналогично следующему экранному снимку:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0303.jpg"/> </div><br />
+      </div>
+   <p>По мере добавления узлов в кластер файл настройки будет автоматически пополняться информацией об узлах. Важно отметить синтаксис, 
+   который является <span class="term"><code>config_version</code></span>. Если вы правите этот файл настройки вручную, убедитесь в 
+   инкрементальном изменении номера версии. Когда настройка кластера выполняется через интерфейс командной строки, такая нумерация версий
+   выполняется автоматически.</p>
+	 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>В большинстве случаев нет необходимости подправлять настройку. Это может быть необходимо в крайне редких случаях, 
+		например, при восстановлении файла настройки из резервной копии для восстановления разрушенного кластера.</p></td></tr></table>
+      </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Когда мы добавим некоторые узлы в кластер, мы посмотрим вновь конфигурацию кластера чтобы увидеть изменения. Мы также проведем 
+   сравнения после внесения изменений в файл конфигурации при настройке высокой доступности Proxmox.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+     	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Мы рассмотрим высокую доступность Proxmox в <a class="link" href="Ch04.html" target="_top">Главе 4. Настройка сети</a>.</p>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Adding_nodes"> </a>Добавление узлов в кластер</h3>
+   </div></div></div>
+   <p>После кластер будет создан, мы должны добавить дополнительные узлы, чтобы выполнить предназначение кластера. Кластер Proxmox 
+   требует минимум три узла для правильного создания кластера. С тремя узлами возможен <span class="term"><strong class="userinput"><code>quorum</code></strong></span>, 
+   который позволяет кластерам обеспечивать работоспособность и функционирование должным образом. Кроме того, можно создать кластер 
+   только с двумя узлами, но это не рекомендуется. При наличии только двух узлов большинство голосов невозможно для выборов кластера. 
+   Кластер с двумя узлами может быть вариантом для целей обучения или для очень небольшой виртуальной среды.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Задача добавления узлов также требует выполнения в среде командной строки. В версии Proxmox VE 3.4 нет возможности добавлять
+   узлы через графический интерфейс Proxmox. Будьте уверены, что время и дата синхронизированы между узлами. Процесс создания кластера 
+   применяет <span class="term"><strong class="userinput"><code>криптографический</code></strong></span> метод и для этого очень важно 
+   чтобы все узлы имели бы одинаковое время и дату.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Используйте следующие шаги для добавления узлов в кластер:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь на узле для добавления в качестве root через SSH или графический интерфейс Proxmox | 
+	  <span class="term"><strong class="userinput"><code>Shell</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>На добавляемом узле выполните следующую команду:</p>
+	   <pre class="screen">
+#pvecm add &lt;existing_node_in_cluster&gt;
+	   </pre>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	    <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	    <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	    <p>Существующие узлы могут быть любыми уже добавленным в кластер узлом или самым первым узлом на котором был создан 
+	    кластер если не существует никаких других дополнительных узлов. В кластере Proxmox не существует иерархии ведущего 
+	    или ведомого. Все узлы участвую в кластере на равных условиях.</p></td></tr></table>
+      </div>
+	 </li><li class="listitem">
+      <p>В нашем примере кластера мы собираемся добавить узлы <span class="term"><code>pmx2</code></span> и 
+	  <span class="term"><code>pmx3</code></span> в наш кластер выполнив следующую команду на обоих узлах:/p>
+	   <pre class="screen">
+#pvecm add 172.16.0.71
+	   </pre>
+	 </li><li class="listitem">
+      <p>Кластер нашего примера <span class="term"><code>pmx</code></span> теперь имеет три узла. Мы можем проверить его 
+	  следующей командой, которая показывает список узлов в кластере:</p>
+	   <pre class="screen">
+#pvecm nodes
+	   </pre>
+	 </li>
+	 </ol>
+	 <p>Команда отображает информацию показанную на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0304.jpg"/> </div><br />
+      </div>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>После добавления узлов в кластер файл настройки кластера в <span class="term"><code>/etc/pve/cluster.conf</code></span> 
+   должен выглядеть аналогично следующему экранному снимку:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0305.jpg"/> </div><br />
+      </div>
+   <p>Команда узла <span class="term"><code>add</code></span> обновила номер версии и добавила узлы 
+   <span class="term"><code>pmx2</code></span>, <span class="term"><code>pmx3</code></span> в конфигурацию кластера.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Removing_nodes"> </a>Удаление узлов из кластера</h3>
+   </div></div></div>
+   <p>Время от времени может быть необходимо удалить узел из кластера по различным причинам. В Proxmox VE 3.4 узел может быть удален 
+   только через интерфейс командной строки.</p>
+  </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Перед удалением узла убедитесь что в узле не существует работающих виртуальных машин. Переместите любые виртуальные машины 
+   на другой узел следуя шагам в рецепте <a class="link" href="#Migrating_VM" target="_top">Миграция виртуальных машин</a> показанном 
+   позже в данной главе. Зарегистрируйтесь на не подлежащем удалению узле в качестве root через SSH или графический интерфейс Proxmox | 
+   <span class="term"><strong class="userinput"><code>Shell</code></strong></span>. Выключите подлежащий удалению узел.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Proxmox настоятельно рекомендует чтобы удаляемый узел не включается в той же сети, в которой он был до этого. Удаление 
+	   узла из кластера окончательный процесс. Он удаляет всю информацию кластера с удаляемого узла.</p></td></tr></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Используйте следующие шаги для удаления узлов из нашего кластера:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выполните на узле следующую команду:</p>
+	   <pre class="screen">
+#pvecm delnode &lt;hostname_to_be_deleted&gt;
+	   </pre>
+      <p>В нашем примере кластера если мы хотим удалить узел <span class="term"><code>pmx3</code></span>, мы выполним следующую 
+	  команду с узла <span class="term"><code>pmx1</code></span> или <span class="term"><code>pmx2</code></span>:</p>
+	   <pre class="screen">
+#pvecm delnode pmx3
+	   </pre>
+	 </li><li class="listitem">
+      <p>Проверьте что узел удален с помощью следующей команды:</p>
+	   <pre class="screen">
+#pvecm nodes
+	   </pre>
+	  <p>Команда должна отобразить список узла кластера без удаленного узла, как показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0306.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Rejoining_removed"> </a>Повторное подключение удаленных узлов в кластер</h3>
+   </div></div></div>
+   <p>Иногда это может быть необходимо, чтобы вернуться в удаленный узел обратно в кластер Proxmox. Узел мог быть удален по ошибке 
+   или узел, возможно, вышел из строя из-за отказа аппаратуры и должен быть возвращен с тем же IP-адресом. Если узел будет возвращаться 
+   после простой установки Proxmox на нем, тогда просто следуйте инструкциям из рецепта <a class="link" href="#Adding_nodes" 
+   target="_top">Добавление узлов в кластер</a> показанном ранее в данной главе. Если узел возвращается с той же установкой Proxmox, 
+   то он может воссоединиться &quot;аккуратно или насильно&quot; {<a class="link" href="https://www.youtube.com/watch?v=eyX5GyeDkhc">:)</a>}.
+   Для обеспечения гарантированной работы, очистите установку Proxmox на этом узле. Повторное соединение рекомендуется только после этого.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Аналогично добавлению узла, повторное присоединение также должно выполняться из интерфейса командной строки. Зарегистрируйтесь с правами
+   root на повторно подключаемом узле Proxmox.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Если повторная установка Proxmox на данном узле не может рассматриваться как вариант, тогда повторное соединение удаленного узла
+   в тот же самый кластер путем аккуратного присоединения настоятельно рекомендуется вместо силового включения. Вот шаги для аккуратного 
+   повторного присоединения удаленного узла:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте каталог для резервного копирования существующей информации о кластере:</p>
+	   <pre class="screen">
+#mkdir /root/pve_backup
+	   </pre>
+	 </li><li class="listitem">
+      <p>Скопируйте информацию о существующем кластере из <span class="term"><code>/etc/pve</code></span> в каталог резервной копии:</p>
+	   <pre class="screen">
+#cp –a /etc/pve /root/pve_backup
+	   </pre>
+	 </li><li class="listitem">
+      <p>Остановите службу кластера на повторно подключаемом узле:</p>
+	   <pre class="screen">
+#service pve-cluster stop
+	   </pre>
+	 </li><li class="listitem">
+      <p>Удалите файл настройки кластера:</p>
+	   <pre class="screen">
+#rm /etc/cluster/cluster.conf
+	   </pre>
+	 </li><li class="listitem">
+      <p>Удалите файлы кластера:</p>
+	   <pre class="screen">
+#rm –rf /var/lib/pve-cluster/*
+	   </pre>
+	 </li><li class="listitem">
+      <p>Повторно запустите службу кластеры:</p>
+	   <pre class="screen">
+#service pve-cluster start
+	   </pre>
+	 </li><li class="listitem">
+      <p>Добавьте узлы в кластер указав IP адрес существующего узла:</p>
+	   <pre class="screen">
+#pvecm add 172.16.0.71
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для силового добавления узла в кластер выполните следующую команду:</p>
+	   <pre class="screen">
+#pvecm add &lt;IP_existing_node&gt; -force
+	   </pre>
+	 </li><li class="listitem">
+      <p>Создайте каталог для резервного копирования существующей информации о кластере:</p>
+	   <pre class="screen">
+#mkdir /root/pve_backup
+	   </pre>
+	 </li><li class="listitem">
+      <p>Выполните следующую команду чтобы быть уверенным, что все предыдущие шаги были успешны:</p>
+	   <pre class="screen">
+#pvecm nodes
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Хотя и можно повторно подключить тот же самый узел аккуратно или силовым путем, очистите установку Proxmox. После этого 
+   всегда рекомендуется повторное подключение. Стоит отметить, что аккуратное повторное соединение оказалось успешным во многих 
+   кластерных средах Proxmox без каких бы то ни было вопросов. Если у вас есть некие сомнения, очистка установки Proxmox перед 
+   повторным соединением самый безопасный способ выполнения.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Understanding_pmxcfs"> </a>Понимание файловой системы Proxmox</h3>
+   </div></div></div>
+   <p>Файловая система кластера Proxmox <span class="term"><strong class="userinput"><code>Proxmox cluster filesystem 
+   (pmxcfs)</code></strong></span>, если коротко, является неотъемлемой частью того как работает кластер Proxmox. Как следует из 
+   названия, это в основном файловая система разделяемая между всеми узлами в кластере Proxmox. Pmxcfs является файловой системой на 
+   управляемая базой данных SQLite, в которой сохраняются все наши файлы настроек Proxmox. Любые изменения этих файлов реплицируются 
+   в реальном времени с применением <span class="term"><strong class="userinput"><code>corosync cluster engine</code></strong></span>.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения дополнительной информации по corosync посетите <a class="link" 
+	   href="https://en.wikipedia.org/wiki/Corosync_Cluster_Engine" target="_top">https://en.wikipedia.org/wiki/Corosync_Cluster_Engine</a>.</p></td></tr></table>
+     </div>
+  </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Для понимания pmxcfs мы собираемся ознакомиться с тем как структура каталога выкладывается в файловую систему. К 
+   <span class="term"><code>pmxcfs</code></span> можно получить доступ через любой узел в кластере. Зарегистрируйтесь с правами 
+   root на узле через SSH или графический интерфейс Proxmox | <span class="term"><strong class="userinput"><code>Shell</code></strong></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p><span class="term"><code>Pmxcfs</code></span> монтируется в <span class="term"><code>/etc/pve</code></span>. Следующая таблица
+   показывает структуру каталога в <span class="term"><code>/etc/pve</code></span> тип информации, который он содержит:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="50%"/><col width="50%"/><thead><tr valign="top">
+          <th>Путь каталога</th>
+          <th>тип данных</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/cluster.conf</code></span></p></td>
+          <td><p>Это основные настройки кластера для corosync.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/datacenter.cfg</code></span></p></td>
+          <td><p>Содержит параметры такие как электронная почта администратора, раскладка клавиатуры и т.п.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/storage.cfg</code></span></p></td>
+          <td><p>Это настройки для хранилища данных.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/user.cfg</code></span></p></td>
+          <td><p>Содержит пользовательские удостоверения и группы для управления доступом.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/authkey.pub</code></span></p></td>
+          <td><p>Это открытые ключи для системы квитанций.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/firewall/</code></span></p></td>
+          <td><p>Настройка межсетевого экрана.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/priv/authkey.key</code></span></p></td>
+          <td><p>Это частные ключи авторизации для системы квитанций.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/priv/shadow.cfg</code></span></p></td>
+          <td><p>Это теневой файл паролей.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node&gt;/openvz/</code></span></p></td>
+          <td><p>Это местоположение файлов настроек контейнеров OpenVZ.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node&gt;/qemu-server/</code></span></p></td>
+          <td><p>Это местоположение содержит файлы настроек машин KVM.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node&gt;/priv</code></span></p></td>
+          <td><p>Это частные ключи SSL для графического веб- интерфейса.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node&gt;/pve-ssl.pem</code></span></p></td>
+          <td><p>Это открытые ключи SSL для графического веб- интерфейса.</p></td>
+        </tr></tbody></table>
+   <p>Отметим, что существует три символические ссылки в пути <span class="term"><code>/etc/pve</code></span></p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="40%"/><col width="60%"/><thead><tr valign="top">
+          <th>Символическая ссылка</th>
+          <th>Назначение</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/~local</code></span></p></td>
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node&gt;</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/~openvz</code></span></p></td>
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node&gt;/openvz</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/etc/pve/~qemu-server</code></span></p></td>
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node&gt;/qemu-server</code></span></p></td>
+        </tr></tbody></table>
+   <p>Применяя каталог узла мы можем перемещать настройки виртуальной машины с одного узла на другой. Это в особенности полезно в 
+   случае когда узел отказал, но есть необходимость получить доступ к виртуальной машине. Поскольку файловая система основана на 
+   базе данных SQLite в качестве внутреннего интерфейса, функциональность этой файловой системы очень ограничена. Она не должна 
+   применяться в качестве обычного хранилища файлов.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Иногда из-за ошибок в кластере <span class="term"><code>pmxcfs</code></span> может становиться недоступной. Это будет 
+   вызывать ошибки при попытке доступа к каталогу <span class="term"><code>/etc/pve</code></span>. В таком случае выполните 
+   следующую команду для получения доступа к <span class="term"><code>/etc/pve</code></span>:</p>
+	   <pre class="screen">
+#pmxcfs –l
+	   </pre>
+   <p>Эта команда заставляет файловую систему стартовать в локальном режиме. Вы можете затем скопировать данные наружу для 
+   устранения проблем кластера. Будьте осторожны при внесении изменений в <span class="term"><code>/etc/pve</code></span> когда 
+   вы находитесь в локальном режиме. Все изменения будут переписаны когда кластер вернется назад в рабочее состояние на 
+   этом узле.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Официальный вики Proxmox по <span class="term"><code>pmxcfs</code></span> находится по адресу:
+	 <a class="link" href="https://pve.proxmox.com/wiki/Proxmox_Cluster_file_system_%28pmxcfs%29" 
+	 target="_top">https://pve.proxmox.com/wiki/Proxmox_Cluster_file_system_%28pmxcfs%29</a></p>
+	 </li>
+   </ul>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Managing_ISO_and_OpenVZ"> </a>Управление ISO и шаблонами OpenVZ</h3>
+   </div></div></div>
+   <p>Proxmox имеет свойства сохранения ISO и шаблонов для контейнеров OpenVZ {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC</em></span>} 
+   в хранилище кластера, которые должны использоваться виртуальными машинами. В данном рецепте мы собираемся рассматривать как выгружать 
+   ISO и шаблоны в хранилище Proxmox.</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: с более современной (31 марта 2016) информацией о контейнерах в версии Proxmox VE 4.1 вы 
+   можете ознакомиться в нашем переводе <a class="link" href="http://onreader.mdl.ru/LearningProxmoxVE/content/Ch03.html" 
+   target="_top">Изучение Proxmox VE</a></em></span>.}</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Образы ISO для основанных на KVM виртуальных машинах и шаблоны для контейнеров OpenVZ {<span class="emphasis"><em>Прим. пер.: 
+   Proxmox VE 4.x: LXC</em></span>} могут быть выгружены или загружены в графическом интерфейсе Proxmox. Загрузитесь в качестве root 
+   или с другими административными привилегиями. Затем кликните на хранилище в левой окне навигации. Каждое хранилище имеет три меню 
+   с закладками: <span class="term"><strong class="userinput"><code>Summary</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>Content</code></strong></span> и
+   <span class="term"><strong class="userinput"><code>Permissions</code></strong></span></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Воспользуйтесь следующими шагами для выгрузки ISO и шаблонов в хранилище Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните на закладку <span class="term"><strong class="userinput"><code>Content</code></strong></span> для отображения 
+	  сохраненных в нашем хранилище. Файлы разбиты на категории на основе типов содержания. Когда не существует файлов, доступны 
+	  только кнопки меню <span class="term"><strong class="userinput"><code>Templates</code></strong></span> и
+	  <span class="term"><strong class="userinput"><code>Upload</code></strong></span>, как показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0307.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Нажмите на <span class="term"><strong class="userinput"><code>Upload</code></strong></span> для открытия диалогового блока, 
+	  как показано в следующем снимке экрана, для выгрузки файла:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0308.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выберите тип содержимого из ниспадающего меню <span class="term"><strong class="userinput"><code>Content</code></strong></span>.
+	  Затем кликните на <span class="term"><strong class="userinput"><code>Select File...</code></strong></span> для выбора файла 
+	  для выгрузки с локального компьютера.</p>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Upload</code></strong></span> для старта выгрузки файла в хранилище.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Заметим, что выгрузка допускает три вида файлов, которые могут выгружаться. А именно:
+	   <span class="term"><strong class="userinput"><code>ISO image</code></strong></span>,
+	   <span class="term"><strong class="userinput"><code>OpenVZ template</code></strong></span> и 
+	   <span class="term"><strong class="userinput"><code>VZDump backup file</code></strong></span>.
+	   Proxmox тоакже допускает загрузку шаблонов OpenVZ {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC</em></span>} 
+	   из их репозитория.</p></td></tr></table>
+     </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Templates</code></strong></span> для открытия диалогового блока 
+	  шаблонов, как показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0309.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выберите шаблон, затем кликните кнопку <span class="term"><strong class="userinput"><code>Download</code></strong></span> 
+	  для загрузки шаблонов OpenVZ {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC</em></span>}. Эти шаблоны являются 
+	  предварительно компилированными готовыми к использованию образцами различных дистрибутивов и приложений. Мы можем также 
+	  загрузить дополнительные шаблоны для контейнеров OpenVZ {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC</em></span>} 
+	  с сайта TurnKey Linux по адресу <a class="link" href="https://www.turnkeylinux.org/" target="_top">https://www.turnkeylinux.org/</a>.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Отметим, что шаблоны доступные из этого репозитория не полностью современны.</p></td></tr></table>
+     </div>
+	 </li><li class="listitem">
+      <p>Для удаления образа ISO или шаблона выберите файл из списка в хранилище. Затем кликните на 
+	  <span class="term"><strong class="userinput"><code>Remove</code></strong></span>.</p>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Хранилища могут содержать различные типы файлов только если тип <span class="term"><strong class="userinput"><code>Content</code></strong></span>
+   выбран из меню <span class="term"><strong class="userinput"><code>Datacenter | Storage</code></strong></span>. Например, в нашем 
+   демонстрационном кластере все типы содержания выбираются для локального хранилища, как показано в следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0310.jpg"/> </div><br />
+      </div>
+   <p>Для изменения типа <span class="term"><strong class="userinput"><code>Content</code></strong></span> выберите хранилище. 
+   Затем кликните на <span class="term"><strong class="userinput"><code>Edit</code></strong></span> для выбора соответствующего 
+   типа содержания.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Существует возможность создания вашего собственного шаблона OpenVZ {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC</em></span>},
+   который будет применяться в Proxmox. Полные инструкции по созданию ваших собственных шаблонов или инструментариев выходят за 
+   пределы данной книги. Однако, следующая ссылка может дать хороший старт в изучении построения шаблонов. Посетите 
+   <a class="link" href="https://pve.proxmox.com/wiki/Debian_Appliance_Builder" 
+   target="_top">https://pve.proxmox.com/wiki/Debian_Appliance_Builder</a> для этого.</p>
+   <p>ISO и шаблоны могут также копироваться через интерфейс командной строки или программы, подобные FileZilla. Соединитесь с узлом 
+   Proxmox в FileZilla и скопируйте файлы в соответствующий путь. Отметим, что когда используются только локальные хранилища, эти образы 
+   ISO и шаблоны необходимо выгрузить на все узлы в кластере. При совместно используемом хранилище мы можем хранить все образы в 
+   одном местоположении, таким образом сохраняя пространство локальных хранилищ. Мы дополнительно обсудим хранилища в 
+   <a class="link" href="Ch06.html" target="_top">Главе 6. Настройка системы хранения</a>.</p>
+   <p>Следующая таблица показывает пути каталога и типы шаблонов для локального хранилища.</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="60%"/><col width="40%"/><thead><tr valign="top">
+          <th>Путь каталога</th>
+          <th>Тип шаблона</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/var/lib/vz/template/iso</code></span></p></td>
+          <td><p>Образы ISO</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/var/lib/vz/template/cache</code></span></p></td>
+          <td><p>Шаблоны контейнера OpenVZ {LXC}</p></td>
+        </tr></tbody></table>
+   <p>Следующая таблица показывает пути каталога и типы шаблонов для всех других хранилищ.</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="60%"/><col width="40%"/><thead><tr valign="top">
+          <th>Путь каталога</th>
+          <th>Тип шаблона</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/mnt/pve/&lt;sstorage_name&gt;/template/iso</code></span></p></td>
+          <td><p>Образы ISO</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><code>/mnt/pve/&lt;storage_name&gt;/template/cache</code></span></p></td>
+          <td><p>Шаблоны контейнера OpenVZ {LXC}</p></td>
+        </tr></tbody></table>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_KVM_VM"> </a>Создание виртуальной машины на базе KVM</h3>
+   </div></div></div>
+   <p>Виртуальные машины являются строительными блоками виртуальной среды. В данном рецепте мы собираемся рассмотреть как создавать 
+   виртуальные машины на основе KVM в кластере Proxmox.</p>
+  </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Загрузите или выгрузите необходимые образы ISO или шаблоны OpenVZ  {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: 
+   LXC</em></span>}, как было показано в предыдущем рецепте. Зарегистрируйтесь в графическом интерфейсе Proxmox в качестве root или 
+   с любыми полномочиями, которые допускают создание виртуальных машин.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Create VM</code></strong></span> чтобы открыть блок диалога. Данный
+	  диалог организован в виде меню с закладками для настройки создаваемых виртуальных машин.</p>
+      <p>Следующая таблица показывает типы информации, подлежащей заполнению для меню с закладками 
+	  <span class="term"><strong class="userinput"><code>General</code></strong></span>:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>General</code></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Node</code></strong></span></p></td>
+          <td><p>Это узел назначения для данной виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>VM ID</code></strong></span></p></td>
+          <td><p>Идентификатор виртуальной машины в численном выражении. Одно и то же значение идентификатора не может использоваться 
+		  более чем для одной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Name</code></strong></span></p></td>
+          <td><p>Алфавитно- цифровая строка названия виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Resource pool</code></strong></span></p></td>
+          <td><p>Выберите имя пула данной виртуальной машины, к которому она будет относиться. Данное значение не обязательное. Чтобы иметь 
+		  возможность выбора из ниспадающего меню этот пул должен быть предварительно создан.</p></td>
+        </tr></tbody></table>
+		<p>Следующий экранный снимок показывает значения, которые мы должны ввести в закладке 
+		<span class="term"><strong class="userinput"><code>General</code></strong></span> для виртуальной машины в нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0311.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>OS</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для меню с закладками <span class="term"><strong class="userinput"><code>OS</code></strong></span>:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="70%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>OS</code></strong></span></p></td>
+          <td><p>Выберите тип операционной системы для данной виртуальной машины.</p></td>
+        </tr></tbody></table>
+	  <p>Тип операционной системы оптимизирует виртуальную машину на основе выбираемого типа операционной системы.</p>
+	  <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+         <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+         <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+         <p>Не запрещается устанавливать Windows на выбранную виртуальную машину при типе операционной системы Linux и наоборот.
+		 Однако, в этих случаях виртуальная машина может работать не оптимально. При выбранном надлежащим образом типе операционной
+		 системы гипервизор может определить установленный тип операционной системы и оптимизировать производительность
+		 данной виртуальной машины.</p></td></tr></table>
+      </div>
+	  <p>Следующий экранный снимок показывает введенные нами значения для виртуальной машины в нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0312.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>CD/DVD</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для меню с закладками <span class="term"><strong class="userinput"><code>CD/DVD</code></strong></span>:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>CD/DVD</code></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Use CD/DVD disc image file (iso)</code></strong></span></p></td>
+          <td><p>Это выбирает уже выгруженный в хранилище образ ISO.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Use physical CD/DVD Drive</code></strong></span></p></td>
+          <td><p>Это выбирает физический диск хоста Proxmox вместо образа ISO в хранилище.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Do not use any media</code></strong></span></p></td>
+          <td><p>Выбор данного пункта не загружает в настоящий момент никакой образ ISO или физический носитель.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает выбор CentOS ISO для виртуальной машины в нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0313.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Hard Disk</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для меню с закладками <span class="term"><strong class="userinput"><code>Hard Disk</code></strong></span>:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Hard Disk</code></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Bus/Device</code></strong></span></p></td>
+          <td><p>Здесь выбирается тип устройства виртуального диска. Допустимыми параметрами являются 
+		  <span class="term"><strong class="userinput"><code>IDE</code></strong></span>,
+		  <span class="term"><strong class="userinput"><code>SATA</code></strong></span>,
+		  <span class="term"><strong class="userinput"><code>VIRTIO</code></strong></span> и 
+		  <span class="term"><strong class="userinput"><code>SCSI</code></strong></span>. Для лучшей производительности выберите 
+		  <span class="term"><strong class="userinput"><code>VIRTIO</code></strong></span>. Виртуальная машина Windows нуждается в 
+		  дополнительных драйверах VirtIO для доступности виртуальных дисков. VirtIO драйверы для виртуальных машин KVM на основе 
+		  Windows могут быть загружены по адресу: <a class="link" 
+		  href="http://www.linux-kvm.org/page/WindowsGuestDrivers/Download_Drivers" 
+		  target="_top">http://www.linux-kvm.org/page/WindowsGuestDrivers/Download_Drivers</a>.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Storage</code></strong></span></p></td>
+          <td><p>Выбор хранилища для размещения данного виртуального диска.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Disk size (GB)</code></strong></span></p></td>
+          <td><p>Вводится значение размера образа виртуального диска в Гигабайтах.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Format</code></strong></span></p></td>
+          <td><p>Выбирается формат образа виртуального диска. Доступные значения: <span class="term"><strong class="userinput"><code>QEMU</code></strong></span>,
+		  <span class="term"><strong class="userinput"><code>RAW</code></strong></span> и <span class="term"><strong class="userinput"><code>VMDK</code></strong></span>. 
+		  Для лучшей производительности выбирайте <span class="term"><strong class="userinput"><code>RAW</code></strong></span>. Отметим, 
+		  что формат образа RAW является полностью выделяемым (thick-provisioned), т.е. выделяется сразу весь объем образа. QEMU и VMDK 
+		  поддерживают динамичное выделение пространства (thin-provisioned), т.е. объем растет по мере сохранения данных на виртуальный диск.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Cache</code></strong></span></p></td>
+          <td><p>Выбор метода кэширования виртуальной машины. По умолчанию выбирается работа без кэширования. Доступные варианты:
+		  <span class="term"><strong class="userinput"><code>Default(No cache)</code></strong></span>,
+		  <span class="term"><strong class="userinput"><code>Direct sync</code></strong></span>,
+		  <span class="term"><strong class="userinput"><code>Writethrough</code></strong></span>,
+		  <span class="term"><strong class="userinput"><code>Writeback</code></strong></span> и
+		  <span class="term"><strong class="userinput"><code>Writeback (unsafe)</code></strong></span>.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>No backup</code></strong></span></p></td>
+          <td><p>Данный параметр исключает виртуальную машину из всех расписаний резервного копирования.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Discard</code></strong></span></p></td>
+          <td><p>Этот параметр делает доступным TRIM, что очищает неиспользуемое пространство образа виртуального диска.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает введенные нами значения для виртуальной машины в нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0314.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>CPU</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для этого меню:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>CPU</code></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Sockets</code></strong></span></p></td>
+          <td><p>Здесь выбирается число сокетов ЦПУ для данной виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Cores</code></strong></span></p></td>
+          <td><p>Здесь вводится число ядер для данной виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Enable numa</code></strong></span></p></td>
+          <td><p>Делает доступной для виртуальной машины архитектуру неоднородного доступа к памяти
+		  (<span class="term"><strong class="userinput"><code>NUMA, non-uniform memory access</code></strong></span>).
+		  Разрешение данного параметра возможно если хост Proxmox поддерживает архитектуру NUMA. Посетите 
+		  <a class="link" href="http://en.wikipedia.org/wiki/Non-uniform_memory_access" 
+		  target="_top">http://en.wikipedia.org/wiki/Non-uniform_memory_access</a> для получения подробностей по NUMA.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Type</code></strong></span></p></td>
+          <td><p>Выбирается необходимый тип процессора. По умолчанию для максимальной совместимости выбирается
+		  <span class="term"><strong class="userinput"><code>KVM64</code></strong></span>. Для максимальной производительности 
+		  выберите <span class="term"><strong class="userinput"><code>HOST</code></strong></span>. Если виртуальная машина предполагает
+		  миграции на различные узлы, убедитесь что узлы имеют одинаковые процессоры перед выбором 
+		  <span class="term"><strong class="userinput"><code>HOST</code></strong></span>. Перенос виртуальной машины с одного хоста 
+		  на другой с отличным типом процессора может оказаться сложной задачей.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает введенные нами значения для виртуальной машины в нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0315.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Memory</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для этого меню:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Memory</code></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Use fixed size memory</code></strong></span></p></td>
+          <td><p>Выберите этот параметр и введите фиксированный размер выделяемой памяти.
+		  При данном параметре виртуальной машине выделяется вся память.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Automatically allocate memory within this range</code></strong></span></p></td>
+          <td><p>Выберите данный параметр для динамичного изменения диапазона выделения памяти. В зависимости от загрузки память 
+		  будет выделяться на лету. Следует избегать применение данного параметра для виртуальных машин Windows. Он увеличит 
+		  нагрузку на центральный процессор внутри виртуальной машины Windows.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает введенные нами значения для виртуальной машины в нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0316.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Network</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для этого меню:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Network</code></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Bridged mode</code></strong></span></p></td>
+          <td><p>Выберите этот параметр для установки сетевого интерфейса в режиме моста. Это предпочтительный параметр для сетевой 
+		  среды виртуальной машины. Режим моста делает возможным создание множества мостов с виртуальными сетями для создания 
+		  изолированных сетей в одной и той же платформе, поскольку виртуальные машины не имеют прямого доступа к реальной 
+		  локальной сетевой среде.</p>
+		  <p>Кликните на параметр <span class="term"><strong class="userinput"><code>Firewall</code></strong></span> для разрешения 
+		  для виртуальной машины встроенных межсетевых экранов.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>NAT mode</code></strong></span></p></td>
+          <td><p>Выберите данный параметр для предоставления виртуальной машине прямого доступа к сетевой среде. Виртуальная машина 
+		  работает как если бы она была подключена к локальной сети напрямую аналогично другим сетевым устройствам.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>No network device</code></strong></span></p></td>
+          <td><p>Выбор данного параметра пропускает настройку сетевой среды в данный момент времени.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Model</code></strong></span></p></td>
+          <td><p>Выберите тип драйвера сетевого устройства. По умолчанию выбирается <span class="term"><strong class="userinput"><code>Intel 
+		  E1000</code></strong></span>. Для максимальной сетевой производительности виртуальной машины выберите 
+		  <span class="term"><strong class="userinput"><code>VirtIO</code></strong></span>. Виртуальная машина Windows потребует 
+		  дополнительный драйвер <span class="term"><strong class="userinput"><code>VirtIO</code></strong></span> для 
+		  доступности сетевого интерфейса.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>MAC address</code></strong></span></p></td>
+          <td><p>По умолчанию Proxmox автоматически создает уникальный MAC адрес для сетевого интерфейса. Если есть такая необходимость, 
+		  вы можете ввести пользовательский MAC адрес вручную.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Rate limit (MB/s)</code></strong></span></p></td>
+          <td><p>Введите численные значения для ограничения пропускной способности сетевой среды. Значение задается в Мб/с. 
+		  Оставьте поле пустым для работы без ограничений.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Multiqueues</code></strong></span></p></td>
+          <td><p>Множественность очередей делает возможной параллельную обработку более чем одного пакета, тем самым повышая производительность 
+		  сети. введите численное значение для установки числа параллельных очередей. Отметим, что значения между 4 и 8 для системы с множеством 
+		  очередей имеет тенденцию сделать сетевую связность нестабильной.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Disconnect</code></strong></span></p></td>
+          <td><p>Кликните на данный параметр для создания сетевого интерфейса, однако не делая его доступным внутри виртуальной машины
+		  в данный момент.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает введенные нами значения для виртуальной машины в нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0317.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Confirm</code></strong></span>. Это меню отобразит все введенные или 
+	  выбранные значения для данной виртуальной машины. Убедитесь что вся введенная информация верна. Затем кликните на 
+	  <span class="term"><strong class="userinput"><code>Finish</code></strong></span> для создания виртуальной машины. 
+	  Если необходимы какие-то изменения, просто кликните на закладку 
+	  <span class="term"><strong class="userinput"><code>Back</code></strong></span>.
+	  Следующий рисунок показывает виртуальную машину с идентификатором <span class="term"><code>100</code></span> в нашем демонстрационном 
+	  кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0318.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Вы можете делать дальнейшие изменения в виртуальной машине даже после ее создания. Выберите виртуальную машину, затем кликните
+	  на закладку меню <span class="term"><strong class="userinput"><code>Hardware</code></strong></span> для выполнения необходимых 
+	  изменений. Однако эти изменения могут не вступить в действие сразу и может потребоваться выключение с последующим включением 
+	  виртуальной машины для инициализации данных аппаратных изменений. Просто выберите технические средства и кликните на
+	  <span class="term"><strong class="userinput"><code>Edit</code></strong></span> для выполнения изменений.</p>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Для получения максимальной производительности возможной для виртуальной машины важно понимать соответствующий Кэш. Proxmox вики 
+   располагает хорошим описанием различных кэшей, доступными по адресу 
+   <a class="link" href="https://pve.proxmox.com/wiki/Performance_Tweaks#Disk_Cache" 
+   target="_top">https://pve.proxmox.com/wiki/Performance_Tweaks#Disk_Cache</a>.</p>
+	 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Хотя по умолчанию Proxmox не использует кэширование для общей максимальной производительности, сквозное (writethrough)
+		кэширование является наиболее безопасным при применении для файла образа диска. В случае внезапного прерывания работы 
+		виртуальной машины или отказа хоста Proxmox потери данных не будет. Однако такое кэширование также является наиболее
+		медленным, поскольку все записи уведомляются только по их завершению или по принятию в хранилище. Мы можем 
+		использовать различные виртуальные диски с различным кэшированием на одной и той же виртуальной машине, тем самым 
+		увеличивая производительность. Например, виртуальный диск с основной операционной системой может иметь сквозное 
+		кэширование. Мы можем создать второй виртуальный диск с кэшированием обратной записи (writeback) для хранения 
+		временных файлов, файлов страниц окон и тому подобного, что не будет иметь никаких последствий при внезапном выключении 
+		виртуальной машины.</p></td></tr></table>
+      </div>
+   <p>В <a class="link" href="Ch10.html" target="_top">Главе 10. Расширенная настройка виртуальных машин</a> мы ознакомимся с 
+   некоторыми расширенными свойствами, которые мы можем изменять для виртуальных машин. Для просмотра 
+   меню виртуальных машин как для KVM, так и для машин на основе контейнеров оглянитесь назад на <a class="link" href="Ch02.html" 
+   target="_top">Главу 2. Знакомство с графическим интерфейсом Proxmox</a>.</p>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Creating_OpenVZ_container"> </a>Создание контейнера OpenVZ</h3>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся рассмотреть процесс создания контейнера OpenVZ в кластере Proxmox. {<span class="emphasis"><em>Прим. 
+   пер.: начиная с Proxmox VE 4.x применяются контейнеры LXC, см. <a class="link" href="Linux_Container.html#Create" 
+   target="_top">Создание контейнера</a> Linux (LXC) и <a class="link" href="Convert_OpenVZ_to_LXC.html" 
+   target="_top">Преобразование OpenVZ в LXC</a> для ознакомления с подробностями изменений.</em></span>}</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: с более современной (31 марта 2016) информацией о контейнерах в версии Proxmox VE 4.1 вы 
+   можете ознакомиться в нашем переводе <a class="link" href="http://onreader.mdl.ru/LearningProxmoxVE/content/Ch03.html" 
+   target="_top">Изучение Proxmox VE</a></em></span>.}</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Загрузите или выгрузите образы необходимых ISO или шаблонов OpenVZ как показано в предыдущем разделе 
+   {<span class="emphasis"><em>Прим. пер.: для Proxmox VE 4.x, см. <a class="link" href="Linux_Container.html#Get_template" 
+   target="_top">Получение шаблона контейнера</a> Linux (LXC)</em></span>}. Зарегистрируйтесь в графическом интерфейсе Proxmox с 
+   правами root или с любыми полномочиями, позволяющими создание виртуальных машин. </p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Create CT</code></strong></span> чтобы открыть блок диалога
+	  создания контейнера. Данный диалог тоже организован в виде меню с закладками для настройки создаваемых контейнеров.</p>
+      <p>Следующая таблица показывает типы информации, подлежащей заполнению для меню с закладками 
+	  <span class="term"><strong class="userinput"><code>General</code></strong></span>:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>General</code></strong></span></p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Node</code></strong></span></p></td>
+          <td><p>Это узел назначения для данного контейнера.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>VM ID</code></strong></span></p></td>
+          <td><p>Идентификатор контейнера в численном выражении. Одно и то же значение идентификатора не может использоваться 
+		  более чем для одного контейнера.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Name</code></strong></span></p></td>
+          <td><p>Алфавитно- цифровая строка названия виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Resource pool</code></strong></span></p></td>
+          <td><p>Выберите имя пула данного контейнера, к которому он будет относиться. Данное значение не обязательное. Чтобы иметь 
+		  возможность выбора из ниспадающего меню этот пул должен быть предварительно создан.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Storage</code></strong></span></p></td>
+          <td><p>Выберите хранилище в котором будет храниться контейнер.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Password</code></strong></span></p></td>
+          <td><p>Введите пароль для данного контейнера.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Confirm password</code></strong></span></p></td>
+          <td><p>Повторите ввод пароля для данного контейнера.</p></td>
+        </tr></tbody></table>
+		<p>Следующий экранный снимок показывает значения, которые мы должны ввести в закладке 
+		<span class="term"><strong class="userinput"><code>General</code></strong></span> для виртуальной машины в 
+		нашем демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0319.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Template</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для меню с закладками <span class="term"><strong class="userinput"><code>Template</code></strong></span>:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Template</code></strong></span></p></td>
+          <td><p>Storage</code></strong></span></p></td>
+          <td><p>Выберите хранилище в котором хранятся шаблоны OpenVZ.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Template</code></strong></span></p></td>
+          <td><p>Выберите шаблон из ниспадающего меню. Шаблоны должны быть уже выгруженными или загруженными до создания контейнера.
+		  Ознакомьтесь с рецептом <a class="link" href="#Managing_ISO_and_OpenVZ" target="_top">Управление ISO и шаблонами OpenVZ</a>
+		  описанным ранее в данной главе для инструкций по загрузке или выгрузке шаблонов.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает значения, которые мы должны ввести в закладке 
+	  <span class="term"><strong class="userinput"><code>Template</code></strong></span></p> для контейнера в нашем 
+	  демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0320.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Resources</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Resources</code></strong></span></p></td>
+          <td><p>Memory (MB)</code></strong></span></p></td>
+          <td><p>Введите значение для выделяемой памяти в мегабайтах.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Swap (MB)</code></strong></span></p></td>
+          <td><p>Введите значение для выделения пространства подкачки в мегабайтах.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Disk size (GB)</code></strong></span></p></td>
+          <td><p>Введите значение для выделения образу диска в гигабайтах.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>CPUs</code></strong></span></p></td>
+          <td><p>Введите число виртуальных процессоров для данного контейнера.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает значения, которые мы заполнили в закладке 
+	  <span class="term"><strong class="userinput"><code>Resources</code></strong></span></p> для контейнера в нашем 
+	  демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0321.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Network</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для этого меню:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Network</code></strong></span></p></td>
+          <td><p>Routed mode</code></strong></span></p></td>
+          <td><p>Выберите это параметр чтобы дать возможность прямого доступа контейнера к локальной сети. Он должен обеспечивать 
+		  правильный IP адрес внутри локальной подсети.</p>
+		  <p>Данный режим дает виртуальной машине {контейнеру} прямой доступ к сетевой среде хоста Proxmox. При данном режиме множество 
+		  подсетей в одном и том же кластере невозможно.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Bridge mode</code></strong></span></p></td>
+          <td><p>Выберите это параметр для установки сетевой среды через мосты. Для возможности опций межсетевого экрана выберите 
+		  <span class="term"><strong class="userinput"><code>Firewall</code></strong></span>.</p>
+		  <p>Режим моста делает для нас возможным создание множества изолированных сетевых сред в пределах виртуального окружения. 
+		  Каждый виртуальный мост действует как отдельный сетевой коммутатор в котором соединяются виртуальные машины.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает значения, которые мы заполнили в закладке 
+	  <span class="term"><strong class="userinput"><code>Network</code></strong></span> для контейнера в нашем 
+	  демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0322.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>DNS</code></strong></span>. Следующая таблица показывает тип информации, 
+	  подлежащей заполнению для этого меню:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="15%"/><col width="25%"/><col width="60%"/><thead><tr valign="top">
+          <th>Меню</th>
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>DNS</code></strong></span></p></td>
+          <td><p>DNS domain</code></strong></span></p></td>
+          <td><p>Введите имя домена или оставьте пустым.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>DNS server 1</code></strong></span></p></td>
+          <td><p>Введите IP адрес первого сервера DNS. Это можно сделать только при введенном имени домена.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>&nbsp;</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>DNS server 2</code></strong></span></p></td>
+          <td><p>Введите IP адрес второго сервера DNS. Это можно сделать только при введенном имени домена.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает значения, которые мы заполнили в закладке 
+	  <span class="term"><strong class="userinput"><code>DNS</code></strong></span></p> для контейнера в нашем 
+	  демонстрационном кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0323.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span> для продолжения работы в меню с
+	  закладками <span class="term"><strong class="userinput"><code>Confirm</code></strong></span>. Это меню отобразит все введенные или 
+	  выбранные значения для данного контейнера. Убедитесь что вся введенная информация верна. Затем кликните на 
+	  <span class="term"><strong class="userinput"><code>Finish</code></strong></span> для создания контейнера. 
+	  Если необходимы какие-то изменения, просто кликните на закладку 
+	  <span class="term"><strong class="userinput"><code>Back</code></strong></span>.</p>
+	  <p>Следующий рисунок показывает контейнер с идентификатором <span class="term"><code>101</code></span> в нашем демонстрационном 
+	  кластере:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0324.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Как и в случае с виртуальными машинами на основе KVM, мы также можем вносить изменения в контейнер после его создания.
+   Однако изменения вступают в действие для контейнера OpenVZ незамедлительно, без необходимости выключения- включения. Отсылаем вас 
+   к рецепту <a class="link" href="Ch02.html#OpenVZ_menus" target="_top">Доступ к меню OpenVZ</a> в 
+   <a class="link" href="Ch02.html" target="_top">Главе 2. Знакомство с графическим интерфейсом Proxmox</a> для просмотра всех 
+   доступных параметров для контейнеров OpenVZ.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Migrating_VM"> </a>Миграция виртуальных машин</h3>
+   </div></div></div>
+   <p>Миграция является одной из наиболее часто выполняемых задач в кластерной среде при которой виртуальные машины могут 
+   перемещаться на различные узлы в кластере по разным причинам. Вот некоторые из возможных сценариев, при которых может возникнуть
+   необходимость миграции:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Отказ физического узла</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Необходимость перезагрузки узла после применения обновлений или обслуживания технических средств</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Перемещение виртуальной машины с узла с низкой производительностью на высокопроизводительный узел</p>
+	 </li>
+   </ul>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Виртуальная машина может быть перемещена как с применением графического интерфейса Proxmox, так и с помощью интерфейса 
+   командной строки без выключения виртуальной машины. Вначале мы собираемся рассмотреть миграцию с применением графического 
+   интерфейса, а позже мы остановимся на шагах командного интерфейса миграции виртуальной машины.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Данный рецепт показывает миграцию виртуальной машины с применением графического интерфейса Proxmox. Давайте рассмотрим 
+   следующие шаги:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox.</p>
+	 </li><li class="listitem">
+      <p>Выберите виртуальную машину для миграции. Затем кликните на кнопку <span class="term"><strong class="userinput"><code>Migrate</code></strong></span>, 
+	  как показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0325.jpg"/> </div><br />
+      </div>
+      <p>После нажатия на кнопку <span class="term"><strong class="userinput"><code>Migrate</code></strong></span> откроется диалоговый 
+	  блок, показанный на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0326.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выберите узел назначения, на который будет осуществляться миграция виртуальной машины. Выберите кнопку- флажок
+	  <span class="term"><strong class="userinput"><code>Online</code></strong></span> если виртуальная машина включена и требует перемещения
+	  в режиме реального времени. Кликните на <span class="term"><strong class="userinput"><code>Migrate</code></strong></span> для запуска 
+	  процесса миграции. Те же самые параметры выполняют перемещение как виртуальных машин KVM, так и контейнеров OpenVZ 
+	  {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC</em></span>}.</p>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Данный рецепт показывает миграцию виртуальной машины с применением интерфейса командной строки. Существуют две разные 
+   команды доступные для KVM и основанных на OpenVZ виртуальных машин, показанных ниже:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Чтобы осуществить миграцию виртуальной машины KVM с применением интерфейса командной строки введите в SSH или оболочке следующую 
+	 команду:</p>
+	   <pre class="screen">
+#qm migrate &lt;vm_id&gt; &lt;target_node_name&gt; -online
+	   </pre>
+	 </li>
+	 <li class="listitem">     
+	 <p>{<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x:
+	 Для миграции контейнера Linux (LXC) предлагаются следующие подходы: 
+	 <a class="link" href="https://insights.ubuntu.com/2015/05/06/live-migration-in-lxd/" target="_top">Live Migration 
+	 in LXD</a>, 
+	 <a class="link" href="http://tycho.ws/blog/2014/09/container-migration.html" target="_top">Live Migration 
+	 of Linux Containers</a>
+	 </em></span>}</li>
+   </ul>
+	 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Применяйте параметр <span class="term"><code>–online</code></span> для KVM и параметр 
+		<span class="term"><code>–live</code></span> для контейнеров когда начинаете миграцию в реальном времени.</p></td></tr></table>
+      </div>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Для миграции виртуальной машины в живую или в реальном времени образ виртуального диска должен храниться в совместно используемом хранилище.
+   Миграция в реальном времени обеспечивает максимальное время работы, но, в то же время медленнее Причина в том, что при миграции в 
+   реальном времени без выключения питания процесс должен скопировать все содержимое оперативной памяти виртуальной машины на новый узел.
+   Чем больше объем выделенной виртуальной машине памяти, тем дольше будет происходить ее перенос.</p>
+   <p>Когда образ виртуального диска виртуальной машины хранится в локальном хранилище узла Proxmox миграция в реальном времени не возможна.
+   В этом случае виртуальная машина должна быть выключена перед миграцией. В процессе миграции виртуальной машины, хранящейся локально, 
+   Proxmox будет копировать весь виртуальный диск на узел получателя с применением 
+   <span class="term"><strong class="userinput"><code>rsync</code></strong></span>. Чтобы иметь возможность применять миграцию в 
+   режиме реального времени, виртуальный диск должен храниться в совместно используемом хранилище. Мы рассмотрим различные параметры 
+   хранилищ, которые могут примеряться с Proxmox в <a class="link" href="Ch06.html" target="_top">Главе 6. 
+   Подготовка хранилища к работе в Ceph</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Cloning_VM"> </a>Клонирование виртуальных машин</h3>
+   </div></div></div>
+   <p>Клонирование делает возможным массовое создание идентично настроенных виртуальных машин в кластерах Proxmox. Это сохраняет массу 
+   времени на настройку множества индивидуальных виртуальных машин. Клонирование может выполняться только для виртуальных 
+   машин на основе KVM. {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: LXC имеют возможность клонирования, например, при помощи
+   программы <a class="link" href="https://help.ubuntu.com/lts/serverguide/lxc.html#lxc-cloning" target="_top">lxc-clone</a></em></span>}.
+   Мы не можем создавать клоны из контейнера OpenVZ. В данном рецепте мы увидим как виртуальные машины клонируются в Proxmox и как 
+   создаются шаблоны для клонирования.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Весь функционал клонирования доступен из графического интерфейса Proxmox. Зарегистрируйтесь в графическом интерфейсе в качестве root 
+   или кого-то еще с полномочиями, позволяющими создание виртуальных машин.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Применяйте следующие шаги для клонирования виртуальных машин в Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте виртуальную машину с необходимыми настройками или воспользуйтесь уже существующей виртуальной машиной для ее настройки 
+	  под свои нужды. Убедитесь, что настройки виртуальной машины соответствуют вашим ожиданиям, поскольку все создаваемые из 
+	  такой виртуальной машины клоны будут иметь идентичные настройки.</p>
+	 </li><li class="listitem">
+      <p>Кликните правой кнопкой на выбранную виртуальную машину для открытия контекстного меню.</p>
+	 </li><li class="listitem">
+      <p>В этом меню выберите <span class="term"><strong class="userinput"><code>Clone</code></strong></span> для открытия диалогового 
+	  блока как показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0327.jpg"/> </div><br />
+      </div>
+	  <p>Следующая таблица содержит типы информации, подлежащие заполнению перед нажатием на кнопку 
+	  <span class="term"><strong class="userinput"><code>Clone</code></strong></span> для запуска клонирования:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="70%"/><thead><tr valign="top">
+          <th>Тип значения</th>
+          <th>Описание</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Target node</code></strong></span></p></td>
+          <td><p>Выбор узла получателя клонируемой виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>VM ID</code></strong></span></p></td>
+          <td><p>Здесь вводится идентификатор для виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Name</code></strong></span></p></td>
+          <td><p>Это алфавитноцифровая строка для имени виртуальной машины.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Mode</code></strong></span></p></td>
+          <td><p>Здесь выбирается метод клонирования. Доступными параметрами являются 
+		  <span class="term"><strong class="userinput"><code>Full Clone</code></strong></span> и 
+		  <span class="term"><strong class="userinput"><code>Linked Clone</code></strong></span>. Полное клонирование 
+		  сздает полностью независимую копию оригинальной виртуальной машины, в то время как связанный клон создает виртуальную 
+		  машину, которой для функционирования требуется начальная виртуальная машина. Поскольку связанная виртуальная машина зависит 
+		  от первоначальной виртуальной машины, ей требуется меньше пространства в хранилище чем полностью клонируемым виртуальным 
+		  машинам.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Snapshot</code></strong></span></p></td>
+          <td><p>Здесь выбирается снимок из которого будет создаваться клон. Если существует несколько снимков, доступных для 
+		  данной виртуальной машины, из них можно выбирать на основе ниспадающего меню.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Resource Pool</code></strong></span></p></td>
+          <td><p>Здесь выбирается пул, к которому будет относиться наша виртуальная машина.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Target Storage</code></strong></span></p></td>
+          <td><p>Здесь выбирается хранилище для клонируемых виртуальных дисков.</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Format</code></strong></span></p></td>
+          <td><p>Это выбирает формат образа виртуального диска.</p></td>
+        </tr></tbody></table>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Clone</code></strong></span> для запуска процесса 
+	  клонирования.</p>
+	 </li>
+	 </ol>
+	 <p>Мы также можем создать шаблон виртуальной машины только для целей клонирования. Виртуальная машина, которая преобразуется 
+	 в шаблон не может быть включена или возвращена обратно в состояние функционирующей.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Вам рекомендуется использовать одни и те же дистрибутив, редакцию и версию ядра на всех узлах кластера Ceph.</p></td></tr></table>
+     </div>
+	 <p></p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Отметим, что термин &quot;шаблон для клонирования&quot; не то же самое что &quot;шаблон для контейнера OpenVZ&quot;.
+	   Здесь &quot;шаблон&quot; только ссылается на главную виртуальную машину из которой создаются клонируемые виртуальные машины.
+	   Преобразование виртуальной машины означает, что первоначальные настройки виртуальной машины никогда не изменятся, поскольку она 
+	   может быть включена.</p></td></tr></table>
+     </div>
+	 <p>Следующие шаги применяются для преобразования виртуальной машины в шаблон для клонирования:</p>
+    <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните правой кнопкой на виртуальную машину для открытия контекстного меню.</p>
+	 </li><li class="listitem">
+      <p>Выберите <span class="term"><strong class="userinput"><code>Convert to template</code></strong></span>. Когда получите запрос
+	  на подтверждение создания шаблона кликните на <span class="term"><strong class="userinput"><code>Yes</code></strong></span>. В 
+	  нашем демонстрационном кластере мы преобразуем виртуальную машину <span class="term"><code>102</code></span> с именем 
+	  <span class="term"><code>test-02</code></span> в шаблон как показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0328.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+    </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Отметим, что преобразованная в шаблон виртуальная машина имеет уникальную иконку для ее более простой идентификации, 
+	   как мы можем увидеть из предыдущего экранного снимка в котором виртуальная машина <span class="term"><code>102</code></span>
+	   теперь является шаблоном.</p></td></tr></table>
+     </div>
+	 <p>Шаги для создания новых клонов из шаблонов те же самые что и спланированные в данном рецепте.</p>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Имейте в виду, что виртуальные машины на основе KVM могут быть преобразованы в шаблоны для целей клонирования. Контейнер OpenVZ
+   не имеет параметра <span class="term"><strong class="userinput"><code>Convert to template</code></strong></span>. Шаблоны могут 
+   быть очень полезными при создании большого числа виртуальных машин с похожими настройками. Множество шаблонов может быть создано 
+   с различными настройками и применяться в различных пулах для их разделения по категориям. Например, компания хостинга VPS может 
+   создать шаблоны на основе различных предложений VPS и когда клиент делает покупку VPS, их VPS может просто клонировать из шаблонов.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>В Proxmox VE 3.4 не существует доступного параметра автоматического клонирования.</p></td></tr></table>
+     </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Managing_VDI"> </a>Управление образами виртуальных дисков</h3>
+   </div></div></div>
+   <p>Образ виртуального диска является сердцем виртуальной машины, местом, где хранятся все данные виртуальной машины В данном рецепте
+   мы собираемся рассмотреть то, как выполнять такие задачи, как добавление, изменение размера и перемещение файла образа виртуального
+   диска. Образом виртуального диска можно управлять посредством графического интерфейса Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Воспользуйтесь следующими шагами для добавления образа виртуального диска к виртуальной машине:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейса в качестве root или с любыми другими полномочиями, которые допускают манипуляции
+	  образом диска и хранилища.</p>
+	 </li><li class="listitem">
+      <p>Выберите виртуальную машину в меню навигации слева. Затем кликните на закладку <span class="term"><strong class="userinput"><code>Hardware</code></strong></span>.
+	  После выбора образа диска становятся доступными все связанные меню, такие как <span class="term"><strong class="userinput"><code>Add</code></strong></span>,
+	  <span class="term"><strong class="userinput"><code>Remove</code></strong></span>, <span class="term"><strong class="userinput"><code>Edit</code></strong></span>, 
+	  <span class="term"><strong class="userinput"><code>Resize disk</code></strong></span>,
+	  <span class="term"><strong class="userinput"><code>Move disk</code></strong></span> и 
+	  <span class="term"><strong class="userinput"><code>Disk Throttle</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Чтобы добавить дополнительные образы диска в виртуальную машину кликните на <span class="term"><strong class="userinput"><code>Add: 
+	  Hard Disk</code></strong></span> для открытия блока диалога, как это показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0329.jpg"/> </div><br />
+      </div>
+      <p>Подлежащая заполнению информация идентична меню с закладками <span class="term"><strong class="userinput"><code>Hard 
+	  Disk</code></strong></span> в рецепте <a class="link" href="#Creating_KVM_VM" target="_top">Создание виртуальной машины на базе KVM</a>.</p>
+	 </li><li class="listitem">
+	  <p>После ввода необходимых значений кликните <span class="term"><strong class="userinput"><code>Add</code></strong></span> для 
+	  завершения добавления виртуального диска. В нашем примере мы добавляем 2ГБ образ виртуального диска в виртуальную машину 
+	  <span class="term"><code>100</code></strong>.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Для доступности образа диска внутри виртуальной машины без выполнения циклов выключения питания должен быть настроен параметр 
+   горячего подключения. Мы обсудим дополнительные подробности подключения в горячем режиме в <a class="link" href="Ch10.html" target="_top">Главе 10. 
+   Расширенная настройка виртуальных машин</a>.</p>
+   <p>Вот шаги для удаления виртуального диска:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите образ диска виртуальной машины.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Remove</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Yes</code></strong></span> для подтверждения после приглашения.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Когда виртуальный диск удаляется из виртуальной машины в начале, он только отсоединяется, но не удаляется полностью. 
+   Он только отсоединяется от виртуальной машины и присутствует в списках как &quot;Unused Disk&quot;, как показано на следующем 
+   экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0330.jpg"/> </div><br />
+      </div>
+   <p>Чтобы удалить образ диска окончательно, выберите неиспользуемый диск, затем кликните на 
+   <strong class="userinput"><code>Remove</code></strong></span>. Если образ диска был удален по ошибке, просто повторно подключите его 
+   снова к виртуальной машине с применением следующих шагов:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите неиспользуемый диск.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Edit</code></strong></span> для открытия диалогового блока.</p>
+	 </li><li class="listitem">
+      <p>В блоке диалога измените в случае необходимости <span class="term"><strong class="userinput"><code>Bus/
+	  Device</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Add</code></strong></span> для повторного подключения образа диска.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>В Proxmox VE 3.4 существует только возможность увеличения размера образа диска, уменьшить размер нельзя.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>При уменьшении размера виртуального диска должны быть предприняты меры предосторожности. Если пространство подлежащее 
+	   уменьшению содержит какие-либо данные, они будут утрачены безвозвратно.</p></td></tr></table>
+     </div>
+   <p>Вот шаги по изменению размера диска:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите образ виртуального диска.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Resize</code></strong></span> для открытия диалогового блока.</p>
+	 </li><li class="listitem">
+      <p>Введите значение увеличения размера диска. Например, если размер существующего диска составляет 20ГБ наберите 10ГБ для изменения размера диска до 30ГБ.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Resize Disk</code></strong></span> для завершения изменения размера.</p>
+	 </li>
+	 </ol>
+   </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Отметим, что функциональная возможность изменения размера только изменяет размер за пределами виртуальной машины и может 
+	   потребоваться полный цикл выключения- включения виртуальной машины чтобы увидеть измененный размер. Дополнительные задачи, такие 
+	   как изменение размера раздела или файловой системы внутри виртуальной машины должны выполняться в соответствии с 
+	   инструкциями для применяемой в ней операционной системы.</p></td></tr></table>
+     </div>
+   <p>Образы виртуального диска могут перемещаться с одного хранилища на другое в пределах одного кластера. Данные шаги выполнят 
+   задачу для перемещения образа диска:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите образ перемещаемого диска.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Move disk</code></strong></span> в меню для открытия диалогового блока,
+	  как это показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0331.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выберите в ниспадающем меню <span class="term"><strong class="userinput"><code>Target Storage</code></strong></span>. Хранилище- 
+	  получатель это место, куда будет перемещен образ виртуального диска.</p>
+	 </li><li class="listitem">
+      <p>Выберите в ниспадающем меню <span class="term"><strong class="userinput"><code>Format</code></strong></span> образа диска, 
+	  если это необходимо. Это полезный параметр для преобразования образов диска из одного формата в другой.</p>
+	 </li><li class="listitem">
+      <p>Выберите кнопку- флажок <span class="term"><strong class="userinput"><code>Delete source</code></strong></span> для автоматического 
+	  удаления образа диска источника после его перемещения в новое хранилище.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Move disk</code></strong></span> для запуска перемещения 
+	  образа диска.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Чтобы ограничить пропускную способность доступа к диску и количество операций в секунду можно воспользоваться параметром 
+   <span class="term"><strong class="userinput"><code>Disk Throttle</code></strong></span> Данные шаги выполнят сужение для образа диска:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Выберите образ диска для дросселирования.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Disk Throttle</code></strong></span> в меню для открытия диалогового блока.</p>
+	 </li><li class="listitem">
+      <p>Введите предел пропускной способности в МБ/с и число операций в секунду в численном выражении. Также может быть установлен предел 
+	  на всплески в этом же блоке диалога. Значения могут быть введены для всех этих пределов или только для пределов чтение/ запись.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>OK</code></strong></span> для сохранения установленных 
+	  пределов или <span class="term"><strong class="userinput"><code>Reset</code></strong></span> для удаления всех пользовательских 
+	  значений.</p>
+	  <p>Следующий экранный снимок показывает блок диалога дросселирования диска:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0332.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Managing_OpenVZ_containers"> </a>Управление контейнерами OpenVZ</h3>
+   </div></div></div>
+   <p>В данном рецепте мы собираемся рассмотреть вопросы администрирования контейнерами OpenVZ по выполнению задач таких, как управление 
+   ресурсами и сетевой средой с применением графического интерфейса Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Следующие шаги демонстрируют изменение ресурсов, подобных процессорам, оперативной памяти и дисковому пространству:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox в качестве root или другого пользователя с правами администратора.</p>
+	 </li><li class="listitem">
+      <p>В левой панели навигации выберите контейнер. Затем кликните на закладку 
+	  <span class="term"><strong class="userinput"><code>Resource</code></strong></span>, как показано на снимке экрана ниже:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0333.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на любую строчку элемента для изменения <span class="term"><strong class="userinput"><code>Processors</code></strong></span>,
+	  <span class="term"><strong class="userinput"><code>Memory</code></strong></span>, 
+	  <span class="term"><strong class="userinput"><code>Swap</code></strong></span> или
+	  <span class="term"><strong class="userinput"><code>Disk size</code></strong></span>, а затем кликните 
+	  <span class="term"><strong class="userinput"><code>Edit</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Каждый элемент откроет блок диалога для изменения значений. После ввода нужных значений нажмите на  
+	  <span class="term"><strong class="userinput"><code>Edit</code></strong></span> для завершения ваших изменений.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Следующие этапы показывают как изменять для контейнера сетевой интерфейс:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните на закладку <span class="term"><strong class="userinput"><code>Network</code></strong></span> для выбранного 
+	  в левой панели навигации контейнера. На экране отобразятся все настроенные для контейнера виртуальные сетевые интерфейсы, как 
+	  показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0334.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выберите нужный интерфейс, затем кликните на <span class="term"><strong class="userinput"><code>Edit</code></strong></span>
+	  для выполнения изменений. Кликая по <span class="term"><strong class="userinput"><code>Add</code></strong></span> или
+	  <span class="term"><strong class="userinput"><code>Remove</code></strong></span> мы можемдобавить новый интерфейс или 
+	  удалить существующий. После нажатия на <span class="term"><strong class="userinput"><code>Edit</code></strong></span>
+	  откроется диалоговый блок, показанный на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0335.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>После выполнения необходимых изменений кликните на <span class="term"><strong class="userinput"><code>OK</code></strong></span>
+	  для принятия введенных значений.</p>
+	 </li>
+	 </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Understanding_UBC"> </a>Понимание OpenVZ счетчиков пользовательских компонентов</h3>
+   </div></div></div>
+   <p>Счетчики пользовательских компонентов (<span class="term"><strong class="userinput"><code>UBC, User Bean Counters</code></strong></span>) 
+   являются жизненно важным компонентом контейнеров OpenVZ. Эти счетчики устанавливают пределы, управляющие тем как ресурсы распределяются 
+   между контейнерами для обеспечения нормальной работы контейнера. Для большинства контейнеров эти предельные значения могут быть оставлены 
+   установленными по умолчанию. В зависимости от загруженности контейнера, в некоторых случаях могут оказаться необходимыми изменения. 
+   Графический интерфейс Proxmox может только отображать установленные значения. Любые изменения могут быть выполнены только через интерфейс 
+   командной строки. {<span class="emphasis"><em>Прим. пер.: Proxmox VE 4.x: контейнеры Linux (LXC) применяют механизм групп управления 
+   (контрольных групп, <a class="link" href="https://ru.wikipedia.org/wiki/Cgroups" target="_top">cgroups</a>, control group) для 
+   изоляции ресурсов групп процессов, позволяющий также ограничивать ресурсы, обеспечивать их учет, необходимую приоритезацию, а также 
+   осуществлять управление ими (приостановку, создание контрольных точек и перезагузку)</em></span>}.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Следующие шаги демонстрируют просмотр значений времени выполнения контейнеров в графическом интерфейсе Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox.</p>
+	 </li><li class="listitem">
+      <p>В левой панели навигации выберите контейнер,затем кликните на <span class="term"><strong class="userinput"><code>UBC</code></strong></span>
+	  в меню с закладками. Если контейнер не выполняется в настоящий момент, экран UBC не отобразит совсем никаких значений. В противном случае 
+	  он отобразит значения, как это показано на следующем экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0336.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+   </div>
+   <p>Следующие шаги показывают изменение пределов для UBC контейнеров с применением интерфейса командной строки:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь через консоль или SSH в узле Proxmox, в котором расположен контейнер OpenVZ.</p>
+	 </li><li class="listitem"><li class="listitem">
+      <p>С помощью графического интерфейса Proxmox получите имя ресурса, для которого необходимо изменить пределы ресурса.</p>
+	 </li><li class="listitem">
+      <p>Следующий формат команды изменит предел для ресурса:</p>
+	   <pre class="screen">
+#vzctl set &lt;ct_id&gt; --&lt;resource_name&gt; &lt;barrier&gt;:&lt;limit&gt; --save
+	   </pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Значение <span class="term"><code>barrier</code></span> не может быть больше чем значение
+	     <span class="term"><code>limit</code></span>.</p></td></tr></table>
+       </div>
+      <p>Например, мы хотим изменить значение <span class="term"><code>kmemsize</code></span> для контейнера 
+	  <span class="term"><code>#103</code></span> до 288МБ в качестве предела и 260МБ для барьера. Следующая команда изменит
+	  пределы <span class="term"><code>kmemsize</code></span>:</p>
+	   <pre class="screen">
+#vzctl set 103 --kmemsize 260m:288m –save
+	   </pre>
+	  <p>Если команда завершится успешно, после сохранения настройки она отобразит сообщение, как это показано на следующем 
+	  экранном снимке:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0337.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+	 <p>Проверьте изменения новых настроек при помощи команды:</p>
+	   <pre class="screen">
+#vzcfgvalidate /etc/vz/conf/103.conf
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>UBC отображает таблицу различных ресурсов с текущими, максимальными и предельными значениями, а также число ошибок. Колонка, на 
+   которую стоит обратить внимание, это <span class="term"><strong class="userinput"><code>Failcnt</code></strong></span>, она 
+   показывает число отказов или число раз, когда определенный ресурс достигал предела. Эти значения сохраняются в:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>/proc/user_beancounters</code></span> для старых версий OpenVZ</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><code>/proc/bc/&lt;ct_id&gt;/resources</code></span> для более новых OpenVZ</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Когда изменения значений ресурсов производятся командой <span class="term"><code>vzctl</code></span>, по умолчанию 
+   команда применяет байты или страницы в качестве единицы измерения. Если мы хотим применять отличные единицы измерения, 
+   мы должны добавлять суффиксы следующим образом:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>K</code></span> или <span class="term"><code>k</code></span> для килобайт,</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><code>M</code></span> или <span class="term"><code>m</code></span> для мегабайт,</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><code>G</code></span> или <span class="term"><code>g</code></span> для гигабайт,</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><code>P</code></span> или <span class="term"><code>p</code></span> для страниц.</p>
+	 </li>
+   </ul>
+   </div>
+   <p>В примере нашего рецепта для увеличения значения <span class="term"><code>kmemsize</code></span> мы использовали 
+   <span class="term"><code>m</code></span> для увеличения значения в мегабайтах.</p>
+   <p>Отметим, что при изменении значения любого ресурса, значение <span class="term"><code>barrier</code></span> не может быть 
+   больше чем значение <span class="term"><code>limit</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Хотя существуют различные типы ресурсов в контейнере OpenVZ, полное описание каждого из них выходит за пределы данной книги. Для 
+	 получения дополнительной информации по счетчикам пользовательских компонентов, обратитесь к 
+	 <a class="link" href="https://openvz.org/UBC" target="_top">https://openvz.org/UBC</a>, 
+	 <a class="link" href="https://openvz.org/UBC_parameter_units" target="_top">https://openvz.org/UBC_parameter_units</a> и
+	 <a class="link" href="https://openvz.org/Resource_shortage" target="_top">https://openvz.org/Resource_shortage</a>.</p>
+	 </li>
+   </ul>
+   </div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

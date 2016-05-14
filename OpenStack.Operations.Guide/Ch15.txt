@@ -1,0 +1,489 @@
+Customize
+
+OpenStack might not do everything you need it to do out of the box. In these cases,
+you can follow one of two major paths. First, you can learn  How To Contribute
+(https://wiki.openstack.org/wiki/How_To_Contribute), follow the  Code Review
+Workflow(https://wiki.openstack.org/wiki/GerritWorkflow), make your changes and
+contribute them back to the upstream OpenStack project. This path is recommended
+if the feature you need requires deep integration with an existing project. The com?
+munity is always open to contributions and welcomes new functionality that follows
+the feature development guidelines.
+Alternately, if the feature you need does not require deep integration, there are other
+ways to customize OpenStack. If the project where your feature would need to reside
+uses the Python Paste framework, you can create middleware for it and plug it in
+through configuration. There may also be specific ways of customizing an project
+such as creating a new scheduler for OpenStack Compute or a customized Dash?
+board. This chapter focuses on the second method of customizing OpenStack.
+To customize OpenStack this way you’ll need a development environment. The best
+way to get an environment up and running quickly is to run DevStack within your
+cloud.
+DevStack
+You can find all of the documentation at the DevStack(http://devstack.org/) website.
+Depending on which project you would like to customize, either Object Storage
+(swift) or another project, you must configure DevStack differently. For the middle?
+ware example below, you must install with the Object Store enabled.
+To run DevStack for the stable Folsom branch on an instance:
+157
+1. Boot an instance from the Dashboard or the nova command-line interface (CLI)
+with the following parameters.
+• Name: devstack
+• Image: Ubuntu 12.04 LTS
+• Memory Size: 4 GB RAM (you could probably get away with 2 GB)
+• Disk Size: minimum 5 GB
+If you are using the novaclient, specify --flavor 6on the nova boot  command
+to get adequate memory and disk sizes.
+2. If your images have only a root user, you must create a &quot;stack&quot; user. Otherwise
+you run into permission issues with screen if you let  stack.sh  create the &quot;stack&quot;
+user for you. If your images already have a user other than root, you can skip this
+step.
+a. ssh root@&lt;IP Address&gt;
+b. adduser --gecos &quot;&quot; stack
+c. Enter a new password at the prompt.
+d. adduser stack sudo
+e. grep -q &quot;^#includedir.*/etc/sudoers.d&quot; /etc/sudoers || echo &quot;#in
+cludedir /etc/sudoers.d&quot; &gt;&gt; /etc/sudoers
+f. ( umask 226 &amp;&amp;echo &quot;stack ALL=(ALL) NOPASSWD:ALL&quot; &gt; /etc/sudo
+ers.d/50_stack_sh )
+g. exit
+3. Now login as the stack user and set up DevStack.
+a. ssh stack@&lt;IP address&gt;
+b. At the prompt, enter the password that you created for the stack user. 
+c. sudo apt-get -y update
+d. sudo apt-get -y install git
+e. git clone https://github.com/openstack-dev/devstack.git -b sta
+ble/folsom devstack/
+f. cd devstack
+g. vim localrc
+a. For Swift only, used in the Middleware Example, see the example [1] Swift
+only localrcbelow
+158  |  Chapter 15: Customize
+b. For all other projects, used in the Nova Scheduler Example, see the exam?
+ple [2] All other projects localrcbelow
+h. ./stack.sh
+i. screen -r stack
+• The  stack.shscript takes a while to run. Perhaps take this
+opportunity to  join the OpenStack foundation  (http://
+www.openstack.org/join/).
+• When you run stack.sh, you might see an error message that
+reads &quot;ERROR: at least one RPC back-end must be enabled&quot;.
+Don’t worry about it; swift and keystone do not need an RPC
+(AMQP) back-end. You can also ignore any ImportErrors.
+• Screen is a useful program for viewing many related services
+at once. For more information, see  GNU screen quick refer?
+ence. (http://aperiodic.net/screen/quick_reference)
+Now that you have an OpenStack development environment, you’re free to hack
+around without worrying about damaging your production deployment. Proceed to
+either the  Middleware Examplefor a Swift-only environment, or the  Nova Schedu?
+ler Examplefor all other projects.
+[1] Swift only localrc
+ADMIN_PASSWORD=devstack
+MYSQL_PASSWORD=devstack
+RABBIT_PASSWORD=devstack
+SERVICE_PASSWORD=devstack
+SERVICE_TOKEN=devstack 
+SWIFT_HASH=66a3d6b56c1f479c8b4e70ab5c2000f5
+SWIFT_REPLICAS=1 
+# Uncomment the BRANCHes below to use stable versions
+# unified auth system (manages accounts/tokens)
+KEYSTONE_BRANCH=stable/folsom
+# object storage
+SWIFT_BRANCH=stable/folsom
+disable_all_services
+enable_service key swift mysql
+DevStack  |  159
+[2] All other projects localrc
+ADMIN_PASSWORD=devstack
+MYSQL_PASSWORD=devstack
+RABBIT_PASSWORD=devstack
+SERVICE_PASSWORD=devstack
+SERVICE_TOKEN=devstack 
+FLAT_INTERFACE=br100
+PUBLIC_INTERFACE=eth0
+VOLUME_BACKING_FILE_SIZE=20480M 
+# For stable versions, look for branches named stable/[milestone]. 
+# compute service
+NOVA_BRANCH=stable/folsom
+# volume service
+CINDER_BRANCH=stable/folsom
+# image catalog service
+GLANCE_BRANCH=stable/folsom
+# unified auth system (manages accounts/tokens)
+KEYSTONE_BRANCH=stable/folsom
+# django powered web control panel for openstack
+HORIZON_BRANCH=stable/folsom
+Middleware Example
+Most OpenStack projects are based on the Python  Paste(http://pythonpaste.org/)
+framework. The best introduction to its architecture is  A Do-It-Yourself Framework
+(http://pythonpaste.org/do-it-yourself-framework.html). Due to the use of this
+framework, you are able to add features to a project by placing some custom code in a
+project’s pipeline without having to change any of the core code.
+To demonstrate customizing OpenStack like this, we’ll create a piece of middleware
+for swift that allows access to a container from only a set of IP addresses, as deter?
+mined by the container’s metadata items. Such an example could be useful in many
+contexts. For example, you might have public access to one of your containers, but
+what you really want to restrict it to is a set of IPs based on a whitelist.
+This example is for illustrative purposes only. It should not be used
+as a container IP whitelist solution without further development and
+extensive security testing.
+160  |  Chapter 15: Customize
+When you join the screen session that stack.shstarts with screen -r stack, you’re
+greeted with three screens if you used the localrc file with just Swift installed.
+0$ shell* 1$ key 2$ swift
+The asterisk * indicates which screen you are on.
+• 0$ shell . A shell where you can get some work done.
+• 1$ key . The keystone service.
+• 2$ swift . The swift proxy service.
+To create the middleware and plug it in through Paste configuration:
+1. All of the code for OpenStack lives in  /opt/stack. Go to the swift directory in
+the shell screen and edit your middleware module.
+a. cd /opt/stack/swift
+b. vim swift/common/middleware/ip_whitelist.py
+2. Copy in the following code. When you’re done, save and close the file.
+# Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import socket
+from swift.common.utils import get_logger
+from swift.proxy.controllers.base import get_container_info
+from swift.common.swob import Request, Response
+class IPWhitelistMiddleware(object):
+&quot;&quot;&quot;
+IP Whitelist Middleware
+Middleware that allows access to a container from only a set of IP
+addresses as determined by the container's metadata items that start
+with the prefix 'allow'. E.G. allow-dev=192.168.0.20
+&quot;&quot;&quot;
+def __init__(self, app, conf, logger=None):
+self.app = app
+Middleware Example  |  161
+if logger:
+self.logger = logger
+else:
+self.logger = get_logger(conf, log_route='ip_whitelist')
+self.deny_message = conf.get('deny_message', &quot;IP Denied&quot;)
+self.local_ip = socket.gethostbyname(socket.gethostname())
+def __call__(self, env, start_response):
+&quot;&quot;&quot;
+WSGI entry point.
+Wraps env in swob.Request object and passes it down.
+:param env: WSGI environment dictionary
+:param start_response: WSGI callable
+&quot;&quot;&quot;
+req = Request(env)
+try:
+version, account, container, obj = req.split_path(1, 4, True)
+except ValueError:
+return self.app(env, start_response)
+container_info = get_container_info(
+req.environ, self.app, swift_source='IPWhitelistMiddleware')
+remote_ip = env['REMOTE_ADDR']
+self.logger.debug(_(&quot;Remote IP: %(remote_ip)s&quot;),
+{'remote_ip': remote_ip})
+meta = container_info['meta']
+allow = {k:v for k,v in meta.iteritems() if k.startswith('allow')}
+allow_ips = set(allow.values())
+allow_ips.add(self.local_ip)
+self.logger.debug(_(&quot;Allow IPs: %(allow_ips)s&quot;),
+{'allow_ips': allow_ips})
+if remote_ip in allow_ips:
+return self.app(env, start_response)
+else:
+self.logger.debug(
+_(&quot;IP %(remote_ip)sdenied access to Account=%(account)s&quot;
+&quot;Container=%(container)s. Not in  %(allow_ips)s&quot;),  lo
+cals())
+return Response(
+status=403,
+body=self.deny_message,
+request=req)(env, start_response)
+def filter_factory(global_conf, **local_conf):
+162  |  Chapter 15: Customize
+&quot;&quot;&quot;
+paste.deploy app factory for creating WSGI proxy apps.
+&quot;&quot;&quot;
+conf = global_conf.copy()
+conf.update(local_conf)
+def ip_whitelist(app):
+return IPWhitelistMiddleware(app, conf)
+return ip_whitelist
+There is a lot of useful information in  envand  conf  that you can use to decide
+what to do with the request. To find out more about what properties are avail?
+able, you can insert the following log statement into the __init__method
+self.logger.debug(_(&quot;conf = %(conf)s&quot;), locals())
+and the following log statement into the __call__method
+self.logger.debug(_(&quot;env = %(env)s&quot;), locals())
+3. To plug this middleware into the Swift pipeline you’ll need to edit one configura?
+tion file.
+vim /etc/swift/proxy-server.conf
+4. Find the  [filter:ratelimit]section and copy in the following configuration
+section.
+[filter:ip_whitelist]
+paste.filter_factory =swift.common.middleware.ip_whitelist:filter_factory
+# You can override the default log routing for this filter here:
+# set log_name = ratelimit
+# set log_facility = LOG_LOCAL0
+# set log_level = INFO
+# set log_headers = False
+# set log_address = /dev/log
+deny_message =You shall not pass!
+5. Find the  [pipeline:main]section and add  ip_whitelist  to the list like so.
+When you’re done, save and close the file.
+[pipeline:main]
+pipeline  =catch_errors healthcheck cache ratelimit ip_whitelist authtoken 
+keystoneauth proxy-logging proxy-server
+6. Restart the Swift Proxy service to make Swift use your middleware. Start by
+switching to the swift screen.
+a. Press Ctrl-A followed by pressing 2, where 2 is the label of the screen. You can
+also press Ctrl-A followed by pressing n to go to the next screen.
+b. Press Ctrl-C to kill the service.
+c. Press Up Arrow to bring up the last command.
+Middleware Example  |  163
+d. Press Enter to run it.
+7. Test your middleware with the Swift CLI. Start by switching to the shell screen
+and finish by switching back to the swift screen to check the log output.
+a. Press Ctrl-A followed by pressing 0
+b. cd ~/devstack
+c. source openrc
+d. swift post middleware-test
+e. Press Ctrl-A followed by pressing 2
+8. Among the log statements you’ll see the lines.
+proxy-server ... IPWhitelistMiddleware
+proxy-server Remote IP: 203.0.113.68 (txn: ...)
+proxy-server Allow IPs: set(['203.0.113.68']) (txn: ...)
+The first three statements basically have to do with the fact that middleware
+doesn’t need to re-authenticate when it interacts with other Swift services. The
+last 2 statements are produced by our middleware and show that the request was
+sent from our DevStack instance and was allowed.
+9. Test the middleware from outside of DevStack on a remote machine that has ac?
+cess to your DevStack instance.
+a. swift --os-auth-url=http://203.0.113.68:5000/v2.0/ --os-regionname=RegionOne --os-username=demo:demo --os-password=devstack
+list middleware-test
+b. Container GET failed: http://203.0.113.68:8080/v1/AUTH_.../middlewaretest?format=json 403 Forbidden You shall not pass!
+10. Check the Swift log statements again and among the log statements you’ll see the
+lines.
+proxy-server Invalid user token - deferring reject downstream
+proxy-server Authorizing from an overriding middleware (i.e: tempurl) 
+(txn: ...)
+proxy-server ... IPWhitelistMiddleware
+proxy-server Remote IP: 198.51.100.12 (txn: ...)
+proxy-server Allow IPs: set(['203.0.113.68']) (txn: ...)
+proxy-server IP 198.51.100.12 denied access to Account=AUTH_... Container=None. Not in set(['203.0.113.68']) (txn: ...)
+Here we can see that the request was denied because the remote IP address wasn’t
+in the set of allowed IPs.
+11. Back on your DevStack instance add some metadata to your container to allow
+the request from the remote machine.
+a. Press Ctrl-A followed by pressing 0
+164  |  Chapter 15: Customize
+b. swift post --meta allow-dev:198.51.100.12 middleware-test
+12. Now try the command from ???again and it succeeds.
+Functional testing like this is not a replacement for proper unit and integration test?
+ing but it serves to get you started.
+A similar pattern can be followed in all other projects that use the Python Paste
+framework. Simply create a middleware module and plug it in through configuration.
+The middleware runs in sequence as part of that project’s pipeline and can call out to
+other services as necessary. No project core code is touched. Look for a pipelineval?
+ue in the project’s  confor  iniconfiguration files in  /etc/&lt;project&gt;to identify
+projects that use Paste.
+When your middleware is done, we encourage you to open source it and let the com?
+munity know on the OpenStack mailing list. Perhaps others need the same function?
+ality. They can use your code, provide feedback, and possibly contribute. If enough
+support exists for it, perhaps you can propose that it be added to the official Swift
+middleware  (https://github.com/openstack/swift/tree/master/swift/common/middle?
+ware).
+Nova Scheduler Example
+Many OpenStack projects allow for customization of specific features using a driver
+architecture. You can write a driver that conforms to a particular interface and plug it
+in through configuration. For example, you can easily plug in a new scheduler for no?
+va. The existing schedulers for nova are feature full and well documented at Schedul?
+ing  (http://docs.openstack.org/trunk/config-reference/content/section_computescheduler.html). However, depending on your user’s use cases, the existing schedulers
+might not meet your requirements. You might need to create a new scheduler.
+To create a scheduler you must inherit from the class nova.scheduler.driver.Sched
+uler. Of the five methods that you can override, you  mustoverride the two methods
+indicated with a &quot;*&quot; below.
+• update_service_capabilities
+• hosts_up
+• schedule_live_migration
+• * schedule_prep_resize
+• * schedule_run_instance
+To demonstrate customizing OpenStack, we’ll create an example of a nova scheduler
+that randomly places an instance on a subset of hosts depending on the originating IP
+Nova Scheduler Example  |  165
+address of the request and the prefix of the hostname. Such an example could be use?
+ful when you have a group of users on a subnet and you want all of their instances to
+start within some subset of your hosts.
+This example is for illustrative purposes only. It should not be used
+as a scheduler for Nova without further development and testing.
+When you join the screen session that  stack.shstarts with  screen -r stack, you
+are greeted with many screens.
+0$ shell* 1$ key 2$ g-reg 3$ g-api 4$ n-api 5$ n-cpu 6$ n-crt 7$ n-net 
+8-$ n-sch ...
+• shell . A shell where you can get some work done.
+• key . The keystone service.
+• g-* . The glance services.
+• n-* . The nova services.
+• n-sch . The nova scheduler service.
+To create the scheduler and plug it in through configuration:
+1. The code for OpenStack lives in /opt/stack  so go to the nova directory and edit
+your scheduler module.
+a. cd /opt/stack/nova
+b. vim nova/scheduler/ip_scheduler.py
+2. Copy in the following code. When you’re done, save and close the file.
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+# Copyright (c) 2013 OpenStack Foundation
+# All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an &quot;AS IS&quot; BASIS, 
+WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See 
+the
+# License for the specific language governing permissions and limitations
+# under the License.
+166  |  Chapter 15: Customize
+&quot;&quot;&quot;
+IP Scheduler implementation
+&quot;&quot;&quot;
+import random
+from nova import exception
+from nova.openstack.common import log as logging
+from nova import flags
+from nova.scheduler import driver
+FLAGS = flags.FLAGS
+LOG = logging.getLogger(__name__)
+class IPScheduler(driver.Scheduler):
+&quot;&quot;&quot;
+Implements Scheduler as a random node selector based on
+IP address and hostname prefix.
+&quot;&quot;&quot;
+def _filter_hosts(self, hosts, hostname_prefix):
+&quot;&quot;&quot;Filter a list of hosts based on hostname prefix.&quot;&quot;&quot;
+hosts = [host for host in hosts if host.startswith(hostname_prefix)]
+return hosts
+def _schedule(self, context, topic, request_spec, filter_properties):
+&quot;&quot;&quot;
+Picks a host that is up at random based on
+IP address and hostname prefix.
+&quot;&quot;&quot;
+elevated = context.elevated()
+hosts = self.hosts_up(elevated, topic)
+if not hosts:
+msg = _(&quot;Is the appropriate service running?&quot;)
+raise exception.NoValidHost(reason=msg)
+remote_ip = context.remote_address
+if remote_ip.startswith('10.1'):
+hostname_prefix = 'doc'
+elif remote_ip.startswith('10.2'):
+hostname_prefix = 'ops'
+else:
+hostname_prefix = 'dev'
+hosts = self._filter_hosts(hosts, hostname_prefix)
+host = hosts[int(random.random() * len(hosts))]
+Nova Scheduler Example  |  167
+LOG.debug(_(&quot;Request from %(remote_ip)sscheduled to %(host)s&quot;)
+% locals())
+return host
+def schedule_run_instance(self, context, request_spec,
+admin_password, injected_files,
+requested_networks, is_first_time,
+filter_properties):
+&quot;&quot;&quot;Attempts to run the instance&quot;&quot;&quot;
+instance_uuids = request_spec.get('instance_uuids')
+for num, instance_uuid in enumerate(instance_uuids):
+request_spec['instance_properties']['launch_index'] = num
+try:
+host = self._schedule(context, 'compute', request_spec,
+filter_properties)
+updated_instance = driver.instance_update_db(context,
+instance_uuid)
+self.compute_rpcapi.run_instance(context,
+instance=updated_instance,
+host=host,
+requested_net
+works=requested_networks,
+injected_files=injec
+ted_files,
+admin_password=admin_pass
+word,
+is_first_time=is_first_time,
+request_spec=request_spec,
+filter_proper
+ties=filter_properties)
+except Exception as ex:
+# NOTE(vish): we don't reraise the exception here to make 
+sure
+# that all instances in the request get set to
+# error properly
+driver.handle_schedule_error(context, ex, instance_uuid,
+request_spec)
+def schedule_prep_resize(self, context, image, request_spec,
+filter_properties, instance, instance_type,
+reservations):
+&quot;&quot;&quot;Select a target for resize.&quot;&quot;&quot;
+host = self._schedule(context, 'compute', request_spec,
+filter_properties)
+self.compute_rpcapi.prep_resize(context, image, instance,
+instance_type, host, reservations)
+There is a lot of useful information in context,  request_spec, and  filter_prop
+ertiesthat you can use to decide where to schedule the instance. To find out
+168  |  Chapter 15: Customize
+more about what properties are available you can insert the following log state?
+ments into the schedule_run_instancemethod of the scheduler above.
+LOG.debug(_(&quot;context = %(context)s&quot;) % {'context': context.__dict__})LOG.debug(_(&quot;request_spec = %(request_spec)s&quot;) % locals())LOG.debug(_(&quot;filter_properties = %(filter_properties)s&quot;) % locals())
+3. To plug this scheduler into Nova you’ll need to edit one configuration file.
+LOG$ vim /etc/nova/nova.conf
+4. Find the compute_scheduler_driverconfig and change it like so.
+LOGcompute_scheduler_driver=nova.scheduler.ip_scheduler.IPScheduler
+5. Restart the Nova scheduler service to make Nova use your scheduler. Start by
+switching to the n-schscreen.
+a. Press Ctrl-A followed by pressing 8
+b. Press Ctrl-C to kill the service
+c. Press Up Arrow to bring up the last command
+d. Press Enter to run it
+6. Test your scheduler with the Nova CLI. Start by switching to the shell screen and
+finish by switching back to the n-schscreen to check the log output.
+a. Press Ctrl-A followed by pressing 0
+b. cd ~/devstack
+c. source openrc
+d. IMAGE_ID=`nova image-list | egrep cirros | egrep -v &quot;kernel|ram
+disk&quot; | awk '{print $2}'`
+e. nova boot --flavor 1 --image $IMAGE_ID scheduler-test
+f. Press Ctrl-A followed by pressing 8
+7. Among the log statements you’ll see the line.
+LOG2013-02-27 17:39:31 DEBUG nova.scheduler.ip_scheduler [req-... demo 
+demo] Request from 50.56.172.78 scheduled to
+devstack-nova from (pid=4118) _schedule /opt/stack/nova/nova/scheduler/
+ip_scheduler.py:73
+Functional testing like this is not a replacement for proper unit and integration test?
+ing but it serves to get you started.
+A similar pattern can be followed in all other projects that use the driver architecture.
+Simply create a module and class that conform to the driver interface and plug it in
+through configuration. Your code runs when that feature is used and can call out to
+other services as necessary. No project core code is touched. Look for a &quot;driver&quot; value
+Nova Scheduler Example  |  169
+in the project’s conf configuration files in  /etc/&lt;project&gt;to identify projects that
+use a driver architecture.
+When your scheduler is done, we encourage you to open source it and let the com?
+munity know on the OpenStack mailing list. Perhaps others need the same function?
+ality. They can use your code, provide feedback, and possibly contribute. If enough
+support exists for it, perhaps you can propose that it be added to the official Nova
+schedulers(https://github.com/openstack/nova/tree/master/nova/scheduler).
+Dashboard
+The Dashboard is based on the Python  Django  (https://www.djangoproject.com/)
+web application framework. The best guide to customizing it has already been written
+and can be found at Build on Horizon(http://docs.openstack.org/developer/horizon/
+topics/tutorial.html).

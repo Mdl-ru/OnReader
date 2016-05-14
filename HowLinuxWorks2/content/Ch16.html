@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 16. Введение в компиляцию программного обеспечения из исходного кода на C - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch15.html" title="Глава 15. Инструменты разработки"/>
+<link rel="next" href="Ch17.html" title="Глава 17. Опираясь на основы"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 16. Введение в компиляцию программного обеспечения из исходного кода на C';
+PrevRef = 'Ch15.html';
+UpRef = 'index.html';
+NextRef = 'Ch17.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 16. Введение в компиляцию программного обеспечения из исходного кода на C</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch16.html">16. Введение в компиляцию программного обеспечения из исходного кода на C</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch16.html#16.1">16.1 Системы сборки программного обеспечения</a></span></dt>
+	 <dt><span class="section"><a href="Ch16.html#16.2">16.2 Распаковка исходных кодов пакетов C</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch16.html#16.2.1">16.2.1 С чего начать</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch16.html#16.3">16.3 GNU Autoconf</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch16.html#16.3.1">16.3.1 Пример Autoconf</a></span></dt>
+      <dt><span class="section"><a href="Ch16.html#16.3.2">16.3.2 Установка при помощи инструментов пакетов</a></span></dt>
+      <dt><span class="section"><a href="Ch16.html#16.3.3">16.3.3 Параметры сценария configure</a></span></dt>
+      <dt><span class="section"><a href="Ch16.html#16.3.4">16.3.4 Переменные среды</a></span></dt>
+      <dt><span class="section"><a href="Ch16.html#16.3.5">16.3.5 Цели Autoconf</a></span></dt>
+      <dt><span class="section"><a href="Ch16.html#16.3.6">16.3.6 Файлы журналов Autoconf</a></span></dt>
+      <dt><span class="section"><a href="Ch16.html#16.3.7">16.3.7 pkg-config</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch16.html#16.4">16.4 Практика установки</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch16.html#16.4.1">16.4.1 Куда устанавливать</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch16.html#16.5">16.5 Применение исправлений</a></span></dt>
+	 <dt><span class="section"><a href="Ch16.html#16.6">16.6 Трудности сборки и установки</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch16.html#16.6.1">16.6.1 Характерные ошибки</a></span></dt>
+	 </dl></dd>
+     <dt><span class="section"><a href="Ch16.html#16.7">16.7 Заглядывая в будущее</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>Большая часть не проприетарного программных пакетов Unix третьих производителей поставляется в исходных кодах, которые вы можете скомпоновать 
+  и установить. Одной из причин для этого является то, что Unix (и Linux сам по себе) имеют так много различных разновидностей и архитектур, что 
+  было бы трудно распространять исполняемые пакеты для всех возможных комбинаций платформ. Другой причиной, которая является по крайней мере 
+  важной, является то, что широкое распространение дистрибутивов исходного кода через сообщество Unix поощряет пользователей вносить свой вклад в 
+  исправление ошибок и новую функциональность в программное обеспечение, привнося содержание в термин открытый код (<span class="emphasis"><em>open 
+  source</em></span>).</p>
+  <p>Почти всё что вы видите в системе Linux вы можете получить в виде исходного кода - начиная с ядр и библиотек вплоть до веб- браузеров. 
+  Даже возможно обновлять и наращивать вашу полную систему посредством (повторной-) установки частей вашей системы из исходных кодов. Однако, вы 
+  вы возможно <span class="emphasis"><em>не должны</em></span> обновлять свою машину переустанавливая <span class="emphasis"><em>всё</em></span> 
+  из исходного кода, пока вы на самом деле не пользуетесь этим процессом или не имеете иной причины. </p>
+  <p>Обычно дистрибутивы Linux предоставляют более простые способы обновления основных частей вашей системы, таких как программы в 
+  <span class="emphasis"><em>/bin</em></span> и одним особенно важным свойством дистрибутивов является то, что они обычно исправляют 
+  проблемы безопасности очень быстро. Однако не ожидайте что дистрибутив сделает для вас всё. Существует ряд причин почему вы можете захотеть 
+  установить некоторые пакеты самостоятельно:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Для управления параметрами настройки</p>
+	 </li><li class="listitem">
+	 <p>Для установки программного обеспечения везде, где вы захотите. Вы даже можете установить несколько различных версий одного и того 
+	 же пакета.</p>
+	 </li><li class="listitem">
+	 <p>Чтобы управлять версиями, которые вы устанавливаете. Дистрибутивы не всегда остаются современными и поддерживают самые последние 
+	 версии всех пакетов, в особенности добавлений (add-ons) для пакетов программного обеспечения (например, библиотек Python).</p>
+	 </li><li class="listitem">
+	 <p>Чтобы лучше понимать как работают пакеты.</p>
+	 </li>
+    </ul>
+    </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.1"> </a>16.1 Системы сборки программного обеспечения</h3>
+   </div></div></div>
+   <p>В Linux существует много сред программирования, начиная с традиционного C вплоть до языков сценариев, таких как Python. Каждая 
+   обычно имеет по крайней мере одну систему с отличиями для сборки и установки  пакетов в дополнение к инструментам, предоставляемым 
+   дистрибутивом Linux.</p>
+   <p>В этой главе мы собираемся рассмотреть компиляцию и установку исходных кодов C при помощи только одной из таких систем сборки - 
+   сценариев настройки генерируемых из комплекта автоматического инструментария GNU. Эта система обычно рассматривается как стабильная и 
+   многие основные утилиты Linux применяют её. Так как она основывается на существующих инструментах, таких как <span 
+   class="term"><code>make</code></span>, после того как вы увидите их в действии, вы будете способны преобразовать свои знания в 
+   другие построения систем.</p>
+   <p>Установка пакетов из исходного кода C обычно содержит следующие этапы:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Распаковка архива исходного кода.</p>
+	 </li><li class="listitem">
+      <p>Настройка полученного пакета.</p>
+	 </li><li class="listitem">
+      <p>Выполнение <span class="term"><code>make</code></span> для сборки программ.</p>
+	 </li><li class="listitem">
+      <p>Выполнение <span class="term"><code>make install</code></span> или специфичных для дистрибутива команд установки для 
+	  инсталляции данного пакета.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DevToolsBasics"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Вам следует изучить основы в <a class="link" href="Ch15.html" target="_top">Главе 15</a> перед работой с этой главой.</p></td></tr></table>
+     </div>
+	 </li>
+	 </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.2"> </a>16.2 Распаковка исходных кодов пакетов C</h3>
+   </div></div></div>
+   <p>Обычно исходные коды дистрибутива приходят в виде файлов <span class="emphasis"><em>.tar.gz</em></span>, 
+   <span class="emphasis"><em>.tar.bz2</em></span> или <span class="emphasis"><em>.tar.xz</em></span> и вам следует распаковать этот файл, 
+   как это описано в разделе <a class="link" href="Ch02.html#02.18" target="_top">2.18 Файлы архивирования и сжатия</a>. Однако, перед 
+   распаковкой проверьте архив при помощи <span class="term"><code>tar tvf</code></span> или <span class="term"><code>tar ztvf</code></span>, 
+   так как некоторые пакеты не создают свои собственные подкаталоги в каталоге, в который вы извлекаете этот архив.</p>
+   <p>Подобный приведённому вывод означает,что этот пакет вероятно можно распаковать:</p>
+	   <pre class="screen">
+	package-1.23/Makefile.in
+	package-1.23/README
+	package-1.23/main.c
+	package-1.23/bar.c
+	--snip--
+	   </pre>
+   <p>Однако, вы можете найти что не все файлы находятся в общем каталоге (подобной <span class="emphasis"><em>package-1.23</em></span> в 
+   предыдущем примере):</p>
+	   <pre class="screen">
+	Makefile
+	README
+	main.c
+	--snip--
+	   </pre>
+   <p>Извлечение подобного архива может создать большую путаницу в вашем текущем каталоге. Чтобы избежать этого, создайте новый каталог 
+   и <span class="term"><code>cd</code></span> туда перед извлечением содержимого данного архива.</p>
+   <p>Наконец, остерегайтесь пакетов, которые содержат файлы с абсолютными именами путей наподобие:</p>
+	   <pre class="screen">
+	/etc/passwd
+	/etc/inetd.conf
+	   </pre>
+   <p>Скорее всего, вы не встретите ничего подобного, однако если это так, удалите такой архив из вашей системы. Он с большой долей 
+   вероятности может содержать Троянские или прочие вредоносные коды.</p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.2.1 С чего начать</span></h4>
+    </div></div></div>
+    <p>Когда вы извлечёте необходимое содержимое исходного архива и получите у себя группы файлов, попробуйте получить представление 
+	об этом пакете. В особенности, просмотрите их файлы <span class="emphasis"><em>README</em></span> и <span class="emphasis"><em>INSTALL</em></span>.
+	Всегда вначале просматривайте все файлы <span class="emphasis"><em>README</em></span>, так как они часто содержат описание этих 
+	пакетов, небольшие руководства, подсказки для установки и прочую полезную информацию. Многие пакеты также приходят с файлами 
+	<span class="emphasis"><em>INSTALL</em></span>, содержащими инструкции как компилировать и устанавливать данный пакет. Обратите 
+	особое внимание на специальные параметры компилятора и определения.</p>
+    <p>Помимо файлов <span class="emphasis"><em>README</em></span> и <span class="emphasis"><em>INSTALL</em></span>, вы можете найти файлы 
+	которые грубо подразделяются на следующие категории:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Файлы, относящиеся к системе <span class="term"><code>make</code></span>, такие как <span class="emphasis"><em>Makefile</em></span>,
+	 <span class="emphasis"><em>Makefile.in</em></span>, <span class="emphasis"><em>configure</em></span> и 
+	 <span class="emphasis"><em>CMakeLists.txt</em></span>. Некоторые очень старые пакеты поставляются с <span class="emphasis"><em>Makefile</em></span>, 
+	 которые вам необходимо изменить, однако большинство применяют утилиты настройки наподобие GNU autoconf или CMake. Они поставляются с файлами сценариев 
+	 или настроек (такими как <span class="emphasis"><em>configure</em></span> или <span class="emphasis"><em>CMakeLists.txt</em></span>) для 
+	 помощи в генерации <span class="emphasis"><em>Makefile</em></span> из <span class="emphasis"><em>Makefile.in</em></span> на основе настроек 
+	 вашей системы и параметров настроек.</p>
+	 </li><li class="listitem">
+	 <p>Файлы исходных кодов, завершающихся <span class="emphasis"><em>.c</em></span>, <span class="emphasis"><em>.h</em></span> или 
+	 <span class="emphasis"><em>.cc</em></span>. Файлы исходного кода C могут возникать почти повсеместно в каталоге пакета. Файлы 
+	 исходного кода C++ обычно имеют суффиксы <span class="emphasis"><em>.cc</em></span>, <span class="emphasis"><em>.C</em></span> или 
+	 <span class="emphasis"><em>.cxx</em></span>.</p>
+	 </li><li class="listitem">
+	 <p>Объектные файлы, завершающиеся <span class="emphasis"><em>.o</em></span> или двоичные файлы. Обычно в дистрибутивах исходного 
+	 кода не существует никаких объектных файлов, но в редких случаях вы можете найти некоторое количество когда поддерживающие пакет 
+	 не разрешают для выпуска определённые исходные коды и вам необходимо делать нечто особенное для применения объектных файлов. В 
+	 большинстве случаев объектные файлы (или исполняемые бинарные) в исходном дистрибутиве означает, что пакет не будет хорошо собираться, 
+	 а вам следует выполнить <span class="term"><code>make clean</code></span> чтобы убедиться что вы получите компиляцию без мусора.</p>
+	 </li>
+    </ul>
+    </div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3"> </a>16.3 GNU Autoconf</h3>
+   </div></div></div>
+   <p>Даже не смотря на то, что  исходные коды C обычно переносимы должным образом, разницы различных платформ делают невозможной компиляцию 
+   большинства пакетов с единственным <span class="emphasis"><em>Makefile</em></span>. Ранние решения этой проблемы состояли в предоставлении 
+   индивидуальных <span class="emphasis"><em>Makefile</em></span> для каждой операционной системы или обеспечения  
+   <span class="emphasis"><em>Makefile</em></span>, который было бы легко изменять. Такой подход привёл к развитию сценариев,которые генерируют 
+   <span class="emphasis"><em>Makefile</em></span></p> основываясь на анализе системы, применяемой для построения данного пакета.<p>
+   <p>GNU autoconf является популярной системой для автоматической генерации <span class="emphasis"><em>Makefile</em></span>. Использующие эту систему 
+   пакеты приходят с файлами,именуемыми <span class="emphasis"><em>configure</em></span>, <span class="emphasis"><em>Makefile.in</em></span> и
+   <span class="emphasis"><em>config.h.in</em></span>. Файлы <span class="emphasis"><em>.in</em></span> являются шаблонами; основная идея состоит 
+   в выполнении сценария <span class="term"><code>configure</code></span> для изучения характеристик вашей системы с последующей подстановкой в 
+   файлы <span class="emphasis"><em>.in</em></span> для создания действительных файлов построения. Это просто для любого конечного пользователя; для
+   создания <span class="emphasis"><em>Makefile</em></span> из <span class="emphasis"><em>Makefile.in</em></span> выполните 
+   <span class="term"><code>configure</code></span>:</p>
+	   <pre class="screen">
+$ ./configure
+	   </pre>
+   <p>Вы должны получить богатый диагностический вывод, та как сценарий проверил вашу систему на необходимые условия. Если всё прошло успешно,
+   <span class="term"><code>configure</code></span> создаёт один или более <span class="emphasis"><em>Makefile</em></span> и файл
+   <span class="emphasis"><em>config.h</em></span>, а также файл кэша (<span class="emphasis"><em>config.cache</em></span>), следовательно 
+   нет необходимости выполнять снова определённые тесты.</p>
+   <p>Теперь вы можете выполнить <span class="term"><code>make</code></span> для компиляции своего пакета. Успешный шаг 
+   <span class="term"><code>configure</code></span> не обязательно означает, что будет работать <span class="term"><code>make</code></span>, 
+   однако шансы этого достаточно высоки. (смотрите раздел <a class="link" href="Ch16.html#16.6" target="_top">16.6 Трудности сборки и установки</a> 
+   для поиска неисправностей отказавших конфигураций и компиляций).</p>
+   <p>Давайте получим некоторый первоначальный опыт такого процесса.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DevToolsBasics"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>На данный момент вы должны располагать всеми необходимыми инструментами построения доступными в вашей системе. Для Debian и Ubuntu 
+	   простейший способ состоит в установке собственных пакетов построения; системы, подобные Fedora, применяют groupinstall
+	   <a class="link" href="Ch15.html" target="_top">Главы 15</a> перед работой с этой главой.</p></td></tr></table>
+     </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.3.1 Пример Autoconf</span></h4>
+    </div></div></div>
+    <p>Перед началом обсуждения того,как вы можете менять поведение autoconf, давайте рассмотрим простой пример чтобы вы знали чего 
+	ожидать. Вы установите пакет GNU coreutils в свой домашний каталог (чтобы убедиться что вы не внесёте путаницу в свою систему). 
+	Получите пакет из <a class="link" href="http://ftp.gnu.org/gnu/coreutils/" target="_top">http://ftp.gnu.org/gnu/coreutils/</a> 
+	(самая последняя версия обычно самая лучшая), распакуйте его, перейдите в его каталог и настройте его примерно следующим образом:</p>
+	   <pre class="screen">
+$ ./configure --prefix=$HOME/mycoreutils
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+--snip--
+config.status: executing po-directories commands
+config.status: creating po/POTFILES
+config.status: creating po/Makefile
+	   </pre>
+    <p>Теперь выполните <span class="term"><code>make</code></span>:</p>
+	   <pre class="screen">
+$ make
+  GEN lib/alloca.h
+  GEN lib/c++defs.h
+--snip--
+make[2]: Leaving directory '/home/juser/coreutils-8.22/gnulib-tests'
+make[1]: Leaving directory '/home/juser/coreutils-8.22'
+	   </pre>
+    <p>Далее попробуйте выполнить один из только что созданных исполняемых файлов, например <span class="emphasis"><em>./src/ls</em></span>, и 
+	попробуйте выполнить <span class="term"><code>make check</code></span> для исполнения последовательностей тестов на этом пакете. (Это займёт 
+	некоторое время, однако будет интересно для просмотра.)</p>
+    <p>Наконец, вы готовы к установке данного пакета. Вначале выполните вхолостую посредством <span class="term"><code>make -n</code></span> 
+	чтобы увидеть что делает <span class="term"><code>make install</code></span> без выполнения установки:</p>
+	   <pre class="screen">
+$ make -n install
+	   </pre>
+    <p>Просмотрите свой вывод и если нет ничего странного (подобного установке где- либо ещё кроме как в каталоге 
+	<span class="emphasis"><em>mycoreutils</em></span>), выполните реальную установку: </p>
+	   <pre class="screen">
+$ make install
+	   </pre>
+    <p>Теперь у вас должен иметься каталог <span class="emphasis"><em>mycoreutils</em></span> в вашем домашнем каталоге, который содержит
+	всвою очередь <span class="emphasis"><em>bin</em></span>, <span class="emphasis"><em>share</em></span> и прочие подкаталоги. Проверьте 
+	некоторые из программ в <span class="emphasis"><em>bin</em></span> (вы только что построили многие из основных инструментов, которые вы 
+	изучали в <a class="link" href="Ch02.html" target="_top">Главе 2</a>). Наконец, поскольку вы настроили свой каталог 
+	<span class="emphasis"><em>mycoreutils</em></span> не зависящим от вашей остальной системы, вы можете полностью удалить его без 
+	беспокойства о том, что что- либо разрушится.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.3.2 Установка при помощи инструментов пакетов</span></h4>
+    </div></div></div>
+    <p>В большинстве дистрибутивов возможно устанавливать новое программное обеспечение, которое вы сможете далее обслуживать своими пакетными 
+	инструментами дистрибутива. Возможно, дистрибутивы на основе Debian, например, Ubuntu, являются простейшими; вместо выполнения 
+	<span class="term"><code>make install</code></span>, вы можете сделать это при помощи утилиты <span class="term"><code>checkinstall</code></span> так:</p>
+	   <pre class="screen">
+# checkinstall make install
+	   </pre>
+    <p>Применяйте параметр <span class="term"><code>--pkgname=name</code></span> для придания вашему новому пакету определённого имени.</p>
+    <p>Создание пакета RPM слегка более сложное, так как вы вначале должны создать дерево каталогов для вашего пакета (пакетов). Вы можете 
+	сделать это при помощи команды <span class="term"><code>rpmdev-setuptree</code></span>; после её выполнения вы можете применить утилиту 
+	<span class="term"><code>rpmbuild</code></span> для прохождения остальных шагов. Для этого процесса лучше пользоваться интернет руководством.</p>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.3.3 Параметры сценария configure</span></h4>
+    </div></div></div>
+    <p>Вы уже видели один из самых полезных параметров для сценария <span class="term"><code>configure</code></span>: применение
+	<span class="term"><code>--prefix</code></span> для определения каталога установки. По умолчанию получатель 
+	<span class="term"><code>install</code></span> из генерируемого autoconf <span class="emphasis"><em>Makefile</em></span> 
+	использует вкачестве <span class="emphasis"><em>prefix</em></span> <span class="emphasis"><em>/usr/local</em></span> - то есть 
+	исполняемые файлы отправятся в <span class="emphasis"><em>/usr/local/bin</em></span>, библиотеки в
+	<span class="emphasis"><em>/usr/local/lib</em></span> и так далее. Часто вы хотите изменить этот префикс таким образом:</p>
+	   <pre class="screen">
+$ ./configure --prefix=new_prefix
+	   </pre>
+    <p>Большинство версий <span class="term"><code>configure</code></span> имеют параметр <span class="term"><code>--help</code></span>, 
+	который отображает список прочих параметров настроек. К сожалению этот список обычно настолько длинный, что трудно вычислить что может 
+	быть важно, поэтому вот некоторые важнейшие параметры:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--bindir=directory</code></strong></span> Устанавливает исполняемое на 
+	 <span class="emphasis"><em><code>directory</code></em></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--sbindir=directory</code></strong></span> Устанавливает системно- исполняемое на 
+	 <span class="emphasis"><em><code>directory</code></em></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--libdir=directory</code></strong></span> Устанавливает библиотеки на 
+	 <span class="emphasis"><em><code>directory</code></em></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--disable-shared</code></strong></span> Препятствует построению совместно используемых 
+	 библиотек для пакетов. Полагаясь на такие библиотеки это позже может сохранять барьеры (см. <a class="link" href="Ch15.html#15.1.4" 
+	 target="_top">15.1.4 Совместное использование библиотек</a>).</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>--with-package=directory</code></strong></span> Сообщает 
+	 <span class="term"><code>configure</code></span>, что  <span class="emphasis"><em><code>package</code></em></span> находится 
+	 в <span class="emphasis"><em><code>directory</code></em></span>. Это удобно когда необходимая библиотека находится в нестандартном 
+	 местоположении. К сожалению, не все сценарии <span class="term"><code>configure</code></span> распознают этот тип параметра, и определить его 
+	 точный синтаксис может быть трудной задачей.</p>
+	 </li>
+    </ul>
+    </div>
+	<p class="title"><strong>Применение отдельных каталогов построения</strong></p>
+	<p>Вы можете создавать отдельные каталоги построения если вы хотите экспериментировать с некоторыми из этих параметров. Чтобы сделать это, 
+	создайте где- нибудь в системе новый каталог и, из этого каталога, выполните сценарий <span class="term"><code>configure</code></span> из 
+	исходного каталога исходного кода пакета. Вы увидите, что <span class="term"><code>configure</code></span> после этого сделает ферму 
+	символических ссылок в вашем новом каталоге сборки, причём все эти ссылки указывают на дерево исходных кодов в первоначальном каталоге 
+	пакетов. (Некоторые разработчики предпочитают чтобы вы строили пакеты таким способом, так как изначальное дерево исходных кодов никогда 
+	не изменяется. Это также полезно если вы собираете более одной платформы или набор параметров настройки использует тот же самый пакет исходных 
+	кодов.)</p>
+   </div>
+ 
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.3.4 Переменные среды</span></h4>
+    </div></div></div>
+    <p>Вы можете воздействовать на <span class="term"><code>configure</code></span> через переменные окружения которые сценарий
+	<span class="term"><code>configure</code></span> помещает в переменные <span class="term"><code>make</code></span>. 
+	Наиболее важные из них это <span class="term"><code>CPPFLAGS</code></span>, <span class="term"><code>CFLAGS</code></span> 
+	и <span class="term"><code>LDFLAGS</code></span>. Однако будьте в курсе, что <span class="term"><code>configure</code></span>
+	может быть очень требовательным к переменным окружения. Например, обычно вам следует применять <span class="term"><code>CPPFLAGS</code></span> 
+	вместо <span class="term"><code>CFLAGS</code></span> в качестве каталога файлов заголовков, так как <span class="term"><code>configure</code></span>
+	часто выполняет предварительную обработку независимо от компилятора.</p>
+    <p>В <span class="term"><code>bash</code></span> простейшим способом переслать переменную окружения в 
+	<span class="term"><code>configure</code></span> заключается в помещении назначения переменной перед 
+	<span class="term"><code>./configure</code></span> в вашей командной строке. Например, чтобы определить макро 
+	<span class="term"><code>DEBUG</code></span> для предварительной обработки, воспользуйтесь командой:</p>
+	   <pre class="screen">
+$ CPPFLAGS=-DDEBUG ./configure
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DevToolsBasics"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Также вы можете передать переменную как параметр для <span class="term"><code>configure</code></span>; например:</p></td></tr></table>
+	   <pre class="screen">
+$ ./configure CPPFLAGS=-DDEBUG
+	   </pre>
+     </div>
+    <p>Переменные окружения в особенности полезны когда <span class="term"><code>configure</code></span> не знает где искать файлы include и 
+	библиотеки третьих производителей. Например, чтобы сделать так, чтобы препроцессор осуществлял поиск в 
+	<span class="emphasis"><em><code>include_dir</code></em></span> выполните команду:</p>
+	   <pre class="screen">
+$ CPPFLAGS=-Iinclude_dir ./configure
+	   </pre>
+    <p>Как показано в <a class="link" href="Ch15.html#15.2.6" target="_top">15.2.6 Стандартные макросы и переменные</a>, чтобы сделать так чтобы 
+	линковщик осуществлял поиск в <span class="term"><strong class="userinput"><em class="emphasis">lib_dir</em></span></strong></span>
+	воспользуйтесь этой командой:</p>
+	   <pre class="screen">
+$ LDFLAGS=-Llib_dir ./configure
+	   </pre>
+    <p>Если <span class="term"><strong class="userinput"><em class="emphasis">lib_dir</em></span></strong></span> имеет совместно используемые 
+	библиотеки (см. <a class="link" href="Ch15.html#15.1.4" target="_top">15.1.4 Совместное использование библиотек</a>), предыдущая команда 
+	возможно не установит динамический путь редактору связей времени исполнения. В этом случае в дополнение к параметру 
+	<span class="term"><code>-L</code></span> применяйте опцию компоновщика <span class="term"><code>-rpath</code></span>:</p>
+	   <pre class="screen">
+$ LDFLAGS=&quot;-Llib_dir -Wl,-rpath=lib_dir&quot; ./configure
+	   </pre>
+    <p>При установке переменных будьте предельно внимательны. Мелкая описка может поставить подножку компилятору и привести к отказу ввыполнении 
+	<span class="term"><code>configure</code></span>. Например, вы можете забыть <span class="term"><code>-</code></span>
+	в <span class="term"><code>-I</code></span>, как показано здесь:</p>
+	   <pre class="screen">
+$ CPPFLAGS=Iinclude_dir ./configure
+	   </pre>
+    <p>Это даст ошибку наподобие такой:</p>
+	   <pre class="screen">
+	configure: error: C compiler cannot create executables
+	See 'config.log' for more details
+	   </pre>
+    <p>Раскопки в <span class="emphasis"><em>config.log</em></span> созданного такой неудачной попыткой чтобы дают следующее:</p>
+	   <pre class="screen">
+	configure:5037: checking whether the C compiler works
+	configure:5059: gcc Iinclude_dir conftest.c &gt;&amp;5
+	gcc: error: Iinclude_dir: No such file or directory
+	configure:5063: $? = 1
+	configure:5101: result: no
+	   </pre>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.3.5 Цели Autoconf</span></h4>
+    </div></div></div>
+    <p>Когда вы получите работающий <span class="term"><code>configure</code></span>, вы увидите, что создаваемый им <span 
+	class="emphasis"><em>Makefile</em></span> имеет другие полезные цели помимо стандартных <span class="term"><code>all</code></span>
+	и <span class="term"><code>install</code></span>:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>make clean</code></strong></span> Как описывалось в 
+	 <a class="link" href="Ch15.html" target="_top">Главе 15</a>, это удаляет все файлы объектов, исполняемые файлы и библиотеки.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>make distclean</code></strong></span> Аналогично 
+	 <span class="term"><code>make clean</code></span> кроме того что в этом случае удаляются все автоматически созданные файлы, 
+	 включая <span class="emphasis"><em>Makefile</em></span>, <span class="emphasis"><em><code>config.h</code></em></span>,
+	 <span class="emphasis"><em><code>config.log</code></em></span> и тому подобные. Идея заключается в том, что после работы 
+	 <span class="term"><code>make distclean</code></span> дерево исходного кода должно выглядеть как только что распакованный 
+	 дистрибутив.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>make check</code></strong></span> Некоторые пакеты поставляются с батареей тестов 
+	 для проверки того, скомпилированные программы работают надлежащим образом; команда <span class="term"><code>make check</code></span>
+	 выполнит эти тесты.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>make install-strip</code></strong></span> Аналогична 
+	 <span class="term"><code>make install</code></span> за исключением того, что при установке отделяет таблицы символов и прочую отладочную 
+	 информацию от исполняемых файлов и библиотек. Чередующиеся библиотеки требуют гораздо меньше пространства.</p>
+	 </li>
+    </ul>
+    </div>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.3.6 Файлы журналов Autoconf</span></h4>
+    </div></div></div>
+    <p>Если в процессе настройки что- то идёт не так, а причина не очевидна, для нахождения проблемы вы можете изучить 
+	<span class="emphasis"><em><code>config.log</code></em></span>. К сожалению, <span class="emphasis"><em><code>config.log</code></em></span>
+	часто является файлом гигантских размеров, что может затруднять точное местоположение источника ваших проблем.</p>
+    <p>Общий подход для поиска ваших проблем состоит в переходе в самый конец <span class="emphasis"><em><code>config.log</code></em></span> 
+	(например, нажатием G в <span class="term"><code>less</code></span>) и затем постраничный подъём до обнаружения проблемы. Однако в конце 
+	всё ещё присутствует много чепухи, так как <span class="term"><code>configure</code></span> выводит сюда всю среду, включая переменные 
+	вывода, переменные кэша и прочие определения. Поэтому вместо перехода в конец и постраничного подъёма, перейдите в конец и выполните 
+	поиск в обратном направлении на предмет строк подобных <span class="term"><code>for more details</code></span> или некоторых 
+	других частей в пределах конца отказавшего вывода <span class="term"><code>configure</code></span>. (Помните, что вы можете начать обратный 
+	поиск в <span class="term"><code>less</code></span> командой <span class="term"><code>?</code></span>.) Существуют хорошие шансы, что 
+	ошибка окажется просто чуть выше того, что найдет ваш поиск.</p>
+   </div>
+ 
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.3.7">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.3.7 pkg-config</span></h4>
+    </div></div></div>
+    <p>Существует так много библиотек третьих производителей, что их хранение в одном месте может приводить к путанице. Однако установка 
+	каждой с отдельным префиксом может вести к проблемам при построении пакетов, которые требуют таких библиотек третьих производителей.
+	Например, если вы хотите скомпилировать OpenSSH, вам понадобится библиотека OpenSSL. Как вы сообщите процессу настройки OpenSSH 
+	местоположение OpenSSL и какие библиотеки необходимы?</p>
+    <p>Многие библиотеки теперь используют программу <span class="term"><code>pkg-config</code></span> не только для оповещения о местоположении 
+	своих файлов include и библиотек, но также для определения строгих флагов, которые нужны вам для компиляции и компоновки программ. 
+	Синтаксис таков:</p>
+	   <pre class="screen">
+$ pkg-config <span class="emphasis"><em>options package1 package2</em></span> ...
+	   </pre>
+    <p>Например, чтобы определить необходимые для OpeSSL библиотеки, вы можете выполнить следующую команду:</p>
+	   <pre class="screen">
+$ pkg-config --libs openssl
+	   </pre>
+    <p>Её вывод будет примерно таким:</p>
+	   <pre class="screen">
+	-lssl -lcrypto
+	   </pre>
+    <p>Чтобы просмотреть все библиотеки, о которых известно <span class="term"><code>pkg-config</code></span>, выполните:</p>
+	   <pre class="screen">
+$ pkg-config --list-all
+	   </pre>
+
+	<a id="16.3.7.1"> </a>
+	<p class="title"><strong>Как работает pkg-config</strong></p>
+    <p>Если вы посмотрите что происходит за сценой, вы обнаружите, что <span class="term"><code>pkg-config</code></span> находит информацию 
+	пакетов путём чтения файлов настройки которые завершаются <span class="emphasis"><em>.pc</em></span>. Например, для библиотеки сокетов 
+	OpenSSL существует <span class="emphasis"><em>openssl.pc</em></span>, что видно в системе Ubuntu (по расположению 
+	<span class="emphasis"><em>/usr/lib/i386-linux-gnu/pkgconfig</em></span>):</p>
+	   <pre class="screen">
+	prefix=/usr
+	exec_prefix=${prefix}
+	libdir=${exec_prefix}/lib/i386-linux-gnu
+	includedir=${prefix}/include
+
+	Name: OpenSSL
+	Description: Secure Sockets Layer and cryptography libraries and tools
+	Version: 1.0.1
+	Requires:
+	Libs: -L${libdir} -lssl -lcrypto
+	Libs.private: -ldl -lz
+	Cflags: -I${includedir} exec_prefix=${prefix}
+	   </pre>
+    <p>Вы можете изменить этот файл, например, добавив <span class="term"><code>-Wl</code></span>, 
+	<span class="term"><code>-rpath=${libdir}</code></span> к флагам библиотеки для установки пути динамической компоновки времени исполнения. 
+	Однако большой вопрос: как <span class="term"><code>pkg-config</code></span> найдёт файлы <span class="emphasis"><em>.pc</em></span>
+	в первом месте. По умолчанию <span class="term"><code>pkg-config</code></span> ищет в своём каталоге 
+	<span class="emphasis"><em>lib/pkgconfig</em></span> его префикса установки. Например, <span class="term"><code>pkg-config</code></span>,
+	установленный в <span class="emphasis"><em>/usr/local</em></span> ищет префиксы в <span class="emphasis"><em>/usr/local/lib/pkgconfig</em></span>.</p>
+
+	<a id="16.3.7.2"> </a>
+	<p class="title"><strong>Установка pkg-config в нестандартные местоположения</strong></p>
+    <p>К сожалению, по умолчанию, <span class="term"><code>pkg-config</code></span> не читает никакие файлы 
+	<span class="emphasis"><em>.pc</em></span> вне своего префикса установки. Поэтому файлы <span class="emphasis"><em>.pc</em></span>, 
+	располагающиеся в нестадартных местах, например, в <span class="emphasis"><em>/opt/ openssl/lib/pkgconfig/openssl.pc</em></span> 
+	окажутся вне достижения какого- либо запаса установок <span class="term"><code>pkg-config</code></span>. Существует два основных 
+	способа сделать файлы <span class="emphasis"><em>.pc</em></span> доступными за пределами префикса установки 
+	<span class="term"><code>pkg-config</code></span>:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Сделать символические ссылки (или копии) действительных файлов <span class="emphasis"><em>.pc</em></span> в центральный 
+	 каталог <span class="emphasis"><em>pkgconfig</em></span>.</p>
+	 </li><li class="listitem">
+	 <p>Установить вашу переменную окружения <span class="term"><code>PKG_CONFIG_PATH</code></span> таким образом, чтобы она включала 
+	 дополнительные каталоги <span class="emphasis"><em>pkgconfig</em></span>. Эта стратегия не работает хорошо на основе всей системы.</p>
+	 </li>
+    </ul>
+    </div>
+	</div>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.4"> </a>16.4 Практика установки</h3>
+   </div></div></div>
+   <p>Знать <span class="emphasis"><em>как</em></span> построить и установить программное обеспечение это хорошо, однако знание того 
+   <span class="emphasis"><em>когда</em></span> и <span class="emphasis"><em>где</em></span> установить ваши собственные пакеты даже 
+   более полезно. Дистрибутивы Linux пытаются впихнуть столько программного обеспечения, сколько возможно при установке, и вам всегда 
+   следует проверять не будет ли лучше вместо этого установить ваш собственный пакет. Вот преимущества, которые дают ваши собственные 
+   установки:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Вы можете настраивать значения пакетов по умолчанию под собственные нужды.</p>
+	 </li><li class="listitem">
+	 <p>При установке пакета вы часто получаете более чистую картину того, как применять этот пакет</p>
+	 </li><li class="listitem">
+	 <p>Вы управляете редакциями с которыми вы работаете</p>
+	 </li><li class="listitem">
+	 <p>Более простое резервное копирование выполненных на заказ пакетов.</p>
+	 </li><li class="listitem">
+	 <p>Более простое распространение самостоятельно установленных пакетов по сети (поскольку ваша архитектура согласована и 
+	 местоположение установки относительно изолировано).</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Вот недостатки:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Это требует времени</p>
+	 </li><li class="listitem">
+	 <p>Выполненные на заказ пакеты не обновляются сами по себе. Дистрибутивы поддерживают большую часть пакетов на современном уровне 
+	 без потребности в большой работе. Это в особенности касается пакетов, которые взаимодействуют с сетевой средой, так как вы хотите быть 
+	 уверенными, что у вас всегда есть самые последние обновления безопасности.</p>
+	 </li><li class="listitem">
+	 <p>Если вы не будете на самом деле применять данный пакет, вы потеряли своё время.</p>
+	 </li><li class="listitem">
+	 <p>Существует возможность неправильной компоновки пакетов.</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Не существует особенного смысла в установке пакетов подобных находящимся в пакете coreutils, который вы построили ранее в данной главе 
+   (<span class="term"><code>ls</code></span>, <span class="term"><code>cat</code></span> и тому подобные), только если вы не собираете 
+   очень специализированную систему. С другой стороны, если у вас существует жизненно важная потребность в сетевых серверах подобных 
+   Apache, лучшим способом для получения полного контроля будет самостоятельная установка серверов.</p>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.4.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.4.1 Куда устанавливать</span></h4>
+    </div></div></div>
+    <p>Префиксом по умолчанию для GNU autoconf и многих других пакетов является <span class="emphasis"><em>/usr/local</em></span>, 
+	обычный каталог для локально устанавливаемого программного обеспечения. Обновления операционной системы игнорируют 
+	<span class="emphasis"><em>/usr/local</em></span>, поэтому вы не можете потерять что либо установленное здесь в процессе обновления
+	операционной системы и для небольших локальных установок программного обеспечения <span class="emphasis"><em>/usr/local</em></span>
+	прекрасен. Единственная проблема состоит в том, что если у вас много индивидуально установленного программного обеспечения, это может 
+	приводить к жуткой мешанине. Тысячи разрозненных небольших файлов могут делать свой собственный маршрут в иерархию 
+	<span class="emphasis"><em>/usr/local</em></span> и вы можете не понимать откуда появился определённый файл.</p>
+    <p>Если ситуация действительно превращается в безобразную, вамследует создавать свои собственные пакеты как это описано в разделе
+	<a class="link" href="Ch16.html#16.3.2" target="_top">16.3.2 Установка при помощи инструментов пакетов</a>.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.5"> </a>16.5 Применение исправлений</h3>
+   </div></div></div>
+   <p>Большинство изменений в исходном коде программного обеспечения доступно в виде ветвей версий исходных кодов их разработчиков, 
+   доступных через интернет (например, через репозиторий git). Однако, то и дело, вы можете получать заплатки (исправления, 
+   <span class="emphasis"><em>patch</em></span>) которые вам следует применить к исходному коду для исправления ошибок или добавления 
+   функциональности. Также вы можете видеть термин <span class="emphasis"><em>diff</em></span>, используемый как синоним <span class="emphasis"><em>
+   patch</em></span>, так как программа <span class="term"><code>diff</code></span> применяет эти заплатки.</p>
+   <p>Начало исправления выглядит примерно так:</p>
+	   <pre class="screen">
+	--- src/file.c.orig        2015-07-17 14:29:12.000000000 +0100
+	+++ src/file.c   2015-09-18 10:22:17.000000000 +0100
+	@@ -2,16 +2,12 @@
+	   </pre>
+   <p>Исправления обычно содержат изменения для более чем одного файла. Найдите три дефиса в строке (<span class="term"><code>---</code></span>)
+   чтобы увидеть те файлы, которые имеют изменения и всегда находятся в начале заплатки для определения необходимого рабочего каталога. 
+   Отметим, что предыдущий пример ссылается на <span class="emphasis"><em>src/file.c</em></span>. По этой причине вам следует перейти в каталог, 
+   содержащий <span class="emphasis"><em>src</em></span> перед применением данного исправления, но <span class="emphasis"><em>не</em></span> в 
+   сам каталог <span class="emphasis"><em>src</em></span>.</p>
+   <p>Для применения исправления выполните команду <span class="term"><code>patch</code></span>:</p>
+	   <pre class="screen">
+$ patch -p0 &lt; patch_file
+	   </pre>
+   <p>Если всё прошло успешно, <span class="term"><code>patch</code></span> выйдет без протестов, оставив вам обновлённый набор файлов. 
+   Однако, <span class="term"><code>patch</code></span> может задать вам вопрос:</p>
+	   <pre class="screen">
+	File to patch:
+	   </pre>
+   <p>Обычно это означает, что вы не находитесь в нужном каталоге, однако это также может означать, что ваш исходный код не соответствует 
+   исходному коду в исправлении. В этом случае вам, скорее всего, не повезло: Даже если вы можете определить некоторые из файлов для 
+   исправлений, остальные не могут быть обновлены надлежащим образом, оставляя вас с исходным кодом, который не может быть скомпилирован.</p>
+   <p>В некоторых случаях вы можете пройти по исправлению которое ссылается на версию пакета наподобие:</p>
+	   <pre class="screen">
+	--- package-3.42/src/file.c.orig      2015-07-17 14:29:12.000000000 +0100
+	+++ package-3.42/src/file.c   2015-09-18 10:22:17.000000000 +0100
+	   </pre>
+   <p>Если у вас слегка отличающийся номер версии (или вы просто переименовали свой каталог), вы можете попросить 
+   <span class="term"><code>patch</code></span> отнять компоненты директив пути. Например, скажем, вы были в каталоге который 
+   содержит <span class="emphasis"><em>src</em></span> (как ранее). Чтобы сообщить <span class="term"><code>patch</code></span> о 
+   необходимости игнорирования части <span class="emphasis"><em>package-3.42/</em></span> пути (то есть убрать одну ведущую компоненту 
+   пути), примените <span class="term"><code>-p1</code></span>: </p>
+	   <pre class="screen">
+$ patch -p0 &lt; patch_file
+	   </pre>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.6"> </a>16.6 Трудности сборки и установки</h3>
+   </div></div></div>
+   <p>Если вы понимаете разницу между ошибками компилятора, предупреждениями компилятора, ошибками компоновщика и проблемами совместно 
+   используемых библиотек, которые объяснялись в <a class="link" href="Ch15.html" target="_top">Главе15</a>, вам не составит большого 
+   труда исправление большинства затруднений, возникающих при сборке программного обеспечения. Данный раздел описывает некоторые наиболее 
+   общие проблемы. Хотя скорее всего вы не столкнётесь ни с одной из них при сборке при помощи autoconf, никогда не будет лишним знать как 
+   выглядят эти проблемы.</p>
+   <p>Перед обсуждением особенностей, убедитесь что вы можете читать определённые выдачи <span class="term"><code>make</code></span>. 
+   Важно понимать разницу между ошибкой и игнорированной ошибкой. Ниже настоящая ошибка, которую вам необходимо расследовать:</p>
+	   <pre class="screen">
+	make: *** [target] Error 1
+	   </pre>
+    <p>Однако некоторые <span class="emphasis"><em>Makefile</em></span> подозревают, что могут возникнуть условия ошибки, однако 
+	знают что эти ошибки безвредны. Вы можете пренебрегать некоторыми сообщениями навроде:</p>
+	   <pre class="screen">
+	make: *** [target] Error 1 (ignored)
+	   </pre>
+    <p>Более того, GNU <span class="term"><code>make</code></span> часто вызывает сам себя в больших пакетах, причём каждый экземпляр 
+	<span class="term"><code>make</code></span> в вашем сообщении об ошибке помечается как [<span class="emphasis"><em>N</em></span>], 
+	где <span class="emphasis"><em>N</em></span> является номером. Часто вы можете быстро найти ошибку найдя ошибку  
+	<span class="term"><code>make</code></span> которая идёт <span class="emphasis"><em>сразу</em></span> после сообщения об 
+	ошибке компилятора. Например:</p>
+	   <pre class="screen">
+	[compiler error message involving file.c]
+	make[3]: *** [file.o] Error 1
+	make[3]: Leaving directory '/home/src/package-5.0/src'
+	make[2]: *** [all] Error 2
+	make[2]: Leaving directory '/home/src/package-5.0/src'
+	make[1]: *** [all-recursive] Error 1 make[1]: Leaving directory
+	'/home/src/package-5.0/'
+	make: *** [all] Error 2
+	   </pre>
+    <p>Первые три строки практически выдают её: Проблема сосредотачивается вокруг <span class="emphasis"><em>file.c</em></span>,
+	находящегося в <span class="emphasis"><em>/home/src/package-5.0/src</em></span>. К сожалению присутствует очень много дополнительного 
+	вывода, поэтому может оказаться сложно обнаружить важные подробности. Изучение того как фильтровать последующие ошибки 
+	<span class="term"><code>make</code></span> проделывает длинный путь в докапывании до истинной причины.</p> 
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.6.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">16.6.1 Характерные ошибки</span></h4>
+    </div></div></div>
+    <p>Вот некоторые наиболее распространённые ошибки компоновки с которыми вы можете сталкиваться:</p>
+	
+	<p class="title"><strong>Проблема</strong></p>
+    <p>Сообщение об ошибке компилятора:</p>
+	   <pre class="screen">
+	src.c:22: conflicting types for 'item'
+	/usr/include/file.h:47: previous declaration of 'item'
+	   </pre>
+	<p class="title"><strong>Объяснение и исправление</strong></p>
+    <p>Программист сделал ошибочное повторное объявление <span class="emphasis"><em>item</em></span> в строке 22
+	<span class="emphasis"><em>src.c</em></span>. Обычно вы можете исправить это удалив проблемную строку (при помощи комментария, 
+	<span class="term"><code>#ifdef</code></span> или какой бы то ни было работы).</p>
+	
+	<p class="title"><strong>Проблема</strong></p>
+    <p>Сообщение об ошибке компилятора:</p>
+	   <pre class="screen">
+	src.c:37: 'time_t' undeclared (first use this function)
+	--snip--
+	src.c:37: parse error before '...'
+	   </pre>
+	<p class="title"><strong>Объяснение и исправление</strong></p>
+    <p>Программист забыл критически важный файл заголовка. Лучшим путём поиска пропущенного файла заголовка будут страницы руководства. 
+	Вначале взгляните на проблемную строку (в нашем случае строка 37 в <span class="emphasis"><em>src.c</em></span>). 
+	Обычно вы можете исправить это удалив проблемную строку (при помощи комментария, 
+	<span class="term"><code>#ifdef</code></span> или какой бы то ни было работы).</p>
+	
+	<p class="title"><strong>Проблема</strong></p>
+    <p>Сообщение об ошибке компилятора:</p>
+	   <pre class="screen">
+	src.c:22: conflicting types for 'item'
+	/usr/include/file.h:47: previous declaration of 'item'
+	   </pre>
+	<p class="title"><strong>Объяснение и исправление</strong></p>
+    <p>Программист сделал ошибочное повторное объявление <span class="emphasis"><em>item</em></span> в строке 22
+	<span class="emphasis"><em>src.c</em></span>. Скорее всего это объявление переменной, например:</p>
+	   <pre class="screen">
+	time_t v1;
+	   </pre>
+	<p>Выполните поиск <span class="term"><code>v1</code></span> далее в программе на предмет её применения рядом с вызовом функции. Например:</p>
+	   <pre class="screen">
+	v1 = time(NULL);
+	   </pre>
+	<p>Теперь выполните <span class="term"><code>man 2 time</code></span> или <span class="term"><code>man 3 time</code></span> для поиска 
+	системного или библиотечного вызова с именем <span class="term"><code>time()</code></span>. В данном случае раздел 2 страниц руководства 
+	имеет то что вам нужно:</p>
+	   <pre class="screen">
+	SYNOPSIS
+		#include <time.h>
+		time_t time(time_t *t);
+	   </pre>
+	<p>Это означает, что для  <span class="term"><code>time()</code></span> необходим <span class="emphasis"><em>time.h</em></span>. 
+	Поместите <span class="term"><code>#include &lt;time.h&gt;</code></span> в начало <span class="emphasis"><em>src.c</em></span> 
+	и попробуйте снова.</p>
+	
+	<p class="title"><strong>Проблема</strong></p>
+    <p>Сообщение об ошибке компилятора (препроцессора):</p>
+	   <pre class="screen">
+	src.c:4: pkg.h: No such file or directory
+	(long list of errors follows)
+	   </pre>
+	<p class="title"><strong>Объяснение и исправление</strong></p>
+    <p>Компилятор выполнил предварительную обработку C в <span class="emphasis"><em>src.c</em></span>, однако не смог найти файл 
+	include <span class="emphasis"><em>src.c</em></span>. Скорее всего, исходный код зависит от библиотеки, которую вам нужно установить 
+	или вам просто может быть нужно предоставить компилятору нестандартный путь include. Обычно вам просто нужно добавить параметр пути 
+	include <span class="term"><code>-I</code></span> для флагов вашего препроцессора C (<span class="term"><code>CPPFLAGS</code></span>).
+	(Имейте в виду, что вам также может понадобиться флаг компоновщика <span class="term"><code>-L</code></span> для одновременного прохода 
+	с файлами include.)</p>
+	<p>Если это не выглядит похожим на то, что вы пропустили библиотеку, существует внешняя возможность, что вы пытаетесь компилировать для операционной 
+	системы, которая не поддерживает данный код. Проверьте свой <span class="emphasis"><em>Makefile</em></span> и файлы 
+	<span class="emphasis"><em>README</em></span> на наличие подробностей о платформах.</p>
+	<p>Если вы работает с дистрибутивом на основе Debian, попробуйте команду <span class="term"><code>apt-file</code></span> с именем файла
+	заголовка:</p>
+	   <pre class="screen">
+$ apt-file search pkg.h
+	   </pre>
+	<p>Она может найти нужный вам пакет разработки. Для дистрибутивов, поддерживающих <span class="term"><code>yum</code></span>, вы можете 
+	вместо этого попробовать:</p>
+	   <pre class="screen">
+$ yum provides */pkg.h
+	   </pre>
+	
+	<p class="title"><strong>Проблема</strong></p>
+    <p>Сообщение об ошибке <span class="term"><code>make</code></span>:</p>
+	   <pre class="screen">
+	make: prog: Command not found
+	   </pre>
+	<p class="title"><strong>Объяснение и исправление</strong></p>
+    <p>Для построения пакета вам в вашей системе необходим <span class="emphasis"><em>prog</em></span>. Если 
+	<span class="emphasis"><em>prog</em></span> является чем- то вроде <span class="term"><code>cc</code></span>, 
+	<span class="term"><code>gcc</code></span> или <span class="term"><code>ld</code></span>, то у вас нет утилит разработки установленных 
+	в вашей системе. С другой стороны, если вы считаете, что <span class="emphasis"><em>prog</em></span> уже установлен в вашей системе, 
+	попробуйте изменить свой <span class="emphasis"><em>Makefile</em></span> с тем, чтобы он предписывал полной имя пути к
+	<span class="emphasis"><em>prog</em></span>.</p>
+    <p>В редких случаях <span class="term"><code>make</code></span> строит программу <span class="emphasis"><em>prog</em></span> и 
+	затем немедленно использует <span class="emphasis"><em>prog</em></span>, предполагая, что ваш текущий каталог 
+	(<span class="term"><code>.</code></span>) присутствует в вашем пути команд. Если ваш <span class="term"><code>$PATH</code></span>
+	не содержит текущий каталог, вы можете изменить свой <span class="emphasis"><em>Makefile</em></span> и изменить 
+	<span class="emphasis"><em>prog</em></span> на <span class="emphasis"><em>./prog</em></span>. В качестве альтернативы вы можете временно 
+	добавить <span class="term"><code>.</code></span> в свой путь.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="16.7"> </a>16.7 Заглядывая в будущее</h3>
+   </div></div></div>
+   <p>Мы только прикоснулись к основам сборки программного обеспечения. Вот некоторые дополнительные темы, которые вы можете изучить после 
+   того как вы научитесь подключать ваши собственные сборки:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">Понимание того, как применять системы построения отличные от autoconf, такие как 
+	 CMake и SCons</strong></span>.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Настройка сборок для вашего собственного программного обеспечения.</strong></span>
+	 Если вы пишите своё собственное программное обеспечение, вы захотите выбрать систему построения и изучить её использование. Для 
+	 пакетов GNU autoconf вам может помочь <a class="link" href="https://www.nostarch.com/autotools.htm" target="_top">Autotools</a>
+	 John Calcote (No Starch Press, 2010).</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Компиляция ядра Linux.</strong></span> Система построения ядра Linux полностью 
+	 отличается от такового для прочих инструментов. Она имеет свою собственную систему конфигурации, подгоняющую под индивидуальный 
+	 заказ ваши собственные ядро и модули. Однако процедура проста и, если вы понимаете как работает начальный загрузчик, у вас не 
+	 будет никаких проблем с ней. Тем не менее, вы должны быть осторожны при этом, убедитесь, что вы всегда держите под рукой 
+	 старое ядро на случай, если вы не можете выполнить загрузку с новым.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Исходные пакеты специфичные для дистрибутива.</strong></span> Дистрибутивы Linux 
+	 сопровождают свои собственные версии исходного кода программного обеспечения. Иногда вы можете найти полезные исправления, которые 
+	 могут расширить функциональность или исправить проблемы в не поддерживаемых иным способом пакетах. Системы управления исходным кодом 
+	 пакетов содержат инструменты для автоматического построения, например, Debian <span class="term"><code>debuild</code></span> и 
+	 <span class="term"><code>mock</code></span> для пакетов на основе RPM.</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Построение программного обеспечения часто является важным средством для изучения программирования и разработки программного обеспечения.
+   Инструменты, которые вы изучили в последних двух главах сняли покров тайны с того как появляются ваше системное программное обеспечение. 
+   Будет не трудно сделать следующие шаги и заглянуть вовнутрь исходного кода, вносить изменения и создавать своё собственное программное 
+   обеспечение.</p>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

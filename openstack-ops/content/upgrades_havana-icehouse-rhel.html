@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Как выполнить модернизацию с Havana на Icehouse—Red Hat Enterprise Linux и производные ОС - Руководство по эксплуатации OpenStack - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="ch_ops_upgrades.html" title="Глава 18. Модернизации"/>
+<link rel="prev" href="upgrades_havana-icehouse-ubuntu.html" title="Как выполнить модернизацию с Havana на Icehouse—Ubuntu"/>
+<link rel="next" href="ops_upgrades-final-steps.html" title="Очистка и окончательная модификация файла настроек"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:13+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//upgrades_havana-icehouse-rhel.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Как выполнить модернизацию с Havana на Icehouse—Red Hat Enterprise Linux и производные ОС';
+PrevRef = 'upgrades_havana-icehouse-ubuntu.html';
+UpRef = 'ch_ops_upgrades.html';
+NextRef = 'ops_upgrades-final-steps.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="upgrades_havana-icehouse-rhel"> </a>
+ Как выполнить модернизацию с Havana на Icehouse—Red Hat Enterprise Linux и производные ОС</h2>
+</div></div></div><div class="toc"><dl><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-impact">Воздействие на пользователей</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-considerations">Анализ модернизации</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-backup">Выполнение резервного копирования</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-manage-repos">Управление репозиториями</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-notes">Замечания по модернизации</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-controller-node">Модернизация узла контроллера</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-services">Модернизация каждой службы</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-network-node">Модернизация сетевого узла</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-compute-nodes">Модернизация вычислительных узлов</a></span></dt><dt><span class="section">
+ <a href="upgrades_havana-icehouse-rhel.html#upgrade_icehouse-rhel-storage-nodes">Модернизация узлов хранения</a></span></dt></dl>
+</div>
+<p>В данном разделе мы предполагаем, что вы начинаете с архитектурой, представленной в 
+<a class="link" href="http://docs.openstack.org/havana/install-guide/install/yum/content/" target="_top"><em class="citetitle">
+Руководстве по установке OpenStack</em></a>
+и выполняете модернизацию для той же архитектуры Icehouse. Все узлы должны выполнять 
+Red Hat Enterprise Linux 6.5 или совместимые производные, такие как
+CentOS и Scientific Linux, с самыми последними установленными 
+и работающими пакетами Havana. В данном разделе в первую очередь обсуждаются 
+службы ядра OpenStack, такие, как служба идентификации (keystone), 
+служба образов (glance), вычислительные ресурсы (nova), 
+сетевые ресурсы (neutron), блочные хранилища (cinder), а также инструментальную панель. 
+Сетевая модернизация включает также преобразование от подключаемого модуля 
+Open vSwitch (OVS) к подключаемому модулю 2 уровня (M2).</p>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-impact"> </a>Воздействие на пользователей</h3>
+</div></div></div>
+<p>Процесс модернизации прерывает управление вашей средой, 
+в том числе через инструментальную панель. Если вы правильно подготовитесь 
+к данной модернизации, экземпляры владельцев нормально продолжат свою работу. 
+Однако экземпляры могут испытывать периодические разъединения сети в процессе 
+перестройки сетевой службой инфраструктуры виртуальной сети.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-considerations"> </a>Анализ модернизации</h3>
+</div></div></div>
+<p>Перед выполнением модернизации всегда просматривайте 
+<a class="link" href="https://wiki.openstack.org/wiki/ReleaseNotes/Icehouse" target="_top">замечания к редакции</a> 
+для ознакомления с новой доступной функциональностью, которую, возможно, вы допустите, 
+при этом устаревшие свойства вы должны отключить.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-backup"> </a>Выполнение резервного копирования</h3>
+</div></div></div>
+<p>Сохраните файлы настройки на всех узлах, как показано здесь:</p>
+<pre class="screen"># for i in keystone glance nova cinder neutron openstack-dashboard; \
+  do mkdir $i-havana; \
+  done
+# for i in keystone glance nova cinder neutron openstack-dashboard; \
+  do cp -r /etc/$i/* $i-havana/; \
+  done</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Вы можете изменить данный пример сценария на каждом узле 
+ для обработки различных служб.</p></td></tr></table>
+</div>
+<p>Выполните резервное копирование всех баз данных на вашем контроллере:</p>
+<pre class="screen"># mysqldump -u root -p --opt --add-drop-database --all-databases &gt; havana-db-backup.sql</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Вы должны модернизировать настройки вашего сервера MySQL и
+ перезапустить службу, как это описано в разделе 
+ <a class="link" href="http://docs.openstack.org/icehouse/install-guide/install/yum/content/basics-database-controller.html" target="_top">
+ установки контроллера MySQL</a> 
+ <a class="link" href="http://docs.openstack.org/icehouse/install-guide/install/yum/content/" target="_top"><em class="citetitle">
+ Руководства по установке OpenStack</em></a>.</p></td></tr></table>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-manage-repos"> </a>Управление репозиториями</h3>
+</div></div></div>
+<p>Удалите репозиторий для пакетов Havana на всех узлах и 
+добавьте репозиторий для пакетов Icehouse:</p>
+<pre class="screen"># yum erase rdo-release-havana
+# yum install http://repos.fedorapeople.org/repos/openstack/openstack-icehouse/ \
+  rdo-release-icehouse-3.noarch.rpm</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Запретите все автоматические обновления пакетов.</p></td></tr></table>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-notes"> </a>Замечания по модернизации</h3>
+</div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Запретите инъекцию файла Compute:</p>
+ <p>Согласно <a class="link" href="https://wiki.openstack.org/wiki/ReleaseNotes/Icehouse" target="_top">
+ Замечаниям к редакции</a>, редакция Icehouse по умолчанию запрещает инъекцию файлов.</p>
+ <p>Если вы планируете выполнение развертывания Icehouse в несколько этапов, 
+ на всех остальных узлах, остающихся с редакцией Havana 
+ вам необходимо запретить инъекцию файлов.</p>
+ <p>Измените файл <code class="filename">/etc/nova/nova-compute.conf</code>:</p>
+ <pre class="programlisting brush: bash; ">[libvirt]
+...
+libvirt_inject_partition = -2</pre></li><li class="listitem">
+ <p>Преобразование от подключаемого модуля OVS к подключаемому модулю ML2:</p>
+ <p>Вы должны преобразовать настройки для вашей среды, содержащиеся в файлах 
+ <code class="filename">/etc/neutron/neutron.conf</code> и
+ <code class="filename">/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini</code>
+ с OVS к ML2. Например, <a class="link" href="http://docs.openstack.org/icehouse/install-guide/install/yum/content/" target="_top"><em class="citetitle">
+ Руководство по установке OpenStack</em></a>
+ содержит <a class="link" href="http://docs.openstack.org/icehouse/install-guide/install/yum/content/section_neutron-networking-ml2.html" target="_top">
+ настройку подключаемого модуля ML2</a> с применением туннелей GRE.</p>
+ <p>Мы рекомендуем сохранить пакеты подключаемыого модуля OVS и 
+ файлов настройки пока вы не проверите модернизацию.</p></li></ul>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-controller-node"> </a>Модернизация узла контроллера</h3>
+</div></div></div>
+<p>Модернизируйте пакеты на узле контроллера до Icehouse следующим образом:</p>
+<pre class="screen"># yum upgrade</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Данный администратор пакетов добавляет в конец новых версий существующих файлов префикс 
+ <code class="filename">.rpmnew</code>. Вы должны проанализировать принятые соглашения, 
+ связанные с более новыми файлами настройки и объединить их с 
+ существующими файлами настройки после завершения процесса 
+ модернизации. Вы можете найти более новые версии
+ существующих файлов настройки следующей командой:</p>
+<pre class="screen"># find /etc -name *.rpmnew</pre></td></tr></table>
+</div></div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-services"> </a>Модернизация каждой службы</h3>
+</div></div></div>
+<p>Для выполнения процедуры модернизации для каждой службы обычно требуется, 
+чтобы вы остановили ее, выполнили команду синхронизации базы данных 
+и запустили службу для применения новых настроек. Для данной процедуры вы должны 
+иметь привилегии администратора. Некоторые службы требуют дополнительные этапы.</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p>Идентификация OpenStack:</p>
+ <p>Модернизируйте файл настройки для совместимости с Icehouse.</p>
+ <p>Измените файл <code class="filename">/etc/keystone/keystone.conf</code>:</p>
+ <p>Добавьте раздел <code class="literal">[database]</code>.</p>
+ <p>Переместите ключ <code class="option">connection</code> из раздела
+ <code class="literal">[sql]</code> в раздел
+ <code class="literal">[database]</code>.</p>
+ <p>Остановите службы, модернизируйте базу данных и повторно стартуйте службы.</p>
+ <pre class="screen"># service openstack-keystone stop
+# keystone-manage token_flush
+# keystone-manage db_sync
+# service openstack-keystone start</pre></li><li class="listitem">
+ <p>Служба образов OpenStack:</p>
+ <p>Перед модернизацией базы данных службы образов вы должны преобразовать набор символов 
+ для каждой таблицы на UTF-8.</p>
+ <p>Воспользуйтесь клиентом MySQL для выполнения следующих команд:</p>
+<pre class="screen"># mysql -u root -p
+mysql&gt; SET foreign_key_checks = 0;
+mysql&gt; ALTER TABLE glance.image_locations CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE glance.image_members CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE glance.image_properties CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE glance.image_tags CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE glance.images CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE glance.migrate_version CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; SET foreign_key_checks = 1;
+mysql&gt; exit</pre>
+ <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+  <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+  <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+  <p>Ваша среда может также содержать другие или дополнительные таблицы, 
+  которые вы тоже должны преобразовать в UTF-8 
+  при помощи аналогичных команд.</p></td></tr></table>
+ </div>
+ <p>Модернизируйте конфигурацию для совместимости с Icehouse.</p>
+ <p>Измените файлы <code class="filename">/etc/glance/glance-api.conf</code> и
+ <code class="filename">/etc/glance/glance-registry.conf</code>:</p>
+ <p>Добавьте раздел <code class="literal">[database]</code>.</p>
+ <p>Переименуйте ключ <code class="option">sql_connection</code> в
+ <code class="option">connection</code> и переместите его в раздел
+ <code class="literal">[database]</code>.</p>
+ <p>Измените файл <code class="filename">/etc/glance/glance-api.conf</code>:</p>
+ <p>Добавьте ключи посредника сообщений Qpid в раздел
+ <code class="literal">[DEFAULT]</code>.</p>
+<pre class="programlisting brush: bash; ">[DEFAULT]
+...
+rpc_backend = qpid
+qpid_hostname = <em class="replaceable"><code>controller</code></em></pre>
+<p>Остановите службы, модернизируйте базу данных и повторно запустите службы:</p>
+<pre class="screen"># service openstack-glance-api stop
+# service openstack-glance-registry stop
+# glance-manage db_sync
+# service openstack-glance-api start
+# service openstack-glance-registry start</pre></li><li class="listitem">
+<p>Вычислительная среда OpenStack:</p>
+<p>Модернизируйте конфигурацию для совместимости с Icehouse.</p>
+<p>Отредактируйте файл <code class="filename">/etc/nova/nova.conf</code>:</p>
+<p>Замените ключ <code class="option">rpc_backend</code> с
+<code class="literal">nova.openstack.common.rpc.impl_qpid</code>
+на <code class="literal">qpid</code>.</p>
+<p>Измените файл <code class="filename">/etc/nova/api-paste.ini</code>:</p>
+<p>Закомментируйте или удалите все ключи в разделе <code class="literal">[filter:authtoken]</code> 
+ниже оператора <code class="literal">paste.filter_factory =
+              keystoneclient.middleware.auth_token:filter_factory</code>.</p>
+<p>Остановите службы, модернизируйте базу данных и повторно запустите службы.</p>
+<pre class="screen"># service openstack-nova-api stop
+# service openstack-nova-scheduler stop
+# service openstack-nova-conductor stop
+# service openstack-nova-cert stop
+# service openstack-nova-consoleauth stop
+# service openstack-nova-novncproxy stop
+# nova-manage db sync
+# service openstack-nova-api start
+# service openstack-nova-scheduler start
+# service openstack-nova-conductor start
+# service openstack-nova-cert start
+# service openstack-nova-consoleauth start
+# service openstack-nova-novncproxy start</pre></li><li class="listitem">
+<p>Сетевая среда OpenStack:</p>
+<p>Перед модернизацией базы данных Networking, вы должны преобразовать набор символов для всех таблиц на UTF-8.</p>
+<p>Для выполнения следующих команд воспользуйтесь клиентом MySQL:</p>
+<pre class="screen"># mysql -u root -p
+mysql&gt; USE neutron;
+mysql&gt; SET foreign_key_checks = 0;
+mysql&gt; ALTER TABLE agents CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE alembic_version CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE allowedaddresspairs CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE dnsnameservers CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE externalnetworks CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE extradhcpopts CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE floatingips CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ipallocationpools CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ipallocations CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ipavailabilityranges CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE networkdhcpagentbindings CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE networks CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ovs_network_bindings CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ovs_tunnel_allocations CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ovs_tunnel_endpoints CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ovs_vlan_allocations CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE portbindingports CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE ports CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE quotas CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE routerl3agentbindings CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE routerroutes CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE routers CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE securitygroupportbindings CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE securitygrouprules CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE securitygroups CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE servicedefinitions CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE servicetypes CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE subnetroutes CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; ALTER TABLE subnets CONVERT TO CHARACTER SET 'utf8';
+mysql&gt; SET foreign_key_checks = 1;
+mysql&gt; exit</pre>
+
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Ваша среда может использовать другие имена баз данных. К тому же, она может содержать
+ другие или дополнительные таблицы, которые вы тоже должны преобразовать в 
+ UTF-8 при помощи аналогичных команд.</p></td></tr></table>
+</div>
+<p>Установите пакет подключаемого модуля ML2:</p>
+<pre class="screen"># yum install openstack-neutron-ml2</pre>
+<p>Наполните файл <code class="filename">/etc/neutron/plugins/ml2/ml2_conf.ini</code>
+эквивалентной конфигурацией для вашей среды. Не изменяйте файл <code class="filename">/etc/neutron/neutron.conf</code> 
+пока не завершатся этапы преобразования.</p>
+<p>Измените символьную ссылку <code class="filename">/etc/neutron/plugin.ini</code> 
+на ссылку <code class="filename">/etc/neutron/plugins/ml2/ml2_conf.ini</code>.</p>
+<p>Остановите службы, модернизируйте базу данных и выполните преобразование с OVS на ML2.</p>
+<p>Замените <em class="replaceable"><code>NEUTRON_DBPASS</code></em> 
+на выбранный вами для вашей базы данных пароль.</p>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+ <p>Мы настоятельно рекомендуем вам выполнить резервное копирование 
+ базы данных перед выполнением следующих команд, поскольку 
+ сценарий преобразования не может выполнять откат.</p></td></tr></table>
+</div>
+<pre class="screen"># service neutron-server stop
+# neutron-db-manage --config-file /etc/neutron/neutron.conf \
+  --config-file /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini stamp havana
+# neutron-db-manage --config-file /etc/neutron/neutron.conf \
+  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade icehouse
+# python -m neutron.db.migration.migrate_to_ml2 openvswitch \
+  mysql://neutron:NEUTRON_DBPASS@controller/neutron</pre>
+<p>Измените файл <code class="filename">/etc/neutron/neutron.conf</code>
+на использование подключаемого модуля ML2 и разрешите уведомления
+сетевых изменений:</p>
+<p>Замените <em class="replaceable"><code>SERVICE_TENANT_ID</code></em> 
+на идентификатор владельца данной службы (id) для службы идентификации, а 
+<em class="replaceable"><code>NOVA_PASS</code></em> на выбранный вами 
+для пользователя <code class="literal">nova</code> пароль в 
+службе идентификации.</p>
+<pre class="programlisting brush: bash; ">[DEFAULT]
+...
+core_plugin = ml2
+service_plugins = router
+...
+notify_nova_on_port_status_changes = True
+notify_nova_on_port_data_changes = True
+nova_url = http://<em class="replaceable"><code>controller</code></em>:8774/v2
+nova_admin_username = nova
+nova_admin_tenant_id = <em class="replaceable"><code>SERVICE_TENANT_ID</code></em>
+nova_admin_password = <em class="replaceable"><code>NOVA_PASS</code></em>
+nova_admin_auth_url = http://<em class="replaceable"><code>controller</code></em>:35357/v2.0
+</pre>
+<p>Запустите сетевые службы.</p>
+<pre class="screen"># service neutron-server start</pre></li><li class="listitem">
+<p>Блочное хранилище OpenStack:</p>
+<p>Остановите службы, модернизируйте базу данных и повторно запустите службы.</p>
+<pre class="screen"># service openstack-cinder-api stop
+# service openstack-cinder-volume stop
+# service openstack-cinder-scheduler stop
+# cinder-manage db sync
+# service openstack-cinder-api start
+# service openstack-cinder-volume start
+# service openstack-cinder-scheduler start</pre></li><li class="listitem">
+<p>Инструментальная панель:</p>
+<p>Модернизируйте настройки для совместимости с редакцией Icehouse.</p>
+<p>Отредактируйте файл <code class="filename">/etc/openstack-dashboard/local_settings</code>:</p>
+<p>Замените ключ <code class="option">OPENSTACK_KEYSTONE_DEFAULT_ROLE</code> c 
+<code class="literal">"Member"</code> на
+<code class="literal">"_member_"</code>.</p>
+<p>Перезапустите службы инструментальной панели.</p>
+<pre class="screen"># service httpd restart</pre></li></ul>
+</div>
+<p>Модернизация узла контроллера завершена. Теперь вы можете модернизировать оставшиеся узлы.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-network-node"> </a>Модернизация сетевого узла</h3>
+</div></div></div>
+<p>Модернизируйте пакеты на сетевом узле на редакцию Icehouse:</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Убедитесь что вы удалили репозиторий для пакетов Havana 
+ и добавили репозиторий для пакетов Icehouse.</p></td></tr></table></div>
+<pre class="screen"># yum upgrade</pre>
+<p>Установите пакет подключаемого модуля ML2:</p>
+<pre class="screen"># yum install openstack-neutron-ml2</pre>
+<p>Измените файл <code class="filename">/etc/neutron/neutron.conf</code> 
+для использования подключаемого модуля ML2:</p>
+<pre class="programlisting brush: bash; ">[DEFAULT]
+core_plugin = ml2
+service_plugins = router</pre>
+<p>Наполните файл <code class="filename">/etc/neutron/plugins/ml2/ml2_conf.ini</code>
+эквивалентной конфигурацией для вашей среды.</p>
+<p>Измените символьную ссылку <code class="filename">/etc/neutron/plugin.ini</code>
+на ссылку <code class="filename">/etc/neutron/plugins/ml2/ml2_conf.ini</code>.</p>
+<p>Очистите активную конфигурацию OVS:</p>
+<pre class="screen"># service neutron-ovs-cleanup restart</pre>
+<p>Перезапустите сетевые службы:</p>
+<pre class="screen"># service neutron-dhcp-agent restart
+# service neutron-l3-agent restart
+# service neutron-metadata-agent restart
+# service neutron-openvswitch-agent restart</pre>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-compute-nodes"> </a>Модернизация вычислительных узлов</h3>
+</div></div></div>
+<p>Модернизируйте пакеты на вычислительных узлах на редакцию Icehouse
+Upgrade packages on the compute nodes to Icehouse:</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Убедитесь что вы удалили репозиторий для пакетов Havana 
+ и добавили репозиторий для пакетов Icehouse.</p></td></tr></table>
+</div>
+<pre class="screen"># yum upgrade</pre>
+<p>Установите пакет подключаемого модуля ML2:</p>
+<pre class="screen"># yum install openstack-neutron-ml2</pre>
+<p>Измените файл <code class="filename">/etc/neutron/neutron.conf</code>
+для использования подключаемого модуля ML2:</p>
+<pre class="programlisting brush: bash; ">[DEFAULT]
+core_plugin = ml2
+service_plugins = router</pre><p>Populate the
+          <code class="filename">/etc/neutron/plugins/ml2/ml2_conf.ini</code>
+        file with the equivalent configuration for your
+        environment.</p>
+<p>Измените символьную ссылку 
+<code class="filename">/etc/neutron/plugin.ini</code>
+на <code class="filename">/etc/neutron/plugins/ml2/ml2_conf.ini</code>.</p>
+<p>Очистите активную конфигурацию OVS:</p>
+<pre class="screen"># service neutron-ovs-cleanup restart</pre>
+<p>Перезапустите сетевые службы:</p>
+<pre class="screen"># service neutron-openvswitch-agent restart</pre>
+<p>Перезапустите службы вычислительной среды:</p>
+<pre class="screen"># service openstack-nova-compute restart</pre>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="upgrade_icehouse-rhel-storage-nodes"> </a>Модернизация узлов хранения</h3>
+</div></div></div>
+<p>Модернизируйте пакеты на узлах хранения на редакцию Icehouse:</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Убедитесь что вы удалили репозиторий для пакетов Havana 
+ и добавили репозиторий для пакетов Icehouse.</p></td></tr></table>
+</div>
+<pre class="screen"># yum upgrade</pre>
+<p>Перезапустите службы блочного хранилища.</p>
+<pre class="screen"># service openstack-cinder-volume restart</pre></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,373 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 7. Настройка вашей установки Swift. Реализация облачного хранилища с OpenStack Swift.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing">
+   <meta name="Description" content="Глава 7. Настройка вашей установки Swift. Реализация облачного хранилища с OpenStack Swift.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="ToC.htm">Реализация облачного хранилища с OpenStack Swift.</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<h2 align="right">ГЛАВА 7</h2>
+<hr />
+<h1 id="Chapter_07" align="right">Настройка вашей установки Swift.</h1>
+<p>
+Огромная гибкость OpenStack Swift переходит в стоимость - существует огромное количество параметров настройки.
+Таким образом, пользователи, использующие Swift в качестве частного облака должны будут выполнить тонкую настройку своей установки для оптимизации производительности, надежности и доступности для своих персональных рабочих нагрузок.
+Данная глава проведет вас по инструментальным средствам тестирования производительности и основным доступным механизмам тонкой настройки вашего кластера Swift.
+</p>
+
+
+<h2 id="Ch0701">Тестирование производительности</h2>
+<p>
+Существуют различные интсрументальные средства, которые могут быть использованы для тестирования производительности вашего кластера Swift при различных определенных нагрузках.
+<strong>COSBench</strong>, <strong>ssbench</strong> и <strong>swift-bench</strong> являются наиболее популярными доступными средствами.
+В то время как swift-bench (<a href="https://pypi.python.org/pypi/swift-bench/1.0"><code>https://pypi.python.org/pypi/swift-bench/1.0</code></a>) используется как часть проекта Swift и, следовательно, является наиболее общим, используемым по умолчанию инструментом тестирования, данная глава обсуждает COSbench, принимая во внимание полноту этого средства и наличие графического интерфейса пользователя в этом инструменте.
+</p><p>
+COSBench является инструментом тестирования распределенной производительности с открытым кодом для систем хранения объектов.
+Она разрабатывается и поддерживается Intel.
+COSBench поддерживает большое разнообразие систем хранения объектов, в том числе OpenStack Swift. 
+</p><p>
+Физическая конфигурация COSBench показана на следующей диаграме: 
+	<div style="width: 479px; margin: 1.75em auto;">
+	<p style="text-align: center;">
+		<img src="i/Pic07-01.jpg"  alt="Физическая конфигурация COSBench" title="Физическая конфигурация COSBench" width="479" height="458" style="width: 479px" />
+		<span class="image-caption">Физическая конфигурация COSBench</span>
+	</p></div>
+</p><p>
+Основными компонентами COSBench являются:<ul>
+ <li><strong>Драйвер</strong> (также называемый драйвером COSBench или генератором нагрузки): <ul>
+   <li>Отвечает за генерацию рабочей нагрузки, выдачи операций к целям в облачном хранилище объектов и сборе статистик производительности
+   <li>В нашем тестовом окружении драйверы были доступны через 
+	<br /><code>http://10.27.128.14:18088/driver/index.html</code> и
+	<br /><code>http://10.27.128.15:18088/driver/index.html</code>
+ </ul>
+ <li><strong>Контроллер</strong> (также называемый контроллером COSBench): <ul>
+   <li>Отвечает за координацию драйверов для коллективного выполнения нагрузки, сбора и агрегирования состояний исполнения или результатов тестирования от экземпляров драйвера, а также принятия заявок на рабочую нагрузку
+   <li>В нашем тестовом окружении доступен через
+	<br /><code>http://10.27.128.14:19088/controller/index.html</code>
+ </ul>
+</ul>
+</p><p>
+Критическим элементом, которое мы должны держать на контроле когда мы начинаем работу с COSBench, заключается в обеспечении того, что машины драйвера и контроллера не станут по небрежности бутылочным горлышком производительности.
+Эти узлы должны иметь адекватные ресурсы.
+</p><p>
+Далее, параметры тестирования тесно увязаны с вашим случаем применения и онидолжны быть установлены соответствующим образом.
+<a href="Ch08ru.htm"><em>Глава 8, Дополнительные ресурсы</em></a> исследует случаи использования более детально, однако пара примеров связанных с тестированием следующие:<ul>
+ <li><strong>Разделение и совместное использование аудио- файлов</strong>:
+Это случай горячего использования данных при котором вы можете захотеть установить соотношение запросов на чтение к запросам на запись как относительно высокое, например, 80 процентов.
+Скорость доступа к контейнерам и объектам может быть относительно малой (десятки запросов в секунду) при относительно больших объектах (скажем, с размером в сотни МБайт или более на объект).
+ <li><strong>Архивирование документов</strong>:
+Это случай несколько прохладного использования данных, при котором вы можете захотеть относительно низким соотношение запросов на чтение к запросам на запись, например, 5 процентов.
+Скорость доступа к контейнерам и объектам может быть высокой (в сотнях запросов в секунду) при среднем размере объектов (скажем, с размеров 5МБайт на объект).
+</ul>
+</p><p>
+Запомните эти модели, поскольку мы к ним будем обращаться.
+</p><p>
+При установке нашего теста COSBench была использована операционная система Ubuntu 12.04.
+Система также имела JRE, unzip и cURL, установленные <em>до</em> установки COSBench версии 0.3.3.0 (<a href="(https://github.com/intel-cloud/cosbench/releases/tag/0.3.3.0"><code>(https://github.com/intel-cloud/cosbench/releases/tag/0.3.3.0</code></a>).
+Установка очень легкая, как вы можете убедиться в следующих простых шагах:
+<br /><code>
+unzip 0.3.3.0.zip<br />
+ln -s 0.3.3.0/ cos<br />
+cd cos<br />
+chmod +x *.sh<br />
+</code>
+</p><p>
+ПОдробнее об установке и проверке того, что программное обеспечение было установлено правильно можно узнать в руководстве пользователя COSBench, расположенной по адресу: <a href="https://github.com/intel-cloud/cosbench"><code>https://github.com/intel-cloud/cosbench</code></a>.
+При установленном COSBench пользователь имеет доступ к набору сценариев.
+Некоторые из этих сценариев следующие:<ul>
+ <li><code>start-all.sh / stop-all.sh</code>: Используется для запуска/останова и контроллера, и драйвера на текущем узле
+ <li><code>start-controller.sh / stop-controller.sh</code>: Используется для запуска/останова только контроллерf на текущем узле
+ <li><code>start-driver.sh / stop-driver.sh</code>: Используется только для запуска/останова драйвера на текущем узле
+ <li><code>cosbench-start.sh / cosbench-stop.sh</code>: Это сценарий для внутреннего использования, вызываемый предыдущими сценариями
+ <li><code>cli.sh</code>: Используется для манипулирования рабочей нагрузкой с использованием коммандных строк.
+</ul>
+</p><p>
+ Контроллер может быть настроен с помощью файла <code>conf/controller.conf</code>, а драйвер может быть настроен с помощью файла <code>conf/driver.conf</code>.
+Драйверы могут быть запущены на всех узлах драйверов с использованием сценария <code>start-driver.sh</code>, в то время как контроллер может быть запущен только на узле контроллера с использованием сценария <code>startcontroller.sh</code>
+</p><p>
+Далее мы должны создать <strong>рабочую нагрузку</strong>.
+Рабочая нагрузка может рассматриваться как один полный эталонный тест.
+Рабочая нагрузка (<code>workload</code>) состоит из <strong>рабочих стадий</strong>.
+Каждая рабочая стадия (<code>workstage</code>) состоит из элементов <strong>заданий</strong>.
+Наконец, элементы задания (<code>work</code>) состоят из <strong>операций</strong>.
+Каждая <code>workload</code> может иметь более одной <code>workstage</code>, которые выполняются последовательно.
+<code>Workstage</code> может иметь более одного элемента <code>work</code>, которые выполняются одновременно.
+</p><p>
+Существуют нормальный тип (<code>main</code>) и четыре специальных типа (<code>init</code>, <code>prepare</code>, <code>cleanup</code> и <code>dispose</code>) <code>work</code>.
+Тип <code>main</code> является тем, на чем мы сосредоточим оставшееся обсуждение; основными параметрами для этой фазы являются:<ul>
+ <li><code>workers</code> для описания числа исполнителей, используемых для одновременного выполнения заданий и, таким образом, управления генерацией нагрузки 
+ <li><code>runtime</code> (плюс <code>rumpup</code> и <code>rumpdown</code>), <code>totalOps</code> и <code>totalBytes</code> используются для управления другими параметрами генерируемой нагрузки, включающими то как начинать и заканчивать <code>work</code>
+</ul>
+</p><p>
+Фаза <code>main</code> имеет операции <code>read</code>, <code>write</code> и <code>delete</code>.
+Обычно вы хотите определить число подлежащих записи контейнеров и объектов, а также размеры объектов.
+Числа и размеры описываются как выражения и доступно разнообразие параметров, такое как constant, uniform и sequential (постоянный, однородный и последовательный).
+</p><p>
+Рабочая нагрузка описывается файлом XML.
+Сейчас мы создадим рабочую нагрузку, которая формируется после использования модели архивирования документо, обсуждавшейся ранее.
+Она использует отношение рабочей нагрузки 95 процентов записей и 5 процентов чтений.
+Драйверы будут порождать 128 исполнителей на промежуток времени в один час; размер объекта статичный в 5МБайт и будет создано 100 объектов.
+Рабочая нагрузка выглядит следующим образом: 
+<br /><code>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />
+&lt;workload name=&quot;LTS2-UAT-V1-128W-5MB-Baseline&quot; description=&quot;LTS2 UAT<br />
+ workload configuration&quot;&gt;<br />
+&lt;auth type=&quot;swauth&quot; config=&quot; ;password=xxxx;url= &gt;username=8016-<br />
+2588:evault-user@evault.com https://auth.lts2.evault.com/v1.0&quot;/<br />
+&lt;storage type=&quot;swift&quot; config=&quot;&quot;/&gt;<br />
+ &lt;workflow&gt;<br />
+ &lt;workstage name=&quot;init&quot; closuredelay=&quot;0&quot;&gt;<br />
+ &lt;work name=&quot;init&quot; type=&quot;init&quot; workers=&quot;16&quot; interval=&quot;20&quot;<br />
+ division=&quot;container&quot; runtime=&quot;0&quot; rampup=&quot;0&quot; rampdown=&quot;0&quot;<br />
+ totalOps=&quot;1&quot; totalBytes=&quot;0&quot; config=&quot;containers=r(1,32)&quot;&gt;<br />
+ &lt;operation type=&quot;init&quot; ratio=&quot;100&quot; division=&quot;container&quot;<br />
+ config=&quot;objects=r(0,0);sizes=c(0)B;containers=r(1,32)&quot;<br />
+ id=&quot;none&quot;/&gt;<br />
+ &lt;/work&gt;<br />
+ &lt;/workstage&gt;<br />
+ &lt;workstage name=&quot;prepare&quot; closuredelay=&quot;0&quot;&gt;<br />
+ &lt;work name=&quot;prepare&quot; type=&quot;prepare&quot; workers=&quot;16&quot;<br />
+ interval=&quot;20&quot;<br />
+ division=&quot;object&quot; runtime=&quot;0&quot; rampup=&quot;0&quot; rampdown=&quot;0&quot;<br />
+ totalOps=&quot;1&quot; totalBytes=&quot;0&quot;<br />
+ config=&quot;containers=r(1,32);objects=r(1,50);<br />
+ sizes=u(5,5)MB&quot;&gt;<br />
+ &lt;operation type=&quot;prepare&quot; ratio=&quot;100&quot; division=&quot;object&quot;<br />
+ config=&quot;createContainer=false;containers=r(1,32);<br />
+ objects=r(1,50);sizes=u(5,5)MB&quot; id=&quot;none&quot;/&gt;<br />
+ &lt;/work&gt;<br />
+ &lt;/workstage&gt;<br />
+ &lt;workstage name=&quot;normal&quot; closuredelay=&quot;0&quot;&gt;<br />
+ &lt;work name=&quot;normal&quot; type=&quot;normal&quot; workers=&quot;128&quot;<br />
+ interval=&quot;20&quot;<br />
+ division=&quot;none&quot; runtime=&quot;300&quot; rampup=&quot;100&quot; rampdown=&quot;0&quot;<br />
+ totalOps=&quot;0&quot; totalBytes=&quot;0&quot;&gt;<br />
+ &lt;operation type=&quot;read&quot; ratio=&quot;5&quot; division=&quot;none&quot;<br />
+ config=&quot;containers=u(1,32);objects=u(1,50);&quot; id=&quot;none&quot;/&gt;<br />
+ &lt;operation type=&quot;write&quot; ratio=&quot;95&quot; division=&quot;none&quot;<br />
+ config=&quot;containers=u(1,32);objects=u(51,100);<br />
+ sizes=u(5,5)MB&quot;<br />
+ id=&quot;none&quot;/&gt;  <br />
+&lt;/work&gt;<br />
+ &lt;/workstage&gt;<br />
+ &lt;workstage name=&quot;cleanup&quot; closuredelay=&quot;0&quot;&gt;<br />
+ &lt;work name=&quot;cleanup&quot; type=&quot;cleanup&quot; workers=&quot;16&quot;<br />
+ interval=&quot;20&quot;<br />
+ division=&quot;object&quot; runtime=&quot;0&quot; rampup=&quot;0&quot; rampdown=&quot;0&quot;<br />
+ totalOps=&quot;1&quot; totalBytes=&quot;0&quot;<br />
+ config=&quot;containers=r(1,32);objects=r(1,100);&quot;&gt;<br />
+&lt; operation type=&quot;cleanup&quot; ratio=&quot;100&quot; division=&quot;object&quot;<br />
+ config=&quot;deleteContainer=false;containers=r(1,32);<br />
+ objects=r(1,100);&quot; id=&quot;none&quot;/&gt;<br />
+ &lt;/work&gt;<br />
+ &lt;/workstage&gt;<br />
+ &lt;workstage name=&quot;dispose&quot; closuredelay=&quot;0&quot;&gt;<br />
+ &lt;work name=&quot;dispose&quot; type=&quot;dispose&quot; workers=&quot;16&quot;<br />
+ interval=&quot;20&quot;<br />
+ division=&quot;container&quot; runtime=&quot;0&quot; rampup=&quot;0&quot; rampdown=&quot;0&quot;<br />
+ totalOps=&quot;1&quot; totalBytes=&quot;0&quot; config=&quot;containers=r(1,32);&quot;&gt;<br />
+ &lt;operation type=&quot;dispose&quot; ratio=&quot;100&quot;<br />
+ division=&quot;container&quot;<br />
+ config=&quot;objects=r(0,0);sizes=c(0)B;containers=r(1,32);&quot;<br />
+ id=&quot;none&quot;/&gt;<br />
+ &lt;/work&gt;<br />
+ &lt;/workstage&gt;<br />
+ &lt;/workflow&gt;<br />
+&lt;/workload&gt;<br />
+</code>
+</p><p>
+Результат <code>workload</code> является последовательностями отчетов о метриках: производительности, измеряемой в операциях/секунду, времени отклика, измеряемого средней продолжительностью между операциями запуска и останова, пропускной способности, измеряемой м МБайтах в секунду (MBps), соотношением удач (процент успешного выполнения) и других метрик.
+Образец не связанного с данной нагрузкой сообщения показан в приводимой ниже копии экрана:
+	<div style="width: 521px; margin: 1.75em auto;">
+	<p style="text-align: center;">
+		<img src="i/Pic07-02.jpg"  alt="Образец отчета" title="Образец отчета" width="521" height="144" style="width: 521px" />
+		<span class="image-caption">Образец отчета</span>
+	</p></div>
+</p><p>
+Если кластер Swift выдержал тестирование под вашей <code>workload</code>, вы выполнили задачу.
+Возможно вы захотите выполнить некоторые основные тонкие настройки, но это не обязательно.
+Однако, если кластер Swift не в состоянии справиться с <code>workload</code>, вам необходимо выполнить настройку.  
+</p><p>
+Первый шаг заключается в определении бутылочного горлышка.
+Обратитесь к <a href="Ch05ru.htm">Глава 5, Управление Swift</a> за инструментарием для поиска бутылочного горлышка производительности.
+Nagios или swift-recom могут быть особенно полезными для этой цели.
+Конечно, также могут быть использованы простейшие средства, такие как <code>top</code>.
+Как только вы изолируете узкое место на определенном сервере (ах) и лежащие в основе компоненты такие как производительность ЦПУ, память, ввод/вывод, пропускная способность дисков и времена откликов, мы можем перейти к следующему шагу, которым является настройка. 
+</p>
+
+
+<h2 id="Ch0702">Настройка аппаратных средств</h2>
+<p>
+<a href="Ch06ru.htm"><em>Глава 6, Выбор соответствующих аппаратных средств</em></a> детально рассматривает аппаратные средства.
+Достаточно сказать, что правильный выбор аппаратных средств оказывает существенное значение на производительность, надежность, доступность и стоимость.   
+</p>
+
+
+<h2 id="Ch0703">Настройка программного обеспечения</h2>
+<p>
+В <a href="Ch02ru.htm"><em>Главе 2, Архитектура OpenStack Swift</em></a> мы ужеговорили о том, что Swift использует два типа модулей программного обеспечения: каналы данных (обычно называемые в документации Swift <strong>WSGI server</strong>-ами) и завершающей обработкой (postprocessing, обычно называемой <strong>background daemon</strong>).
+Кроме того, существуют кольца.
+Все три полезных свойства должны рассматриваться отличными способами в терминах настройки программного обеспечения.
+Также мы вкраце взглянем на другие дополнительные возможности настройки.
+</p>
+
+<h3 id="Ch070301">Обзор колец</h3>
+<p>
+Количество <strong>разделов</strong> в кольце влияет на производительность и должно тщательно выбираться, поскольку оно не может быть легко изменено.
+Документация Swift рекомендует, как минимум, 100 разделов на диск для обеспечения равномерного распределения между серверами.
+Взяв максимальное ожидаемое количество дисков, умноженное на 100, азатем округленное доближайшей степени двух, мы получаем минимальное общее количество разделов.
+Использование бОльшего, чем необходимо, числа будет означать очень равномерное распределение, однако, за счет производительности, поскольку большее число разделов добавляет нагрузку на репликаторы и другие завершающие задания.
+Следовательно, пользователи не должны переоценивать окончательный размер кластера.
+</p><p>
+Например, предположим, что мы ожидаем, что наш кластер должен иметь 1000 узлов, причем каждыйбудет иметь 60 дисков.
+Это дает нам <em>60 x 1,000 x 100 = 6`000`000 разделов</em>.
+Округляя до ближайшей степени двойки, мы получаем 2<sup>23</sup> = <em>8`388`608</em>.
+Следовательно, значение, котороебудет использовано для создания кольца будет 23.
+При данных вычислениях мы не принимали в расчет размердиска, однако кластер с меньшим/ более быстрым дисками (например, 2ТБ SAS дисками) будет работать лучше чем кластер с меньшими / более медленными дисками (например, 6ТБ SATA дисками) при одноми том же количестве разделов.
+</p>
+
+<h3 id="Ch070302">Настрока программных каналов данных</h3>
+<p>
+Основными программными модулями канала данных являются сервера прокси, учетных записей, контейнеров и объектов.
+Существуют десятки параметров настройки, однако наиболее важными с точки зрения производительности являются следующие четыре:
+<table style="border: none; align=center;" align="center" cellspacing="0" cellpadding="0"><tbody>
+<tr>
+ <td width="30%" style="border-top: thin solid; border-bottom: thin solid; align=center;"><strong>Параметр</strong>
+ <td width="35%" style="border-top: thin solid; border-bottom: thin solid; align=center;"><strong>Сервер прокси</strong>
+ <td width="35%" style="border-top: thin solid; border-bottom: thin solid; align=center;"><strong>Сервер хранения</strong>
+</tr><tr>
+ <td><code>workers</code> (по умолчанию <code>auto</code>)
+ <td colspan="2">Каждый исполнитель (worker) может обрабатывать <code>max_clients</code> количество одновременных запросов.
+В идеале, большее число исполнителей означает обработку большего количества запросов без блокировки.
+Однако, существует верхний предел, диктуемый ЦПУ.
+Начните с установки  <code>max_clients</code> равного удвоенному числу ядер.
+Если сервер хранения содержит серверы учетных записй, контейнеров и объектов, вы можете поэксперементировать.
+</tr><tr>
+ <td><code>max_clients</code> (по умолчанию <code>1024</code>)
+ <td>Поскольку мы хотим наиболее эффективно использовать емкость сети, мы желаем максимального количества одновременных запросов.
+Возможно, вамне придется менять установки по умолчанию.
+ <td>В опубликованных RedHat данных, были найдены вызовы файловой системы, которые целиком блокируют исполнителя.
+Это означает, что установка очень большого значения для <code>max_clients</code> не является полезной.
+Поэксперементируйте с этим параметром, и не бойтесь уменьшать его до упора, чтобы соответствовать значению <code>threads_per_disk</code>, или даже 1.
+</tr><tr>
+ <td><code>object_chunk_size</code> (по умолчанию <code>64КБ</code>)
+ <td>Принимая во внимание, что обмен этими данными осуществляется по внутренней сети Swift, установка бОльшего значения может быть эффективной.
+RedHat определила, что установка 2МБ оказывается более эффективной, чем значение по умолчанию при сети 10Gbps. 
+ <td>N/A
+</tr><tr>
+ <td style="border-bottom: thin solid;"><code>threads_per_disk</code> (по умолчанию <code>0</code>)
+ <td style="border-bottom: thin solid;">N/A
+ <td style="border-bottom: thin solid;">Этот параметр определяет размер пула потоков каждого диска.
+Значение по умолчанию <code>0</code> означает, что дисковый пул не будет использоваться.
+В общем случае, документация Swift рекомендует сохранять это значение небольшим, чтобы избегатьбольшой глубины очереди, которая приводит к большим задержкам чтения.
+Попробуйте начать с четырех потоков на диск.
+</tr></tbody></table>
+</p><p>
+</p>
+
+<h3 id="Ch070303">Настройка завершающего программного обеспечения</h3>
+<p>
+Влияние настроек завершающего программного обеспечения сильно отличается от настроек программного обеспечения канала передачи данных.
+Внимание сосредотачивается не столько на обслуживании запросов API, сколько на надежности, производительности, согласованности.
+Увеличение скорости репликаторов и аудиторов делает систему более надежной, поскольку это уменьшает время, необходимое для поиска и испраления ошибок за счет увеличения нагрузки на сервер.
+Кроме того, увеличение скорости аудита уменьшает значения окна согласованности, увеличивая нагрузку на сервер.
+Ниже приводятся параметры, подлежащие учету:<ul>
+ <li><code>concurrency</code>: 
+Документация Swift (<a href="http://docs.openstack.org/developer/swift/deployment_guide.html"><code>http://docs.openstack.org/developer/swift/deployment_guide.html</code></a>) рекомендует устанавливать параллелизм (<code>concurrency</code>) большинства заданий завершающей обработки равным 1, за исключением репликаторов, где рекомендуется значение 2. 
+Если вам требуется более высокий уровень надежности, рассмотрите возможность увеличения этого значения.
+Надежность, опять же, измеряется как 1-P (потеря объектов за год), где обычно размер объекта 1КБайт.
+ <li><code>interval</code>:
+Если вы не хотите понижать нагрузку на серверы, увеличивать надежность или уменьшать размер окна согласованности, вероятно, вы захотите придерживаться значения по умолчанию.
+</ul>
+</p>
+
+
+<h2 id="Ch0704">Дополнительные параметры настройки</h2>
+<p>
+Пользователю доступно большое число дополнительных параметров настройки.
+Наиболее важные перечислены ниже:<ul>
+ <li><strong>memcached</strong>:
+Ряд служб Swift полагаются на <code>memcached</code> для поиска в кэше, поскольку Swift не кэширует данные.
+Хотя <code>memcached</code> может работатьна всех серверах, он должен бытьвключен на серверах прокси.
+Если <code>memcached</code> включен, убедитесь, что доступно достаточное количество ресурсов ОЗУ и ЦПУ.
+ <li><strong>System time</strong> (системное время):
+Поскольку Swift является распределенной системой, временная метка объекта используется по целому ряду причин.
+Следовательно, очень важно гарантировать согласованность времени между серверами.
+Для этой цели могут использоваться службы, подобные NTP.
+ <li><strong>Filesystem</strong> (файловая система):
+Swift является независимой от файловой системы, тем не менее, XFS является протестированной сообществом Swift файловой системой.
+Важно сохранять размер <code>inode</code> высоким, например, 1024, чтобы гарантировать, что значения по умолчанию и метаданные хранятся эффективно.
+Остальныепараметры могут быть установлены так, как описано в <a href="Ch03ru.htm"><em>Главе 3, Установка OpenStack Swift</em></a> 
+ <li><strong>Operating system</strong> (операционная система):
+Общая настройка операционной системы выходит зарамки данной книги.
+Однако, документация Swift предполагает отключение <code>TIME_WAIT</code> и <code>syn cookies</code>, а также дублирование разрешенных <code>conntrack</code> в <code> sysctl.conf</code>.
+Поскольку ОС обычноустанавливается на диск, обычно не являющийся частью системы хранения, вы можете рассомтреть возможность установки небольшого SSD для увеличения времени загрузки. 
+ <li><strong>Network stack</strong> (сетевой стек):
+Настройка сетевого стека также выходит за рамкиданной книги.
+Тем не менее, существуют некоторые дополнительные очевидные настройки, например, разрешение больших кадров (jumbo) для внутренней сети кластера хранения.
+Jumbo кадры также могут быть включены для сети клиента или репликаций, если такой обмен данными осуществляется в локальной сети (в случае частных облаков).   
+ <li><strong>Logging</strong> (ведение журналов):
+Если не используются пользовательские обработчики журналов, то Swift делает записи непосредственно в syslog.
+Swift генерирует большой объем регистрационных данных и, следовательно, правильное управление этими записями очень важно.
+Надлежащая установка журналирования может повлиять как на производительность, так и на вашу способность диагностировать проблемы.
+Вы можете рассмотреть высокопроизводительные возможности, например, такие как  rsyslog (<a href="http://www.rsyslog.com/"><code>http://www.rsyslog.com/</code></a>) или syslog-ng (<a href="http://www.balabit.com/network-security/syslogng/opensource-logging-system"><code>http://www.balabit.com/network-security/syslogng/opensource-logging-system</code></a>). 
+</ul>
+</p>
+
+
+<h2 id="Ch0705">Заключение</h2>
+<p>
+В данной главе мы рассмотрели как протестировать кластер Swift и настроить его для конкретного случая использования в частном пользовательском облаке.
+Следующая заключительная глава охватывает случаи использования OpenStack Swift и дополнительные ресурсы.
+</p>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch06ru.htm">Глава 6</a></td>
+ <td align="center"><a href="ToC.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch08ru.htm">Глава 8</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</body>
+</html>

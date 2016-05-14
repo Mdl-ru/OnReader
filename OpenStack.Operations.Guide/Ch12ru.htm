@@ -1,0 +1,384 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 12. Устранение неполадок сети. Руководство по эксплуатации OpenStack.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing, Swift, RESTful, Object Storage, Ceph, CORS, CNAME lookup, Domain remap, Health check, Rate limiting, Bulk delete, Container qoutas, account qoutas, TempURL, Static Web, Form post, recon, Swift origin server, Bulk archive auto-extraction">
+   <meta name="Description" content="Глава 12. Устранение неполадок сети. Руководство по эксплуатации OpenStack.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="index.htm">Руководство по эксплуатации OpenStack</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<h2 align="right">ГЛАВА 12</h2>
+<hr />
+<h1 id="Chapter_12" align="right">Устранение неполадок сети</h1>
+
+<em>Пользуйтесь переводом <strong>существенно переработанной и дополенной <a href="http://onreader.mdl.ru/openstack-ops/content/network_troubleshooting.html">2й редакции</a></strong> (12-дек-2014),<br />
+находящейся теперь и в режиме <a href="http://docs.openstack.org/openstack-ops/content/network_troubleshooting.html">постоянно обновляемой документации</a> <br />
+(последняя пока доступна только на англ.яз.).</em><br />
+<p></p>
+
+<p>К сожалению, поиск и устранение неисправностей сети может быть очень сложной и запутанной процедурой.
+ Вопросы с сетью могут вызывать проблемы в различных местах облака.
+ Использование процедуры логического устранения неполадок может уменьшить беспорядок и более быстро изолировать именно то место, где есть проблема сети.
+ Цель данной главы- предоставить вам информацию, которая необходима для ваших решений.</p>
+ 
+<h2 id="Ch1201">Использование &quot;ip a&quot; для проверки состояний интерфейса</h2>
+<p>Используйте следующую команду на вычислительных узлах и узлах, с работающими nova-network, чтобы увидеть информацию об интерфейсах, 
+включая информацию об IP-адресах, VLAN и работают ли ваши интерфейсы.
+<br /><code>
+# ip a<br />
+</code></p>
+<p>Если вы испытываете любой вид проблем с сетью, одна хорошая начальная здравая проверка заключается в том, чтобы убедиться, что ваши интерфейсы работают.
+  Например:
+<br /><code>
+$ ip a | grep state<br />
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 16436 qdisc noqueue state UNKNOWN <br />
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP qlen 1000<br />
+3: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast master br100 state UP qlen 1000<br />
+4: virbr0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN <br />
+6: br100: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP<br />
+</code></p>
+<p>Вы можете спокойно игнорировать состояние virbr0, который является мостом (bridge) по умолчанию созданным <code>libvirt</code> и 
+не используемым OpenStack.</p>
+
+<h2 id="Ch1202">Сетевой трафик в облаке</h2>
+<p>Если вы вошли в систему экземпляра и выполняете ping на внешний хост, например google.com, пакет для ping выполняет следующий маршрут:
+<img src="i/Pic12-01.jpg" /><ol>
+ <li>Экземпляр генерирует пакет и помещает его в виртуальную сетевую плату (virtual NIC) внутри экземпляра, например, такую, как, <code>eth0</code>.
+ <li>Пакет передается виртуальной сетевой плате вычислительного хоста, например, <code>vnet1</code>.
+  Вы можете узнать какой именно сетевой адаптер (vnet NIC) используется, просмотрев файл <code>/etc/libvirt/qemu/instance-xxxxxxxx.xml</code>.
+ <li>Из vnet NIC пакет передается в мост вычислительного узла, например <code>br100</code>.
+  Если у вас выполняется FlatDHCPManager, на вычислительном узле присутствует один мост.
+  Если у вас выполняется VlanManager, по одному мосту существует для каждой VLAN.
+  Чтобы посмотреть какой мост будет использовать пакет, выполните команду:
+<br /><code>
+$ brctl show<br />
+</code>
+  Найдите vnet NIC.
+  Вы также можете воспользоваться <code>nova.conf</code> и найти параметр <code>flat_interface_bridge</code>.
+ <li>Пакетые перемещается в главную сетевую плату вычислительного узла.
+  Вы также можете увидеть эту сетевую плату на выходе brctl, или вы можете найти ее с помощью ссылки на параметр flat_interface в <code>nova.conf</code>.
+ <li>После того, как пакет попадает в этот сетевой адаптер, он передается в шлюз по умолчанию для данного вычислительного узла.
+  Наиболее вероятно, что пакет теперь находится вне вашего контроля в данной точке.
+  Диаграмма изображает внешний шлюз.
+  Тем не менее, в конфигурации по умолчанию с мульти- хостами, хост вычислительного узла является шлюзом.
+ </ol></p>
+<p>Чтобы увидеть путь ответа ping-а, измените направление.</p>
+<p>Из рассмотренного пути вы можете увидеть, что один пакет проходит через четыре 
+ различных сетевых адаптера.
+ Если возникает проблема с любой из этих сетевых плат, возникает проблема с сетью.</p>
+
+<h2 id="Ch1203">Поиск неисправностей в пути</h2>
+<p>Используйте команду ping, чтобы быстро найти где существует отказ в сетевом пути.
+  В экземпляре вначале убедитесь, можете ли вы проверить связь (ping) с внешним хостом, например, google.com.
+  Если да, то вообще не должно быть проблемы с сетью.</p>
+<p>Если нет, попробуйте выполнить ping к IP адресу вычислительного узла, на котором располагается экземпляр.
+ Если ping к этому IP выполняется, то проблема находится где- то между вычислительным узлом и его шлюзом по умолчанию.</p>
+<p>Если ping на IP адрес вычислительного узла не выполняется, проблема между экземпляром и вычислительным узлом.
+ Она может заключаться и в мосте, соединяющем основную сетевую плату вычислительного узла и vnet NIC экземпляра.</p>
+<p>И последний тест заключается в запуске второго экземпляра и проверке того, что оба экземпляра могут осуществлять ping друг к другу.
+ Если да, то проблема может быть связана с брандмауэром (firewall) на данном вычислительном узле.</p>
+
+<h2 id="Ch1204">tcpdump</h2>
+<p>Один замечательный, хотя и чересчур глубокий, способ устранения неполадок сети заключается в использовании <code>tcpdump</code>.
+  Рекомендуется использовать <code>tcpdump</code> в различных точках сетевого пути, чтобы скоррелировать где может быть проблема.
+  Если вы предпочитаете работать с графическим интерфейсом (GUI), либо напрямую или с использованием перехвата <code>tcpdump</code> 
+  попробуйте в обоих случаях <span class="red-heading">Wireshark</span> (<a href="http://www.wireshark.org/">http://www.wireshark.org/</a>)</p>
+<p>Например, выполните следующую команду:
+<br /><code>
+tcpdump -i any -n -v 'icmp[icmptype] = icmp-echoreply or icmp[icmptype] = icmp-echo'<br />
+</code></p>
+<p>Выполните ее из командной строки в следующих областях: <ol>
+ <li>На внешнем сервере за пределами облака.
+ <li>На вычислительном узле.
+ <li>В экземпляре, запущенном на вычислительном узле.
+ </ol></p>
+<p>В нашем примере эти местоположения имеют следующие IP-адреса:
+<br /><code>
+ &nbsp; &nbsp; &nbsp; &nbsp; Экземпляр <br />
+ &nbsp; &nbsp; &nbsp; &nbsp; 10.0.2.24 <br />
+ &nbsp; &nbsp; &nbsp; &nbsp; 203.0.113.30 <br />
+ &nbsp; &nbsp; &nbsp; &nbsp; Вычислительный узел <br />
+ &nbsp; &nbsp; &nbsp; &nbsp; 10.0.0.42 <br />
+ &nbsp; &nbsp; &nbsp; &nbsp; 203.0.113.34 <br />
+ &nbsp; &nbsp; &nbsp; &nbsp; Внешний сервер <br />
+ &nbsp; &nbsp; &nbsp; &nbsp; 1.2.3.4 <br />
+</code></p>
+<p>Затем откройте новую оболочку на экземпляре и потом выполните ping к внешнему хосту, на котором работает tcpdump.
+Если сетевой путь к внешнему серверу и обратно полностью работоспособен, вы видите нечто вроде следующего:
+<br />На внешнем сервере:
+<br /><code>
+12:51:42.020227 IP (tos 0x0, ttl 61, id 0, offset 0, flags [DF], proto ICMP (1), length 84)
+ &nbsp;203.0.113.30 &gt; 1.2.3.4: ICMP echo request, id 24895, seq 1, length 64 
+12:51:42.020255 IP (tos 0x0, ttl 64, id 8137, offset 0, flags [none], proto ICMP (1), length 84) 
+ &nbsp;1.2.3.4 &gt; 203.0.113.30: ICMP echo reply, id 24895, seq 1, length 64<br />
+</code>
+<br />В экземпляре:
+<br /><code>
+12:51:42.020974 IP (tos 0x0, ttl 61, id 8137, offset 0, flags [none], proto ICMP (1), length 84)<br />
+ 1.2.3.4 &gt; 10.0.2.24: ICMP echo reply, id 24895, seq 1, length 64<br />
+</code></p>
+<p>Здесь внешний сервер получил ping-запрос и послал ping-ответ.
+  На вычислительном узле вы можете увидеть, что и сам ping и ping ответ успешно выполнены.</p>
+<p>Вы также должны увидеть дублированные пакеты на вычислительном узле, как показано выше, потому что <code>tcpdump</code> 
+захватывает пакет как в мосте, так и на исходящем интерфейсе.</p>
+
+<h2 id="Ch1205">iptables</h2>
+<p>Nova автоматически управляет iptables, в том числе пересылкой пакетов к экземпляру и от него на вычислительном узле, переадресацию (forwarding) 
+трафика плавающих IP и управление правилами безопасности группы.</p>
+<p>Выполните следующую команду, чтобы посмотреть текущую конфигурацию iptables:
+<br /><code>
+# iptables-save<br />
+</code></p>
+<p><img src="i/Tip.jpg" alt="Совет" />Если вы измените конфигурацию, она вернется в следующий раз, когда вы перезагрузите nova-network.
+  Вы должны использовать OpenStack для управления iptables.</p>
+
+<h3 id="Ch1206">Настройка сети в базе данных</h3>
+<p>База данных nova содержит несколько таблиц с сетевой информацией:</ul>
+ <li>fixed_ips: содержит все возможные IP-адреса для подсети (подсетей) добавленных в nova.
+  Эта таблица связана с таблицей экземпляров посредством столбца (<em>Прим. пер.: более правильно сточки зрения баз данных: атрибута, 
+  поля</em>) fixed_ips.instance_uuid.
+ <li>floating_ips: содержит все плавающие IP-адрес, которые был добавлены в nova.
+  Эта таблица связана с таблицей fixed_ips посредством столбца(<em>Прим. пер.: более правильно с точки зрения баз данных: атрибута, поля</em>) 
+  floating_ips.fixed_ip_id.
+ <li>экземпляры: не совсем характерна для сети, но она содержит информацию об экземпляре, который использует fixed_ip и не обязательные floating_ip.
+ </ul></p>
+
+<h2 id="Ch120601">Отсоединение плавающих IP вручную.</h2>
+<p>Иногда экземпляр завершается, но плавающий IP не был правильно отсоединен от этого экземпляра.
+  Поскольку база данных находится в несогласованном состоянии, обычные инструменты для отсоединения IP не работают.
+  Чтобы это исправить, необходимо вручную обновить базу данных.</p>
+<p>Сначала найдите UUID экземпляра выполнив запрос:
+ <br /><code>
+mysql&gt; select uuid from instances where hostname = 'hostname';<br />
+</code></p>
+<p>Далее, найдите запись фиксированного IP для этого UUID:
+<br /><code>
+mysql&gt; select * from fixed_ips where instance_uuid = '&lt;uuid&gt;';<br />
+</code></p>
+<p>Теперь вы можете получить соответствующую запись плавающего IP:
+<br /><code>
+mysql&gt; select * from floating_ips where fixed_ip_id = '&lt;fixed_ip_id&gt;';<br />
+</code></p>
+<p>И, наконец, вы можете отсоединить плавающий IP:
+<br /><code>
+mysql&gt; update floating_ips set fixed_ip_id = NULL, host = NULL where fixed_ip_id = '&lt;fixed_ip_id&gt;';<br />
+</code></p>
+<p>При необходимости также можно освободить IP из пула пользователя:
+<br /><code>
+mysql&gt; update floating_ips set project_id = NULL where fixed_ip_id = '&lt;fixed_ip_id&gt;';<br />
+</code></p>
+
+<h2 id="Ch1207">Отладка проблем DHCP</h2>
+<p>Одна из распространенных проблем сети заключается в том, что экземпляр успешно стартует, но не доступен, потому что не удается получить 
+IP-адрес от dnsmasq, который является сервером DHCP, запускаемым службой nova-network.</p>
+<p>Самый простой способ выяснить, что эта проблема связана с вашим экземпляром, заключается в просмотре вывода консоли вашего экземпляра.
+  Если отказал DHCP, вы можете получить журнал консоли, выполнив:
+<br /><code>
+$ nova console-log &lt;instance name or uuid&gt;<br />
+<br /></code>
+Если ваш экземпляр не получил IP через DHCP, в консоли должны появиться какие-то сообщения.
+ Например, для образа Cirros вы увидите вывод, выглядящий следующим образом:
+<br /><code>
+udhcpc (v1.17.2) started<br />
+Sending discover...<br />
+Sending discover...<br />
+Sending discover...<br />
+No lease, forking to background<br />
+starting DHCP forEthernet interface eth0 [ [1;32mOK[0;39m ]<br />
+cloud-setup: checking http://169.254.169.254/2009-04-04/meta-data/instance-id<br />
+wget: can't connect to remote host (169.254.169.254): Network is unreachable<br />
+</code></p>
+<p>После того, как вы установите, что экземпляр загрузился правильно, задача состоит в том, чтобы выяснить, где происходит отказ.</p>
+<p>Проблема DHCP может быть вызвана некорректно работающим процессом dnsmasq.
+  Во-первых, выполните отладку, проверив журналы и перезагрузите процессы dnsmasq только для этого проекта (владельца, tenant).
+  В режиме VLAN существует по процессу dnsmasq для каждого владельца.
+  После перезагрузки целевых процессов dnsmasq, самый простой способ исключить причины dnsmasq, состоит в том, чтобы уничтожить все dnsmasq 
+  процессы на машине, и перезапустить nova-network.
+  В крайнем случае, выполните это с правами root:
+<br /><code>
+# killall dnsmasq
+# restart nova-network<br />
+</code></p>
+<p><img src="i/Tip.jpg" alt="Tip" />Существует openstack-nova-network в RHEL/CentOS/Fedora, но novanetwork на Ubuntu/Debian.</p>
+<p>Спустя несколько минут после того, как nova-network будет запущена повторно, вы должны увидеть новое выполнение процессов dnsmasq:
+<br /><code>
+# ps aux | grep dnsmasq<br />
+nobody 3735 0.0 0.0 27540 1044 ? S 15:40 0:00 /usr/sbin/dnsmasq --strict-order <br />
+--bind-interfaces --conf-file= <br />
+ &nbsp; &nbsp; &nbsp;--domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid --listen-address=192.168.100.1 <br />
+ &nbsp; &nbsp;--except-interface=lo --dhcp-range=set:'novanetwork',192.168.100.2,static,120s --dhcp-lease-max=256<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;--dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf --dhcpscript=/usr/bin/nova-dhcpbridge --leasefile-ro<br />
+root 3736 0.0 0.0 27512 444 ? S 15:40 0:00 /usr/sbin/dnsmasq --strict-order --bind-interfaces --conf-file= <br />
+ &nbsp; &nbsp; &nbsp;--domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid --listen-address=192.168.100.1 <br />
+ &nbsp; &nbsp;--except-interface=lo --dhcp-range=set:'novanetwork',192.168.100.2,static,120s --dhcp-lease-max=256<br />
+ &nbsp; &nbsp; &nbsp; &nbsp;--dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf --dhcpscript=/usr/bin/nova-dhcpbridge --leasefile-ro<br />
+</code></p>
+<p>Если ваши экземпляры все еще не в состоянии получить IP-адреса, следующая задача заключается в проверке того, видны ли запросы DHCP <code>dnsmasq</code> 
+из экземпляра.
+  На машине, на которой выполняется процесс dnsmasq и которая является хоcтом Compute при работе в режиме мульти-хостов, найдите 
+  <code>/var/log/syslog</code>, чтобы увидеть вывод dnsmasq.
+  Если <code>dnsmasq</code> видит запросы правильно и раздает IP, результат выглядит так:
+<br /><code>
+Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPDISCOVER(br100) fa:16:3e:56:0b:6f <br />
+Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPOFFER(br100) 192.168.100.3 fa:16:3e:56:0b:6f <br />
+Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPREQUEST(br100) 192.168.100.3 fa:16:3e:56:0b:6f <br />
+Feb 27 22:01:36 mynode dnsmasq-dhcp[2438]: DHCPACK(br100) 192.168.100.3 fa:16:3e:56:0b:6f test<br />
+</code></p>
+<p>Если вы не видите DHCPDISCOVER, существует проблема с получением  пакетов от экземпляра к машине с запущенным dnsmasq.
+  Если вы видите все приводимые выше выводы, а экземплярам до сих пор не удалось получить IP-адреса, то пакеты доходят от экземпляра к хосту 
+  с запущенным dnsmasq, но они не в состоянии выполнить обратный путь.</p>
+<p>Если вы видите любое другое сообщения, например:
+<br /><code>
+Feb 27 22:01:36 mynode dnsmasq-dhcp[25435]: DHCPDISCOVER(br100) fa:16:3e:78:44:84 no address available<br />
+</code></p>
+<p>Это может быть проблема, вызванная Dnsmasq и / или nova-network.
+(Для предыдущего примера, если бы случилась проблема, что dnsmasq не имеет больше 
+IP-адресов для выдачи, поскольку больше нет фиксированных IP-адресов в базе данных в
+ вычислительной среде OpenStack).</p>
+<p>Если есть подозрительные сообщения журнала dnsmasq, взгляните на 
+ аргументы командной строки для процессов dnsmasq чтобы убедиться, 
+ что они выглядят правильно.
+<br /><code>
+$ ps aux | grep dnsmasq<br />
+</code></p>
+<p>Вывод результатов выглядит примерно следующим образом:
+<br /><code>
+108 1695 0.0 0.0 25972 1000 ? S Feb26 0:00 /usr/sbin/dnsmasq -u libvirt-dnsmasq 
+--strict-order --bind-interfaces
+ &nbsp; &nbsp;--pid-file=/var/run/libvirt/network/default.pid --conf-file= --exceptinterface lo --listen-address 192.168.122.1
+ &nbsp;--dhcp-range 192.168.122.2,192.168.122.254 --dhcp-leasefile=/var/lib/libvirt/dnsmasq/default.leases
+ --dhcp-lease-max=253 --dhcp-no-override
+nobody 2438 0.0 0.0 27540 1096 ? S Feb26 0:00 /usr/sbin/dnsmasq --strict-order --bind-interfaces --conf-file=
+ &nbsp;--domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid --listenaddress=192.168.100.1
+ --except-interface=lo --dhcp-range=set:'novanetwork',192.168.100.2,static,120s 
+--dhcp-lease-max=256 
+ --dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf --dhcp-script=/usr/bin/
+nova-dhcpbridge --leasefile-ro
+root 2439 0.0 0.0 27512 472 ? S Feb26 0:00 /usr/sbin/dnsmasq --strict-order --bind-interfaces --conf-file= 
+ &nbsp;--domain=novalocal --pid-file=/var/lib/nova/networks/nova-br100.pid --listenaddress=192.168.100.1 
+ --except-interface=lo --dhcp-range=set:'novanetwork',192.168.100.2,static,120s 
+--dhcp-lease-max=256 
+ --dhcp-hostsfile=/var/lib/nova/networks/nova-br100.conf --dhcp-script=/usr/bin/
+nova-dhcpbridge --leasefile-ro<br />
+</code></p>
+<p>Если проблема не кажется связанной с самим dnsmasq, в данном месте используйте <code>tcpdump</code> в интерфейсах для определения места, 
+в котором теряются пакеты.</p>
+<p>DHCP трафик использует UDP.
+ Клиент отправляет пакеты из порта 68 в порт 67 на сервере.
+ Попробуйте загрузить новый экземпляр, а затем систематически прослушивать сетевой адаптер, пока вы не идентифицируете тот, который не видит трафик.
+ Чтобы использовать <code>tcpdump</code> для прослушивания портов 67 и 68 на br100, вы могли бы выполнить:
+<br /><code>
+# tcpdump -i br100 -n port 67 or port 68<br />
+</code></p>
+<p>Вы должны выполнять проверку готовности к работе интерфейсов, например, с помощью команд, подобных 
+&quot;<code>ip a</code>&quot; и &quot;<code>brctl show</code>&quot; для того, чтобы убедиться, 
+что интерфейсы действительно работают и настроены таким образом, что вы полагаете, что они существуют.</p>
+
+<h2 id="Ch1208">Проблемы отладки DNS</h2>
+<p>Если вы в состоянии пробросить ssh к экземпляру, но получение приглашения занимает очень много времени (порядка минуты), то, возможно, 
+у вас проблемы с DNS.
+ Причина проблемы с DNS может быть вызвана тем, что сервер ssh не осуществляет обратный DNS поиск IP-адреса, с которого вы подключаетесь.
+ Если поиск DNS не работает на вашем экземпляре, то вы должны ожидать выполнение тайм-аута обратного просмотра DNS для выполнения 
+ процесса авторизации ssh.</p>
+<p>При отладке проблем DNS, начните с удостоверения того, что хост, на котором работает процесс dnsmasq для этого экземпляра способен правильно 
+разрешать адреса.
+  Если хост не может разрешать адреса, тогда и экземпляры не смогут выполнять это.</p>
+<p>Быстрый способ проверить, работает ли DNS заключается в разрешении имени хоста внутри вашего экземпляра с использованием команды <code>host</code>.
+  Если DNS работает, вы должны увидеть:
+<br /><code>
+$ host openstack.org<br />
+openstack.org has address 174.143.194.225<br />
+openstack.org mail is handled by 10 mx1.emailsrvr.com.<br />
+openstack.org mail is handled by 20 mx2.emailsrvr.com.<br />
+</code></p>
+<p>Если вы работаете с образом Cirros, он не имеет установленной программы &quot;host&quot;, в этом случае вы можете использовать ping, 
+чтобы попытаться получить доступ к машине по имени хоста и чтобы убедиться в способности разрешать имена.
+  Если DNS работает, первая строка ping будет:
+<br /><code>
+$ ping openstack.org<br />
+PING openstack.org (174.143.194.225): 56 data bytes<br />
+</code></p>
+<p>Если экземпляр не может разрешить имя хоста, у вас имеется проблема с DNS.  Например:
+<br /><code>
+$ ping openstack.org<br />
+ping: bad address 'openstack.org'<br />
+</code></p>
+<p>В облаке OpenStack, процесс dnsmasq выступает в качестве DNS- сервера для экземпляров в дополнение к работе в качестве DHCP-сервера.
+ Некорректно работающий процесс <code>dnsmasq</code> может быть источником проблем, связанных с DNS внутри экземпляра.
+ Как уже упоминалось в предыдущем разделе, самый простой способ исключения плохого поведения процесса <code>dnsmasq</code>, 
+ заключается в уничтожении (kill) всех dnsmasq процессов на машине, и перезапуске nova-network.
+ Однако следует помнить, что эта команда влияет на все работающие на данном узле экземпляры, в том числе на процессы владельцев (tenant), 
+ которые не испытывают данной проблемы.
+ В крайнем случае, выполните с правами root:
+<br /><code>
+# killall dnsmasq
+# restart nova-network<br />
+</code></p>
+<p>После того, как <code>dnsmasq</code> снова стартует, убедитесь что DNS работает.</p>
+<p>Если перезапуск процесса <code>dnsmasq</code> не решил проблему, вам, возможно, потребуется использовать 
+<code>tcpdump</code> для просмотра пакетов, чтобы проследить, где они теряются.
+ Сервер DNS прослушивает UDP порт 53.
+ Вы должны увидеть запрос DNS в мосте (например, br100) вашего вычислительного узла.
+ Если вы запустили прослушивание <code>tcpdump</code> на вычислительном узле:
+<br /><code>
+# tcpdump -i br100 -n -v udp port 53
+tcpdump: listening on br100, link-type EN10MB (Ethernet), capture size 65535 bytes<br />
+</code></p>
+<p>Тогда, если вы прокинете ssh в экземпляр и попытаетесь выполнить ping openstack.org, вы должны увидеть нечто вроде:
+<br /><code>
+16:36:18.807518 IP (tos 0x0, ttl 64, id 56057, offset 0, flags [DF], proto UDP (17), length 59)<br />
+192.168.100.4.54244 &gt; 192.168.100.1.53: 2+ A? openstack.org. (31)<br />
+16:36:18.808285 IP (tos 0x0, ttl 64, id 0, offset 0, flags [DF], proto UDP (17), length 75)<br />
+192.168.100.1.53 &gt; 192.168.100.4.54244: 2 1/0/0 openstack.org. A 174.143.194.225 (47)<br />
+</code></p>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch11ru.htm">Глава 11</a></td>
+ <td align="center"><a href="index.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch13ru.htm">Глава 13</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links are obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</tbody></table>
+</body>
+</html>

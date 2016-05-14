@@ -1,0 +1,841 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 3. Установка OpenStack Swift. Реализация облачного хранилища с OpenStack Swift.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing">
+   <meta name="Description" content="Глава 3. Установка OpenStack Swift. Реализация облачного хранилища с OpenStack Swift.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="ToC.htm">Реализация облачного хранилища с OpenStack Swift.</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+
+<h2 align="right">ГЛАВА 3</h2>
+<hr />
+<h1 id="Chapter_03" align="right">Установка OpenStack Swift.</h1>
+
+<p>
+В предыдущая глава должна была дать вам хорошее представление об архитектуре OpenStack Swift.
+Теперь, давайте углубимся в детали установки OpenStack Swift.
+Эта глава предназначена для ИТ-администраторов, которые хотят установить OpenStack Swift.
+Обсуждаемая здесь версия- выпуск OpenStack Havana.
+(<em>Прим. пер. на декабрь 2014 современной является редакция Juno /<a href="http://www.openstack.org/software/roadmap/">дорожная карта</a>/</em>).
+Установка Swift имеет несколько шагов и требует тщательного планирования перед началом процесса.
+Простая установка состоит из установки всех компонентов Swift на один узел, в то время как сложная установка 
+состоит из установки Swift на нескольких серверных узлах прокси, а также на серверных узлах хранения.
+Количество узлов хранения может исчисляться в порядком тысяч и располагаться в нескольких зонах и регионах.
+В зависимости от вашей установки, вы должны определиться с количеством серверных узлов прокси и 
+серверных узлов систем хранения, которое вы собираетесь настраивать.
+В этой главе демонстрирует процесс ручной установки; опытные пользователи могут использовать утилиты, 
+такие как Puppet или Chef, чтобы упростить процесс.
+</p><p>
+Данная главе проведет вас через установку кластера OpenStack Swift, который содержит один прокси сервер 
+и пять серверов систем хранения.
+Как объяснялось в <em><a href="Ch02ru.htm">главе 2, Архитектура OpenStack Swift</a></em>, 
+серверы хранения содержат учетные записи, контейнеры и серверы объектов.
+</p>
+
+
+<h2 id="Ch0301">Планирование аппаратных средств</h2>
+<p>
+В этом разделе описываются различные аппаратные компоненты вовлеченные в установку (для полного 
+обсуждения этой темы см. <em><a href="Ch06ru.htm">Глава 6, Выбор соответствующих аппаратных средств</a></em>).
+Поскольку Swift имеет дело с системой хранения объектов, диски будет основной частью планирования 
+аппаратного обеспечения.
+Размер и количество требующихся дисков должны быть рассчитаны с учетом ваших требований.
+Сетевые ресурсы также являются важным компонентом, в котором нужно планировать такие факторы, как 
+общественная/ частная сеть и отдельная сеть для связи между серверами хранения.
+Предполагается, по крайней мере, пропускная способность сети 1 Гбит/с, в то время как рекомендуется 10 Гбит/с.
+</p><p>
+Устанавливаемые нами в качестве прокси- серверов и серверов систем хранения серверы являются 
+двухсокетными четырехядерными машинами с 12ГБ ОЗУ.
+</p><p>
+В нашей установке мы имеем в общей сложности 15 х 2 ТБ дисков для системы хранения Swift; это дает нам 
+общий размер 30 ТБ.
+Тем не менее, при встроенной репликации (со значением числа реплик по умолчанию 3), Swift поддерживает 
+три копии одних и тех же данных, а следовательно, эффективная емкость для хранения файлов/объектов 
+составляет 10 ТБ.
+Этот объем еще больше снижается из-за того, что используется менее чем 100 процентов.
+Ниже на рисунке показаны узлы нашей конфигурации кластера Swift:
+	<div style="width: 586px; margin: 1.75em auto;">
+	<p style="text-align: center;">
+		<img src="i/Pic03-01.jpg"  alt="Установка системы хранения объектов OpenStack Swift" title="Установка системы хранения объектов OpenStack Swift" width="586" height="366" style="width: 586px" />
+		<span class="image-caption">Установка системы хранения объектов OpenStack Swift</span>
+	</p></div>
+</p>
+
+<h2 id="Ch0302">Установка сервера и настройка сети</h2>
+<p>
+Все серверы установлены с операционной системой Ubuntu (версия 12.04)
+</p><p>
+Вы должны настроить следующие три сети:<ul>
+ <li><strong>Общественная сеть</strong>:
+К этой сети подключается прокси-сервер.
+Эта сеть обеспечивает общественный доступ к конечным точкам API внутри прокси-сервера.
+ <li><strong>Сеть системы хранения</strong>:
+Это частная сеть не доступна для внешнего мира.
+К этой сети будет подключаться все серверы хранения и сервер прокси.
+В рамках этой сети происходит коммуникация между сервером прокси и серверами хранения и передача информации 
+между серверами хранения.
+В нашей конфигурации IP-адреса в этой сети назначены следующие адреса: <code>172.168.10.0/172.168.10.99</code>.
+ <li><strong>Сеть репликации</strong>:
+Это также частная сеть, которая не доступна для внешнего мира.
+Она предназначена для трафика репликаций, и к этой сети подключаются только серверы хранения.
+В этой сети происходит все связанное с репликациями взаимодействие между серверами хранения.
+В нашей конфигурации в этой сети назначены следующие IP-адреса: <code>172.168.9.0/172.168.9.99</code>.
+</ul></p>
+
+<h3 id="Ch030201">Шаги предварительной установки</h3>
+<p>
+Для того, чтобы различным серверам было легче взаимодействовать, отредактируйте файл <code>/etc/hosts</code>, 
+и добавьте имена хостов каждому серверу в нем.
+ <br/ >(<em>Прим.пер.: для редактирования, например, можно воспользоваться текстовым /не графическим,
+ что особенно удобно при удаленном редактировании/ редактором mcedit, который устанавливается,
+  как не трудно догадаться, при помощи запроса <code>apt-get install mcedit</code>.
+  <br/ >При недостатке прав не забывайте предворять исполнение команды вызовом <code>sudo</code>, 
+  <br />например, <code>sudo apt-get install mcedit</code></em>)
+ <br/ >Эта работа проводится на всех узлах.
+Следующее изображение показывает пример содержимого файла <code>/etc/hosts</code> узла прокси-сервера:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+127.0.0.1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; localhost<br />
+192.168.2.244 &nbsp; &nbsp; swift-proxy<br />
+192.168.10.51 &nbsp; &nbsp; s-swift-proxy<br />
+192.168.10.52 &nbsp; &nbsp; swift-storage-1<br />
+192.168.10.53 &nbsp; &nbsp; swift-storage-2<br />
+192.168.10.54 &nbsp; &nbsp; swift-storage-3<br />
+192.168.10.55 &nbsp; &nbsp; swift-storage-4<br />
+192.168.10.56 &nbsp; &nbsp; swift-storage-5<br />
+<td>&nbsp;</tr></tbody></table>
+</p><p>
+Установите службу NTP на узлах сервера прокси и серверов хранения.
+Это поможет всем узлы в синхронизации своих служб эффективно без каких-либо временных задержек.
+Шаги предварительной установки должны быть выполнены следующим образом:<ol>
+ <li>Настройте узел сервера прокси, чтобы он был справочным сервером для узлов серверов хранения при установке 
+ ими своего времени с узла прокси-сервера:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; apt-get install ntp
+<td>&nbsp;</tr></tbody></table>
+ <li>Добавьте следующую строку в <code>/etc/ntp.conf</code> для настройки NTP на узле сервера прокси:
+<br /><strong><code>server ntp.ubuntu.com</code></strong>
+ <li>Для настройки NTP на узлах серверов хранения добавьте следующую строку в <code>/etc/ntp.conf</code>:
+<br /><strong><code>server s-swift-proxy</code></strong>
+<br />Закомментируйте оставшиеся строки с адресами сервером такими как <code>0.ubuntu.pool.ntp.org, 
+1.ubuntu.pool.ntp.org, 2.ubuntu.pool.ntp.org и 3.ubuntu.pool.ntp.org</code>.
+ <li>Перезапустите службу NTP на каждом сервере следующей командой:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; service ntp restart
+<td>&nbsp;</tr></tbody></table>
+</ol>
+</p>
+
+<h3 id="Ch030202">Загрузка и установка Swift</h3>
+<p>
+Архив Ubuntu Cloud является специальным репозиторием, который предоставляет пользователям возможность 
+установки новых версий OpenStack.
+</p><p>
+Шаги для выполнения загрузки и установки Swift заключаются в следующем:<ol>
+ <li>Включите возможность установки новой версии OpenStack и установите последнюю версию Swift на 
+ каждом узле с помощью следующих команд:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; apt-get install python-software-properties<br />
+# &nbsp; add-apt-repository cloud-archive:havana
+<br />(<em>Прим. пер.: по состоянию на декабрь 2014 juno вместо havana /<a href="http://www.openstack.org/software/roadmap/">дорожная карта</a>/</em>)
+<td>&nbsp;</tr></tbody></table>
+ <li>Теперь обновите ОС с помощью следующей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; apt-get update && apt-get dist-upgrade
+ <br />(<em>Прим. пер.: или, <code>
+ <br />sudo apt-get update && sudo apt-get dist-upgrade</code>)
+<td>&nbsp;</tr></tbody></table>
+ <li>На всех узлах Swift мы установим обязательные программное обеспечение и службы с использованием 
+ следующей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; apt-get install swift rsync memcached python-netifaces python-xattr python-memcache
+<td>&nbsp;</tr></tbody></table>
+ <li>Далее мы создаем каталог Swift в <code>/etc</code> и предоставляем пользователю доступ к этой 
+ папке с использованием следующих команд:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; mkdir -p /etc/swift<br />
+# &nbsp; chown -R swift:swift /etc/swift
+<td>&nbsp;</tr></tbody></table>
+ <li>Создайте файл <code>/etc/swift/swift.conf</code> и добавьте в раздел <code>swift-hash</code> 
+ переменную с названием <code>swift_hash_path_suffix</code>.
+Затем мы создаем уникальную хэш-строку с использованием 
+<code>Python –c</code> (<em>Прим. пер.: и затем</em>) <code>from uuid import uuid4; print uuid4()</code> или 
+<code>openssl</code> (<em>Прим. пер.: и затем</em>) <code>rand –hex 10</code>,
+ и назначаем ее этой переменной как показано в следующей команде:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+[swift-hash]<br />
+# &nbsp; random unique string that can never change (DO NOT LOSE)<br />
+# &nbsp; уникальная строка со случайным значением,<br />
+# &nbsp; &nbsp; которая может никогда не меняться (НЕ ПОТЕРЯЙТЕ)<br />
+swift_hash_path_suffix = sLSDQfffedFUHIjjakM
+<td>&nbsp;</tr></tbody></table>
+ <li>Мы затем добавим другую переменную с именем <code>swift_hash_path_prefix</code> в раздел 
+ <code>swift_hash</code> и присвоим ей другую хэш-строку, созданную с использованием метода, 
+ описанного в предыдущем шаге.
+Эти строки будут использованы в процессе хеширования для определения отображений в кольце.
+Файл <code>swift.conf</code> должен быть одинаковым на всех узлах кластера.
+</ol></p>
+
+<h3 id="Ch030203">Установка узлов серверов хранения</h3>
+<p>
+В этом разделе поясняются дополнительные действия для настройки узла сервера хранения.
+</p>
+
+<h4 id="Ch03020301">Установка служб</h4>
+<p>
+На каждом узле сервера хранения, установите пакеты учетных записей swift, контейнеров swift, объектов swift 
+и xfsprogs (файловая система XFS) с помощью следующей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; apt-get install swift-account swift-container swift-object xfsprogs
+<td>&nbsp;</tr></tbody></table>
+</p>
+
+<h4 id="Ch03020302">Форматирование и монтирование дисков</h4>
+<p>
+На каждом узле сервера хранения, мы должны определить жесткие диски, которые будут использоваться для 
+хранения данных.
+Затем мы отформатируем жесткие диски и установим их в каталог, который Swift будет использовать для хранения 
+данных.
+Мы не будем создавать какие-либо уровни RAID или какие-либо подразделы на этих жестких дисках, потому что 
+они не являются необходимыми для Swift.
+Они будут использоваться в качестве целых дисков.
+Операционная система будет установлена на отдельных дисках, которые будут RAID-настроенными.
+</p><p>
+Во-первых, определите жесткие диски, которые вы собираетесь использовать для хранения и отформатируйте их.
+В нашем сервере хранения, мы определили sdb, sdc, и sdd, которые будут использоваться для системы хранения.
+</p><p>
+Мы выполним следующие четыре операции на <strong>sdb</strong>.
+Эти четыре операции должны также затем быть повторены на дисках <strong>sdc</strong> и <strong>sdd</strong>:<ol>
+ <li>Сделаем разметку <strong>sdb</strong> и создадим файловую систему с использованием следующей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; fdisk /dev/sdb<br />
+# &nbsp; mkfs.xfs /dev/sdb1
+<br /><em>(Прим.пер.: в утилите fdisk рекомендуем использовать параметры по умолчанию, 
+ <br />например, создать один primary раздел на весь диск [ID=83, Linux]; 
+ <br />при форматировании, возможно, понадобится ключ -f: <code>mkfs.xfs /dev/sdb1 -f</code>)</em>
+<td>&nbsp;</tr></tbody></table>
+ <li>Затем, давайте создадим каталог в <code>/srv/node</code>, который будет использоваться для 
+ монтирования файловой системы.
+Дайте права пользователю <code>swift</code>, чтобы он мог получить доступ к этому каталогу.
+Эти операции могут быть выполнены с помощью следующих команд:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; mkdir /srv/node/sdb1<br />
+# &nbsp; chown -R swift:swift /srv/node/sdb1
+<td>&nbsp;</tr></tbody></table>
+ <li>Мы создаем запись <strong>fstab</strong> для раздела <strong>sdb1</strong> на жестком диске 
+ <strong>sdb</strong> как показано ниже. 
+Это позволит автоматическое монтирование <strong>sdb1</strong> <code>/srv/node/sdb1</code> в при 
+каждой загрузке.
+Добавьте следующую командную строку в файл <code>/etc/fstab</code>:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; /dev/sdb1 /srv/node/sdb1 xfs noatime,nodiratime,nobarrier,logbufs=8 0 0
+<td>&nbsp;</tr></tbody></table>
+ <li>Смонтируйте <strong>sdb1</strong> в <code>/srv/node/sdb1</code> с использованием следующей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; mount /srv/node/sdb1
+<td>&nbsp;</tr></tbody></table>
+</ol>
+</p>
+
+<h4 id="Ch03020303">RSYNC и RSYNCD</h4>
+<p>
+Для того, чтобы Swift выполнял репликацию данных, мы должны установить Rsync и rsyncd.conf, выполнив 
+следующие действия:<ol>
+ <li>Создайте файл <code>rsyncd.conf</code> в каталоге <code>/etc</code> со следующим содержанием:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; vi /etc/rsyncd.conf
+<td>&nbsp;</tr></tbody></table>
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+ &nbsp; &nbsp; uid = swift &nbsp; <br />
+ &nbsp; &nbsp; gid = swift &nbsp; <br />
+ &nbsp; &nbsp; log file = /var/log/rsyncd.log &nbsp; <br />
+ &nbsp; &nbsp; pid file = /var/log/rsyncd.pid &nbsp; <br />
+ &nbsp; &nbsp; address = 172.168.9.52 &nbsp; <br />
+ &nbsp; &nbsp; [account] &nbsp; <br />
+ &nbsp; &nbsp; max connections = 2 &nbsp; <br />
+ &nbsp; &nbsp; path = /srv/node &nbsp; <br />
+ &nbsp; &nbsp; read only = false &nbsp; <br />
+ &nbsp; &nbsp; lock file = /var/lock/account.lock &nbsp; <br />
+ &nbsp; &nbsp; [container] &nbsp; <br />
+ &nbsp; &nbsp; max connections = 2 &nbsp; <br />
+ &nbsp; &nbsp; path = /srv/node &nbsp; <br />
+ &nbsp; &nbsp; read only = false &nbsp; <br />
+ &nbsp; &nbsp; lock file = /var/lock/container.lock &nbsp; <br />
+ &nbsp; &nbsp; [object] &nbsp; <br />
+ &nbsp; &nbsp; max connections = 2 &nbsp; <br />
+ &nbsp; &nbsp; path = /srv/node &nbsp; <br />
+ &nbsp; &nbsp; read only = false &nbsp; <br />
+ &nbsp; &nbsp; lock file = /var/lock/object.lock &nbsp; <br />
+<td>&nbsp;</tr></tbody></table>
+172.168.9.52 является IP адресом, который расположен в сети репликаций для данного сервера хранения.
+Используйте подходящие IP адреса сети репликации для соответствующих серверов хранения. 
+ <li>Затем мы отредактируем файл <code>/etc/default/rsync</code> и установим значение <code>RSYNC_ENABLE</code> в true следующей командой:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+RSYNC_ENABLE=true
+<td>&nbsp;</tr></tbody></table>
+ <li>После этого мы перезапустим службу rsync с использованием следующей команды: 
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; service rsync start
+<td>&nbsp;</tr></tbody></table>
+ <li>Далее мы создаем каталог кэша swift recon с использованием приводимой ниже команды и затем 
+ устанавливаем его разрешения: 
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; mkdir -p /var/swift/recon
+<td>&nbsp;</tr></tbody></table>
+Установка прав выполняется следующей командой
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; chown -R swift:swift /var/swift/recon
+<td>&nbsp;</tr></tbody></table>
+Повторите эти шаги на каждом сервере хранения.
+</ol>
+</p>
+
+<h3 id="Ch030204">Установка прокси- сервера</h3>
+<p>
+В этом разделе описываются действия по настройке параметров узла прокси-сервера, которые выглядят так:<ol>
+ <li>Установите следующие службы только на узле прокси-сервера:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; apt-get install swift-proxy memcached python-keystoneclient python-swiftclient python-webob
+<td>&nbsp;</tr></tbody></table>
+<table align= "center"><tbody><tr>
+<td style="font-size: 36pt;">[<img src="i/Notes.jpg" width="36" height="31"></td>
+<td align= "center">Openssl уже был установлен как часть установки операционной системы для поддержки HTTPS.</td>
+<td style="font-size: 36pt;">]</td>
+</tr></tbody></table>
+ <li>Мы собираемся использовать сервис OpenStack Keystone для аутентификации.
+Таким образом, мы должны создать файл <code>proxy-server.conf</code> и добавить следующее содержание в него:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; vi /etc/swift/proxy-server.conf
+ <br />(<em>Прим.пер.: лично мне, больше нравится использование <code>mcedit</code> вместо <code>vi</code></em>)
+<td>&nbsp;</tr></tbody></table>
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+ &nbsp; &nbsp; [DEFAULT]<br />
+ &nbsp; &nbsp; bind_port=8888<br />
+ &nbsp; &nbsp; user=swift<br />
+ &nbsp; &nbsp; [pipeline:main]<br />
+ &nbsp; &nbsp; pipeline = healthcheck cache authtoken keystoneauth proxy-server<br />
+ &nbsp; &nbsp; [app:proxy-server]<br />
+ &nbsp; &nbsp; use = egg:swift#proxy<br />
+ &nbsp; &nbsp; allow_account_management = true<br />
+ &nbsp; &nbsp; account_autocreate = true<br />
+ &nbsp; &nbsp; [filter:keystoneauth]<br />
+ &nbsp; &nbsp; use = egg:swift#keystoneauth<br />
+ &nbsp; &nbsp; operator_roles = Member,admin,swiftoperator<br />
+ &nbsp; &nbsp; [filter:authtoken]<br />
+ &nbsp; &nbsp; past.filter_factory = keystoneclient.middleware.auth_token:filter_factory &nbsp; <br />
+ &nbsp; &nbsp; # Delaying the auth decision is required to support token-less<br />
+ &nbsp; &nbsp; # usage for anonymous referrers ('.r:*').<br />
+ &nbsp; &nbsp; # Задержка решения аутентификации требуется для поддержки без маркера &nbsp; <br />
+ &nbsp; &nbsp; # Используется для анонимных обращений ('.r:*').<br />
+ &nbsp; &nbsp; delay_auth_decision = true<br />
+ &nbsp; &nbsp; # cache directory for signing certificate<br />
+ &nbsp; &nbsp; # кэш- каталог для сертификатов подписей<br />
+ &nbsp; &nbsp; signing_dir = /home/swift/keystone-signing<br />
+ &nbsp; &nbsp; # auth_* setting refer to the Keystone server<br />
+ &nbsp; &nbsp; # установки auth_* отсылающие на сервер Keystone<br />
+ &nbsp; &nbsp; auth_protocol = http<br />
+ &nbsp; &nbsp; # the hostname of the proxy server<br />
+ &nbsp; &nbsp; auth_host = swift_proxy<br />
+ &nbsp; &nbsp; auth_port = 35357<br />
+ &nbsp; &nbsp; # the same admin_token as provided in ketstone.conf<br />
+ &nbsp; &nbsp; # admin_token тот же, что и предоставляемый в ketstone.conf<br />
+ &nbsp; &nbsp; admin_token = Random Token<br />
+ &nbsp; &nbsp; # the service tenant and swift userid and password created in Keystone &nbsp; <br />
+ &nbsp; &nbsp; # владелец службы, а также userid и password swift созданные в Keystone &nbsp; <br />
+ &nbsp; &nbsp; admin_tenant_name = admin<br />
+ &nbsp; &nbsp; admin_user = admin<br />
+ &nbsp; &nbsp; admin_password = vadadms123<br />
+ &nbsp; &nbsp; [filter:cache]<br />
+ &nbsp; &nbsp; use = egg:swift#memcache<br />
+ &nbsp; &nbsp; [filter:cath_errors]<br />
+ &nbsp; &nbsp; use = egg:swift#catch_errors
+<td>&nbsp;</tr></tbody></table>
+ <li>Файл <code>proxy-server.conf</code> должен быть отредактирован с тем, чтобы содержать правильные 
+ <code>auth_host</code>, <code>admin_token</code>, <code>admin_tenant_name</code>, <code>admin_user</code> и <code>admin_password</code> (обратитесь к следующему разделу настройки keystone, чтобы увидеть, как настроить правильные учетные данные).
+ <li>Далее, мы создаем каталог keystone- подписей и даем права пользователю swift, используя следующие команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; mkdir /home/swift/keystone-signing<br />
+# &nbsp; chown -R swift:swift /home/swift/keystone-signing
+<td>&nbsp;</tr></tbody></table>
+</ol>
+</p>
+
+<h3 id="Ch030205">Установка кольца</h3>
+<p>
+Как обсуждалось в <a href="Ch02ru.htm">главе 2, Архитектура OpenStack Swift</a>, кольцо (также называемое 
+кольцевым формирователем, или просто файлом построения) содержит информацию для отображения информации 
+пользовательского запроса API в физического месторасположение учетной записи, контейнера или объекта.
+Мы будем иметь файл построения для учетных записей, которые будут содержать информацию отображения для 
+учетной записи.
+Подобным образом мы будем иметь файл построения для контейнеров и объектов.
+</p><p>
+Файлы построения создаются с использованием следующих команд:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; cd /etc/swift<br />
+# &nbsp; swift-ring-builder account.builder create 18 3 1<br />
+# &nbsp; swift-ring-builder container.builder create 18 3 1<br />
+# &nbsp; swift-ring-builder object.builder create 18 3 1
+<td>&nbsp;</tr></tbody></table>
+</p><p>
+Параметр <code>18</code> показывает, что может быть два в степени 18 разделов, созданных для хранения данных.
+Чтобы определить количество разделов, оцените максимальное количество дисков, умножьте это число на 100, 
+а затем округлите его до ближайшей степени двойки.
+Выбор меньшее, чем это необходимо, количества не катастрофичен; это только приведет в несбалансированному 
+кластеру с точки зрения емкости.
+Выбор значения больше, чем это необходимо, будет влиять на производительность.
+Параметр <code>3</code> указывает, что будут сохраняться три копии данных, а параметр <code>1</code> 
+установлен таким образом, что мы не перемещаем раздел более одного раза в час.
+</p><p>
+В системах хранения Swift жесткие диски могут быть сгруппированы в зоны, а кольца могут быть созданы в 
+соответствии с этими зонами.
+Каждый жесткий диск на сервере хранения относится к определенной зоне.
+Это помогает Swift реплицировать данные в различные зоны уникальным-насколько-это-возможно образом.
+Если происходит сбой в определенной зоне, данные могут быть выбраны из копий данных в других зонах.
+При установке с несколькими регионами, если происходит сбой в конкретном регионе, то данные могут 
+быть выбраны из других регионов.
+</p><p>
+Следующий синтаксис команды используется для добавления устройств на жестких дисках серверов хранения в 
+файлы построения кольца.
+Пожалуйста, обратите внимание, что область и зона,которым принадлежит данный жесткий диск, предоставляется 
+в качестве входного параметра.
+Параметр веса (100) указывает, сколько данных будет размещено на этом диске по сравнению с другими дисками.
+</p><p>
+Выполните следующие команды, чтобы добавить жесткие диски, выделенные для хранения в кольце.
+Для того, чтобы добавить отображение для <strong>sdb1</strong> устройства, мы запускаем следующие команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; swift-ring-builder account.builder add r1z1-172.168.10.52:6002\<br />
+R172.168.9.52:6005/sdb1 100<br />
+# &nbsp; swift-ring-builder container.builder add r1z1-172.168.10.52:60\<br />
+01R172.168.9.52:6004/sdb1 100<br />
+# &nbsp; swift-ring-builder object.builder add r1z1-172.168.10.52:6000R\<br />
+172.168.9.52:6003/sdb1 100
+<td>&nbsp;</tr></tbody></table>
+</p><p>
+В предыдущих командах <code>172.168.10.52</code> является IP- адресом узла хранилища в сети хранения, 
+которая содержит <strong>sdb1</strong>, а <code>172.168.9.52</code> является IP адресом того же самого 
+узла хранения в сети репликаций.
+</p><p>
+Мы должны выполнить предыдущие команды, заменив <strong>sdb1</strong> на <strong>sdc1</strong> и 
+<strong>sdd1</strong> для этого IP-адреса сети хранения и IP-адреса сети репликации.
+Мы должны выполнить те же команды, чтобы добавить <strong>sdb1</strong>, <strong>sdc1</strong> и 
+<strong>sdd1</strong> остальных серверов хранения, а также предоставив их IP-адреса сети хранения и 
+IP-адреса сети репликации в командах.
+</p><p>
+Последним шагом в выполнении процесса построения кольца является создание файлов кольца, которые будут 
+использоваться процессами Swift.
+Это делается с помощью команды перераспределения данных, как показано на рисунке:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; swift-ring-builder account.builder rebalance<br />
+# &nbsp; swift-ring-builder container.builder rebalance<br />
+# &nbsp; swift-ring-builder object.builder rebalance
+<td>&nbsp;</tr></tbody></table>
+</p><p>
+После запуска предыдущих команд, будут созданы следующие файлы: <code>account.ring.gz</code>, 
+<code>container.ring.gz</code> и <code>object.ring.gz</code>.
+Скопируйте эти файлы в каталог <code>etc/swift</code> всех узлов в кластере.
+</p><p>
+Кроме того убедитесь, что <code>etc/swift</code> имеет права пользователя <code>swift</code> на каждом узле.
+Установите правапользователя с помощью следующей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; chown -R swift:swift /etc/swift
+<td>&nbsp;</tr></tbody></table>
+</p><p>
+Теперь мы можем запустить службу прокси следующим образом:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; service swift-proxy restart
+<td>&nbsp;</tr></tbody></table>
+</p>
+
+<h4 id="Ch03020501">Запуск служб на всех узлах хранения</h4>
+<p>
+Теперь, когда серверы хранения имеют файлы кольца (<code>account.ring.gz</code>, 
+<code>container.ring.gz</code> и <code>object.ring.gz</code>), мы можем запустить службы Swift на 
+серверах хранения данных, используя следующие команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; service swift-object start<br />
+# &nbsp; service swift-object-replicator start<br />
+# &nbsp; service swift-object-updater start<br />
+# &nbsp; service swift-object-auditor start<br />
+# &nbsp; service swift-container start<br />
+# &nbsp; service swift-container-replicator start<br />
+# &nbsp; service swift-container-updater start<br />
+# &nbsp; service swift-container-auditor start<br />
+# &nbsp; service swift-account start<br />
+# &nbsp; service swift-account-replicator start<br />
+# &nbsp; service swift-account-updater start<br />
+# &nbsp; service swift-account-auditor start
+<td>&nbsp;</tr></tbody></table>
+</p><p>
+Мы также должны запустить службы <code>rsyslog</code> и <code>memcached</code> на серверах хранения 
+данных с помощью следующих команд:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; service rsyslog restart<br />
+# &nbsp; service memcached restart
+<td>&nbsp;</tr></tbody></table>
+</p>
+
+<h3 id="Ch030206">Поддержка нескольких регионов</h3>
+<p>
+При установке для нескольких регионов, мы размещаем пул узлов хранения в одном регионе, а оставшиеся в 
+других регионах.
+Мы можем иметь либо одну конечную точку для всех регионов или отдельные конечные точки для каждого региона.
+Во время установки построителя кольца, регион описывается в качестве параметра.
+Клиенты могут получить доступ к любой конечной точке и выполнять операции (создание, удаление и т.п.), 
+и эти операции будут воспроизведены в других регионах.
+Файлы настройки прокси-сервера будут содержать <code>read_affinity</code> и <code>write_affinity</code> в 
+определенном регионе.
+</p><p>
+Наша тестовая конфигурация имела два прокси-сервера и узла хранения файлов.
+Два региона были созданы путем создания двух конечных точек.
+Список конечных точек дает следующие результаты, которые были сокращены для удобства чтения:
+<br /><code>
+# keystone endpoint-list<br />
++-------------------+------------------------------+----------------------------------------------++<br />
+|id| &nbsp; &nbsp; region  &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; publicurl &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; adminurl&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-------------------+------------------------------+----------------------------------------------++<br />
+|| Swift-Region2 &nbsp; &nbsp;| http://192.168.2.231:8888/v1/AUTH_%(tenant_id)s| http://192.168.2.231:8888/v1|<br />
+||Openstack-Identity| http://192.168.2.230:5000/v2.0 | http://192.168.2.230:35357/v2.0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+|| Swift-Region1 &nbsp; &nbsp;| http://192.168.2.244:8888/v1/AUTH_%(tenant_id)s| http://192.168.2.244:8888/v1|<br />
++-------------------+------------------------------+----------------------------------------------++<br />
+</code>
+</p><p>
+<code>Swift-Region2</code> и <code>Swift-Region1</code> являются двумя регионами, а 
+<code>Openstack-Identity</code> конечной точкой аутентификации.
+</p>
+
+<h3 id="Ch030207">Служба Keystone</h3>
+<p>
+Для аутентификации мы будем использовать службу Keystone.
+Служба Keystone предоставляет конечную точку, через которую пользователь будет подключаться для использования 
+имени пользователя и полномочий владельца.
+После проверки службой идентичности Keystone, пользователю возвращается метка (token), которая будет 
+кэширована и использоваться в дальнейших вызовов API в различных других конечных точках API OpenStack.
+В рамках Keystone, пользователь определяется как имеющий полномочия учетных данных и связывается с одним 
+или несколькими владельцами.
+Кроме того, пользователю может быть отведена роль, например, admin (информация метаданных), 
+которая дает право этому пользователю бОльшие привилегии по сравнению с обычным пользователем.
+</p><p>
+Рассмотрим случай, когда пользователь подключается к конечной точке Swift для чтения объекта.
+Когда пользователь инициирует вызов API наряду с меткой конечной точки Swift, этот маркер передается 
+конечной точкой Swift назад в Keystone для проверки.
+После того, как она подтверждена Keystone, она возвращает код подтверждения в конечную точку Swift.
+Служба Swift затем продолжит обработку API для чтения объекта.
+</p><p>
+Теперь в последующих разделах мы покажем шаги, необходимые для установки и настройки службы Keystone.
+</p>
+
+<h4 id="Ch03020701">Установка MySQL</h4>
+<p>
+Для базы данных Keystone мы будем использовать MeSQL.
+Этапы установки следующие:<ol>
+ <li>Установите базу данных MySQL и клиентское программное обеспечения на узле сервера прокси 
+ с помощью следующей команды:<br />
+<code><strong>root@swift-proxy:/home/vedams# apt-get install python-mysqldb mysql-server</strong></code>
+ <li>Отредактируйте <code>/etc/mysql/my.cnf</code> на узле прокси, назначив имя сервера хоста прокси 
+ переменной <code>Bind-address</code>, как показано в следующей команде:<br />
+<code><strong>Bind-address = swift-proxy</strong></code>
+ <li>Перезапустите службу MySQL на узле прокси с помощью следующей команды:
+<code><strong>root@swift-proxy:/home/vedams# service mysql restart</strong></code>
+ <li>Удалить анонимных пользователей с помощью команды <code>mysql_secure_installation</code>, а именно:
+<code><strong>root@swift-proxy:/home/vedams# mysql_secure_installation</strong></code>
+ <li>Ответьте yes на приглашение <code>delete anonymous user</code>.
+</ol></p>
+
+<h4 id="Ch03020702">Установка Keystone</h4>
+<p>
+Keystone может быть установлен на выделенных серверах для крупных установок, однако для нашего примера 
+установите службу Keystone на узле прокси.
+Следующие шаги описывают, как установить и настроить службу Keystone:<ol>
+ <li>Установите службу Keystone с помощью следующей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; apt-get install keystone
+<td>&nbsp;</tr></tbody></table>
+ <li>Мы должны сгенерировать случайный маркер для доступа к службе Keystone, как показано в следующей команде:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; openssl rand -hex 10
+<td>&nbsp;</tr></tbody></table>
+ <li>Затем мы редактируем файл <code>/etc/keystone/keystone.conf</code> и выполняем следующие изменения:<ul>
+   <li>Заменяем <code>admin_token</code> случайным маркером, который был только что сформирован, как показано 
+   в следующей команде:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+ &nbsp; admin_token = <em>Random Token</em>
+<td>&nbsp;</tr></tbody></table>
+   <li>Заменяем соединение с базой данных SQLite на MySQL следующей командой: 
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+ connection = mysql://keystone:vedams123@swift-proxy/keystone
+<td>&nbsp;</tr></tbody></table>
+  </ul>
+ <li>Убедитесь, что файл SQLite был удален после настройки MySQL; в противном случае, мы должны удалить 
+ файл вручную.
+Выполните следующую команду, чтобы вывести содержимое каталога <code>/var/lib/keystone</code> и 
+удалите файл <code>keystone.sqlite</code>, если он присутствует:
+<code><strong>#sudo ls –la /var/lib/keystone/</strong></code>
+ <li>Затем мы создаём базу данных Keystone пользователей и их допусков, используя следующие команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+root@swift-proxy:/home/vedams# mysql -u root -pvedams123<br />
+Welcome to the MySQL monitor. Commands end with ; or \g.<br />
+Your MySQL connection id is 38<br />
+Server version: 5.5.34-0ubuntu0.12.04.1 (Ubuntu)<br />
+<br />
+Copyright (c) 2000, 2013 Oracle and/or its affiliates. All rights reserved.<br />
+<br />
+Oracle is registered trademark of Oracle Corporation and/or its<br />
+affiliates. Other names may be trademarks of theier respective<br />
+owners.<br />
+<br />
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.<br />
+<br />
+mysql> CREATE DATABASE keystone;<br />
+Query OK, 1 row affected (0.00sec)<br />
+<br />
+mysql> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'vedams123';<br />
+Query OK, 0 rows affected (0.00sec)<br />
+<br />
+mysql> quit<br />
+Bye<br />
+root@swift-proxy:/home/vedams#<br />
+<td>&nbsp;</tr></tbody></table>
+ <li>Далее мы проверяем синхронизацию базы данных Keystone и перезапускаем службу Keystone, используя 
+ следующие команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; keystone-manage db_sync <br />
+# &nbsp; service keystone restart
+<td>&nbsp;</tr></tbody></table>
+ <li>Экспортируем следующие переменные окружения:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; export OS_SERVICE_TOKEN=<em>Random Token</em> <br />
+# &nbsp; export OS_SERVICE_ENDPOINT=http://sift-proxy:35357/v2.0
+<td>&nbsp;</tr></tbody></table>
+ <li>Затем мы настраиваем владельца (tenant), пользователя (user) и роль (role) для аутентификации в 
+ отношении входных данных.
+После проверки подлинности разрешается доступ к службам Swift и конечным точкам.
+Затем мы создаем владельца для пользователя с правами администратора, пользователь с правами администратора 
+под названием <code>admin</code> и роль для административных задач.
+Затем мы добавляем роль администратора пользователю с правами администратора. 
+Это показано в следующих командных строках:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; keystone tenant-create --name=admin --description=&quot;Admin Tenant&quot; <br />
+# &nbsp; keystone user-create --name=admin --pass=vedams123 --email=test@gmail.com <br />
+# &nbsp; keystone role-create --name=admin <br />
+# &nbsp; keystone user-role-add --user=admin --tenant=admin --role=admin
+<td>&nbsp;</tr></tbody></table>
+Следующий скриншот показывает ход выполнения предыдущей команды:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+<code>
+ root@swift-proxy:/home/vedams# keystone tenant-create --name=admin --description=&quot;Admin Tenant&quot; <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ | description | &nbsp; &nbsp; &nbsp; &nbsp; Admin Tenant &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; enabled &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | f570de35b6dc4a4d81a24516d049173a | <br />
+ | &nbsp; &nbsp; name&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; admin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams# keystone user-create --name=admin --pass=vedams123 --email=test@gmail.com <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; &nbsp; email&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; test@gmail.com&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; enabled &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | 77461f6a3763462b990cdaceec034afe | <br />
+ | &nbsp; &nbsp; name&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; admin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams# keystone role-create --name=admin <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | 814ffecf0bbc4221a9ab98618d159ded | <br />
+ | &nbsp; &nbsp; name&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; admin &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams# keystone user-role-add --user=admin --tenant=admin --role=admin <br />
+ root@swift-proxy:/home/vedams#
+</code>
+<td>&nbsp;</tr></tbody></table>
+Затем мы создаем еще одного пользователя с именем <code>swift-user</code> и добавляем его владельцу под 
+названием <code>swift-tenant</code>.
+Пользователю предоставляется роль участника с доступом.
+Следующий скриншот показывает процесс создания:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+<code>
+ root@swift-proxy:/home/vedams# keystone tenant-create --name=swift-tenant --description=&quot;Swift Tenant&quot; <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ | description | &nbsp; &nbsp; &nbsp; &nbsp; Swift Tenant &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; enabled &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | bd1e87f876e541a4acc42803430a1bdb | <br />
+ | &nbsp; &nbsp; name&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;swift-tenant &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams# keystone user-create --name=swift-user --pass=vedams123 --email=swift-user@gmail.com <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; &nbsp; email&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp;swift-user@gmail.com &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; enabled &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; True&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | 0b81ddf04865444bbbdd4be417a392fc | <br />
+ | &nbsp; &nbsp; name&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;swift-tenant &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams#
+</code>
+<td>&nbsp;</tr></tbody></table>
+ <li>Служба Keystone отслеживает различные службы OpenStack, которые мы установили, а также отслеживает, 
+ где они находятся в сети.
+Для того, чтобы отслеживать службы, создаются идентификаторы (ID) для служб с использованием команды keystone 
+<strong>service-create</strong>, как показано в следующих командах:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; keystone service-create --name=keystone --type=identity \ <br />
+--description=&quot;Keystone Identity Service&quot; <br />
+# &nbsp; keystone service-create --name=swift --type=object-store \ <br />
+--description=&quot;swift Service&quot;
+<td>&nbsp;</tr></tbody></table>
+Следующий скриншот показывает вывод выполнения предыдущих команд создания сервисов:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+<code>
+ root@swift-proxy:/home/vedams# keystone service-create --name=keystone --type=identity --description=&quot;Keystone Identity Service&quot; <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ | description | &nbsp; Keystone Identity Service&nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | a9c2d44442464975bb50e296fcc584b4 | <br />
+ | &nbsp; &nbsp; name&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;keystone &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; type&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;identity &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams# keystone service-create --name=swift --type=object-store --description=&quot;swift Service&quot; <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ | description | &nbsp;swift Object storage service&nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | a0ab378728b148fd9c9a0534d1d6a227 | <br />
+ | &nbsp; &nbsp; name&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;swift&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; type&nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;object-store &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams# keystone user-role-add --user=swift-user --tenant=swift-tenant --role=_member_ <br />
+ root@swift-proxy:/home/vedams#
+</code>
+<td>&nbsp;</tr></tbody></table>
+ <li>Затем мы должны указать конечные точки службы Keystone и  конечные точки службы Swift для использования 
+ команды Keystone <code>endpoint-create</code>.
+В следующих командах <code>swift-proxy</code> является именем хоста сервера прокси:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; keystone endpoint-create --service-id KEYSTONE_SERVICE_ID --region regioneOne --publicurl 'http://swift-proxy:5000/v2.0' --adminurl 'http://swift-proxy:35357/v2.0' --internalurl 'http://swift-proxy:5000/v2.0' <br />
+# &nbsp; keystone endpoint-create --service-id SWIFT_SERVICE_ID --region regioneOne --publicurl 'http://swift-proxy:8888/v1/AUTH_%(tenant_id)s' --adminurl 'http://swift-proxy:8888/v1' --internalurl 'http://swift-proxy:8888/v1/AUTH_%(tenant_id)s'
+<td>&nbsp;</tr></tbody></table>
+Следующий скриншот отображает вывод выполнения предыдущих команд создания конечных точек:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+<code>
+ root@swift-proxy:/home/vedams# keystone endpoint-create --service-id KEYSTONE_SERVICE_ID --region regioneOne --publicurl 'http://swift-proxy:5000/v2.0' --adminurl 'http://swift-proxy:35357/v2.0' --internalurl 'http://swift-proxy:5000/v2.0' <br />
+ +-------------+----------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+----------------------------------+ <br />
+ | &nbsp; adminurl &nbsp;| &nbsp;http://swift-proxy:35357/v2.0 &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | cdade3f814ac48c1b1a365839685c18f | <br />
+ | internalurl&nbsp;| &nbsp; http://swift-proxy:5000/v2.0 &nbsp; | <br />
+ | &nbsp;publicurl &nbsp;| &nbsp; http://swift-proxy:5000/v2.0 &nbsp; | <br />
+ | &nbsp; &nbsp;region &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;regionOne&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | a9c2d44442464975bb50e296fcc584b4 | <br />
+ +-------------+----------------------------------+ <br />
+ root@swift-proxy:/home/vedams# keystone endpoint-create --service-id SWIFT_SERVICE_ID --region regioneOne --publicurl 'http://swift-proxy:8888/v1/AUTH_%(tenant_id)s' --adminurl 'http://swift-proxy:8888/v1' --internalurl 'http://swift-proxy:8888/v1/AUTH_%(tenant_id)s' <br />
+ +-------------+-----------------------------------------------+ <br />
+ |&nbsp; Property &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Value&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| <br />
+ +-------------+-----------------------------------------------+ <br />
+ | &nbsp; adminurl &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; http://swift-proxy:8888/v1&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; 479defffcd3452a8d90a4c00c35dc04 &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | internalurl&nbsp;| http://swift-proxy:8888/v1/AUTH_%(tenant_id)s | <br />
+ | &nbsp;publicurl &nbsp;| http://swift-proxy:8888/v1/AUTH_%(tenant_id)s | <br />
+ | &nbsp; &nbsp;region &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;regionOne &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ | &nbsp; &nbsp; id&nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; a0ab378728b148fd9c9a0534d1d6a227&nbsp; &nbsp; &nbsp; &nbsp; | <br />
+ +-------------+-----------------------------------------------+ <br />
+ root@swift-proxy:/home/vedams#
+</code>
+<td>&nbsp;</tr></tbody></table>
+ <li>Теперь мы вернем в исходное состояние переменные окружения, которые мы экспортировали ранее, так как мы 
+ не нуждаемся в них снова.
+Мы будем вызывать REST API и снабжать их именем пользователя и паролем для вместе с конечной точкой.
+Верните в исходное положение переменные окружения, как показано в следующих командах:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; unset OS_SERVICE_TOKEN <br />
+# &nbsp; unset OS_SERVICE_ENDPOINT 
+<td>&nbsp;</tr></tbody></table>
+ <li>Теперь мы запросим маркер аутентификации используя пользователя с правами администратора и указанием пароля.
+Это потдведит, что служба Keystone настроена и работает правильно на сконфигурированной конечной точке.<br />
+Мы также убедимся, что аутентификация работает правильно, запросив маркер для определенного владельца, как 
+показано в следующей команде:
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; keystone --os-username=admin --os-password=ADMIN_PASS \ <br />
+--os-tenant-name=admin --os-auth-url=http://swift-proxy:35357/v2.0 token-gat
+<td>&nbsp;</tr></tbody></table>
+ <li>Наконец, протестируем службу Keystone, выполнив следующие приведенные ниже команды для вывода списка 
+ пользователей, владельцев, ролей и конечных точек (сгенерированный ранее случайный маркер именуются 
+ <code>Random Token</code>):
+<table style="border: none; align=center;" align="center"><tbody><tr><td>&nbsp;<td style="border: thin solid; align=center; padding: 3px 3px 3px 3px;">
+# &nbsp; keystone --os-token=<em>Random Token</em> --os-endpoint=http://swift-proxy:35357/v2.0 \ <br />
+user-list <br />
+# &nbsp; keystone --os-token=<em>Random Token</em> --os-endpoint=http://swift-proxy:35357/v2.0 \ <br />
+tenant-list <br />
+# &nbsp; keystone --os-token=<em>Random Token</em> --os-endpoint=http://swift-proxy:35357/v2.0 \ <br />
+role-list <br />
+# &nbsp; keystone --os-token=<em>Random Token</em> --os-endpoint=http://swift-proxy:35357/v2.0 \ <br />
+endpoint-list <br />
+<td>&nbsp;</tr></tbody></table>
+</ol>
+</p>
+
+
+<h2 id="Ch0303">Заключение</h2>
+<p>
+В этой главе вы узнали, как установить и настроить службу OpenStack Swift для обеспечения хранения объектов, 
+а также установить и настроить службу Keystone для аутентификации пользователей для доступа к хранилищу 
+объектов Swift.
+Следующая глава содержит подробную информацию о различных инструментах, командах и API, которые 
+предоставлены для доступа и использования системы хранения объектов Swift.
+</p>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch02ru.htm">Глава 2</a></td>
+ <td align="center"><a href="ToC.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch04ru.htm">Глава 4</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</body>
+</html>

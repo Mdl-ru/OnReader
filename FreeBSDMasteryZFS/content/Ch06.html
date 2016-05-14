@@ -1,0 +1,1081 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Управление дисковым пространством - Мастерство FreeBSD: ZFS</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS"/>
+<link rel="prev" href="Ch05.html" title="Глава 5. Восстановление и реконструкция"/>
+<link rel="next" href="Ch07.html" title="Глава 7. Моментальные снимки и клоны"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Управление дисковым пространством';
+PrevRef = 'Ch05.html';
+UpRef = 'index.html';
+NextRef = 'Ch07.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 6. Управление дисковым пространством</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch06.html">6. Управление дисковым пространством</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch06.html#Reading_ZFSDiskUsage">Чтение использования диска ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#ReferencedData">Ссылочные данные</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#FreeingSpace">Освобождение пространства</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#DiskSpaceDetail">Подробности дискового пространства</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#PoolSpaceUsage">Использование пространства пулов</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#ZFSetc">ZFS, df(1) и прочие обычные средства</a></span></dt>
+	 </dl></dd>
+    <dt><span class="section"><a href="Ch06.html#LimitingDatasetSize">Ограничение наборов данных</a></span></dt>
+    <dt><span class="section"><a href="Ch06.html#Reservations">Резервирования</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#ViewingReservations">Просмотр резервирований</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#SettingAndRemovingReservations">Установка и удаление резервирований</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#Quotas">Квоты</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#DatasetQuotas">Квоты наборов данных</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#SettingQuotas">Установка квот</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#ViewingQuotas">Просмотр квот</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#ExceededQuotas">Превышенные квоты</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#UserAndGroupQuotas">Квоты пользователей и групп</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#ViewingSpaceUsed">Просмотр используемого пространства и существующие квоты на наборы данных</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#AssigningAndRemoving">Назначение и удаление квот пользователей и групп</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#ViewingIndividual">Просмотр индивидуальных квот</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#ZFS_Compression">Сжатие ZFS</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#EnablingCompression">Разрешение сжатия</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#CompressionAlgorithms">Алгоритмы сжатия</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#CompressionProperties">Свойства сжатия</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#ChoosingAnAlgorithm">Выбор алгоритма</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#WhenToChange">Когда изменять алгоритм сжатия</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#CompressionAndPerformance">Сжатие и производительность</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#DeactivatingCompression">Отключение сжатия</a></span></dt>
+	 </dl></dd>
+	<dt><span class="section"><a href="Ch06.html#Deduplication">Дедупликация</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#DeduplicationMemoryNeeds">Потребности дедупликации в памяти</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#DeduplicationEffectiveness">Эффективность дедупликации</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#EnablingDeduplication">Разрешение дедупликации</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#DisablingDeduplication">Запрет дедупликации</a></span></dt>
+	 </dl></dd>
+   </dl></dd>
+   </dl>
+  </div>
+   <p>ZFS позволяет легко отвечать на такие вопросы, как &quot;Сколько свободных дисков имеет данный пул?&quot;
+   На вопрос &quot;Что заняло все мое пространство?&quot; намного труднее ответить из-за снимков, клонов, предварительных распределений, 
+   ZVOL и ссылочных данных. Эта функциональность также может вызывать проблемы при попытке использования традиционных методов 
+   управления файловой системой в наборах данных ZFS. Вы можете обнаружить, что у вас недостаточно пространства для удаления файлов, 
+   которые страшно запутаны, пока вы не разберетесь что случилось.</p>
+   <p>ZFS предлагает способы улучшения использования дискового пространства. Вместо того чтобы просить системного администратора сжимать 
+   отдельные файлы, ZFS может применять сжатие на уровне файловой системы. ZFS также может выполнять дедупликацию файлов, значительно 
+   улучшая использование диска в отношении стоимости памяти. Мы увидим как делать оценку этих возможностей и определять когда какую применять.</p>
+   <p>Но для начала давайте рассмотрим использование дискового пространства ZFS.</p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reading_ZFSDiskUsage"> </a>Чтение использования диска ZFS</h3>
+   </div></div></div>
+    <p>Программа <span class="term"><code>df(1)</code></span> отображает объем свободного пространства в каждом разделе, в то время как 
+	<span class="term"><code>du(1)</code></span> показывает сколько дисков используется в разделе или дереве каталога. На протяжении
+	десятилетий системные администраторы применяли эти инструменты для просмотра того, что же съедает их свободное пространство. Они
+	великолепны для традиционных файловых систем. Однако, ZFS требует отличного способа понимания.</p>
+    <p>Рассмотрим данный (сильно укороченный) список наборов данных ZFS.</p>
+	   <pre class="screen">
+# zfs list
+NAME                 USED  AVAIL  REFER  MOUNTPOINT
+zroot               17.5G   874G   144K  none
+zroot/ROOT          1.35G   874G   144K  none
+zroot/ROOT/default  1.35G   874G  1.35G  /
+zroot/usr           12.5G   874G   454M  /usr
+zroot/usr/local     1.84G   874G  1.84G  /usr/local
+...
+	   </pre>
+    <p>Согласно нему пул <span class="term"><code>zroot</code></span> имеет занятыми 1.75ГБ. На первый взгляд можно подумать, что
+	<span class="term"><code>zroot/ROOT</code></span> и <span class="term"><code>zroot/ROOT/default</code></span> каждый используют по 
+	1.35ГБ. Но это не верно.</p>
+    <p>Наш набор данных <span class="term"><code>zroot/ROOT</code></span> использует 1.35ГБ данных. В данном наборе данных существует 1.35ГБ
+	данных. Набор данных <span class="term"><code>zroot/ROOT/default</code></span> также использует 1.35ГБ данных. Однако, набор данных 
+	<span class="term"><code>zroot/ROOT/default</code></span> содержится в наборе данных <span class="term"><code>zroot/ROOT</code></span>.
+	Это те же самые 1.35ГБ данных.</p>
+    <p>Аналогично, рассмотрим 12.5ГБ которые использует <span class="term"><code>zroot/usr</code></span>. Этот набор данных имеет дочерние 
+	наборы данных, такие как <span class="term"><code>zroot/usr/local</code></span>, <span class="term"><code>zroot/usr/obj</code></span> 
+	и тому подобные. Каждый из этих наборов данных использует часть данных, часто несколько гигабайт. Общие 12.5ГБ, которые использует 
+	<span class="term"><code>zroot/usr</code></span> содержат все под ними.</p>
+    <p>В ZFS вы не можете просто складывать объем используемого пространства для получения общего потребления. Колонка AVAIL, или доступное 
+	пространство, несколько более надежна. Пул <span class="term"><code>zroot</code></span> имеет 874ГБ свободного пространства. Когда
+	вы начнете применять снимки и клоны и все прочие хорошие свойства ZFS, вы обнаружите, что эти 874ГБ пространства могут содержать 
+	во много раз больше данных благодаря ссылочным данным.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ReferencedData"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ссылочные данные</span></h4>
+    </div></div></div>
+    <p>Объем данных, содержащийся в наборе данных является ссылочными данными. Взглянем на колонку REFER в приведенном выше листинге. Пул
+	<span class="term"><code>zroot</code></span> и <span class="term"><code>zroot/ROOT</code></span> оба ссылаются на 144КБ пространства. 
+	Будет достаточно грубо сказать: &quot;да, днаая часть наполнения имеется&quot;. Это заполнитель. Набор данных 
+	<span class="term"><code>zroot/ROOT/default</code></span>, однако, ссылается на 1.35ГБ данных.</p>
+    <p>Ссылочные данные являются веществом, которое существует в пределах данной файловой системы или набора данных. Если вы перейдете в 
+	файловую систему <span class="term"><code>zroot/ROOT/default</code></span>, вы найдете 1.35ГБ наполнения.</p>
+    <p>То есть, мы складываем ссылочное пространство и получаем используемый объем? Нет, опять не так. Множество наборов данных ZFS могут 
+	ссылаться на один и тот же набор данных. Именно так работают снимки и клоны. Вот почему, например, несколько 10ГБ снимков размещаются в 11ГБ 
+	пространства.</p>
+    <p>Клоны используют пространство во много аналогично снимкам, за исключением более динамичного способа применения. После добавления 
+	дедупликации и сжатия, использование дискового пространства усложняется очень быстро.</p>
+    <p>А помимо этого еще существуют вопросы, связанные с освобождением пространства.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FreeingSpace"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Освобождение пространства</span></h4>
+    </div></div></div>
+   <p>Во многих внедрениях ZFS удаление файла не означает освобождение места. В большинстве ситуаций удаление в действительности увеличивает 
+   потребление дискового пространства на маленькую величину благодаря снимкам и метаданным. Используемое этими файлами пространство назначается 
+   самому последнему снимку. Для успешного управления ZFS вам необходимо понимать как работают лежащие в основе функции и что делает ZFS 
+   когда вы удаляете данные.</p>
+   <p>В файловой системе, применяющей снимки и клоны, недавно освобожденное пространство не возвращается немедленно. Многие операции ZFS 
+   освобождают пространство в асинхронном режиме по мере того, как ZFS обновляет все блоки, которые ссылаются на это пространство. Свойство пула
+   <span class="term"><strong class="userinput"><code>freeing</code></strong></span> показывает сколько пространства ZFS нуждается в возвращении 
+   из данного пула. Если вы освобождаете за раз целую кучу пространства, вы можете заметить, что свойство 
+   <span class="term"><strong class="userinput"><code>freeing</code></strong></span> уменьшится и свободное пространство возрастет. Как быстро 
+   ZFS возвратит пространство зависит от вашего оборудования, объема нагрузки, архитектуры пула, уровня фрагментации и того, как используется 
+   пространство. {<span class="emphasis"><em>Прим. пер.: подробнее см. <a class="link" 
+   href="http://onreader.mdl.ru/DesignAndImplementationFreeBSD/content/Ch10.html#10.4.FreeingBlocks" target="_top">Освобождение блоков</a> в 
+   переводе <a class="link" href="http://onreader.mdl.ru/DesignAndImplementationFreeBSD/content/Ch10.html" target="_top">Главы 10. ZFS: 
+   Зеттабайт файловая система</a> 2й редакции книги Маршала Кирка МакКузика, Джорджа В. Невил-Нейла и Роберта Н.М. Ватсона &quot;Архитектура и 
+   реализация операционной системы FreeBSD&quot; (ISBN-13: <a class="link" href="http://www.informit.com/store/design-and-implementation-of-the-freebsd-operating-9780321968975" 
+   target="_top">978-0-321-96897-5</a>)</em></span>}.</p>
+   <p>Асинхронное освобождение пространства легко понять: вы наблюдаете за свойством <span class="term"><strong class="userinput"><code>freeing</code></strong></span>
+   и видите как быстро оно уменьшается. Однако для непосвященных использование диска ZFS может показаться более странным. Допустим, у вас есть 
+   ряд снимков набора данных и их родительский набор данных переполняется. (Мы рассмотрим снимки в <a class="link" 
+   href="Ch07.html" target="_top">Главе 7</a>, потерпите с нами сейчас.) Вы удалили череду больших ISO из этого набора данных. Удаление этих 
+   файлов не освободило никакого пространства. Почему?</p>
+   <p>Данные файлы ISO все еще существуют в ваших более старых снимках. ZFS знает, что эти файлы не существуют в текущем наборе данных, однако, если 
+   вы просмотрите каталоги снимков вы увидите эти файлы. ZFS должна хранить копии этих удаленных файлов для более старых снимков до тех пор, 
+   пока снимки ссылаются на эти данные. Содержимое снимков доступно только для чтения, следовательно единственный способ удалить эти большие файлы
+   заключается в удалении этих снимков. Если у вас имеется множество снимков, использование диска становится более сложным. А клоны 
+   (<a class="link" href="Ch07.html" target="_top">Глава 7</a>), строящиеся на снимках, ведут себя подобным образом.</p>
+   <p>Понимание того, как именно конкретный набор данных использует дисковое пространство, требует затрат некоторого времени на его свойства.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DiskSpaceDetail"> </a>Подробности дискового пространства</h3>
+   </div></div></div>
+   <p>Чтобы увидеть точно куда уходит дисковое пространство, запросите у <span class="term"><code>zfs list</code></span> дополнительные 
+   подробности об использовании пространства с помощью модификатора <span class="term"><code>-o space</code></span>.</p>
+	   <pre class="screen">
+# zfs list -o space
+NAME               AVAIL   USED  USEDSNAP  USEDDS  USEDREFRESERV  USEDCHILD
+zroot               874G  17.5G         0    144K              0      17.5G
+zroot/ROOT          874G  1.35G         0    144K              0      1.35G
+zroot/ROOT/default  874G  1.35G         0   1.35G              0          0
+zroot/usr           874G  12.5G         0    454M              0      12.0G
+...
+	   </pre>
+   <p>Колонка AVAIL отображает объем пространства, доступный каждому набору данных в этом пуле. ZFS предоставляет для совместного использования 
+   доступное пространство для всех наборов данных в этом пуле. Эти данные берутся из свойства ZFS
+   <span class="term"><strong class="userinput"><code>available</code></strong></span>. Мы покажем как ограничивать использование квотами и 
+   предварительным выделением позже в данной главе.</p>
+   <p>Колонка USED показывает объем пространства, берущийся этим набором данных и всеми происходящими из него. Снимки, ZVOL, клоны, 
+   обычные файлы, и все что еще потребляет память перечисляется в данном объеме. Это значение может отставать от изменений в пределах нескольких 
+   секунд пока ZFS записывает новые файлы, создает снимки и дочерние наборы данных, или вносит другие изменения. Значение получается из 
+   свойства <span class="term"><strong class="userinput"><code>used</code></strong></span>.</p>
+   <p>Колонка USEDBYSNAP показывает объем пространства, потребляемый исключительно снимками. Когда вы делаете первый снимок набора данных, снимок 
+   почти не потребляет пространства, поскольку он почти идентичен первоначальному набору данных. По мере изменения набора данных, однако, 
+   снимок растет. Поскольку множество снимков одного и того же набора данных возможно ссылаются на одни и те же данные, трудно сказать что 
+   удаление отдельного снимка освободит часть этого пространства. Однако, полное удаление всех таких снимков наборов данных несомненно освободит 
+   этот объем пространства. Данное значение получается от свойства набора данных <span class="term"><strong class="userinput"><code>usedbysnapshots</code></strong></span>.
+   <a class="link" href="Ch07.html" target="_top">Глава 7</a> обсуждает снимки.</p>
+   <p>Колонка USEDDS отображает объем пространства, занимаемый файлами в данном наборе данных. Она исключает снимки, предварительное выделение, 
+   дочерние наборы данных или прочую функциональность ZFS. Эти данные получаются из свойства набора данных <span class="term"><strong class="userinput"><code>usedbydataset</code></strong></span>
+   <a class="link" href="Ch04.html" target="_top">Глава 4</a> охватывает наборы данных.</p>
+   <p>В колонке USEDBYREFRESERV вы увидите пространство занятое refreservation для данного набора данных, исключая его потомков. Данное значение получается 
+   от свойства <span class="term"><strong class="userinput"><code>usedbyrefreserv</code></strong></span> этого набора данных. Подробности далее в 
+   этой главе в &quot;<a class="link" href="#Reservations" target="_top">Резервирование</a>&quot; и &quot;<a class="link" href="#Quotas" 
+   target="_top">Квоты</a>&quot;.</p>
+   <p>Колонка USEDCHILD отображает какой объем пространства потребляют потомки этого набора данных, что показывается свойством
+   <span class="term"><strong class="userinput"><code>usedbyrefreserv</code></strong></span>.</p>
+   <p>Сравните запись для <span class="term"><code>zroot/usr</code></span> в <span class="term"><code>zfs list</code></span> из предыдущего раздела 
+   с подробным описанием расхода пространства. Результат <span class="term"><code>zfs list</code></span> сообщает, что наборы данных потребляют 
+   12.5ГБ и ссылаются на 454МБ. Путем разделения списка специфичного для пространства на разные категории, становится очевидно, что эти наборы 
+   данных используют 454МБ, а дочерние наборы данных потребляют 12ГБ.</p>
+   <p>Применяйте <span class="term"><code>zfs list -o space</code></span> каждый раз при исследовании использования диска.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="PoolSpaceUsage"> </a>Использование пространства пулов</h3>
+   </div></div></div>
+   <p>Иногда вы не беспокоитесь об использовании пространства отдельных наборов данных. Имеет значение только доступный объем пула целиком.
+   Если вы посмотрите на свойства пула, вы увидите свойства, которые очень сильно похожи на используемый и свободный объемы пространства.
+   Да, они существуют, однако свойства пространства пула содержат пространство, необходимое для избыточной информации. Они не отображаются 
+   в объеме данных, которые вы можете поместить в пул.</p>
+   <p>Если вы имеете пул зеркала или чередования, информация о пространстве пула достаточно близка к реальной. Если вы применяете RAID-Z1,
+   вы теряете в вашем пуле одного поставщика пространства на виртуальное устройство. RAID-Z2 стоит двух дисков на VDEV, а RAID-Z3 стоит три 
+   диска на VDEV. Хотя вы согласно теории можете можете применять эти свойства, а именно текущее использование пула, и немного математики 
+   для получения хорошего предположения о том какой объем вы потребляете, существует более простой путь: запросить  
+   <span class="term"><code>zfs(8)</code></span> о наборе данных корня пула.</p>
+	   <pre class="screen">
+# zfs list zroot
+NAME    USED  AVAIL  REFER  MOUNTPOINT
+zroot  37.7G   854G   144K  none
+	   </pre>
+   <p>Данный пул использует 37.7ГБ и имеет свободными 854ГБ.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFSetc"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">ZFS, df(1) и прочие обычные средства</span></h4>
+    </div></div></div>
+    <p>Таким образом, ZFS имеет все мыслимые виды &quot;нарезки на кубики и ломтики&quot; (slice and dice) своих отображений использования диска.
+	После десятилетий применения <span class="term"><code>df(1)</code></span> для просмотра использования диска многие из нас не хотят ничего 
+	менять. Однако, когда вы применяете ZFS, почтенный <span class="term"><code>df(1)</code></span> и многие другие инструменты являются не просто 
+	не оптимальны - они просто активно неверны и дают неправильные или противоречивые ответы для ZFS. Мы собираемся в качестве примера использовать
+    <span class="term"><code>df(1)</code></span>, но и многие другие инструменты имеют аналогичные проблемы.</p>
+    <p>Традиционные файловые системы состоят из одного раздела. Этот раздел имеет размер, основанный на выделенном на диске количестве блоков.
+    Инструмент <span class="term"><code>df(1)</code></span> перебирает все смонтированные файловые системы и отобразит размер раздела, объем 
+	используемого в настоящее время пространства, а также сколько свободного пространства осталось.</p>
+    <p>Для ZFS проход по файловым системам не работает, поскольку наборы данных не являются файловыми системами. ZFS предоставляет каждый набор 
+	данных для операционной системы как если бы он был отдельной файловой системой. Набор данных не имеет максимального размера (если он не имеет 
+	квот). Хотя вы и можете установить верхние и нижние пределы на размер набора данных, все наборы данных ZFS имеют доступ ко всему доступному 
+	свободному пространству в пуле.</p> 
+	<p>Чтобы предложить некое подобие совместимости с традиционным инструментом <span class="term"><code>df(1)</code></span>, 
+	ZFS сообщает невинную ложь. Поскольку набор данных ZFS не имеет &quot;размер&quot; в понимании традиционной файловой системы, она суммирует 
+	используемое пространство и все доступное свободное пространство пула вместе и представляет это значение как &quot;размер&quot; этого 
+	набора данных.</p>
+    <p>Посмотрите на примеры пулов в предыдущем разделе. Набор данных <span class="term"><code>zroot/ROOT/default</code></span> использует 
+	1.35ГБ пространства и имеет 874ГБ свободными. Общий размер составляет 873.35ГБ. Затем рассмотрим наш набор данных 
+    <span class="term"><code>zroot/usr</code></span>. Он потребляет 12.5ГБ и имеет 874ГБ свободными, в общей сложности 886.5ГБ.</p>
+    <p>Теперь проверим некоторые реальные выводы <span class="term"><code>df(1)</code></span> для этих наборов данных.</p>
+	   <pre class="screen">
+# df -h
+Filesystem          Size  Used  Avail  Capacity  Mounted on
+zroot/ROOT/default  875G  1.4G  874G         0%  /
+zroot/usr           874G  454M  874G         0%  /usr
+...
+	   </pre>
+    <p>Корневая файловая система занимает 875ГБ, а <span class="term"><code>/usr</code></span> составляет 874ГБ, давая в сумме для двух 
+	разделов 1749ГБ с 1748ГБ свободными. Довольно внушительно для диска 1ТБ, не так ли? Колонка &quot;Capacity&quot;, которая отображает 
+	какой процент файловой системы используется, очевидно, фиктивен.</p>
+    <p>По мере роста наборов данных, объем свободного пространства сжимается. Согласно <span class="term"><code>df(1)</code></span>, 
+	файловая система сжимается в размере по мере использования и растет при освобождении.</p>
+    <p>Такие инструменты как <span class="term"><code>df(1)</code></span> и большинство других инструментов мониторинга, предназначенных для 
+	традиционных файловых систем, дают неверные ответы. Остерегайтесь их! Хотя они могут показаться нормальными для быстрой проверки, 
+	продолжение применения этих инструментов зафиксирует вредные привычки. Вредные привычки системного администрирования приведут к головной 
+	боли и простоям. При наблюдении за свободным пространством набора данных убедитесь что вы измеряете действительный объем свободного, 
+	а не процент использования. Если традиционные инструменты, которые отображают &quot;проценты использования&quot; дают значимый результат,
+	это простая случайность. Вашим системам наблюдения нужны инструменты, предназначенные для ZFS.</p>
+    <p>Такое поведение имеет интересные побочные эффекты при просмотре с помощью других инструментов, предназначенных для традиционных 
+	файловых систем. Наборы данных ZFS, смонтированные с помощью Samba в машинах Windows покажут только незначительный объем 
+	используемого пространства, а остальной объем пространства в пуле в качестве свободного пространства. По мере заполнения пула данными 
+	Windows видит сжимание диска.</p>
+    <p>При применении ZFS выработайте привычку управлять ею при помощи точных инструментов.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="LimitingDatasetSize"> </a>Ограничение наборов данных</h3>
+   </div></div></div>
+   <p>Гибкость ZFS означает, что пользователи и приложения могут использовать дисковое пространство, если оно доступно. Это очень полезно, 
+   в особенности для систем с долгим временем жизни, однако иногда это не совсем в точности то, что вы хотите. Вы не хотите, чтобы наборы 
+   данных подобные <span class="term"><code>/var/log</code></span> расширялись и заполняли весь ваш диск и, наоборот, вы хотите быть уверенными, 
+   что критически важные наборы данных, подобные вашей базе данных обеспечены нужным им пространством. Если основная база данных не получит 
+   нужное пространство, поскольку Джуд временно спрятал свою коллекцию запрещенных фотографий выращенных в горшках папоротников в своем домашнем
+   каталоге, вы будете иметь неприятное и ненужное совещание. (Положительной стороной будет то, что у вас будет повод бросить Джуда под автобус. 
+   Метафорически, если хотите.) Вот где появляются квоты и предварительное резервирование.</p>
+   <p>Квота устанавливает максимальный объем пространства набора данных и всех его потомков, который они могут использовать. Если вы 
+   установите квоту в 100ГБ на набор данных, смонтированный в <span class="term"><code>/home</code></span>, общий объем пространства используемый
+   <span class="term"><code>/home</code></span> и всеми наборами данных и снимками под ним не может превысить 100ГБ.</p>
+   <p>Предварительное выделение устанавливает объем пространства, установленный для набора данных. Чтобы быть уверенным, что база данных всегда 
+   будет иметь место для записи своих файлов, воспользуйтесь предварительным резервирование (reservation) для выделения объема дискового 
+   пространства только для этого набора данных.</p>
+   <p>Вначале мы обсудим предварительное выделение, а затем приступим к квотированию.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Reservations"> </a>Резервирования</h3>
+   </div></div></div>
+   <p>Предварительное выделение приберегает часть диска для набора данных и его потомков. Система не позволит другим наборам данных 
+   использовать это пространство. Если в пуле начинает не хватать места, предварительно выделенное (зарезервированное) пространство будет 
+   по-прежнему доступно для записи только для набора данных, для которого оно предназначено.</p>
+   <p>Предположим, что мы зарезервировали 100ГБ из 1ТБ пула для <span class="term"><code>/var/db</code></span>, куда наша база данных 
+   распихивает свои файлы данных. Этот набор данных содержит в себе примерно 50ГБ данных. Файл журнала работает выйдя из под контроля и 
+   заполняет остаток нашего пула. Мы начнем получать ошибки от других программ в нашей системе, сообщающие о том, что диск заполнен - 
+   однако программа базы данных все еще будет иметь свободное пространство в <span class="term"><code>/var/db</code></span>. Она может
+   жаловаться, что не может записывать журналы программ в <span class="term"><code>/var/log/db</code></span>, но это другая тема.</p>
+   <p>ZFS управляет предварительным выделением посредством двух свойств ZFS: <span class="term"><strong class="userinput"><code>refreservation</code></strong></span>
+   и <span class="term"><strong class="userinput"><code>reservation</code></strong></span>. 
+   <span class="term"><strong class="userinput"><code>refreservation</code></strong></span> оказывает воздействие на ссылочные данные 
+   набора данных - т.е. она исключает снимки, клоны и и прочих потомков. Предварительное выделение содержит дочерние наборы данных, 
+   снимки и тому подобное. Для примера рассмотрим фрагмент из <span class="term"><code>zfs list</code></span>.
+   </p>
+	   <pre class="screen">
+# zfs list
+NAME              USED  AVAIL  REFER  MOUNTPOINT
+zroot/usr        12.5G   874G   454M  /usr
+zroot/usr/local  1.84G   874G  1.84G  /usr/local
+zroot/usr/obj    6.89G   874G  6.89G  /usr/obj
+zroot/usr/ports  1.97G   874G   816M  /usr/ports
+...
+	   </pre>
+   <p>Набор данных <span class="term"><code>zroot/usr</code></span> монтируется как <span class="term"><code>/usr</code></span>. Он 
+   &quot;использует&quot; 12.5ГБ, включает дочерние наборы данных, например <span class="term"><code>usr/local</code></span>,
+   <span class="term"><code>/usr/obj</code></span> и тому подобные. Он ссылается только на 454МБ, что означает, что объем данных в 
+   главном наборе данных <span class="term"><code>zroot/usr</code></span> меньше чем полгигабайта.</p>
+   <p>Если мы устанавливаем предварительное выделение 1ГБ для <span class="term"><code>zroot/usr</code></span>, то это спорный вопрос. 
+   Существующие файлы в дочерних наборах данных намного превышают это значение и вероятность какого-то не катастрофического усечения 
+   таких дочерних наборов до менее чем 1ГБ незначительна.</p>
+   <p>Это экстремальный пример, однако несколько искусственный. Допустим, что вы хотите убедиться, что все ваши пользователи получают по 
+   крайней мере 1ГБ дискового пространства. Создайте отдельный набор данных для домашнего каталога каждого пользователя и сделайте 
+   первоначальное выделение для каждого.</p>
+   <p>Вы также можете вкладывать резервирования. Предположим, у вас есть два набора данных, <span class="term"><code>zroot/var/log</code></span> 
+   и <span class="term"><code>zroot/var/log/db</code></span>, причем последний исключительно для вашего сервера баз данных. Вы хотите 
+   всегда иметь по крайней мере 10ГБ  для журналов вашего сервера баз данных, следовательно вы назначаете выделение для 
+   <span class="term"><code>zroot/var/log/db</code></span>. Затем вы хотите 20ГБ для общих журналов сервера. Если эти 20ГБ должны 
+   включать в себя журналы баз данных, применяйте <span class="term"><strong class="userinput"><code>reservation</code></strong></span>. 
+   Если они не должны включать журналы баз данных, применяйте <span class="term"><strong class="userinput"><code>refreservation</code></strong></span>.</p>
+   <p>Набор данных может иметь и <span class="term"><strong class="userinput"><code>reservation</code></strong></span>, и 
+   <span class="term"><strong class="userinput"><code>refreservation</code></strong></span>. Вы можете сказать, что набор данных 
+   <span class="term"><code>zroot/var/log/db</code></span> имеет 10ГБ <span class="term"><strong class="userinput"><code>refreservation</code></strong></span> 
+   для текущих файлов журналов, однако установить намного большее <span class="term"><strong class="userinput"><code>reservation</code></strong></span> 
+   с тем, чтобы вы могли делать снимки вашего набора данных и вычислять их использование по отдельности.</p>
+   <p>Попытка нарушить предварительное выделение вырабатывает ошибку &quot;out of space&quot;. Когда возникает эта ошибка, даже если вы знаете,
+   что у вас есть свободное дисковое пространство, проверьте резервирования. Наборы данных с предварительными выделениями покажут наличие 
+   свободного пространства, а все остальные будут заполненными.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingReservations"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр резервирований</span></h4>
+    </div></div></div>
+    <p>Вы можете проверить <span class="term"><strong class="userinput"><code>refreservation</code></strong></span> и
+	<span class="term"><strong class="userinput"><code>reservation</code></strong></span> по отдельности, но мы предпочитаем получить 
+	всю информацию о предварительном выделении за один раз. Вы можете просмотреть список определенных свойств выполнив 
+	<span class="term"><code>zfs get -o reservation,refreservation,usedbyrefreservation</code></span>, однако Лукас чрезвычайно ленив 
+	набирать их все, а к тому же он ведущий автор, поэтому данный пример использует <span class="term"><code>grep(1)</code></span>.</p>
+	   <pre class="screen">
+# zfs get all zroot/var/log/db | grep reserv
+zroot/var/log/db  reservation           none  default
+zroot/var/log/db  refreservation        none  default
+zroot/var/log/db  usedbyrefreservation  0     -
+	   </pre>
+    <p>Набор данных не имеет ни <span class="term"><strong class="userinput"><code>refreservation</code></strong></span>, ни
+	<span class="term"><strong class="userinput"><code>reservation</code></strong></span>. Давайте что-нибудь установим.</p>
+    <p>Свойство <span class="term"><strong class="userinput"><code>usedbyrefreservation</code></strong></span> показывает, сколько 
+	пространства будет освобождено в этом наборе данных, если были удалены 
+	<span class="term"><strong class="userinput"><code>refreservation</code></strong></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SettingAndRemovingReservations"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Установка и удаление резервирований</span></h4>
+    </div></div></div>
+    <p>Установка предварительного выделения в точности аналогична вашим действиям с другими свойствами ZFS. Здесь мы устанавливаем 
+	<span class="term"><strong class="userinput"><code>refreservation</code></strong></span> для <span class="term"><code>/var/log/db</code></span>
+	и <span class="term"><strong class="userinput"><code>reservation</code></strong></span> для <span class="term"><code>/var/log</code></span>.</p>
+	   <pre class="screen">
+# zfs set refreservation=10G zroot/var/log/db
+# zfs set reservation=20G zroot/var/log
+	   </pre>
+    <p>Не зависимо ни от чего, хост теперь имеет выделенными 10ГБ для журналов баз данных и 20ГБ для файлов журналов, включая каталог 
+	баз данных. Мы применяем <span class="term"><strong class="userinput"><code>refreservation</code></strong></span> для журналов 
+	баз данных, поскольку мы не хотим учитывать снимки в нашем выделении.</p>
+    <p>Для удаления выделения установите его в <span class="term"><code>none</code></span>.</p>
+	   <pre class="screen">
+# zfs set reservation=none zroot/var/log
+	   </pre>
+    <p>Теперь другие наборы данных могут использовать это пространство.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Quotas"> </a>Квоты</h3>
+   </div></div></div>
+   <p><span class="term"><strong class="userinput"><code>Квота</code></strong></span> - это максимальный объем пространства, которое могут использовать 
+   набор данных, пользователь или группа пользователей. Все подобные квоты устанавливаются на базе индивидуальной настройки набора данных. Мы начнем 
+   с квот для набора данных, а затем исследуем квоты пользователей и групп.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DatasetQuotas"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Квоты наборов данных</span></h4>
+    </div></div></div>
+    <p>Применяйте квоты всякий раз, когда вы хотите установить максимальный объем пространства, который может потреблять набор данных. Например, 
+	вы можете решить, что <span class="term"><code>/tmp</code></span> может использовать только 10ГБ, или что <span class="term"><code>/home</code></span>
+	может брать только 200ГБ, или еще какие-то пределы могут быть существенны для вас.</p>
+    <p>Как и для предварительного выделения, ZFS применяет два свойства для квотирования: <span class="term"><strong class="userinput"><code>quota</code></strong></span>
+    и <span class="term"><strong class="userinput"><code>refquota</code></strong></span>. Свойство
+    <span class="term"><strong class="userinput"><code>quota</code></strong></span> устанавливает максимальный размер, который могут использовать 
+	набор данных и все его потомки. Свойство <span class="term"><strong class="userinput"><code>refquota</code></strong></span> устанавливает 
+	максимальный объем пространства, который может использовать набор данных, исключая его потомков. Если вам нужны квоты, которые исключают 
+	снимки и дочерние наборы данных, применяйте свойство <span class="term"><strong class="userinput"><code>refquota</code></strong></span>.</p>
+    <p>Почему вы можете хотеть применять <span class="term"><strong class="userinput"><code>refquota</code></strong></span> вместо
+    <span class="term"><strong class="userinput"><code>quota</code></strong></span>? Предположим, каждый домашний каталог пользователя является 
+	его собственным набором данных, и пользователи не могут создавать снимки. Большинство не может, а большая часть из тех, кто может - не знают как.
+	Если вы автоматически создаете снимки, как мы покажем это в <a class="link" href="Ch07.html" target="_top">Главе 7</a>, то пространство, 
+	используемое такими снимками будет относиться на счет пользователя. Выходящий за пределы использования пространства может удалять некоторые файлы, 
+	однако обнаруживает, что он не освобождает все пространство. По- видимому, будет несправедливо взимать плату с пользователя за пространство, 
+	которым он не управляет. (Системные администраторы, которые рассчитывают &quot;быть справедливым для пользователей&quot; за пределами их 
+	обычной компетенции, могут применять <span class="term"><strong class="userinput"><code>refquota</code></strong></span> как способ снижения 
+	воздействия на пользовательских блох.)</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SettingQuotas"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Установка квот</span></h4>
+    </div></div></div>
+    <p>Для настройки квоты на наборе данных назначьте свойство <span class="term"><strong class="userinput"><code>quota</code></strong></span>
+	и/ или <span class="term"><strong class="userinput"><code>refquota</code></strong></span>.</p>
+    <p>В разделе <a class="link" href="#Reservations" target="_top">Резервирования</a> мы выделили 20ГБ для системных журналов в наборе данных 
+	<span class="term"><code>zroot/var/log</code></span>, гарантируя, что журнал всегда будет иметь по крайней мере 20ГБ пространства. Более общая 
+	задача заключается в случае, когда журнал выходит из под контроля и поглощает все доступное дисковое пространство, обрушивая систему. Ваша 
+	система наблюдения должна отловить эту ошибку, но также не лишено смысла установить квотирование для набора данных журналов с тем, чтобы 
+	кто-то, убрав комментарий с <span class="term"><code>/var/log/all.log</code></span> в <span class="term"><code>/etc/syslog.conf</code></span>
+	не привел компьютер к краху днем позже.</p>
+    <p>Здесь мы установим квоту на <span class="term"><code>zroot/var/log</code></span>.</p>
+	   <pre class="screen">
+# zfs set quota=100G zroot/var/log
+	   </pre>
+    <p>Файлы журнала могут использовать не более 100ГБ, включая снимки, дочерние наборы данных и все прочее.</p>
+    <p>При помощи <span class="term"><strong class="userinput"><code>refquota</code></strong></span> вы можете ограничить объем ссылочных 
+	данных. Это исключит дочерние наборы данных и снимки. Ограничение как размера всего набора данных, так и ссылочных данных этого набора 
+	данных может помочь вам управлять размером ваших снимков. Например, установка <span class="term"><strong 
+	class="userinput"><code>refquota</code></strong></span> в 10ГБ, а <span class="term"><strong class="userinput"><code>quota</code></strong></span>
+	в 100ГБ подскажет вам, что вы всегда можете иметь 10 снимков, даже если данные изменяются полностью. Аналогично, если вы хотите 
+	исключить дочерние наборы данных, применяйте <span class="term"><strong class="userinput"><code>refquota</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs set refquota=50G zroot/var/log
+# zfs set refquota=50G zroot/var/log/db
+# zfs set quota=500G zroot/var/log
+	   </pre>
+    <p>Здесь у нас есть отдельные <span class="term"><strong class="userinput"><code>refquota</code></strong></span> для двух наборов данных 
+	журналов, а также квота на оба набора данных вместе. Если каждый набор данных может ссылаться на объем до 50ГБ внутри себя, то квота 500ГБ 
+	означает, что вне зависимости от того, как изменялись данные, вы можете иметь по крайней мере по четыре снимка каждого из них.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingQuotas"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр квот</span></h4>
+    </div></div></div>
+    <p>Для просмотра квотирований набора данных проверьте его свойства <span class="term"><strong class="userinput"><code>quota</code></strong></span>
+	и <span class="term"><strong class="userinput"><code>refquota</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs get all zroot/home | grep quota
+zroot/home  quota     none  default
+zroot/home  refquota  none  default
+	   </pre>
+    <p>Каталог <span class="term"><code>/home</code></span> не имеет своих квот. Пользователи могут заполнить ваш диск до его пределов.</p>
+    <p>Квоты изменяют максимальный размер набора данных и свободное пространство в этом наборе данных. Данный пул имеет несколько сот свободных 
+	гигабайт, однако <span class="term"><code>zfs list</code></span> на данном наборе данных сообщит другое.</p>
+	   <pre class="screen">
+# zfs list zroot/var/log
+NAME           USED   AVAIL  REFER  MOUNTPOINT
+zroot/var/log  25.0G  75.0G  5.01G  /var/log
+	   </pre>
+    <p>Набор данных <span class="term"><code>zroot/var/log</code></span> содержит 25ГБ и 75ГБ в нем свободны. ZFS знает, что данный набор данных 
+	имеет квоту в 100ГБ и она отображает использование соответствующим образом. При помощи квот вы просто имитируете обычные разделы - однако не 
+	выполняйте <span class="term"><code>df(1)</code></span>! Для начала взглянем на дочерний набор данных 
+	<span class="term"><code>zroot/var/log</code></span>.</p>
+	   <pre class="screen">
+# zfs list zroot/var/log/db
+NAME              USED   AVAIL  REFER  MOUNTPOINT
+zroot/var/log/db  20.0G  85.0G  10.0G  /var/log/db
+	   </pre>
+    <p>ZFS знает, что родительский набор данных имеет квоту в 100ГБ, и, тем самым, устанавливает максимальный размер на данный потомственный 
+	набор данных. Если <span class="term"><code>/var/log</code></span> имеет свободными 75ГБ, а <span class="term"><code>/var/log/db</code></span>
+	имеет свободными 85ГБ, означает ли это, что два раздела имеют (75 + 85=) 160ГБ свободного пространства? Нет, потому что как и свободное 
+	пространство пула, эти два элемента ссылаются на одно и тоже свободное пространство. То, что, как представляется, набор данных 
+	<span class="term"><code>zroot/var/log</code></span> должен иметь больше свободного пространства в своем родительском наборе данных, 
+	не отражается на использовании пространства дочерними наборами данных.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ExceededQuotas"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Превышенные квоты</span></h4>
+    </div></div></div>
+    <p>Если пользователь или процесс попытаются записать нечто,что будет превосходить свои квоты, они получат ошибку квотирования.</p>
+	   <pre class="screen">
+# cp script.sh testscript.sh
+cp: testscript.sh: Disc quota exceeded
+	   </pre>
+    <p>Вам придется освободить свободное пространство, однако, запомните, что снимки осложняют это, как это уже обсуждалось в 
+	&quot;<a class="link" href="#FreeingSpace" target="_top">Освобождении пространства</a>&quot; ранее в этой главе. Если вы установите и 
+	<span class="term"><strong class="userinput"><code>quota</code></strong></span>, и <span class="term"><strong 
+	class="userinput"><code>refquota</code></strong></span>, пользователь будет способен удалять файлы и освобождать пространство, даже 
+	не смотря на то, что это увеличивает размеры снимков файловой системы.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="UserAndGroupQuotas"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Квоты пользователей и групп</span></h4>
+    </div></div></div>
+    <p>Квоты пользователей и групп управляют тем, сколько данных могут записывать в некий набор данных пользователь или группа. 
+	Как и квоты набора данных, квоты пользователей и групп управляются посредством квотирования наборов данных.</p>
+    <p>Квоты пользователей и групп не применяются к дочерним файловым системам, снимкам и клонам. Вы должны применять квоты к каждому 
+	набору данных индивидуально, если вы хотите, чтобы они воздействовали на него.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingSpaceUsed"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр используемого пространства и существующие квоты на наборы данных</span></h4>
+    </div></div></div>
+    <p>Команда <span class="term"><code>zfs userspace</code></span> позволяет вам увидеть сколько пространства используется каждым пользователем 
+	в наборе данных. Здесь мы опрашиваем набор данных <span class="term"><code>zroot/home</code></span> в нашей тестовой системе. Система со 
+	сложными наборами данных может потребовать нескольких минут для <span class="term"><code>du(1)</code></span>, однако 
+	<span class="term"><code>zfs userspace</code></span> позволяет найти все файлы всех владельцев почти мгновенно.</p>
+	   <pre class="screen">
+# zfs userspace zroot/home
+TYPE        NAME      USED  QUOTA
+POSIX User  179      7.29M   none
+POSIX User  mwlucas  1.16G   none
+POSIX User  root      298M   none
+	   </pre>
+    <p>Пользователь <span class="term"><strong class="userinput"><code>mwlucas</code></strong></span> имеет 1.16ГБ файлов - не удивительно.
+	Пользователь root имеет 298МБ файлов в <span class="term"><code>/home</code></span> - что-то удивительное, но не шокирующее. Так или иначе, 
+    пользователь <span class="term"><strong class="userinput"><code>179</code></strong></span> имеет 7.29МБ файлов в этом наборе данных. Данная 
+	система не имеет никакого пользователя <span class="term"><strong class="userinput"><code>179</code></strong></span>, что объясняется тем, 
+	что отображается UID пользователя, а не его имя. Небольшое углубление показывает, что Лукас как-то использовал аргумент 
+	<span class="term"><code>-p</code></span> tar при выделении исходного кода tarball, сохраняя первоначального владельца файла.</p> 
+	<p>Ни один из этих пользователей не имеет квот.</p>
+    <p>Команда <span class="term"><code>zfs groupspace</code></span> показывает какой объем файлового пространства используется владельцами каждой 
+	группы. Для получения чего-то еще более интересного, я проверяю владения группами в нашем наборе данных 
+	<span class="term"><code>zroot/usr/local</code></span>.</p>
+	   <pre class="screen">
+# zfs groupspace zroot/usr/local
+TYPE         NAME         USED  QUOTA
+POSIX Group  _tss        25.5K   none
+POSIX Group  bin         93.5K   none
+POSIX Group  kmem         128K   none
+POSIX Group  messagebus   392K   none
+POSIX Group  polkit       115K   none
+POSIX Group  wheel       1.85G   none
+	   </pre>
+    <p>Если ваш сервер поддерживает множество групп, например, команды разработчиков, исследовательские группы или поклонников различных 
+	вариантов BSD, вы можете назначить каждой группе и каждому пользователю ограничения на их использование диска.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="AssigningAndRemoving"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Назначение и удаление квот пользователей и групп</span></h4>
+    </div></div></div>
+    <p>Для назначения квот пользователям и группам применяйте свойства <span class="term"><strong class="userinput"><code>userquota</code></strong></span>
+    и <span class="term"><strong class="userinput"><code>groupquota</code></strong></span>. Для определения того, к какой квоте относится 
+	те или иные пользователи или группы, задавайте имя свойства, знак <span class="term"><strong class="userinput"><code>@</code></strong></span> и
+	имя пользователя или группы. Например, зададим квоту пользователю <span class="term"><strong class="userinput"><code>mwlucas</code></strong></span>
+    при помощи <span class="term"><strong class="userinput"><code>userquota@mwlucas</code></strong></span>.</p>
+	   <pre class="screen">
+# zfs set userquota@mwlucas=1G zroot/home
+	   </pre>
+    <p><a class="link" href="#ViewingSpaceUsed" target="_top">Предыдущий раздел</a> показал, что учетная запись <span class="term"><strong 
+	class="userinput"><code>mwlucas</code></strong></span> имеет более гигабайта данных в нем. Учетная запись <span class="term"><strong 
+	class="userinput"><code>mwlucas</code></strong></span> выходит за пределы квотирования и пользователь получит ошибку при попытке создания 
+	файла.</p>
+	   <pre class="screen">
+$ touch test
+touch: test: Disc quota exceeded
+	   </pre>
+    <p>Аналогично, назначайте квоту группы с применением свойства <span class="term"><strong class="userinput"><code>groupquota</code></strong></span>,
+	знака <span class="term"><strong class="userinput"><code>@</code></strong></span> и имени группы.</p>
+	   <pre class="screen">
+# zfs set groupquota@staff=10G zroot/home
+	   </pre>
+    <p>Если пользователь неоднократно жестко обращается с совместно используемыми каталогами подобными <span class="term"><code>/tmp</code></span>,
+	назначьте ему ограничительную квоту.</p>
+	   <pre class="screen">
+# zfs set userquota@mwlucas=10m zroot/tmp
+	   </pre>
+    <p>Этот пользователь может использовать функциональность наподобие переадресации агента SSH, однако он не сможет раскрывать огромные tarball 
+	и монополизировать наше совместно используемое временное пространство.</p>
+    <p>Чтобы удалить квоту, установите ее значение в <span class="term"><code>none</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ViewingIndividual"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр индивидуальных квот</span></h4>
+    </div></div></div>
+    <p>Если вам интересны установки квот для определенных пользователей или групп, запросите ZFS об этом одном свойстве.</p>
+	   <pre class="screen">
+# zfs get userquota@mwlucas zroot/tmp
+NAME       PROPERTY           VALUE  SOURCE
+zroot/tmp  userquota@mwlucas  10M    local
+	   </pre>
+    <p>Теперь вы можете позволить вашим командам ссориться между собой по поводу занимаемого ими дискового пространства без затрат вашего 
+	драгоценного времени. Наши поздравления!</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Compression"> </a>Сжатие ZFS</h3>
+   </div></div></div>
+   <p>Вы не можете увеличить размер существующего диска, но вы можете изменить то, как ваши данные используют этот диск. В течение многих десятилетий 
+   системные администраторы сжимали файлы, чтобы сделать их занимающими меньше места. Мы написали все виды сценариев оболочки для выполнения 
+   наших предпочтительных алгоритмов на файлах которые, как мы знаем, могут быть безопасно сжаты, а также мы всегда ищем дополнительные файлы, 
+   которые могут быть сжаты для сохранения пространства. И мы все знаем об этом первоначально неизвестном файле журнала, который расширяется пока 
+   не заполнит раздел и не включится сигнал тревоги. (Вы не наблюдаете за дисковым пространством? Хорошо, отключение электричества является лишь одним 
+   из различных видов тревоги.)</p>
+   <p>ZFS уносит с собой эту проблему сжимая файлы в реальном масштабе времени на уровне файловой системы. Эти файлы журнала записывает ваш демон?
+   ZFS может сжимать их по мере записи, делая все эти скрипты неуместными. Это также амортизирует стоимость сжатия, поскольку система сжимает все 
+   на постоянной основе, а не в 3 часа ночи, в режиме безумного трешинга диска.</p>
+   <p>Тем не менее, сжатие требует затрат. Сжатие и распаковка требуют времени процессора, следовательно слепо позволяя самое плотное сжатие 
+   посредством <span class="term"><code>gzip</code></span> всего и вся может добавить еще одно ограничение на производительность диска. Любые 
+   потери производительности, однако, обычно больше совершаемых уменьшением активности дисков. ZFS содержит алгоритмы, специально разработанные 
+   для применения файловой системой.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="EnablingCompression"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Разрешение сжатия</span></h4>
+    </div></div></div>
+    <p>Сжатие ZFS выполняется в пределах набора данных. Вы можете включить сжатие для некоторых наборов данных и не включать для других.</p>
+    <p>Включение и отключение сжатия выполняется при помощи свойства <span class="term"><strong 
+	class="userinput"><code>compression</code></strong></span>. Здесь мы проверяем установки сжатия.</p>
+	   <pre class="screen">
+# zfs get compress zroot/usr
+NAME       PROPERTY     VALUE  SOURCE
+zroot/usr  compression  off    default
+	   </pre>
+    <p>Разрешите сжатие, установив свойство <span class="term"><strong class="userinput"><code>compression</code></strong></span>. Алгоритм сжатия 
+	по умолчанию, <span class="emphasis"><em>LZJB</em></span>, не является самым эффективным алгоритмом, который предлагает ZFS. Почти во всех случаях 
+	используйте сжатие <span class="emphasis"><em>LZ4</em></span>. Ниже мы разрешаем сжатие на все наборы данных в пуле 
+	<span class="term"><code>zroot</code></span>, а для набора данных <span class="term"><code>zroot/var/cdr</code></span> назначаем 
+	<span class="emphasis"><em>gzip-9</em></span>.</p>
+	   <pre class="screen">
+# zfs set compress=lz4 zroot
+# zfs set compress=gzip-9 zroot/var/cdr
+	   </pre>
+    <p>ZFS сжимает файлы при их записи на диск. Если у вас есть набор данных, наполненный текстовыми файлами, добавление сжатия не уменьшит их.
+	Для уменьшения дискового пространства, используемого файлами, вы должны переписать все эти файлы после разрешения сжатия.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CompressionAlgorithms"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Алгоритмы сжатия</span></h4>
+    </div></div></div>
+    <p>ZFS поддерживает различные алгоритмы сжатия. Задаваемый по умолчанию, <span class="emphasis"><em>LZJB</em></span>, был специально разработан 
+	для использования файловой системы. Он может быстро сжимать и распаковывать блоки при скромном коэффициенте сжатия. Однако это не самый лучший 
+	алгоритм сжатия для повседневного использования.</p>
+    <p>Алгоритм <span class="emphasis"><em>LZ4</em></span> является более новым и более быстрым алгоритмом сжатия, приспособленным для файловых
+	систем. Он превосходит <span class="emphasis"><em>LZJB</em></span> во всех отношениях. Не все данные сжимаемы, однако 
+	<span class="emphasis"><em>LZ4</em></span> быстро обнаруживает несжимаемые файлы и не пытаться сжимать их. При включении сжатия для набора 
+	данных, используйте <span class="emphasis"><em>LZ4</em></span> если только у вас нет специального случая применения для сжатия 
+	<span class="emphasis"><em>gzip</em></span>.</p>
+    <p>Алгоритм <span class="emphasis"><em>ZLE</em></span> сжимает строки нулей в файлах. Это минимальная система сжатия, и она не очень 
+	полезна для большинства файлов. <span class="emphasis"><em>LZ4</em></span> является гораздо более эффективным, по сравнению с 
+	<span class="emphasis"><em>ZLE</em></span>, даже для сильно заполненных нулями файлов.</p>
+    <p>Для специфических случаев, ZFS поддерживает сжатие <span class="emphasis"><em>gzip</em></span>. <span class="emphasis"><em>gzip</em></span> 
+	использует гораздо больше процессорного времени, в сравнении с <span class="emphasis"><em>LZ4</em></span>, но может быть более эффективным 
+	для некоторых наборов данных. Необходимое <span class="emphasis"><em>gzip</em></span> дополнительное время центрального процессора делает 
+	файловую систему медленнее, но для редко используемых данных экономия дискового пространства может того стоить.</p>
+    <p><span class="emphasis"><em>Gzip</em></span> имеет девять уровней сжатия, от 1 (самого быстрого, но менее эффективного), до 9 (самого 
+	медленного, но самого энергичного). Определяйте уровень сжатия посредством дефиса и номера уровня.</p>
+	   <pre class="screen">
+# zfs set compress=gzip-1 zroot/var/log
+	   </pre>
+    <p>Если вы определите <span class="emphasis"><em>gzip</em></span> без уровня, ZFS по умолчанию будет применять уровень 6.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CompressionProperties"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Свойства сжатия</span></h4>
+    </div></div></div>
+    <p>Некоторые свойства дают возможность понять насколько хорошо ZFS сжимает данные.</p>
+    <p>Свойство <span class="term"><strong class="userinput"><code>compressratio</code></strong></span> показывает, как сжатие воздействует на 
+	этот набор данных и всех его потомков, в то время как свойство <span class="term"><strong class="userinput"><code>refcompressratio</code></strong></span> 
+	позволяет вам видеть, как влияет сжатие данных, на данные, на которые ссылается этот набор данных.</p>
+    <p>Наборы данных имеют два свойства просто для сценариев сжатия, а именно 
+	<span class="term"><strong class="userinput"><code>logicalreferenced</code></strong></span>
+	и <span class="term"><strong class="userinput"><code>logicalused</code></strong></span>. Пространство <span class="term"><strong 
+	class="userinput"><code>referenced</code></strong></span> набора данных включает в себя эффект сжатия, однако свойство 
+	<span class="term"><strong class="userinput"><code>logicalreferenced</code></strong></span> исключает сжатие.</p>
+    <p>Аналогично, свойство <span class="term"><strong class="userinput"><code>used</code></strong></span> показывает объем пространства, 
+	потребляемого на самом деле набором данных и всеми его потомками, в то время как <span class="term"><strong 
+	class="userinput"><code>logicalused</code></strong></span> показывает объем несжатых данных в наборе данных.</p>
+    <p>Когда вы изучите все это совместно, вы cvj;tnt получить </p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ChoosingAnAlgorithm"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Выбор алгоритма</span></h4>
+    </div></div></div>
+    <p>Как вы можете определить могут ли ваши данные извлечь выгоду от сжатия, или как разные алгоритмы влияют на размер файла? Возьмите некоторые 
+	из ваших типичных файлов данных и проверьте их. Воспользуйтесь <span class="term"><code>du(1)</code></span> или 
+	<span class="term"><code>ls -ls</code></span> чтобы увидеть фактический размер файла на диске. При тестировании своих данных вы захотите
+	использовать целую кучу различных файлов ваших реальных данных. Для данного примера Лукас использовал проект генома человека, скачаный 
+	из проекта Gutenberg.</p>
+	   <pre class="screen">
+# du hgp.txt
+280721   hgp.txt
+	   </pre>
+    <p>В несжатом виде этот файл занимает 280,721 блоков, или, приблизительно 274МБ.</p>
+    <p>Наш набор данных для тестирования называется <span class="term"><code>db</code></span>. В этом наборе данных у нас больше нет никаких 
+	других данных, следовательно, мы можем точно оценить влияние сжатия на этот определенный файл. Теперь, когда мы знаем размер данного файла 
+	в несжатом виде, разрешим сжатие и увидим что произойдет.</p>
+	   <pre class="screen">
+# zfs set compression=on db
+	   </pre>
+    <p>Это активирует сжатие <span class="emphasis"><em>LZJB</em></span>. Проверим размер файла теперь.</p>
+	   <pre class="screen">
+# du hgp.txt
+280721 hgp.txt
+	   </pre>
+    <p>Размер файла не изменился, однако мы разрешили сжатие. Что происходит? Помните, сжатие, дедупликация и аналогичная функциональность 
+	работают только при записи после того, как эта функциональность разрешена. Мы должны удалить файл и вернуть его обратно.</p>
+	   <pre class="screen">
+# rm /db/*
+# cp /home/mwl/hgp.txt /db
+	   </pre>
+    <p>Подождите несколько секунд, чтобы ZFS успела записать все на диск и посмотрите что произошло.</p>
+	   <pre class="screen">
+# du /db/hgp.txt
+139577  /db/hgp.txt
+	   </pre>
+    <p>Файл использует только 139,577 блоков, или примерно 136МБ. Он ужался примерно наполовину, как показывают свойства.</p>
+	   <pre class="screen">
+# zfs get compressratio,refcompressratio db
+NAME  PROPERTY          VALUE  SOURCE
+db    compressratio     2.01x  -
+db    refcompressratio  2.01x  -
+	   </pre>
+    <p><span class="term"><strong class="userinput"><code>refcompressratio</code></strong></span> равен 
+	<span class="term"><strong class="userinput"><code>compressratio</code></strong></span>, поскольку у нас есть только одна порция данных 
+	в этом наборе данных и только один набор данных в пуле. В более сложных пулах значения, вероятно, будут различаться.</p>
+    <p>Таким образом, алгоритм по умолчанию уменьшил размер наполовину. Давайте попробуем более эффективный <span class="emphasis"><em>LZ4</em></span></p>
+	   <pre class="screen">
+# zfs set compression=lz4 db
+	   </pre>
+    <p>Повторно скопируем файл в переключенное на <span class="emphasis"><em>LZ4</em></span> сжатие, подождем несколько секунд чтобы ZFS 
+	сделала свои расчеты и посмотрим что произошло.</p>
+	   <pre class="screen">
+# du /db/hgp.txt
+146076  /db/hgp.txt
+	   </pre>
+    <p><span class="emphasis"><em>LZ4</em></span> сжимает эти данные до 142МБ. <span class="emphasis"><em>LZ4</em></span> не настолько 
+	эффективен как <span class="emphasis"><em>LZJB</em></span> на этом определенном файле. Это не сильно шокирует - разные алгоритмы 
+	по разному работают на разных данных.</p>
+    <p>Сможет ли <span class="emphasis"><em>gzip</em></span> еще улучшить положение вещей?</p>
+	   <pre class="screen">
+# zfs set compress=gzip-1 db/text
+	   </pre>
+    <p>Повторно скопируем тестовый файл и проверим использование диска.</p>
+	   <pre class="screen">
+# du /db/hgp.txt
+74104  /db/hgp.txt
+	   </pre>
+    <p>Эти данные теперь используют 74МБ, а <span class="term"><strong class="userinput"><code>compressratio</code></strong></span>
+	набора данных теперь составляет 3.78. Совершенно ясно, что <span class="emphasis"><em>gzip</em></span> лучше соответствует 
+	для этих конкретных данных. Сжатие почти учетверяет нашу эффективность дискового пространства. Хотя это довольно впечатляюще, давайте увеличим
+	объем.</p>
+	   <pre class="screen">
+# zfs set compress=gzip-9 db/text
+# cp /home/mwl/hgp.txt /db/
+# du /db/hgp.txt
+63614  /db/hgp.txt
+	   </pre>
+    <p>Врубив сжатие на <span class="emphasis"><em>gzip-9</em></span> мы уменьшили этот файл в 274МБ до 62МБ, с 
+	<span class="term"><strong class="userinput"><code>compressratio</code></strong></span> 4.41. <span class="emphasis"><em>Gzip-9</em></span>
+	позволяет сохранять данных более чем вчетверо больше.</p>
+    <p>Однако этот пример жульничает. Реально- реально обманывает! Как и надувательство с &quot;записью формул на ладони перед экзаменом 
+	по физике&quot;</p>
+    <p>После удаления стандартных вставок, добавленных проектом Gutenberg, проект генома человека полностью состоит из четырех букв. Это, пожалуй, 
+	самый избыточные, наиболее сжимаемые данные реального мира из существующих. Вы не можете ожидать подобного от большинства данных реального 
+	мира. (Да, господин Педант, ваши данные реального мира состоят только из нулей и единиц. Сожмите ваши данные до одного 0 и одной 1 и затем 
+	посмотрите, как хорошо это работает для вас.)</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="WhenToChange"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Когда изменять алгоритм сжатия</span></h4>
+    </div></div></div>
+    <p>Как правило, мы рекомендуем изменить алгоритмы сжатия с <span class="emphasis"><em>LZ4</em></span> только тогда, когда 
+	того требует от вас настоятельная необходимость, а дополнительные накладные расходы процессора и более медленнее доступ к диску не влияли 
+	на реальную работу.</p>
+    <p>Не так давно Лукас работал для телефонной компании. Телефонная компания хранила более десяти лет записей детализации вызовов (CDR, 
+	call detail records) в простом текстовом виде. Эти записи были постоянно доступны для отчетов в середине ночи. Иногда для исследования 
+	 мошенничества необходимо получать доступ к этим отчеты с помощью инструментов, подобных <span class="term"><code>grep(1)</code></span> 
+	 <span class="term"><code>awk(1)</code></span>. Для подобного варианта применения имело смысл разрешение сжатия 
+	 <span class="emphasis"><em>gzip-9</em></span>. При измерении при помощи с <span class="term"><code>du(1)</code></span>, 
+	 ZFS сжимает файлы примерно до 8:1. Однако, если бы нам нужно было постоянно взаимодействовать с этими файлами, <span class="emphasis"><em>LZ4</em></span> 
+	 и несколько сотен долларов дополнительно на жесткие диски имели бы больше смысла.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CompressionAndPerformance"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сжатие и производительность</span></h4>
+    </div></div></div>
+    <p>Взглянем на эти свойства для примеров данных.</p>
+	   <pre class="screen">
+# zfs get all db | grep reference
+db/text  referenced         48.7M  -
+db/text  logicalreferenced  220M   -
+	   </pre>
+    <p>Эти наборы данных используют 48.7МБ дискового пространства. Когда вы пренебрегаете сжатием, этот набор данных имеет 220МБ данных.
+	Сжимаемые наборы данных могут хранить больше &quot;логических данных&quot;, чем их размер. Это то место, где на самом деле вступает в 
+	игру эффективность сжатия. Самая медленная часть чтения и записи данных заключается в их сохранении на носителях. Физический носитель 
+	является самой медленной частью дисковой транзакции. Запись 48.7МБ на диск занимает около 22% от длительности записи 220МБ. Разрешая сжатие, 
+	вы можете сократить ваше время сохранения на 78% за счет небольших затрат процессорного времени. Если ваш диск может записывать 
+	100 МБ/с, тогда запись 48.7МБ сжатых данных займет около половины секунды. Если вы посмотрите на это с точки зрения приложения, 
+	которое записывает эти данные, вы в действительности записали 220 Мб за половину секунды, что эффективно 440МБ/с. Держим пари, что вы не 
+	думаете, что диск вашего ноутбук может так управляться!</p>
+    <p>Если вы сохраняете много небольших файлов, сжатие будет менее эффективным. Файлы меньшие чем размер сектора, все равно будут занимать 
+	целый блок данных. Если вы хотите очень-очень настоящее сжатие, применяйте диски с настоящими 512- байтовыми секторами и просите ZFS 
+	использовать этот размер сектора. {<span class="emphasis"><em>Прим. пер.: однако имейте ввиду, что, скорее всего, такие диски 
+	будут очень - очень старыми и помимо вопросов об их надежности их скорости тоже будут существенно ниже доступных сегодня: в 
+	действительности практически все современные диски физически применяют сектора 4K. Подробнее о 4K и 512e дисках в разделе
+	<a class="link" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/Ch02.html#Raw" target="_top">Хранилище на "сырых" дисках</a>
+	Главы 2.</em></span>}</p>
+    <p>Сжатие не является совершенным. Последовательный и произвольный доступ могут изменяться,в зависимости от того, насколько хорошо 
+	выполняется сжатие. Всегда проверяйте на ваших собственных данных, в вашей среде. Сжатие работает достаточно хорошо, когда FreeBSD 
+	разрешает сжатия <span class="emphasis"><em>LZ4</em></span> в качестве установки значения по умолчанию.</p>
+    <p>Большинство процессоров, в основном, простаивает. заставьте ленивых тварей хрустеть некоторыми данными!</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DeactivatingCompression"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отключение сжатия</span></h4>
+    </div></div></div>
+    <p>Чтобы отключить сжатие, установите свойство набора данных <span class="term"><strong 
+	class="userinput"><code>compression</code></strong></span> в значение <span class="term"><code>off</code></span></p>.
+    <p>Также как и активация сжатия влияет только на вновь записанные файлы, отключение сжатия влияет только на новые данные. 
+	Сжатые файлы остаются сжатыми, пока не будут переписаны. ZFS достаточно умна, чтобы знать, что файл сжат и автоматически распаковывать 
+	при обращении, но она все еще имеет накладные расходы.</p>
+    <p>Вы не можете очистить все следы сжатия в наборе данных, кроме как переписав все файлы. Наверное, вам лучше воссоздать 
+	набор данных.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Deduplication"> </a>Дедупликация</h3>
+   </div></div></div>
+   <p>Файлы повторяют одни и те же данные снова и снова, располагая их слегка по-другому. Множество файлов содержат еще больше повторений. 
+   Более половины данных в вашей системе могут быть дубликатами данных, которые можно найти в других местах. ZFS может определять дубликаты 
+   данных в файлах, извлекать и документировать его, таким образом, сохраняя каждый фрагмент данных только один раз. Это очень похоже на 
+   сжатие. Дедупликация в некоторых случаях может снизить использование диска.</p>
+   <p>Существует множество систем дедупликации. Одна крайность - можно дедуплицировать все данные на уровне байт в байт. Вы можете 
+   дедуплицировать эту книгу идентифицировав и зарегистрировав положения каждой буквы и каждого знака пунктуации, но запись вырастет 
+   до размера большего чем первоначальная книга. Другая крайность- можно дедуплицировать несколько копий целых файлов, 
+   записав каждый только один раз.</p>
+   <p>Можно сказать, что снимки ZFS, дедуплицируют данные файловой системы. Для дедупликации файлов ZFS выполняет дедупликацию на уровне 
+   блоков файловой системы (отображается свойством <span class="term"><strong class="userinput"><code>recordsize</code></strong></span>). 
+   Это делает ZFS хорошей для удаления дубликатов идентичных файлов, однако она осознает, что файлы дублируются, только если их блоки 
+   файловой системы точно выровнены. Применение блоков меньшего размера улучшает качество работы дедупликации, но повышает требования к 
+   памяти. ZFS запоминает идентичные блоки только один раз и хранит таблицы дедупликации в памяти.</p>
+   <p>Разрешите дедупликацию на основе наборов данных. При каждом доступе к любому файлу в наборе данных с дедупликацией - и на чтение, 
+   и на запись, система должна проверять таблицу дедупликаций. Для эффективного выполнения дедупликации система должна иметь достаточно 
+   памяти для размещения всей своей таблицы дедупликации. ZFS хранит таблицу дедупликации на диске, однако если хост должен обращаться за 
+   справкой к диску всякий раз, когда он хочет получить доступ к файлу, производительность упадет до уровня помойки. (Хост должен 
+   прочитывать таблицу дедупликации с диска при загрузке, следовательно вы в любом случае получаете трешинг диска при каждой перезагрузке.)</p>
+   <p>Хотя дедупликации звучит невероятно круто, вы должны знать, насколько хороши ваши данные для дедупликации и сколько памяти 
+   потребуется для дедупликации, прежде чем вы даже приступите к рассмотрению возможности ее включения.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DeduplicationMemoryNeeds"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Потребности дедупликации в памяти</span></h4>
+    </div></div></div>
+    <p>В первом грубом приближения можно считать, что 1ТБ дедуплицированных данных использует около 5ГБ оперативной памяти. Вы можете 
+	более точно апроксимировать потребность памяти для ваших конкретных данных, просмотрев ваш пул данных и выполнив некоторые вычисления. 
+	Мы рекомендуем всегда выполнять математические вычисления и определять сколько оперативной памяти нужно вашим данным, а затем 
+	использовать наиболее пессимистичный результат. Если математика дает вам число больше 5ГБ, используйте результат вычислений. 
+	Если нет, предполагайте 5ГБ на терабайт.</p>
+	<p>Если вы урежете свою систему в оперативной памяти, производительность уйдет в пике как Wile E. Coyote. (К тому же не поможет 
+	нарисованная на стене картинка туннеля, как в случае Wile E. Coyote.) Не делайте этого с собой.</p>
+    <p>Каждый блок файловой системы в наборе данных с дедупликацией использует около 320 байт оперативной памяти. Инструмент ZFS
+	<span class="term"><code>zdb(8)</code></span> может проанализировать пул, чтобы определить сколько блоков будет использоваться. 
+	Используйте флаг <span class="term"><code>-b</code></span> и имя пула, который вы хотите проанализировать.</p>
+	   <pre class="screen">
+# zdb -b data
+Traversing all blocks to verify nothing leaked ...
+
+loading space map for vdev 1 of 2, metaslab 33 of 174 ...
+5.45G completed ( 341MB/s) estimated time remaining: 0hr 00min 30sec
+	   </pre>
+    <p>Счетчик оставшегося времени (&quot;time remaining&quot;) не слишком ужасен, что хорошо, поскольку процесс может выполняться очень долгое 
+	время в зависимости от скорости диска и использования. После его выполнения вы получите статистический анализ вашего пула.</p>
+	   <pre class="screen">
+bp count: 139025
+ganged count: 0
+bp logical:    18083569152  avg: 130074
+bp physical:   18070658560  avg: 129981 compression: 1.00
+bp allocated:  18076997120  avg: 130026 compression: 1.00
+bp deduped:         0     ref&gt;1: 0 deduplication: 1.00
+SPA allocated: 18076997120 used: 1.81%
+
+additional, non-pointer bps of type 0:    21
+Dittoed blocks on same vdev: 1183
+	   </pre>
+    <p>Счетчик bp (&quot;bp count&quot;) показывает общее число блоков ZFS, хранящихся в вашем пуле. Данный пул использует 139 025 блоков. Хотя ZFS по 
+	умолчанию использует максимальный размер блока 128кБ, небольшие файлы используют меньшие блоки. Если в пуле есть больше небольших 
+	файлов, вам нужно больше памяти.</p>
+    <p>В третьей строке снизу элемент &quot;используется&quot; (&quot;used&quot;) отображает, что данный пул используется на 1.81% (0.0181). 
+	Предположим, что данные в этом пуле останутся достаточно последовательными пр мере его роста. Округлим число используемых блоков до 
+	140 000. Разделим используемые блоки на заполнение блоками и мы увидим, что полный пул будет иметь примерно (140 000/0.0181 =) 7 734 806 блоков.
+	При 320 байтах на блок эти данные используют 2 475 138 121байт, или примерно 2.3ГБ.</p>
+    <p>Это меньше чем половина правила. Предположим, что таблице дедупликации понадобится 5ГБ на терабайт хранимых данных.</p>
+    <p>ZFS позволит метаданным, подобным таблице дедупликации занять только 25% памяти системы. (В действительности, это 25% от 
+	кэша адаптивного замещения- ARC, Adaptive Replacement Cache, но мы обсудим эти детали в книге <span class="emphasis"><em>FreeBSD 
+	Mastery: Advanced ZFS</em></span>.) Каждый терабайт пула с дедупликацией означает, что системе потрубуется как минимум 20ГБ оперативной памяти.
+	Даже если вы будете следовать более обнадеживающей математике использования блока, при которой каждый терабайт диска требует 2.3ГБ 
+	оперативной памяти, предел в 25% означает, что каждый терабайт пула с дедупликацией требует примерно 10ГБ оперативной памяти. (В
+	<span class="emphasis"><em>FreeBSD Mastery: Advanced ZFS</em></span> мы обсудим выравнивание этого предела, чтобы люди, которые хотят 
+	выстрелить себе в ногу, могли сделать это хорошо.)</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DeduplicationEffectiveness"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Эффективность дедупликации</span></h4>
+    </div></div></div>
+    <p>ZFS может моделировать дедупликацию и обеспечить хорошую оценку того, насколько хорошо данные будут дедуплицированы.
+	Выполните в вашем пуле <span class="term"><code>zdb -S</code></span>. Вы получите хорошую гистограмму использования блоков и общих элементов, 
+	которую вы можете полностью игнорировать в пользу последней строки.</p>
+	   <pre class="screen">
+# zdb -S data
+Simulated DDT histogram:
+...
+dedup = 3.68, compress = 1.00, copies = 1.00, dedup * compress / copies = 3.68
+	   </pre>
+    <p>Наш пул данных может быть дедуплицирован в 3.68 раза. Если все данные в этом пуле были бы дедуплицируемыми, мы могли бы заполнять 
+	3.68ТБ данных каждый терабайт хранилища. Такие данные, однако, исключительно избыточны. Для сравнения, на рабочем месте Лукаса 
+	пул <span class="term"><code>zroot</code></span>, который содержит операционную систему FreeBSD, пользовательские программы и 
+	домашние каталоги, имеет дедупликацию приблизительно 1.06.</p>
+    <p>Это не плохо. Нам все еще нужна машина с 20ГБ оперативной памяти на терабайт пула с дедупликацией, не забудьте, однако теперь мы 
+	можем вычислить стоимость/ преимущества на основе текущих потребностей в аппаратных средствах. Вы также можете сравнить свои тестовые 
+	данные дедуплицируемости со сжимаемостью.</p>
+    <p>Являются ли расходы на память стоящими? Это зависит от стоимости памяти в сравнении со стоимостью хранения.</p>
+    <p>Каждый раз, когда мы проводили оценку наших данные на дедуплицируемость и сжимаемость, а затем и на стоимость оборудования для 
+	каждого случая, мы обнаруживали, что улучшение сжатия с более быстрыми дисками и более мощными процессорами более рентабельно, 
+	чем загрузка памяти для дедупликации. Дедупликации не улучшит скорость чтения диска, хотя она может улучшить попадание в кэш. 
+	Она всего лишь увеличивает скорость записи при нахождении дублирующего блока. Дедупликация также значительно увеличивает 
+	количество времени необходимого для освобождения блоков, следовательно уничтожение наборов данных и снимков могут стать чрезвычайно 
+	медленными. Сжатие влияет на все без наложения подобных штрафов.</p>
+    <p>Возможно, дедупликация имеет смысл только при ограниченном, дорогом и очень высоко производительном дисковом пространстве. Если 
+	вам нужно втиснуть много дедуплицируемых данных в пул SSD, дедупликация может быть вашим выбором.</p>
+    <p>Однако, все данные различны, поэтому проверьте свои перед принятием решения.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="EnablingDeduplication"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Разрешение дедупликации</span></h4>
+    </div></div></div>
+    <p>Свойство ZFS <span class="term"><strong class="userinput"><code>dedup</code></strong></span> активирует и отключает дедупликацию.</p>
+	   <pre class="screen">
+# zfs set dedup=on data/data1
+	   </pre>
+    <p>Теперь дедупликация активна в этом наборе данных.</p>
+    <p>Подобно сжатию дедупликация воздействует только на вновь записываемые данные. Активация дедупликации не способна магическим 
+	образом дедуплицировать уже записанные в пуле данные. Для достижения лучших результатов активируйте дедупликацию сразу при создании 
+	набора данных, до записи данных в него.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="DisablingDeduplication"> 
+	 </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Запрет дедупликации</span></h4>
+    </div></div></div>
+    <p>Чтобы отключить дедупликацию, установите свойство <span class="term"><strong class="userinput"><code>dedup</code></strong></span> 
+	вашего набора данных в значение <span class="term"><code>off</code></span></p>
+	   <pre class="screen">
+# zfs set dedup=off data/data1
+	   </pre>
+    <p>Как и в случае со сжатием, запрет на дедупликацию не реплицирует магическим образом все ваши файлы. Дедуплицированные файлы
+	останутся таковыми. Если вы выключаете <span class="term"><strong class="userinput"><code>dedup</code></strong></span> по той причине, 
+	что она делает производительность системы отвратительной, простое ее выключение не улучшит производительность. Улучшит производительность
+	{после выключения дедупликации} только удаление дедуплицированных файлов. Вы не можете вычистить все следы 
+	<span class="term"><strong class="userinput"><code>dedup</code></strong></span> из набора данных. Вам лучше воспользоваться
+	<span class="term"><code>zfs send</code></span> и <span class="term"><code>zfs receive</code></span> для пересылки данных в новый 
+	набор данных, который не применяет дедупликацию.</p>
+    <p>Вероятно, лучшим выбором будет отказ от дедупликации. Дкдупликация является замечательной технологией, и те, кому она в 
+	действительности нужна, могут ее использовать. Большинство из нас, однако, не имеют дедуплицируемых данных. Не разрешайте 
+	свойство только потому, что оно крутое.</p>
+    <p>Выбор правильной стратегии управления дисковым пространством в начале сэкономит вам много таблеток от головной боли в последующем.</p>
+   </div>
+  </div>   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

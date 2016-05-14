@@ -1,0 +1,851 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 3. Построение вашей первой сетевой среды Docker - Изучение построения сетей Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningDockerNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="up" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="prev" href="Ch02.html" title="Глава 2. Построение сети Docker взгляд вовнутрь"/>
+<link rel="next" href="Ch04.html" title="Глава 4. Построение сетей в кластере Docker"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-docker-networking";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningDockerNetworking/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 3. Построение вашей первой сетевой среды Docker';
+PrevRef = 'Ch02.html';
+UpRef = 'index.html';
+NextRef = 'Ch04.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 3. Построение вашей первой сетевой среды Docker</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+   <p>Данная глава описывает практические примеры построения сетей Docker, охватывая множество контейнеров 
+   по множеству хостов. Мы охватим следующие темы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Введение в Piperwork</p>
+	 </li><li class="listitem">
+	 <p>Множество контейнеров поверх одного хоста</p>
+	 </li><li class="listitem">
+	 <p>В направлении масштабирования сетевых сред - введение в Open vSwitch</p>
+	 </li><li class="listitem">
+	 <p>Построение сетей с оверлейными сетевыми средами - Flannel</p>
+	 </li><li class="listitem">
+	 <p>Сравнение параметров построения сетей Docker</p>
+	 </li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch03.html">3. Построение вашей первой сетевой среды Docker</dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch03.html#0301">Введение в Piperwork</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0302">Множество контейнеров поверх одного хоста</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030201">Переплетение ваших контейнеров</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0303">Open vSwitch</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch03.html#030301">OVS одного хоста</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch03.html#03030101">Создание моста OVS</a></span></dt>
+      </dl></dd>
+     <dt><span class="section"><a href="Ch03.html#030302">OVS множества хостов</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch03.html#0304">Построение сетей с оверлейными сетевыми средами - Flannel</a></span></dt>
+	<dt><span class="section"><a href="Ch03.html#0305">Заключение</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>Введение в Piperwork</h3>
+   </div></div></div>
+   <p>Конвейеризация (Piperwork) позволяет вам соединять воедино контейнеры в произвольных сложных сценарях.</p>
+   <p>На практике она создаёт унаследованный мост Linux, добавляет новый интерфейс в контейнер, а затем 
+   подключает данный интерфейс к этому мосту; контейнеры получают сегмент сетевой среды в котором они 
+   взаимодействуют друг с другом.</p>
+
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>Множество контейнеров поверх одного хоста</h3>
+   </div></div></div>
+   <p>Piperwork является сценарием оболочки и его установка проста:</p>
+	   <pre class="screen"><code>
+#sudo wget -O /usr/local/bin/pipework
+https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework &amp;&amp; sudo
+chmod +x /usr/local/bin/pipework
+ 	   </code></pre>
+   <p>Следующий рисунок отображает взаимодействие контейнеров с применением Pipework:</p>
+   <div class="figure"><a id="Fig0301"> </a>
+    <p class="title"><strong>Рисунок 3.1. Взаимодействие контейнеров с применением Pipework</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0301.jpg" width="308" height="296"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Для начала создайте два контейнера:</p>
+	   <pre class="screen"><code>
+#docker run -i -t --name c1 ubuntu:latest /bin/bash
+root@5afb44195a69:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:10
+          inet addr:172.17.0.16  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:10/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:13 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:1038 (1.0 KB)  TX bytes:738 (738.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+#docker run -i -t --name c2 ubuntu:latest /bin/bash
+root@c94d53a76a9b:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:11
+          inet addr:172.17.0.17  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:11/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:648 (648.0 B)  TX bytes:738 (738.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 	   </code></pre>
+   <p>Теперь давайте применим Pipework для соединения с ними:</p>
+	   <pre class="screen"><code>
+[root@us-east-1 ~]# s3cmd ls s3://owncloud#sudo pipework brpipe c1 192.168.1.1/24
+ 	   </code></pre>
+   <p>Данная команда создаёт на машине хоста мост, <span class="term"><code>brpipe</code></span>. Она добавляет 
+   интефейс <span class="term"><code>eth1</code></span> к вашему контейнеру <span class="term"><code>с1</code></span>
+   с IP адресом <span class="term"><code>192.168.1.1</code></span> и подключает интерфейс к мосту следующим 
+   образом:</p>
+	   <pre class="screen"><code>
+root@5afb44195a69:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:10
+          inet addr:172.17.0.16  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:10/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:13 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:1038 (1.0 KB)  TX bytes:738 (738.0 B)
+eth1      Link encap:Ethernet  HWaddr ce:72:c5:12:4a:1a
+          inet addr:192.168.1.1  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::cc72:c5ff:fe12:4a1a/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:23 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:1806 (1.8 KB)  TX bytes:690 (690.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+#sudo pipework brpipe c2 192.168.1.2/24
+ 	   </code></pre>
+   <p>Эта команда не создаст мост <span class="term"><code>brpipe</code></span>, так как он уже существует. 
+   Она добавит интерфейс <span class="term"><code>eth1</code></span> к контейнеру 
+   <span class="term"><code>c2</code></span> и соединит его с этим мостом следующим образом:</p>
+	   <pre class="screen"><code>
+root@c94d53a76a9b:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:11
+          inet addr:172.17.0.17  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:11/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:648 (648.0 B)  TX bytes:738 (738.0 B)
+eth1      Link encap:Ethernet  HWaddr 36:86:fb:9e:88:ba
+          inet addr:192.168.1.2  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::3486:fbff:fe9e:88ba/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:648 (648.0 B)  TX bytes:690 (690.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 	   </code></pre>
+   <p>Теперь контейнеры соединены и будут способны пинговать друг друга, так как они оба находятся в одной подсети,
+   а именно, <span class="term"><code>192.168.1.0/24</code></span>. Pipework предоставляет преимущество добавлления 
+   статичных IP адресов вашим контейнерам.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Переплетение (Weave) ваших контейнеров </span></h4>
+   </div></div></div>
+   <p>Weave (переплетение) создаёт виртуальную сетевую среду, которая способна соединять контейнеры Docker на множестве 
+   хостов так, как если бы они соединялись одним комутатором. Маршрутизатор Weave сам по себе выполняется в качестве 
+   контейнера Docker и может кодировать обмен для передачи его через Интернет. Предоставляемые сетевой средой 
+   Weave контейнеры приложений могут быть сделаны доступными для внешнего мира, в зависимости от того, где 
+   эти контейнеры выполняются.</p>
+   <p>Воспользуйтесь следующим кодом для установки Weave:</p>
+	   <pre class="screen"><code>
+#sudo curl -L git.io/weave -o /usr/local/bin/weave
+#sudo chmod a+x /usr/local/bin/weave
+ 	   </code></pre>
+   <p>Следующий рисунок изображает взаимодействие с множеством хостов с применением Weave</p>
+   <div class="figure"><a id="Fig0302"> </a>
+    <p class="title"><strong>Рисунок 3.2.Взаимодействие с множеством хостов посредством Weave</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0302.jpg" width="463" height="261"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>На <span class="term"><code>$HOST1</code></span> мы выполним:</p>
+ 	   <pre class="screen"><code>
+# weave launch
+# eval $(weave proxy-env)
+# docker run --name c1 -ti ubuntu
+ 	   </code></pre>
+  <p>Далее мы повторим аналогичные шаги на <span class="term"><code>$HOST2</code></span>:</p>
+	   <pre class="screen"><code>
+# weave launch $HOST1
+# eval $(weave proxy-env)
+# docker run --name c2 -ti ubuntu
+ 	   </code></pre>
+   <p>В запущенном на <span class="term"><code>$HOST1</code></span> контейнере создаётся следующий вывод:</p>
+	   <pre class="screen"><code>
+root@c1:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:21
+          inet addr:172.17.0.33  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:21/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:38 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:34 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:3166 (3.1 KB)  TX bytes:2299 (2.2 KB)
+ethwe     Link encap:Ethernet  HWaddr aa:99:8a:d5:4d:d4
+          inet addr:10.128.0.3  Bcast:0.0.0.0  Mask:255.192.0.0
+          inet6 addr: fe80::a899:8aff:fed5:4dd4/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:65535  Metric:1
+          RX packets:130 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:74 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:11028 (11.0 KB)  TX bytes:6108 (6.1 KB)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 	   </code></pre>
+   <p>Мы може увидеть интерфейс Weave, <span class="term"><code>ethwe</code></span>, воспользовавшись 
+   командой <span class="term"><code>ifconfig</code></span>:</p>
+	   <pre class="screen"><code>
+root@c2:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:04
+          inet addr:172.17.0.4  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:4/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:28 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:29 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:2412 (2.4 KB)  TX bytes:2016 (2.0 KB)
+ethwe     Link encap:Ethernet  HWaddr 8e:7c:17:0d:0e:03
+          inet addr:10.160.0.1  Bcast:0.0.0.0  Mask:255.192.0.0
+          inet6 addr: fe80::8c7c:17ff:fe0d:e03/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:65535  Metric:1
+          RX packets:139 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:74 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:11718 (11.7 KB)  TX bytes:6108 (6.1 KB)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+#root@c1:/# ping -c 1 -q c2
+PING c2.weave.local (10.160.0.1) 56(84) bytes of data.
+--- c2.weave.local ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 1.317/1.317/1.317/0.000 ms
+ 	   </code></pre>
+   <p>Аналогично, в запущенном на <span class="term"><code>$HOST2</code></span> контейнере создаётся следующий
+   вывод:</p>
+	   <pre class="screen"><code>
+#root@c2:/# ping -c 1 -q c1
+PING c1.weave.local (10.128.0.3) 56(84) bytes of data.
+--- c1.weave.local ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 1.658/1.658/1.658/0.000 ms
+ 	   </code></pre>
+   <p>Следовательно, здесь мы достигли желаемого - два контейнера на различных хостах успешно общаются 
+   друг с другом.</p>
+  </div>
+ 
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0303"> </a>Open vSwitch</h3>
+   </div></div></div>
+   <p>Docker по умолчанию использует мост <span class="term"><code>docker0</code></span>. Однако, существуют 
+   варианты применения, при которых может требоваться <span class="term"><strong class="userinput">Open vSwitch</strong></span>
+   (<span class="term"><strong class="userinput">OVS</strong></span>) вместо моста Linux. Отдельный мост 
+   Linux может обрабатывать только 1024 порта- это ограничивает масштабируемость Docker, поскольку мы можем 
+   создать только 1024 контейнера, причйм каждый с отдельным сетевым интерфейсом.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">OVS одного хоста </span></h4>
+   </div></div></div>
+   <p>Теперь мы установим OVS на отдельный хост, создадим два контейнера, и соединим их мостом OVS.</p>
+   <p>Для установки OVS примените эту команду:</p>
+	   <pre class="screen"><code>
+# sudo apt-get install openvswitch-switch
+ 	   </code></pre>
+   <p>Установите утилиту <span class="term"><code>ovs-docker</code></span> следующим образом:</p>
+	   <pre class="screen"><code>
+# cd /usr/bin
+# wget https://raw.githubusercontent.com/openvswitch/ovs/master/utilities/ovsdocker
+# chmod a+rwx ovs-docker
+ 	   </code></pre>
+   <p>Приводимая ниже схема показывает OVS с одним хостом:</p>
+   <div class="figure"><a id="Fig0303"> </a>
+    <p class="title"><strong>Рисунок 3.3. OVS одного хоста</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0303.jpg" width="371" height="237"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+	
+	<a id="03030101"> </a>
+    <p class="title"><strong>Создание моста OVS</strong></p>
+   <p>Здесь мы добавим новый мост OVS и настроим его таким образом, чтобы он мог достичь контейнеры, присоединённые 
+   к различным сетевым средам следующим образом:</p>
+	   <pre class="screen"><code>
+# ovs-vsctl add-br ovs-br1
+# ifconfig ovs-br1 173.16.1.1 netmask 255.255.255.0 up
+ 	   </code></pre>
+   <p>Из моста OVS добавим порт к контейнеру Docker применив следующую последовательность:</p>
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Создадим два контейнера Ubuntu Docker:</p>
+	   <pre class="screen"><code>
+# docker run -I -t --name container1 ubuntu /bin/bash
+# docekr run -I -t --name container2 ubuntu /bin/bash
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Соединим эти контейнеры с вашим моcтом OVS:</p>
+	   <pre class="screen"><code>
+# ovs-docker add-port ovs-br1 eth1 container1 --ipaddress=173.16.1.2/24
+# ovs-docker add-port ovs-br1 eth1 container2 --ipaddress=173.16.1.3/24
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Ппри помощи команды <span class="term"><code>ping</code></span> проверим соединение между двумя 
+	 контейнерами, взаимодействующими через мост OVS. Для начала определим их IP адреса:</p>
+	   <pre class="screen"><code>
+# docker exec container1 ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:10:11:02
+          inet addr:172.16.17.2  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::42:acff:fe10:1102/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1472  Metric:1
+          RX packets:36 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:4956 (4.9 KB)  TX bytes:648 (648.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B) TX bytes:0 (0.0 B)
+
+# docker exec container2 ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:10:11:03
+          inet addr:172.16.17.3  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::42:acff:fe10:1103/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1472  Metric:1
+          RX packets:27 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:4201 (4.2 KB)  TX bytes:648 (648.0 B)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 	   </code></pre>
+     <p>Теперь, когда мы знаем IP адреса <span class="term"><code>container1</code></span> и
+	 <span class="term"><code>container2</code></span>, мы можем пропинговать их:</p>
+	   <pre class="screen"><code>
+# docker exec container2 ping 172.16.17.2
+PING 172.16.17.2 (172.16.17.2) 56(84) bytes of data.
+64 bytes from 172.16.17.2: icmp_seq=1 ttl=64 time=0.257 ms
+64 bytes from 172.16.17.2: icmp_seq=2 ttl=64 time=0.048 ms
+64 bytes from 172.16.17.2: icmp_seq=3 ttl=64 time=0.052 ms
+
+# docker exec container1 ping 172.16.17.2
+PING 172.16.17.2 (172.16.17.2) 56(84) bytes of data.
+64 bytes from 172.16.17.2: icmp_seq=1 ttl=64 time=0.060 ms
+64 bytes from 172.16.17.2: icmp_seq=2 ttl=64 time=0.035 ms
+64 bytes from 172.16.17.2: icmp_seq=3 ttl=64 time=0.031 ms
+ 	   </code></pre>
+	 </li>
+   </ol>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="030302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">OVS множества хостов </span></h4>
+   </div></div></div>
+    <p>Давайте рассмотрим как соединять контейнеры Docker с применением OVS на множестве хостов.</p>
+    <p>Рассмотрим нашу сборку как это отображено на диаграмме ниже, которая содержит два хоста, 
+	<span class="term"><strong class="userinput">Host1</strong></span> и 
+	<span class="term"><strong class="userinput">Host2</strong></span>, работающих под управлением 
+	Ubuntu 14.04:</p>
+   <div class="figure"><a id="Fig0304"> </a>
+    <p class="title"><strong>Рисунок 3.4. OVS с двумя хостами</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0304.jpg" width="501" height="304"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+    <p>На обоих хостах установим Docker и Open vSwitch:</p>
+	   <pre class="screen"><code>
+# wget -qO- https://get.docker.com/ | sh
+# sudo apt-get install openvswitch-switch
+ 	   </code></pre>
+    <p>Установим утилиту <span class="term"><code>ovs-docker</code></span>:</p>
+	   <pre class="screen"><code>
+# cd /usr/bin
+# wget https://raw.githubusercontent.com/openvswitch/ovs/master/utilities/ovsdocker
+# chmod a+rwx ovs-docker
+ 	   </code></pre>
+    <p>По умолчанию, Docker случайным образом выбирает сеть для выполнения в ней контейнеров. Он создаёт мост, 
+	<span class="term"><code>docker0</code></span> и назначает ему IP адрес
+	(<span class="term"><code>172.17.42.1</code></span>). Следовательно, у обоих 
+	<span class="term"><strong class="userinput">Host1</strong></span> и 
+	<span class="term"><strong class="userinput">Host2</strong></span> IP адреса моста 
+	<span class="term"><code>docker0</code></span> являются одинаковыми, что осложняет взаимодействие контейнеров 
+	в обоих ваших хостах. Для преодоления этого препятствия, давайте назначим статические IP адреса вашей 
+	сетевой среде, а именно: <span class="term"><code>192.168.10.0/24</code></span>.</p>
+    <p>Давайте взглянем на то, как изменится подсеть Docker по умолчанию.</p>
+    <p>Выполним на <span class="term"><strong class="userinput">Host1</strong></span> следующие 
+	команды:</p>
+	   <pre class="screen"><code>
+# service docker stop
+# ip link set dev docker0 down
+# ip addr del 172.17.42.1/16 dev docker0
+# ip addr add 192.168.10.1/24 dev docker0
+# ip link set dev docker0 up
+# ip addr show docker0
+# service docker start
+ 	   </code></pre>
+    <p>Добавим мост <span class="term"><strong class="userinput">br0</strong></span> OVS:</p>
+	   <pre class="screen"><code>
+# ovs-vsctl add-br br0
+ 	   </code></pre>
+    <p>Создадим туннель к другому хосту и подключимся к нему:</p>
+	   <pre class="screen"><code>
+# add-port br0 gre0—set interface gre0 type=gre
+options:remote_ip=30.30.30.8
+ 	   </code></pre>
+    <p>Добавим мост <span class="term"><strong class="userinput">br0</strong></span> к мосту
+	<span class="term"><strong class="userinput">docker0</strong></span>:</p>
+	   <pre class="screen"><code>
+# brctl addif docker0 br0
+ 	   </code></pre>
+    <p>На <span class="term"><strong class="userinput">Host2</strong></span> выполним следующие команды:</p>
+	   <pre class="screen"><code>
+# service docker stop
+# iptables -t nat -F POSTROUTING
+# ip link set dev docker0 down
+# ip addr del 172.17.42.1/16 dev docker0
+# ip addr add 192.168.10.2/24 dev docker0
+# ip link set dev docker0 up
+# ip addr show docker0
+# service docker start
+ 	   </code></pre>
+    <p>Добавим OVS мост <span class="term"><strong class="userinput">br0</strong></span>:</p>
+	   <pre class="screen"><code>
+# ip link set br0 up
+# ovs-vsctl add-br br0
+ 	   </code></pre>
+    <p>Создадим туннель к другому хосту и присоединимся к нему:</p>
+	   <pre class="screen"><code>
+# br0 bridge ovs-vsctl add-port br0 gre0—set interface gre0 type=gre options:remote_ip=30.30.30.7
+ 	   </code></pre>
+    <p>Добавим мост <span class="term"><strong class="userinput">br0</strong></span> к нашему мосту 
+	<span class="term"><strong class="userinput">docker0</strong></span>:</p>
+	   <pre class="screen"><code>
+# brctl addif docker0 br0
+ 	   </code></pre>
+    <p>Мост <span class="term"><strong class="userinput">docker0</strong></span> подключён к другому мосту, 
+	<span class="term"><strong class="userinput">br0</strong></span>. В то же время, это мост OVS. Это 
+	означает, что весь обмен между мостами также маршрутизируется через 
+	<span class="term"><strong class="userinput">br0</strong></span>.</p>
+    <p>Кроме того, нам необходимо соединить вместе сети с двух хостов, в которых выполняются контейнеры. 
+	Для этой цели применяется туннель GRE. Этот туннель присоединяется к мосту OVS 
+	<span class="term"><strong class="userinput">br0</strong></span> и, в результате, к 
+	<span class="term"><strong class="userinput">docker0</strong></span>.</p>
+    <p>После выполнения предыдущих команд на обоих хостах, у вас должна быть возможность пинговать адреса 
+	моста <span class="term"><strong class="userinput">docker0</strong></span> с обоих хостов.</p>
+    <p>При применении команды <span class="term"><strong class="userinput">ping</strong></span> на
+	<span class="term"><strong class="userinput">Host1</strong></span> создаётся следующий вывод:</p>
+	   <pre class="screen"><code>
+# ping 192.168.10.2
+PING 192.168.10.2 (192.168.10.2) 56(84) bytes of data.
+64 bytes from 192.168.10.2: icmp_seq=1 ttl=64 time=0.088 ms
+64 bytes from 192.168.10.2: icmp_seq=2 ttl=64 time=0.032 ms
+^C
+
+--- 192.168.10.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.032/0.060/0.088/0.028 ms
+ 	   </code></pre>
+    <p>Когда мы используем команду <span class="term"><strong class="userinput">ping</strong></span> на 
+	<span class="term"><strong class="userinput">Host2</strong></span>, мы получаем:</p>
+	   <pre class="screen"><code>
+# ping 192.168.10.1
+PING 192.168.10.1 (192.168.10.1) 56(84) bytes of data.
+64 bytes from 192.168.10.1: icmp_seq=1 ttl=64 time=0.088 ms
+64 bytes from 192.168.10.1: icmp_seq=2 ttl=64 time=0.032 ms
+^C
+
+--- 192.168.10.1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.032/0.060/0.088/0.028 ms
+ 	   </code></pre>
+    <p>Давайте посмотрим как создавать контейнеры на обоих наших хостах:</p>
+    <p>На <span class="term"><strong class="userinput">Host1</strong></span> воспользуемся следующим 
+	кодом:</p>
+	   <pre class="screen"><code>
+# docker run -t -i --name container1 ubuntu:latest /bin/bash
+ 	   </code></pre>
+    <p>На <span class="term"><strong class="userinput">Host2</strong></span> применим:</p>
+	   <pre class="screen"><code>
+# docker run -t -i --name container2 ubuntu:latest /bin/bash
+ 	   </code></pre>
+    <p>Теперь мы можем пинговать <span class="term"><strong class="userinput">container2</strong></span>
+	из <span class="term"><strong class="userinput">container1</strong></span>. Таким образом, мы соединили 
+	контейнеры Docker на множестве хостов при помощи Open vSwitch.</p>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0304"> </a>Построение сетей с оверлейными сетевыми средами - Flannel</h3>
+   </div></div></div>
+   <p>Flannel является уровнем виртуальной сетевой среды, который предоставляет подсеть каждому хосту для её 
+   применения контейнерами Docker. Он поставляется в пакете с CoreOS, однако также может быть настроен с прочими 
+   ОС Linux. Flannel создаёт оверлеи на самом деле соединяясь с мостом Docker, к которому, в свою очередь, 
+   присоединены контейнеры, как это показано на рисунке ниже. Для установки Flannel необходимы две машины хостов 
+   или ВМ, которые могут быть как CoreOS, что более предпочтительно, ОС Linux, как это ображено на данном 
+   рисунке:</p>
+   <div class="figure"><a id="Fig0305"> </a>
+    <p class="title"><strong>Рисунок 3.5. Flannel с двумя хостами</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0305.jpg" width="388" height="255"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Код Flannel может быть клонирован с GitHub и собран локально, если это необходимо, на различных 
+   предпочтениях ОС Linux, как показано здесь. В качестве предустановленного он поставляется в CoreOS:</p>
+	   <pre class="screen"><code>
+# git clone https://github.com/coreos/flannel.git
+Cloning into 'flannel'...
+remote: Counting objects: 2141, done.
+remote: Compressing objects: 100% (19/19), done.
+remote: Total 2141 (delta 6), reused 0 (delta 0), pack-reused 2122
+Receiving objects: 100% (2141/2141), 4.
+Checking connectivity… done.
+
+# sudo docker run -v `pwd`:/opt/flannel -i -t google/golang /bin/bash -c
+&quot;cd /opt/flannel &amp;&amp; ./build&quot;
+Building flanneld…
+ 	   </code></pre>
+   <p>Машины CoreOs могут быть легко настроены с применением Vagrant и VirtualBox, как это оговаривается 
+   в руководстве по следующей ссылке: <a class="link" 
+   href="https://coreos.com/os/docs/latest/booting-on-vagrant.html" 
+   target="_top">https://coreos.com/os/docs/latest/booting-on-vagrant.html</a>.</p>
+   <p>После того как машина создана и на ней выполнена регистрация, мы увидим мост Flannel, автоматически 
+   создающийся с применением настройки <span class="term"><code>etcd</code></span>:</p>
+	   <pre class="screen"><code>
+# ifconfig flannel0
+flannel0: flags=4305&lt;UP,POINTOPOINT,RUNNING,NOARP,MULTICAST&gt;  mtu 1472
+          inet 10.1.30.0 netmask 255.255.0.0 destination 10.1.30.0
+          unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00 
+txqueuelen 500 (UNSPEC)
+          RX packets 243  bytes 20692 (20.2 KiB)
+          RX errors 0  dropped 0  overruns 0  frame 0
+          TX packets 304 bytes 25536 (24.9 KiB)
+          TX errors 0  dropped 0  overruns 0  carrier 0  collisions 0
+ 	   </code></pre>
+   <p>Среда Flannel может быть проверена просмотром <span class="term"><code>subnet.env</code></span>:</p>
+	   <pre class="screen"><code>
+# cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.1.0.0/16
+FLANNEL_SUBNET=10.1.30.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+ 	   </code></pre>
+   <p>Демон Docker должен быть перезапущен с применением следующей команды для переустановки сетевой среды с 
+   параметрами подсети от моста Flannel:</p>
+	   <pre class="screen"><code>
+# source /run/flannel/subnet.env
+# sudo rm /var/run/docker.pid
+# sudo ifconfig docker0 ${FLANNEL_SUBNET}
+# sudo docker -d --bip=${FLANNEL_SUBNET} --mtu=${FLANNEL_MTU} &amp; INFO[0000]
+[graphdriver] using prior storage driver &quot;overlay&quot;
+INFO[0000] Option DefaultDriver: bridge
+INFO[0000] Option DefaultNetwork: bridge
+INFO[0000] Listening for HTTP on unix (/var/run/docker.sock)
+INFO[0000] Firewalld running: false
+INFO[0000] Loading containers: start.
+..............
+INFO[0000] Loading containers: done.
+INFO[0000] Daemon has completed initialization
+INFO[0000] Docker daemon
+commit=cedd534-dirty execdriver=native-0.2 graphdriver=overlay
+version=1.8.3
+ 	   </code></pre>
+   <p>Для вторго хоста среда Flannel может быть проверена просмотром <span 
+   class="term"><code>subnet.env</code></span>:</p>
+   <p></p>
+	   <pre class="screen"><code>
+# cat /run/flannel/subnet.env
+FLANNEL_NETWORK=10.1.0.0/16
+FLANNEL_SUBNET=10.1.31.1/24
+FLANNEL_MTU=1472
+FLANNEL_IPMASQ=true
+ 	   </code></pre>
+   <p>На втором хосте размещается другая подсеть. Служба Docker также может быть перезапущена на этом хосте с 
+   указанием моста Flannel:</p>
+	   <pre class="screen"><code>
+# source /run/flannel/subnet.env
+# sudo ifconfig docker0 ${FLANNEL_SUBNET}
+# sudo docker -d --bip=${FLANNEL_SUBNET} --mtu=${FLANNEL_MTU} &amp; INFO[0000]
+[graphdriver] using prior storage driver &quot;overlay&quot;
+INFO[0000] Listening for HTTP on unix (/var/run/docker.sock)
+INFO[0000] Option DefaultDriver: bridge
+INFO[0000] Option DefaultNetwork: bridge
+INFO[0000] Firewalld running: false
+INFO[0000] Loading containers: start.
+....
+INFO[0000] Loading containers: done.
+INFO[0000] Daemon has completed initialization
+INFO[0000] Docker daemon
+commit=cedd534-dirty execdriver=native-0.2 graphdriver=overlay
+version=1.8.3
+ 	   </code></pre>
+   <p>Контейнеры Docker могут быть созданы на соответствующих хостах и они могут быть протестированы с применением 
+   команды <span class="term"><code>ping</code></span> для проверки связности оверлейной сетевой среды 
+   Flannel:</p>
+	   <pre class="screen"><code>
+#docker run -it ubuntu /bin/bash
+INFO[0013] POST /v1.20/containers/create
+INFO[0013] POST
+/v1.20/containers/1d1582111801c8788695910e57c02fdba593f443c15e2f1db9174ed9078db809/attach?stderr=1&stdin=1&stdout=1&stream=1
+INFO[0013] POST
+/v1.20/containers/1d1582111801c8788695910e57c02fdba593f443c15e2f1db9174ed9078db809/start
+INFO[0013] POST
+/v1.20/containers/1d1582111801c8788695910e57c02fdba593f443c15e2f1db9174ed9078db809/resize?h=44&w=80
+
+root@1d1582111801:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:0a:01:1e:02
+          inet addr:10.1.30.2  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::42:aff:fe01:1e02/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1472  Metric:1
+          RX packets:11 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:6 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:969 (969.0 B)  TX bytes:508 (508.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 	   </code></pre>
+   <p>Для <span class="term"><strong class="userinput">Host2</strong></span> воспользуйтесь следующими 
+   командами:</p>
+	   <pre class="screen"><code>
+# docker run -it ubuntu /bin/bash
+root@ed070166624a:/# ifconfig
+eth0       Link encap:Ethernet  HWaddr 02:42:0a:01:1f:02
+           inet addr:10.1.31.2  Bcast:0.0.0.0  Mask:255.255.255.0
+           inet6 addr: fe80::42:aff:fe01:1f02/64 Scope:Link
+           UP BROADCAST RUNNING MULTICAST  MTU:1472  Metric:1
+           RX packets:18 errors:0 dropped:2 overruns:0 frame:0
+           TX packets:7 errors:0 dropped:0 overruns:0 carrier:0
+           collisions:0 txqueuelen:0
+           RX bytes:1544 (1.5 KB)  TX bytes:598 (598.0 B)
+lo         Link encap:Local Loopback
+           inet addr:127.0.0.1  Mask:255.0.0.0
+           inet6 addr: ::1/128 Scope:Host
+           UP LOOPBACK RUNNING  MTU:65536  Metric:1
+           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+           collisions:0 txqueuelen:0
+           RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+root@ed070166624a:/# ping 10.1.30.2
+PING 10.1.30.2 (10.1.30.2) 56(84) bytes of data.
+64 bytes from 10.1.30.2: icmp_seq=1 ttl=60 time=3.61 ms
+64 bytes from 10.1.30.2: icmp_seq=2 ttl=60 time=1.38 ms
+64 bytes from 10.1.30.2: icmp_seq=3 ttl=60 time=0.695 ms
+64 bytes from 10.1.30.2: icmp_seq=4 ttl=60 time=1.49 ms
+ 	   </code></pre>
+   <p>Таким образом, в предыдущем примере мы увидели уменьшение сложности с применением Flannel при выполнении 
+   агента <span class="term"><code>flanneld</code></span> на каждом хосте, который отвечает за выделение подсети,
+   сдаваемой в аренду из предварительно настроенного простанства адресов. Flannel внутренне применяет 
+   <span class="term"><code>etcd</code></span> для сохранения настроек сетевой среды и прочих подробностей таких, 
+   как IP хоста и выделяемая подсеть. Перенаправление пакетов достигается применением лежащей в основе 
+   стратегии.</p>
+   <p>Flannel также имеет целью решение проблемы развёртывания Kubernetes в поставщиках облачных решений, 
+   отличных от GCE, в которых оверлеи ячеек сетевых сред Flannel могут облегчить проблему назначения 
+   уникального IP адреса каждому соединению путём создания подсети для каждого сервера.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0305"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В этой главе мы изучили как контейнеры Docker взаимодейтсвуют на множестве хостов с применением различных 
+   параметров сетевой среды, таких как {Pipework}, Weave, OVS и Flannel. Pipework использует наследуемый мост 
+   Linux, Weave создаёт виртуальную сетевую среду, OVS применяет технологию туннелирования GRE, а Flannel 
+   обеспечивает отдельные подсети для каждого хоста для соединения контейнеров на множестве хостов. 
+   Некоторые из реализаций, такие как Pipeworks, являются наследуемыми и остаются абсолютными на всём промежутке 
+   времени, в то время как другие разрабатываются для применения в контексте определённых ОС, например, 
+   Flannel с CoreOS.</p>
+   <p>Следующий рисунок показывает базовое сопоставление параметров построения сетевых сред Docker:</p>
+   <div class="figure"><a id="Fig0306"> </a>
+    <p class="title"><strong>Рисунок 3.6. Сопоставление параметров построения сети Docker</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0306.jpg" width="260" height="218"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>В следующей главе мы обсудим то, как контейнеры Docker выстраивают сетевые среды с применением таких 
+   инфраструктур, как Kubernetes, Docker Swarm и Mesosphere.</p>
+  </div>
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

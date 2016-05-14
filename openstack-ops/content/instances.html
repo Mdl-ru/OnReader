@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Экземпляры - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="user_facing_operations.html" title="Глава 10. Операции стороны пользователя"/>
+<link rel="prev" href="user_facing_block_storage.html" title="Блочные хранилища"/>
+<link rel="next" href="associate_security_groups.html" title="Привязывание групп безопасности"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:05+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//instances.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Экземпляры';
+PrevRef = 'user_facing_block_storage.html';
+UpRef = 'user_facing_operations.html';
+NextRef = 'associate_security_groups.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="instances"> </a>Экземпляры</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="instances.html#start_instances">Запуск экземпляров</a></span></dt><dt><span class="section">
+ <a href="instances.html#instance_boot_failures">Сбои при загрузке экземпляров</a></span></dt><dt><span class="section">
+ <a href="instances.html#instance_specific_data">Использование характерных для экземпляров данных</a></span></dt></dl>
+</div>
+ <p>Экземпляры являются выполняемыми виртуальными машинами в пределах облака 
+ OpenStack. Данный раздел обсуждает как работать с ними и принадлежащими им 
+ образами, с их сетевыми свойствами и как они представлены в базе данных.
+ <a id="d9e4243" class="indexterm"/></p>
+ <div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="start_instances"> </a>Запуск экземпляров</h3>
+ </div></div></div>
+ <p>Чтобы запустить экземпляр вам необходимо выбрать образ, шаблон виртуального ресурса и 
+ имя. Имя не требует уникальности, однако ваша жизнь будет проще, если вы это сделаете, 
+ т.к. многие инструменты будут использовать имя на месте UUID пока имя 
+ является уникальным. Это может быть выполнено с инструментальной панели кнопкой 
+ <span class="guibutton"><strong>Launch Instance</strong></span> (Запустить экземпляр) 
+ на странице <span class="guilabel"><strong>Instances</strong></span> или выбрав действие 
+ <span class="guilabel"><strong>Launch</strong></span> (Запуск), следующее за образом или моментальным снимком 
+ на странице <span class="guilabel"><strong>Images &amp; Snapshots</strong></span>.
+ <a id="d9e4253" class="indexterm"/></p>
+ <p>
+ Выполните это в командной строке:</p>
+ <pre class="screen">$ nova boot --flavor &lt;flavor&gt; --image &lt;image&gt; &lt;name&gt;</pre>
+ <p>Существует ряд дополнительных элементов, которые можно задать. Прежде 
+ чем попытаться их запустить, вы должны прочитать оставшуюся часть данного раздела 
+ об экземплярах, но приводимая команда является базовой, на которую в 
+ последствии наслоятся детали.</p>
+ <p>Для удаления экземпляра в инструментальной панели выберите действие 
+ <span class="guilabel"><strong>Terminate instance</strong></span> (Прекратить экземпляр) 
+ следующее за экземпляром на странице <span class="guilabel"><strong>Instances</strong></span>. 
+ Из командной строки выполните следующее:</p>
+ <pre class="screen">$ nova delete &lt;instance-uuid&gt;</pre>
+ <p>Важно отметить, что выключение экземпляра не прекращает его в смысле OpenStack.</p>
+</div>
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="instance_boot_failures"> </a>Сбои при загрузке экземпляров</h3>
+ </div></div></div>
+ <p>Если экземпляр не запускается и немедленно переходит к состоянию error (Ошибка),
+ существует несколько различных способов отследить, что пошло не так. 
+ Некоторые из них можно выполнить обычным доступом пользователей, а другие требуют 
+ доступ к вашим журналам сервера или вычислительных узлов.
+ <a id="d9e4267" class="indexterm"/></p>
+ <p>Простейшими причинами отказа в запуске узлов являются превышения квот 
+ или неспособность планировщика найти подходящий вычислительный узел 
+ для запуска экземпляра. В этих случаях ошибка очевидна при выполнении 
+ <code class="code">nova show</code> отказавшем экземпляре:
+ <a id="d9e4272" class="indexterm"/></p>
+ <pre class="screen">$ nova show test-instance</pre>
+ <pre class="screen">
++------------------------+-----------------------------------------------------\
+| Property               | Value                                               /
++------------------------+-----------------------------------------------------\
+| OS-DCF:diskConfig      | MANUAL                                              /
+| OS-EXT-STS:power_state | 0                                                   \
+| OS-EXT-STS:task_state  | None                                                /
+| OS-EXT-STS:vm_state    | error                                               \
+| accessIPv4             |                                                     /
+| accessIPv6             |                                                     \
+| config_drive           |                                                     /
+| created                | 2013-03-01T19:28:24Z                                \
+| fault                  | {u'message': u'NoValidHost', u'code': 500, u'created/
+| flavor                 | xxl.super (11)                                      \
+| hostId                 |                                                     /
+| id                     | 940f3b2f-bd74-45ad-bee7-eb0a7318aa84                \
+| image                  | quantal-test (65b4f432-7375-42b6-a9b8-7f654a1e676e) /
+| key_name               | None                                                \
+| metadata               | {}                                                  /
+| name                   | test-instance                                       \
+| security_groups        | [{u'name': u'default'}]                             /
+| status                 | ERROR                                               \
+| tenant_id              | 98333a1a28e746fa8c629c83a818ad57                    /
+| updated                | 2013-03-01T19:28:26Z                                \
+| user_id                | a1ef823458d24a68955fec6f3d390019                    /
++------------------------+-----------------------------------------------------\
+            </pre>
+ <p>В данном случае, просмотр <code class="literal">fault</code> (отказавшего) сообщения 
+ показывает <code class="literal">NoValidHost</code> (отсутствует допустимый хост), указывая на то, 
+ что планировщик не был в состоянии удовлетворить требования экземпляра.</p>
+ <p>Если <code class="code">nova show</code> не достаточно объясняет отказ, 
+ осуществите поиск строк, содержащих UUID экземпляра в <code class="code">nova-compute.log</code> 
+ на планировавшемся для запуска вычислительном узле или 
+ <code class="code">nova-scheduler.log</code> на вашем хосте планировщика тоже является хорошим 
+ местом для начала поиска проблем более низкого уровня.</p>
+ <p>Использование <code class="code">nova show</code> пользователем с правами администратора покажет, 
+ вычислительный узел запланированного экземпляра как <code class="code">hostId</code>. 
+ Однако, если сбой запуска экземпляра произошел во время планирования данное поле будет пустым.</p>
+</div>
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="instance_specific_data"> </a>Использование характерных для экземпляров данных</h3>
+ </div></div></div>
+ <div class="toc"><dl><dt><span class="section">
+  <a href="instances.html#instance_metadata">Метаданные экземпляра</a></span></dt><dt><span class="section">
+  <a href="instances.html#instance_user_data">Пользовательские данные экземпляра</a></span></dt><dt><span class="section">
+  <a href="instances.html#file_injection">Инъекция файлов</a></span></dt></dl>
+ </div>
+ <p>Существует два основных типа присущих экземплярам данных: метаданные и данные пользователей.
+ <a id="d9e4289" class="indexterm"/>
+ <a id="d9e4292" class="indexterm"/></p>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="instance_metadata"> </a>Метаданные экземпляра</h4>
+</div></div></div>
+<p>Для вычислительной среды метаданные экземпляра представляет собой набор связанных с экземпляром 
+пар ключ/ значение. Вычислительная среда читает и пишет в эти пары ключ/ значение 
+в любое время в течение времени жизни экземпляра, причем как из самого экземпляра, 
+так и извне всякий раз, когда конечный пользователь применяет для этого интерфейс Compute API. 
+Однако, у вас нет возможности запросить связанные с экземпляром пары ключ/ значение через 
+службу метаданных по аналогии со службой метаданных Amazon EC2.</p>
+<p>В качестве примера метаданных экземпляра: пользователи могут формировать и регистрировать
+ключи SSH используя команду <code class="literal">nova</code>:</p>
+<pre class="screen">$ nova keypair-add mykey &gt; mykey.pem</pre>
+<p>Она создает ключ с именем <strong class="userinput"><code>mykey</code></strong>, который вы 
+можете связать с экземплярами. Файл <code class="filename">mykey.pem</code> 
+является частным ключом, который должен быть сохранен в безопасном месте, поскольку 
+он делает возможным доступ с правами root к экземпляру, с которым связан 
+ключ <strong class="userinput"><code>mykey</code></strong>.</p>
+<p>Для регистрации существующего общедоступного ключа в OpenStack используйте команду:</p>
+<pre class="screen">$ nova keypair-add --pub-key mykey.pub mykey</pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+ <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+ <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+ <p>Вы должны иметь соответствующий частный ключ, чтобы получить доступ к 
+ связанным с этим ключом экземплярам..</p></td></tr></table>
+</div>
+<p>Для связывания ключа с экземпляром про загрузке, например, добавьте в командую строку
+<code class="code">--key_name mykey</code>. Например:</p>
+<pre class="screen">$ nova boot --image ubuntu-cloudimage --flavor 2 --key_name mykey myimage</pre>
+<p>При загрузке сервера вы можете добавить метаданные, так что 
+вы сможете легко определить их среди других запущенных экземпляров. 
+Используйте параметр <code class="code">--meta</code> с парой key-value, где вы 
+можете использовать строковое выражение и для ключа, и для значения. Например, 
+можно добавить описание сервера, а также его автора:</p>
+<pre class="screen">$ nova boot --image=test-image --flavor=1 \
+  --meta description='Small test image' smallimage</pre>
+<p>При просмотре информации о сервере, вы сможете увидеть <span class="keep-together">metadata</span>,
+находящееся в строке метаданных:</p>
+<pre class="screen">$ nova show smallimage
++------------------------+-----------------------------------------+
+|     Property           |                   Value                 |
++------------------------+-----------------------------------------+
+|   OS-DCF:diskConfig    |               MANUAL                    |
+| OS-EXT-STS:power_state |                 1                       |
+| OS-EXT-STS:task_state  |                None                     |
+|  OS-EXT-STS:vm_state   |               active                    |
+|    accessIPv4          |                                         |
+|    accessIPv6          |                                         |
+|      config_drive      |                                         |
+|     created            |            2012-05-16T20:48:23Z         |
+|      flavor            |              m1.small                   |
+|      hostId            |             de0...487                   |
+|        id              |             8ec...f915                  |
+|      image             |             natty-image                 |
+|     key_name           |                                         |
+|     metadata           | {u'description': u'Small test image'}   |
+|       name             |             smallimage                  |
+|    private network     |            172.16.101.11                |
+|     progress           |                 0                       |
+|     public network     |             10.4.113.11                 |
+|      status            |               ACTIVE                    |
+|    tenant_id           |             e83...482                   |
+|     updated            |            2012-05-16T20:48:35Z         |
+|     user_id            |          de3...0a9                      |
++------------------------+-----------------------------------------+</pre>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="instance_user_data"> </a>Пользовательские данные экземпляра</h4>
+</div></div></div>
+<p>Пользовательские данные (<code class="code">user-data</code>) являются специальным ключом в службе 
+метаданных, хранящей файл, который могут использовать в рамках гостевого экземпляра имеющие 
+соответствующую компетенцию приложения облака. Например, 
+<a class="link" href="https://help.ubuntu.com/community/CloudInit" title="Служба образов OpenStack" target="_top">
+cloudinit</a> является пакетом с открытым кодом из Ubuntu, однако доступным во многих дистрибутивах, 
+который обрабатывает начальную инициализацию экземпляра облака, что позволяет использовать 
+такие пользовательские данные.
+<a id="d9e4323" class="indexterm"/></p>
+<p>Эти пользовательские данные могут быть помещены в файл в вашей локальной системе и 
+затем переданы в создаваемый экземпляр с помощью флага <code class="code">--user-data
+&lt;user-data-file&gt;</code>. Например:</p>
+<pre class="screen">$ nova boot --image ubuntu-cloudimage --flavor 1 --user-data mydata.file</pre>
+<p>Чтобы понять разницу между данными пользователей и метаданными
+представьте себе, что данные пользователей создаются до запуска экземпляра.
+Пользовательские данные доступны изнутри экземпляра когда он работает.
+Пользовательские данные могут быть использованы для сохранения настроек,
+сценариев или всего, что пожелает их владелец.</p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="file_injection"> </a>Инъекция файлов</h4>
+</div></div></div>
+<p>Произвольные локальные файлы также могут быть размещены в файловой системе 
+экземпляра в момент создания с помощью параметра 
+<code class="code">--file &lt;dst-path=src-path&gt;</code>. 
+Вы можете сохранять до пяти файлов.
+<a id="d9e4333" class="indexterm"/></p>
+<p>Например, если у вас есть специальный файл <code class="filename">authorized_keys</code> с именем 
+special_authorized_keysfile, который вы хотите поместить в экземпляр 
+вместо использования обычной инъекции с ключем SSH. В этом случае 
+вы можете использовать следующую команду:</p>
+<pre class="screen">$ nova boot --image ubuntu-cloudimage --flavor 1  \
+  --file /root/.ssh/authorized_keys=special_authorized_keysfile</pre>
+</div></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Как запускается пользовательское пространство - Как работает Linux</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="HowLinuxWorks2"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Как работает Linux"/>
+<link rel="up" href="index.html" title="Как работает Linux"/>
+<link rel="prev" href="Ch05.html" title="Глава 5. Как загружается ядро Linux"/>
+<link rel="next" href="Ch07.html" title="Глава 7. Настройка системы: ведение журналов, время системы, пакетные задания и пользователи"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/HowLinuxWorks2/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Как запускается пользовательское пространство';
+PrevRef = 'Ch05.html';
+UpRef = 'index.html';
+NextRef = 'Ch07.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 6. Как запускается пользовательское пространство</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch06.html">6. Как запускается пользовательское пространство</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch06.html#06.1">6.1 Введение в init</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.2">6.2 Уровни выполнения System V</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.3">6.3 Идентификация вашего init</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.4">6.4 systemd</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#06.4.1">6.4.1 Юниты и типы юнитов</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.2">6.4.2 Зависимости systemd</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.3">6.4.3 Настройка systemd</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.4">6.4.4 Работа systemd</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.5">6.4.5 Добавление юнитов systemd</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.6">6.4.6 Отслеживание процесса systemd и синхронизация</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.7">6.4.7 systemd по запросу и запуск распараллеленых ресурсов</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.8">6.4.8 System V совместимость systemd</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.4.9">6.4.9 Вспомогательные программы systemd</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch06.html#06.5">6.5 Upstart</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#06.5.1">6.5.1 Процедура инициализации Upstart</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.5.2">6.5.2 Задания Upstart</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.5.3">6.5.3 Настройка Upstart</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.5.4">6.5.4 Работа Upstart</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.5.5">6.5.5 Журналы Upstart</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.5.6">6.5.6 Уровни выполнения Upstart и System V совместимость</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch06.html#06.6">6.6 System V init</a></span></dt>
+     <dd><dl>
+      <dt><span class="section"><a href="Ch06.html#06.6.1">6.6.1 System V init: последовательность команд запуска</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.6.2">6.6.2 Ферма ссылок System V init</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.6.3">6.6.3 run-parts</a></span></dt>
+      <dt><span class="section"><a href="Ch06.html#06.6.4">6.6.4 Управление System V init</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch06.html#06.7">6.7 Выключение вашей системы</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.8">6.8 Файловая система на диске в оперативной памяти для начальной инициализации</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.9">6.9 Аварийная загрузка в режиме с одним пользователем</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p></p>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.1"> </a>6.1 Введение в init</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.2"> </a>6.2 Уровни выполнения System V</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.3"> </a>6.3 Идентификация вашего init</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4"> </a>6.4 systemd</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.1 Юниты и типы юнитов</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.2 Зависимости systemd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.3 Настройка systemd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.4 Работа systemd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.5 Добавление юнитов systemd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.6 Отслеживание процесса systemd и синхронизация</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.7">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.7 systemd по запросу и запуск распараллеленых ресурсов</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.8">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.8 System V совместимость systemd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.4.9">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.4.9 Вспомогательные программы systemd</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.5"> </a>6.5 Upstart</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.5.1 Процедура инициализации Upstart</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.5.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.5.2 Задания Upstart</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.5.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.5.3 Настройка Upstart</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.5.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.5.4 Работа Upstart</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.5.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.5.5 Журналы Upstart</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.5.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.5.6 Уровни выполнения Upstart и System V совместимость</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.6"> </a>6.6 System V init</h3>
+   </div></div></div>
+   <p></p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.6.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.6.1 System V init: последовательность команд запуска</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.6.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.6.2 Ферма ссылок System V init</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.6.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.6.3 run-parts</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.6.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">6.6.4 Управление System V init</span></h4>
+    </div></div></div>
+    <p></p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.7"> </a>6.7 Выключение вашей системы</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.8"> </a>6.8 Файловая система на диске в оперативной памяти для начальной инициализации</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06.9"> </a>6.9 Аварийная загрузка в режиме с одним пользователем</h3>
+   </div></div></div>
+   <p></p>
+  </div>
+   
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

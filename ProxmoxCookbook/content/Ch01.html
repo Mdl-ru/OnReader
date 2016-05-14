@@ -1,0 +1,985 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 1. Установка Proxmox - Книга рецептов Proxmox</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="ProxmoxCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="up" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="prev" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="next" href="Ch02.html" title="Глава 2. Знакомство с графическим интерфейсом Proxmox"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 1. Установка Proxmox';
+PrevRef = 'index.html';
+UpRef = 'index.html';
+NextRef = 'Ch02.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 1. Установка Proxmox</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим следующие основы Proxmox:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Требования к аппаратным средствам</p>
+	 </li>
+	<li class="listitem">
+	 <p>Подготовку к установке</p>
+	 </li>
+	<li class="listitem">
+	 <p>Установку Proxmox на голом узле</p>
+	 </li>
+	<li class="listitem">
+	 <p>Установку Proxmox на Debian системы</p>
+	 </li>
+	<li class="listitem">
+	 <p>Подписки Proxmox</p>
+	 </li>
+	<li class="listitem">
+	 <p>Запрет подписок Proxmox</p>
+	 </li>
+	<li class="listitem">
+	 <p>Применение подписок Proxmox</p>
+	 </li>
+	<li class="listitem">
+	 <p>Установку репозитория пакетов Proxmox</p>
+	 </li>
+	<li class="listitem">
+	 <p>Поиск поддержки</p>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Установка Proxmox</a></span></dt>
+   <dd><dl>
+    <dt><span class="section"><a href="Ch01.html#Introduction">Введение</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Hardware_requirements">Требования к аппаратным средствам</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Preparing_for_installation">Подготовка к установке</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Installing_on_bare_metal">Установка Proxmox на голом узле</a></span></dt>
+    <dt><span class="section"><a href="Ch01.html#Installing_on_Debian">Установка Proxmox на Debian системы</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Proxmox_subscription">Подписки Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Disabling_subscription">Запрет подписок Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Applying_subscription">Применение подписок Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#SettingUp_Repository">Установка репозитория пакетов Proxmox</a></span></dt>
+	<dt><span class="section"><a href="Ch01.html#Seeking_support">Поиск поддержки</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+   </div></div></div>
+   <p><span class="term"><span class="emphasis"><em>Virtual Environment (VE)</em></span></span> (виртуальня среда) Proxmox 
+   является многоузловым кластерным <span class="term"><span class="emphasis"><em>гипервизором</em></span></span> 
+   с открытым исходным кодом, построенным на Debian Linux и способным работать на общедоступных аппаратных средствах, те самым 
+   устраняя любые блокировки вендора. Proxmox свободно доступен без каких-либо блокированных особенностей. 
+   Тем не менее, доступна лицензия подписного типа для доступности репозитория уровня предприятия для получения хорошо проверенных 
+   патчей и обновлений. Подписки рекомендуются для Proxmox среды промышленного уровня.</p>
+	  <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+		<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+		<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+		<p>Гипервизор представляет собой программное обеспечение или встроенное ПО, которое создает слой между естественным оборудованием и 
+		операционной системой для формирования виртуальной среды создания и запуска виртуальных машин. Гипервизор эмулирует функции 
+		физического оборудования для предоставления виртуальным машинам выглядеть аналогично физическим ресурсам.</p></td></tr></table>
+	  </div>
+
+   <p>Proxmox может быть настроен для работы в виртуальной среде всего нескольких узлов с виртуальными машинами или в среде с тысячами узлов. 
+   Поддерживая виртуальные машины KVM и OpenVZ на базе контейнеров, Proxmox VE является сегодня ведущим гипервизором. Proxmox имеет чрезвычайно 
+   активное сообщество готовое оказывать помощь любым бесплатным пользователям Proxmox. Кроме того, группа экспертов технической поддержки Proxmox 
+   в равной степени способно обрабатывать всех корпоративных пользователей с их критически важными виртуальными средами.</p>
+   <p>Как упоминалось ранее, Proxmox это мультиузловая среда, и это означает, что многие узлы могут образовывать единый кластер в 
+   котором виртуальная машина может быть перемещена на любой узел в кластере, тем самым делая возможной избыточную виртуальную среду. 
+   Весь Proxmox кластер может управляться через надежный <span class="term"><span class="emphasis"><em>графический интерфейс пользователя (GUI)</em></span></span>.
+   В Proxmox VE 3.4 через GUI только один кластер является управляемым.</p>
+   <p>Вот некоторые из примечательные особенности Proxmox VE:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Он обеспечивает мультиузловую кластерную среду для виртуализации. Ни один узел не выступает в качестве ведущего, 
+	 тем самым устраняя единую точку отказа.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Он обеспечивает <span class="term"><span class="emphasis"><em>высокую доступность (HA, High Availability)</em></span></span> виртуальных машин.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Он дает централизованное веб-управление и единый интерфейс для управления всем кластером.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Консоль может быть доступна через безопасные VNC, SPICE и HTML5 на основе noVNC.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Он обеспечивает поддержку многих источников аутентификации, таких как локальное применение <span class="term"><span class="emphasis"><em>Pluggable 
+	 Authentication (РАМ)</em></span></span>, Microsoft ADS и LDAP.</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>Proxmox cluster fie system (pmxcfs)</em></span></span> может быть использована для 
+	 для хранения файлов настройки для репликации в реальном времени на всех узлах с применением <span class="term"><span class="emphasis"><em>corosync</em></span></span>
+	 <a class="link" href="http://en.wikipedia.org/wiki/Corosync_%28project%29" target="_top">http://en.wikipedia.org/wiki/Corosync_%28project%29</a></p>
+	 </li>
+	 <li class="listitem">
+	 <p>Она обеспечивает ролевое управление разрешениями для объектов VMS, хранилищ, узлов, пулов и тому подобного.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>В отличие от SOAP, REST не является протоколом, но сочетает различные стандарты, такие как HTTP, JSON, XML и URI.
+	 Посетите <a class="link" href="http://www.restapitutorial.com" target="_top">http://www.restapitutorial.com</a> для информации о базирующемся на REST API.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Он предоставляет мощный встроенный межсетевой экран для хост- узлов и виртуальных машин.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Он обеспечивает миграцию виртуальных машин между физическими узлами приналичии общего хранилища или без него.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Он поддерживает типы систем хранения основного направления, такие как Ceph, NFS, ZFS, Gluster и ISCSI.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Он предоставляет регистрацию по всему кластеру.</p>
+	 </li>
+    </ul>
+    </div>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Hardware_requirements"> </a>Требования к аппаратным средствам</h3>
+   </div></div></div>
+   <p>Приведем здесь рекомендуемые конфигурации аппаратных средств для стабильно работающего кластера Proxmox:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>64-битный процессор Intel или Amd</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Материнская плата с поддержкой двух- или четырех- ядерного Intel VT или Amd-V</p>
+	 </li>
+	 <li class="listitem">
+	 <p>16ГБ памяти ОЗУ</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Две карты сетевых адаптеров (NIC, Network Interface Card)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>RAID контроллер с <span class="term"><span class="emphasis"><em> устройством резервной батареи (BBU, Battery Backup Unit)</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>Твердотельные диски (SSD, Solid State Drive)</em></span></span> для операционной системы или SSD для совместно используемого узла</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Ограждающее оборудование только в случае необходимости высокой доступности</p>
+	 </li>
+    </ul>
+    </div>
+	  <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+		<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+		<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+		<p>Для получения дополнительной информации об ограждающем оборудовании посетите
+		<a class="link" href="https://pve.proxmox.com/wiki/Fencing" target="_top">https://pve.proxmox.com/wiki/Fencing</a>.</p></td></tr></table>
+	  </div>
+	<p>Следующая таблица приводит список конфигурации узла сервера, который может быть использован в промышленной среде:</p>
+        <table rules="all" width="500" style="text-align:center" id="proxmox_production_hw">
+        <caption></caption><col width="40%"/><col width="60%"/><thead><tr valign="top">
+          <th>Потребность</th>
+          <th>Аппаратные средства</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p>Процессор/ ЦПУ</p></td>
+          <td><p>Intel Xeon E5-2630 v3 2.4ГГц</p></td>
+        </tr><tr valign="top">
+          <td><p>Материнская плата</p></td>
+          <td><p>Intel S2600CP2 Dual LGA2011</p></td>
+        </tr><tr valign="top">
+          <td><p>Оперативная память</p></td>
+          <td><p>Kingston 16 GB DDR3 Registered ECC</p></td>
+        </tr><tr valign="top">
+          <td><p>Источник питания</p></td>
+          <td><p>С резервированием</p></td>
+        </tr></tbody></table>
+	<p>Отметим, что пример конфигурации приводится исключительно для справки. Ваше требования будут варьироваться в зависимости 
+	от рабочей нагрузки и ожидаемой производительности. Регулируйте требования к оборудованию в соответствии с пониманием того, 
+	что большее число ядер в гипервизоре повысит производительность виртуальных машин также как более высокое значение тактовой 
+	частоты используемого процессора. При более высоком числе ядер между процессами может быть распределено большее число потоков (threads).</p>
+      <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Стоит упомянуть, что лучше выбрать процессор с бОльшим размером кэша для узла с большИм объемом памяти для минимизации доступа к 
+	    основной памяти и максимизации производительности каждого процессорного ядра.</p></td></tr></table>
+      </div>
+	<p>Proxmox является кластерным гипервизором. Для того, чтобы построить кластер требуется, как минимум, два узла. Для преследуемых этой 
+	книгой целей убедитесь что вы располагаете достаточным количеством компонентов для установки двух узлов при выборе оборудования.</p>
+	  <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+		<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+		<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+		<p>Для получения дополнительной информации по Proxmox посетите
+		<a class="link" href="http://www.proxmox.com/" target="_top">http://www.proxmox.com/</a>.</p></td></tr></table>
+	  </div>
+    <p>Хотя кластер Proxmox может быть установлен только на два узла, рекомендуется применять минимум три узла для промышленной среды.</p>
+	  <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+		<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+		<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+		<p>В кластере кворум устанавливается, как минимум тремя голосами. Каждый узел считается одним голосом. Благополучие кластера зависит 
+		от такой демократической системы, при которой побеждает большинство голосов. Так, в кластере из двух узлов при выходе из строя 
+		одного узла другой узел может подать только один голос, создавая неразрешимую ситуацию. В кластере с тремя узлами, при отказе одного 
+		узла, общее число голосов от оставшихся узлов составит два возможных голоса из трех. Таким образом, работа кластера продолжится. 
+		В любом случае, кластер из двух узлов не рекомендуется для промышленного кластера. Тем не менее, он все еще может быть создан с помощью 
+		инструкции доступной на <a class="link" href="https://pve.proxmox.com/wiki/TwoNode_High_Availability_Cluster" target="_top">https://pve.proxmox.com/wiki/TwoNode_High_Availability_Cluster</a>.</p></td></tr></table>
+	  </div>
+
+  </div>
+
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preparing_for_installation"> </a>Подготовка к установке</h3>
+   </div></div></div>
+   <p>После того, как необходимое оборудование собрано, в данном рецепте мы собираемся рассмотреть что нам подготовить перед установкой Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Для установки Proxmox мы собираемся применять установочный диск Proxmox VE. Вначале нам необходимо подготовить диск с установочным 
+   образом ISO Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Вот шаги по установке Proxmox:</p>
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+	   <p>Загрузите образ ISO Proxmox посетив <a class="link" href="http://proxmox.com/downloads/category/iso-images-pve" target="_top">http://proxmox.com/downloads/category/iso-images-pve</a></p>
+	  </li>
+	  <li class="listitem">
+	  <p>Воспользуйтесь вашей программой прожига для копирования ISO на DVD. {Прим. пер.: или, если не хотите следовать приводимой ниже 
+	   инструкции, примените одно из средств  для переноса ISO на флеш-носитель с сохранением возможности загрузки, например:
+	   <a class="link" href="http://unetbootin.github.io/" target="_top">http://unetbootin.github.io/</a>,
+	   <a class="link" href="http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows" target="_top">http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows</a>.} </p>
+	  </li>
+	  <li class="listitem">
+	   <p>Загрузите физический узел с подготовленного на предыдущем шаге диска для начала установки.</p>
+	  </li>
+     </ol>
+     </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Некоторые узлы не могут иметь ROM устройств, доступных для установки с диска. В таких случаях, можно установить Proxmox путем 
+   переноса образа ISO на флэш-накопитель USB. Обратите внимание, что для того, чтобы загрузиться с USB флеш-диска, ваша материнская плата 
+   должна поддерживать опцию загрузки с USB. Проверьте в BIOS {Прим.пер.: firmware} материнской платы, прежде чем приступать к следующим 
+   шагам. Если материнская плата не поддерживает опцию загрузки с USB, она также не сможет поддерживать внешнее USB ROM-устройство. В этом 
+   случае для продолжения лучше всего установить ROM диск в компьютер или воспользоваться новой материнской платой, если это возможно. 
+   Вот инструкции для переноса образа ISO на USB и его использования в качестве загрузочного диска:</p>
+   <p>В Windows воспользуйтесь следующими шагами:</p>
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+	   <p>Загрузите образ ISO Proxmox посетив <a class="link" href="http://proxmox.com/downloads/category/iso-images-pve" target="_top">http://proxmox.com/downloads/category/iso-images-pve</a></p>
+	  </li>
+	  <li class="listitem">
+	  <p>Переименуйте расширение загруженного ISO образа с .iso на .raw.</p>
+	  </li>
+	  <li class="listitem">
+	   <p>Загрузите и установите приложение записи образов USB с 
+	   <a class="link" href="https://github.com/downloads/openSUSE/kiwi/ImageWriter.exe" target="_top">https://github.com/downloads/openSUSE/kiwi/ImageWriter.exe</a>.</p>
+	  <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+		<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+		<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+		<p>В некоторых версиях Windows 7, предыдущее средство записи может не может работать. В этом случае, загрузите и установите ImageUSB с 
+	    <a class="link" href="http://www.osforensics.com/tools/write-usb-images.html" target="_top">http://www.osforensics.com/tools/write-usb-images.html</a>.
+		{Прим.пер.: или воспользуйтесь одним из любых других доступных средств.}</p></td></tr></table>
+	  </div>
+	  </li>
+	  <li class="listitem">
+	  <p>Пользуясь загруженным инструментом перенесите ISO образ на USB-устройство.</p>
+	  </li>
+	  <li class="listitem">
+	  <p>Вставьте USB носитель в USB порт физического узла и загрузитесь с USB носителя {Вы уже проверили, что firmware 
+	  материнской платы узла поддерживает загрузку с USB!}.</p>
+	  </li>
+     </ol>
+     </div>
+   <p>В Linux применяйте следующие шаги:</p>
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+	   <p>Загрузите образ ISO Proxmox посетив <a class="link" href="http://proxmox.com/downloads/category/iso-images-pve" target="_top">http://proxmox.com/downloads/category/iso-images-pve</a></p>
+	  </li>
+	  <li class="listitem">
+	  <p>Вставьте USB носитель в USB порт узла и найдите имя устройства с применением <span class="term"><strong class="userinput"><code>#fdisk</code></strong></span>
+	  Имя должно быть в формате <span class="term"><strong class="userinput"><code>/dev/XXX</code></strong></span>.</p>
+	  </li>
+	  <li class="listitem">
+	   <p>Примените следующую команду для копирования ISO на USB носитель. Будьте очень аккуратны при использовании устройства в имени 
+	   следующей команды. Неверное имя устройства уничтожит все данные на этом устройстве:
+	   <pre class="screen">
+#dd if=&lt;Proxmox ISO file&gt; of=/dev/XXX bs=1M
+	   </pre>
+	   </p>
+	  </li>
+	  <li class="listitem">
+	  <p>Перезагрузите узел с USB носителя для запуска установки {вы уже проверили, что firmware 
+	  материнской платы узла поддерживает загрузку с USB!}.</p>
+	  </li>
+     </ol>
+     </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Installing_on_bare_metal"> </a>Установка Proxmox на голом узле</h3>
+   </div></div></div>
+   <p>Процесс установки Proxmox полностью управляется графическим интерфейсом с помощью различных подсказок. В этом рецепте мы 
+   последуем следующими шагами в создании нашего первого узла Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Включите питание и загрузите физический узел, используя установочный диск или USB-носитель созданный нами в предыдущем рецепте. 
+   На следующий снимок экрана показывает как выглядит экран после загрузки:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0101.jpg"/> </div><br />
+    </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+	   <p>В главном окне установки после завершения процесса загрузки нажмите <span class="emphasis"><em></em></span> 
+	   для запуска установки.</p>
+	  </li>
+	  <li class="listitem">
+	  <p>В экране <span class="term"><strong class="userinput"><code>End User License Agreement (EULA)</code></strong></span>
+	  кликните согласие: <span class="term"><strong class="userinput"><code>Agree</code></strong></span>.</p>
+	  </li>
+	  <li class="listitem">
+	   <p>На данном шаге мы выбираем диск для установки на нем гипервизора. Начиная с Proxmox VE 3.4 была добавлена новая функция 
+	   для изменения файловой системы. После выбора <span class="term"><strong class="userinput"><code>Target Harddisk</code></strong></span>
+	   в выпадающем меню, выберите <span class="term"><strong class="userinput"><code>Options</code></strong></span>, чтобы 
+	   открыть диалоговое окно выбора <span class="term"><strong class="userinput"><code>Filesystem</code></strong></span>. 
+	   Следующий снимок экрана показывает экран выбора дисков с открытым диалоговым окном <span class="term"><strong class="userinput"><code>Filesystem</code></strong></span>:
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0102.jpg"/> </div><br />
+       </div>
+	   </p>
+	  </li>
+	  <li class="listitem">
+	  <p>Из ниспадающего меню <span class="term"><strong class="userinput"><code>Filesystem</code></strong></span> выберите 
+	  желаемую файловую систему. Выберите нужный размер файловой системы в <span class="term"><strong class="userinput"><code>hdsize</code></strong></span>.
+	  В версии 3.3 была добавлена поддержка для файловых систем <span class="term"><strong class="userinput"><code>ext3</code></strong></span>, 
+	  <span class="term"><strong class="userinput"><code>ext4</code></strong></span> и <span class="term"><strong class="userinput"><code>ZFS</code></strong></span>.
+	  Добавьте дополнительную информацию, такую как значения <span class="term"><strong class="userinput"><code>swapsize</code></strong></span>,
+	  <span class="term"><strong class="userinput"><code>maxroot</code></strong></span>,
+	  <span class="term"><strong class="userinput"><code>minfree</code></strong></span> и
+	  <span class="term"><strong class="userinput"><code>maxvz</code></strong></span> в соответствии с требованиями или оставьте их пустыми для 
+	  продолжения со значениями по умолчанию, затем кликните на <span class="term"><strong class="userinput"><code>Next</code></strong></span>.
+	  Следующая таблица описывает функции этих четырех параметров. Эти значения обычно являются альтернативными друг другу, что означает,
+	  что если введено значение для одного из этих параметров, значения для других параметров вычисляются автоматически:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="70%"/><thead><tr valign="top">
+          <th>Параметр</th>
+          <th>Функция</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>swapsize</code></strong></span></p></td>
+          <td><p>Определяет размер раздела подкачки. Существуют сложные формулы для расчета этого значения. Тем не менее, 
+		  как правило, оставляется в качестве значения по умолчанию.</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>maxroot</code></strong></span></p></td>
+          <td><p>Относится к максимальному размеру, который должен иметь корневой каталог.</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>minfree</code></strong></span></p></td>
+          <td><p>Относится к минимальному свободному пространству для выделения разделу pve.</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>maxvz</code></strong></span></p></td>
+          <td><p>Относится к максимальному пространству для выделения локальному хранилищу виртуальных машин.
+		  Путь по умолчанию для локального хранения виртуальных машин это 
+		  <span class="term"><strong class="userinput"><code>/var/lib/vz</code></strong></span></p></td>
+        </tr></tbody></table>
+	    <p>Следующий снимок экрана показывает поддерживаемые файловые системы после нажатия на ниспадающее меню:</p>
+        <div class="informalfigure"><div class="mediaobject">
+          <img src="figures/Fig0103.jpg"/> </div><br />
+        </div>
+	  </li>
+	  <li class="listitem">
+	  <p>После выбора диска для установки мы должны выбрать информацию по локализации, а именно 
+	  <span class="term"><strong class="userinput"><code>Country</code></strong></span>,
+	  <span class="term"><strong class="userinput"><code>Time Zone</code></strong></span> и
+	  <span class="term"><strong class="userinput"><code>Keyboard Layout</code></strong></span> на основании выбираемого языка. Затем
+	  нажмите <span class="term"><strong class="userinput"><code>Next</code></strong></span>. Следующий экранный снимок отобразит 
+	  экран локализации:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0104.jpg"/> </div><br />
+      </div>
+	  </li>
+	  <li class="listitem">
+	  <p>Введите и подтвердите пароль для пользователя root. Затем введите адрес е-mail, на который отсылать все уведомления 
+	  кластера Proxmox. Нажмите на <span class="term"><strong class="userinput"><code>Next</code></strong></span></p>
+	  </li>
+	  <li class="listitem">
+	  <p>На данном шаге вы должны ввести имя хоста и сетевую информацию, такую как <span class="term"><strong class="userinput"><code> IP Address</code></strong></span>,
+	  <span class="term"><strong class="userinput"><code>Gateway</code></strong></span>, <span class="term"><strong class="userinput"><code>DNS Server</code></strong></span> 
+	  и тому подобное. Введите необходимую информацию для вашей среды, азатем нажмите <span class="term"><strong class="userinput"><code>Next</code></strong></span>.
+	  Следующий экранный снимок показывает экран с сетевой информацией:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0105.jpg"/> </div><br />
+      </div>
+	  </li>
+	  <li class="listitem">
+	  <p>На данный момент была собрана вся необходимая информация и была запущена основная установка. После ее выполнения удалите 
+	  установочный диск или носитель USB и кликните на <span class="term"><strong class="userinput"><code>Reboot</code></strong></span>.</p>
+	  </li>
+     </ol>
+     </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Следуйте шагам с 1 по 7 на втором узле. Для Proxmox кластера минимально требуются два узла. Дополнительная информация по настройке 
+   кластера доступна в <a class="link" href="Ch03.html" target="_top">Главе 3. Управление кластером и виртуальными машинами</a>.</p>
+</div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Installing_on_Debian"> </a>Установка Proxmox на Debian системы</h3>
+   </div></div></div>
+   <p>Хотя рекомендуется установка Proxmox на естественном голом узле, время от времени может оказаться необходимым установить Proxmox 
+   на существующем узле Debian. В данном рецепте мы увидим как устанавливать Proxmox VE на Debian. Обратите внимание, что Proxmox может быть 
+   установлена только на 64-разрядном оборудовании и 64-разрядной операционной системе.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Установите Debian следуя указаниям официального сайта Debian на <a class="link" href="http://www.debian.org" target="_top">http://www.debian.org</a>.
+   Перед установкой Proxmox на узле Debian, убедитесь, что имя хоста может быть разрешено. Проверьте имя хоста, используя следующую команду:</p>
+	   <pre class="screen">
+#nano /etc/hosts
+	   </pre>
+   <p>Вы должны получить следующие записи:</p>
+	   <pre class="screen">
+127.0.0.1 localhost.localdomain localhost
+172.16.0.71 pmx1.domain.com pmx1 pvelocalhost
+	   </pre>
+   <p>Если записи утрачены, введите соответствующий IP адрес ассоциируемый с именем хоста узла. Запись 
+   <span class="term"><code>epel.repo</code></span> должна присутствовать в конце строки.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Примените следующие шаги для установки Proxmox на системуDebian:</p>
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Добавьте репозиторий Proxmox VE в список источника следующим образом:</p>
+	   <pre class="screen">
+#nano /etc/apt/sources.list
+deb http://ftp.ca.debian.org/debian wheezy main contrib
+
+#PVE repository for installation
+deb http://download.proxmox.com/debian wheezy pve
+
+#PVE security updates
+deb http://security.debian.org/ wheezy/updates main contrib
+	   </pre>
+      <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Из-за ошибки в ОС Debian, <span class="term"><code>apt-get</code></span> может отображать ошибку, не найдя 
+		<span class="term"><code>/binary-i386</code></span> с сообщением об ошибке 
+		<span class="term"><code>Unable to find expected entry 'pve/binary-i386/packages'</code></span>. Эта ошибка может возникнуть, 
+		даже когда установлен 64-разрядная операционная система Debian. В таких случаях, изменить запись репозитория PVE следующим образом:</p>
+	   <pre class="screen">
+deb [arch=amd64] http://download.proxmox.com/debian wheezy pve
+	   </pre>
+		</td></tr></table>
+      </div>
+	 </li><li class="listitem">
+      <p>Добавьте ключ репозитория Proxmox VE применив следующую команду:</p>
+	   <pre class="screen">
+#wget –O-http://download.proxmox.com/debian/key.asc | apt-key add –
+	   </pre>
+	 </li><li class="listitem">
+      <p>Обновите репозиторий использовав следующую команду:</p>
+	   <pre class="screen">
+#apt-get update
+	   </pre>
+	 </li><li class="listitem">
+      <p>Обновите операционную систему с применением следующей команды:</p>
+	   <pre class="screen">
+#apt-get dist-upgrade
+	   </pre>
+	 </li><li class="listitem">
+      <p>Установите ядро Proxmox VE:</p>
+	   <pre class="screen">
+#apt-get install pve-firmware pve-kernel-2.6.32-37-pve
+	   </pre>
+	 </li><li class="listitem">
+      <p>Установите заголовки ядра:</p>
+	   <pre class="screen">
+#apt-get install pve-header-2.6.32-37-pve
+	   </pre>
+	 </li><li class="listitem">
+      <p>Убедитесь, что ядро Proxmox выбрало загрузчиком <span class="term"><code>grub2</code></span></p>
+	 </li><li class="listitem">
+      <p>Перезагрузите узел для активации нового ядра Proxmox VE.</p>
+	 </li><li class="listitem">
+      <p>Проверьте работы ядра чтобы убедиться, что загружено необходимое ядроProxmox VE:</p>
+	   <pre class="screen">
+#uname –a
+	   </pre>
+	 </li><li class="listitem">
+      <p>Проверьте настройку <span class="term"><code>grub2</code></span> используя следующую команду:</p>
+	   <pre class="screen">
+#update-grub
+	   </pre>
+	 </li><li class="listitem">
+      <p>Установите пакеты Proxmox VE:</p>
+	   <pre class="screen">
+#apt-get install Proxmox-ve-2.6.32 ntp ssh lvm2 postfix ksmcontrol-daemon vzprocps open-iscsi bootlogd
+	   </pre>
+	 </li><li class="listitem">
+      <p>В процессе установки примите предложения по устранению <span class="term"><strong class="userinput"><code>Exim</code></strong></span> 
+	  и <span class="term"><strong class="userinput"><code>Postfix</code></strong></span>, установленные ранее. 
+	  <span class="term"><strong class="userinput"><code>Exim</code></strong></span>, если потребуется, может быть установлены позже.</p>
+	 </li><li class="listitem">
+      <p>Перезагрузите Proxmox VE после завершения установки.</p>
+	 </li>
+	 </ol>
+	 </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Следуйте шагам с 1 по 13 для установки второго узла. Для Proxmox кластера минимально требуются два узла. Мы сделаем более хороший 
+   обзор графического интерфейса Proxmox в <a class="link" href="Ch02.html" target="_top">Главе 2. Знакомство с графическим интерфейсом Proxmox</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Proxmox_subscription"> </a>Подписки Proxmox</h3>
+   </div></div></div>
+   <p>Proxmox VE сам по себе свободен для применения. Не существует абсолютно никаких платежей включенных в загрузку простого 
+   образа ISO и установки полнофункционального кластера Proxmox без оплаты лицензий или подписок. Тем не менее, существует опция 
+   подписки Proxmox для поддержки проекта, которая делает доступным репозиторий уровня предприятия. Не существует различий функционала 
+   для Proxmox версий Free (свободная) и Subscription (подписка). Они одни и те же. Разница заключается между типом выпусков, 
+   обновлений и исправлений, которые они получают.</p>
+      <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Пакеты из репозитория предприятия проходят сквозь дополнительный уровень безопасности и тестирования. Таким образом, 
+		subscription (подписка) рекомендуется для Proxmox VE производственного уровня.</p></td></tr></table>
+      </div>
+   <p>Это не следует путать с тем фактом, что кластер Proxmox построенный без подписки и не достаточно стабилен для применения. 
+   Новые пакеты, как правило, выпускаются вначале через не подписной репозиторий. Такие же пакеты выкладываются через репозиторий 
+   уровня предприятия позже. Эта задержка позволяет команде Proxmox поставить точку и исправить любые затяжные ошибки или дефекты 
+   в пакете. Из-за ошибок кластер, работающий с критически важными виртуальными машинами, может столкнуться с неприемлемыми простоями, 
+   которые не повлияют на среды меньшего размера,которые в состоянии выдержать время простоя.</p>
+   <p>Существует четыре уровня подписок с различной стоимостью, такие как 
+   <span class="term"><strong class="userinput"><code>COMMUNITY</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>BASIC</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>STANDARD</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>PREMIUM</code></strong></span>. За дополнительной информацией о подписках Proxmox
+   обращайтесь на <a class="link" href="https://www.proxmox.com/proxmox-ve/pricing" target="_top">https://www.proxmox.com/proxmox-ve/pricing</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Disabling_subscription"> </a>Запрет подписок Proxmox</h3>
+   </div></div></div>
+   <p>Только что установленный Proxmox VE без подписки высветит после входа в Proxmox GUI сообщение, показанное на следующем 
+   сохраненном экране:</p>
+   <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0106.jpg"/> </div><br />
+    </div>
+   <p>Это происходит потому, что по умолчанию разрешен репозиторий уровня предприятия. Если вы решите не получать никакую подписку
+   Proxmox и продолжать использовать полностью свободную версию, вы должны запретить репозиторий уровня предприятия.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Зарегистрируйтесь на узле Proxmox через консоль SSH. Репозиторий уровня предприятия может быть отключен только из командной строки.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Репозиторий уровня предприятия находится в списке 
+   <span class="term"><code>/etc/apt/sources.list.d/pve-enterprise.list</code></span>. Мы должны скрыть его строкой комментария для 
+   запрета этого репозитория:</p>
+	   <pre class="screen">
+# nano /etc/apt/sources.list.d/pve-enterprise.list
+#deb https://enterprise.proxmox.com/debian wheezy pve-enterprise	   </pre>
+   <p>Добавьте репозиторий Proxmox без подписки следующим образом:</p>
+	   <pre class="screen">
+# nano /etc/apt/sources.list
+deb http://download.proxmox.com/debian wheezy pve-no-subscription
+	   </pre>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Никакие перезапуск служб или перезагрузка не требуются для применения изменений. Выйдите из Proxmox GUI и снова войдите, 
+   чтобы увидеть что изменения были применены правильно. Окно сообщения &quot;no subscription&quot; не должно всплывать после входа в систему.
+   Подписками можно управлять в графическом интерфейсе Proxmox на вкладке <span class="term"><strong class="userinput"><code>Subscription</code></strong></span>.
+   Вот снимок экрана узла Proxmox без подписки:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0107.jpg"/> </div><br />
+    </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Applying_subscription"> </a>Применение подписок Proxmox</h3>
+   </div></div></div>
+   <p>Для активации подписки необходимо загрузить на узел Proxmox ключ подписки, если вы выбрали подписку Proxmox любого типа.
+   Ключ подписки высылается электронным письмом после успешной оплаты. Ключ может может быть загружен через графический интерфейс Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Зарегистрируйтесь в Proxmox GUI с помощью доступа через ссылку в браузере и введите учетные данные администратора. Имя пользователя 
+   по умолчанию root, а пароль тот же, что был введен при установке: <span class="term"><code>https://&lt;pmx_node_IP&gt;:8006</code></span></a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+     <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>После регистрации в Proxmox GUI нажмите на узел, к которому будет применяться подписка.</p>
+	 </li><li class="listitem">
+      <p>Выберите закладку <span class="term"><strong class="userinput"><code>Subscription</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Нажмите на кнопку <span class="term"><strong class="userinput"><code>Upload Subscription Key</code></strong></span>
+	  чтобы открыть диалоговое поле ввода ключа, как показано на сохраненном экране ниже:.</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0108.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выполните copy/pust ключа подписки из полученного электронного письма в диалоговое поле ключа, затем нажмите 
+	  <span class="term"><strong class="userinput"><code>OK</code></strong></span>.</p>
+	 </li>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Check</code></strong></span>. На данный момент 
+	  ключ будет проверен Proxmox на предмет его правильности. После завершения активации вы должны увидеть следующий вывод:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0109.jpg"/> </div><br />
+      </div>
+	  
+	 </li>
+	 </ol>
+	 </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+      <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Если был введен недопустимый ключ, то отображаемое на дисплее должно быть похоже на следующее:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0110.jpg"/> </div><br />
+    </div>
+   <p>В этом случае просто загрузите правильный ключ и активируйте его снова. Также вы можете увидеть замечание о недопустимости ключа 
+   в случае, когда ключ уже был активирован для другого узла, который больше не обслуживается. В этом случае обратитесь в Proxmox 
+   или к третьему поставщику лицензии, у которого она была приобретена сзапросом повторного выпуска той же лицензии. Затем просто
+   кликните кнопку <span class="term"><strong class="userinput"><code>Check</code></strong></span> для повторной активации ключа.
+   Каждый ключ жестко программируется с каждым ID сервера. Ключ должен быть перевыпущен Promox для его применения.</p>
+      <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Пожалуйста, имейте в виду, что, как только ключ переиздан, он больше не будет работать на предыдущем узле, на котором он 
+		был активирован. Если вы попросили переиздать лицензию по ошибке, попросите переиздать его снова и нажмите на кнопку 
+		<span class="term"><strong class="userinput"><code>Check</code></strong></span> на предыдущем узле.</p></td></tr></table>
+      </div>
+
+
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="SettingUp_Repository"> </a>Установка репозитория пакетов Proxmox</h3>
+   </div></div></div>
+   <p>Proxmox VE предлагает три главных репозитория:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="20%"/><col width="20%"/><col width="60%"/><thead><tr valign="top">
+          <th>Репозиторий</th>
+          <th>Подписка</th>
+          <th>Применение</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Enterprise</code></strong></span></p>
+		  <p>{уровня предприятия}</p></td>
+          <td><p>Требуется</p></td>
+          <td><p>В основном используется в промышленных узлах Proxmox. Пакеты в этом хранилище проходят дополнительные контроль, 
+		  исправление ошибок и тестирование.</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>No-Subscription</code></strong></span></p>
+		  <p>{без подписки}</p></td>
+          <td><p>Не требуется</p></td>
+          <td><p>Применяется для обучения, тестирования и домашних узлов кластера Proxmox. Пакеты в этом репозитории проходят 
+		  через первичное тестирование на ошибки и достаточно стабильны чтобы быть ссылками в качестве конечного выпуска.</p></td>
+		  </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Test</code></strong></span></p>
+		  <p>{тестовый}</p></td>
+          <td><p>Не требуется</p></td>
+          <td><p>Применяется только для тестирования и разработки Proxmox. Пакеты вэтом репозитории обычно самые последние и
+		  все еще находятся в стадии окончательных фаз цикла выпуска таких, как бета- тестирование, и кандидат выпуска. Пакеты 
+		  в данном репозитории могут содержать ряд ошибок и проблем. Пользователи данного репозитория поощряются разработчиками 
+		  в распространении сообщений об ошибках.</p></td>
+        </tr></tbody></table>
+   <p>Местоположение и содержание файла источника <span class="term"><strong class="userinput"><code>Enterprise 
+   Repository</code></strong></span> следующее:</p>
+	   <pre class="screen">
+#cat /etc/apt/sources.list.d/pve-enterprise.list
+deb https://enterprise.proxmox.com/debian wheezy pve-enterprise
+	   </pre>
+   <p>Местоположение и содержание файла источника <span class="term"><strong class="userinput"><code>No-Subscription 
+   Repository</code></strong></span> следующее:</p>
+	   <pre class="screen">
+#cat /etc/apt/sources.list
+deb http://ftp.ca.debian.org/debian wheezy main contrib
+deb http://download.proxmox.com/debian wheezy pve-no-subscription
+deb http://security.debian.org / wheezy/updates main contrib
+	   </pre>
+   <p>Proxmox предлагает <span class="term"><strong class="userinput"><code>Test Repository</code></strong></span> чтобы 
+   дать возможность пользователям попробовать новые свойства или пакеты. Все новые свойства Proxmox выпускаются в тестовом 
+   репозитории до того, как они станут доступными в репозиторях без подписки и уровня предприятия. Пакеты в тестовом репозитории 
+   не прошли полное тестирование и могут содержать ошибки. По этой причине данный репозиторий никогда не должен применяться в 
+   кластере промышленного уровня. По умолчанию тестовый репозиторий не доступен.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Зарегистрируйтесь на узле Proxmox через консоль или SSH. Для подключения тестового репозитория понадобится отредактировать 
+   с применением CLI файл источников репозитория.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Используйте следующие этапы для установки репозитория пакетов Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+	  <p>Откройте файл источников репозитория с помощью любого любимого текстового редактора:</p>
+	   <pre class="screen">
+#nano /etc/apt/sources.list
+	   </pre>
+	 </li><li class="listitem">
+	  <p>Сделайте необходимые изменения чтобы записи выглядели похожими на следующие:</p>
+	   <pre class="screen">
+deb http://ftp.debian.org/debian wheezy main contrib
+deb http://download.proxmox.com/debian wheezy pvetest
+deb http://security.debian.org/ wheezy/updates main contrib
+	   </pre>
+	 </li><li class="listitem">
+	  <p>Сохраните файл и выйдите из редактора.</p>
+	 </li><li class="listitem">
+	  <p>Выполните следующую команду для обновления репозиториев:</p>
+	   <pre class="screen">
+#apt-get update
+	   </pre>
+	 </li>
+	 </ol>
+	 </div>
+	 
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Как правило, объявление о наличии нового пакета осуществляется на официальном форуме Proxmox 
+   (<a class="link" href="http://forum.proxmox.com" target="_top">http://forum.proxmox.com</a>). Название пакета или информация о версии 
+   содержатся в объявлении. Если вы хотите информацию по пакету, просто спросить об этом на форуме. Если у вас есть необходимая информация, 
+   просто выполните команду <span class="term"><code>apt-get</code></span> для установки пакета через CLI:.</p>
+	   <pre class="screen">
+#apt-get install &lt;package_name&gt;
+	   </pre>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>В рамках репозиториев Enterprise, No-Subscription и Test существует два устаревших репозитория, которые больше не поддерживаются и 
+   не обновляются:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Outdated stable repository (pve)</code></strong></span>:
+	 Данный репозиторий прекратил получение обновлений после начального выхода Proxmox VE 3.1:</p>
+	   <pre class="screen">
+/etc/apt/sources.list
+deb http://ftp.debian.org/debian wheezy main contrib
+deb http://download.proxmox.com/debian wheezy pve
+deb http://security.debian.org/wheezy/updates main contrib
+	   </pre>
+      <p>Если вы обновляете Proxmox VE с 2.x на 3.x, вторая запись в <span class="term">/etc/apt/sources.list<code>Outdated stable repository (pve)</code></span>
+	  должна быть изменена с <span class="term"><code>wheezy pve</code></span> на 
+	  <span class="term"><code>wheezy pve-nosubscription</code></span>.</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Outdated Proxmox VE 2.x stable repository (squeeze pve)</code></strong></span>:
+	 Чтобы иметь стабильный узел Proxmox настоятельно рекомендуется модернизировать и обновить Proxmox VE на последний стабильный выпуск.</p>
+	   <pre class="screen">
+/etc/apt/sources.list
+deb http://ftp.debian.org/debian squeeze main contrib
+deb http://download.proxmox.com/debian squeeze pve
+deb http://security.debian.org/squeeze/updates main contrib
+	   </pre>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Seeking_support"> </a>Поиск поддержки</h3>
+   </div></div></div>
+   <p>Как отмечалось в начале данной главы, Proxmox имеет активное сообщество пользователей готовых оказать помощь любому нуждающемуся 
+   в ней. Существует несколько способов которыми новый пользователь Proxmox может обратиться за помощью и поддержкой для обучения и 
+   расширения знания о Proxmox VE:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="50%"/><col width="50%"/><thead><tr valign="top">
+          <th>Помощь и поддержка</th>
+          <th>Свободная/ подписка</th>
+        </tr></thead><tr valign="top">
+          <td><p>Форум</p></td>
+          <td><p>Свободно</p></td>
+        </tr><tr valign="top">
+          <td><p>Вики/ Документация</p></td>
+          <td><p>Свободно</p></td>
+        </tr><tr valign="top">
+          <td><p>Портал пользователей и билеты</p></td>
+          <td><p>Требует подписки</p></td>
+        </tr><tr valign="top">
+          <td><p>Список рассылки Promox</p></td>
+          <td><p>Свободно</p></td>
+        </tr><tr valign="top">
+          <td><p>Отслеживание ошибок Promox</p></td>
+          <td><p>Свободно</p></td>
+        </tr></tbody></table>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Форум </span></h4>
+   </div></div></div>
+   <p>Официальный форум Proxmox является местом сбора для новичков или экспертов для получения или предоставления помощи от сообщества 
+   Proxmox. Это также обширный информационный ресурс последних вопросов и решений многих проблем. Некоторые из сотрудников Proxmox также 
+   проводят значительное количество времени в этом форуме, чтобы предложить помощь за пределами своих должностных обязанностей. Существует 
+   массив экспертов Proxmox готовых помочь, не ожидая ничего взамен. Это единственное место поиска поддержки для пользователей Proxmox 
+   Free и с подпиской на уровне COMMUNITY. Для доступа к официальному форуму посетите Proxmox
+   <a class="link" href="http://forum.proxmox.com" target="_top">http://forum.proxmox.com</a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Вики/ Документация </span></h4>
+   </div></div></div>
+   <p>Proxmox сайт Wiki содержит большое количество информации об установке, настройке и управлении кластеров Proxmox. Вся документация 
+   написана в очень доступной для понимания форме с большим количеством иллюстраций, где это возможно. Использование страницы 
+   Proxmox Wiki является полностью бесплатным и не требует регистрации. Посетите 
+   <a class="link" href="https://pve.proxmox.com/wiki/Main_Page" target="_top">https://pve.proxmox.com/wiki/Main_Page</a>
+   для знокамства с официальной документацией Proxmox.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Портал пользователей и билеты </span></h4>
+   </div></div></div>
+   <p>Пользовательский портал доступен только для пользователей с уровней подписки BASIC, STANDARD и PREMIUM. Билеты подписки должны 
+   открываться на пользовательском портале <a class="link" href="https://my.proxmox.com/" target="_top">https://my.proxmox.com/</a> 
+   для получения технической поддержки напрямую от персонала Proxmox.</p>
+   <p>В зависимости от уровня подписки отличается число билетов, которое может быть открыто. Отклики гарантируются в течение одного
+   бизнес- дня. Ознакомьтесь с различными уровнями поддержки для подписок посетив
+   <a class="link" href="https://www.proxmox.com/proxmox-ve/pricing" target="_top">https://www.proxmox.com/proxmox-ve/pricing</a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Список рассылки Promox </span></h4>
+   </div></div></div>
+   <p>Существует два различных списка почтовых рассылок доступных в Proxmox:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>User mailing list:</code></strong></span>: Этот список почтовых рассылок 
+	 имеет адресатами обычных пользователей Proxmox для задания технических вопросов (
+	 <a class="link" href="http://pve.proxmox.com/cgi-bin/mailman/listinfo/pve-user" target="_top">http://pve.proxmox.com/cgi-bin/mailman/listinfo/pve-user</a>)</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Developer mailing list:</code></strong></span>: Этот список почтовых рассылок 
+	 предназначен для разработчиков, которые интересуются участием в вопросах, связанных с обязательствами и разработкой связанными с кодом (
+	 <a class="link" href="http://pve.proxmox.com/cgi-bin/mailman/listinfo/pve-devel" target="_top">http://pve.proxmox.com/cgi-bin/mailman/listinfo/pve-devel</a>)</p>
+	 </li>
+   </ul>
+   </div>
+
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отслеживание ошибок Promox </span></h4>
+   </div></div></div>
+   <p>Трекер ошибок Proxmox доступен для представления и рассмотрения каких-либо ошибок, найденных в Proxmox в течение повседневного 
+   применения (<a class="link" href="https://bugzilla.proxmox.com/" target="_top">https://bugzilla.proxmox.com/</a>). Он также может быть 
+   использован для передачи запросов на новую функциональность. Не все функции будут добавлены в Proxmox, но разработчики Proxmox 
+   мыслят намного вперед и применяют время назначения и основной поток функциональности, чтобы сделать Proxmox VE еще лучше.</p>
+      <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Трекер ошибок Proxmox НЕ используется для задания технических вопросов или поиска поддержки любого вида.</p></td></tr></table>
+      </div>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

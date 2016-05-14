@@ -1,0 +1,23 @@
+﻿[root@ceph-node1 /]# ceph osd crush rule list
+[
+    "data",
+    "metadata",
+    "rbd"]
+[root@ceph-node1 /]#
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# ceph osd crush rule dump data
+{ "rule_id": 0,
+  "rule_name": "data",
+  "ruleset": 0,
+  "type": 1,
+  "min_size": 1,
+  "max_size": 10,
+  "steps": [
+         { "op": "take",
+           "item": -1,
+           "item_name": "default"},
+         { "op": "chooseleaf_firstn",
+           "num": 0,
+           "type": "host"},
+         { "op": "emit"}]}
+[root@ceph-node1 /]#

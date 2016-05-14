@@ -1,0 +1,270 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Дополнения. Реализация облачного хранилища с OpenStack Swift.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing">
+   <meta name="Description" content="Дополнения. Реализация облачного хранилища с OpenStack Swift.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="ToC.htm">Реализация облачного хранилища с OpenStack Swift.</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<h2 id="Appendix" align="right">Дополнения</h2>
+<hr />
+<h1 id="Appendix_" align="right"></h1>
+<p>
+Данное приложение предоставляет подробную информацию о наборе команд, которые могут быть запущены из сеанса Swift CLI.
+Эти командымогут быть использованы для операций CRUD.
+</p>
+
+
+<h2 id="App01">Команды</h2>
+<p>
+В Swift CLI можно выполнять следующие команды: <code>list</code>, <code>stat</code>, <code>post</code>, <code>upload</code>, <code>download</code> и <code>delete</code>.
+Каждая команда имеет подробную справку, которая может быть отображена путем выполнения команды <code> swift command –h</code>, например <code> swift list –h</code>.
+</p><p>
+</p>
+
+
+<h2 id="App02">List</h2>
+<p>
+Команда <code>list</code> используется для перечисления контейнеров для учетной записи или объектовдля контейнера.
+Данный подраздел объясняет использование команды <code>list</code>.
+<br /><strong><code>
+# swift list &lt;container&gt; -A Auth_URL –U User –K Key --os-username=&lt;authuser-name&gt; --os-password=&lt;auth-password&gt; --os-tenant-id=&lt;auth-tenantid&gt; --os-tenant-name=&lt;auth-tenant-name&gt; --os-auth-url=&lt;auth-url&gt; --osauth-token=&lt;auth-token&gt; --os-storage-url=&lt;storage-url&gt; --os-regionname=&lt;region-name&gt; --os-service-type=&lt;service-type&gt; --os-endpointtype=&lt;endpoint-type&gt; --prefix=PREFIX
+</code></strong>
+</p>
+
+<h3 id="App0201">Примеры</h3>
+<p>
+С использованием следующей команды вы можете перечислить контейнеры с информацией об их размере:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 list --lh
+<br /><br />
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 list –long
+</code></strong>
+</p><p>
+С использованием следующей команды вы можете перечислить контейнеры с информацией об их размере, имеющими префикс <code>con1</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 list --lh --prefix con1
+</code></strong>
+</p><p>
+С использованием следующей команды вы можете перечислить контейнеры с информацией об их размере, имеющими префикс <code>con1</code> и расположенными в регионе <code>regionOne</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 list --lh --prefix con1 --os-region-name=regionOne
+</code></strong>
+</p>
+
+
+<h2 id="App03">Stat</h2>
+<p>Команда <code>stat</code> используется для отображения информации об учетных записях, контейнерах или объектах.
+Данный подраздел объясняет использование команды <code>stat</code>.
+<br /><strong><code>
+# swift stat &lt;container&gt; &lt;object&gt; -A Auth_URL –U User –K Key --osusername=&lt;auth-user-name&gt; --os-password=&lt;auth-password&gt; --os-tenantid=&lt;auth-tenant-id&gt; --os-tenant-name=&lt;auth-tenant-name&gt; --os-authurl=&lt;auth-url&gt; --os-auth-token=&lt;auth-token&gt; --os-storage-url=&lt;storageurl&gt; --os-region-name=&lt;region-name&gt; --os-service-type=&lt;service-type&gt; --os-endpoint-type=&lt;endpoint-type&gt;
+</code></strong>
+</p>
+
+<h3 id="App0301">Примеры</h3>
+<p>
+С помощью следующей команды вы можете отобразить метаданные учетной записи:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin: user1 -K t1 stat
+</code></strong>
+</p><p>
+С помощью следующей команды вы можете отобразить метаданные контейнера <code>container2</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 stat container2
+</code></strong>
+</p><p>
+С помощью следующей команды вы можете отобразить метаданные учетной записи в регионе <code>regionOne</code> в длинном формате отображения с итоговыми значениями:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 stat --lh --os-region-name=regionOne
+</code></strong>
+</p>
+
+
+<h2 id="App04">Post</h2>
+<p>Команда <code>post</code> используется для обновления метаданных информации для учетных записей, контейнеров или объектов.
+Данный подраздел объясняет использование команды <code>post</code>.
+<br /><strong><code>
+# swift post &lt;container&gt; &lt;object&gt; --read-acl &lt;acl&gt; --write-acl &lt;acl&gt; --meta &lt;name:value&gt; --header &lt;header&gt; -A Auth_URL –U User –K Key --osusername=&lt;auth-user-name&gt; --os-password=&lt;auth-password&gt; --os-tenantid=&lt;auth-tenant-id&gt; --os-tenant-name=&lt;auth-tenant-name&gt; --os-authurl=&lt;auth-url&gt; --os-auth-token=&lt;auth-token&gt; --os-storage-url=&lt;storageurl&gt; --os-region-name=&lt;region-name&gt; --os-service-type=&lt;service-type&gt; --os-endpoint-type=&lt;endpoint-type&gt;
+</code></strong>
+</p>
+
+<h3 id="App0401">Примеры</h3>
+С помощью следующей команды обновите метаданные <code>read-acl</code> для контейнера <code>container1</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 post container1 --read-acl=account1
+</code></strong>
+</p><p>
+С помощью следующей команды добавьте метаданные <code>Size:Large</code> и <code>Color:Blue</code> для контейнера <code>container2</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 post container2 -m Size:Large -m Color:Blue
+</code></strong>
+</p><p>
+С помощью следующей команды обновите метаданные заголовка <code>content-type</code> как text/plain в контейнере <code>container3</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 post container3 -H &quot;content-type:text/plain&quot;
+</code></strong>
+</p><p>
+Обновите метаданные <code>read-acl</code> для контейнера <code>container4</code>, осуществив доступ через регион <code>regionOne</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 post container4 --read-acl=account1 --os-region-name=regionOne
+</code></strong>
+</p>
+
+
+<h2 id="App05">Upload</h2>
+<p>Команда <code>upload</code> используется для пересылки файлов и каталогов в определенный контейнер.
+Данный подраздел объясняет использование команды <code>upload</code>.
+<br /><strong><code>
+# swift upload &lt;container&gt; &lt;file_or_directory&gt; --changed --segmentsize &lt;size&gt; --segment-container &lt;container&gt; --leave-segments --header &lt;header&gt; -A Auth_URL –U User –K Key --os-username=&lt;auth-user-name&gt; --ospassword=&lt;auth-password&gt; --os-tenant-id=&lt;auth-tenant-id&gt; --os-tenantname=&lt;auth-tenant-name&gt; --os-auth-url=&lt;auth-url&gt; --os-auth-token=&lt;authtoken&gt; --os-storage-url=&lt;storage-url&gt; --os-region-name=&lt;region-name&gt; --os-service-type=&lt;service-type&gt; --os-endpoint-type=&lt;endpoint-type&gt;
+</code></strong>
+</p>
+
+<h3 id="App0501">Примеры</h3>
+<p>
+С использованием следующей команды перешлите объект <code>key.txt</code> в контейнер <code>container1</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 upload container1 key.txt
+</code></strong>
+</p><p>
+С использованием следующей команды перешлите множество объектов (<code>key1.txt</code>, <code>key2.txt</code> и <code>key3.txt</code>) в контейнер <code>container1</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 upload container1 key1.txt key2.txt key3.txt
+</code></strong>
+</p><p>
+Перешлите объект <code>key.txt</code> в контейнер <code>container2</code> с использованием размера сегмента (<code>segment-size</code>) 100 Байт.
+Swift имеет ограничение на объект, установленное по умолчанию в значение 5ГБайт.
+Файлы бОльшего размера могут пересылаться с использованием параметра <code>segment-size</code>.
+Объект будет сохраняться в нескольких сегментах в хранилище объектов Swift.
+В данном примере каждый созданный объект будет иметь размер 100 Байт и будет переслано множество таких сегментов, определяемое размером объекта.
+Параметр <code>–changed</code> используется для того, чтобы файл был перемещен только в случае если он был изменен с момента последней пересылки, как это делается в следующей команде:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 upload container2 key.txt --changed --segment-size=100
+</code></strong>
+Перешлите объект <code>key.txt</code> в контейнер <code>container3</code> с использованием размера сегмента (<code>segment-size</code>) 100 Байт.
+Также мы неявно описываем каталог сегмента <code>seg_container3</code> в который будут перемещаться сегменты.
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 upload container3 key.txt --segment-size=100 --segment-container=seg_container3
+</code></strong>
+</p><p>
+Перешлите объект <code>key.txt</code> в контейнер <code>container4</code> с использованием размера сегмента (<code>segment-size</code>) 100 Байт.
+Параметр <code>use-slo</code> задается для создания статичного большого объекта вместо определяемого по умолчанию динамичногообльшого объекта, как продемонстрировано в следующей команде:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 upload container4 key.txt --segment-size=100 --use-slo --os-regionname=regionOne
+</code></strong>
+</p>
+
+
+<h2 id="App06">Download</h2>
+<p>Команда <code>download</code> используется для выгрузки объектов из контейнера.
+Данный подраздел объясняет использование команды <code>download</code>.
+<br /><strong><code>
+# swift download &lt;container&gt; &lt;object&gt; --all --prefix &lt;prefix&gt; --output &lt;out_file&gt; -A Auth_URL –U User –K Key --os-username=&lt;auth-username&gt; --os-password=&lt;auth-password&gt; --os-tenant-id=&lt;auth-tenant-id&gt; --os-tenant-name=&lt;auth-tenant-name&gt; --os-auth-url=&lt;auth-url&gt; --osauth-token=&lt;auth-token&gt; --os-storage-url=&lt;storage-url&gt; --os-regionname=&lt;region-name&gt; --os-service-type=&lt;service-type&gt; --os-endpointtype=&lt;endpoint-type&gt;
+</code></strong>
+</p>
+
+<h3 id="App0601">Примеры</h3>
+<p>
+С использованием следующей команды выгрузите все объекты из всех контейнеров:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 download --all
+</code></strong>
+</p><p>
+<p>
+С помощью следующей команды выгрузите все объекты с префиксом <code>key</code> из контейнера <code>container1</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 download container1 --prefix key
+</code></strong>
+</p><p>
+С помощью следующей команды выгрузите объект <code>key.txt</code> из контейнера <code>container1</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 download container1 key.txt
+</code></strong>
+</p><p>
+С использованием следующей команды выгрузите все объекты из всех контейнеров с применением двух потоков для выгрузки объектов:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 download --all --object-threads 2 --os-region-name=regionOne
+</code></strong>
+</p>
+
+
+<h2 id="App07">Delete</h2>
+<p>Команда <code>delete</code> используется для удаления контейнера или удаления объектов в контейнере.
+Данный подраздел объясняет использование команды <code>delete</code>.
+<br /><strong><code>
+# swift delete &lt;container&gt; &lt;object&gt; --all –leave_segments -A Auth_URL –U User –K Key --os-username=&lt;auth-user-name&gt; --os-password=&lt;authpassword&gt; --os-tenant-id=&lt;auth-tenant-id&gt; --os-tenant-name=&lt;auth-tenantname&gt; --os-auth-url=&lt;auth-url&gt; --os-auth-token=&lt;auth-token&gt; --osstorage-url=&lt;storage-url&gt; --os-region-name=&lt;region-name&gt; --os-servicetype=&lt;service-type&gt; --os-endpoint-type=&lt;endpoint-type&gt;
+</code></strong>
+</p>
+
+<h3 id="App0701">Примеры</h3>
+<p>
+С помощью следующей команды удалите объект <code>key.txt</code> из контейнера <code>container1</code>:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 delete container1 key.txt
+</code></strong>
+</p><p>
+С помощью следующей команды удалите все объекты из контейнера <code>container2</code> и оставьте сегменты как есть:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 delete container2 --leave-segments
+</code></strong>
+</p><p>
+С помощью следующей команды удалите все объекты и все контейнеры:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 delete --all
+</code></strong>
+</p><p>
+С помощью следующей команды удалите все объекты и все контейнеры с применением двух потоков для удаления объектов:
+<br /><strong><code>
+# swift -V 2.0 -A https://auth.lts2.evault.com/v2.0 -U admin:user1 -K t1 delete --all --object-threads=2 --os-region-name=regionOne
+</p>
+
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch08ru.htm">Глава 8</a></td>
+ <td align="center"><a href="ToC.htm">Оглавление</a></td>
+ <td align="right"><a href="Index.htm">Указатель</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,1531 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 4. Основы Docker - Использование Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="UsingDocker"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Использование Docker"/>
+<link rel="up" href="index.html" title="Использование Docker"/>
+<link rel="prev" href="Ch03.html" title="Глава 3. Первые шаги"/>
+<link rel="next" href="Ch05.html" title="Глава 5. Применение Docker при разработке"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-using-docker";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/UsingDocker/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 4. Основы Docker';
+PrevRef = 'Ch03.html';
+UpRef = 'index.html';
+NextRef = 'Ch05.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Часть 1. Предпосылки и основы</h1>
+  </div></div></div>
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 4. Основы Docker</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch04.html">4. Основы Docker</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch04.html#04.1">Архитектура Docker</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.1.1">Технологии, лежащие в основе</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.1.2">Окружающие технологии</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.1.3">Docker хостинг</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.2">Как выполняется построение образов</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.2.1">Контекст сборки</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.2">Уровни образа</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.3">Кэширование</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.4">Базовые образы</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.5">Инструкции Dockerfile</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.3">Соединение контейнеров с миром</a></span></dt>
+	 <dt><span class="section"><a href="Ch04.html#04.4">Связывание контейнеров</a></span></dt>
+	 <dt><span class="section"><a href="Ch04.html#04.5">Управление данными томами и контейнерами данных</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.5.1">Совместное использование данных</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.5.2">Контейнеры данных</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.5.3">Удаление томов</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.6">Общие команды Docker</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.6.1">Команда run</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.2">Управление контейнерами</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.3">Информация Docker</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.4">Информация контейнера</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.5">Обращение с образами</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.6">Использование реестра</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.7">Заключение</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <p>В этой главе мы расширим фундаментальные понятия Docker. Мы начнем с рассмотрения общей архитектуры Docker, включая технологии, которые она 
+  выстраивает. Затем следуют более глубокие разделы по построению образов Docker, сетевых контейнеров и обработки данных в томах. Глава 
+  заканчивается обзором остальных команд Docker.</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+			<p>Поскольку данная глава содержит большое количество справочного материала, вы можете предпочесть поверхностно пробежаться 
+			по ее основным моментам и перейти к <a class="link" href="Ch05.html" target="_top">Главе 5</a>, возвращаясь к данной 
+			главе по мере необходимости.</p></td></tr></table>
+		  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.1"> </a>Архитектура Docker</h3>
+   </div></div></div>
+   <p>Чтобы понять как лучше применять Docker и некоторые из наиболее необычных режимов работы в Docker, будет неплохо получить представление 
+   о том, как платформа Docker собирается под покровом.</p>
+   <p>На <a class="link" href="#Fig0401" target="_top">Рисунке 4-1</a> мы можем увидеть основные компоненты установки Docker:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>По центру находится <span class="emphasis"><em>демон Docker</em></span>, который отвечает за создание, работу и мониторинг 
+	 контейнеров, а также за построение и сохранение образов, что совместно представлено в правой части диаграммы. Демон Docker 
+	 запускается выполнением <span class="term"><strong class="userinput"><code>docker daemon</code></strong></span>, о чем обычно заботится 
+	 операционная система хоста.</p>
+	 <li class="listitem">
+	 <p>Клиент Docker располагается слева и используется для общения с демоном Docker посредством HTTP. По умолчанию это происходит через 
+	 <a class="link" href="https://ru.wikipedia.org/wiki/Сокет_домена_UNIX" target="_top">сокет домена Unix</a> (UDS или, иначе: IPC, 
+	 сокет межпроцессного взаимодействия), но также может использоваться сокет TCP, делая возможными удаленные клиенты, или дескриптор 
+	 файла для сокетов, управляемых <a class="link" href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch06.html#06.4" 
+	 target="_top">sytemd</a>. Поскольку все взаимодействие должно выполняться в HTTP, достаточно легко подключаться к удаленным 
+	 демонам Docker и разрабатывать связывание программного языка, но это также имеет последствия для того, как реализуется 
+	 функциональность, например требования контекста сборки для Dockerfile, как описано в разделе &quot;<a class="link" 
+	 href="Ch01.html#04.2.1" target="_top">Встроенный контекст</a>&quot;. Используемый для взаимодействия с демоном API хорошо определен и 
+	 документирован, что позволяет разработчикам писать программы, которые напрямую взаимодействуют с демоном без использования 
+	 клиента Docker. Клиент Docker и демон распространяются в виде исполняемого (двоичного) файла.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Реестры Docker хранят и распространяют образы. Реестром по умолчанию является Docker Hub, который размещает 
+	 тысячи общедоступных образов а также курирует &quot;официальные&quot; образы. Многие организации имеют собственные реестры, которые 
+	 могут применяться для хранения коммерческих или критически важных образов а также избегать перегруженности необходимостью загрузки 
+	 образов из интернета. Для информации о работе ваших собственных реестров смотрите раздел &quot;<a class="link" 
+	 href="Ch04.html#07.4.1" target="_top">Работа вашего собственного реестра</a>&quot;. Демон Docker загружает образы определяемые запросами 
+	 <span class="term"><strong class="userinput"><code>docker pull</code></strong></span>. Он также автоматически загружает образы 
+	 определенные запросом <span class="term"><strong class="userinput"><code>docker run</code></strong></span> и в инструкции 
+	 <span class="term"><strong class="userinput"><code>FROM</code></strong></span> Dockerfile когда они не доступны локально.</p>
+	 </li>
+    </ul>
+    </div>
+<div class="figure"><a id="Fig0401"> </a>
+ <p class="title"><strong>Рисунок 4-1. Обзор на высоком уровне основных компонентов Docker</strong></p>
+ <div class="figure-contents"><div class="mediaobject">
+  <img src="figures/Fig0401.jpg" width="683" height="302"/><br />
+  <span></span>
+ </div></div>
+</div><br class="figure-break"/>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.1.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Технологии, лежащие в основе</span></h4>
+    </div></div></div>
+    <p>Демон Docker использует &quot;драйвер выполнения&quot; для создания контейнера. По умолчанию это собственный драйвер Docker 
+	<span class="emphasis"><em>runc</em></span>, однако также существует наследуемая поддержка для LXC. Runc очень тесно подогнан 
+	к следующей функциональности ядра:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	  <p><span class="emphasis"><em>cgroups</em></span>, которые отвечают за управление используемыми контейнерами ресурсами (т.е. за 
+	  использование ЦПУ и оперативной памяти). Они также отвечают за замораживание (<span class="emphasis"><em>freezing</em></span>)
+	  и размораживание (<span class="emphasis"><em>unfreezing</em></span>) контейнеров, которые используются в функциональности 
+	  <span class="term"><strong class="userinput"><code>docker pause</code></strong></span>.</p>
+	 </li>
+	 <li class="listitem">
+	  <p><span class="emphasis"><em>namespaces</em></span> (пространство имен) ответственно за изоляцию контейнеров; гарантирующую что 
+	  файловая система, имя хоста, сетевая среда и процессы контейнера отделены от остальной части вашей системы.</p>
+	 </li>
+    </ul>
+    </div>
+    <p>Libcontainer также поддерживает <span class="emphasis"><em>SElinux</em></span> и <span class="emphasis"><em>AppArmor</em></span>, 
+	которые могут быть разрешены для более плотной безопасности. За дополнительной информацией обращайтесь к <a class="link" href="Ch13.html" 
+	target="_top">Главе 13</a>.</p>
+    <p>Другой лежащей в основе Docker главной технологией является файловая система UFS (Union File System), используемая для хранения 
+	уровней для контейнеров. UFS обеспечивается одним из нескольких драйверов хранения из AUFS, devicemapper, BTRFS или Overlay. Отсылаем 
+	к предыдущему обсуждению в &quot;<a class="link" href="Ch03.html#ImagesContainersUFS" target="_top">Образы, контейнеры и UFS</a>&quot;.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.1.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Окружающие технологии</span></h4>
+    </div></div></div>
+   <p>Движок Docker и его хаб не представляют сами по себе законченное решение для работы с контейнерами. Большинство пользователей 
+   обнаружат, что им требуется поддержка служб и программного обеспечения подобного средствам управления кластером, инструментарию служб 
+   обнаружения, а также развитым сетевым возможностям.</p>
+   <p>Как описано в &quot;<a class="link" href="Ch01.html#01.4" target="_top">Плагины и прокладка труб</a>&quot;, Docker Inc. планирует 
+   построить полное коробочное решение которое включает в себя эту функциональность, но при этом позволяет пользователям легко выгружать 
+   установленные по умолчанию компоненты в замен разработанных третьими фирмами. Стратегия &quot;заменяемых батарей&quot; прежде всего 
+   относится к уровню API - позволяя компонентам прицепляться к движку Docker - но также могут рассматриваться как делающие возможной 
+   поддержку технологий Docker упакованных в виде независимого исполняемого (двоичного) кода способного легко заменяться эквивалентами 
+   третьих сторон.</p>
+   <p>Текущий список предоставляемых Docker поддерживаемых технологий включает:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="emphasis"><em>Swarm</em></span>
+    <dd>Кластерное решение Docker. Swarm может объединять в группы различные хосты Docker, позволяя пользователям представлять их как 
+	о едином ресурсе. За дополнительной информацией обращайтесь к <a class="link" href="Ch12.html" target="_top">Главе 12</a>.
+    <dt><span class="emphasis"><em>Compose</em></span>
+    <dd>Docker Compose является инструментом для построения и выполнения приложений состоящих из множества контейнеров Docker. Изначально 
+	он применялся при разработке и тестировании, а не в промышленной эксплуатации. Для ознакомления с подробностей отсылаем вас к 
+	разделу &quot;<a class="link" href="Ch05.html#05.2" target="_top">Автоматизация при помощи Compose</a>&quot;.
+    <dt><span class="emphasis"><em>Machine</em></span>
+    <dd>Docker Machine устанавливает и настраивает хосты Docker на локальных и удаленных ресурсах. Machine также настраивает клиента Docker, 
+	делая его легко перемещаемым между окружениями. За примером обращайтесь к <a class="link" href="Ch09.html" target="_top">Главе 9</a>.
+    <dt><span class="emphasis"><em>Kitematic</em></span>
+    <dd>Kitematic является графическим интерфейсом Mac OS и Windows для работы контейнеров Docker и управления ими
+    <dt><span class="emphasis"><em>Docker Trusted Registry</em></span>
+    <dd>(Доверенный реестр Docker) это решение в рамках Docker для хранения и управления образами Docker. Это эффективная локальная версия 
+	Docker Hub, которая может интегрироваться с существующей инфраструктурой безопасности и помогать организациям соблюдать правила 
+	относительно хранения и безопасности данных. Функциональность содержит метрики, управление доступом на основе ролей (RBAC, 
+	Role-Based Access Control), а также журналы, причем все управляется с консоли администратора. В настоящее время это единственный продукт 
+	Docker Inc, не имеющий открытого исходного кода.
+   </dl></div>
+   <p>Уже существует большой список служб и приложений третьих сторон, который встроен в Docker и работает с ним. Некоторые решения уже 
+   появились в следующих областях:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="emphasis"><em>Сетевая среда</em></span>
+    <dd>Создание охватывающих хосты сетей контейнеров является нетривиальной задачей, которая может быть решена различными способами. В 
+	этой области появилось несколько решений, включающих <span class="term"><strong class="userinput">Weave</strong></span> и
+	<span class="term"><strong class="userinput">Проект Calico</strong></span>. Кроме того, Docker вскоре получит интегрированное сетевое 
+	решение с названием Overlay. Пользователи получат возможность выгружать драйвер Overlay для других решений, использующих сетевые 
+	подключаемые структуры Docker.
+    <dt><span class="emphasis"><em>Обнаружение служб</em></span>
+    <dd>При поступлении контейнера Docker, ему нужен некий способ нахождения прочих служб, с которыми ему следует взаимодействовать и которые 
+	обычно также работают в виде контейнеров. Поскольку контейнерам динамично назначаются IP адреса, это не является тривиальной задачей в 
+	больших системах. Решения в этой сфере включают <span class="term"><strong class="userinput">Consul</strong></span>, 
+	<span class="term"><strong class="userinput">Registrator</strong></span>, <span class="term"><strong class="userinput">SkyDNS</strong></span>
+	и <span class="term"><strong class="userinput">etcd</strong></span>
+    <dt><span class="emphasis"><em>Управление оркестровкой и кластеризацией</em></span>
+    <dd>В больших реализациях контейнеров для мониторинга и управления системой существенен инструментарий для этих целей. Каждый новый 
+	контейнер нуждается в размещении на хосте, в мониторинге и обновлении. Система должна реагировать на отказы или изменения нагрузки посредством 
+	соответствующих перемещений, запусков или остановок контейнеров. Существует ряд конкурирующих решений в этой отрасли, включающих 
+	<span class="term"><strong class="userinput">Kubernetes</strong></span> от Google, <span class="term"><strong class="userinput">Marathon</strong></span>
+	(конструктив для Mesos), CoreOS <span class="term"><strong class="userinput">Fleet</strong></span> и собственный инструментарий Docker 
+	Swarm.
+   </dl></div>
+   <p>Все эти темы обсуждаются в больших подробностях в <a class="link" href="Ch11.html" target="_top">Части III</a>. Стоит также отметить 
+   альтернативы Docker Trusted Registry, включающие CoreOS <span class="term"><strong class="userinput">Enterprise Registry</strong></span>
+   и JFrog <span class="term"><strong class="userinput">Artifactory</strong></span>.</p>
+   <p>В добавление к упомянутым ранее подключаемым сетевым драйверам Docker также поддерживает подключаемые тома (<span class="emphasis"><em>volume 
+   plugin</em></span>) для интеграции с прочими системами хранения. Достойные упоминания подключаемые тома включают 
+   <span class="term"><strong class="userinput">Flocker</strong></span>, инструмент множества хостов управления и миграции данных, а также 
+   <span class="term"><strong class="userinput">GlusterFS</strong></span> для распределенного хранилища. Дополнительная информация по 
+   подключаемым конструктивам может быть найдена на <span class="term"><strong class="userinput"><a class="link" href="https://www.docker.com/" 
+   target="_top">веб- сайте Docker</a></strong></span>.</p>
+   <p>Интересный побочный эффект от роста популярности контейнеров заключается в новом поколении операционных систем, предназначенных для 
+   их хостинга. Хотя Docker успешно работает в большинстве современных дистрибутивов Linux, подобных Ubuntu и Red Hat, существует ряд 
+   проектов в стадии реализации для создания минимальных и простых в сопровождении дистрибутивов, сосредоточенных исключительно на работе 
+   контейнеров (или контейнеров и виртуальных машин), особенно в контексте насыщения цетнра обработки данных или кластера. Примеры 
+   включают    <span class="term"><strong class="userinput">Проект Atomic</strong></span>, 
+   <span class="term"><strong class="userinput">CoreOS</strong></span> и <span class="term"><strong class="userinput">RancherOS</strong></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.1.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Docker хостинг</span></h4>
+    </div></div></div>
+   <p>Мы обсудим хостинг Docker более подробно в <a class="link" href="Ch09.html" target="_top">Главе 9</a>, но здесь стоит отметить некоторые 
+   из многих вариантов. Многие традиционные поставщики облачных решений, включающие Amazon, Google и Digital Ocean привнесли определенный уровень 
+   в продукцию Docker. Наиболее интересным из них, возможно, является Container Engine Google, поскольку он строится непосредственно поверх 
+   Kubernetes. Конечно, даже если поставщик облачных решений не имеет определенного предложения решений Docker, все еще стандартным будет 
+   предоставление виртуальных машин, которые могут выполнять контейнеры Docker.</p>
+   <p>Joyent также выходит в свет со своим собственным предложением контейнеров под названием Triton, построенным поверх SmartOS. Реализовав 
+   API Docker в своих собственных контейнере и технологии эмуляции Linux, Joуent смог создать общедоступное облако, которое взаимодействует 
+   со стандартным клиентом Docker. Важно отметить, что Joyent полагает, что его реализация контейнера достаточно безопасна чтобы работать 
+   непосредственно на голом железе вместо размещения его в виртуальные машины, что может повлечь значительную экономию эффективности, в 
+   особенности в плане операций ввода/ вывода.</p>
+   <p>Существуют также различные проекты построения платформ PaaS поверх Docker, в том числе 
+   <span class="term"><strong class="userinput">Deis</strong></span>, <span class="term"><strong class="userinput">Flynn</strong></span> и
+   <span class="term"><strong class="userinput">Paz</strong></span>.</p>
+   </div>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.2"> </a>Как выполняется построение образов</h3>
+   </div></div></div>
+   <p>В разделе &quot;<a class="link" href="http://onreader.mdl.ru/UsingDocker/content/Ch03.html#03.3" target="_top">Построение образов 
+   из Dockerfile</a>&quot; мы видели, что первоначальный вариант изготовления нового образа заключается в Dockerfile и команде 
+   <span class="term"><strong class="userinput"><code>docker build</code></strong></span>. Данный раздел рассмотрит что в этом случае 
+   происходит слегка подробнее и завершится руководством по различным инструкциям, которые могут использоваться в Dockerfile. Полезно 
+   иметь некое представление о том как работает команда построения изнутри, поскольку ее поведение порой выглядит загадочным.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.2.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Контекст сборки</span></h4>
+    </div></div></div>
+   <p>Команде <span class="term"><strong class="userinput"><code>docker build</code></strong></span> необходимы Dockerfile и контекст сборки 
+   (<span class="emphasis"><em>build context</em></span>, который может быть пустым). Контекст сборки является набором локальных файлов и 
+   каталогов, на которые можно ссылаться в инструкциях <span class="term"><code>ADD</code></span> и <span class="term"><code>COPY</code></span> 
+   в Dockerfile и обычно определяются в виде пути и каталога. Например, в разделе &quot;<a class="link" 
+   href="http://onreader.mdl.ru/UsingDocker/content/Ch03.html#03.3" target="_top">Построение образов из Dockerfile</a>&quot; мы применяем команду 
+   построения <span class="term"><code>docker build -t test/cowsay-dockerfile .</code></span>, которая устанавливает контекст в 
+   <span class="term"><code>'.'</code></span>, текущий рабочий каталог. Все файлы и каталоги в пути формируют контекст сборки и будут 
+   отосланы демону Docker как часть процесса построения.</p>
+   <p>В случаях когда контекст не описан - если в Dockfile передается только URL или содержимое Dockfile передаётся в конвейере через STDIN -
+   контекст сборки рассматривается как пустой.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+      <p><span class="term"><strong class="userinput">Не используйте <span class="term"><code>+/+</code></span> в качестве контекста сборки</strong></span></p>
+	  <p>После того как контекст сборки накоплен в  tarball и отослан демону Docker, вы на самом деле не хотите использовать каталог с уже 
+	  имеющимся большим числом файлов. Например, использование <span class="term"><code>/home/user</code></span>, 
+	  <span class="term"><code>Downloads</code></span> или <span class="term"><code>/</code></span> приведет к длительной задержке на 
+	  время упаковки всего и отправки демону.</p></td></tr></table>
+     </div>
+   <p>Если задан URL, начинающийся с <span class="emphasis"><em>http</em></span> или <span class="emphasis"><em>https</em></span>, то
+   он предполагается прямой ссылкой на Dockerfile. Вряд ли будет полезно не связывать никакой контекст с Dockerfile (и не принимать 
+   ссылки на архивы).</p>
+   <p>Репозиторий git также может быть определен в качестве контекста сборки. В таком случае клиент Docker клонирует репозиторий и все 
+   подмодули во временный каталог, который далее отсылается демону Docker в качестве контекста сборки. Docker воспринимает ваш контекст 
+   как репозиторий git если путь начинается с <span class="emphasis"><em>github.com/</em></span>, <span class="emphasis"><em>_git@</em></span>
+   или <span class="emphasis"><em>_git://</em></span>. В общем случае я хотел бы предложить избегать такого метода и вместо этого 
+   проверять репозитории вручную, что является более гибким и оставляет меньше шансов для путаницы.</p>
+   <p>Клиент Docker также может получать входные данные через <span class="term"><code>STDIN</code></span>, задавая 
+   &quot;<span class="term"><code>-</code></span>&quot; в качестве аргумента на месте контекста сборки. Входные данные также могут быть 
+   Dockerfile-ом без какого бы то ни было контекста (т.е. <span class="term"><code>docker build - &lt; context.tar.gz</code></span>). 
+   Файлы архива могут быть в формате <span class="term"><code>tar.gz</code></span>, <span class="term"><code>xz</code></span> 
+   или <span class="term"><code>bzip2</code></span>.</p>
+   <p>Местонахождение Dockerfile внутри контекста может быть определено аргументом <span class="term"><code>-f</code></span>, (т.е. 
+   <span class="term"><code>docker build -f dockerfiles/Dockerfile.debug</code></span>). Если он не определен явно, Docker будет искать 
+   файл с названием <span class="term"><code>Dockerfile</code></span> в корне контекста.</p>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+			<p><span class="term"><strong class="userinput">Использование файла .dockerignore</strong></span></p>
+			<p>Чтобы удалить не нужные файлы из контекста сборки, вы можете воспользоваться файлом <span class="emphasis"><em>.dockerignore</em></span>.
+			Этот файл должен содержать имена подлежащих исключению файлов, разделенные символами новой строки. Допускаются символы 
+			подстановки <span class="emphasis"><em>*</em></span> и <span class="emphasis"><em>?</em></span>. Например, у нас имеется следующий файл 
+			<span class="term"><code>.dockerignore</code></span>:</p>
+	   <pre class="screen">
+.git<sup><strong>1</strong></sup>
+*/.git<sup><strong>2</strong></sup>
+*/*/.git<sup><strong>3</strong></sup>
+*.sw?<sup><strong>4</strong></sup>
+	   </pre>
+		<div class="variablelist"><dl>
+		<dt><sup><strong>1</strong></sup>
+		<dd>Будет игнорировать файл или каталог <span class="emphasis"><em>.git</em></span> в корне контекста сборки, однако будет 
+		допускать его в любом подкаталоге (т.е. <span class="emphasis"><em>.git</em></span> игнорируется, а <span class="emphasis"><em>dir1/.git</em></span> 
+		нет).
+		<dt><sup><strong>2</strong></sup>
+		<dd>Будет игнорировать файл или каталог <span class="emphasis"><em>.git</em></span> ровно на один каталог ниже корня контекста сборки 
+		(т.е. <span class="emphasis"><em>dir1/.git</em></span> игнорируется, а <span class="emphasis"><em>dir1/dir2/.git</em></span> 
+		нет).
+		<dt><sup><strong>3</strong></sup>
+		<dd>Будет игнорировать файл или каталог <span class="emphasis"><em>.git</em></span> ровно на два каталога ниже корня контекста сборки 
+		(т.е. <span class="emphasis"><em>dir1/dir2/.git</em></span> игнорируется, а <span class="emphasis"><em>.git</em></span> и
+		<span class="emphasis"><em>dir1/.git</em></span> нет).
+		<dt><sup><strong>4</strong></sup>
+		<dd>Будет игнорировать <span class="emphasis"><em>test.swp</em></span>, <span class="emphasis"><em>test.swo</em></span> и 
+		<span class="emphasis"><em>bla.swp</em></span>, но не <span class="emphasis"><em>dir1/test.swp</em></span>.
+		</dl></div>
+		<p>Отсутствует полная поддержка регулярных выражений наподобие <span class="term"><code>[A-Z]*</code></span></p>
+		<p>На момент написания книги не существовало способа отметки соответствия файлов по всем каталогам (т.е. вы не можете игнорировать и 
+		<span class="emphasis"><em>test.tmp</em></span>, и <span class="emphasis"><em>dir1/test.tmp</em></span>в одном выражении).</p>
+			</td></tr></table>
+		  </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.2.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Уровни образа</span></h4>
+    </div></div></div>
+   <p>Новые пользователи Docker часто бросают как бы между прочим построенные образы. Каждая инструкция в Dockerfile имеет результатом новый 
+   уровень образа, который может быть использован для запуска контейнера. Новый уровень создается запуском контейнера, применяющего образ 
+   предыдущего уровня, выполнением инструкции Dockerfile и сохранением нового образа. После успешного завершения инструкции Dockerfile 
+   промежуточный контейнер будет удален, если не был задан аргумент <span class="term"><code>--rm=false</code></span> (Не отчаивайтесь если 
+   я вас потерял в данном месте. Все встанет на свои места после просмотра вывода <span class="term"><code>docker build</code></span> в 
+   нашем отладочном примере). Поскольку результат каждой инструкции состоит в статичном образе - по существу лишь файловая система и некие 
+   метаданные - все выполняемые в инструкции процессы будут остановлены. Это означает, что хотя вы можете запускать в инструкции 
+   <span class="term"><code>RUN</code></span> процессы с длительным временем жизни, например базы данных или демоны SSH, они уже не будут 
+   исполняться при обработке следующей инструкции или запуске контейнера. Если вы хотите стартовать с контейнером службу или процесс, 
+   они должны запускаться из инструкции <span class="term"><code>ENTRYPOINT</code></span> или <span class="term"><code>CMD</code></span>.</p>
+   <p>Вы можете посмотреть полный набор создавших образ уровней выполнив команду <span class="term"><code>docker history</code></span>. 
+   Например:</p>
+	   <pre class="screen">
+$ docker history mongo:latest
+IMAGE CREATED CREATED BY ...
+278372cb22b2 4 days ago /bin/sh -c #(nop) CMD [&quot;mongod&quot;]
+341d04fd3d27 4 days ago /bin/sh -c #(nop) EXPOSE 27017/tcp
+ebd34b5e9c37 4 days ago /bin/sh -c #(nop) ENTRYPOINT &amp;{[&quot;/entrypoint.
+f3b2b8cf226c 4 days ago /bin/sh -c #(nop) COPY file:ef2883b33ed7ba0cc
+ba53e9f50f18 4 days ago /bin/sh -c #(nop) VOLUME [/data/db]
+c537910de5cc 4 days ago /bin/sh -c mkdir -p /data/db &amp;&amp; chown -R mong
+f48ad436057a 4 days ago /bin/sh -c set -x
+df59596772ab 4 days ago /bin/sh -c echo &quot;deb http://repo.mongodb.org/
+96de83c82d4b 4 days ago /bin/sh -c #(nop) ENV MONGO_VERSION=3.0.6
+0dab801053d9 4 days ago /bin/sh -c #(nop) ENV MONGO_MAJOR=3.0
+5e7b428dddf7 4 days ago /bin/sh -c apt-key adv --keyserver ha.pool.sk
+e81ad85ddfce 4 days ago /bin/sh -c curl -o /usr/local/bin/gosu -SL "h
+7328803ca452 4 days ago /bin/sh -c gpg --keyserver ha.pool.sks-keyser
+ec5be38a3c65 4 days ago /bin/sh -c apt-get update
+430e6598f55b 4 days ago /bin/sh -c groupadd -r mongodb &amp;&amp; useradd -r
+19de96c112fc 6 days ago /bin/sh -c #(nop) CMD [&quot;/bin/bash&quot;]
+ba249489d0b6 6 days ago /bin/sh -c #(nop) ADD file:b908886c97e2b96665
+	   </pre>
+   <p>В случае неудачного построения может быть очень полезным запускать предшествующий отказу уровень. Например, если у нас имеется следующий 
+   Dockerfile:</p>
+	   <pre class="screen">
+FROM busybox:latest
+
+RUN echo &quot;This should work&quot;
+RUN /bin/bash -c echo &quot;This won't&quot;
+	   </pre>
+   <p>и попытка его построения:</p>
+	   <pre class="screen">
+$ docker build -t echotest .
+Sending build context to Docker daemon 2.048 kB
+Step 0 : FROM busybox:latest
+---&gt; 4986bf8c1536
+Step 1 : RUN echo &quot;This should work&quot;
+---&gt; Running in f63045cc086b<sup><strong>1</strong></sup>
+This should work
+---&gt; 85b49a851fcc<sup><strong>2</strong></sup>
+Removing intermediate container f63045cc086b<sup><strong>3</strong></sup>
+Step 2 : RUN /bin/bash -c echo &quot;This won't&quot;
+---&gt; Running in e4b31d0550cd
+/bin/sh: /bin/bash: not found
+The command '/bin/sh -c /bin/bash -c echo &quot;This won't&quot;' returned a non-zero
+code: 127
+	   </pre>
+		<div class="variablelist"><dl>
+		<dt><sup><strong>1</strong></sup>
+		<dd>Идентификатор временного <span class="emphasis"><em>контейнера</em></span>, запускаемого Docker-ом для выполнения нашей 
+		инструкции.
+		<dt><sup><strong>2</strong></sup>
+		<dd>Идентификатор <span class="emphasis"><em>образа</em></span>, созданного из контейнера.
+		<dt><sup><strong>3</strong></sup>
+		<dd>Теперь временный контейнер удаляется.
+		</dl></div>
+   <p>Хотя в данном случае проблема совершенно очевидна из сообщения об ошибке, мы можем выполнить образ созданный на последнем успешном уровне 
+   для отладки данной инструкции. Отметим, что мы используем здесь последний идентификатор <span class="emphasis"><em>образа</em></span> 
+   (85b49a851fcc), а не идентификатор последнего <span class="emphasis"><em>контейнера</em></span> (e4b31d0550cd):</p>
+	   <pre class="screen">
+$ docker run -it 7831e2ca1809
+/ # /bin/bash -c &quot;echo hmm&quot;
+/bin/sh: /bin/bash: not found
+/ # /bin/sh -c &quot;echo ahh!&quot;
+ahh!
+/ #
+	   </pre>
+   <p>И проблема становится даже ещё более очевидной: образ <span class="term"><code>busybox</code></span> не содержит оболочку 
+   <span class="term"><code>bush</code></span>.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.2.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Кэширование</span></h4>
+    </div></div></div>
+   <p>Docker также кэширует каждый уровень с целью ускорения построения образов. Такое кэширование очень важно эффективным рабочим потокам, но 
+   несколько безыскусно. Кэш применяется для инструкции если:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Предыдущая инструкция была найдена в кэше <span class="emphasis"><em>И</em></span></p>
+	 </li>
+	 <li class="listitem">
+	 <p>в кэше существует уровень, который имеет в точности те же инструкцию и родительский уровень (даже несущественные пробелы сделают кэш 
+	 недействительным)</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Помимо этого в случае инструкций <span class="term"><code>ADD</code></span> и <span class="term"><code>COPY</code></span> кэш будет 
+   недействительным если были изменены контрольная сумма или метаданные для любого из файлов в кэше.</p>
+   <p>Это означает, что инструкция <span class="term"><code>RUN</code></span>, которая не гарантирует получение одного и того же результата 
+   при множестве исполнений <span class="emphasis"><em>все еще будет кэширована</em></span>. Будьте особенно внимательны к этому обстоятельству 
+   если вы загружаете файлы, запускает обновление apt-get или клонируете источник репозитория.</p>
+   <p>Если вам нужно отказать в кэшировании, вы можете выполнить <span class="term"><code>docker build</code></span> с аргументом 
+   <span class="term"><code>--no-cache</code></span>. Вы также можете добавлять или изменять инструкцию перед точкой, в которой вы 
+   хотите отвергнуть кэш; и по этой причине вы можете увидеть Dockerfile со строками наподобие:</p>
+	   <pre class="screen">
+ENV UPDATED_ON &quot;14:12 17 February 2015&quot;
+RUN git clone....
+	   </pre>
+   <p>Я бы предостерег от применения подобной техники, поскольку она ведёт к запутыванию последующих пользователей образов, в особенности 
+   когда образ был построен в день, отличный от установленного в строке.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.2.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Базовые образы</span></h4>
+    </div></div></div>
+   <p>При создании собственных образов вам придется определиться с какого базового образа начинать. Существует множество вариантов выбора и стоит 
+   потратить определенное время чтобы понять различные преимущества и недостатки каждого.</p>
+   <p>Наилучшим выбором будет не создавать собственный образ совсем - вы можете просто воспользоваться уже существующим и смонтировать свои 
+   собственные файлы настройки и/ или данные в него. Возможно это будет лучшим выбором для распространенного прикладного программного 
+   обеспечения, такого как базы данных и веб-сервера, где существуют официальные доступные образы. В общем случае вам гораздо лучше воспользоваться 
+   официальным образом, чем обкатывать свой собственный - вы получите преимущество от чужих работы и опыта в выяснении того как лучше выполнять 
+   программное обеспечение в контейнере. Если существует конкретный довод почему официальный образ не подходит для вас, рассмотрите возможность 
+   открытия проблемы в родительском проекте, поскольку, скорее всего, и другие люди сталкиваются с аналогичными задачами или знают как обойти 
+   эту проблему.</p>
+   <p>Если вам требуется образ для хостинга вашего собственного приложения, вначале окиньте взглядом: существует ли образ на официальной основе 
+   для поддержки используемого вами языка или инфраструктуры (например, Go или Ruby on Rails). Зачастую вы можете воспользоваться отдельными 
+   образами для построения и распространения вашего программного обеспечения (например, вы можете применять образ 
+   <span class="term"><code>java:jdk</code></span> для построения приложения Java, однако затем распространять полученный в результате файл 
+   JAR с применением более скромного в размерах образа <span class="term"><code>java:jre</code></span>, который избавлен от ненужного 
+   инструментария построения). Аналогично, некоторые официальные образы (например, <span class="term"><code>node</code></span>) имеют 
+   специальные &quot;тонкие&quot; построения, в которых удалено множество средств разработки и заголовков.</p>
+   <p>Иногда на практике вам нужен небольшой, но полный дистрибутив Linux. Если я собираюсь следовать истинному минимализму, я буду 
+   применять образ <span class="term"><code>alpine</code></span>, который требует размеров всего лишь в 5МБ, но все таки имеет значительный 
+   менеджер пакетов для простой установки пакетов и инструментов. Если мне нужен более полный образ, я обычно применяю один из образов 
+   <span class="term"><code>debian</code></span>, который намного меньше чем также общеупотребимые образы 
+   <span class="term"><code>ubuntu</code></span>, но имеет доступ к тем же пакетам. Если ваша организация связана с определенным дистрибутивом 
+   Linux, вам также следует найти для него образ Docker. Это может иметь больше смысла, чем переход на новый дистрибутив, который ваша 
+   организация не поддерживает или с которым у нее нет опыта работы.</p>
+   <p>Большую часть времени не существует необходимости сильно беспокоиться о максимально возможном сокращении объёма образа. Помните, что 
+   базовые образы совместно используются различными образами, поэтому если вы уже имеете образ <span class="term"><code>ubuntu:14.04</code></span>, 
+   и извлекаете из хаба (Hub) основанный на нем образ, вместо всего образа целиком вы вытащите только нужные вам изменения. Тем не менее, 
+   минимизированные образы несомненно являются большим плюсом когда нам необходимо быстрое развертывание и простое распространение.</p>
+   <p>Можно брать с собой сверхминимизированные образы и поставлять их исключительно в двоичном виде. Чтобы сделать это следует написать 
+   Dockerfile который наследуется из образа специальной рабочей области (полностью очищенная файловая система) с простой копией вашего исполняемого 
+   кода и установить соответствующую инструкцию <span class="term"><code>CMD</code></span>. Ваш исполняемый код должен содержать все необходимые 
+   библиотеки (никаких динамических связываний) и не должен иметь возможности вызова внешних команд. Кроме того помните, что двоичный код должен 
+   быть скомпилирован под архитектуру вашего контейнера, которая может отличаться от архитектуры машины, выполняющей клиента Docker. (На самом 
+   деле можно продвинуть эту концепцию минимальности вычислений ещё дальше, отказавшись от Docker и полного ядра Linux в пользу подхода 
+   <a class="link" href="https://ru.wikipedia.org/wiki/Микроядро" target="_top">микроядер</a> - <span class="emphasis"><em>unikernel</em></span>. 
+   В архитектуре микроядра приложение объединяется с ядром, содержащим только ту функциональность, которая нужна этому приложению и далее 
+   непосредственно запускается гипервизором. Это позволяет избавляться от ряда ненужных уровней кода и неиспользуемых драйверов, получая в 
+   результате намного меньшее и более быстрое приложение - микроядра обычно загружаются в пределах секунд, т.е. они могут запускаться в качестве 
+   непосредственного ответа на пользовательские запросы. Если вы хотите узнать больше об этом обратите внимание на <a class="link" 
+   href="http://queue.acm.org/detail.cfm?id=2566628" target="_top">Unikernels: Rise of the Virtual Library Operating System</a> Anil Madhavapeddy 
+   и David J. Scott, а также на <a class="link" href="http://www.xenproject.org/developers/teams/mirage-os.html" target="_top">MirageOs</a>.)</p>
+   <p>Хотя минималистский подход может быть очень заманчивым, обратите внимание на то, что он может поставить вас в сложную ситуацию когда дело 
+   доходит до отладки и сопровождения - <span class="term"><code>busybox</code></span> не будет иметь большого числа инструментов для работы с 
+   ним, а если вы применяете рабочий образ (<span class="term"><code>scratch</code></span>), у вас даже не будет оболочки.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Ответ Phusion</th></tr><tr><td align="left" valign="top">
+	   <p>Другим интересным выбором основного образа является <span class="term"><code>phusion/baseimage-docker</code></span>. Разработчики	
+	   Phusion создали этот базовый образ как ответ на официальный образ Ubuntu, который по их утверждению упустил ряд существенных служб. Некоторые 
+	   разработчики ядра Docker не согласны с точкой зрения Phusion, что повлекло к различным обменам мнениями в блогах, IRC и Твиттере. Основными 
+	   спорными моментами являются:</p>
+	   <div class="variablelist"><dl>
+	    <dt><span class="emphasis"><em>Потребность в службе инициализации</em></span>
+		<dd>Точка зрения Docker состоит в том, что контейнер должен выполнять только отдельное приложение, а в идеале 
+		<span class="emphasis"><em>отдельный процесс</em></span>. Если у вас имеется только один процесс, нет потребности для службы инициализации. 
+		Главный аргумент, выдвигаемый Phusion состоит в том, что отсутствие службы инициализации может приводить к контейнерам, заполненными 
+		<a class="link" href="https://ru.wikipedia.org/wiki/Процесс-зомби" target="_top">процессами зомби</a> - процессами, которые не были 
+		корректно уничтожены породившими их процессами или собранными процессом супервизора. Хотя этот аргумент и верен, в случае ошибки в коде 
+		приложения является единственным способом возникновения процессов зомби; подавляющее большинство пользователей не должно сталкиваться с 
+		этой проблемой, а если уж это происходит, то лучшим решением будет исправление кода.
+	    <dt><span class="emphasis"><em>Работа демона <span class="term"><code>crone</code></span></em></span>
+		<dd>Большинство образов <span class="term"><code>ubuntu</code></span> и <span class="term"><code>debian</code></span> не запускают по 
+		умолчанию демон <span class="term"><code>crone</code></span>, а образ <span class="term"><code>phusion</code></span> запускает. Phusion 
+		приводит аргументацию, что многие приложения зависят от <span class="term"><code>crone</code></span>, следовательно он существенен для их 
+		выполнения. Точка зрения Docker - с которой я склонен соглашаться - заключается в том, что <span class="term"><code>crone</code></span> 
+		должен запускаться только если ваше приложение зависит от него.
+	    <dt><span class="emphasis"><em>Демон <span class="term"><code>SSH</code></span></em></span>
+		<dd>Образы по умолчанию не устанавливают и не выполняют демон <span class="term"><code>SSH</code></span>. Обычный способ получения оболочки 
+		заключается в применении команды <span class="term"><code>docker exec</code></span> (см. раздел &quot;<a class="link" 
+		href="Ch04.html#04.6.2" target="_top">Управление контейнерами</a>&quot;), которая позволяет избегать проблем с работой ненужного процесса в 
+		контейнере. Phusion кажется принял это и отключил демон <span class="term"><code>SSH</code></span> по умолчанию, но их образ все еще значительно 
+		раздут за счет включения этого демона и его библиотек.
+	   </dl></div>
+	   <p>Что касается меня лично, я рекомендовали бы применять базовый образ Phusion только если у вас имеется потребность выполнять множество процессов, 
+	   <span class="term"><code>crone</code></span> и <span class="term"><code>ssh</code></span> внутри вашего контейнера. В противном случае я бы 
+	   придерживался образов из официальных репозиториев Docker, например <span class="term"><code>ubuntu:14.04</code></span> или 
+	   <span class="term"><code>debian:wheezy</code></span>.</p>
+	   </td></tr></table>
+     </div>
+
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Предостережение</th></tr><tr><td align="left" valign="top">
+	   <p><strong>Реконструкция образов</strong></p>
+      <p>Отметим, что при выполнении <span class="term"><code>docker build</code></span> Docker просмотрит инструкцию 
+	  <span class="term"><code>FROM</code></span> и попытается извлечь образ если он не присутствует локально. Если он существует, Docker воспользуется 
+	  этим образом без проверки существует ли доступная более новая версия. Это означает, что простого выполнение <span class="term"><code>docker 
+	  build</code></span> не достаточно для уверенности в том, что ваши образы точно самые новые, вам придется либо в явном виде выполнить 
+	  <span class="term"><code>docker pull</code></span> всех образов- предков или удалить их чтобы принудить команду построения к загрузке самых 
+	  последних версий.</p>
+	  <p>Это становится особенно актуальным когда выходят обновления безопасности общих базовых образов, например,
+	  <span class="term"><code>debian</code></span>.</p>
+	  </td></tr></table>
+     </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.2.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Инструкции Dockerfile</span></h4>
+    </div></div></div>
+   <p>Данный раздел вкратце рассмотрит различные инструкции, доступные для применения в Dockerfile. Он не погружается вглубь деталей, частично 
+   из-за того что они все ещё изменяются и возможно быстро станут не современными, а частично потому,что существует всесторонняя и всегда 
+   актуальная документация, доступная на <a class="link" href="https://docs.docker.com/" target="_top">веб- сайте Docker</a>. Комментарии в 
+   Dockerfile выделяются началом строки с символа #.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Сопоставление форматов exec и shell</th></tr><tr><td align="left" valign="top">
+	   <p>Некоторые инструкции (<span class="term"><code>RUN</code></span>, <span class="term"><code>CMD</code></span> и 
+	   <span class="term"><code>ENTRYPOINT</code></span>) принимают оба формата: и <span class="emphasis"><em>shell</em></span>, и 
+	   <span class="emphasis"><em>exec</em></span>. Формат <span class="emphasis"><em>exec</em></span> принимает вид массива JSON (т.е. 
+	   <span class="term"><code>[&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code></span>), что предполагает, что первый элемент 
+	   является исполняемым именем, которое выполняется с остальными элементами в качестве параметров. Формат <span class="emphasis"><em>shell</em></span> 
+	   является строкой произвольной формы, которая будет интерпретироваться путем передачи в <span class="term"><code>/bin/sh -c</code></span>. 
+	   Применяйте формат <span class="emphasis"><em>exec</em></span> во избежание умышленной порчи строк или в случаях, когда в образе нет 
+	   <span class="term"><code>/bin/sh</code></span></p>
+	   </td></tr></table>
+	   </td></tr></table>
+     </div>
+   <p>В Dockerfile доступны следующие инструкции:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>ADD</code></span>
+    <dd>Копирует файлы из контекста сборки или с удаленного URL в образ. Если файлы архива добавляются из локального пути, они будут автоматически 
+	распаковываться. Поскольку диапазон функциональности, покрываемый <span class="term"><code>ADD</code></span> достаточно большой, обычно 
+	лучше предпочесть более простую команду <span class="term"><code>COPY</code></span> для копирования файлов и каталогов в контексте сборки и 
+	инструкции <span class="term"><code>RUN</code></span> c <span class="term"><code>curl</code></span> или <span class="term"><code>wget</code></span> 
+	для загрузки удаленных ресурсов (что оставляет возможность обработки и удаления загруженного в той же самой инструкции).
+    <dt><span class="term"><code>CMD</code></span>
+    <dd>Выполняет данную инструкцию при запуске контейнера. Если была определена <span class="term"><code>ENTRYPOINT</code></span>, данная инструкция 
+	будет интерпретироваться как аргумент для <span class="term"><code>ENTRYPOINT</code></span> (в этом случае убедитесь, что вы используете формат 
+	<span class="emphasis"><em>exec</em></span>). Инструкция <span class="term"><code>CMD</code></span> перекрывается любыми аргументами в 
+	<span class="term"><code>docker run</code></span>после имени данного образа. Эффект имеет только последняя инструкция 
+	<span class="term"><code>CMD</code></span>, а все предыдущие инструкции перекрываются (включая присутствующие в базовых образах).
+    <dt><span class="term"><code>COPY</code></span>
+    <dd>Применяется для копирования файлов из контекста сборки в ваш образ. Она имеет две формы, <span class="term"><code>COPY 
+	<span class="emphasis"><em>src</em></span> dest_</code></span> 
+	и <span class="term"><code>COPY [&quot;<span class="emphasis"><em>src</em></span>&quot;, &quot;<span class="emphasis"><em>dest</em></span>&quot;]</code></span>, 
+	причем обе копируют файлы или каталоги <span class="emphasis"><em>src</em></span> в <span class="emphasis"><em>dest</em></span> внутри 
+	контейнера. Формат массива JSON требуется если пути имеют внутри пробелы. Для определения множества файлов или каталогов могут использоваться 
+	символы подстановки. Отметим, что вы не можете определять пути <span class="emphasis"><em>src</em></span> вне вашего контекста сборки (т.е., 
+	<span class="emphasis"><em>../another_dir/myfile</em></span> не будет работать).
+    <dt><span class="term"><code>ENTRYPOINT</code></span>
+    <dd>Устанавливает исполняемый код (и аргументы по умолчанию), которые должны быть выполнены при запуске контейнера. Все инструкции 
+	<span class="term"><code>CMD</code></span> или параметры для <span class="term"><code>docker run</code></span> после имени данного образа 
+	будут передаваться в качестве параметров для ее исполнения. Инструкции <span class="term"><code>ENTRYPOINT</code></span> часто применяются 
+	для обеспечения &quot;запускающих&quot; сценариев, которые инициализируют переменные и службы до интерпретации всех заданных аргументов.
+    <dt><span class="term"><code>ENV</code></span>
+    <dd>Устанавливает переменные окружения внутри образа. Она может служить ссылкой в последующих инструкциях. Например: 
+	   <pre class="screen">
+...
+ENV MY_VERSION 1.3
+RUN apt-get install -y mypackage=$MY_VERSION
+...
+	   </pre>
+	Эти переменные также будут доступны внутри образа.
+    <dt><span class="term"><code>EXPOSE</code></span>
+    <dd>Указывает Docker, что данный контейнер будет иметь процесс, прослушивающий заданный порт или порты. Данная информация используется Docker 
+	при соединении контейнеров (см. <a class="link" href="Ch04.html#04.4" target="_top">Связывание контейнеров</a>) или публикуйте порты предоставляя 
+	параметр <span class="term"><code>-P</code></span> в <span class="term"><code>docker run</code></span>; сама по себе инструкция 
+	<span class="term"><code>EXPOSE</code></span> не имеет влияния на сетевую среду.
+    <dt><span class="term"><code>FROM</code></span>
+    <dd>Устанавливает базовый образ для Dockerfile; последующие инструкции выполняют построение поверх данного образа. Базовый образ определяется как 
+	<span class="term"><code>IMAGE:TAG</code></span> (например, <span class="term"><code>debian:wheezy</code></span>). Если тег опущен, предполагается, 
+	что он будет <span class="term"><code>lastest</code></span>, но я настоятельно рекомендую вам всегда устанавливать этот тег на определенную версию 
+	во избежание неожиданностей. Должна быть самой первой инструкцией в Dockerfile.
+    <dt><span class="term"><code>MAINTAINER</code></span>
+    <dd>Устанавливает в вашем образе метаданные &quot;Author&quot; в значение данной строки. Вы можете извлекать его при помощи 
+	span class="term"><code>docker inspect -f {{.Author}} IMAGE</code></span>. Обычно используется подробностей имен и контактных данных специалиста 
+	по сопровождению данного образа.
+    <dt><span class="term"><code>ONBUILD</code></span>
+    <dd>Определяет инструкцию, которая должна быть выполнена позже, когда данный образ применяется в качестве базового уровня для другого образа. 
+	Это может быть полезным для обработки данных, которые будут добавлены в дочернем образе (т.е. эта инструкция может копировать в код из выбранного 
+	каталога и выполнять на текущих данных сценарий сборки).
+    <dt><span class="term"><code>RUN</code></span>
+    <dd>Выполняет заданную инструкцию внутри контейнера и фиксирует результат.
+    <dt><span class="term"><code>USER</code></span>
+    <dd>Устанавливает пользователя (через имя или UID) для использования во всех последующих инструкциях <span class="term"><code>RUN</code></span>, 
+	<span class="term"><code>CMD</code></span> или <span class="term"><code>ENTRYPOINT</code></span>. Отметим, что UID одни и те же и в хосте, и в 
+	контейнере, однако имена пользователей могут быть назначены для различных UID, что может сделать вещи мудрёными при установке разрешений.
+    <dt><span class="term"><code>VOLUME</code></span>
+    <dd>Определяет описываемый файл иликаталог в качестве тома. Если этот файл или каталог уже существуют в вашем образе, они будут скопированы в 
+	том после запуска контейнера. Если задано множество параметров, они интерпретируются как множество определений томов. Вы не можете определять 
+	каталог хоста для тома внутри Dockerfile по причинам переносимости и безопасности. Для получения дополнительной информации ознакомьтесь с разделом 
+	&quot;<a class="link" href="Ch04.html#04.5" target="_top">Управление данными томами и контейнерами данных</a>&quot;.
+    <dt><span class="term"><code>WORKDIR</code></span>
+    <dd>Устанавливает рабочий каталог для всех последующих инструкций <span class="term"><code>RUN</code></span>,
+	<span class="term"><code>CMD</code></span>, <span class="term"><code>ENTRYPOINT</code></span> и 
+	<span class="term"><code>ADD</code></span>, <span class="term"><code>COPY</code></span>. Может применяться многократно. Могут быть использованы 
+	относительные пути, причем они разрешаются относительно предыдущего <span class="term"><code>WORKDIR</code></span>.
+   </dl></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.3"> </a>Соединение контейнеров с миром</h3>
+   </div></div></div>
+   <p>Допустим вы выполняете внутри контейнера веб сервер. Как вы обеспечите доступ во внешний мир? Ответ заключается в &quot;публикации&quot; 
+   с командами <span class="term"><code>-p</code></span> или <span class="term"><code>-P</code></span>. Эти команды переадресовывают порты хоста 
+   в контейнер. Например:</p>
+	   <pre class="screen">
+$ docker run -d -p 8000:80 nginx
+af9038e18360002ef3f3658f16094dadd4928c4b3e88e347c9a746b131db5444
+$ curl localhost:8000
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+...
+	   </pre>
+   <p>Параметр  <span class="term"><code>-p 8000:80</code></span> предпишет Docker переадресовать порт хоста 8000 в порт 80 контейнера. В 
+   качестве альтернативы параметр <span class="term"><code>-P</code></span> может использоваться для сообщения Docker о необходимости 
+   автоматического выбора свободного порта для переадресации в хосте. Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -d -P nginx)
+$ docker port $ID 80
+0.0.0.0:32771
+$ curl localhost:32771
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+...
+	   </pre>
+   <p>Основное преимущество команды <span class="term"><code>-P</code></span> состоит в том, что вы больше не отвечаете за отслеживание 
+   выделения портов, что становится важным если у вас есть различные порты публикации контейнеров. В этих случаях вы можете применять команду 
+   <span class="term"><code>docker port</code></span> для изучения выделения портов Docker.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.4"> </a>Связывание контейнеров</h3>
+   </div></div></div>
+   <p>Связи (<span class="emphasis"><em>link</em></span>) Docker являются простейшим способом сделать возможным общение контейнеров на одном 
+   и том же хосте. При использовании сетевой модели Docker по умолчанию взаимодействие между контейнерами будет осуществляться через внутреннюю 
+   сетевую среду Docker, что означает, что взаимодействие не выходит за пределы сетевой среды вашего хоста.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Изменения сетевой среды Docker</th></tr><tr><td align="left" valign="top">
+	   <p>В последующих версиях Docker (вероятно, 1.9 и далее), идиомами средств сетевой среды контейнеров станут &quot;службы публикации&quot;,
+	   (publish service), а не связи контейнеров. Тем не менее, поддержка связей будет продолжена в обозримом будущем и примеры из данной 
+	   книги должны работать без изменений.</p>
+	   <p>С более подробной информацией о грядущих изменениях в сетевой среде можно ознакомится в разделе &quot;<a class="link" 
+	   href="Ch11.html#11.4" target="_top">Новая сетевая среда Docker</a>&quot;.</p></td></tr></table>
+     </div>
+   <p>Связи инициализируются путем задания аргумента <span class="term"><code>--link CONTAINER:ALIAS to docker run</code></span>, 
+   где <span class="term"><code>CONTAINER</code></span> является именем вашего связанного контейнера (в данном обсуждении и на протяжении всей 
+   этой книги я буду ссылаться на подсоединяемый контейнер как на связанный контейнер -<span class="emphasis"><em>link container</em></span>, 
+   а запускавший связь контейнер как главный контейнер -<span class="emphasis"><em>master container</em></span>- поскольку последний ответственен 
+   за инициацию связи), а <span class="term"><code>ALIAS</code></span> является локальным именем, используемым внутри главного контейнера для 
+   ссылки на вашу связь контейнера.</p>
+   <p>Использование связей Docker также добавит псевдоним (алиас) и идентификатор связанного контейнера в <span class="emphasis"><em>/etc/hosts</em></span>
+   в вашем главном контейнере, делая возможной адресацию связанного контейнера по имени из главного контейнера.</p>
+   <p>Кроме того, Docker установит группу переменных окружения внутри главного контейнера, которые предназначены для осуществления более простого 
+   общения со связанным контейнером. Например, если мы создаем связь к контейнеру Redis:</p>
+	   <pre class="screen">
+$ docker run -d --name myredis redis
+c9148dee046a6fefac48806cd8ec0ce85492b71f25e97aae9a1a75027b1c8423
+$ docker run --link myredis:redis debian env
+ATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=f015d58d53b5
+REDIS_PORT=tcp://172.17.0.22:6379
+REDIS_PORT_6379_TCP=tcp://172.17.0.22:6379
+REDIS_PORT_6379_TCP_ADDR=172.17.0.22
+REDIS_PORT_6379_TCP_PORT=6379
+REDIS_PORT_6379_TCP_PROTO=tcp
+REDIS_NAME=/distracted_rosalind/redis
+REDIS_ENV_REDIS_VERSION=3.0.3
+REDIS_ENV_REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-3.0.3.tar.gz
+REDIS_ENV_REDIS_DOWNLOAD_SHA1=0e2d7707327986ae652df717059354b358b83358
+HOME=/root
+	   </pre>
+   <p>мы можем увидеть, что Docker установил переменные окружения с префиксом <span class="term"><code>REDIS_PORT</code></span>, которые 
+   содержат информацию о том как связаться с этим контейнером. Большинство из них выглядит несколько избыточными, поскольку информация в 
+   их значениях содержится в имени переменной. Тем не менее, они полезны как форма документации, если больше ни для чего.</p>
+   <p>Docker также импортирует переменные окружения из связанного контейнера, причем они имеют префикс <span class="term"><code>REDIS_ENV</code></span>.
+   Хотя такая функциональность может быть очень полезной, важно иметь ввиду, что именно это же происходит если вы используете переменные 
+   для хранения секретной информации, например, токенов API или паролей баз данных.</p>
+   <p>По умолчанию контейнеры будут способны общаться друг с другом вне зависимости от того, связаны ли они в явном виде или нет. Если вы 
+   хотите избежать взаимодействия контейнеров, которые не были связаны, применяйте параметры <span class="term"><code>--icc=false</code></span> и 
+   <span class="term"><code>--iptables</code></span> при запуске демона Docker. Теперь, когда контейнеры связаны, Docker установит правила 
+   Iptalles для разрешения взаимодействия контейнеров по всем портам, которые были объявлены как незащищенные (expose).</p>
+   <p>К сожалению, связи Docker, после их установления, имеют ряд недостатков. Возможно, самый существенный состоит в том что они статичны - 
+   хотя связи должны сохраняться после перезапуска работы контейнеров, они не обновляются если связанный контейнер заменен. Кроме того, 
+   связанный контейнер должен запускаться перед главным контейнером, что означает что вы не можете иметь двустороннюю связь.</p>
+   <p>Для получения дополнительной информации по сетевым контейнерам отсылаем вас к <a class="link" href="Ch11.html" target="_top">Главе 11</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.5"> </a>Управление данными томами и контейнерами данных</h3>
+   </div></div></div>
+   <p>Напомним, что тома Docker являются каталогами (технически каталогами или файлами, поскольку том может быть отдельным файлом), которые не являются частью UFS 
+   контейнера (подробнее: &quot;<a class="link" href="Ch03.html#ImagesContainersUFS" target="_top">Образы, контейнеры и UFS</a>&quot;) - это просто находящиеся 
+   на хосте каталоги, которые закреплённо смонтированы (<span class="emphasis"><em>bind mount</em></span> <a class="link" href="Ch04.html#BindMounting" 
+   target="_top">Закреплённое монтирование</a>) в контейнер.</p>
+   <p>Существует три (хорошо, два с половиной, все зависит от способа подсчета) различных способа инициализации томов и важно понимать разницу между этими 
+   методами. При первом мы можем объявить том во время выполнения при помощи флага <span class="term"><code>-v</code></span>:</p>
+	   <pre class="screen">
+$ docker run -it --name container-test -h CONTAINER -v /data debian /bin/bash
+root@CONTAINER:/# ls /data
+root@CONTAINER:/#
+	   </pre>
+   <p>Это создаст каталог <span class="emphasis"><em>/data</em></span> внутри контейнера в томе. Все расположенные в каталоге <span class="term"><code>/data</code></span> 
+   файлы будут скопированы в том. Мы можем найти место расположения тома на вашем хосте путём выполнения на этом хосте <span class="term"><code>docker 
+   inspect</code></span> из новой оболочки:</p>
+	   <pre class="screen">
+$ docker inspect -f {{.Mounts}} container-test
+[{5cad... /mnt/sda1/var/lib/docker/volumes/5cad.../_data /data local true}]
+	   </pre>
+   <p>В этом случае том <span class="term"><code>/data/</code></span> в контейнере это просто ссылка на каталог хоста 
+   <span class="emphasis"><em>/var/lib/docker/volumes/5cad…/_data</em></span>. Чтобы удостовериться в этом, мы можем добавить файл в каталог на нашем хосте (если вы
+   связаны с удаленным демоном Docker, вам придется выполнить данную команду на удаленном хосте через SSH. Если вы используете машину Docker - что будет 
+   действительно так, если вы устанавливали Docker с помощью Docker Toolbox, вы можете сделать это с помощью <span class="term"><code>docker-machine ssh default</code></span>):</p>
+	   <pre class="screen">
+$ sudo touch /var/lib/docker/volumes/5cad.../_data/test-file
+	   </pre>
+   <p>И вы должны сразу увидеть внутри контейнера:</p>
+	   <pre class="screen">
+$ root@CONTAINER:/# ls /data
+test-file
+	   </pre>
+   <p>Второй способ установить том заключается в применении инструкции <span class="term"><code>VOLUME</code></span> в Dockerfile:</p>
+	   <pre class="screen">
+FROM debian:wheezy
+VOLUME /data
+	   </pre>
+   <p>Это имеет в точности тот же эффект, что и определение <span class="term"><code>-v /data</code></span> в <span class="term"><code>docker run</code></span>.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="SettingPermissions"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Установка полномочий в Dockerfile</th></tr><tr><td align="left" valign="top">
+	   <p>Часто вам необходимо устанавливать полномочия и владельцев на какой-то том или инициализировать некий том с какими-то определенными по умолчанию данными или 
+	   файлами настройки. Здесь ключевым моментом, который вы должны знать, является то, что все инструкции в Dockerfile после инструкции 
+	   <span class="term"><code>VOLUME</code></span> не способны вносить изменения в этот том. Например, следующий Dockerfile не будет работать ожидаемым образом:</p>
+	   <pre class="screen">
+FROM debian:wheezy
+RUN useradd foo
+VOLUME /data
+RUN touch /data/x
+RUN chown -R foo:foo /data
+	   </pre>
+	   <p>Мы хотим выполнить команды <span class="term"><code>touch</code></span> и <span class="term"><code>chown</code></span> в файловой системе образа, 
+	   однако на самом деле они выполняются внутри тома временного контейнера, используемого для создания данного уровня (отсылаем назад к 
+	   &quot;<a class="link" href="Ch04.html#04.2" target="_top">Как выполняется построение образов</a>&quot; за дополнительными подробностями). Этот том 
+	   будет удален после выполнения команды, что лишает смысла данной инструкции.</p>
+	   <p>Следующий Dockerfile будет работать:</p>
+	   <pre class="screen">
+FROM debian:wheezy
+RUN useradd foo
+RUN mkdir /data &amp;&amp; touch /data/x
+RUN chown -R foo:foo /data
+VOLUME /data
+	   </pre>
+	   <p>Когда в этом образе запускается контейнер, Docker скопирует все файлы из каталога тома в образ внутри тома контейнера. Этого не случится если вы опишите 
+	   каталог хоста для данного тома (таким образом эти файлы хоста не будут случайно перезаписаны).</p>
+	   <p>Если по некоторой причине вы не можете установить полномочия и владельца в инструкции <span class="term"><code>RUN</code></span>, вы должны сделать это с 
+	   применением сценария <span class="term"><code>CMD</code></span> или <span class="term"><code>ENTRYPOINT</code></span>, который выполнится после создания 
+	   контейнера.</p>
+	   </td></tr></table>
+     </div>
+   <p>Третий (Эквивалентный второму?) способ заключается в расширении параметра <span class="term"><code>-v</code></span> для 
+   <span class="term"><code>docker run</code></span> с явным закреплением каталога в хосте с применением формата <span class="term"><code>-v HOST_DIR:CONTAINER_DIR</code></span>.
+   Это можно сделать в Dockerfile (что будет не портируемым и к тому же не безопасным). Например:</p>
+	   <pre class="screen">
+$ docker run -v /home/adrian/data:/data debian ls /data
+	   </pre>
+   <p>Это смонтирует каталог <span class="emphasis"><em>/home/adrian/data</em></span> на данном хосте в качестве <span class="emphasis"><em>/data</em></span>
+   внутри вашего контейнера. Всё уже существующее в каталоге <span class="emphasis"><em>/home/adrian/data</em></span> будет доступно внутри данного контейнера.
+   Если каталог <span class="emphasis"><em>/data</em></span> уже существует в этом контейнере, его содержимое будет скрыто данным томом. В отличие от прочих 
+   вызовов никакие файлы из рассматриваемого образа не будут копироваться в данный том, а том не будет удален Docker-ом (то есть 
+   <span class="term"><code>docker rm -v</code></span> не удалит том, который смонтирован в выбранном пользователем каталоге).</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="BindMounting"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Закреплённое монтирование</th></tr><tr><td align="left" valign="top">
+	      <p>Когда в каком-то томе используется определенный каталог хоста (синтаксис <span class="term"><code>-v HOST_DIR:CONTAINER_DIR</code></span>), 
+		  на это обычно ссылаются как на закрепленное монтирование (<span class="emphasis"><em>bind mounting</em></span>). Хотя это и вводит слегка в заблуждение, 
+		  поскольку все тома технически монтируются с прикреплением - разница состоит в том, что точка монтирования делается в явном виде в отличие от скрытого 
+		  определения при каталоге, принадлежащем Docker.</p></td></tr></table>
+     </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.5.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Совместное использование данных</span></h4>
+    </div></div></div>
+   <p>Синтаксис <span class="term"><code>-v HOST_DIR:CONTAINER_DIR</code></span> очень полезен при совместном использовании файлов хостом и одним или более 
+   контейнеров. Например, файлы настройки могут сохраняться на хосте и монтироваться в контейнер из общих образов.</p>
+   <p>Мы также совместно используем данные в контейнерах при помощи параметра <span class="term"><code>--volumes-from CONTAINER</code></span> в 
+   <span class="term"><code>docker run</code></span>. Например, мы можем создать новый контейнер, который имеет доступ к вашим томам из контейнера в нашем 
+   предыдущем примере примерно так:</p>
+	   <pre class="screen">
+$ docker run -it -h NEWCONTAINER --volumes-from container-test debian /bin/bash
+root@NEWCONTAINER:/# ls /data
+test-file
+root@NEWCONTAINER:/#
+	   </pre>
+   <p>Важно отметить, что это работает вне зависимости от того, содержит или нет контейнер работающие в настоящий момент тома (в данном случае 
+   <span class="term"><code>container-test</code></span>). Пока существует по крайней мере одна связь с неким томом, он не может быть удален.</p>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.5.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Контейнеры данных</span></h4>
+    </div></div></div>
+   <p>Общая практика состоит в создании контейнеров данных (<span class="emphasis"><em>data container</em></span>) - контейнеров, чья основная роль 
+   заключается в предоставлении совместного использования другим контейнерам. Главное преимущество такого подхода заключается в том, что он 
+   поддерживает удобное пространство имен для томов которые легко могут загружаться с применением команды <span class="term"><code>--volumes-from</code></span>.</p>
+   <p>Например, мы можем создать контейнер данных для базы данных PostgerSQL с помощью следующей команды:</p>
+	   <pre class="screen">
+$ docker run --name dbdata postgres echo &quot;Data-only container for postgres&quot;
+	   </pre>
+   <p>Это создаст контейнер из образа <span class="term"><code>postgres</code></span> и проведет инициализацию всех томов определенных в данном образе до 
+   выполнения команды <span class="term"><code>echo</code></span> и выхода (Мы могли бы применить любую команду, которая выйдет непосредственно здесь, однако 
+   сообщение <span class="term"><code>echo</code></span> будет служить нам напоминанием о цели данного контейнера при выполнении <span class="term"><code>docker 
+   ps -a</code></span>. Другим вариантом будет не запускать контейнер вообще, воспользовавшись командой <span class="term"><code>docker create</code></span>
+   вместо <span class="term"><code> docker run</code></span>). Нет необходимости оставлять контейнеры данных исполняемыми, поскольку это будет пустой тратой 
+   ресурсов.</p>
+   <p>Затем мы можем использовать этот том из других контейнеров при помощи параметра <span class="term"><code>--volumes-from</code></span>. Например:</p>
+	   <pre class="screen">
+$ docker run -d --volumes-from dbdata --name db1 postgres
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DataContainersImages"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Образы для контейнеров данных</th></tr><tr><td align="left" valign="top">
+	      <p>Обычно не существует потребности применять &quot;минимальный образ&quot; подобный <span class="term"><code>busy box</code></span> или 
+		  <span class="term"><code>scratch</code></span> для контейнера данных. Просто используйте тот же образ, который применяется для контейнера, 
+		  потребляющего эти данные. Например, примените образ <span class="term"><code>postgres</code></span> для создания контейнера, который будет 
+		  использоваться с базой данных Potgres.</p>
+		  <p>Применение того же самого образа не потребует дополнительного пространства - вы уже должны иметь загруженный или созданный образ для вашего потребителя. 
+		  Это также дает вашему образу возможность наполнить ваш контейнер некими начальными данными и гарантировать, что полномочия установлены 
+		  корректно.</p></td></tr></table>
+     </div>
+  </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.5.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Удаление томов</span></h4>
+    </div></div></div>
+   <p>Тома могут быть удалены только если:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>контейнер был удалён при помощи <span class="term"><code>docker rm -v</code></span> <span class="emphasis"><em>или</em></span></p></p>
+	 </li>
+	 <li class="listitem">
+	 <p>В <span class="term"><code>docker run</code></span> был обеспечен флаг <span class="term"><code>--rm</code></span></p>
+	 </li>
+    </ul>
+    </div>
+   <p><span class="emphasis"><em>И</em></span></p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>не существует связей контейнеров к данному тому</p>
+	 </li>
+	 <li class="listitem">
+	 <p>никакой каталог хоста не определено для этого тома (не применялся синтаксис <span class="term"><code>-v HOST_DIR:CONTAINER_DIR</code></span>)</p>
+	 </li>
+    </ul>
+    </div>
+   <p>На текущий момент это означает, что если вы не сильно беспокоитесь о том, чтобы всегда выполнять контейнеры описанным способом, то у вас, скорее всего, 
+   в каталоге установки Docker имеются бесхозные файлы и каталоги и не существует простого способа объяснения что они собой представляют. Docker работает над 
+   командой &quot;volume&quot; верхнего уровня, которая позволит вам перечислять, создавать, инспектировать и удалять тома независимых контейнеров. Ожидается ее 
+   появление в 1.9, который должен состояться к моменту публикации данной книги.</p>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.6"> </a>Общие команды Docker</h3>
+   </div></div></div>
+   <p>Данный раздел предоставляет короткий (по крайней мере в сравнении с официальной документацией) и не исчерпывающий обзор различных команд 
+   Docker, в основном сосредотачиваясь на повседневно используемых командах. Поскольку Docker быстро меняется и эволюционирует, отсылаем вас к 
+   <a class="link" href="https://docs.docker.com/" target="_top">официальной документации</a> на веб- сайте Docker за исчерпывающими и 
+   современными подробностями по данным командам. Я не описываю в подробностях параметры и синтаксис различных приводимых команд за исключением 
+   <span class="term"><code>docker run</code></span>. За этим отсылаю ко встроенному помощнику, к к торому можно получить доступ задав параметр 
+   <span class="term"><code>--help</code></span> в любой команде или посредством команды <span class="term"><code>docker help</code></span>.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DockerBooleanFlags"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Булевы флаги Docker</th></tr><tr><td align="left" valign="top">
+	      <p>В большинстве инструментов командной строки Unix вы найдете флаги, которые не принимают значение, например, 
+		  <span class="term"><code>-l</code></span> в <span class="term"><code>ls -l</code></span>. Поскольку эти флаги являются либо установленными, либо нет, Docker 
+		  рассматривает их рассматривает их как булевы (<span class="emphasis"><em>boolean</em></span>) и - в отличие от большинства прочего 
+		  инструментария - поддерживает явное определение булева значения флага (т.е. он будет принимать оба варианта, 
+		  <span class="term"><code>-f=true</code></span> и <span class="term"><code>-f</code></span>. Кроме того, 
+		  использоваться с базой данных Potgres.</p>
+		  <p>Применение того же самого образа не потребует дополнительного пространства - вы уже должны иметь загруженный или созданный образ для вашего потребителя. 
+		  Это также дает вашему образу возможность наполнить ваш контейнер некими начальными данными и гарантировать, что полномочия установлены 
+		  корректно. Кроме того (и это то место, где все становится запутанным) вы можете иметь флаги, установленные по умолчанию как в истину, так и 
+		  в ложь. В отличие от установки по умолчанию в значение ложь, установка по умолчанию в истину считается принятой при отсутствии определения в 
+		  явном виде. Указание флага без аргумента имеет тот же эффект, что и установка его в значение истина - сброс значения истины флага по умолчанию 
+		  не задается аргументом со значением; единственным способом сброса истинного значения флага по умолчанию может быть явное его определение 
+		  в значение ложь (т.е. <span class="term"><code>-f=false</code></span>).</p>
+		  <p>Чтобы узнать что является значением флага по умолчанию истина или ложь, обратитесь к команде <span class="term"><code>docker 
+		  help</code></span>. Например:</p>
+	   <pre class="screen">
+$ docker logs --help
+...
+-f, --follow=false Follow log output
+--help=false Print usage
+-t, --timestamps=false Show timestamps
+...
+	   </pre>
+		  <p>показывает, что аргументы <span class="term"><code>-f</code></span>, <span class="term"><code>--help</code></span> и <span class="term"><code>-t</code></span>
+		  по умолчанию имеют значение ложь.</p>
+		  <p>Чтобы дать пару конкретных примеров, рассмотрим истинное значение по умолчанию <span class="term"><code>--sig-proxy</code></span> для 
+		  <span class="term"><code>docker run</code></span>. Единственный способ выключить этот параметр заключается в его явной установке в 
+		  значение ложь. Например:</p>
+	   <pre class="screen">
+$ docker run --sig-proxy=false ...
+	   </pre>
+		  <p>Всё последующее эквивалентно:</p>
+	   <pre class="screen">
+$ docker run --sig-proxy=true ...
+$ docker run --sig-proxy ...
+$ docker run ...
+	   </pre>
+		  <p>В случае значения по умолчанию, установленного в ложь, например, <span class="term"><code>--read-only</code></span>, 
+		  следующие примеры установят его в истину:</p>
+	   <pre class="screen">
+$ docker run --read-only=true
+$ docker run --read-only
+	   </pre>
+		  <p>Оставление его неописанным или явная установка в значение ложь эквивалентны. Это также приводит к некоторому причудливому 
+		  обращению с флагами, которые обычно накоротко замыкают логику (например, <span class="term"><code>docker ps --help=false</code></span>)
+		  будет работать как обычная команда без выдачи сообщения подсказки).</p>
+		  </td></tr></table>
+     </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.6.1">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Команда run</span></h4>
+    </div></div></div>
+   <p>Мы уже видели команду <span class="term"><code>docker run</code></span> в действии; это команда перехода для запуска новых контейнеров. В качестве 
+   таковой она является на сегодня самой сложной командой и поддерживает большой список возможных параметров. Параметры позволяют пользователям 
+   настраивать пользователям то, как должны работать образы, перезаписывать установки Dockerfile, настраивать сетевую среду, а также устанавливать 
+   полномочия и ресурсы для определенного контейнера.</p>
+   <p>Следующие параметры управляют жизненным циклом определяемого контейнера и его основными режимами работы:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>-a</code></span>, <span class="term"><code>--attach</code></span>
+    <dd><p>Подключает определяемый поток (<span class="term"><code>STDOUT</code></span> и т.п.) к вашему терминалу. Если не определен, подключаются и 
+	<span class="term"><code>stdout</code></span>, и <span class="term"><code>stderr</code></span>. В случае когда параметр не задан и контейнер 
+	запускается в интерактивном режиме (<span class="term"><code>-i</code></span>), также подключается <span class="term"><code>stdin</code></span>.</p>
+	<p>Несовместим с <span class="term"><code>-d</code></span>.</p>
+    <dt><span class="term"><code>-d</code></span>, <span class="term"><code>--dettach</code></span>
+    <dd><p>Выполняет контейнер в &quot;отключённом режиме&quot;. Команда будет выполнять контейнер в фоновом режиме и вернёт идентификатор 
+	контейнера.</p>
+    <dt><span class="term"><code>-i</code></span>, <span class="term"><code>--interactive</code></span>
+    <dd><p>Оставляет открытым <span class="term"><code>stdin</code></span> (даже когда он не подключен). Обычно используется совместно с 
+	<span class="term"><code>-t</code></span> для запуска интерактивного сеанса контейнера. Например:</p>
+	   <pre class="screen">
+$ docker run -it debian /bin/bash
+root@bd0f26f928bb:/# ls
+...snip...
+	   </pre>
+    <dt><span class="term"><code>--restart</code></span>
+    <dd><p>Определяет когда Docker попытается перезапустить исчезнувший контейнер. Параметр <span class="term"><code>no</code></span> никогда не 
+	будет пытаться повторно запускать какой бы то ни было контейнер, а <span class="term"><code>always</code></span> будет пытаться осуществлять 
+	повторный запуск вне зависимости от состояния выхода. Параметр <span class="term"><code>on-failure</code></span> будет пытаться осуществлять 
+	повторный запуск контейнера, который <span class="emphasis"><em>вышел с ненулевым состоянием</em></span> и может получать необязательный 
+	параметр, определяющий число попыток повторного запуска до прекращения (если не задан, будет пытаться без ограничений). Например,
+	<span class="term"><code>docker run --restart onfailure:10 postgres</code></span> будет запускать контейнер 
+	<span class="term"><code>postgres</code></span> и попытается повторно запустить его 10 раз, если он будет выходить с ненулевым кодом.</p>
+    <dt><span class="term"><code>--rm</code></span>
+    <dd><p>Автоматически удаляет контейнер, если он существует. Не может применяться вместе с <span class="term"><code>-d</code></span>.</p>
+    <dt><span class="term"><code>-t</code></span>, <span class="term"><code>--tty</code></span>
+    <dd><p>Выделяет псевдо- TTY. Обычно применяется совместно с <span class="term"><code>-i</code></span> для запуска интерактивного контейнера</p>
+   </dl></div>
+   <p>Следующие параметры выполняют установку имен и переменных контейнера:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>-e</code></span>, <span class="term"><code>--env</code></span>
+    <dd><p>Устанавливает переменные внутри контейнера. Например:</p>
+	   <pre class="screen">
+$ docker run -e var1=val -e var2=&quot;val 2&quot; debian env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=b15f833d65d8
+var1=val
+var2=val 2
+HOME=/root
+	   </pre>
+	<p>Также отметим параметр <span class="term"><code>--env-file</code></span> для передачи параметров через некий файл.</p>
+    <dt><span class="term"><code>-h</code></span>, <span class="term"><code>--hostname</code></span>
+    <dd><p>Устанавливает unix имя хоста контейнера в значение <span class="term"><code>NAME</code></span>. Например:</p>
+	   <pre class="screen">
+$ docker run -h &quot;myhost&quot; debian hostname
+myhost
+	   </pre>
+    <dt><span class="term"><code>--name NAME</code></span>
+    <dd><p>Назначает контейнеру имя <span class="term"><code>NAME</code></span>. Это имя затем может применяться для адресации контейнера 
+	в других командах Docker.</p>
+   </dl></div>
+   <p>Следующие параметры позволяют пользователю настраивать тома. (за подробностями обращайтесь к &quot;<a class="link" 
+   href="Ch04.html#04.5" target="_top">Управление данными томами и контейнерами данных</a>&quot;):</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>-v</code></span>, <span class="term"><code>--volume</code></span>
+    <dd><p>Существует две формы параметров для настройки тома (файла или каталога внутри контейнера, который является частью собственной 
+	файловой системы хоста, а не UFS контейнера). Первая форма только определяет каталог в пределах контейнера и будет закрепляться (bind) за 
+	каталогом хоста по выбору Docker. Вторая форма определяет каталог хоста для закрепления (bind).</p>
+    <dt><span class="term"><code>--volumes-from</code></span>
+    <dd><p>Монтирует том из определяемого контейнера. Часто применяется в ассоциации с контейнерами данных (см. &quot;<a class="link" 
+	href="Ch04.html#04.5.2" target="_top">Контейнеры данных</a>&quot;).</p>
+   </dl></div>
+   <p>Существует также ряд параметров, влияющих на сетевую среду. Основные команды, которые вы можете предполагать для обычного применения:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>--expose</code></span>
+    <dd><p>Эквивалентна <span class="term"><code>EXPOSE</code></span> инструкции Dockerfile. Устанавливает порт или диапазон портов для 
+	применения в контейнере, однако не открывает порт. Имеет смысл только совместно с <span class="term"><code>-P</code></span> и при 
+	связанных контейнерах.</p>
+    <dt><span class="term"><code>--link</code></span>
+    <dd><p>Устанавливает частный сетевой интерфейс для определенного контейнера. Для дополнительной информации обращайтесь к 
+    &quot;<a class="link" href="Ch04.html#04.4" target="_top">Связывание контейнеров</a>&quot;.</p>
+    <dt><span class="term"><code>-p</code></span>, <span class="term"><code>--publish</code></span>
+    <dd><p>&quot;Публикует&quot; порт контейнера, делая его доступным в хосте. Если порт хоста не определен, выбирается случайный порт с 
+	большим значением, который может быть обнаружен посредством команды <span class="term"><code>docker port</code></span>. Также может 
+	быть определен интерфейс хоста, на который проецируется данный порт.</p>
+    <dt><span class="term"><code>-P</code></span>, <span class="term"><code>--publish-all</code></span>
+    <dd><p>Публикует все выставленные (<span class="emphasis"><em>expose</em></span>) в контейнере для хоста порты. Для каждого 
+	выставляемого порта будет выбираться случайный порт с большим числовым значением. Команда <span class="term"><code>docker 
+	port</code></span> может применяться для просмотра соответствий.</p>
+   </dl></div>
+   <p>Существует ряд более углубленных параметров, которые вы можете найти полезными если вам нужно создавать более изощрённую сетевую 
+   среду. Имейте в виду, что ряд этих параметров потребует от вас наличия некоторого понимания сетевой среды и того, как она реализуется 
+   в Docker. За дополнительной информацией обращайтесь к <a class="link" href="Ch11.html" target="_top">Главе 11</a>.</p>
+   <p>Команда <span class="term"><code>docker run</code></span> также имеет большой набор параметров для управления правами и возможностями 
+   контейнеров. За их подробностями обращайтесь к <a class="link" href="Ch13.html" target="_top">Главе 13</a>.</p>
+   <p>Следующие параметры напрямую перезаписывают установки Dockerfile:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>--entrypoint</code></span>
+    <dd><p>Устанавливает точку входа для вашего контейнера на задаваемый параметр, перезаписывает любую инструкцию 
+	<span class="term"><code>ENTRYPOINT</code></span> в Dockerfile.</p>
+    <dt><span class="term"><code>-u</code></span>, <span class="term"><code>--user</code></span>
+    <dd><p>Устанавливает пользователя, от имени которого выполняется данная команда. Может определяться как именем пользователя, так и его UID.
+	Перезаписывает инструкцию <span class="term"><code>USER</code></span> в Dockerfile.</p>
+    <dt><span class="term"><code>-w</code></span>, <span class="term"><code>--workdir</code></span>
+    <dd><p>Устанавливает рабочий каталог в контейнере в значение предоставляемого пути. Перекрывает любое значение из Dockerfile.</p>
+   </dl></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.6.2">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Управление контейнерами</span></h4>
+    </div></div></div>
+   <p>Помимо <span class="term"><code>docker run</code></span> в процессе жизненного цикла контейнеров следующие команды 
+   <span class="term"><code>docker</code></span> применяются для управления ими:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>docker attach [OPTIONS] CONTAINER</code></span>
+    <dd><p>Команда <span class="term"><code>attach</code></span> позволяет пользователю наблюдать за главным процессом в вашем 
+	контейнере или взаимодействовать с ним. Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -d debian sh -c &quot;while true; do echo 'tick'; sleep 1; done;&quot;)
+$ docker attach $ID
+tick
+tick
+tick
+tick
+	   </pre>
+	<p>Отметим, что применение <span class="term"><code>CTRL-C</code></span> для выхода завершит главный процесс и вызовет завершение работы 
+	контейнера.</p>
+    <dt><span class="term"><code>docker create</code></span>
+    <dd><p>Создает контейнер из некого образа, но не запускает его. Получает большинство параметров аналогичных 
+	<span class="term"><code>docker run</code></span>. Чтобы запустить созданный контейнер воспользуйтесь <span class="term"><code>docker 
+	start</code></span>.</p>
+    <dt><span class="term"><code>docker cp</code></span>
+    <dd><p>Копирует файлы и каталоги между контейнером и хостом.</p>
+    <dt><span class="term"><code>docker exec</code></span>
+    <dd><p>Выполняет команду внутри контейнера. Может быть использована для выполнения задач сопровождения или как замена 
+	<span class="term"><code>ssh</code></span> для регистрации в контейнере.</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -d debian sh -c &quot;while true; do sleep 1; done;&quot;)
+$ docker exec $ID echo &quot;Hello&quot;
+Hello
+$ docker exec -it $ID /bin/bash
+root@5c6c32041d68:/# ls
+bin dev home lib64 mnt proc run selinux sys usr
+boot etc lib media opt root sbin srv tmp var
+root@5c6c32041d68:/# exit
+exit
+	   </pre>
+    <dt><span class="term"><code>docker kill</code></span>
+    <dd><p>Отправляет сигнал главному процессу (PID 1) контейнера. По умолчанию отправляет <span class="term"><code>SIGKILL</code></span>, 
+	который вызывает немедленный выход из контейнера. В качестве альтернативы может быть определен другой сигнал при помощи параметра 
+	<span class="term"><code>-s</code></span>. Возвращается идентификатор контейнера.</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -d debian bash -c \
+&quot;trap 'echo caught' SIGTRAP; while true; do sleep 1; done;&quot;)
+$ docker kill -s SIGTRAP $ID
+e33da73c275b56e734a4bbbefc0b41f6ba84967d09ba08314edd860ebd2da86c
+$ docker logs $ID
+caught
+$ docker kill $ID
+e33da73c275b56e734a4bbbefc0b41f6ba84967d09ba08314edd860ebd2da86c
+	   </pre>
+    <dt><span class="term"><code>docker pause</code></span>
+    <dd><p>Приостанавливает все процессы в данном контейнере. Процессы не получают никакие сигналы, поскольку они были приостановлены и, 
+	следовательно, не могут быть выключены или вычищены. Процесс может быть запущен повторно при помощи <span class="term"><code>docker 
+	unpause</code></span>. <span class="term"><code>docker pause</code></span> использует внутреннюю функциональность 
+	<span class="term"><code>cgroup freezer</code></span> Linux. Данная команда противопоставляется <span class="term"><code>docker 
+	stop</code></span>, которая останавливает процесс и посылает сигналы, наблюдаемые процессами.</p>
+    <dt><span class="term"><code>docker restart</code></span>
+    <dd><p>Повторно запускает один или более контейнеров. Примерно эквивалентна вызову <span class="term"><code>docker stop</code></span> 
+	с последующим <span class="term"><code>docker start</code></span> в контейнерах. Принимает необязательный параметр 
+	<span class="term"><code>-t</code></span>, который определяет промежуток времени для ожидания перед закрытием контейнера перед 
+	его уничтожением отправкой сигнала <span class="term"><code>SIGTERM</code></span>.</p>
+    <dt><span class="term"><code>docker rm</code></span>
+    <dd><p>Удаляет один или более контейнеров. Возвращает имена или идентификаторы успешно удаленных контейнеров. По умолчанию 
+	<span class="term"><code>docker rm</code></span> не удаляет никакие тома. Параметр <span class="term"><code>-f</code></span> может 
+	применяться для удаления выполняемого контейнера, а параметр <span class="term"><code>-v</code></span> удалит созданные контейнером 
+	тома (только если они не были закреплённо смонтированы или не используются другим контейнером).</p>
+	<p>Например, чтобы удалить все остановленные контейнеры:</p>
+	   <pre class="screen">
+$ docker rm $(docker ps -aq)
+b7a4e94253b3
+e33da73c275b
+f47074b60757
+	   </pre>
+    <dt><span class="term"><code>docker start</code></span>
+    <dd><p>Запускает остановленный контейнер (или контейнеры). Может использоваться для повторного как запуска для контейнера, который 
+	завершил свою работу, так и для контейнера, который был создан при помощи <span class="term"><code>docker create</code></span>, но 
+	ещё никогда не запускался.</p>
+    <dt><span class="term"><code>docker stop</code></span>
+    <dd><p>Останавливает (но не удаляет) один или более контейнеров. После вызова в контейнере <span class="term"><code>docker 
+	stop</code></span>, он перейдёт в состояние &quot;выходящего&quot;. Принимает необязательный параметр 
+	<span class="term"><code>-t</code></span>, который определяет промежуток времени для ожидания перед закрытием контейнера перед 
+	его уничтожением отправкой сигнала <span class="term"><code>SIGTERM</code></span>.</p>
+    <dt><span class="term"><code>docker unpause</code></span>
+    <dd><p>Повторно запускает контейнер, приостановленный перед этим при помощи <span class="term"><code>docker pause</code></span>.</p>
+   </dl></div>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="DetachingFromContainers"> </a>
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Отсоединение от контейнеров</th></tr><tr><td align="left" valign="top">
+			<p>При подсоединении к контейнеру Docker, будь это результатом запуска его в интерактивном режиме или присоединение к нему 
+			при помощи <span class="term"><code>docker attach</code></span>, вы остановите запущенный контейнер если попытаетесь 
+			отсоединиться от него посредством <span class="term"><code>CTRL-C</code></span>. Вместо этого, если вы примените 
+			<span class="term"><code>CTRL-P</code></span> <span class="term"><code>CTRL-Q</code></span>, вы сможете отсоединиться от 
+			контейнера без его остановки.</p>
+			<p>Данный код работает только когда вы присоединены в интерактивном режиме с TTY (т.е. с применением обоих флагов, и 
+			<span class="term"><code>-i</code></span>, и <span class="term"><code>-t</code></span>).</p>
+			</td></tr></table>
+		  </div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.6.3">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Информация Docker</span></h4>
+    </div></div></div>
+   <p>Следующие подкоманды могут быть использованы для получения дополнительной информации по установке и применению Docker:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>docker info</code></span>
+    <dd><p>Выводит различную информацию о системе Docker и хосте.</p>
+    <dt><span class="term"><code>docker help</code></span>
+    <dd><p>Выводит информацию о применении и справочные сведения по определенной подкоманде. Идентична выполнению команды 
+	с флагом <span class="term"><code>--help</code></span>.</p>
+    <dt><span class="term"><code>docker info</code></span>
+    <dd><p>Выдаёт информацию о версии Docker для клиента и сервера а также версию использовавшегося для компиляции Go.</p>
+   </dl></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.6.4">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Информация контейнера</span></h4>
+    </div></div></div>
+   <p>Следующие команды предоставляют дополнительную информацию по запущенным и остановленным контейнерам.</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>docker diff</code></span>
+    <dd><p>Отображает изменения, внесенные в файловую систему контейнеров по сравнению с образом, из которого он был запущен. Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -d debian touch /NEW-FILE)
+$ docker diff $ID
+A /NEW-FILE
+	   </pre>
+    <dt><span class="term"><code>docker events</code></span>
+    <dd><p>Выводит события демона в реальном масштабе времени. Для выход используется <span class="term"><code>CTRL-C</code></span>.
+	Для дополнительных сведений по этой теме обращайтесь к <a class="link" href="Ch10.html" target="_top">Главе 10</a>.</p>
+    <dt><span class="term"><code>docker inspect</code></span>
+    <dd><p>Предоставляет детализированную информацию по определенным контейнерам или образам. Информация содержит большую часть информации 
+	о настройках и охватывает сетевые установки, а также соответствия томов. Команда может принимать один параметр, <span class="term"><code>-f</code></span>,
+	который применяется для поддержки шаблона Go, который может быть использован для форматирования и фильтрации вывода.</p>
+    <dt><span class="term"><code>docker logs</code></span>
+    <dd><p>Выводит &quot;журналы&quot; контейнера. Это просто все, что было записано в <span class="term"><code>STDERR</code></span>
+	и <span class="term"><code>STDOUT</code></span> внутри контейнера. За дополнительной информацией о регистрации обращайтесь 
+	к <a class="link" href="Ch10.html" target="_top">Главе 10</a>.</p>
+    <dt><span class="term"><code>docker port</code></span>
+    <dd><p>Выводит список соответствий раскрытых портов для данного контейнера. Опционально может определяться для поиска внутренним портом 
+	контейнера и протоколом. Часто применяется после <span class="term"><code>docker run -P &lt;image&gt;</code></span> для 
+	обнаружения назначенных портов.</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -P -d redis)
+$ docker port $ID
+6379/tcp -> 0.0.0.0:32768
+$ docker port $ID 6379
+0.0.0.0:32768
+$ docker port $ID 6379/tcp
+0.0.0.0:32768
+	   </pre>
+    <dt><span class="term"><code>docker ps</code></span>
+    <dd><p>Предоставляет информацию верхнего уровня по текущим контейнерам, например, имя, идентификатор и состояние. Принимает 
+	большое число дополнительных параметров, особенно отметим <span class="term"><code>-a</code></span> для получения всех 
+	контейнеров, а не только запущенных. Также отметим параметр <span class="term"><code>-q</code></span>, который возвращает 
+	только идентификаторы контейнеров, что очень полезно в качестве входной информации для других команд, подобных 
+	<span class="term"><code>docker rm</code></span>.</p>
+    <dt><span class="term"><code>docker top</code></span>
+    <dd><p>Предоставляет информацию по выполняемым процессам в пределах заданного контейнера. На самом деле, данная команда 
+	выполняет на данном хосте утилиту Unix <span class="term"><code>ps</code></span> и фильтрует процессы для данного 
+	контейнера. Эта команда может быть определена с теми же параметрами, что и утилита <span class="term"><code>ps</code></span>, 
+	а по умолчанию установлены <span class="term"><code>-ef</code></span> (однако проверяйте, что поле идентификатора процесса, 
+	PID, все ещё сохраняется в выводе).</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -d redis)
+$ docker top $ID
+UID PID PPID C STIME TTY TIME CMD
+999 9243 1836 0 15:44 ? 00:00:00 redis-server *:6379
+$ ps -f -u 999
+UID PID PPID C STIME TTY TIME CMD
+999 9243 1836 0 15:44 ? 00:00:00 redis-server *:6379
+$ docker top $ID -axZ
+LABEL PID TTY STAT TIME COMMAND
+docker-default 9243 ? Ssl 0:00 redis-server *:6379
+	   </pre>
+   </dl></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.6.5">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Обращение с образами</span></h4>
+    </div></div></div>
+   <p>Следующие команды предоставляют инструментарий для создания образов и работы с ними:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>docker build</code></span>
+    <dd><p>Строит образ из Dockerfile. За подробностями обращайтесь к разделам &quot;<a class="link" href="Ch03.html#03.3" 
+	target="_top">Построение образов из Dockerfile</a>&quot; и &quot;<a class="link" href="Ch04.html#04.2" target="_top">Как 
+	выполняется построение образов</a>&quot;.</p>
+    <dt><span class="term"><code>docker commit</code></span>
+    <dd><p>Создаёт образ из заданного контейнера. Хотя <span class="term"><code>docker commit</code></span> может быть полезной, 
+	обычно предпочтительнее создавать образы с применением <span class="term"><code>docker build</code></span>, которая легче повторяется.
+	По умолчанию контейнеры приостанавливаются перед <span class="term"><code>commit</code></span>, однако это может быть выключено 
+	при помощи параметра <span class="term"><code>--pause=false</code></span>. Принимает параметры <span class="term"><code>-a</code></span>
+	и <span class="term"><code>-m</code></span> для установки метаданных.</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ ID=$(docker run -d redis touch /new-file)
+$ docker commit -a &quot;Joe Bloggs&quot; -m &quot;Comment&quot; $ID commit:test
+ac479108b0fa9a02a7fb290a22dacd5e20c867ec512d6813ed42e3517711a0cf
+$ docker images commit
+REPOSITORY TAG IMAGE ID CREATED VIRTUAL SIZE
+commit test ac479108b0fa About a minute ago 111 MB
+$ docker run commit:test ls /new-file
+/new-file
+	   </pre>
+    <dt><span class="term"><code>docker export</code></span>
+    <dd><p>Экспортирует содержимое файловой системы контейнера в виде архива tar в <span class="term"><code>STDOUT</code></span>.
+	Получающийся в результате архив может загружаться при помощи <span class="term"><code>docker import</code></span>. Отметим, что 
+	экспортируется только файловая система; все метаданные, такие как раскрытые порты, установки <span class="term"><code>CMD</code></span> 
+	и <span class="term"><code>ENTRYPOINT</code></span> будут утрачены. Также отметим, что никакие тома не включаются в этот экспорт. 
+	Противопоставляется <span class="term"><code>docker save</code></span>.</p>
+    <dt><span class="term"><code>docker history</code></span>
+    <dd><p>Выводит информацию по каждому уровню в образе.</p>
+    <dt><span class="term"><code>docker images</code></span>
+    <dd><p>Предоставляет список локальных образов, включая информацию подобную имени репозитория, имени тэга и размеру. По умолчанию 
+	промежуточные образы (используемые при создании образов верхнего уровня) не отображаются. <span class="term"><code>VIRTUAL SIZE</code></span>
+	является общим размером образа, включающим все лежащие в его основе уровни. Поскольку эти уровни могут использоваться совместно с 
+	другими образами, простое сложение всех этих размеров не обеспечивает точную оценку использования диска. Кроме того, образы могут 
+	появляться много раз если они имеют более одного тэга; различные образы могут распознаваться по сравнению их идентификаторов. 
+	Принимает различные параметры; в частности, отметим <span class="term"><code>-q</code></span>, возвращающий только идентификаторы 
+	образов, что очень полезно в качестве входной информации для прочих команд, например, <span class="term"><code> docker rmi</code></span>.</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ docker images | head -4
+REPOSITORY TAG IMAGE ID CREATED VIRTUAL SIZE
+identidock_identidock latest 9fc66b46a2e6 26 hours ago 839.8 MB
+redis latest 868be653dea3 6 days ago 110.8 MB
+containersol/pres-base latest 13919d434c95 2 weeks ago 401.8 MB
+	   </pre>
+	<p>Чтобы удалить все подвисшие образы:</p>
+	   <pre class="screen">
+$ docker rmi $(docker images -q -f dangling=true)
+Deleted: a9979d5ace9af55a562b8436ba66a1538357bc2e0e43765b406f2cf0388fe062
+	   </pre>
+    <dt><span class="term"><code>docker import</code></span>
+    <dd><p>Создает образ из файла архива, содержащего файловую систему, например, из созданного <span class="term"><code>docker 
+	export</code></span>. Архив может задаваться путем к файлу, или URL, или получаться из потока через 
+	<span class="term"><code>STDIN</code></span> (при использовании флага <span class="term"><code>-</code></span>). 
+	Возвращает идентификатор вновь созданного образа. Образ может быть помечен поддержкой репозитория и именем тэга. Отметим, 
+	что образ построенный из <span class="term"><code>import</code></span> будет состоять только из одного уровня и потеряет 
+	все установки настрое Docker такие как раскрытые порты и значения <span class="term"><code>CMD</code></span>. Противопоставляется 
+	<span class="term"><code>docker load</code></span></p>
+	<p>Пример &quot;выровненного&quot; посредством экспорта и импорта образа:</p>
+	   <pre class="screen">
+$ docker export 35d171091d78 | docker import - flatten:test
+5a9bc529af25e2cf6411c6d87442e0805c066b96e561fbd1935122f988086009
+$ docker history flatten:test
+IMAGE CREATED CREATED BY SIZE COMMENT
+981804b0c2b2 59 seconds ago 317.7 MB Imported from -
+	   </pre>
+    <dt><span class="term"><code>docker load</code></span>
+    <dd><p>Загружает репозиторий из архива tar, передаваемого через <span class="term"><code>STDIN</code></span>. Этот 
+	репозиторий может содержать различные образы и тэги. В отличие от <span class="term"><code>docker import</code></span>, 
+	данные образы будут содержать историю и метаданные. Продходящие файлы архива создаются командой <span class="term"><code>docker 
+	save</code></span>, делая <span class="term"><code>save</code></span> и <span class="term"><code>load</code></span> 
+	жизнеспособной альтернативой реестру для распространения образов и поддеживая резервные копирования. В качестве примера 
+	посмотрите <span class="term"><code>docker save</code></span>.</p>
+    <dt><span class="term"><code>docker rmi</code></span>
+    <dd><p>Удаляет заданный образ или образы. Образы определяются идентификатором или именами репозитория или тэга. Если предоставляется 
+	имя репозитория без имени тэга, значение тэга предполагается установленным в <span class="term"><code>latest</code></span>. Чтобы 
+	удалить образы, которые существуют во множестве репозиториев, определите такой образ идентификатором и примените параметр
+	<span class="term"><code>-f</code></span>. Вам придется выполнить это по разу для каждого репозитория.</p>
+    <dt><span class="term"><code>docker save</code></span>
+    <dd><p>Сохраняет поименованные образы или репозитории в архив tar, который передаётся в поток <span class="term"><code>STDOT</code></span> 
+	(для записи в файл используйте <span class="term"><code>-o</code></span>). Образы могут определяться идентификатором или в виде 
+	<span class="term"><code>repository:tag</code></span>. Если задано только имя репозитория, в таком репозитории будут сохранены 
+	все образы, а не только помеченные тэгом <span class="term"><code>latest</code></span>. Может быть использован совместно с 
+	<span class="term"><code>docker load</code></span> для распространения образов или их резервного копирования.</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ docker save -o /tmp/redis.tar redis:latest
+$ docker rmi redis:latest
+Untagged: redis:latest
+Deleted: 868be653dea3ff6082b043c0f34b95bb180cc82ab14a18d9d6b8e27b7929762c
+...
+$ docker load -i /tmp/redis.tar
+$ docker images redis
+REPOSITORY          TAG            IMAGE ID            CREATED
+VIRTUAL SIZE
+redis               latest         0f3059144681        3 months ago
+111 MB
+	   </pre>
+    <dt><span class="term"><code>docker tag</code></span>
+    <dd><p>Связывает имя репозитория и тэга с образом. Образ может определяться идентификатором или репозиторием и тэгом (если никакой 
+	не определен, предполагается тэг <span class="term"><code>latest</code></span>). Если никакой тэг не задан для нового имени, 
+	предполагается <span class="term"><code>latest</code></span>.</p>
+	<p>Например:</p>
+	   <pre class="screen">
+$ docker tag faa2b75ce09a newname<sup><strong>1</strong></sup>
+$ docker tag newname:latest amouat/newname<sup><strong>2</strong></sup>
+$ docker tag newname:latest amouat/newname:newtag<sup><strong>3</strong></sup>
+$ docker tag newname:latest myregistry.com:5000/newname:newtag<sup><strong>4</strong></sup>
+	   </pre>
+		<div class="variablelist"><dl>
+		<dt><sup><strong>1</strong></sup>
+		<dd><p>Добавляет образ с идентификатором <span class="term"><code>faa2b75ce09a</code></span> в репозиторий 
+		<span class="term"><code>newname</code></span>, используя тэг <span class="term"><code>latest</code></span>, 
+		поскольку никакой другой не определён.</p>
+		<dt><sup><strong>2</strong></sup>
+		<dd><p>Добавляет образ <span class="term"><code>newname:latest</code></span> в репозиторий 
+		<span class="term"><code>amouat/newname</code></span>, опять применяется тэг <span class="term"><code>latest</code></span>.
+		Эта метка присутствует в формате удобном для размещения в Docker Hub в предположении, что пользователем является  
+		<span class="term"><code>amouat</code></span>.</p>
+		<dt><sup><strong>3</strong></sup>
+		<dd><p>Аналогично предыдущему, за исключением замены тэга <span class="term"><code>latest</code></span> на 
+		<span class="term"><code>newtag</code></span>.</p>
+		<dt><sup><strong>4</strong></sup>
+		<dd><p>Добавляет новый образ <span class="term"><code>newname:latest</code></span> в репозиторий 
+		<span class="term"><code>amouat/newname</code></span> с тэгом <span class="term"><code>newtag</code></span>.
+		Эта метка представляется в формате, удобном для размещения по адресу 
+		<span class="emphasis"><em>http://myregistry.com:5000.(((range=&quot;endofrange&quot;,startref=&quot;ix_04_docker_fundamentals-asciidoc23&quot;)))(((range=&quot;endofrange&quot;,startref=&quot;ix_04_docker_fundamentals-asciidoc22&quot;)))</em></span>.</p>
+		</dl></div>
+   </dl></div>
+   </div>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.6.6">
+	  </a><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Использование реестра</span></h4>
+    </div></div></div>
+   <p></p>
+   <p>Следующие команды относятся к использованию реестра, включая Docking Hub. Убедитесь что Docker сохраняет мандаты в файл 
+   <span class="emphasis"><em>.dockercfg</em></span> в вашем домашнем каталоге:</p>
+   <div class="variablelist"><dl>
+    <dt><span class="term"><code>docker login</code></span>
+    <dd><p>Регистрируется или входит на заданный сервер реестра. Если не определён никакой сервер, предполагается, что им будет 
+	Docker Hub. По мере необходимости процесс будет запрашивать подробности, либо они могут быть определены в качестве параметров.</p> 
+    <dt><span class="term"><code>docker logout</code></span>
+    <dd><p>Выходит из реестра Docker. Если не определен никакой сервер, предполагается что это Docker Hub.</p> 
+    <dt><span class="term"><code>docker pull</code></span>
+    <dd><p>Загружает заданные образы из реестра. Реестр определяется по имени образа и по умолчанию предполагается Docker Hub. Если 
+	не указано имя тэга, будет загружаться образ помеченный тэгом <span class="term"><code>latest</code></span> (если доступен). Для 
+	загрузки всех образов из репозитория применяйте параметр <span class="term"><code>-a</code></span>.</p> 
+    <dt><span class="term"><code>docker push</code></span>
+    <dd><p>Выгружает образ или репозиторий в реестр. Если не задан никакой тэг, данная команда выгрузит в определённый реестр
+	<span class="emphasis"><em>все</em></span> образы вашего репозитория, а не только те, которые помечены как 
+	<span class="term"><code>latest</code></span>.</p> 
+    <dt><span class="term"><code>docker search</code></span>
+    <dd><p> Выводит список общедоступных репозиториев в Docker Hub соответствующих терминам поиска. Ограничивает выдачу до 25 
+	репозиториев. Вы также можете фильтровать с помощью звёздочек и автоматизировать построения. Обычно легче применять веб- сайты.</p> 
+   </dl></div>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04.7"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В данной главе мы предоставили много информации! Даже если вы только пробежались по основным моментам, вы должны получить достаточно 
+   широкое понимание того как работает Docker и его основных команд. В <a class="link" href="Ch05.html" target="_top">Части 2</a> мы увидим как 
+   применять эти знания в проектах программных продуктов, причем начиная с их разработки до производства. Вы можете найти материалы данной 
+   главы более понятными после их рассмотрения на практике.</p>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

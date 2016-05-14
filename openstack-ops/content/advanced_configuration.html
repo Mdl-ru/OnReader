@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 17. Расширенная настройка - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="operations.html" title="Эксплуатация"/>
+<link rel="prev" href="upstream_openstack.html" title="Глава 16. Обратная связь OpenStack"/>
+<link rel="next" href="ch_ops_upgrades.html" title="Глава 18. Модернизации"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:43:10+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//advanced_configuration.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 17. Расширенная настройка';
+PrevRef = 'upstream_openstack.html';
+UpRef = 'operations.html';
+NextRef = 'ch_ops_upgrades.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="chapter"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="advanced_configuration"> </a>Глава 17. Расширенная настройка</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="advanced_configuration.html#driver_differences">Разница между различными драйверами</a></span></dt><dt><span class="section">
+ <a href="advanced_configuration.html#periodic_tasks">Реализация периодических заданий</a></span></dt><dt><span class="section">
+ <a href="advanced_configuration.html#specific-advanced-config-topics">Специфические разделы настройки</a></span></dt></dl>
+</div>
+<p>OpenStack предназначен для успешной работы в различных вариантахмонтажных
+установок, начиная с очень маленьких частных облаков до огромных общедоступных облаков. Чтобы добиться 
+этого, разработчики добавили параметры настройки в свой код, что позволяет 
+изменять поведение различных компонентов в зависимости от ваших потребностей. 
+К сожалению, не возможно охватить все вероятные установки с помощью 
+параметров конфигурации по умолчанию.
+<a id="d9e7077" class="indexterm"/>
+<a id="d9e7080" class="indexterm"/></p>
+<p>К моменту написания данной книги, OpenStack имеет более чем 1500 вариантов настроек. 
+Вы можете увидеть их задокументированными в 
+<a class="link" href="http://docs.openstack.org/trunk/config-reference/content/config_overview.html" target="_top">
+справочном руководстве по настройке OpenStack</a>. 
+Данная глава не может надеяться на документирование всех вариантов. Однако мы 
+постараемся описать важные понятия, чтобы вы знали, куда идти копать 
+для получения дополнительной информации.</p>
+ 
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="driver_differences"> </a>Разница между различными драйверами</h2>
+</div></div></div>
+<p>Многие проекты OpenStack реализованы уровне драйвера, и каждый из этих 
+драйверов будет применять свои собственные параметры конфигурации. Например, 
+в вычислительной среде OpenStack (nova), существуют различные реализации драйвера гипервизора-
+libvirt, хenserver, hyper-V и vmware. Не все 
+из этих драйверов гипервизора имеют схожие свойства, причем каждый из них имеет различные 
+требования по настройке.
+<a id="d9e7088" class="indexterm"/>
+<a id="d9e7091" class="indexterm"/></p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+<p>Реализованые к настоящему времени гипервизоры 
+<a class="link" href="http://docs.openstack.org/trunk/config-reference/content/section_compute-hypervisors.html" target="_top">
+приведены на веб-сайте документации OpenStack</a>. 
+Вы можете увидеть матрицу различных свойств в драйверах гипервизора вычислительной среды 
+OpenStack (nova) на вики OpenStack, на  
+<a class="link" href="https://wiki.openstack.org/wiki/HypervisorSupportMatrix" target="_top">
+странице матрицы поддерживаемых гипервизоров</a>.</p></td></tr></table>
+</div>
+<p>Смысл, который мы пытаемся получить здесь заключается в том, что 
+данный вариант соответствует вашему выбору драйвера не только потому что он
+существует. Обычно документация отмечает, какие драйверы применяется для 
+настройки.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="periodic_tasks"> </a>Реализация периодических заданий</h2>
+</div></div></div>
+<p>Еще одной распространенной концепцией в различных проектах OpenStack заключается в 
+периодических задачах. Периодические задачи очень похожи на задания cron в 
+обычных Unix системах, однако они выполняются внутри процесса OpenStack. Например, 
+когда вычислительной среде OpenStack (nova) требуется определить какие образы 
+она может удалить из своего локального кэша, она выполняет периодическую задачу.
+<a id="d9e7102" class="indexterm"/>
+<a id="d9e7104" class="indexterm"/></p>
+<p>Периодические задачи важны для осмысления из-за ограничений в 
+модели потоков, которую использует OpenStack. OpenStack использует совместные 
+потоки в Python, что означает, что если что-то долго и сложно работает, 
+то оно будет блокировать другие задачи внутри этого процесса на выполнение, 
+пока это что-то добровольно не отдаст выполнение другому совместному потоку.
+<a id="d9e7108" class="indexterm"/></p>
+<p>Наглядным примером этого является процесс <code class="literal">nova-compute</code>. 
+Для того, чтобы управлять кэшем образов при помощи libvirt, 
+<code class="literal">nova-compute</code> имеет периодический процесс, который сканирует 
+содержимое кэша образа. Частью этой проверки является вычисление контрольной суммы 
+для каждого из образов и получение подтверждения, что контрольная сумма соответствует тому, что ожидает
+<code class="literal">nova-compute</code>. Однако, образы могут быть очень 
+большими, и вычисление таких контрольных сумм может занять много времени.
+В одном из обращений, прежде чем о нем было сообщено как об ошибке и ее исправлении, 
+<code class="literal">nova-compute</code> блокировал эту задачу и переставал 
+отвечать на запросы RPC. Это было видно для пользователей в виде отказов таких операций, как 
+порождение или удаление экземпляров.</p>
+<p>Выход из этой ситуации заключается в том, что если вы видите процесс OpenStack, который, 
+как представляется, &quot;остановился&quot; на некоторое время, а затем продолжает процесс нормально, вы 
+должны проверить, что периодические задачи не испытывают проблем. Один из способов сделать это- 
+отключить периодические задачи, установив интервал их в ноль. 
+Кроме того, вы можете настроить как часто эти периодические задачи выполняются в некоторых 
+случаях. Возможно, имеет смысл запускать их с другой частотой со значения по умолчанию.</p>
+<p>Частота определяется отдельно для каждой периодической задачи. 
+Поэтому, чтобы отключить каждую периодическую задачу в вычислительной среде OpenStack (Nova), вам 
+нужно будет установить ряд опций конфигурации в ноль. Текущий 
+список опций настройки, которые вы должны установить в ноль это:</p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+ <p><code class="literal">bandwidth_poll_interval</code></p></li><li class="listitem">
+ <p><code class="literal">sync_power_state_interval</code></p></li><li class="listitem">
+ <p><code class="literal">heal_instance_info_cache_interval</code></p></li><li class="listitem">
+ <p><code class="literal">host_state_interval</code></p></li><li class="listitem">
+ <p><code class="literal">image_cache_manager_interval</code></p></li><li class="listitem">
+ <p><code class="literal">reclaim_instance_interval</code></p></li><li class="listitem">
+ <p><code class="literal">volume_usage_poll_interval</code></p></li><li class="listitem">
+ <p><code class="literal">shelved_poll_interval</code></p></li><li class="listitem">
+ <p><code class="literal">shelved_offload_time</code></p></li><li class="listitem">
+ <p><code class="literal">instance_delete_interval</code></p></li></ul>
+</div>
+<p>Для установки параметров конфигурации в ноль, включите строку, подобную
+To set a configuration option to zero, include a line such as
+<code class="literal">image_cache_manager_interval=0</code> в вашем файле
+<code class="filename">nova.conf</code>.</p>
+<p>Этот список будет меняться между редакциями, поэтому, пожалуйста, обратитесь к вашему 
+руководству по настройке для текущих данных.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+ <a id="specific-advanced-config-topics"> </a>Специфические разделы настройки</h2>
+</div></div></div>
+<div class="toc"><dl><dt><span class="section">
+ <a href="advanced_configuration.html#adv-config-security">Настройка безопасности для вычислительной среды, сетевых ресурсов и систем хранения</a></span></dt><dt><span class="section">
+ <a href="advanced_configuration.html#adv-config-ha">Высокая доступность</a></span></dt><dt><span class="section">
+ <a href="advanced_configuration.html#adv-config-ipv6">Включение поддержки IPv6</a></span></dt><dt><span class="section">
+ <a href="advanced_configuration.html#specific-advanced-config-period-tasks">Частота периодических заданий для вычислительной среды</a></span></dt><dt><span class="section">
+ <a href="advanced_configuration.html#adv-config-geography">Анализ географии для хранилищ объектов</a></span></dt></dl>
+</div>
+<p>В этом разделе рассматриваются конкретные примеры вариантов настройки, которые 
+вы могли бы рассмотреть для тюнинга. Это ни в коем случае не исчерпывающий список.</p>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="adv-config-security"> </a>Настройка безопасности для вычислительной среды, сетевых ресурсов и систем хранения</h3>
+</div></div></div>
+<p><span class="emphasis"><em><a class="link" href="http://docs.openstack.org/sec/" target="_top">
+Руководство OpenStack по безопасности</a></em></span> предоставляет глубокое погружение в 
+вопросы безопасности облака OpenStack, в том числе SSL/TLS, управление ключами, PKI и управления 
+сертификатами, обмена данными и неприкосновенности частной жизни, а также согласованности
+<a id="d9e7160" class="indexterm"/>
+<a id="d9e7163" class="indexterm"/></p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="adv-config-ha"> </a>Высокая доступность</h3>
+</div></div></div>
+<p><span class="emphasis"><em>
+<a class="link" href="http://docs.openstack.org/high-availability-guide/content/" target="_top">
+Руководство по высокой доступности OpenStack</a></em></span>
+предлагает советы для устранения единой точки отказа, 
+которая может привести к простоям системы. Хотя этот документ не предоставляет
+исчерпывающих инструкций, он предлагает методы и техники, позволяющие избежать простоев и потери данных.
+<a id="d9e7171" class="indexterm"/>
+<a id="d9e7173" class="indexterm"/></p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="adv-config-ipv6"> </a>Включение поддержки IPv6</h3>
+</div></div></div>
+<p>Редакция Havana с сетевой средой OpenStack (neutron) не обеспечивают 
+полную поддержку IPv6. Улучшенная поддержка планируется в редакции Icehouse. 
+Вы можете следовать развитию, наблюдая за 
+<a class="link" href="https://wiki.openstack.org/wiki/Meetings/Neutron-IPv6-Subteam" target="_top">
+neutron IPv6 Subteam at work</a>.
+<a id="d9e7180" class="indexterm"/>
+<a id="d9e7183" class="indexterm"/>
+<a id="d9e7185" class="indexterm"/></p>
+<p>Изменяя настройку конфигурации, вы можете настроить IPv6 при 
+использовании <code class="literal">nova-network</code> для сетевой среды, и проверить 
+установки, описанные для FlatDHCP и конфигурации с многими хостами. 
+Основой является побудить <code class="literal">nova-network</code>
+полагать, что команда <code class="literal">radvd</code>
+выполнилась успешно. Полная настройка детально обсуждается в 
+блог- посте Cybera, 
+<a class="link" href="http://www.cybera.ca/news-and-events/tech-radar/an-ipv6-enabled-cloud/" target="_top">
+“Установка IPv6 облака”</a>.</p>
+</div>
+
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="specific-advanced-config-period-tasks"> </a>Частота периодических заданий для вычислительной среды</h3>
+</div></div></div>
+<p>До выхода редакции Grizzly, частота периодических задач указывалась в секундах между 
+исполнениями. Это означало, что если периодическая задача для выполнения требовала 30 минут, 
+а частота была установлена на час, то периодическая задача фактически выполнялась каждые 
+90 минут, потому что задача будет ждать час после окончания выполнения перед новым запуском. 
+Ситуация изменилась в Grizzly, и теперь мы измеряем частоту периодических 
+задач с момента старта задачи. Таким образом, наша периодическая задача 
+на 30 минут будет запускаться каждый час, с 30-минутным ожиданием между окончанием 
+первого запуска и началом следующего.
+<a id="d9e7196" class="indexterm"/></p>
+</div>
+<div class="section">
+<div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title">
+ <a id="adv-config-geography"> </a>Анализ географии для хранилищ объектов</h3>
+</div></div></div>
+<p>Расширенная поддержка глобальной кластеризации серверов хранения объектов должна 
+быть добавлена начиная с редакции Grizzly (1.8.0), когда были введены регионы. 
+Вы могли бы реализовывать такие глобальные кластеры для обеспечения репликации данных по 
+географическим областям, на случай природного стихийного бедствия, 
+а также для того, чтобы пользователи могли записывать или получить доступ 
+к чвоим объектам быстрее на основе ближайшего центра обработки данных. 
+Вы настраиваете регион по умолчанию с одной зоной для каждого кластера, 
+однако, будьте уверены, что ваша глобальная сеть (WAN) сможет справиться с 
+дополнительной нагрузкой запросов и ответов 
+между зонами после того, как вы добавите несколько зон и построить кольцо, 
+которое обрабатывает бОльшее число областей. Для получения дополнительной информации
+обратитесь к документации по
+<a class="link" href="http://docs.openstack.org/developer/swift/admin_guide.html#geographically-distributed-clusters" target="_top">
+Географически распределенным кластерам</a>.
+<a id="d9e7203" class="indexterm"/>
+<a id="d9e7206" class="indexterm"/>
+<a id="d9e7209" class="indexterm"/></p>
+</div></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

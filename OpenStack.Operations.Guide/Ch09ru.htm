@@ -1,0 +1,604 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 9. Управление проектами и пользователями. Руководство по эксплуатации OpenStack.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing, Swift, RESTful, Object Storage, Ceph, CORS, CNAME lookup, Domain remap, Health check, Rate limiting, Bulk delete, Container qoutas, account qoutas, TempURL, Static Web, Form post, recon, Swift origin server, Bulk archive auto-extraction">
+   <meta name="Description" content="Глава 9. Управление проектами и пользователями. Руководство по эксплуатации OpenStack.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="index.htm">Руководство по эксплуатации OpenStack</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<h2 align="right">ГЛАВА 9</h2>
+<hr />
+<h1 id="Chapter_09" align="right">Управление проектами и пользователями</h1>
+
+<em>Пользуйтесь переводом <strong>существенно переработанной и дополенной <a href="http://onreader.mdl.ru/openstack-ops/content/projects_users.html">2й редакции</a></strong> (12-дек-2014),<br />
+находящейся теперь и в режиме <a href="http://docs.openstack.org/openstack-ops/content/projects_users.html">постоянно обновляемой документации</a> <br />
+(последняя пока доступна только на англ.яз.).</em><br />
+<p></p>
+
+<p>Без пользователей облако OpenStack не имеет большого значения.
+ В данной главе рассматриваются темы, связанные с пользователями, проектами и квотами.</p>
+
+<h2 id="Ch0901">Проекты или владельцы</h2>
+<p>В интерфейсах пользователя и документации OpenStack, группа пользователей называется 
+<span class="red-heading">проектом</span> или <span class="red-heading">владельцем</span>.
+ Эти термины взаимозаменяемые.</p>
+<p>Первоначальная реализация вычислительной службы (Compute Service) OpenStack (nova) имела собственную 
+систему аутентификации и использовался термин проект.
+ После перемещения аутентификации в проект службы идентификации (Identity Service) OpenStack (keystone), 
+ для названия группы пользователей используется термин владелец.</p>
+<p>Данное руководство использует термин проект, за исключением примера, демонстрирующего
+ взаимодействие с инструментом, который использует термин владелец.</p>
+
+<h2 id="Ch0902">Управление проектами</h2>
+<p>Пользователи должны быть связаны хотя бы с одним проектом, хотя они и могут принадлежать множеству проектов.
+ Следовательно, перед добавлением пользователей вы должны создать хотя бы один проект.</p>
+
+<h3 id="Ch090201">Добавление проектов</h3>
+<p>Чтобы создать проект при помощи инструментальной панели:</p>
+<ul>
+ <li>Войдите в систему с правами администратора.
+ <li>Выберите ссылку &quot;Projects&quot; (Проекты) в левой панели навигации.
+ <li>Справа вверху кликните на кнопку &quot;Create Project&quot; (Создать проект).
+</ul>
+<p>Вам будет предложено ввести название проекта и, что не является обязательным, однако рекомендуется, 
+его описание.
+ Чтобы включить этот проект, установите флажок в нижней части формы.
+ По умолчанию эта опция включена.</p>
+<p>Кроме того, можно добавить участников проекта и скорректировать его квоты.
+ Мы обсудим это позже, однако, на практике может оказаться весьма удобным иметь дело со всеми этими 
+ операциями одновременно.</p>
+<p>Чтобы создать проект с использованием интерфейса командной строки (CLI):</p>
+<p>Для добавления проекта с использованием командной строки необходимо применить утилиту keystone, 
+которая использует термин &quot;владелец&quot; (tenant) вместо &quot;проект&quot; (project).
+ <br /><code>
+# keystone tenant-create --name=demo
+ </code></p>
+<p>Данная команда создает проект с именем &quot;demo&quot;.
+ По желанию вы можете добавить строку описания путем добавления --description  tenant-description, что 
+ может быть очень полезным.
+ Также вы можете создать группу в отключенном состоянии путем добавления в команде  --enabled false.
+ По умолчанию проекты создаются во включенном состоянии.</p>
+
+<h2 id="Ch0903">Квоты</h2>
+<p>Для предотвращения исчерпания системных возможностей без предупреждения можно настроить квоты.
+ Квоты являются эксплутационными пределами.
+ Например, можно управлять количеством доступных владельцу гигабайт, чтобы пребывать в уверенности, 
+ что отдельный владелец не займет все доступное дисковое пространство.
+ В настоящее время квоты применяются на уровне владельца (или проекта), а не на уровне пользователя.</p>
+<p>Используя интерфейс командной строки вы можете управлять квотами OpenStack Compute Service и 
+Block Storage Service.</p>
+<p>Как правило, значения по умолчанию изменяются, поскольку владельцу требуется больше, чем установленное 
+в OpenStack по умолчанию значение 10 томов на владельца, или более чем установленное по умолчанию в 
+OpenStack значение в 1Тб дискового пространства на вычислительном узле.</p>
+<p><img src="i/Tip.jpg" alt="Tip" />Для просмотра всех владельцев выполните команду:
+ <br /><code>
+$ <strong>keystone tenant-list</strong><br /><br />
++----------------------------------+----------+---------+<br />
+| id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | name &nbsp; &nbsp; | enabled |<br />
++----------------------------------+----------+---------+<br />
+| a981642d22c94e159a4a6540f70f9f8d | admin &nbsp;&nbsp; | True &nbsp;&nbsp; |<br />
+| 934b662357674c7b9f5e4ec6ded4d0e7 | tenant01 | True &nbsp;&nbsp; |<br />
+| 7bc1dbfd7d284ec4a856ea1eb82dca80 | tenant02 | True &nbsp;&nbsp; |<br />
+| 9c554aaef7804ba49e1b21cbd97d218a | services | True &nbsp;&nbsp; |<br />
++----------------------------------+----------+---------+<br />
+ </code></p>
+
+<h3 id="Ch090302">Установка квот вычислительной службы (Compute Service)</h3>
+<p>В качестве пользователя с правами администратора, вы можете обновить квоты вычислительной службы для 
+существующих владельцев, а также обновлять значения квот по умолчанию для нового владельца.
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td width="20%">Квота<br />&nbsp;</td>
+ <td width="60%">Описание<br />&nbsp;</td>
+ <td width="20%">Название атрибута<br />&nbsp;</td>
+</tr><tr>
+ <td>Fixed Ips<br />&nbsp;</td>
+ <td>Количество фиксированных IP- адресов, доступных владельцу.
+  Это число должно быть больше или равно числу доступных экземпляров.<br />&nbsp;</td>
+ <td>Fixed Ips<br />&nbsp;</td>
+</tr><tr>
+ <td>Floating Ips<br />&nbsp;</td>
+ <td>Количество плавающих IP, доступных владельцу<br />&nbsp;</td>
+ <td>floating-ips<br />&nbsp;</td>
+</tr><tr>
+ <td>Injected File Content Bytes<br />&nbsp;</td>
+ <td>Количество байт содержимого, доступных для внедряемого файла<br />&nbsp;</td>
+ <td>injected-file-content-bytes<br />&nbsp;</td>
+</tr><tr>
+ <td>Injected File Path Bytes<br />&nbsp;</td>
+ <td>Количество байт, доступных для пути внедряемого файла<br />&nbsp;</td>
+ <td>injected-file-path-bytes<br />&nbsp;</td>
+</tr><tr>
+ <td>Injected Files<br />&nbsp;</td>
+ <td>Количество внедряемых файлов, доступных владельцу<br />&nbsp;</td>
+ <td>injected-files<br />&nbsp;</td>
+</tr><tr>
+ <td>Instances<br />&nbsp;</td>
+ <td>Количество экземпляров, доступных владельцу<br />&nbsp;</td>
+ <td>instances<br />&nbsp;</td>
+</tr><tr>
+ <td>Key Pairs<br />&nbsp;</td>
+ <td>Количество ключевых пар, доступных пользователю<br />&nbsp;</td>
+ <td>key-pairs<br />&nbsp;</td>
+</tr><tr>
+ <td>Metadata Items<br />&nbsp;</td>
+ <td>Количество элементов метаданных, доступных экземпляру<br />&nbsp;</td>
+ <td>metadata-items<br />&nbsp;</td>
+</tr><tr>
+ <td>Ram<br />&nbsp;</td>
+ <td>Объем ОЗУ в мегебайтах, доступных владельцу<br />&nbsp;</td>
+ <td>ram<br />&nbsp;</td>
+</tr><tr>
+ <td>Security Group Rules<br />&nbsp;</td>
+ <td>Количество правил, доступных группе безопасности<br />&nbsp;</td>
+ <td>security-group-rules<br />&nbsp;</td>
+</tr><tr>
+ <td>Security Groups<br />&nbsp;</td>
+ <td>Количество групп безопасности, доступных владельцу<br />&nbsp;</td>
+ <td>security-groups<br />&nbsp;</td>
+</tr><tr>
+ <td>VCPUs<br />&nbsp;</td>
+ <td>Количество ядер экземпляров, доступных владельцу<br />&nbsp;</td>
+ <td>cores<br />&nbsp;</td>
+</tr></tbody></table><hr />
+</p>
+
+<h4 id="Ch09030202">Просмотр и обновление вычислительных квот для владельца (проекта)</h4>
+<p>Для просмотра и обновления квот владельца вы можете использовать поддерживаемые клиентом 
+<em>python-novaclient</em> команды <em>nova quota-*</em> в качестве пользователя с правами администратора.</p>
+
+<h5 id="Ch0903020201">Для просмотра и обновления значения квот по умолчанию</h5>
+<ol>
+ <li>Выведите список всех квот по умолчаниюдля всех владельцев следующим образом:<br />
+ <code>
+  $ <strong>nova quota-defaults</strong>
+ </code><br />
+ Например:<br />
+ <code>
+$ <strong>nova quota-defaults</strong><br />
++-----------------------------+-------+<br />
+| Property &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Value |<br />
++-----------------------------+-------+<br />
+| metadata_items &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 128&nbsp; &nbsp;|<br />
+| injected_file_content_bytes | 10240 |<br />
+| ram &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 51200 |<br />
+| floating_ips &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 10 &nbsp; &nbsp;|<br />
+| key_pairs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| 100&nbsp; &nbsp;|<br />
+| instances &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| 10 &nbsp; &nbsp;|<br />
+| security_group_rules &nbsp; &nbsp; &nbsp; &nbsp;| 20 &nbsp; &nbsp;|<br />
+| injected_files &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 5 &nbsp; &nbsp; |<br />
+| cores &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| 20 &nbsp; &nbsp;|<br />
+| fixed_ips &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;| -1 &nbsp; &nbsp;|<br />
+| injected_file_path_bytes &nbsp; &nbsp;| 255&nbsp; &nbsp;|<br />
+| security_groups &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp;|<br />
++-----------------------------+-------+<br />
+ </code><br />
+ <li>Обновите значения по умолчанию для нового владельца следующим образом:<br />
+ <code>
+$ <strong>nova quota-class-update default <em>key value</em></strong>
+ </code><br />
+ Например:<br />
+ <code>
+$ <strong>nova quota-class-update default instances 15</strong>
+ </code><br />
+</ol>
+
+<h5 id="Ch0903020202">Чтобы просмотреть значения квот для владельца (проекта)</h5>
+<ol>
+ <li>Поместите ID владельца в используемую переменную следующим образом:<br />
+ <code>
+  $ <strong>tenant=$(keystone tenant-list | awk '/<em>tenantName</em>/ {print $2}')</strong>
+ </code><br />
+ <li>Выведите список значений квот, установленных в настоящее время для владельца следующим образом:<br />
+ <code>
+  $ <strong>nova quota-show --tenant $tenant</strong>
+ </code><br />
+  Например:<br />
+ <code>
+$ <strong>nova quota-show --tenant $tenant</strong><br />
++-----------------------------+-------+<br />
+| Property &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Value |<br />
++-----------------------------+-------+<br />
+| metadata_items &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 128 &nbsp; |<br />
+| injected_file_content_bytes | 10240 |<br />
+| ram &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 51200 |<br />
+| floating_ips &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 12 &nbsp; &nbsp;|<br />
+| key_pairs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 100 &nbsp; |<br />
+| instances &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp;|<br />
+| security_group_rules &nbsp; &nbsp; &nbsp; &nbsp;| 20 &nbsp; &nbsp;|<br />
+| injected_files &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 5 &nbsp; &nbsp; |<br />
+| cores &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 20 &nbsp; &nbsp;|<br />
+| fixed_ips &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | -1 &nbsp; &nbsp;|<br />
+| injected_file_path_bytes &nbsp; &nbsp;| 255 &nbsp; |<br />
+| security_groups &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp;|<br />
++-----------------------------+-------+<br />
+ </code><br />
+</ol>
+
+<h5 id="Ch0903020203">Чтобы обновить значения квот для владельца (проекта)</h5>
+<ol>
+ <li>Поместите ID владельца в используемую переменную следующим образом:<br />
+ <code>
+  $ <strong>tenant=$(keystone tenant-list | awk '/<em>tenantName</em>/ {print $2}')</strong>
+ </code><br />
+ <li>Обновите определенное значение квоты следующим образом:<br />
+ <code>
+  # <strong>nova quota-update <em>--quotaName quotaValue tenantID</em></strong>
+ </code><br />
+  Например:<br />
+ <code>
+# <strong>nova quota-update --floating-ips 20 $tenant</strong><br />
+# <strong>nova quota-show --tenant $tenant</strong><br />
++-----------------------------+-------+<br />
+| Property &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| Value |<br />
++-----------------------------+-------+<br />
+| metadata_items &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 128 &nbsp; |<br />
+| injected_file_content_bytes | 10240 |<br />
+| ram &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 51200 |<br />
+| floating_ips &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 20 &nbsp; &nbsp;|<br />
+| key_pairs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 100 &nbsp; |<br />
+| instances &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp;|<br />
+| security_group_rules &nbsp; &nbsp; &nbsp; &nbsp;| 20 &nbsp; &nbsp;|<br />
+| injected_files &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 5 &nbsp; &nbsp; |<br />
+| cores &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 20 &nbsp; &nbsp;|<br />
+| fixed_ips &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | -1 &nbsp; &nbsp;|<br />
+| injected_file_path_bytes &nbsp; &nbsp;| 255 &nbsp; |<br />
+| security_groups &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp;|<br />
++-----------------------------+-------+<br />
+ </code><br />
+ <img src="i/Tip.jpg" alt="Tip" />Для просмотра списка опций команд обновления квот выполните:<br />
+ <code>
+  $ <strong>nova help quota-update</strong>
+ </code><br />
+</ol>
+
+<h3 id="Ch090303">Установка квот блочного хранилища (Block Storage)</h3>
+<p>
+ В качестве пользователя с правами администратора вы можете обновить квоты службы блочного хранилища 
+ (Block Storage) для владельцев, а также обновлять значения по умолчанию квот для нового владельца.
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td width="30%">Название атрибута<br />&nbsp;</td>
+ <td width="70%">Описание<br />&nbsp;</td>
+</tr><tr>
+ <td>gigabytes<br />&nbsp;</td>
+ <td>Объем доступных на томе данных в гигабайтах, доступных для каждого владельца.<br />&nbsp;</td>
+</tr><tr>
+ <td>snapshots<br />&nbsp;</td>
+ <td>Количество моментальных снимков блочного хранилища, доступных для каждого владельца.<br />&nbsp;</td>
+</tr><tr>
+ <td>volumes<br />&nbsp;</td>
+ <td>Количество томов блочного хранилища, доступных каждому владельцу.<br />&nbsp;</td>
+</tr></tbody></table><hr />
+</p>
+
+<h4 id="Ch09030302">Просмотр и обновление квот блочного хранилища для владельца (проекта)</h4>
+<p>Для просмотра и обновления квот владельца вы можете использовать поддерживаемые пакетом 
+<em>python-cinderclient</em> команды <em>cinder quota-*</em> в качестве пользователя с 
+правами администратора.</p>
+
+<h5 id="Ch0903030201">Для просмотра и обновления значения квот блочного хранилища по умолчанию</h5>
+<ol>
+ <li>Выведите список всех квот по умолчанию для всех владельцев следующим образом:<br />
+ <code>
+  $ <strong>cinder quota-defaults</strong>
+ </code><br />
+ Например:<br />
+ <code>
+$ <strong>cinder quota-defaults</strong><br />
++-----------+-------+<br />
+| Property &nbsp;| Value |<br />
++-----------+-------+<br />
+| gigabytes | 1000 &nbsp;|<br />
+| snapshots | 10 &nbsp; &nbsp;|<br />
+| volumes &nbsp; | 10 &nbsp; &nbsp;|<br />
++-----------+-------+<br />
+ </code><br />
+ <li>Чтобы обновить значение по умолчанию для нового владельца, обновите атрибут в файле 
+ <code>/etc/cinder/cinder.conf</code>.
+</ol>
+
+<h5 id="Ch0903030202">Чтобы просмотреть квоты блочного хранилища для владельца (проекта)</h5>
+<ol>
+ <li>Выведите список всех квот по умолчанию для всех владельцев следующим образом:<br />
+ <code>
+  # <strong>cinder quota-show <em>tenantName</em></strong>
+ </code><br />
+ Например:<br />
+ <code>
+# <strong>cinder quota-show tenant01</strong><br />
++-----------+-------+<br />
+| Property &nbsp;| Value |<br />
++-----------+-------+<br />
+| gigabytes | 1000 &nbsp;|<br />
+| snapshots | 10 &nbsp; &nbsp;|<br />
+| volumes &nbsp; | 10 &nbsp; &nbsp;|<br />
++-----------+-------+<br />
+ </code><br />
+</ol>
+
+<h5 id="Ch0903030203">Для обновления квот блочного хранилища</h5>
+<p><em>Прим. перев.: в оригинале допущена опечатка, а именно: данный раздел называется 
+&quot;To update Compute service quotas&quot; вместо &quot;To update Block Storage service quotas&quot;.</em></p>
+<ol>
+ <li>Поместите ID владельца в используемую переменную следующим образом:<br />
+ <code>
+  $ <strong>tenant=$(keystone tenant-list | awk '/<em>tenantName</em>/ {print $2}')</strong>
+ </code><br />
+ <li>Обновите определенное значение квоты следующим образом:<br />
+ <code>
+  # <strong>cinder quota-update <em>--quotaName NewValue tenantID</em></strong>
+ </code><br />
+ Например:<br />
+ <code>
+# <strong>cinder quota-update --volumes 15 $tenant</strong><br />
+# <strong>cinder quota-show tenant01</strong><br />
++-----------+-------+<br />
+| Property &nbsp;| Value |<br />
++-----------+-------+<br />
+| gigabytes | 1000 &nbsp;|<br />
+| snapshots | 10 &nbsp; &nbsp;|<br />
+| volumes &nbsp; | 15 &nbsp; &nbsp;|<br />
++-----------+-------+<br />
+ </code><br />
+</ol>
+
+<h2 id="Ch0904">Управление пользователями</h2>
+<p>Инструменты командной строки для управления пользователями неудобны для непосредственного использования.
+  Они требуют выдачи нескольких команд для выполнения одной задачи, а также для многих элементов 
+  они используют UUID вместо символических имен.
+  На практике люди, как правило, не используют эти инструменты непосредственно.
+  К счастью, инструментальная панель OpenStack (Dashboard) обеспечивает приемлемый интерфейс для этих целей.
+  Кроме того, многие сайты написали пользовательские инструменты для собственных потребностей по 
+  обеспечению соблюдения локальных политик и обеспечивают уровни самообслуживания для пользователей, 
+  которые не  доступны в настоящее время в инструментах пакета.
+</p>
+
+<h2 id="Ch0905">Создание нового пользователя</h2>
+<p>Для создания пользователя вам потребуется следующая информация:
+<ul>
+ <li>Имя пользователя
+ <li>Адрес электронной почты
+ <li>Пароль
+ <li>Первичный проект
+ <li>Роль
+</ul>
+</p>
+<p>Имя пользователя и адрес электронной почты не требуют пояснений, хотя ваш сайт может иметь локальные 
+соглашения, которые вы должны соблюдать.
+  Установка и изменение паролей в службе идентификации (Identity Service) требует административных привилегий.
+  Начиная с версии Folsom пользователи не могут изменять свои собственные пароли.
+  Это является большим стимулом для создания локальных пользовательских инструментов, и должно приниматься 
+  во внимание при назначении и распространении паролей.
+  Первичный проект просто является первым ассоциированным с пользователем проектом и он должен существовать 
+  перед созданием пользователя.
+  Роль почти всегда устанавливается в значение &quot;участник&quot;.
+  Распространяемый в дистрибутиве OpenStack поставляется с двумя ролями, определяемыми как:<ul>
+<li> &quot;участник&quot; (member): типичный пользователь.
+<li> &quot;администратор&quot; (admin): административный супер пользователь, наделенный полные правами для 
+всех проектов, который должен использоваться с большой осторожностью.
+</ul></p>
+<p>Можно определять и другие роли, но это не является общей практикой.</p>
+<p>После того, как вы собрали эту информацию, создание пользователя в инструментальной панели Dashboard 
+является просто заполнением еще одной веб-формы, подобной тем, которые мы видели ранее, и которую можно 
+найти по ссылке &quot;Users&quot; (Пользователи) в панели навигации &quot;Admin&quot;, с последующим 
+нажатием кнопки &quot;Create User&quot; (Создать пользователя) в правом верхнем углу.
+</p>
+<p>Изменение пользователей выполняется также на данной странице &quot;Пользователи&quot;.
+ Если у вас имеется большое количество пользователей, то эта страница может стать довольно переполненной.
+ Поле поиска &quot;Filter&quot; (Фильтр) в верхней части страницы можно использовать для ограничения 
+ просматриваемых пользователей.
+ Выбрав &quot;Edit&quot; (редактирование) в действиях ниспадающего меню в конце линии для изменяемого 
+ пользователя, можно остановиться на форме, очень похожей на диалог создания пользователя.
+</p>
+
+<h2 id="Ch0906">Связывание пользователей с проектами</h2>
+<p>Многие сайты работают с пользователями, ассоциируемыми только с одним проектом.
+  Это является более традиционным и простым выбором как для администрирования, так и для пользователей.
+  С точки зрения администрирования: если пользователь сообщает о проблеме с экземпляром или квотой, то 
+  очевидно, о каком проекте идет речь.
+  Пользователям не следует беспокоиться о том, в рамках какого проекта они работают, если они участвуют 
+  только в одном проекте.
+  Тем не менее, обратите внимание, что по умолчанию любой пользователь может повлиять на ресурсы и любого 
+  другого пользователя в рамках своего проекта.
+  Кроме того, можно ассоциировать пользователей с несколькими проектами, если это имеет смысл для вашей 
+  организации.
+</p>
+<p>Связывание существующих пользователей с дополнительным проектом или их удаление из старого проекта 
+выполняется на странице &quot;Projects&quot; (Проекты) в инструментальной панели Dashboard, при выборе 
+&quot;Modify Users&quot; (Изменить пользователей) в колонке &quot;Actions&quot; (Действия):
+<img src="i/Pic09-01.jpg" /></p>
+<p>В данном представлении вы можете выполнить ряд полезных и опасных вещей.</p>
+<p>Первый столбец в данной форме, озаглавленный &quot;All Users&quot; (Все пользователи), включает 
+в себя список всех пользователей вашего облака, которые пока не ассоциированы с данным проектом, 
+а во втором пользователи, которые уже связаны с ним.
+ Они могут быть достаточно длинными, однако могут быть ограничены набором подстроки имени пользователя, 
+ которого вы ищете в поле фильтрации в верхней части столбца.
+</p>
+<p>В данном месте нажмите иконку + для добавления пользователя к проекту. Кликните на - для его удаления.</p>
+<p>Вероятность угрозы происходит из возможности изменения роли участников.
+ А именно, после имени пользователя в списке &quot;Project Members&quot; (Участники проекта) существует 
+ ниспадающий список.
+ Почти всегда его значение должно быть установлено в &quot;Member&quot; (Участник).
+ Данный пример намеренно демонстрирует и пользователя с правами администратора, где это значение 
+ установлено "admin" (Администратор).</p>
+<p>Значение &quot;admin&quot; является глобальным не только для одного проекта, следовательно 
+предоставляет пользователю роль администратора в любом проекте, давая права администратора во всем облаке.</p>
+<p>Обычная практика заключается в создании только одного пользователя с правами администратора в 
+отдельном проекте, по договоренности, это обычно проект &quot;admin&quot;, создаваемый по умолчанию 
+при установке облака.
+ Если ваши пользователи с правами администратора также используют облако для запуска и управления 
+ экземплярами, настоятельно рекомендуется использовать отдельные учетные записи для административного 
+ доступа и для обычной работы, а также их принадлежность различным проектам.</p>
+
+<h3 id="Ch090602">Настройка авторизации</h3>
+<p>Параметры <span class="red-heading">авторизации</span> по умолчанию позволяют создавать ресурсы 
+от имени другого проекта только пользователям с правами администратора.
+ OpenStack обрабатывает два вида политик авторизации:
+ <ul>
+  <li><strong>На основе операций</strong>: политики описывают критерии доступа для определенных 
+  операций, возможно с уточняющим управлением с использованием конкретных атрибутов. 
+  <li><strong>На основе ресурсов</strong>: в соответствии с разрешениями, определяемыми для ресурса, 
+  определяется: может или нет предоставляться определенный ресурс (на время написания 
+  [переводимой книги] доступно только для сетевого ресурса).
+   Фактические политики, вводимые в действие службой OpenStack изменяются от развертывания к развертыванию.
+ </ul>
+</p>
+<p>Механизм политик читает записи из файла policy.json.
+  Фактическое местонахождение этого файла может варьироваться от дистрибутива к дистрибутиву, для nova 
+  это обычно <code>/etc/nova/policy.json</code>.
+  Вы можете обновлять записи во время работы системы, при этом вы не должны перезапускать службы.
+  В настоящее время единственный способ обновлять такие политики заключается в редактировании файла политик.
+</p>
+<p>Механизм службы политик OpenStack помечает политику непосредственно.
+ Например, в операторе <code>compute:create:[["rule:admin_or_owner"]]</code>, политикой является 
+ <code>compute:create</code>, а правило - <code>admin_or_owner</code>.</p>
+<p>Политики включаются механизмом политик OpenStack всякий раз, когда одна из них соответствует 
+операции OpenStack API или для данной операции используется конкретный атрибут.
+ Например, механизм проверяет политику <code>create:compute</code> всякий раз, когда пользователь 
+ отправляет запрос <code>POST /v2/{tenant_id}/servers</code> серверу OpenStack Compute API.
+ Политики также могут быть связаны с определенными <span class="red-heading">расширениями API</span>.
+ Например, если пользователю необходимо расширение подобное <code>compute_extension:rescue</code>, 
+ атрибуты, определенные поддержкой расширений включают проверку правила для этой операции.</p>
+<p>Политики авторизации могут состоять из одного или большего количества правил.
+ Если задано много правил, политика оценивается как успешная когда выполняется одно из правил; если 
+ операция API помечает много политик, то все политики должны определиться успешными.
+ Помимо этого, правила авторизации рекурсивны.
+ После того, как правило совпало, оно (они) могут быть приняты для решения другого правила, пока не будет 
+ достигнуто завершающее правило.
+ Существуют определенные правила:
+ <ul>
+  <li><strong>Правила, определяемые ролями</strong> (Role-based): оцениваются успешным в случае, когда 
+  выполняющий запрос пользователя имеет описываемую роль.
+   Например, <code>&quot;role:admin&quot;</code> является успешным, если выполняющий запрос 
+   пользователь является администратором.
+  <li><strong>Правила, определяемые полями</strong> (Field-based): оцениваются как успешные, если поле 
+  описываемого ресурса в текущем запросе соответствует определенному значению.
+   Например, <code>&quot;field:networks:shared=True&quot;</code> является успешным, если атрибут сети 
+   совместной используемости (shared) имеет значение истинно (True). 
+  <li><strong>Общие правила</strong> (Generic): сравнивает атрибут в ресурсе с атрибутом, извлекаемым 
+  из учетных данных пользователя и принимается успешным, при успешном сравнении.
+   Например, <code>&quot;tenant_id:%(tenant_id)s&quot;</code> является успешным, если идентификатор 
+   владельца в ресурсе равен идентификатору владельца для выполняющего запрос пользователя.
+ </ul>
+</p>
+<p>Вот фрагменты файла policy.json nova по умолчанию:<br />
+<code>
+{<br />
+&nbsp; &nbsp; &quot;context_is_admin&quot;: [[&quot;role:admin&quot;]],<br />
+&nbsp; &nbsp; &quot;admin_or_owner&quot;: [[&quot;is_admin:True&quot;], [&quot;project_id:%(project_id)s&quot;]],<strong>[1]</strong><br />
+&nbsp; &nbsp; &quot;default&quot;: [[&quot;rule:admin_or_owner&quot;]], <strong>[2]</strong><br />
+&nbsp; &nbsp; &quot;compute:create&quot;: [ ],<br />
+&nbsp; &nbsp; &quot;compute:create:attach_network&quot;: [ ],<br />
+&nbsp; &nbsp; &quot;compute:create:attach_volume&quot;: [ ],<br />
+&nbsp; &nbsp; &quot;compute:get_all&quot;: [ ],<br />
+&nbsp; &nbsp; &quot;admin_api&quot;: [[&quot;is_admin:True&quot;]],<br />
+&nbsp; &nbsp; &quot;compute_extension:accounts&quot;: [[&quot;rule:admin_api&quot;]],<br />
+&nbsp; &nbsp; &quot;compute_extension:admin_actions&quot;: [[&quot;rule:admin_api&quot;]],<br />
+&nbsp; &nbsp; &quot;compute_extension:admin_actions:pause&quot;: [[&quot;rule:admin_or_owner&quot;]],<br />
+&nbsp; &nbsp; &quot;compute_extension:admin_actions:unpause&quot;: [[&quot;rule:admin_or_owner&quot;]],<br />
+&nbsp; &nbsp; ...<br />
+&nbsp; &nbsp; &quot;compute_extension:admin_actions:migrate&quot;: [[&quot;rule:admin_api&quot;]],<br />
+&nbsp; &nbsp; &quot;compute_extension:aggregates&quot;: [[&quot;rule:admin_api&quot;]],<br />
+&nbsp; &nbsp; &quot;compute_extension:certificates&quot;: [ ],<br />
+&nbsp; &nbsp; ...<br />
+&nbsp; &nbsp; &quot;compute_extension:flavorextraspecs&quot;: [ ],<br />
+&nbsp; &nbsp; &quot;compute_extension:flavormanage&quot;: [[&quot;rule:admin_api&quot;]],  <strong>[3]</strong><br />
+}</code>
+</p>
+<p>[1] Демонстрирует правило, которое оценивается как успешное, если текущий пользователь является 
+администратором или владельцем указанного в ресурсе запроса (равным идентификатору владельца)</p>
+<p>[2] Демонстрирует политику по умолчанию, принимаемую всегда, когда операция API не соответствует ни 
+одной из политик в <code>policy.json</code></p>
+<p>[3] Демонстрирует политику, ограничивающую возможность манипулирования предпочтениями (flavors) 
+администраторами исключительно административными API.</p>
+<p>В определенных случаях некоторые операции должны быть ограничены только для администраторов.
+  Поэтому, в качестве еще одного примера, рассмотрим, как этот пример файла политики может быть изменен 
+  в сценарии, при котором мы позволим пользователям создавать свои собственные особенности (flavors):<br />
+<code>
+ &quot;compute_extension: flavormanage&quot;: [],
+</code></p>
+
+<h3 id="Ch090603">Пользователи, разрушающие других пользователей</h3>
+<p>Пользователи в вашем облаке могут разрушать других пользователей иногда намеренно и предумышленно, а 
+иногда из-за сбоев.
+ Понимание ситуации позволяет вам сделать лучший выбор для обработки нарушения.</p>
+<p>Например: Некая группа пользователей имеет имеет экземпляры, которые используют большое количество 
+вычислительных ресурсов для задач с очень интенсивными вычислениями.
+ Это побуждает к загрузке вычислительных узлов с одновременным воздействием на остальных пользователей.
+ В подобной ситуации пересмотрите варианты эксплуатации ресурсов вашими пользователями.
+ Вы можете обнаружить, что сценарии массивных вычислений являются общеупотребимыми, и, следовательно, 
+ должны быть разделены в вашем облаке, например, путем группирования хостов или разбиения на области.</p>
+<p>Другим примером являются пользователи, потребляющие очень большой трафик.
+  Опять же, главное понять, что делают пользователи.
+  Если они действительно нуждаются в высоком объеме пропускной способности, вам, возможно, придется 
+  ограничить их скорость передачи, чтобы они не оказывали существенного воздействия на других 
+  пользователей, или же переместить их в область с более высокой пропускной способностью.
+  С другой стороны может оказаться, что экземпляр пользователя был взломан, и в настоящее время является 
+  частью ботнета запускающего DDOS атаки.
+  Разрешение этой проблемы является аналогичным тому, что любой другой сервер в вашей сети был взломан.
+  Обратитесь к пользователям, и дайте им время на ответ.
+  Если они не отвечают, закройте данный экземпляр.
+</p>
+<p>Последний пример заключается в том, что пользователи разбивают ресурс неоднократно.
+ Пообщайтесь с пользователями и выясните, что они пытаются сделать.
+ Может быть, они не понимают, что то, что они делают, является неуместным или, может быть, есть проблема 
+ с ресурсом, к которому они пытаются получить доступ, что вызывает очередь их запросов или запаздывания.
+</p>
+<p>Одним из ключевых элементов системного администрирования, который часто упускается из виду, заключается в 
+том, что конечные пользователи являются причиной, объясняющей наличие системных администраторов.
+  Не следуйте маршрутом BOFH и не прерывайте каждого пользователя, который вызывает сигнал отключения.
+  Поработайте с ними, чтобы понять, что они пытаются сделать, и увидеть, как ваша среда может лучше помочь 
+  им в достижении их целей.
+</p>
+
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch08ru.htm">Глава 8</a></td>
+ <td align="center"><a href="index.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch10ru.htm">Глава 10</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</tbody></table>
+</body>
+</html>

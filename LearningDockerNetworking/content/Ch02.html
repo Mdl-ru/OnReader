@@ -1,0 +1,842 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 2. Построение сети Docker взгляд вовнутрь - Изучение построения сетей Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningDockerNetworking"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="up" href="index.html" title="Изучение построения сетей Docker"/>
+<link rel="prev" href="Ch01.html" title="Глава 1. Букварь построения сети Docker"/>
+<link rel="next" href="Ch03.html" title="Глава 3. Построение вашей первой сетевой среды Docker"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "learning-docker-networking";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningDockerNetworking/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 2. Построение сети Docker взгляд вовнутрь';
+PrevRef = 'Ch01.html';
+UpRef = 'index.html';
+NextRef = 'Ch03.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 2. Построение сети Docker взгляд вовнутрь</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+   <p>Данная глава подробно обсудит семантику и синтаксис построения сетей Docker, обнажая преимущества и недостатки текущей парадигмы сетевой 
+   среды Docker.</p>
+   <p>Она охватывает следующие темы:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Настройку стека IP для Docker</p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Поддержка IPv4</p>
+		  </li><li class="listitem">
+		  <p>Проблемы управления адресами IPv4</p>
+		  </li><li class="listitem">
+		  <p>Поддержка IPv6</p>
+		  </li>
+		 </ul>
+		 </li><li class="listitem">
+		 <p>Настройку DNS</p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Основы DNS</p>
+		  </li><li class="listitem">
+		  <p>Групповой DNS</p>
+		  </li>
+		 </ul>
+		 </li><li class="listitem">
+		 <p>Настройку моста Docker</p>
+		 </li><li class="listitem">
+		 <p>Оверлейные сетевые среды и подстилающие сетевые среды</p>
+		 <ul class="itemizedlist" type="disc">
+		  <li class="listitem">
+		  <p>Что это такое?</p>
+		  </li><li class="listitem">
+		  <p>Как Docker применяет их?</p>
+		  </li><li class="listitem">
+		  <p>В чём их некоторые преимущества?</p>
+		  </li>
+		 </ul>
+		 </li>
+		</ul>
+		</div>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+    <dt><span class="chapter"><a href="Ch02.html">2. Построение сети Docker взгляд вовнутрь</a></span></dt>
+    <dd><dl>
+	<dt><span class="section"><a href="Ch02.html#0201">Настройка стека IP для Docker</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch02.html#020101">Поддержка IPv4</a></span></dt>
+     <dt><span class="section"><a href="Ch02.html#020102">Поддержка IPv6</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#0202">Настройка сервера DNS</a></span></dt>
+     <dd><dl>
+     <dt><span class="section"><a href="Ch02.html#020201">Взаимодействие между контейнером и внешними сетями</a></span></dt>
+      <dd><dl>
+      <dt><span class="section"><a href="Ch02.html#02020101">Ограничение доступа из одного контейнера к другому на SSH</a></span></dt>
+      </dl></dd>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch02.html#0203">Настройка моста Docker</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0204">Перекрывающие и лежащие в основе сетевые среды</a></span></dt>
+	<dt><span class="section"><a href="Ch02.html#0205">Заключение</a></span></dt>
+    </dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0201"> </a>Настройка стека IP для Docker</h3>
+   </div></div></div>
+   <p>Для взаимодействия с внешним миром Docker применяет стек IP, используя TCP или UDP. Он поддерживает инфраструктуры адресации IPv4 и IPv6, 
+   которые объясняются в следующих подразделах.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Поддержка IPv4 </span></h4>
+   </div></div></div>
+   <p>По умолчанию Dockeer обеспечивает адресацию IPv4 каждому контейнеру, который подключён к мосту по умолчанию 
+   <span class="term"><code>docker0</code></span>. Диапазон адресов IP может быть определён при запуске демона Docker при помощи флага 
+   <span class="term"><code>--fixed-cidr</code></span>, как показано в следующем коде:</p>
+	   <pre class="screen"><code>
+$ sudo docker –d --fixed-cidr=192.168.1.0/25
+	   </code></pre>
+   <p>Более подробно мы обсудим это в разделе <a class="link" href="Ch02.html#0203" target="_top">Настройка моста Docker</a>.</p>
+   <p>Помимо сокета Unix, демон Docker может включаться в список терминала IPv4 TCP:</p>
+	   <pre class="screen"><code>
+$ sudo docker -H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -d &amp;
+	   </code></pre>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020102"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Поддержка IPv6 </span></h4>
+   </div></div></div>
+   <p>IPv4 и IPv6 могут работать совместно; это называется <span class="term"><strong class="userinput">сдвоенным стеком</strong></span>
+   (dual stack). Такая поддержка сдвоенного стека делается возможной при выполнении демона Docker с флагом <span class="term"><code>--ipv6</code></span>.
+   Docker установит мост <span class="term"><code>docker0</code></span> с локальной связью IPv6 <span class="term"><code>fe80::1</code></span>.
+   Все совместно используемые между контейнерами пакеты будут проходить через такой мост.</p>
+   <p>Для назначения маршрутизируемых адресов IPv6 адресов вашим контейнерам вы должны определить подсеть IPv6, откуда вы сможете выбирать 
+   нужные адреса.</p>
+   <p>Следующие команды при помощи параметра <span class="term"><code>--fixed-cidr-v6</code></span> устанавливают подсеть IPv6 при запуске 
+   демона Docker и кроме того добавляют новый маршрут в таблицу маршрутизации:</p>
+	   <pre class="screen"><code>
+# docker –d --ipv6 --fixed-cidr-v6=&quot;1553:ba3:2::/64&quot;
+# docker run -t -i --name c0 ubuntu:latest /bin/bash
+	   </code></pre>
+   <p>Следующий рисунок демонстрирует настроенный с диапазоном адресов IPv6 мост Docker:</p>
+   <div class="figure"><a id="Fig0201"> </a>
+    <p class="title"><strong>Рисунок 2.1. Мост Docker с IPv6</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0201.jpg" width="352" height="356"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Если внутри контейнера при помощи <span class="term"><code>ifconfig</code></span> вы проверите диапазон адресов IP, вы отметите, что интерфейсу 
+   <span class="term"><code>eth0</code></span> была назначена соответствующая подсеть, что показывается в следующем коде:</p>
+	   <pre class="screen"><code>
+#ifconfig
+eth0      Link encap:Ethernet HWaddr 02:42:ac:11:00:01
+          inet addr:172.17.0.1 Bcast:0.0.0.0 Mask:255.255.0.0
+          inet6 addr: fe80::42:acff:fe11:1/64 Scope:Link
+          inet6 addr: 1553:ba3:2::242:ac11:1/64 Scope:Global
+          UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+          RX packets:7 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:10 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:738 (738.0 B) TX bytes:836 (836.0 B)
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1 Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING MTU:65536 Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B) TX bytes:0 (0.0 B)
+	   </code></pre>
+   <p>Весь обмен с подсетью <span class="term"><code>1553:ba3:2::/64</code></span> будет маршрутизироваться через интерфейс 
+   <span class="term"><code>docker0</code></span>.</p>
+   <p>Предыдущий контейнер назначался с применением <span class="term"><code>fe80::42:acff:fe11:1/64</code></span> в качестве адреса 
+   локальной связи и <span class="term"><code>1553:ba3:2::242:ac11:1/64</code></span> в качестве глабального адреса маршрутизации.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Note0201"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Адреса локальной связи (link-local) и контура обратной связи (loopback) имеют сферу действия локальной связи, что означает, что они 
+	   должны применяться в сетевых средах непосредственного подключения (link). Все прочие адреса имеют глобальную область действия, что 
+	   означает, что они применяются в глобальной маршрутизации и используются для повсеместной адресации с глобальной сферой деятельности.</p></td></tr></table>
+     </div>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0202"> </a>Настройка сервера DNS</h3>
+   </div></div></div>
+   <p>Docker предоставляет имя хоста и настройки DNS каждому контейнеру без нашего вмешательства в построение настраиваемого под пользователя образа. 
+   Он совмещает (overlay) папку <span class="term"><code>/etc</code></span> внутри данного контейнера виртуальными файлами, в которые он может 
+   записывать новую информацию.</p>
+   <p>Это можно наблюдать выполнив команду <span class="term"><code>mount</code></span> внутри этого контейнера. Контейнер получит то же самый 
+   файл <span class="term"><code>resolv.conf</code></span>, который имелся на машине хоста когда он первоначально создавался. Если файл хоста 
+   <span class="term"><code>resolv.conf</code></span> изменяется, это будет в файле контейнера <span class="term"><code>/resolv.conf</code></span>
+   только когда этот контейнер будет перезапущен.</p>
+   <p>В Docker вы можете установить параметры DNS двумя способами:</p>
+		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p>Воспользовавшись <span class="term"><code>run --dns=&lt;ip-address&gt;</code></span></p>
+		 </li><li class="listitem">
+		 <p>Добавляя <span class="term"><code>DOCKER_OPTS=&quot;--dns ip-address&quot;</code></span> в файл вашего демона Docker</p>
+		 </li>
+		</ul>
+		</div>
+   <p>Также вы можете определить поиск домена при помощи <span class="term"><code>--dns-search=&lt;DOMAIN&gt;</code></span>.</p>
+   <p>Следующее изображение показывает настроенный в контейнере <span class="term"><strong class="userinput"><code>nameserver</code></strong></span>
+   с помощью установок <span class="term"><code>DOCKER_OPTS</code></span> в файле вашего демона Docker:</p>
+   <div class="figure"><a id="Fig0202"> </a>
+    <p class="title"><strong>Рисунок 2.2.nameserver с настройками <span class="term"><code>DOCKER_OPTS</code></span></strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0202.jpg" width="555" height="331"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Основными файлами DNS являются:</p>
+   		<div class="itemizedlist">
+		<ul class="itemizedlist" type="disc">
+		 <li class="listitem">
+		 <p><span class="term"><code>/etc/hostname</code></span></p>
+		 </li><li class="listitem">
+		 <p><span class="term"><code>/etc/resolv.conf</code></span></p>
+		 </li><li class="listitem">
+		 <p><span class="term"><code>/etc/hosts</code></span></p>
+		 </li>
+		</ul>
+		</div>
+   <p>Вот команда для добавления сервера DNS:</p>
+	   <pre class="screen"><code>
+# docker run --dns=8.8.8.8 --net=&quot;bridge&quot; -t -i ubuntu:latest /bin/bash
+	   </code></pre>
+   <p>Имена хостов добавляются следующей командой:</p>
+	   <pre class="screen"><code>
+#docker run --dns=8.8.8.8 --hostname=docker-vm1 -t -i ubuntu:latest /bin/bash
+	   </code></pre>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="020201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Взаимодействие между контейнером и внешними сетями </span></h4>
+   </div></div></div>
+   <p>Обмен пакетами между контейнерами может осуществляться только если параметр <span class="term"><code>ip-forward</code></span>
+   установлен в значение <span class="term"><code>1</code></span>. Обычно вы просто оставляете сервер Docker в 
+   состоянии настроек по умолчанию, <span class="term"><code>--ip-forward=true</code></span>, а Docker установит 
+   <span class="term"><code>ip-forward</code></span> в значение <span class="term"><code>1</code></span> для вас 
+   при старте этого сервера.</p>
+   <p>Для проверки текущих установок или включения пересылки IP вручную воспользуйтесь следующими командами:</p>
+	   <pre class="screen"><code>
+# cat /proc/sys/net/ipv4/ip_forward
+0#
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+# cat /proc/sys/net/ipv4/ip_forward
+1
+ 	   </code></pre>
+   <p>Разрешив <span class="term"><code>ip-forward</code></span>, пользователи могут сделать возможным 
+   взаимодействие между контейнерами и их внешним миром; это также будет необходимо для взаимодействия 
+   между контейнерами в случае с установкой со множеством мостов. Следующий рисунок показывает как 
+   <span class="term"><code>--ip-forward=true</code></span> {<span class="emphasis"><em>Прим. пер.: 
+   В оригинале опечатка: <span class="term"><code>--ip-forward=false</code></span>.</em></span>} 
+   перенаправляет все пакеты к/от контейнера из/в внешней сетевой среды:</p>
+   <div class="figure"><a id="Fig0203"> </a>
+    <p class="title"><strong>Рисунок 2.3. обмен пакетами между контейнером и внешней сетью при 
+	<span class="term"><code>--ip-forward=true</code></span> </strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0203.jpg" width="599" height="446"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Docker не удаляет и не изменяет никакие правила в установленной цепочке фильтрации Docker. Это делает 
+   возможным пользователю создавать правила ограничения доступа к контейнеру.</p>
+   <p>Docker использует мост <span class="term"><code>docker0</code></span> для потоков пакетов между всеми 
+   имеющимися контейнерами на единичном хосте. Он добавляет правило для пересылки по цепочке используя 
+   IPTables для организации перемещения пакетов между двумя контейнерами. Установка 
+   <span class="term"><code>--icc=false</code></span> отбрасывает все имеющиеся пакеты.</p>
+   <p>Когда демон Docker настроен и на <span class="term"><code>--icc=false</code></span>, и на 
+   <span class="term"><code>--iptables=true</code></span>, а <span class="term"><code>docker run</code></span> 
+   выполняется с параметром <span class="term"><code>--link</code></span>, сервер Docker вставит пару правил 
+   приёма из IPTables для новых контейнеров для соединения с портами, выставляемыми другими его контейнерами, 
+   которые будут портами, которые упоминаются в строках выставления в своих Dockerfile. Следующий рисунок отображает 
+   как <span class="term"><code>ip_forward = false</code></span> отбрасывает все пакеты к/от контейнеру 
+   из/в внешней сетевой среды:</p>
+   <div class="figure"><a id="Fig0204"> </a>
+    <p class="title"><strong>Рисунок 2.4. отброс пакетов между контейнером и внешней сетью при 
+	<span class="term"><code>--ip-forward=false</code></span> </strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0204.jpg" width="602" height="489"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>По умолчанию правило Docker <span class="term"><code>forward</code></span> разрешает все внешние IP. 
+   Для открытия доступа только к определённым IP или сетевой среде, добавьте в верхней части цепочки 
+   фильтрации Docker отвергающее правило.</p>
+   <p>Например, применяя следующую команду вы можете ограничить внешний доступ таким образом, что к 
+   данному контейнеру может осуществлять доступ только обладатель IP источника 
+   <span class="term"><code>10.10.10.10</code></span>:</p>
+	   <pre class="screen"><code>
+#iptables –I DOCKER –i ext_if ! –s 10.10.10.10 –j DROP
+ 	   </code></pre>
+	
+	<a id="02020101"> </a>
+    <p class="title"><strong>Ограничение доступа из одного контейнера к другому на SSH</strong></p>
+    <p>Для ограничения SSH доступа от одного контейнера к другому следуйте таким шагам:</p>
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Создайте два контейнера, <span class="term"><code>c1</code></span> и 
+	 <span class="term"><code>c2</code></span>.</p>
+	 <p>Для <span class="term"><code>c1</code></span> воспользуйтесь следующей командой:</p>
+	   <pre class="screen"><code>
+# docker run -i -t --name c1 ubuntu:latest /bin/bash
+ 	   </code></pre>
+	 <p>Она породит следующий вывод:</p>
+	   <pre class="screen"><code>
+root@7bc2b6cb1025:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:05
+          inet addr:172.17.0.5  Bcast:0.0.0.0 Mask:255.255.0.0
+          inet6 addr: 2001:db8:1::242:ac11:5/64 Scope:Global
+          inet6 addr: fe80::42:acff:fe11:5/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+          RX packets:7 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:738 (738.0 B) TX bytes:696 (696.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536 Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 	   </code></pre>
+	 <p>Для <span class="term"><code>c2</code></span> воспользуйтесь следующей командой:</p>
+	   <pre class="screen"><code>
+# docker run -i -t --name c2 ubuntu:latest /bin/bash
+ 	   </code></pre>
+	 <p>Она породит следующий вывод:</p>
+	   <pre class="screen"><code>
+root@e58a9bf7120b:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:06
+          inet addr:172.17.0.6  Bcast:0.0.0.0 Mask:255.255.0.0
+          inet6 addr: 2001:db8:1::242:ac11:6/64 Scope:Global
+          inet6 addr: fe80::42:acff:fe11:6/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+          RX packets:6 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:648 (648.0 B)  TX bytes:696 (696.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536 Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+ 	   </code></pre>
+	 <p>Мы можем проверить наличие связи между контейнерами с использованием только что обнаруженных 
+	 нами адресов. Давайте посмотри её сейчас применив инструмент <span class="term"><code>ping</code></span>:</p>
+	   <pre class="screen"><code>
+root@7bc2b6cb1025:/# ping 172.17.0.6
+PING 172.17.0.6 (172.17.0.6) 56(84) bytes of data.
+64 bytes from 172.17.0.6: icmp_seq=1 ttl=64 time=0.139 ms
+64 bytes from 172.17.0.6: icmp_seq=2 ttl=64 time=0.110 ms
+^C
+--- 172.17.0.6 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.110/0.124/0.139/0.018 ms
+root@7bc2b6cb1025:/#
+
+root@e58a9bf7120b:/# ping 172.17.0.5
+PING 172.17.0.5 (172.17.0.5) 56(84) bytes of data.
+64 bytes from 172.17.0.5: icmp_seq=1 ttl=64 time=0.270 ms
+64 bytes from 172.17.0.5: icmp_seq=2 ttl=64 time=0.107 ms
+^C
+--- 172.17.0.5 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1002ms
+rtt min/avg/max/mdev = 0.107/0.188/0.270/0.082 ms
+root@e58a9bf7120b:/#
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Установите в обоих контейнерах сервер <span class="term"><code>openssh-server</code></span></p>
+	   <pre class="screen"><code>
+#apt-get install openssh-server
+ 	   </code></pre>
+	 </li><li class="listitem">
+     <p>Сделайте доступными iptables в вашей машине хоста:</p>
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Изначально вам будет доступен SSH из одного контейнера к другому.</p>
+	   </li><li class="listitem">
+       <p>Остановите службу Docker и добавьте <span class="term"><code>DOCKER_OPTS=&quot;--icc=false 
+	   --iptables=true&quot;</code></span> в Dockerfile по умолчанию вашей машины хоста. Этот параметр 
+	   сделает доступным межсетевой экран iptables и отбросит все порты между контейнерами.</p>
+	   <p>По умолчанию, <span class="term"><code>iptables</code></span> не являются доступными на 
+	   вашем хосте. Воспользуйтесь следующей командой для их доступности:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# iptables -L -n
+Chain INPUT (policy ACCEPT)
+target     prot opt source            destination
+Chain FORWARD (policy ACCEPT)
+target     prot opt source            destination
+DOCKER     all — 0.0.0.0/0         0.0.0.0/0
+ACCEPT     all — 0.0.0.0/0         0.0.0.0/0         ctstate
+RELATED,ESTABLISHED
+ACCEPT     all — 0.0.0.0/0         0.0.0.0/0
+DOCKER     all — 0.0.0.0/0         0.0.0.0/0
+ACCEPT     all — 0.0.0.0/0         0.0.0.0/0         ctstate
+RELATED,ESTABLISHED
+ACCEPT     all — 0.0.0.0/0         0.0.0.0/0
+ACCEPT     all — 0.0.0.0/0         0.0.0.0/0
+ACCEPT     all — 0.0.0.0/0         0.0.0.0/0
+
+#service docker stop
+#vi /etc/default/docker
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Docker Upstart и SysVinit файл установок. Настройте под себя местоположение своего исполняемого 
+	   Docker (в особенности, при тестировании в процессе разработки):</p>
+	   <pre class="screen"><code>
+#DOCKER=&quot;/usr/local/bin/docker&quot;
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Перезапустите службу Docker:</p>
+	   <pre class="screen"><code>
+# service docker start
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Проверьте iptables:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# iptables -L -n
+Chain INPUT (policy ACCEPT)
+target     prot opt source                         destination
+Chain FORWARD (policy ACCEPT)
+target     prot opt source                         destination
+DOCKER     all — 0.0.0.0/0                      0.0.0.0/0
+ACCEPT     all — 0.0.0.0/0                      0.0.0.0/0    ctstate RELATED,
+ESTABLISHED
+ACCEPT     all — 0.0.0.0/0                      0.0.0.0/0
+DOCKER     all — 0.0.0.0/0                      0.0.0.0/0
+ACCEPT     all — 0.0.0.0/0                      0.0.0.0/0    ctstate RELATED,
+ESTABLISHED
+ACCEPT     all — 0.0.0.0/0                      0.0.0.0/0
+ACCEPT     all — 0.0.0.0/0                      0.0.0.0/0
+DROP       all — 0.0.0.0/0                      0.0.0.0/0
+ 	   </code></pre>
+       <p>В <span class="term"><code>iptables</code></span> вашей машины хоста было добавлено правило <span 
+	   class="term"><code>DROP</code></span>, которое отвергает соединение между контейнерами. Теперь вам будет 
+	   недоступен SSH между контейнерами.</p>
+	   </li><li class="listitem">
+       <p></p>
+	   <pre class="screen"><code>
+[root@us-east-1 ~]# s3cmd ls s3://owncloud 
+ 	   </code></pre>
+	   </li>
+     </ol>
+	 </li><li class="listitem">
+     <p>Мы можем взаимодействовать или соединиться с контейнерами с применением параметра 
+	 <span class="term"><code>--link</code></span> при помощи следующих шагов:</p>
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Создайте первый контейнер, который будет выступать в роли вашего сервера, 
+	   <span class="term"><code>sshserver</code></span>:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# docker run -i -t -p 2222:22 --name sshserver ubuntu bash
+root@9770be5acbab:/#
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Выполните команду <span class="term"><code>iptables</code></span> и вы увидите добавленную цепочку 
+	   правил Docker:</p>
+	   <pre class="screen"><code>
+#root@ubuntu:~# iptables -L -n
+Chain INPUT (policy ACCEPT)
+target     prot opt source                      destination
+Chain FORWARD (policy ACCEPT)
+target     prot opt source                      destination
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source                      destination
+Chain DOCKER (0 references)
+target     prot opt source                      destination
+ACCEPT     tcp — 0.0.0.0/0                     172.17.0.3      tcp dpt:22
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Создайте второй контейнер, который выступает в роли клиента, 
+	   <span class="term"><code>sshclient</code></span>:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# docker run -i -t --name sshclient --link sshserver:sshserver ubuntu bash
+root@979d46c5c6a5:/#
+ 	   </code></pre>
+	   </li><li class="listitem">
+       <p>Мы можем видеть, что появились дополнительные правила в цепочке правил Docker:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# iptables -L -n
+Chain INPUT (policy ACCEPT)
+target     prot opt source                      destination
+Chain FORWARD (policy ACCEPT)
+target     prot opt source                      destination
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source                      destination
+Chain DOCKER (0 references)
+target     prot opt source                      destination
+ACCEPT     tcp — 0.0.0.0/0                   172.17.0.3           tcp dpt:22
+ACCEPT     tcp — 172.17.0.4                  172.17.0.3           tcp dpt:22
+ACCEPT     tcp — 172.17.0.3                  172.17.0.4           tcp spt:22
+root@ubuntu:~#
+ 	   </code></pre>
+	   <p>Следующий рисунок объясняет взаимодействие между контейнерами с применением флага 
+	   <span class="term"><code>--link</code></span>:</p>
+   <div class="figure"><a id="Fig0205"> </a>
+    <p class="title"><strong>Рисунок 2.5. взаимодействие между контейнерами с применением флага 
+	<span class="term"><code>--link</code></span></strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0205.jpg" width="735" height="415"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+	   </li>
+     </ol>
+	 </li>
+	 </li><li class="listitem">
+     <p>Вы можете проинспектировать свой присоединённый контейнер при помощи команды <span class="term"><code>docker 
+	 inspect</code></span>:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# docker inspect -f &quot;{{ .HostConfig.Links }}&quot; sshclient
+[/sshserver:/sshclient/sshserver]
+ 	   </code></pre>
+	 <p>теперь вы можете успешно осуществлять доступ ssh к <span class="term"><code>sshserver</code></span>
+	 по его IP адресу.</strong></p>
+	   <pre class="screen"><code>
+#ssh root@172.17.0.3 –p 22
+ 	   </code></pre>
+	 </li>
+   </ol>
+   </div>
+   <p>Применяя параметр <span class="term"><code>--link</code>, Docker создаёт безопасный канал между 
+   контейнерами который не требует делать видимыми вовне никакие порты ваших контейнеров.</span>
+   </p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0203"> </a>Настройка моста Docker</h3>
+   </div></div></div>
+   <p>Сервер Docker создаёт мост с именем <span class="term"><code>docker0</code></span> по умолчанию внутри 
+   ядра Linux, а он может передавать пакеты назад и далее между остальными физическими или виртуальными 
+   интерфейсами так, как если бы они вели себя как отдельные сети Ethernet. Выполните следующую команду для 
+   обнаружения списка интерфейсов в ВМ и те IP адреса, к которым они подключены:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# ifconfig
+docker0   Link encap:Ethernet  HWaddr 56:84:7a:fe:97:99
+          inet addr:172.17.42.1  Bcast:0.0.0.0 Mask:255.255.0.0
+          inet6 addr: fe80::5484:7aff:fefe:9799/64 Scope:Link
+          inet6 addr: fe80::1/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1
+          RX packets:11909 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:14826 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:516868 (516.8 KB)  TX bytes:46460483 (46.4 MB)
+eth0      Link encap:Ethernet  HWaddr 00:0c:29:0d:f4:2c
+          inet addr:192.168.186.129  Bcast:192.168.186.255
+Mask:255.255.255.0
+          inet6 addr: fe80::20c:29ff:fe0d:f42c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500 Metric:1
+          RX packets:108865 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:31708 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:59902195 (59.9 MB)  TX bytes:3916180 (3.9 MB)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:4 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:336 (336.0 B)  TX bytes:336 (336.0 B)
+ 	   </code></pre>
+   <p>Когда у вас в наличии один или более запущенных и работающих контейнеров, вы можете подтвердить, что 
+   Docker надлежащим образом соединил их с мостом <span class="term"><code>docker0</code></span> выполнив 
+   на своей машине хоста команду <span class="term"><code>brctl</code></span> и промотрев его колонку 
+   вывода <span class="term"><code>interfaces</code></span>.</p>
+   <p>Перед настройкой моста <span class="term"><code>docker0</code></span> установите утилиты моста:</p>
+	   <pre class="screen"><code>
+# apt-get install bridge-utils
+ 	   </code></pre>
+   <p>Вот хост с двумя различными присоединёнными контейнерами:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# brctl show
+bridge name     bridge id                STP enabled       interfaces
+docker0         8000.56847afe9799        no                veth21b2e16
+                                                           veth7092a45
+ 	   </code></pre>
+   <p>Docker применяет настройки <span class="term"><code>docker0</code></span> при каждом создании контейнера. 
+   Он назначает новый IP адрес из доступного диапазона в мосте при каждом создании нового контейнера, как мы 
+   можем увидеть здесь:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# docker run -t -i --name container1 ubuntu:latest /bin/bash
+root@e54e9312dc04:/# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:07
+          inet addr:172.17.0.7  Bcast:0.0.0.0  Mask:255.255.0.0
+          inet6 addr: 2001:db8:1::242:ac11:7/64 Scope:Global
+          inet6 addr: fe80::42:acff:fe11:7/64 Scope:Link
+          UP BROADCAST RUNNING  MULTICAST  MTU:1500 Metric:1
+          RX packets:7 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:738 (738.0 B)  TX bytes:696 (696.0 B)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+root@e54e9312dc04:/# ip route
+default via 172.17.42.1 dev eth0
+172.17.0.0/16 dev eth0  proto kernel  scope link  src 172.17.0.7
+ 	   </code></pre>
+   <p>По умолчанию Docker обеспечивает виртуальную сетевую среду с именем <span class="term"><code>docker0</code></span>,
+   которая имеет IP адрес <span class="term"><code>172.17.42.1</code></span>. Контейнеры Docker имеют IP адреса 
+   в диапазоне <span class="term"><code>172.17.0.0/16</code></span>.</p>
+   <p>Для изменения в Docker настроек умолчанию, отредактируйте его файл  
+   <span class="term"><code>/etc/default/docker</code></span>.</p>
+   <p>Изменения моста по умолчанию с <span class="term"><code>docker0</code></span> на
+   <span class="term"><code>br0</code></span> может быть сделано следующим образом:</p>
+	   <pre class="screen"><code>
+# sudo service docker stop
+# sudo ip link set dev docker0 down
+# sudo brctl delbr docker0
+# sudo iptables -t nat -F POSTROUTING
+# echo 'DOCKER_OPTS=&quot;-b=br0&quot;' &gt;&gt; /etc/default/docker
+# sudo brctl addbr br0
+# sudo ip addr add 192.168.10.1/24 dev br0
+# sudo ip link set dev br0 up
+# sudo service docker start
+ 	   </code></pre>
+   <p>Следующая команда отображает новое имя моста и диапазон IP адресов службы Docker:</p>
+	   <pre class="screen"><code>
+root@ubuntu:~# ifconfig
+br0       Link encap:Ethernet  HWaddr ae:b2:dc:ed:e6:af
+          inet addr:192.168.10.1  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::acb2:dcff:feed:e6af/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:7 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:738 (738.0 B)
+eth0      Link encap:Ethernet  HWaddr 00:0c:29:0d:f4:2c
+          inet addr:192.168.186.129 Bcast:192.168.186.255
+Mask:255.255.255.0
+          inet6 addr: fe80::20c:29ff:fe0d:f42c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:110823 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:33148 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:60081009 (60.0 MB)  TX bytes:4176982 (4.1 MB)
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536 Metric:1
+          RX packets:4 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:336 (336.0 B)  TX bytes:336 (336.0 B)
+ 	   </code></pre>
+
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0204"> </a>Перекрывающие и лежащие в основе сетевые среды</h3>
+   </div></div></div>
+   <p>Оверлейными (перекрывающими, overlay) являются виртуальные сетевые среды, которые стрятся поверх лежащих в 
+   основе сетевых инфраструктур (подстилающие, underlay). Их цель состоит в реализации сетевых служб, которые не 
+   доступны в физической сетевой среде.</p>
+   <p>Сетевые оверлеи драматически увеличивают число виртуальных подсетей которые могут быть созданы поверх 
+   физической сетевой среды, что в конечном итоге поддерживает множественную аренду и виртуализацию.</p>
+   <p>Каждому контейнеру в Docker назначается некий IP адрес, который применяется для взаимодействия с 
+   остальными контейнерами. Если контейнер должен взаимодействовать со своей внешней сетевой средой, вы 
+   настраиваете сетевую среду в системе хоста и выделяете или ставите в соответствие порт из контейнера в 
+   машину хоста. При таком подходе работающие внутри контейнера приложения не будут способны афишировать свои 
+   внешние IP и порты, поскольку данная информация им не доступна.</p>
+   <p>Решение в чём-то похоже назначению уникальных IP каждому контейнеру Docker по всем хостам и наличию 
+   некоторого сетевого продукта, который выполняет маршрутизацию обмена между хостами.</p>
+   <p>Для работы с сетевыми средами Docker существуют различные проекты, а именно:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Flannel</p>
+	 </li><li class="listitem">
+	 <p>Weave</p>
+	 </li><li class="listitem">
+	 <p>Open vSwitch</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Flannel предоставляет решение, обеспечивая каждому контейнеру некий IP который может применяться для 
+   взаимодействия контейнера- с- контейнером. Применяя инкапсуляцию пакета, он создаёт виртуальную оверлейную 
+   сетевую среду поверх сетевой среды хоста. По умолчанию, Flannel обеспечивает хосту подсеть 
+   <span class="term"><code>/24</code></span>, из которой демон выделяет IP контейнерам. Следующий рисунок 
+   показывает взаимодействие между контейнерами с применением Flannel:</p>
+   <div class="figure"><a id="Fig0206"> </a>
+    <p class="title"><strong>Рисунок 2.6. взаимодействие между контейнерами с применением Flannel</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0206.jpg" width="624" height="269"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>На всех хостах flannel работает как агент, <span class="term"><strong class="userinput">flanneld</strong></span>,
+   и отвечает за выделение ареды подсети из предварительно настроенного пространства адресов. Для хранения 
+   настроек сетевой среды, выделения подсетей и вспомогательных данных (например, IP хоста) Flannel использует 
+   <span class="term"><strong class="userinput">etcd</strong></span>.</p>
+   <p>Flannel применяет универсальное устройство TUN/TAP и создаёт оверлейную сетевую среду применяя UDP для 
+   инкапсуляции пакетов IP. Выделение подсети выполняется при помощи <span class="term"><strong class="userinput">etcd</strong></span>, 
+   который устанавливает перекрывающее соответствие подсети-к-хосту.</p>
+   <p>Weave создаёт виртуальную сетевую среду, которая соединяет контейнеры Docker, развёртываемые в хостах/ ВМ и 
+   делает возможным их автоматическое обнаружение. Следующий рисунок отображает сетевую среду Weave:</p>
+   <div class="figure"><a id="Fig0207"> </a>
+    <p class="title"><strong>Рисунок 2.7. Контейнеры в сетевой среде Weave</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0207.jpg" width="579" height="311"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p>Weave способен преодолевать межсетевые экраны и работать в частично соединённых сетевых средах. Обмен 
+   может быть опционально закодирован, что делает возможным хостам/ ВМ соединяться в сетевых средах с 
+   неподтверждённой безопасностью.</p>
+   <p>Weave расширяет существующие сетевые возможности Docker (для единичного хоста), такие как мост 
+   <span class="term"><code>docker0</code></span>, следовательно они могут продолжать применяться 
+   контейнерами.</p>
+   <p>Open vSwitch является виртуальным коммутатором с OpenFlow- совместимым открытым исходным кодом, 
+   который обычно применяется с гипервизорами для интерконнекта виртуальных машин в пределах хоста, а 
+   также между различными хостами в сетевых средах. Перекрывающие сетевые среды требуют создания виртуальных 
+   путей данных с применением поддерживаемой инкапсуляции туннелирования, например, 
+   <a class="link" href="https://ru.wikipedia.org/wiki/Virtual_Extensible_LAN" target="_top">VXLAN</a> и
+   <a class="link" href="https://ru.wikipedia.org/wiki/GRE_(протокол)" target="_top">GRE</a>.</p>
+   <p>Оверлейный путь данных предоставляется между терминалами туннеля расположенными в хосте Docker, 
+   что даёт возможность всем хостам в пределах данного сегмента поставщика напрямую соединяться друг с 
+   другом.</p>
+   <p>Как только контейнер становится работающим, в протоколе маршрутизации обновляется его префикс, 
+   объявляя его местоположение в качестве терминала туннеля. По мере получения обновлений прочими хостами 
+   Docker, правила перенаправления устанавливаются в OVS для терминала (endpoint) туннеля, который 
+   размежает данный хост. При свёртывании хоста происходит аналогичный процесс и терминал хостов Docker 
+   удаляет записи перенаправления для сворачиваемого контейнера. Следующий рисунок отображает взаимодействие 
+   между контейнерами работающими на множестве хостов через туннели VXLAN на основе OVS:</p>
+   <div class="figure"><a id="Fig0208"> </a>
+    <p class="title"><strong>Рисунок 2.8. Взаимодействие контейнеров в сетевой среде с множеством хостов по 
+	туннелям VXLAN на основе OVS</strong></p>
+    <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/Fig0208.jpg" width="725" height="591"/><br />
+     <span><a href="http://www.packtpub.com/sites/default/files/downloads/LearningDockerNetworking_ColorImages.pdf">
+     Источник рисунка</a></span>
+    </div></div>
+   </div><br class="figure-break"/>
+
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0205"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В этой главе мы обсудили внутреннюю сетевую архитектуру Docker. Мы изучили настройки IPv4, IPv6 и DNS в 
+   Docker. Затем в этой главе мы рассмотрели мост Docker и взаимодействие между контейнерами в пределах 
+   одного хоста и множества хостов.</p>
+   <p>Также мы обсудили оверлейное туннелирование и различные методы которые реализуются в сетевых средах 
+   Docker, таких как OVS, Flannel и Weave.</p>
+   <p>В следующей главе мы изучим практическое построение сетей Docker, собираемых воедино при помощи 
+   различных инфраструктур.</p>
+
+  </div>
+   
+ 
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

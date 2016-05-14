@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 1. Пример архитектур - Руководство по эксплуатации OpenStack</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="org.openstack.docs"/>
+<meta name="mavenArtifactId" content="openstack-ops-manual"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Руководство по эксплуатации OpenStack"/>
+<link rel="up" href="architecture.html" title="Архитектура"/>
+<link rel="prev" href="architecture.html" title="Архитектура"/>
+<link rel="next" href="section_arch_provision.html" title="Глава 2. Инициализация и развертывание"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:42:58+00:00"/><script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+        </script><style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+        </style><link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/><link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/><link rel="stylesheet" type="text/css" href="../common/css/custom.css"/><link rel="canonical" href="http://docs.openstack.org/openstack-ops/content//example_architecture.html"/><!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+	<![endif]--><link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+	<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+	<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+	<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"><!--jQuery plugin for glossary popups. --></script>
+	<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+	<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+	<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+	<script type="text/javascript" src="search/stemmers/en_stemmer.js"><!--//make this scalable to other languages as well.--></script>
+	<script type="text/javascript" src="search/index-1.js"><!----></script>
+	<script type="text/javascript" src="search/index-2.js"><!----></script>
+	<script type="text/javascript" src="search/index-3.js"><!----></script>
+	<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+
+	        </script>
+<script type="text/javascript" src="../common/ga.js"><!----></script></head>
+<script language="javascript" src="/js/common.js"></script>
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 1. Пример архитектур';
+PrevRef = 'openstack-ops_preface.html';
+UpRef = 'architecture.html';
+NextRef = 'section_arch_provision.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content"><div class="part"><div xmlns="" class="titlepage">
+	<div>
+		<div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+			<a id="architecture"> </a>Глава 1. Пример архитектур</h1>
+		</div>
+	</div>
+</div>
+<div class="partintro"><div xmlns=""/>
+			<p>Чтобы понять предлагаемые OpenStack возможности, лучше начать с
+  базовых архитектур, которые продемонстрировали себя на практике и были протестированы 
+  промышленных окружениях. Мы предлагаем два таких примера с базовыми операционными системами
+  (Ubuntu и Red Hat Enterprise Linux) и сетевыми архитектурами. Существуют и другие отличия между
+  этими двумя примерами, но вы должны найти соображения, сделанные для выбора в каждом из них, 
+  а также обоснование того, почему он хорошо работает в данном окружении.</p>
+	<p>Поскольку OpenStack является чрезвычайно настраиваемым с использованием очень большого количества параметров серверов и сети, трудно написать документацию, которая охватывала бы все возможные реализации OpenStack.
+ По этой причине данное руководство определяет пример построения для упрощения задачи документирования, а также для обеспечения данного руководства границами.
+ Оба предлагаемых примера архитектуры в настоящее время запущены в производство и обслуживают пользователей.</p>
+  <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Совет]" src="../common/images/admon/tip.png"/></td>
+  <th align="left">Совет</th></tr><tr><td align="left" valign="top"><p>Как всегда, обратитесь к <a class="xref" href="openstack_glossary.html" title="Словарь">Словарю</a> если вы
+    не уверены в какой- нибудь терминологии, упоминающейся в этой
+    архитектуре.</p></td></tr></table></div><div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="example_architecture-nova"> </a>
+  Пример архитектуры—Традиционные сети (nova)</h2></div></div></div>
+  <div class="toc"><dl><dt><span class="section"><a href="example_architecture.html#overview">Обзор</a></span></dt>
+  <dt><span class="section"><a href="example_architecture.html#detailed_desc">Детальное описание</a></span></dt>
+  <dt><span class="section"><a href="example_architecture.html#optional_extensions">Необязательные расширения</a></span></dt></dl></div>
+  <p>Этот частный пример архитектуры был обновлен с Grizzly на Havana и протестирован
+  на промышленном окружении в котором множество IP адресов доступно для назначения
+  множеству экземпляров. После данного раздела вы сможете найти другой пример
+  архитектуры, который использует OpenStack Networking (neutron). Каждый пример 
+  предлагает высокую доступность, означающую, что если некоторый узел выходит
+  из строя, другой узел с аналогичной конфигурацией может взять на себя выполнение
+  задач, следовательно служба будет все еще доступной.<a id="d9e447" class="indexterm"/><a id="d9e449" class="indexterm"/></p><div class="section"><div xmlns="" class="titlepage"><div>
+  <div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="overview"> </a>Обзор</h3></div></div></div>
+  <div class="toc"><dl><dt><span class="section"><a href="example_architecture.html#overview_components-nova">Компоненты</a></span></dt>
+  <dt><span class="section"><a href="example_architecture.html#rationale">Обоснование</a></span></dt><dt><span class="section">
+  <a href="example_architecture.html#neutron">Почему бы не воспользоваться OpenStack Network Service (neutron)?</a></span></dt>
+  <dt><span class="section"><a href="example_architecture.html#multi-host-networking">Зачем использовать сеть с множеством хостов?</a></span></dt></dl></div>
+  <p>Простейшая архитектура, которую вы можете построить для Compute имеет
+    один контроллер облака и множество вычислительных узлов. Простейшая архитектура
+    для системы хранения объектов имеет пять узлов: один для идентификации пользователей
+    и представления запросов для API, и кроме того четыре для системы хранения самой по себе
+    для обеспечения достаточного числа репликаций для окончательной связности. Этот пример
+    архитектуры не диктует определенного числа узлов, однако показывает понимание <span class="keep-together">и соображения
+    </span>, которые вошли в выбор данной архитектуры включая <span class="keep-together">предложенные</span> функции.
+    <a id="d9e456" class="indexterm"/><a id="d9e458" class="indexterm"/><a id="d9e460" class="indexterm"/><a id="d9e462" class="indexterm"/><a id="d9e465" class="indexterm"/><a id="d9e468" class="indexterm"/><a id="d9e471" class="indexterm"/></p>
+    <div class="section"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="overview_components-nova"> </a>Компоненты</h4></div></div></div>
+    <table rules="all" id="d9e476"><col width="40%"/><col width="60%"/><thead><tr>
+            <th>Компонент</th>
+
+            <th>Детали</th>
+          </tr></thead><tbody><tr>
+            <td><p>Редакция OpenStack</p></td>
+
+            <td><p>Havana</p></td>
+          </tr><tr>
+            <td><p>Опреационная система хоста</p></td>
+
+            <td><p>Ubuntu 12.04 LTS или Red Hat Enterprise Linux 6.5,
+            включая производные ОС, такие как CentOS и Scientific
+            Linux</p></td>
+          </tr><tr>
+            <td><p>Репозиторий пакетов OpenStack</p></td>
+
+            <td><p><a class="link" href="https://wiki.ubuntu.com/ServerTeam/CloudArchive" target="_top">Архив облака Ubuntu
+            </a> или <a class="link" href="http://openstack.redhat.com/Frequently_Asked_Questions" target="_top">RDO</a>*</p></td>
+          </tr><tr>
+            <td><p>Гипервизор</p></td>
+
+            <td><p>KVM</p></td>
+          </tr><tr>
+            <td><p>База данных</p></td>
+
+            <td><p>MySQL*</p></td>
+          </tr><tr>
+            <td><p>Очередь сообщений</p></td>
+
+            <td><p>RabbitMQ для Ubuntu; Qpid для Red Hat Enterprise Linux
+            и производные ОС</p></td>
+          </tr><tr>
+            <td><p>Сетевая служба</p></td>
+
+            <td><p><code class="literal">nova-network</code></p></td>
+          </tr><tr>
+            <td><p>Менеджер сети</p></td>
+
+            <td><p>FlatDHCP</p></td>
+          </tr><tr>
+            <td><p>Одна <code class="literal">nova-network</code> или
+            много хостов?</p></td>
+
+            <td><p>multi-host*</p></td>
+          </tr><tr>
+            <td><p>Сервер служб образов (glance)</p></td>
+
+            <td><p>file</p></td>
+          </tr><tr>
+            <td><p>Драйвер службы идентификации (keystone)</p></td>
+
+            <td><p>SQL</p></td>
+          </tr><tr>
+            <td><p>Сервер службы блочного хранения (cinder)</p></td>
+
+            <td><p>LVM/iSCSI</p></td>
+          </tr><tr>
+            <td><p>Сервер миграции в реальном времени</p></td>
+
+            <td><p>Совместно используемая система хранения с использованием NFS*</p></td>
+          </tr><tr>
+            <td><p>Система хранения объектов</p></td>
+
+            <td><p>Система хранения объектов OpenStack (swift)</p></td>
+          </tr></tbody></table><p>Звездочка (*) обозначает, что пример архитектуры 
+		отклоняется от значений по умолчанию в установке. Мы дадим объяснения для этих отклонений позже.
+	<a id="d9e559" class="indexterm"/><a id="d9e562" class="indexterm"/><a id="d9e565" class="indexterm"/><a id="d9e567" class="indexterm"/><a id="d9e569" class="indexterm"/><a id="d9e572" class="indexterm"/><a id="d9e574" class="indexterm"/><a id="d9e577" class="indexterm"/><a id="d9e579" class="indexterm"/><a id="d9e581" class="indexterm"/></p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Замечания"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Замечания]" src="../common/images/admon/note.png"/></td><th align="left">Замечания</th></tr><tr><td align="left" valign="top">
+	<p>Следующие свойства OpenStack поддерживаются данным примером архитектуры, документированным в данном
+	руководстве, но не являются обязательными:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><a class="gloss" href="#" def="&lt;strong&gt;Инструментальная панель: &lt;/strong&gt; ">Инструментальная панель</a>: 
+	Возможно вы захотите предложить инструментальную панель, однако ваши пользователи могут быть более заинтересованы исключительно
+	в API доступе.</p></li><li class="listitem"><p><a class="gloss" href="#" def="&lt;strong&gt;Блочное хранилище: &lt;/strong&gt; ">Блочное хранилище</a>: 
+	Вы не должны предлагать пользователям систему блочного хранения, например, если они используют их в своих приложениях 
+	только для эфемерных хранилищ на вычислительных узлах.</p></li><li class="listitem"><p><a class="gloss" href="#" def="&lt;strong&gt;Плавающие IP адреса: &lt;/strong&gt; ">Плавающие IP адреса</a>: 
+	Плавающие IP адреса являются общедоступными IP адресами, которые вы выделяете из 
+	предопределенного пула для назначения виртуальным машинам при загрузке.
+	Плавающие IP адреса гарантируют, что общедоступный IP адрес поступает в распоряжение 
+	сразу после загрузки экземпляра. Не все организации могут предложить тысячи общедоступных 
+	плавающих адресов для тысяч экземпляров, следовательно это свойство не обязательное.</p></li>
+	<li class="listitem"><p><a class="gloss" href="#" def="&lt;strong&gt;Миграция в реальном времени: &lt;/strong&gt; ">Миграция в реальном времени</a>: 
+	Если вы должны перемещать запущенный экземпляр виртуальной машины с одного хоста
+	на другой, вам нужно разрешить миграцию вреальном масштабе времени,
+	однако оно является не обязательным.</p></li><li class="listitem"><p><a class="gloss" href="#" def="&lt;strong&gt;Объектная система хранения: &lt;/strong&gt; ">Объектная система хранения</a>: 
+	Вы можете выбрать для хранения образов машин файловую систему вместо
+	объектного хранилища, если у вас нет дополнительного оборудования для
+	необходимого реплицирования и избыточности, предлагаемых объектным 
+	хранилищем OpenStack.</p></li></ul></div></td></tr></table></div></div>
+
+	<div class="section"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="rationale"> </a>Обоснование</h4></div></div></div>
+	<p>Этот пример построения был выбран на основе текущего набора свойств по умолчанию 
+	OpenStack <a class="gloss" href="#" def="&lt;strong&gt;Havana: &lt;/strong&gt; &lt;p&gt;Кодовое имя для восьмой редакции OpenStack. Конференция дизайна состоялось в Портленде, штат Орегон, США, и Havana является ассоциацией без юридического лица в штате Орегон. &lt;/p&gt;">Havana</a>,
+	с акцентом на стабильность. Мы считаем, что многие облака, которые в настоящее время используют OpenStack в своей деятельности, выполнили подобный выбор.<a id="d9e606" class="indexterm"/></p>
+	<p>Вначале вы должны выбрать операционную систему, которая будет работать на всех 
+	физических узлах. Хотя OpenStack поддерживается множеством дистрибутивов Linux, мы 
+	использовали <span class="emphasis"><em>Ubuntu 12.04 LTS (Long Term Support)</em></span>, 
+	которая используется большинством в сообществе разработчиков, имеет полный набор 
+	возможностей по сравнению с другими дистрибутивами, а также имеет четкие планы 
+	дальнейшей поддержки.</p>
+	<p>Мы рекомендуем вам не использовать пакеты установки, используемые по умолчанию Ubuntu OpenStack,
+	а вместо этого воспользоваться <a class="link" href="https://wiki.ubuntu.com/ServerTeam/CloudArchive" target="_top">Архивом Ubuntu Cloud</a>.
+	Архив Cloud является канонически поддерживаемым хранилищем пакетов, что позволяет перейти к 
+	будущим версиям OpenStack, оставаясь с Ubuntu 12.04.</p>
+	<p> <span class="emphasis"><em>KVM</em></span> в качестве дополнения <a class="gloss" href="#" def="&lt;strong&gt;гипервизор: &lt;/strong&gt; &lt;p&gt;Программное обеспечение, которое осуществляет арбитраж и контролирует доступ ВМ к реально используемому оборудованию. &lt;/p&gt;">гипервизора</a>
+	является выбором Ubuntu - будучи хорошо подогнанной парой в терминах поддержки, а также из-за значительной степени
+	внимания, получаемого им от сообщества разработчиков OpenStack (в том числе от авторов, которые в основном используют KVM).
+	Он также полностью укомплектован, свободен от лицензионных сборов и ограничений.
+
+	<a id="d9e616" class="indexterm"/><a id="d9e618" class="indexterm"/></p>
+	<p><span class="emphasis"><em>MySQL</em></span> следует аналогичной тенденции. Несмотря 
+	на недавнюю смену собственника, эта база данных является наиболее протестированной для 
+	использования с OpenStack и мощно документирована. Мы уклонились от использования базы 
+	данных по умолчанию, <span class="emphasis"><em>SQLite</em></span>, поскольку SQLite 
+	не соответствует требованиям к использованию на практике для баз данных.</p>
+
+	<p>Выбор <span class="emphasis"><em>RabbitMQ</em></span> по сравнению с другими AMQP совместимыми
+	вариантами, которые набирают возрастающую поддержку в OpenStack, такими как ZeroMQ и Qpid, 
+	связан с простотой его использования и значительного объема тестирования на практике. 
+	Он также является единственным вариантом, поддерживает такие свойства, как Compute cell. 
+	Мы рекомендуем кластеризацию с использованием RabbitMQ, поскольку он является неотъемлемой 
+	составляющей системы, и довольно прост в реализации в связи с его встроенной природой.
+	<a id="d9e626" class="indexterm"/></p>
+
+	<p>Как уже говорилось в предыдущих главах, есть несколько вариантов создания сетей в 
+	OpenStack Compute. Мы рекомендуем <span class="emphasis"><em>FlatDHCP</em></span> при 
+	использовании режима работы в сети <span class="emphasis"><em>Multi-Host</em></span> 
+	для обеспечения высокой доступности, запускающего по одному демону <code class="code">nova-network</code> 
+	на хост OpenStack Compute. Это обеспечивает надежный механизм гарантии изоляции прерываний работы сети 
+	в отдельных вычислительных хостах, а также позволяет прямое использование аппаратных сетевых 
+	шлюзов.</p>
+
+	<p><span class="emphasis"><em>Миграция в реальном времени</em></span> обеспечивается 
+	посредством совместного использования системы хранения с <span class="emphasis"><em>NFS</em></span> 
+	в качестве распределенной файловой системы.</p>
+
+	<p>Признавая, что для многих мало масштабных реализациях работа службы хранения объектов 
+	только для хранения образов виртуальных машин выглядит слишком дорогой, для службы образов OpenStack (Glance) 
+	мы выбрали файловые сервера. Если проектируемое вами облако также предполагает запускать службу хранения объектов, 
+	вы легко сможете использовать ее в качестве серверов.</p>
+
+	<p>Мы отдали предпочтение серверу <span class="emphasis"><em>SQL в качестве службы идентификации (keystone)</em></span>
+	над другими, например LDAP. Эти сервера просты в установке и надежны. Авторы признают, что для многих установок 
+	желательна связь с существующими службами каталогов, и предупреждают о необходимости точного понимания 
+	<a class="link" href="http://docs.openstack.org/havana/config-reference/content/ch_configuring-openstack-identity.html#configuring-keystone-for-ldap-backend" title="Параметры настройки LDAP" target="_top">массива доступных опций</a>.</p>
+
+	<p>Служба блочного хранения (cinder) изначально устанавливается на внешних узлах- хранилищах 
+	и использует <span class="emphasis"><em>плагин LVM/iSCSI</em></span>. Большинство плагинов 
+	службы блочного хранения привязаны к продуктам и реализациям определенного производителя, 
+	что ограничивает их использование для потребителей рассматриваемых аппаратных платформ, 
+	однако LVM/iSCSI является надежной и стабильной службой при работе на серийно выпускаемой 
+	вычислительной технике.</p>
+
+	<p>В то время как облако может работать без <span class="emphasis"><em>инструментальной панели 
+	(Dashboard) OpenStack</em></span>, мы расцениваем ее как незаменимую, причем не только для 
+	взаимодействия пользователя с облаком, но и в качестве инструмента для операторов. 
+	Кроме того, использование инструментальной панели из Django превращает ее в гибкую 
+	структуру для <span class="keep-together">расширения</span>.</p></div>
+
+	<div class="section"><div xmlns="" class="titlepage"><div><div>
+	<h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="neutron"> </a>Почему бы не воспользоваться сетевой службой OpenStack (neutron)?</h4></div></div></div>
+	<p>Данный пример архитектуры не использует сетевую службу OpenStack
+      (neutron), поскольку она пока не осуществляет поддержку сети с многими хостами,
+      а наши организации (университет, правительство) имеют доступ к большому
+      диапазону IPv4 адресов с общественным доступом.<a id="d9e647" class="indexterm"/></p></div>
+
+	<div class="section"><div xmlns="" class="titlepage"><div><div>
+	<h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="multi-host-networking"> </a>Зачем использовать сеть с множеством хостов?</h4></div></div></div>
+	<p>При развертывании OpenStack по умолчанию, именно единcтвенная служба <code class="code">nova-network</code>, 
+	которая работает в облаке (обычно на контроллере облака), предоставляет такие услуги, как трансляция сетевых 
+	адресов (NAT), DHCP, DNS для гостевых экземпляров. Если отказывает один узел, который управляет 
+	службой <code class="code">nova-network</code>, вы не сможете получить доступ к экземплярам, а экземпляры 
+	не смогут получить доступ в интернет. В случае возникновения чрезмерного сетевого трафика, единственный узел, 
+	управляющий службой <code class="code">nova-network</code>, может стать узким местом, и выйти 
+	из состава облака.<a id="d9e656" class="indexterm"/><a id="d9e659" class="indexterm"/><a id="d9e661" class="indexterm"/></p>
+
+	<div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Совет]" src="../common/images/admon/tip.png"/></td>
+	<th align="left">Совет</th></tr><tr><td align="left" valign="top">
+	<p>Режим с <a class="link" href="http://docs.openstack.org/havana/install-guide/install/apt/content/nova-network.html" target="_top">множеством хостов</a>
+	является вариантом с высоким уровнем доступности для конфигурации сети, в которой служба <code class="literal">nova-network</code> 
+	выполняется на каждом вычислительном узле в противоположность работе только на единственном узле.</p></td></tr></table></div></div></div>
+
+	<div class="section"><div xmlns="" class="titlepage"><div><div>
+	<h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="detailed_desc"> </a>Подробное описание</h3></div></div></div>
+	<p>Эталонная архитектура состоит из нескольких вычислительных узлов, контроллера облака, 
+	внешнего сервера хранения NFS для хранения экземпляров и сервера блочного хранилища OpenStack
+	для хранения томов (<a class="gloss" href="#" def="&lt;strong&gt;volume: &lt;/strong&gt;
+	 &lt;p&gt;Системы хранения данных на основе диксов обычно представляются пердметом iSCSI с файловой системой которая поддерживает
+	 расширенные атрибуты; могут быть постоянными или эфемерными. &lt;/p&gt;">volume</a>). 
+	<a id="d9e672" class="indexterm"/> Служба сетевого времени (Network Time Protocol, NTP) синхронизирует время для всех узлов. 
+	FlatDHCPManager в режиме мульти-хоста используется для построения сети.
+	Логическая диаграмма для данного примера архитектуры демонстрирует какие службы
+	работают на каждом узле:</p><div class="informalfigure"><div class="mediaobject">
+	<img src="figures/osog_01in01.png"/ width="685" height="764"></div>
+	<span style="text-align: center;"><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_01in01.png">источник рисунка</a></span></div>
+	<p>Контроллер облака выполняет: инструментальную панель, службы API, базу данных (MySQL), сервер очереди сообщений (RabbitMQ), 
+	планировщик для выбора вычислительных ресурсов (<code class="literal">nova-scheduler</code>), 
+	службы идентификации (keystone, <code class="code">nova-consoleauth</code>), 
+	службы образов (<code class="code">glance-api</code>, <code class="code">glance-registry</code>), 
+	службы для консолей доступа гостей, а также службы блочного хранения, 
+	включающие планировщик для ресурсов хранения (<code class="code">cinder-api</code> и <code class="code">cinder-scheduler</code>).
+	
+	<a id="d9e686" class="indexterm"/></p><p>
+	Вычислительные узлы находятся там, где проводятся вычисления, и в нашем 
+	примере применения они выполняют гипервизор (KVM), libvirt (драйвер для 
+	гипервизора, который позволяет динамическую миграцию с узла на узел), 
+	<code class="code">nova-compute</code>, <code class="code">nova-api-metadata</code> (как правило, 
+	используется только при работе в режиме мульти-хоста, он извлекает метаданные определенных экземпляров), 
+	<code class="code">nova-vncproxy</code> и
+    <code class="code">nova-network</code>.</p>
+	<p>Сеть состоит из двух коммутаторов, один для управления или 
+	частного трафика, и второй, покрывающий общий доступ в том числе плавающие
+	IP-адреса. Для поддержки этого, контроллер облака и вычислительные узлы имеют по две 
+	сетевых карты. Серверы хранения блочных данных OpenStack и NFS необходимы исключительно 
+	для доступа в частной сети и, следовательно, им нужна только одна сетевая 
+	карта, однако, если это возможно , рекомендуется связанная конфигурация с 
+	несколькими работающими в одном сервере платами. Плавающий IP доступ идет 
+	напрямую в интернет, в то время как доступ связного IP проходит через NAT.
+	Чтобы представить сетевой трафик, используйте эту диаграмму:</p>
+	<div class="informalfigure"><div class="mediaobject">
+	<img src="figures/osog_01in02.png" width="547" height="350" /></div>
+	<span style="text-align: center"><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_01in02.png"/>источник рисунка</span></div></div>
+	
+	<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="optional_extensions"> </a>Необязательные расширения</h3></div></div></div>
+	<p>Вы можете расширить рассмотренную архитектуру:<a id="d9e702" class="indexterm"/> следующим образом:</p>
+	<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Добавить дополнительные облачные контроллеры (см. 
+	<a class="xref" href="maintenance.html" title="Глава 11. Обслуживание, сбои и отладка">Главу 11, <em>Обслуживание, сбои и отладка</em></a>).</p></li>
+	<li class="listitem"><p>Добавить службы OpenStack Storage (см. главу <a href="http://docs.openstack.org/havana/install-guide/install/apt/content/ch_swift.html">Добавление хранилища объектов</a>
+        в <span class="emphasis"><em>Руководстве по установке OpenStack</em></span> для вашего дистрибутива).</p></li>
+	<li class="listitem"><p>Добавить дополнительные хосты блочных хранилищ OpenStack (см. <a class="xref" href="maintenance.html" title="Глава 11. Обслуживание, сбои и отладка">Главу 11, <em>Обслуживание, сбои и отладка</em></a>).</p></li></ul></div></div></div>
+	
+	<div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both">
+	<a id="example_architecture-neutron"> </a>Пример архитектуры — Сети OpenStack</h2></div></div></div>
+	<div class="toc"><dl><dt><span class="section"><a href="example_architecture.html#overview-neutron">Обзор</a></span></dt>
+	<dt><span class="section"><a href="example_architecture.html#detailed_description">Подробное описание</a></span></dt>
+	<dt><span class="section"><a href="example_architecture.html#software_config">Пример настройки компонентов</a></span></dt></dl></div>
+	<p>Данный раздел предоставляет пример архитектуры, использующей сетевое оборудование OpenStack,
+	также известное как проект Neutron, в среде с высокой доступностью.</p>
+	
+	<div class="section"><div xmlns="" class="titlepage"><div><div>
+	<h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="overview-neutron"> </a>Обзор</h3></div></div></div>
+	<div class="toc"><dl><dt><span class="section"><a href="example_architecture.html#overview_components_neutron">Компоненты</a></span></dt>
+	<dt><span class="section"><a href="example_architecture.html#rational-neutron">Обоснование</a></span></dt></dl></div>
+	
+	<p>Если вам требуется среда, которую можно масштабировать горизонтально, или вы
+	хотите, чтобы ваше облако продолжало работать после отказа узла,
+	в действие может быть введена среда с высокой доступностью.
+	Данный пример архитектуры был описан на основе текущего набора свойств по 
+	умолчанию для OpenStack Havana, с акцентом на высокую доступность.
+	<a id="d9e721" class="indexterm"/><a id="d9e723" class="indexterm"/></p>
+	<div class="section"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="overview_components_neutron"> </a>
+	Компоненты</h4></div></div></div><table rules="all" id="d9e728"><col width="40%"/><col width="60%"/><thead><tr>
+            <th>Компонента</th>
+
+            <th>Детали</th>
+          </tr></thead><tbody><tr>
+            <td><p>Редакция OpenStack</p></td>
+
+            <td><p>Havana</p></td>
+          </tr><tr>
+            <td><p>Операционная система хоста</p></td>
+
+            <td><p>Red Hat Enterprise Linux 6.5</p></td>
+          </tr><tr>
+            <td><p>Репозиторий пакетов OpenStack</p></td>
+
+            <td><p><a class="link" href="https://repos.fedorapeople.org/repos/openstack/openstack-havana/rdo-release-havana-7.noarch.rpm" target="_top">
+			Red Hat Distributed OpenStack (RDO)</a></p></td>
+          </tr><tr>
+            <td><p>Гипервизор</p></td>
+
+            <td><p>KVM</p></td>
+          </tr><tr>
+            <td><p>База данных</p></td>
+
+            <td><p>MySQL</p></td>
+          </tr><tr>
+            <td><p>Очередь сообщений</p></td>
+
+            <td><p>Qpid</p></td>
+          </tr><tr>
+            <td><p>Сетевая служба</p></td>
+
+            <td><p>OpenStack Networking</p></td>
+          </tr><tr>
+            <td><p>Разделение владельцев в сети</p></td>
+
+            <td><p>VLAN</p></td>
+          </tr><tr>
+            <td><p>Сервер службы образов (glance)</p></td>
+
+            <td><p>GlusterFS</p></td>
+          </tr><tr>
+            <td><p>Драйвер службы идентичности (keystone)</p></td>
+
+            <td><p>SQL</p></td>
+          </tr><tr>
+            <td><p>Сервер службы блочного хранения (cinder)</p></td>
+
+            <td><p>GlusterFS</p></td>
+          </tr></tbody></table></div>
+		  
+		  <div class="section"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="rational-neutron"> </a>
+		  Обоснование</h4></div></div></div>
+		  <p>Данный приер архитектуры был выбран на основе текущего набора особенностей по умолчанию
+		  редакции OpenStack Havana с акцентом на высокую доступность. 
+		  В настоящее время данная архитектура развернута во внутреннем облаке
+		  Red Hat OpenStack и используется для размещенных в нем и совместно
+		  используемых служб, которые по своей природе должны обладать очень
+		  высокой доступностью.<a id="d9e795" class="indexterm"/></p>
+		  
+		  <p>Компоненты данной архитектуры были отобраны по следующим причинам:</p>
+	  
+	  <div class="variablelist"><dl><dt><span class="term">Red Hat Enterprise Linux</span></dt>
+		<dd><p>Вы должны выбрать операционную систему, которая может работать на 
+			всех физических узлах. Данный пример архитектуры основывается на Red Hat
+            Enterprise Linux, которая предлагает надежность, долгосрочную поддержку,
+			сертифицированные испытания и закаленность. Перемещающиеся сейчас в 
+			направлении использования OpenStack корпоративные клиенты обычно 
+			нуждаются в таких преимуществах.</p></dd>
+		<dt><span class="term">RDO</span></dt>
+		<dd><p>Пакет Red Hat Distributed OpenStack предлагает простой способ
+			загрузки наиболее новой редакции OpenStack, которая построена
+            под платформу Red Hat Enterprise Linux.</p></dd>
+		<dt><span class="term">KVM</span></dt>
+		<dd><p>KVM является поддерживаемым гипервизором, выбранным для Red Hat
+            Enterprise Linux (и включенным в дистрибутив). Он полностью укомплектован
+			и свободен от лицензионных сборов и ограничений.</p></dd>
+		<dt><span class="term">MySQL</span></dt>
+		<dd><p>MySQL используется для серверов баз данных для всех баз данных
+			в окружении OpenStack. MySQL является поддерживаемой базой данных в
+			выборе для Red Hat Enterprise Linux (и содержится в дистрибутиве); 
+			эта СУБД является масштабируемой системой с открытым кодом, 
+			к тому же хорошо управляющая памятью.</p></dd>
+		<dt><span class="term">Qpid</span></dt>
+		<dd><p>Apache Qpid предлагает 100 процентную совместимость со
+			стандартом протоколом очередей расширенных сообщений
+            (Advanced Message Queuing Protocol Standard), и его брокер доступен 
+			и для C++, и для Java.</p></dd>
+		<dt><span class="term">OpenStack Networking</span></dt>
+		<dd><p>Сетевое обеспечение OpenStack предлагает современную сетевую
+			функциональность, содержащую разделение сетей Layer 2 (L2) 
+			и поставщиков сетевых служб.</p></dd>
+		<dt><span class="term">VLAN</span></dt>
+		<dd><p>Использование виртуальных локальных сетей предлагает широковещательное
+			управление, безопасность и прозрачность физического уровня. Если
+			необходимо, для расширения вашего адресного пространства используйте VXLAN.</p></dd>
+		<dt><span class="term">GlusterFS</span></dt>
+		<dd><p>GlusterFS предлагает масштабируемую систему хранения. По мере роста
+			вашей среды вы можете добавлять дополнительные узлы хранения (вместо того,
+			чтобы, например, быть ограниченным дорогим массивом хранения).</p></dd></dl></div></div></div>
+		
+		<div class="section"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="detailed_description"> </a>
+		Подробное описание</h3></div></div></div>
+		<div class="toc"><dl><dt><span class="section"><a href="example_architecture.html#node_types">
+		Типы узлов</a></span></dt>
+		<dt><span class="section"><a href="example_architecture.html#networking_layout">Компоновка сети</a></span></dt>
+		<dt><span class="section"><a href="example_architecture.html#node_connectivity">Связность узлов</a></span></dt>
+		<dt><span class="section"><a href="example_architecture.html#node_diagrams">Схемы узлов</a></span></dt></dl></div>
+		
+		<div class="section"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="node_types"> </a>Типы узлов</h4></div></div></div>
+		<p>Данный раздел предлагает вам подразделение различных типов узлов,
+		составляющих среду OpenStack. Узел является физической машиной, которая снабжена операционной 
+		системой и выполняет определенный стек программного обеспечения поверх ее. 
+		<a class="xref" href="example_architecture.html#node-types-table" title="Таблица 1.1, Типы узлов">Таблица 1.1, “Типы узлов”</a> 
+		представляет описание и спецификацию узлов.<a id="d9e838" class="indexterm"/></p><table rules="all" id="node-types-table"><caption>
+		Таблица 1.1. Типы узлов</caption><col width="11%"/><col width="62%"/><col width="27%"/><thead><tr>
+            <th>Тип</th>
+
+            <th>описание</th>
+
+            <th>Пример аппаратной реализации</th>
+          </tr></thead><tbody><tr>
+            <td>Контроллер</td>
+
+            <td><p>Узлы контроллера отвечают за выполнение служб управляющего программного обеспечения, 
+				необходимого для работы окружения OpenStack. Эти узлы:</p>
+              <p></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+				<p>Обеспечивают интерфейс переднего плана для доступа клиентов, а также
+					службы API, которые являются средством общения для всех других компонентов в среде.</p></li>
+				<li class="listitem"><p>Выполняют ряд служб в режиме высокой доступности с использованием 
+					Pacemaker и HAProxy для поддержки виртуальных IP и функций балансировки нагрузки, что обеспечивает
+					использование всех узлов.</p></li>
+				<li class="listitem"><p>Поддержание служб &quot;инфраструктуры&quot; высокой доступности
+					таких как MySQL и Qpid, которые лежат в основе всех остальных служб.</p></li>
+				<li class="listitem"><p>Обеспечение того, что называется &quot;постоянным хранением&quot;
+					с помощью служб также размещенных на этих хостах. Эти системы постоянного хранения
+					являются основой на узлах хранения для обеспечения надежности.</p></li></ul></div><p>
+              </p>
+              <p>См. <a class="xref" href="example_architecture.html#node_controller-diagram" title="Рисунок 1.3. Узел контроллера">Рисунок 1.3, “Узел контроллера”</a>.</p></td>
+            <td><p>Модель: Dell R620</p> 
+			<p>ЦПУ: 2x Intel® Xeon® CPU E5-2620 0 @ 2.00 GHz</p> 
+			<p>Оперативная память: 32 ГБ</p> 
+			<p>Диск: два 300 ГБ 10000 RPM SAS диска</p> 
+			<p>Сеть: два сетевых порта 10G</p></td>
+          </tr><tr>
+            <td>Вычислительный узел</td>
+            <td><p>Вычислительные узлы выполняют экземпляры виртуальных машин OpenStack. Они:</p>
+             <p></p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+			 <p>Выполняют скудный минимум служб, необходимых для обеспечения этих экземпляров.</p></li>
+			 <li class="listitem"><p>Использование локальной системы хранения приводит
+				к тому, что при сбое узла не возможна никакая миграция виртуальных машин
+				или восстановление экземпляров.</p></li></ul></div>
+			<p><span class="keep-together">See <a class="xref" href="example_architecture.html#node_compute-diagram" title="Рисунок 1.4. Вычислительный узел">Рисунок 1.4, Вычислительный узел”</a>.</span>
+              </p></td>
+            <td><p>Model: Dell R620</p> 
+			<p>ЦПУ: 2x Intel® Xeon® CPU E5-2650 0 @ 2.00 GHz</p> 
+			<p>Оперативная память: 128 GB</p>
+            <p>Диск: два 600 GB 10000 RPM SAS диска</p> 
+			<p>Сеть:
+              четыре сетевых порта 10G (Для дальнейшего расширения настройки)</p></td>
+          </tr><tr>
+            <td>Узел хранения</td>
+            <td><p>Узлы хранения содержат все необходимые среде данные, включая образы дисков 
+			в библиотеке службы образов и постоянные тома системы хранения, создаваемые службой
+			блочного хранения. Узлы хранения используют технологию GlusterFS для хранения 
+			высоко доступных и масштабируемых данных.</p>
+              <p>См. <a class="xref" href="example_architecture.html#node_storage-diagram" title="Рисунок 1.6. Узел хранения">Рисунок 1.6, “Узел хранения”</a>.</p></td>
+            <td><p>Модель: Dell R720xd</p> 
+			<p>ЦПУ: 2x Intel® Xeon® CPU E5-2620 0 @ 2.00 GHz</p> 
+			<p>Оперативная память: 64 ГБ</p>
+            <p>Диск: два диска 500 ГБ 7200 RPM SAS и двадцать четыре диска 600 ГБ 10000 RPM SAS Disks</p> 
+			<p>Raid контроллер: PERC H710P интегрированный RAID контроллер, 1 ГБ NV кеш</p> 
+			<p>Сеть: два сетевых порта 10G</p></td>
+          </tr><tr>
+            <td>Сетевой узел</td>
+            <td><p>Сетевые узлы отвечают за обеспечение всех виртуальных сетей для клиентов,
+				для создания общедоступных или частных сетей и выдачи виртуальных
+				машин наружу, во внешние сети. Сетевые узлы:</p>
+              <p>
+             </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+			 <p>Формируют только входную и выходную точку для исполняемых поверх OpenStack экземпляров.</p></li>
+			 <li class="listitem"><p>Запускают все службы сетевой среды 
+				за исключением службы сетевого API (которая работает на
+				узле контроллера)</p></li></ul></div>
+			<p></p>
+              <p>См. <a class="xref" href="example_architecture.html#node_network-diagram" title="Рисунок 1.5. Сетевой узел">Рисунок 1.5, “Сетевой узел”</a>.</p></td>
+            <td><p>Модель: Dell R620</p> 
+			<p>ЦПУ: 1x Intel® Xeon® CPU E5-2620 0 @ 2.00 GHz</p> 
+			<p>Оперативная память: 32 ГБ</p> 
+			<p>Диск:
+            два диска 300 ГБ 10000 RPM SAS</p> 
+			<p>Сеть: пять сетевых портов 10G</p></td>
+          </tr><tr>
+          <td>Сервисные узлы</td>
+            <td><p>Сервисные узлы используются исключительно внутренним администрирующим персоналом
+				предоставляя ряд основных функций системного администрирования, необходимых для 
+				поддержки в рабочем состоянии среды, а также работы и обслуживания аппаратных средств,
+				операционной системы и программного обеспечения с которыми все работает.</p> 
+				<p>Эти узлы выполняют такие службы как выделение ресурсов, управление конфигурацией, 
+				мониторинг или управление программным обеспечением GlusterFS. Они не требуют
+				масштабирования, хотя обычно эти машины резервируются.</p></td>
+            <td><p>Модель: Dell R620</p> 
+			<p>ЦПУ: 2x Intel® Xeon® CPU E5-2620 0 @ 2.00 GHz</p> 
+			<p>Оперативная память: 32 ГБ</p> 
+			<p>Диск:
+            два диска 500 GB 7200 RPM SAS</p> 
+			<p>Сеть: два сетевых порта 10G</p></td>
+          </tr></tbody></table></div><div class="section"><div xmlns="" class="titlepage"><div><div>
+		  
+		  <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="networking_layout"> </a>Компоновка сети</h4></div></div></div>
+		  <div class="toc"><dl><dt><span class="section"><a href="example_architecture.html#OS_network">Внутренняя сеть OpenStack</a></span></dt>
+		  <dt><span class="section"><a href="example_architecture.html#public_network">Общедоступная сеть</a></span></dt>
+		  <dt><span class="section"><a href="example_architecture.html#vm_network">Сеть обмена виртуальными машинами</a></span></dt></dl></div>
+		  
+		  <p>Сетевое оборудование содержит все устройства управления для всего 
+		  оборудования в среде (например, включает в себя устройства Dell iDrac7 
+		  (интегрированного контроллера удаленного доступа Dell) для
+		  аппаратуры узлов, а также управляющую инфраструктуру для сетевых коммутаторов).
+		  Сетевое оборудование доступно исключительно внутреннему персоналу и только при выполнении 
+		  задач диагностики и восстановления.</p>
+		  
+		  <div class="section"><div xmlns="" class="titlepage"><div><div><h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="OS_network"> </a>Внутренняя сеть OpenStack</h5></div></div></div>
+		  
+		  <p>Эта сеть используется для функций управления OpenStack и
+		  обмена, включающего в себя необходимые для предоставления аппаратуры
+		  узлов службы (<code class="literal">pxe</code>, <code class="literal">tftp</code>,
+		  <code class="literal">kickstart</code>), а также обмен между различными типами
+		  узлов OpenStack с помощью OpenStack API и сообщений (например,
+          <code class="literal">nova-compute</code> взаимодействует с <code class="literal">keystone</code>
+          или <code class="literal">cinder-volume</code> обращается к
+          <code class="literal">nova-api</code>), а также весь обмен для хранимых данных на 
+		  уровне хранения передаваемый по протоколу Gluster. Все физические узлы имеют по 
+		  крайней мере один сетевой интерфейс (обычно <code class="literal">eth0</code>) в сети. 
+		  Эта сеть доступна исключительно через другие VLAN на порт 22 (для <code class="literal">ssh</code>
+          доступа управления машиной).</p></div>
+		  
+		  <div class="section"><div xmlns="" class="titlepage"><div><div><h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="public_network"> </a>Общедоступная сеть</h5></div></div></div>
+		  
+		  <p>Данная сеть представляет собой сочетание:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+		  <p>IP адресов для интерфейсов на общественной стороне в узлах контроллера
+		  (через которые конечные пользователи получат доступ к службам OpenStack)</p></li><li class="listitem">
+		  <p>Диапазона подлежащих маршрутизации в общедоступных сетях сетевых адресов IPv4, 
+		  которые будут использоваться сетевыми средствами OpenStack для плавающих IP. 
+		  Возможно, вы будете ограничены в своем доступе к адресам IPv4; однако,
+		  большой диапазон адресов IPv4 не является необходимым.</p></li><li class="listitem">
+		  <p>Маршрутизаторы для частных сетей создаются самой OpenStack.</p></li></ul></div>
+		  <p>Эта сеть подключена к узлам контроллера, следовательно, пользователи могут получить 
+		  доступ к интерфейсам OpenStack, а также подключаться к сетевым узлам для обеспечения
+		  виртуальных машин функциональностью маршрутизацией обмена в общедоступных сетях. 
+		  Эта сеть также подключает сервисные узлы, следовательно может быть доступна 
+		  любая сервисная служба, которая должна быть открыта (например, мониторинг системы).</p></div><div class="section">
+		  
+		  <div xmlns="" class="titlepage"><div><div><h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="vm_network"> </a>Сеть обмена виртуальнымми машинами</h5></div></div></div>
+		  
+		  <p>Это закрытая сеть, которая не использует общедоступную маршрутизацию
+		  и просто используется как частная, внутренняя сеть для обмена между виртуальными
+		  машинами в OpenStack, а также между виртуальными машинами и сетевыми узлами, которые
+		  обеспечивают маршрутизацию уровня L3 в сеть общего пользования (а также плавающие
+		  IP-адреса для обратной связи с виртуальными машинами).
+		  Поскольку эта сеть закрытая, мы используем другое адресное пространство по сравнению 
+		  с остальными для четкого определения такого разделения. К этой сети должны 
+		  подключаться только вычислительные узлы и сетевые узлы OpenStack.</p></div></div>
+		
+		<div class="section"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="node_connectivity"> </a>Связность узлов</h4></div></div></div>
+		
+		<div class="toc"><dl><dt><span class="section"><a href="example_architecture.html#node_connectivity-initial">Начальное развертывание</a></span></dt>
+		<dt><span class="section"><a href="example_architecture.html#node_connectivity-performance">Связность с максимальной производительностью</a></span></dt></dl></div>
+		
+		<p>Следующий раздел даст подробное описание того, каким образом узлы 
+		объединяются в различные сети (см. раздел с названием 
+		<a class="xref" href="example_architecture.html#networking_layout" title="Компоновка сети">“Компоновка сети”</a>), 
+		а также какой дополнительный анализ необходимо выполнить (например, создание перемычек) при объединении узлов в сети.</p>
+		
+		<div class="section"><div xmlns="" class="titlepage"><div><div><h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="node_connectivity-initial"> </a>Начальное развертывание</h5></div></div></div>
+		
+		<p>В начале настройки соединения должны вращаться вокруг поддержки простого и 
+		непосредственного соединения для минимизации сложности и времени развертывания.
+		Ввод в действие показан на <a class="xref" href="example_architecture.html#fig1-1" title="Рисунок 1.1. Развертывание базового узла">Рисунке 1.1, “Развертывание базового узла”</a>, 
+		преследующим цель наличия связи по 1 × 10G со всеми вычислительными узлами,
+        в то же время используя соединения в соответствующих узлах для
+		достижения максимальной производительности.</p><div class="figure"><a id="fig1-1"> </a>
+		<p class="title"><strong>Рисунок 1.1. Развертывание базового узла</strong></p>
+		
+		<div class="figure-contents"><div class="mediaobject" align="center">
+		<img src="figures/osog_0101.png" align="middle" width="783" height="505" /></div>
+		<span  align="middle"><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0101.png">источник рисунка</span></div></div><br class="figure-break"/></div>
+		<div class="section"><div xmlns="" class="titlepage"><div><div><h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="node_connectivity-performance"> </a>Связность с максимальной производительностью</h5></div></div></div>
+		
+		<p>Если сетевой подсистемы базовой комплектации оказывается недостаточно,
+		мы можете перейти к <a class="xref" href="example_architecture.html#fig1-2" title="Рисунок 1.2. Развертывание производительного узла">Рисунку 1.2, “Развертывание производительного узла”</a>, 
+		который предоставляет 2 × 10G сетевые соединения всем экземплярам в среде,
+		а также обеспечивает бОльшую пропускную способность к уровню хранения.<a id="d9e980" class="indexterm"/></p>
+		
+		<div class="figure"><a id="fig1-2"> </a><p class="title"><strong>Рисунок 1.2. Развертывание производительного узла</strong></p><div class="figure-contents"><div class="mediaobject" align="center">
+		<img src="figures/osog_0102.png" align="middle" width="783" height="548"/></div>
+		<span align="middle"><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0102.png">источник рисунка</a>
+		</div></div><br class="figure-break"/></div></div>
+		<div class="section"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="node_diagrams"> </a>Схемы узла</h4></div></div></div>
+		<p>Следующие схемы (с <a class="xref" href="example_architecture.html#node_controller-diagram" title="Рисунок 1.3. Узел контроллера">Рисунка 1.3, “Узел контроллера”</a>
+        до <a class="xref" href="example_architecture.html#node_storage-diagram" title="Рисунок 1.6. Узел хранения">Рисунка 1.6, “Узел хранения”</a>) 
+	    содержат логическую информацию о различных типах узлов с отображением того,
+		какие службы будут работать на них и как они будут взаимодействовать друг с другом.
+		Схемы также иллюстрируют то, каким образом достигается доступность
+		и масштабируемость служб.</p>
+	  <div class="figure"><a id="node_controller-diagram"> </a><p class="title"><strong>Рисунок 1.3. Узел контроллера</strong></p>
+	  <div class="figure-contents"><div class="mediaobject">
+	  <img src="figures/osog_0103.png" title="Рисунок 1.3. Узел контроллера" width="774" height="1083" /></div>
+	  <span align="middle"><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0103.png">источник рисунка</a></span>
+	  </div></div><br class="figure-break"/>
+	  <div class="figure"><a id="node_compute-diagram"> </a><p class="title"><strong>Рисунок 1.4. Вычислительный узел</strong></p>
+	  <div class="figure-contents"><div class="mediaobject" align="center">
+	  <img src="figures/osog_0104.png" title="Рисунок 1.4. Вычислительный узел" align="middle" width="637" height="367"/></div>
+	  <span><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0104.png" align="middle"/>источник рисунка</span>
+	  </div></div><br class="figure-break"/>
+	  <div class="figure"><a id="node_network-diagram"> </a><p class="title"><strong>Рисунок 1.5. Сетевой узел</strong></p>
+	  <div class="figure-contents"><div class="mediaobject">
+	  <img src="figures/osog_0105.png" title="Рисунок 1.5.Сетевой узел" align="middle" width="644" height="354" /></div>
+	  <span align="middle"><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0105.png" align="middle" />источник рисунка</a>
+	  </div></div><br class="figure-break"/><div class="figure"><a id="node_storage-diagram"> </a><p class="title"><strong>Рисунок 1.6. Узел хранения</strong></p>
+	  <div class="figure-contents"><div class="mediaobject">
+	  <img src="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0106.png" width="780" height="647"/></div>
+	  <span align="middle"><a href="http://git.openstack.org/cgit/openstack/operations-guide/plain/doc/openstack-ops/figures/osog_0106.png"  align="middle" />источник рисунка</a>
+	  </div></div><br class="figure-break"/></div></div><div class="section"><div xmlns="" class="titlepage"><div><div>
+	  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="software_config"> </a>Пример настройки компонентов</h3></div></div></div>
+	  
+	  <p><a class="xref" href="example_architecture.html#thirdparty-table" title="Таблица 1.2, Настройка компонентов третьих производителей">Таблица 1.2, “Настройка компонентов третьих производителей”</a>
+	  и <a class="xref" href="example_architecture.html#openstack-config-table" title="Таблица 1.3. Настройка компонентов OpenStack">Таблица 1.3, “Настройка компонентов OpenStack”</a> 
+	  содержат пример и его анализ как для компонентов третьих производителей и OpenStack<a id="d9e1018" class="indexterm"/> components: </p>
+	  <table rules="all" id="thirdparty-table"><caption>Таблица 1.2, Настройка компонентов третьих производителей</caption><col width="10%"/><col width="30%"/><col width="30%"/><col width="30%"/><thead><tr>
+            <th>Компонент</th>
+
+            <th>Настройка</th>
+
+            <th>Доступность</th>
+
+            <th>Масштабирование</th>
+          </tr></thead><tbody><tr>
+            <td>MySQL</td>
+
+            <td><code class="literal">binlog-format = row</code></td>
+
+            <td>Репликации мастер/мастер. Однако оба узла не используются одновременно.
+			Репликация поддерживает все узлы очень близко к актуальным данным
+			настолько, насколько это возможно (хотя асинхронная природа репликаций
+			означает, что полная согласованность невозможна). Подключение
+			к базе данных осуществляется только через виртуальные IP Pacemaker,
+			обеспечивая что большинство проблем репликации мастер-мастер можно
+			избежать.</td>
+
+            <td>Не очень проработано. Как только загрузка сервера MySQL возрастает
+			в достаточной степени для рассмотрения масштабируемости, может использоваться
+			установка с несколькими мастерами или конфигурация ведущий/ведомый.</td>
+          </tr><tr>
+            <td>Qpid</td>
+
+            <td><code class="literal">max-connections=1000</code>
+            <code class="literal">worker-threads=20</code>
+            <code class="literal">connection-backlog=10</code>, включает безопасность sasl
+			с аутентификацией SASL-BASIC</td>
+
+            <td>Qpid добавляется в качестве ресурса для программного обеспечения Pacemaker 
+			которое выполняется на узлах контроллера, на которых расположен Qpid. 
+			Это гарантирует, что только один экземпляр Qpid работает в определенное время, 
+			и узел с виртуальным IP Pacemaker всегда будет узлом с запущенным Qpid.</td>
+
+            <td>Не очень проработано. Однако, Qpid может быть заменен для работы на всех узлах 
+			контроллера для задач масштабируемости и доступности и удален с Pacemaker.</td>
+          </tr><tr>
+            <td>HAProxy</td>
+
+            <td><code class="literal">maxconn 3000</code></td>
+
+            <td>HAProxy является балансировщиком нагрузки программного уровня -7,
+			используемым в качестве точки входа для всех компонентов кластерного
+			API OpenStack и выполняющего терминацию SSL. HAProxy может быть добавлен
+			как ресурс для программного обеспечения Pacemaker, которое работает на узлах
+			контроллера где расположен HAProxy. Это гарантирует, что только один экземпляр
+            работать в определенный момент времени, а узел с виртуальным IP Pacemaker 
+			всегда будет узлом с работающим HAProxy.</td>
+
+            <td>Не рассматривается. HAProxy имеет достаточно небольшие накладные расходы 
+			производительности, которые один экземпляр должен масштабировать в достаточной 
+			степени для заданного уровня рабочей нагрузки. Если требуется
+			дополнительное масштабирование, можно добавить перед множеством копий
+			HAProxy <code class="literal">keepalived</code> или
+			другой балансировщик нагрузки 4 уровня.</td>
+          </tr><tr>
+            <td>Memcached</td>
+
+            <td><code class="literal">MAXCONN="8192" CACHESIZE="30457"</code></td>
+
+            <td>Memcached является быстрым кэширующим в оперативной памяти пары ключ-значение 
+			программным обеспечением, которое используется компонентами OpenStack для кэширования 
+			данных и увеличения производительности. Memcached работает на всех узлах контроллера,
+			гарантируя, что в случае выхода из строя одного из экземпляров, другой экземпляр
+			будет доступен.</td>
+
+            <td>Не рассматривается. Один экземпляр Memcached должен иметь возможность масштабирования 
+			до требуемых нагрузок. Если требуется масштабируемость, перед Memcached (в режиме 
+			необработанного <code class="literal">tcp</code>) может быть помещен HAProxy для
+			использования множества экземпляров Memcached для масштабируемости.
+			Однако это может создать проблемы согласованности кэша.</td>
+          </tr><tr>
+            <td>Pacemaker</td>
+
+            <td>Настроен на использование <span class="keep-together"><code class="literal">corosync</code> и</span>
+            <code class="literal">cman</code> как средство управления стеком/кворумом кластерного 
+			взамиодействия, а также как кластер из двух узлов.</td>
+
+            <td><p>Pacemaker является кластерным программным обеспечением, используемым для 
+			гарантирования доступности служб, запущенных на узлах контроллера и сетевых узлах: </p>
+			<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+			<p>Поскольку Pacemaker является кластерным программным обеспечением, само 
+			программное обеспечение обрабатывает свою собственную доступность, используя на нижнем 
+			уровне <code class="literal">corosync</code> и <code class="literal">cman</code>.</p></li><li class="listitem">
+			<p>Если вы используете родной клиент GlusterFS, никакие виртуальные IP не требуются.
+			Если вы используете адаптер NFS или SMB, вам потребуются виртуальный IP на
+			котором вы смонтируете тома GlusterFS.</p></li></ul></div><p> </p></td>
+
+            <td>Если требуется сделать больше узлов доступных кластеру, Pacemaker 
+			может масштабироваться до 64 узлов.</td>
+          </tr><tr>
+            <td>GlusterFS</td>
+
+            <td>Во всех томах включается профиль производительности &quot;virrt&quot; 
+			<code class="literal">glusterfs</code>. Тома устанавливаются в двух узловую репликацию.</td>
+
+            <td>Glusterfs является кластерной файловой системой, которая работает
+			на узлах хранения для обеспечения постоянных масштабируемых систем хранения данных.
+			Поскольку все подключения к gluster используют родные <code class="literal">gluster</code> 
+			точки монтирования, экземпляры <code class="literal">gluster</code> сами по себе
+			обеспечивают функциональность доступности и отказоустойчивости.</td>
+
+            <td>Масштабируемость систем хранения GlusterFS может быть получена добавлением
+			большего числа томов хранения.</td>
+          </tr></tbody></table><p> </p>
+		  
+		  <table rules="all" id="openstack-config-table"><caption>Таблица 1.3. Настройка компонентов OpenStack</caption><col width="8%"/><col width="8%"/><col width="25%"/><col width="29%"/><col width="30%"/><thead><tr>
+            <th>Компонент</th>
+
+            <th>Тип узла</th>
+
+            <th>Настройка</th>
+
+            <th>Доступность</th>
+
+            <th>Масштабирование</th>
+          </tr></thead><tbody><tr>
+            <td>Инструментальная панель (horizon)</td>
+
+            <td>Контроллер</td>
+
+            <td>Настроена на использование Memcached для хранения сессий,
+			поддержка <code class="literal">neutron</code> включена,
+            <code class="literal">can_set_mount_point = False</code></td>
+
+            <td>Инструментальная панель работает на всех узлах контроллера,
+			обеспечивая доступность по крайней мере одного экземпляра в случае отказа
+			узла. Она также расположена за HAProxy, который определяет отказы 
+			программного обеспечения и маршрутизации запросов во всех 
+			неисправных экземплярах.</td>
+
+            <td>Инструментальная панель выполняется на всех узлах контроллера,
+			следовательно масштабируемость может быть достигнута за счет
+			дополнительных узлов контроллера. HAProxy делает возможным
+			масштабирование инструментальной панели по мере добавления 
+			большего числа узлов.</td>
+          </tr><tr>
+            <td>Идентификация (keystone)</td>
+
+            <td>Контроллер</td>
+
+            <td>Настроен на использование Memcached для кэширования и PKI для маркеров.</td>
+
+            <td>Идентификация работает на всех узлах контроллера, обеспечивая доступность 
+			по крайней мере одного экземпляра в случае отказа узла.
+			Идентификация также расположена за HAProxy, который определяет отказы 
+			программного обеспечения и маршрутизации запросов во всех 
+			неисправных экземплярах.</td>
+
+            <td>Идентификация выполняется на всех узлах контроллера,
+			следовательно масштабируемость может быть достигнута за счет
+			дополнительных узлов контроллера. HAProxy делает возможным
+			масштабирование инструментальной панели по мере добавления 
+			большего числа узлов.</td>
+          </tr><tr>
+            <td>Служба образов (glance)</td>
+
+            <td>Контроллер</td>
+
+            <td><code class="literal">/var/lib/glance/images</code> является 
+			монтируемым самой GlusterFS томом для выведения его за пределы
+			уровня системы хранения.</td>
+
+            <td>Служба образов работает на всех узлах контроллера,
+			обеспечивая доступность по крайней мере одного экземпляра в случае отказа
+			узла. Она также расположена за HAProxy, который определяет отказы 
+			программного обеспечения и маршрутизации запросов во всех 
+			неисправных экземплярах.</td>
+
+            <td>Служба образов выполняется на всех узлах контроллера,
+			следовательно масштабируемость может быть достигнута за счет
+			дополнительных узлов контроллера. HAProxy делает возможным
+			масштабирование инструментальной панели по мере добавления 
+			большего числа узлов.</td>
+          </tr><tr>
+            <td>Вычислительный узел (nova)</td>
+
+            <td>Контроллер, Вычислительные узлы</td>
+
+            <td><p>Настроен на использование Qpid, <span class="keep-together">
+            <code class="literal">qpid_heartbeat = </code>
+            <span class="keep-together"><code class="literal">10</code>,</span>
+            </span><span class="keep-together"> сконфигурирован для использования
+            </span> Memcached для кэширования, настроен для использования 
+			<span class="keep-together"><code class="literal">libvirt</code>,</span>
+            настроен для использования <span class="keep-together"><code class="literal">neutron</code>.</span></p>
+            <p>Настраивает <code class="literal">nova-consoleauth</code>  использовать
+            Memcached для управления сессиями (таким образом, чтобы он мог иметь 
+			множество копий и выполнять балансировку нагрузки).</p></td>
+
+            <td><p>Службы nova API, планировщика заданий, хранилища объектов, 
+			cert, consoleauth, conductor и vncproxy работают на всех узлах контроллера,
+			обеспечивая доступность по крайней мере одного экземпляра в случае отказа
+			узла. Compute также расположена за HAProxy, который определяет отказы 
+			программного обеспечения и маршрутизации запросов во всех 
+			неисправных экземплярах.</p>
+            <p>Вычислительные узлы служб compute и проводника(conductor), которые
+			выполняются на вычислительных узлах, требуются только для выполнения
+			служб на этих узлах, следовательно доступность этих служб тесно сочетается 
+			с доступными узлами. Пока вычислительный узел работает, он будет иметь
+			запущенные на нем необходимые службы.</p></td>
+
+            <td>Службы nova API, планировщика заданий, хранилища объектов, cert, consoleauth,
+            conductor и vncproxy services выполняются на всех узлах контроллера,
+            следовательно масштабируемость может быть достигнута за счет
+			дополнительных узлов контроллера. HAProxy делает возможным
+			масштабирование инструментальной панели по мере добавления 
+			большего числа узлов. Масштабируемость служб, запущенных на 
+			вычислительных узлах (compute, conductor) достигается в линейную
+			зависимость путем добавления бОльшего числа вычислительных узлов.</td>
+          </tr><tr>
+            <td>Система блочного хранения (cinder)</td>
+
+            <td>Контроллер</td>
+
+            <td>Настроена на использование Qpid, <span class="keep-together"><code class="literal">qpid_heartbeat = </code>
+			<span class="keep-together"><code class="literal">10</code>,</span></span>
+			<span class="keep-together"> настроена на использование томов Gluster</span> 
+            с уровня системы хранения в качестве сервера для блочного хранилища ()Block Storage), 
+			с применением родного клиента Gluster.</td>
+
+            <td>Службы API блочного хранилища, планировщика заданий и томов 
+			выполняются на всех узлах контроллера, обеспечивая доступность по 
+			крайней мере одного экземпляра в случае отказа узла. 
+			Блочное хранилище также расположено за HAProxy, который определяет отказы 
+			программного обеспечения и маршрутизации запросов во всех 
+			неисправных экземплярах.</td>
+
+            <td>Службы API блочного хранилища, планировщика заданий и томов 
+			выполняются на всех узлах контроллера, следовательно масштабируемость может быть достигнута за счет
+			дополнительных узлов контроллера. HAProxy делает возможным
+			масштабирование инструментальной панели по мере добавления 
+			большего числа узлов для хранения блоков.</td>
+          </tr><tr>
+            <td>Сетевые средства OpenStack (neutron)</td>
+
+            <td>Контроллер, Вычислительные узлы, Сетевые узлы</td>
+
+            <td>Настроен применять QPID, <span class="keep-together"><code class="literal">
+			qpid_heartbeat = 10</code></span>, включена поддержка
+			службы имен ядра, <code class="literal">tenant_network_type = vlan</code>,
+            <code class="literal">allow_overlapping_ips = true</code>,
+            <code class="literal">tenant_network_type = vlan</code>,
+            <code class="literal">bridge_uplinks = br-ex:em2</code>,
+            <code class="literal">bridge_mappings = physnet1:br-ex</code></td>
+
+            <td><p>Служба сети OpenStack работает на всех вычислительных узлах,
+			обеспечивая доступность по крайней мере одного экземпляра в случае отказа
+			узла. Она также расположена за HAProxy, который определяет отказы 
+			программного обеспечения и маршрутизации запросов во всех 
+			неисправных экземплярах.</p> 
+			<p>Службы сетевая среды OpenStack <code class="literal">ovs-agent</code>,
+            <code class="literal">l3-agent</code>,
+            <code class="literal">dhcp-agent</code> и 
+            <code class="literal">metadata-agent</code> выполняются на сетевых узлах, 
+			как ресурсы <code class="literal">lsb</code> внутри Pacemaker.
+			Это означает, что в случае отказа сетевого узла, службы остаются запущенными
+			на другом узле. Наконец служба <code class="literal">ovs-agent</code> 
+			также выполняется на всех вычислительных узлах, и в случае отказа 
+			вычислительного узла любой другой оставшийся узел продолжит
+			работу с применением копии, запущенной на нем.</p></td>
+
+            <td>Служба сети OpenStack работает на всех вычислительных узлах, 
+			следовательно масштабируемость может быть достигнута за счет
+			дополнительных узлов контроллера. HAProxy делает возможным
+			масштабирование сетевой службы по мере добавления 
+			большего числа узлов. Масштабируемость служб, запущенных на 
+			сетевых узлах в настоящее время не поддерживается сетевыми ресурсами
+            OpenStack, следовательно, они не рассматриваются.
+			Одной копии служб должно быть достаточно для обработки
+			данной рабочей нагрузки.
+			Масштабируемость <code class="literal">ovs-agent</code> 
+			работающих на вычислительных узлах, достигается добавлением по
+			мере необходимости бОльшего числа вычислительных узлов.</td>
+          </tr></tbody></table></div></div>
+		  
+		  <div class="section"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="example_archs_conclusion"> </a>Заключительные соображения по архитектуре</h2></div></div></div>
+		  <p>При всем обилии доступных возможностей и опций мы надеемся обеспечить ваше
+		  изучение OpenStack несколькими четко обозначенными и проверенными способами.
+		  Если вам необходимы допонительные идеи, проверьте <a class="xref" href="use-cases.html" title="Дополнение A. Случаи использования">Дополнение A. <em>Случаи использования</em></a>,
+		  <a class="link" href="http://docs.openstack.org/" target="_top">Руководство по установке OpenStack</a> 
+		  или <a class="link" href="http://www.openstack.org/user-stories/" target="_top">Страницу пользовательских историй OpenStack</a>.</p></div></div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Понимание разгрузки удаляющего кодирования - Книга рецептов Ceph - Приложения</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch10.html" title="Глава 10. Ещё о Ceph"/>
+<link rel="next" href="MellanoxOFED.html" title="Стек протоколов Mellanox OFED"/>
+<meta name="git-sha" content="13fb30b7c263d715eee84f0ca1a16df79697eb88"/>
+<meta name="buildTime" content="2014-12-12T17:42:58+00:00"/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Понимание разгрузки удаляющего кодирования';
+PrevRef = 'Ch10.html';
+UpRef = 'index.html';
+NextRef = 'MellanoxOFED.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   <a id="architecture"> </a>Приложения</h1>
+  </div></div></div>
+
+  <div class="toc"><p class="title"><strong>Перевод <a class="link" href="https://community.mellanox.com/docs/DOC-2414?forceNoRedirect=true" 
+   target="_top">Understanding Erasure Coding Offload</a>, <a class="link" href="https://community.mellanox.com/people/hani%40mellanox.com" 
+   target="_top">hani</a>, 15.02.2016.</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="UnderstandingErasureCodingOffload.html">Понимание разгрузки удаляющего кодирования</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#01">Ссылки</a></span></dt>
+	<dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#02">Что такое удаляющее кодирование Рида- Соломона?</a></span></dt>
+	<dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#03">Программные модули разгрузки удаляющего кодирования</a></span></dt>
+    <dd><dl>
+	  <dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#0301">Вычисления программным обеспечением (без разгрузки)</a></span></dt>
+	  <dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#0302">Аппаратная разгрузка</a></span></dt>
+      <dd><dl>
+	    <dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#030201">Синхронное кодирование вычислений</a></span></dt>
+	    <dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#030202">Асинхронное кодирование вычислений</a></span></dt>
+	    <dt><span class="section"><a href="UnderstandingErasureCodingOffload.html#030203">Асинхронное кодирование и рассылка вычислений</a></span></dt>
+      </dl></dd>
+    </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="MellanoxOFED.html">Стек протоколов Mellanox OFED</a></span></dt>
+   <dt><span class="chapter"><a href="iNetworkStack.html">Стек протоколов Intel®</a></span></dt>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>Ссылки</h3>
+   </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><a class="link" href="https://www.youtube.com/watch?v=jgO09opx56o" target="_top">Reed Solomon Tutorial: Reed Solomon Encoding Example Case</a>
+	 (<a class="link" href="Ch08.html#ReedSolomonTutorial" target="_top">Учебное пособие по алгоритмам Рида Соломона: 
+	 на примере кодирования Рида Соломона</a>)</p>
+	 </li><li class="listitem">
+	 <p><a class="link" href="http://www.snia.org/sites/default/files/Luse_Kevin_SNIATutorialSwift_Object_Storage2014_final.pdf" 
+	 target="_top">http://www.snia.org/sites/default/files/Luse_Kevin_SNIATutorialSwift_Object_Storage2014_final.pdf</a></p>
+	 </li><li class="listitem">
+	 <p><a class="link" href="http://www.mellanox.com/related-docs/prod_software/RDMA_Aware_Programming_user_manual.pdf" 
+	 target="_top">http://www.mellanox.com/related-docs/prod_software/RDMA_Aware_Programming_user_manual.pdf</a></p>
+	 </li>
+    </ul>
+    </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>Что такое удаляющее кодирование Рида- Соломона?</h3>
+   </div></div></div>
+   <p>Удаляющее кодирование является таким математическим методом <span class="term"><strong class="userinput">кодирования 
+   данных</strong></span> при котором они могут быть восстановлены в случае отказа диска. Для недостаточно подготовленных в 
+   восстановлении данных предлагается просмотреть <a class="link" href="https://www.youtube.com/watch?v=jgO09opx56o" 
+   target="_top">это</a> видео (или его краткое изложение в виде <a class="link" href="Ch08.html#ReedSolomonTutorial" 
+   target="_top">слайд- шоу</a>) и <a class="link" href="http://www.snia.org/sites/default/files/Luse_Kevin_SNIATutorialSwift_Object_Storage2014_final.pdf" 
+   target="_top">эту</a> презентацию, которые на высоком уровне объясняют данный алгоритм и предоставляют примеры и 
+   иллюстрации.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>Программные модули разгрузки удаляющего кодирования</h3>
+   </div></div></div>
+   <p>Существуют различные программные модели,которые приложения могут выбрать для реализации разгрузки RAID и удаляющего кодирования 
+   (EC, Erasure Coding). Мы продемонстрируем пример кодирования 5-2 (5 блоков данных и 2 вычисляемых избыточных блока). Аппаратная реализация 
+   разгрузки удаляющих кодирования и декодирования поддерживается адаптерами 
+   <a class="link" href="http://www.mellanox.com/page/products_dyn?product_family=201&mtag=connectx_4_vpi_card" target="_top">Mellanox ConnectX-4</a>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Вычисления программным обеспечением (без разгрузки) </span></h4>
+   </div></div></div>
+   <p>Большинство приложений сегодня выполняет вычисления удаляющего кодирования (EC), после чего отправляет свои данные и избыточные 
+   блоки на соответствующие узлы/ диски (OSD). В этом случае вычисления выполняются ЦПУ и, таким образом, не существует аппаратной 
+   разгрузки. Использование ЦПУ в этом случае будет высоким в дополнение к операциям ввода/ вывода.</p>
+   <div class="figure"><a id="FigUECO01"> </a>
+    <p class="title"><strong></strong></p>
+     <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/FigUECO01.jpg" width="1020" height="646"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Аппаратная разгрузка </span></h4>
+   </div></div></div>
+   <p>При помощи адаптеров <a class="link" href="http://www.mellanox.com/page/products_dyn?product_family=201&mtag=connectx_4_vpi_card" 
+   target="_top">Mellanox ConnectX-4</a> вычисления удаляющего кодирования могут быть разгружены на ASIC адаптера. Существуют 
+   различные модели аппаратной разгрузки описываемые ниже.</p>
+   
+   <a id="030201"> </a>
+   <p class="title"><strong>Синхронное кодирование вычислений</strong></p>
+   <p>Синхронное вычисление EC может применяться существующим программным обеспечением путём простой замены API аналогичного 
+   <a class="link" href="Ch08.html#080501" target="_top">JErasure</a> для применения аппаратно проводимых вычислений EC.</p>
+   <div class="figure"><a id="FigUECO02"> </a>
+    <p class="title"><strong></strong></p>
+     <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/FigUECO02.jpg" width="904" height="515"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p class="title"><strong>Шаги программирования:</strong></p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Вызовите API <span class="term"><strong class="userinput"><code>encode_sync</code></strong></span><span class="term"><code>(data, 
+	  code, block_size)</code></span> - влокировка.</p>
+	 </li><li class="listitem">
+      <p>Отошлите данные буферов на соответствующие узлы (не существует порядковой зависимости с 1 шагом 
+	  {<span class="emphasis"><em>Прим. пер.: могут выполняться одновременно</em></span>}).</p>
+	 </li><li class="listitem">
+      <p>После возврата <span class="term"><strong class="userinput"><code>encode_sync</code></strong></span><span 
+	  class="term"><code>()</code></span> отошлите кодированные буферы на соответствующие узлы.</p>
+	 </li><li class="listitem">
+      <p>{<span class="emphasis"><em>Прим. пер.: снятие блокировки</em></span>}.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Преимуществами здесь являются:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Лёгкое преобразование кода для работы с выполняемыми аппаратно вычислениями</p>
+	 </li><li class="listitem">
+	 <p>Предотвращение использования ЦПУ благодаря разгрузке ваших вычислений EC</p>
+	 </li>
+    </ul>
+    </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="03020101"> </a>
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Маловероятно что латентность и скорость обмена сообщениями и/ или пропускная способность напрямую 
+	   улучшатся.</p></td></tr></table>
+     </div>
+   
+   <a id="030202"> </a>
+   <p class="title"><strong>Асинхронное кодирование вычислений</strong></p>
+   <p>Также является возможным асинхронное вычисление EC при котором приложение может отправлять операции вычисления EC и 
+   получать уведомления о выполнении этих вычислений. Такая модель позволяет приложениям становиться более эффективными по сравнению 
+   с временем ожидания вычисления EC, они вольны проводить вычисления или выполнять работу, или службу или какое- либо другое задание.
+   Когда адаптер завершит свои вычисления, он уведомит приложение и тем самым сможет продолжить пересылку своих блоков данных и кода 
+   на соответствующие одноранговые узла (OSD).</p>
+   <div class="figure"><a id="FigUECO03"> </a>
+    <p class="title"><strong></strong></p>
+     <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/FigUECO03.jpg" width="927" height="555"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+   <p class="title"><strong>Шаги программирования:</strong></p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Отошлите <span class="term"><strong class="userinput"><code>encode_async</code></strong></span><span class="term"><code>(data, 
+	  code, block_size, ...)</code></span>.</p>
+	 </li><li class="listitem">
+      <p>Отошлите данные буферов на соответствующие узлы (не существует порядковой зависимости с 1 шагом 
+	  {<span class="emphasis"><em>Прим. пер.: могут выполняться одновременно</em></span>}).</p>
+	 </li><li class="listitem">
+      <p>Ожидайте завершения <span class="term"><strong class="userinput"><code>encode_async</code></strong></span><span 
+	  class="term"><code>()</code></span> (асинхронно), вольны тем временем выполнять задачи.</p>
+	 </li><li class="listitem">
+      <p>Отошлите вычисленные буферы на соответствующие узлы.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>В отличие от синхронной модели асинхронное кодирование является не блокирующей и быстрой операцией. Вызывающий поток предоставляет 
+   указатель функции <span class="term"><code>done()</code></span> для исполнения после вычислений и продолжает прочие вычисления. Он может, 
+   например, на данном этапе отправлять ваши блоки данных. Когда вычисление завершено, выполняется ваша функция 
+   <span class="term"><code>done()</code></span>, переданная вызывающим модулем. Предполагается, что функция 
+   <span class="term"><code>done()</code></span> переключится на отсылку вычисленных блоков.</p>
+   
+   <a id="030203"> </a>
+   <p class="title"><strong>Асинхронное кодирование и рассылка вычислений</strong></p>
+   <p>Обычно EC применяется для распределения хранимых объектов по множеству узлов (OSD) в кластере - эта операция называется 
+   чередованием (stripping) объекта. Использующие такую модель приложения способны отсылать структуру задания, которое включает в себя 
+   все операции чередования на адаптер и продолжать выполнение следующей задачи. Адаптер разгрузит и EC вычисления и отсылку 
+   соответствующих блоков на подходящие узлы.</p>
+   <div class="figure"><a id="FigUECO04"> </a>
+    <p class="title"><strong></strong></p>
+     <div class="figure-contents"><div class="mediaobject">
+     <img src="figures/FigUECO04.jpg" width="1010" height="572"/><br />
+     <span></span>
+    </div></div>
+   </div><br class="figure-break"/>
+  </div>
+   <p class="title"><strong>Шаги программирования:</strong></p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Отошлите структуру операции <span class="term"><strong class="userinput"><code>encode_send</code></strong></span><span class="term"><code>(data, 
+	  code, block_size, nodes, ...)</code></span>.</p>
+	 </li><li class="listitem">
+      <p>Отошлите данные буферов на соответствующие узлы (не существует порядковой зависимости с 1 шагом 
+	  {<span class="emphasis"><em>Прим. пер.: могут выполняться одновременно</em></span>}).</p>
+	 </li><li class="listitem">
+      <p>Вольны продолжать выполнение задач.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Завершение операции неявное. Вся транзакция рассматривается как завершённая после того, как выполнены все индивидуальные обмены 
+   вашими данными. Пользователь может захотеть сигнализировать соответствующими операциями SEND или использовать любой другой способ, 
+   который гарантирует что этот обмен данными завершён успешно и сохранён на вашем носителе хранения.</p>
+   <p>Преимуществом этого метода является <span class="term"><strong class="userinput">уменьшенная латентность</strong></span>
+   и скорости сообщений (операций ввода/ вывода), так как приложение сберегает прерывания программного обеспечения и возвраты 
+   строк кэша (благодаря завершению контекстного выполнения), которые существуют в предыдущих двух моделях. Однако преобразование 
+   существующих приложений для работы с полностью разгруженными разделёнными операциями менее тривиально.</p>
+
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

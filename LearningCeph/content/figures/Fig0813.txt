@@ -1,0 +1,17 @@
+﻿[root@ceph-client1 kraken]# ll
+total 12
+-rwxr-xr-x. 1 root root  100 Aug 8 04:46 api.sh
+-rwxr-xr-x. 1 root root   93 Aug 8 04:46 django.sh
+drwxr-xr-x. 7 root root 4096 Aug 8 04:4S krakendash
+[root@ceph-client1 kraken]#
+[root@ceph-client1 kraken]#
+[root@ceph-client1 kraken]# ./api.sh
+[detached from 30167.api]
+[rootflceph-clientl kraken]# ./django.sh
+[detached from 30203.django]
+[root@ceph-client1 kraken]#
+[root@ceph-client1 kraken]# ps  -ef | grep -i screen
+root     30167     1  0  05:44  ?       00:00:00  SCREEN -s api sudo ceph-rest-api -c /etc/ceph/ceph.conf —-cluster ceph -i admin
+root     30203     1  0  05:45  ?       00:00:00  SCREEN -s django sudo python krakendash/manage.py runserver 0.0.0.0:8000
+root     30209  6858  0  05:45  pts/0   00:00:00  grep —color=auto -i screen
+[root@ceph-client1 kraken]#

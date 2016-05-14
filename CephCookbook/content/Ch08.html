@@ -1,0 +1,2809 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 8. Планирование промышленного применения и настройка производительности Ceph - Книга рецептов Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="CephCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="up" href="index.html" title="Книга рецептов Ceph"/>
+<link rel="prev" href="Ch07.html" title="Глава 7. Ceph под колпаком"/>
+<link rel="next" href="Ch09.html" title="Глава 9. Менеджер виртуального хранения Ceph"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/CephCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 8. Планирование промышленного применения и настройка производительности Ceph';
+PrevRef = 'Ch07.html';
+UpRef = 'index.html';
+NextRef = 'Ch09.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 8. Планирование промышленного применения и настройка производительности Ceph</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы охватим такие рецепты:
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Динамика ёмкости, производительности и стоимости</p>
+	 </li><li class="listitem">
+	 <p>Выбор аппаратных и программных компонентов Ceph</p>
+	 </li><li class="listitem">
+	 <p>Рекомендации Ceph и настройка производительности</p>
+	 </li><li class="listitem">
+	 <p>Удаляющее кодирование Ceph</p>
+	 </li><li class="listitem">
+	 <p>Создание пула с удаляющим кодированием</p>
+	 </li><li class="listitem">
+	 <p>Многоуровневое кэширование Ceph</p>
+	 </li><li class="listitem">
+	 <p>Создание пула для многоуровневого кэширования</p>
+	 </li><li class="listitem">
+	 <p>Создание уровня кэша</p>
+	 </li><li class="listitem">
+	 <p>Настройка уровня кэша</p>
+	 </li><li class="listitem">
+	 <p>Тестирование уровня кэша</p>
+	 </li>
+   </ul>
+   </div>
+  </p>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch08.html">8. Планирование промышленного применения и настройка производительности Ceph</a></span></dt>
+   <dd><dl>
+	<dt><span class="section"><a href="Ch08.html#0801">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0802">Динамика ёмкости, производительности и стоимости</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0803">Выбор аппаратных и программных компонентов Ceph</a></span></dt>
+     <dd><dl>
+	 <dt><span class="section"><a href="Ch08.html#iCPUprices">Рекомендуемые цены Intel на некоторые ЦПУ</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#SwitchTable">Рекомендуемые нами экономичные сетевые коммутаторы для сетевых сред Ceph</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#ECatASIC">Аппаратная поддержка удаляющего кодирования ASIC ConnectX-4</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#DriveTable">Топовые характеристики устройств хранения</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#NVMe">NVMe</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#0804">Рекомендации Ceph и настройка производительности</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0805">Удаляющее кодирование Ceph</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch08.html#ReedSolomonTutorial">Учебное пособие по алгоритмам Рида- Соломона</a></span></dt>
+     </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#0806">Создание пула с удаляющим кодированием</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0807">Многоуровневое кэширование Ceph</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0808">Создание пула для многоуровневого кэширования</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0809">Создание уровня кэша</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0810">Настройка уровня кэша</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#0811">Тестирование уровня кэша</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0801"> </a>Введение</h3>
+   </div></div></div>
+   <p>В этой главе мы изучим некоторые очень интересные концепции относительно Ceph. Они содержат рекомендации по аппаратным и программным 
+   средствам, настройку производительности компонентов Ceph (т.е. Ceph MON, OSD), а также клиентов, включая тюнинг ОС. Наконец мы узнаем 
+   об удаляемом кодировании и многоуровневом кэшировании, охватив различные технологии обоих.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0802"> </a>Динамика ёмкости, производительности и стоимости</h3>
+   </div></div></div>
+   <p>Ceph является определяемым программным обеспечением решением хранения, которое разработано для работы на общедоступных аппаратных 
+   средствах. Такая возможность Ceph делает её гибким и экономичным решением, которое подгоняется под ваши потребности. Поскольку вся 
+   интеллектуальность Ceph содержится в её программном обеспечении, она требует хорошего набора аппаратных средств для выполнения общей 
+   упаковки которая является великолепным решением.</p>
+   <p>Выбор аппаратных средств Ceph требует тщательного планирования на основе ваших потребностей хранения и имеющихся у вас вариантов 
+   применения. Организациям необходима оптимизация аппаратных конфигураций, которая позволяет им начиная с малого масштабироваться 
+   до нескольких петабайт. Следующая схема представляет ряд факторов, которые применяются для определения оптимальной конфигурации 
+   для вашего кластера Ceph:</p>
+      <div class="figure"><a id="Fig0801"> </a>
+       <p class="title"><strong>Рисунок 8.1. Наилучшая область</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0801.jpg" width="766" height="593"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+   <p>Различные организации имеют различные рабочие нагрузки, которые обычно требуют некоторых общих компромиссов между производительностью,
+   ёмкостью и <a class="link" href="https://ru.wikipedia.org/wiki/Совокупная_стоимость_владения" target="_top">ТСО</a>. Ceph является универсальным 
+   хранилищем, то есть, оно может предоставлять хранение Файлов, Блоков и Объектов в одном и том же кластере. Ceph также способен 
+   предоставлять различные типы пулов хранения в пределах одного и того же кластера, которые предназначены для различных рабочих 
+   нагрузок. Может существовать множество способов определения ваших потребностей в хранении; следующая схема один из вариантов
+   их определения:</p>
+      <div class="figure"><a id="Fig0802"> </a>
+       <p class="title"><strong>Рисунок 8.2. Вариант определения потребностей хранения</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0802.jpg" width="855" height="658"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">IOPS Optimized</strong></span> (оптимизированные под IOPS): Основным моментом такого типа 
+	 конфигурация является наивысшая <span class="term"><strong class="userinput">IOPS</strong></span>
+	 (<span class="term"><strong class="userinput">количество операций ввода/ вывода в секунду</strong></span>) при низкой 
+	 <span class="term"><strong class="userinput">TCO</strong></span> (<span class="term"><strong class="userinput">совокупной 
+	 стоимости владения</strong></span>) операции ввода/ вывода (IO). Обычно реализуется с применением для хранения высокопроизводительных 
+	 узлов, содержащих самые быстрые диски SSD, PCIe SSD, NVMe и тому подобного. Обычно применяется для хранения блоков, однако вы можете 
+	 применять их и для других рабочих нагрузок, нуждающихся в высоких IOPS.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Throughput Optimized</strong></span> (оптимизированные под пропускную способность): Их 
+	 изюминка состоит в наивысшей пропускной способности при её низкой стоимости. Они обычно реализуются с применением дисков SSD и PCIe SSD 
+	 для ведения журналов OSD с физически дублированной сетевой средой высокой пропускной способности. В основном применяются для блочных 
+	 устройств. Если ваши варианты применения требуют высокопроизводительного хранения объектов или файлов, то вам следует рассмотреть 
+	 такой вариант.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Capacity Optimized</strong></span> (оптимизированные под ёмкость): Его привлекательная 
+	 сторона заключается в низкой стоимости за ТБ и низкой стоимости из расчёта на юнит стойки или физическое пространство центра обработки 
+	 данных. Оно также известно как экономичное хранилище, хранилище с низкой стоимостью, а также как архивное/ долговременное хранилище, и 
+	 оно обычно реализуется с применением плотных серверов, наполненных шпиндельными дисками, обычно от 36 до 72 физических дисков на сервер 
+	 с ёмкостью физических дисков 4 или 6ТБ. Они обычно применяются как хранилища объектов или файловых систем большой ёмкости с низкой 
+	 стоимостью. Это хорошие претенденты на применение удаляющего кодирования для максимизации используемой ёмкости.</p>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0803"> </a>Выбор аппаратных и программных компонентов Ceph</h3>
+   </div></div></div>
+   <p>Как уже упоминалось ранее, выбор аппаратных средств Ceph требует тщательного планирования на основе вашей среды и потребностей в 
+   хранении. Тип аппаратных компонентов, сетевая инфраструктура и архитектура кластера являются некоторыми критичными факторами, 
+   которые вы должны рассматривать на начальном этапе планирования хранилища Ceph. Не существует золотого правила для выбора оборудования 
+   Ceph, поскольку такой выбор зависит от различных факторов, таких как бюджет, производительность в соотношении к ёмкости, или и то и другое, 
+   уровень отказоустойчивости и ваш вариант применения.</p>
+   <p>Ceph не зависит от аппаратных средств; организации вольны выбирать любое оборудование по своему усмотрению основываясь на их бюджете, 
+   требованиях к производительности/ ёмкости или способам применения. Они получают полное управление над их кластером хранения и лежащей 
+   в его основе инфраструктуре. Кроме того, одним из основных преимуществ Ceph является то, что она поддерживает разнородное оборудование. 
+   Вы можете мешать торговые марки при создании инфраструктуры кластера Ceph. Например, при построении своего кластера Ceph вы можете 
+   смешивать оборудование от различных производителей, таких как HP, Dell, Supermicro и так далее {Fujitsu, Huawei, Inspur, Mdl...}, а также 
+   даже уже имеющееся в наличии оборудование, что может приводить к значительной экономии средств. {<span class="emphasis"><em>Прим. пер.: 
+   не следует, однако, забывать об усложнении технической поддержки и сопровождения при росте вашего зоопарка.</em></span>}</p>
+   <p>Вам следует иметь в виду, что выбор для Ceph управляется рабочими нагрузками, которые вы планируете размещать в вашем кластере хранения, 
+   вашей среде и используемой вами функциональности. В данном рецепте мы изучим некоторые основные практические подходы по выбору 
+   оборудования для вашего кластера Ceph. {<span class="emphasis"><em>Прим. пер.: см. также наш перевод официальных
+   <a class="link" href="http://www.mdl.ru/Solutions/Put.htm?Nme=CephHW" target="_top">Рекомендаций по оборудованию Ceph</a>.</em></span>}</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Центральный процессор </span></h4>
+   </div></div></div>
+   <p>Ваш демон монитора Ceph поддерживает карты вашего кластера и не обслуживает никакие данные клиентов, следовательно он 
+   легковесен и не имеет очень сильных требований к процессору. В большинстве случаев средний одноядерный процессор выполнит работу 
+   монитора Ceph. Сдругой стороны, MDS Ceph слегка более требователен к ресурсам. Ему требуется значительно более мощный ЦПУ с четырьмя 
+   ядрами или даже больше. Для небольшого кластера Ceph или для среды проверки концепции вы можете совмещать мониторы Ceph с прочими его 
+   компонентами, такими как OSD, Radosgw или даже MDS Ceph. Для окружений с размером от среднего и выше, вместо совместного использования 
+   мониторы Ceph должны размещаться на выделенных машинах. {<span class="emphasis"><em>Прим. пер.: с точки зрения единообразия и 
+   взаимозаменяемости стоит рассмотреть и возможность применения однотипных ЦПУ!</em></span>}</p>
+   <p>Демон OSD требует достаточный объём вычислительной мощности, так как он обслуживает данные клиентов. Для оценки требований к ЦПУ для 
+   OSD Ceph важно знать сколько OSD будет размещать данный сервер. Обычно рекомендуется чтобы каждый демон OSD располагал как минимум одним 
+   ГГц на ядро ЦПУ. Вы можете применять следующую формулу для оценки потребностей ЦПУ OSD:</p>
+	   <pre class="screen">
+((разёмы ЦПУ * число ядер на разъём ЦПУ * тактовая частота ЦПУ в ГГц) / число OSD) &gt;=1
+	   </pre>
+   <p>Например, сервер с одним сокетом ЦПУ, 6 ядрами по 2.5ГГц должен быть достаточно хорош для 12 OSD Ceph, причём каждый OSD получит примерно 1.25ГГц 
+   вычислительной мощности: <span class="emphasis"><em><code>((1*6*2.5)/12)= 1.25</code></em></span>.</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Процессор Intel® Xeon® E5-2620 v3 (2.40 ГГц, 6 ядер)</p>
+	 <p><span class="emphasis"><em><code>1 * 6 * 2.4= 14.4</code></em></span> предполагает, что его достаточно для узла Ceph с общим числом OSD до 14.</p>
+	 </li><li class="listitem">
+	 <p>Процессор Intel® Xeon® E5-2680 v3 (2.50 ГГц, 12 ядер)</p>
+	 <p><span class="emphasis"><em><code>1 * 12 * 2.5= 30</code></em></span> предполагает, что его достаточно для узла Ceph с общим числом OSD до 30.</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Если вы планируете применять функциональность удаляющего кодирования (erasure coding, EC), будет более выгодным получить более мощные ЦПУ, 
+   поскольку работа удаляющего кодирования требует больших вычислительных потребностей.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Giant2HammerUpdate"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Если вы планируете применять пул Ceph с удаляющим кодированием, то будет полезным получить более мощные ЦПУ, поскольку OSD Ceph, которые
+		 размещают пулы с удаляющим кодированием больше используют ЦПУ чем размещающие пулы с репликациями OSD Ceph.</p>
+		 </td></tr></table>
+       </div>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left"><span class="emphasis"><em>Совет переводчика</em></span></th></tr><tr><td align="left" valign="top">
+			<p><span class="emphasis"><em>{Cтоит воздерживаться от применения в одном кластере ЦПУ разных поколений (например Intel® Xeon® E5-2620 v3 и 
+			Intel® Xeon® E5-2620 v2) и, тем более, разных производителей (Intel/ Amd) или даже архитектур (x86/ ARM/ Sparc/ Power).
+			Это может стать причиной проблем с применяемым программным обеспечением, а также существенно осложнит возможности миграции 
+			и сопровождения. Если уж деваться некуда, необходимо убедиться в совместимости применяемого вами в режиме совместимости кода.}</em></span></p></td></tr></table>
+		  </div>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Hyper-threading"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left"><span class="emphasis"><em>Замечание переводчика</em></span></th></tr><tr><td align="left" valign="top">
+	     <p><span class="emphasis"><em>{Ядра многих современных ЦПУ поддерживают <a class="link" href="https://ru.wikipedia.org/wiki/Hyper-threading" 
+		 target="_top">Hyper-threading</a> (гиперпоточность), позволяющую демонам разделять ядро на аппаратном уровне. Хотя эта технология, как 
+		 правило, проигрывает в производительности от долей процента до нескольких процентов по сравнению с работой ядра при выключенной 
+		 гиперпоточности, не стоит сбрасывать со счетов эту возможность для аппаратной изоляции демонов с прицелом на повышение высокой доступности. 
+		 Испытывающий проблемы OSD будет конкурировать за ресурс с нормально работающими OSD и даже может &quot;подвешивать&quot; их, 
+		 разделение ресурсов на аппаратном уровне способно помогать в подобной ситуации.}</em></span></p>
+		 </td></tr></table>
+       </div>
+	   {<span class="emphasis"><em>Прим. пер.: приведём для справки: <br /><a id="iCPUprices"> </a>
+	   31 марта 2016 Intel объявил о начале приёма заказов на новую линейку процессоров Intel® Xeon® E5-2600 v4, совместимых с v3 (необходимо 
+	   обновление firmware материнской платы). Ждём новый чипсет материнских плат для 
+	   <a class="link" href="http://support.mdl.ru/ABC/PC_Buses.htm" target="_top">PCIe 4.0</a>.
+        <table rules="all" width="600" style="text-align:center" id="iCPUprices_Table">
+        <caption>Рекомендуемые цены Intel на некоторые ЦПУ, 1 апреля 2016</caption><col width="50%"/><col width="17%"/><col width="16%"/><col width="17%"/><thead><tr valign="top">
+          <th>Наименование</th>
+          <th>Число ядер<br /> Рекомендуемое число OSD</th>
+          <th>Расчётная мощность</th>
+          <th>Рекомендуемая цена<br /> Cтоимость OSD</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2699 v4<br /> (55M Кэш, 2.20 ГГц)</code></strong></span></p></td>
+          <td><p>22</p>
+		  <p><span class="term"><strong class="userinput"><code>48</code></strong></span></p></td>
+          <td><p>145Вт</p></td>
+          <td><p>$4 115</p>
+		  <p><span class="term"><strong class="userinput"><code>$85.7</code></strong></span></p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2697 v4<br /> (45M Кэш, 2.30 ГГц)</code></strong></span></p></td>
+          <td><p>18</p>
+		  <p><span class="term"><strong class="userinput"><code>41</code></strong></span></p></td>
+          <td><p>145Вт</p></td>
+          <td><p>$2 702</p>
+		  <p><span class="term"><strong class="userinput"><code>$65.9</code></strong></span></p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2680 v4<br /> (35M Кэш, 2.40 ГГц)</code></strong></span></p></td>
+          <td><p>14</p>
+		  <p><span class="term"><strong class="userinput"><code>33</code></strong></span></p></td>
+          <td><p>120Вт</p></td>
+          <td><p>$1 745</p>
+		  <p><span class="term"><strong class="userinput"><code>$70.5</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2650 v4<br /> (30M Кэш, 2.20 ГГц)</code></strong></span></p></td>
+          <td><p>12</p>
+		  <p><span class="term"><strong class="userinput"><code>26</code></strong></span></p></td>
+          <td><p>105Вт</p></td>
+          <td><p>$1 166</p>
+		  <p><span class="term"><strong class="userinput"><code>$44.9</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2640 v4<br /> (25M Кэш, 2.40 ГГц)</code></strong></span></p></td>
+          <td><p>10</p>
+		  <p><span class="term"><strong class="userinput"><code>24</code></strong></span></p></td>
+          <td><p>90Вт</p></td>
+          <td><p>$939</p>
+		  <p><span class="term"><strong class="userinput"><code>$39.1</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2630 v4<br /> (25M Кэш, 2.20 ГГц)</code></strong></span></p></td>
+          <td><p>10</p>
+		  <p><span class="term"><strong class="userinput"><code>22</code></strong></span></p></td>
+          <td><p>85Вт</p></td>
+          <td><p>$667</p>
+		  <p><span class="term"><strong class="userinput"><code>$30.3</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2620 v4<br /> (20M Кэш, 2.10 ГГц)</code></strong></span></p></td>
+          <td><p>8</p>
+		  <p><span class="term"><strong class="userinput"><code>16</code></strong></span></p></td>
+          <td><p>85Вт</p></td>
+          <td><p>$417</p>
+		  <p><span class="term"><strong class="userinput"><code>$26.1</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2609 v4<br /> (20M Кэш, 1.70 ГГц)</code></strong></span></p></td>
+          <td><p>8</p>
+		  <p><span class="term"><strong class="userinput"><code>13</code></strong></span></p></td>
+          <td><p>85Вт</p></td>
+          <td><p>$417</p>
+		  <p><span class="term"><strong class="userinput"><code>$23.5</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;
+
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2680 v3<br /> (30M Кэш, 2.50 ГГц)</code></strong></span></p></td>
+          <td><p>12</p>
+		  <p><span class="term"><strong class="userinput"><code>30</code></strong></span></p></td>
+          <td><p>120Вт</p></td>
+          <td><p>$1745</p>
+		  <p><span class="term"><strong class="userinput"><code>$58.2</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2650 v3<br /> (25M Кэш, 2.30 ГГц)</code></strong></span></p></td>
+          <td><p>10</p>
+		  <p><span class="term"><strong class="userinput"><code>23</code></strong></span></p></td>
+          <td><p>105Вт</p></td>
+          <td><p>$1166</p>
+		  <p><span class="term"><strong class="userinput"><code>$50.7</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2630 v3<br /> (20M Кэш, 2.40 ГГц)</code></strong></span></p></td>
+          <td><p>8</p>
+		  <p><span class="term"><strong class="userinput"><code>19</code></strong></span></p></td>
+          <td><p>85Вт</p></td>
+          <td><p>$667</p>
+		  <p><span class="term"><strong class="userinput"><code>$34.7</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2620 v3<br /> (15M Кэш, 2.40 ГГц)</code></strong></span></p></td>
+          <td><p>6</p>
+		  <p><span class="term"><strong class="userinput"><code>14</code></strong></span></p></td>
+          <td><p>85Вт</p></td>
+          <td><p>$417</p>
+		  <p><span class="term"><strong class="userinput"><code>$29.8</code></strong></span></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Intel® Xeon® E5-2603 v3<br /> (15M Кэш, 1.60 ГГц)</code></strong></span></p></td>
+          <td><p>6</p>
+		  <p><span class="term"><strong class="userinput"><code>9</code></strong></span></p></td>
+          <td><p>85Вт</p></td>
+          <td><p>$213</p>
+		  <p><span class="term"><strong class="userinput"><code>$23.7</code></strong></span></p></td>
+        </tr></tbody></table>
+		(Более полная таблица <a class="link" href="iE52600-20160401.xlsx" target="_top">xls</a>).</em></span>}
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Оперативная память </span></h4>
+   </div></div></div>
+   <p>Демонам монитора и метаданных требуется обслуживать свои данные быстро, следовательно они должны иметь достаточно памяти для более 
+   быстрой работы. Практический способ - необходимо иметь 2ГБ или более памяти на экземпляр демона- этого должно быть достаточно и для 
+   MDS Ceph, и для монитора. MDS Ceph сильно зависят от кэширования данных; так как им необходимо обслуживать данные быстро, им необходимо 
+   достаточно оперативной памяти. Чем больше оперативной памяти для для MDS Ceph, тем лучше будет производительность CephFS.</p>
+   <p>Для OSD обычно требуется приличный объём физической памяти. При средней рабочей нагрузке 1ГБ памяти на экземпляр демона OSD должно 
+   быть достаточно; однако сточки зрения производительности 2ГБ на демон OSD будет хорошим выбором, а ещё больший объём также поможет при 
+   восстановлении и будет лучше для кэширования. Эта рекомендация предполагает, что вы применяете один демон для одного физического 
+   диска. Если вы применяете более одного физического диска на OSD, ваши требования к памяти также возрастут. Обычно больший объём 
+   физической памяти это хорошо, поскольку в процессе восстановления кластера значительно повышается потребление оперативной памяти.
+   Следует знать, что потребление памяти OSD увеличится, если вы учитываете сырую ёмкость лежащего в основе физического диска. Поэтому 
+   требования OSD для 6ТБ диска будут больше чем в случае 4ТБ диска. Вам следует принимать такое решение разумно, с тем, чтобы оперативная 
+   память не стала узким местом в производительности вашего кластера.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Giant2HammerUpdate"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Обычно более эффективно со стоимостной точки зрения выделить ЦПУ и оперативную память с неким запасом на начальном этапе 
+		 планирования вашего кластера, поскольку мы сможем добавить больше физических дисков в виде JBOD в тот же самый хост в любое 
+		 время если располагаем достаточными системными ресурсами, в сравнении с закупкой нового узла целиком, что будет существенно 
+		 дороже.</p>
+		 </td></tr></table>
+       </div>
+		 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+			<table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+			<img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left"><span class="emphasis"><em>Совет переводчика</em></span></th></tr><tr><td align="left" valign="top">
+			<p><span class="emphasis"><em>{Для увеличения пропускной способности обмена ЦПУ и оперативной памяти современные системы применяют 
+			более одного <a class="link" href="https://ru.wikipedia.org/wiki/Многоканальная_архитектура_памяти" 
+			target="_top">канала памяти</a> на разъем процессора. Серверы с процессорами Intel® Xeon® E5-2600 v2 использовали, как 
+			правило, 3 канала памяти, а процессоры Intel® Xeon® E5-2600 v3 4 канала памяти. Для достижения максимальных значений 
+			пропускной способности необходимо полностью заполнять канал однотипными модулями памяти.}</em></span></p></td></tr></table>
+		  </div>
+   <p>{<span class="emphasis"><em>Прим. пер.: современные процессоры Intel® Xeon® E5-2600 v3 применяют память <a class="link" 
+   href="https://ru.wikipedia.org/wiki/DDR4_SDRAM" target="_top">DDR4 SDRAM</a>, согласно 
+   <a class="link" href="http://www.jedec.org/standards-documents/results/jesd79-4%20ddr4" target="_top">спецификации</a> имеющую 
+   предел пропускной способности 25.6ГБ/c на канал. С учётом потерь на взаимодействие модулей памяти, это около 100ГБ/c при эффективной 
+   частоте 3.2ГГц, что даёт оценку времени обмена данными в 1ТБ порядка 10 секунд. Имеющаяся на рынке в марте 2016г 
+   работает с эффективной частотой 2.133ГГц, что допускает предел пропускной способности порядка 68ГБ/с и оценку времени обмена данными 
+   с объёмом в <span class="term"><strong class="userinput">1ТБ</strong></span> порядка <span class="term"><strong class="userinput">15 
+   секунд</strong></span>. Стоимость оперативной памяти очень сильно подвержена биржевым колебаниям. Точнее всего их динамику 
+   отслеживает ресурс <a class="link" href="http://dramexchange.com/" target="_top">http://dramexchange.com/</a> (оценка стоимости для 
+   больших партий снизу). Приведем пример методики оценки текущей стоимости памяти для 16ГБ модуля <a class="link" 
+   href="http://www.samsung.com/semiconductor/products/dram/server-dram/ddr4-registered-dimm/M393A2G40DB1?ia=2503" 
+   target="_top">M393A2G40DB1</a> производства Samsung. Согласно <a class="link" 
+   href="http://www.samsung.com/semiconductor/global/file/product/DDR4_Product_guide_May15.pdf" target="_top">спецификации</a>, 
+   этот модуль памяти содержит 36 кристаллов 4Gb (1Gx4) 2133МГц. Биржевая стоимость 4Gb DDR4 DRAM в марте 2016 составляет порядка $2 
+   (см. строка &quot;DDR4 4Gb 512Mx8 2133 MHz&quot; на <a class="link" href="http://dramexchange.com/" 
+   target="_top">http://dramexchange.com/</a>). Разброс стоимости доступного на рынке модуля памяти составит от 
+   <span class="emphasis"><em><code>$2 * 36 * <strong class="userinput">[1.5-2]</strong></code></em></span>, 
+   где <span class="term"><strong class="userinput">[1.5-2]</strong></span> - оценка коэффициента пересчёта. Т.е. рыночная стоимость такого 
+   модуля памяти будет в пределах <span class="term"><strong class="userinput">$110-$140</strong></span>. Проверяем по <a class="link" 
+   href="http://www.amazon.com/Samsung-DDR4-2400-Server-Memory-M393A2G40DB1-CRC/dp/B01ADQRCWO" target="_top">amazon.com</a>: $126.5 на момент 
+   проверки. Согласен, данная методика даёт слишком большой разброс, однако она позволяет следить за динамикой при часто возникающих 
+   турбулентных процессах на рынке памяти.</em></span>}</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Сетевая среда </span></h4>
+   </div></div></div>
+   <p>Ceph является распределённой системой хранения и он в большой степени полагается на лежащую в его основе сетевую инфраструктуру. 
+   Если вы планируете, чтобы ваш кластер Ceph был надёжным и производительным, убедитесь что у вас имеется спроектированная для него 
+   сетевая среда. Рекомендуется чтобы все узлы кластера имели две избыточные раздельные сетевые среды для обмена внутри самого кластера 
+   и для клиентов.</p>
+   <p>Для небольшой проверки концепции или для тестирования будет достаточно кластера Ceph из нескольких узлов с сетевой средой, работающей 
+   на 1Gbps. Если у вас имеется кластер с размером выше среднего (несколько десятков узлов), вам следует думать о применении сетевой 
+   среды с пропускной способностью 10Gbps или выше. На момент восстановления/ ребалансировки сетевая среда играет решающую роль. Если 
+   у вас имеются хорошие соединения с пропускной способностью сетевой среды 10Gbps или выше, ваш кластер будет восстанавливаться быстро, 
+   в противном случае это займёт определённое время. Поэтому, сточки зрения производительности, Дублированная сеть с 10Gbps или выше 
+   будет хорошим параметром. Хорошо спроектированный кластер Ceph применяет две раздельные сетевые среды: одну для сетевой среды кластера 
+   (внутренняя сеть) и другую для сетевой среды клиентов (внешняя сеть); обе эти сетевые среды должны быть физически разделены прямо 
+   начиная с вашего сервера вплоть до сетевого коммутатора и всё в промежутке, как показано на следующей схеме:</p>
+      <div class="figure"><a id="Fig0803"> </a>
+       <p class="title"><strong>Рисунок 8.3. Рекомендованные две сетевые среды Ceph</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0803.jpg" width="661" height="515"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+   <p>{<span class="emphasis"><em>Прим. пер.: Часто в качестве бонуса в наличии имеется некая сеть на встроенных в материнские платы 
+   1GbE адаптерах. Эту сеть мы рекомендуем выделять в третью, административную, способную работать с оборудованием на уровне 
+   <a class="link" href="https://ru.wikipedia.org/wiki/Intelligent_Platform_Management_Interface" target="_top">IPMI</a> и выполнять 
+   другие административные функции (например, функциональность <a class="link" href="http://onreader.mdl.ru/ProxmoxCookbook/content/Fencing.html" 
+   target="_top">Ограждения</a> /Fencing/ для предоставления высокой доступности и управление прочими системами <a class="link" 
+   href="http://www.mdl.ru/Solutions/Put.htm?Nme=Admin" target="_top">контроля оборудования</a>). Причём, обращаем внимание на 
+   возможность наличия дублирования функциональности IPMI в других имеющихся в наличии сетевых средах, в том числе с выделением полосы 
+   пропускания (очень сильно зависит от производителя конкретного оборудования). За дополнительными консультациями 
+   <a href="javascript:tocall()" onmouseover="this.href=mail" target="_blank">обращайтесь</a> к нашим специалистам.</p>
+   <p>Для завершения обсуждения наших &quot;хотелок&quot; в плане сетевых сред отметим, что вынесение сетевой среды ребалансировки,
+   наполнения и восстановления в отдельную физическую сеть делает более прогнозируемым поведение как внешней, так и внутренней 
+   сетей.</em></span>}</p>
+   <p>В отношении вашей сетевой среды другой темой дискуссий является обсуждение того, что лучше применять: сетевую среду Ethernet или 
+   Infiniband, или, более определённо: сеть 10GbE, 40GbE или ещё больших пропускных способностей. Это зависит от ряда факторов, таких как 
+   рабочая нагрузка, размер вашего кластера Ceph, плотность и число узлов OSD Ceph и тому подобное. В некоторых реализациях я видел как 
+   пользователи применяли и 10GbE и 40GbE сетевые среды в Ceph. В этом случае их кластеры Ceph относились к уровню нескольких Петабайт и 
+   нескольких сотен узлов, причём они применяли 10GbE в качестве клиентской сети, а внутренняя сетевая среда имела более высокую пропускную 
+   способность и более низкую латентность 40GbE. Тем не менее, стоимость сетевых сред Ethernet стремительно падает; основываясь на вашем 
+   варианте применения, вы можете определять тип сетевой среды, которой вы хотите обладать.</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: На протяжении последних лет я неустанно рассказывал своим заказчикам о несомненных 
+   преимуществах 56/100G IB перед 10/40/100GbE, пока не наткнулся на препятствие, которое представители Mellanox объяснили исключительно 
+   требованиями спецификации Infiniband. А именно: невозможность объединять в транки несколько линий IB для повышения пропускной 
+   способности как на аппаратном уровне, так и на уровне программного управления каналом (драйверы, etc.). Понятно, что это можно выполнить 
+   на более высоком уровне, например, на прикладном. Но это сродни забиванию гвоздей микроскопом.</em></span>}</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: приведём таблицу экономичных коммутаторов различных производителей, применяемых 
+   нами (или которые мы бы рады были применить в ваших решениях) для построения сетей в кластерах:
+        <table rules="all" width="600" style="text-align:center" id="SwitchTable">
+        <caption>Рекомендуемые нами экономичные сетевые коммутаторы для сетевых сред Ceph, март 2016</caption><col width="50%"/><col width="23%"/><col width="17%"/><col width="10%"/><thead><tr valign="top">
+          <th>Наименование</th>
+          <th>Число основных портов<br />/портов расширения</th>
+          <th>Общая производ. коммутации<br />/производ. передачи</th>
+          <th>Рекоменду- емая цена<br /><br /><a href="#08030301"><span class="term">Важно</a>: см. сноску 
+		  <sup><a href="#08030301"><span class="term">1</a></sup></th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Allied Telesis AT-DC2552XS/L3</strong></span></p></td>
+          <td><p>48x SFP+ 10GbE</p>
+		      <p> 4x QSFP+ 40GbE</p></td>
+          <td><p>1.28Tbps</p>
+		      <p>952.32 Mpps</p></td>
+          <td><p>$16 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Allied Telesis AT-XS916MX(T/S)</strong></span></p></td>
+          <td><p>12x/4x Base-T 10GbE</p>
+		      <p>4x/12 SFP+ 10GbE</p></td>
+          <td><p>320Gbps</p>
+		      <p>238 Mpps</p></td>
+          <td><p>-</p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;</td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Brocade VDX 6940-144S</strong></span></p></td>
+          <td><p>96*10GbE SFP+</p>
+		      <p> 4*100GbE QSFP+</p></td>
+          <td><p>2.88Tbps</p>
+		      <p>2.16 Bpps</p></td>
+          <td><p>?</p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;</td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Dell Z9100-ON/ S6100-ON</strong></span></p></td>
+          <td><p>32x 100GbE</p>
+		      <p>/ 64x 50GbE</p>
+			  <p>/ 64x/32x 40GbE (S6100/Z9100)</p>
+		      <p>/128x SFP+ 25GbE</p>
+		      <p>/128x SFP+ 10GbE</p></td>
+          <td><p>6.4Tbps</p>
+		      <p>4.4 Bpps</p></td>
+          <td><p>~$50 000/<br /> ~$60 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Dell S6000-ON</strong></span></p></td>
+          <td><p>96x SFP+ 10GbE</p>
+		      <p> 8x QSFP+ 40GbE</p>
+		      <p>/ 32x QSFP+ 40GbE</p></td>
+          <td><p>1.44Tbps</p>
+		      <p>1 080 Mpps</p></td>
+          <td><p>?<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Dell S4048-ON</strong></span></p></td>
+          <td><p>48x SFP+ 10GbE</p>
+		      <p> 6x QSFP+ 40GbE</p></td>
+          <td><p>1.44Tbps</p>
+		      <p>1 080 Mpps</p></td>
+          <td><p>?<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Dell N4064F</strong></span></p></td>
+          <td><p>48x SFP+ 10GbE</p>
+		      <p> 4x QSFP+ 40GbE</p></td>
+          <td><p>1.28Tbps</p>
+		      <p>952 Mpps</p></td>
+          <td><p>$15 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Dell N4032F</strong></span></p></td>
+          <td><p>24x SFP+ 10GbE</p>
+		      <p> 2x QSFP+ 40GbE</p></td>
+          <td><p>0.64Tbps</p>
+		      <p>476 Mpps</p></td>
+          <td><p>$9 900<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;</td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Dlink DXS-1210-12SC</strong></span></p></td>
+          <td><p>10x SFP+ 10GbE + 2x Base-T/SFP+ 10GbE</p></td>
+          <td><p>0.24Tbps</p>
+		      <p>178.56 Mpps</p></td>
+          <td><p>$1 500<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;</td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Edge-Core AS5610-52X (ONIE)</strong></span> WhiteBox</p></td>
+          <td><p>48x 10GbE SFP+</p>
+		      <p> 4x 40GbE QSFP+</p></td>
+          <td><p>1.28 Tbps</p>
+		      <p> 960 Mpps</p></td>
+          <td><p>$5 100<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Edge-Core AS6701-32X (ONIE)</strong></span> WhiteBox</p></td>
+          <td><p>20x 40GbE SFP+</p>
+		      <p>(+ 12x 40GbE через слоты расширения)</p></td>
+          <td><p>2.56 Tbps</p>
+		      <p>1.92 Bpps</p></td>
+          <td><p>$7 900<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;</td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Huawei CE6851-48S6Q-HI</strong></span></p></td>
+          <td><p>48*10GbE SFP+</p>
+		      <p> 6*40GbE QSFP+</p></td>
+          <td><p>1.44Tbps</p>
+		      <p>1 080Mpps</p></td>
+          <td><p>$16 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Huawei S6720-54C-EI-48S-AC</strong></span></p></td>
+          <td><p>48*10GbE SFP+/SFP</p>
+		      <p> 2*40GbE QSFP+</p></td>
+          <td><p>2.56Tbps</p>
+		      <p>1 080Mpps</p></td>
+          <td><p>$16 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Huawei S6720-30C-EI-24S-AC</strong></span></p></td>
+          <td><p>24*10GbE SFP+/SFP</p>
+		      <p> 2*40GbE QSFP+</p></td>
+          <td><p>2.56Tbps</p>
+		      <p> 720Mpps</p></td>
+          <td><p>$12 800<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Huawei CE7850-32Q-EI</strong></span></p></td>
+          <td><p>32*40GbE QSFP+</p>
+		      <p>-</p></td>
+          <td><p>2.56Tbps</p>
+		      <p>1 440Mpps</p></td>
+          <td><p>$32 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Huawei CE8860-4C-EI</strong></span></p></td>
+          <td><p>4 слота обслуживания x(8x100GbE QSFP28/<br />16x 40GE QSFP+/<br />24x 25GE SFP28/<br />24x 10GE SFP+)</td>
+          <td><p>6.4Tbps</p>
+		      <p>2 976Mpps</p></td>
+          <td><p>$40 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Huawei S12804S</strong></span></p></td>
+          <td><p>4 слота до 36x 40GbE (2016Q3: 100GbE)</p></td>
+          <td><p>40/80Tbps</p>
+		      <p>17 280 Mpps</p></td>
+          <td><p>$69 624<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;</td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Juniper OCX1100-48SX</strong></span></p></td>
+          <td><p>48x 10GbE SFP+</p>
+		      <p> 6x 40GbE портов QSFP+</p></td>
+          <td><p>1.44Bbps</p>
+		      <p>1 080 Mpps</p></td>
+          <td><p>$32 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Juniper QFX5100-24Q</strong></span></p></td>
+          <td><p>24x 40GbE QSFP+</p></td>
+          <td><p>2.56Tbps</p>
+		      <p>1.44Bpps</p></td>
+          <td><p>$40 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Juniper QFX5200-32С</strong></span></p></td>
+          <td><p>32x40GbE QSFP+/ 28QSFP</p></td>
+          <td><p>3.2Tbps</p>
+		      <p>2.44Bpps</p></td>
+          <td><p>$35 000<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td colspan="4">&nbsp;</td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SN2700</strong></span></p></td>
+          <td><p>до 32x 40/56/100GbE</p>
+		      <p>или 64x 10/25GbE</p>
+			  <p>или 64x 50GbE</p></td>
+          <td><p>6.4Tbps</p>
+		      <p>4 770 Mpps</p></td>
+          <td><p>-</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SN2410</strong></span></p></td>
+          <td><p>48x 25GbE</p>
+		      <p>8x 100GbE</p></td>
+          <td><p>6.4Tbps</p>
+		      <p>4 770 Mpps</p></td>
+          <td><p>-</p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SB7790-E</strong></span></p></td>
+          <td><p>10/20/40/56/100G 4X IB</p>
+		      <p>36x QSFP28 портов</p></td>
+          <td><p>7.2Tbps</p>
+		      <p>7 020 Mpps</p></td>
+          <td><p>$22 009<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SX6036F</strong></span></p></td>
+          <td><p>10/20/40/56 4X IB</p>
+		      <p>36x QSFP</p></td>
+          <td><p>4.032 Tbps</p>
+		      <p>?</p></td>
+          <td><p>$15 373<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SX1024</strong></span></p></td>
+          <td><p>48x 10GbE SFP+</p>
+		      <p>12x/4x 40GbE QSFP+</p></td>
+          <td><p>2.0 Tbps</p>
+		      <p>3 Mpps</p></td>
+          <td><p>$17 769<sup><a href="#08030301">1</a></sup> / $15 234<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SX1012</strong></span></p></td>
+          <td><p>12x 40/56GbE SFP+ портов</p></td>
+          <td><p>2.0 Tbps</p>
+		      <p>3 Bpps</p></td>
+          <td><p>$11 425<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SX6015F</strong></span></p></td>
+          <td><p>18x QSFP+ FDR 56G</p></td>
+          <td><p>2.0 Tbps</p>
+		      <p>3 Bpps</p></td>
+          <td><p>$11 995<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SX6005F</strong></span></p></td>
+          <td><p>12x QSFP+ FDR 56G</p></td>
+          <td><p>1.3 Tbps</p>
+		      <p>1.5? Bpps</p></td>
+          <td><p>$5 361<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SX6005T</strong></span></p></td>
+          <td><p>12x QSFP+ FDR10 40G</p></td>
+          <td><p>1.3 Tbps</p>
+		      <p>1.5? Bpps</p></td>
+          <td><p>$6 652<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Mellanox SX6005T</strong></span></p></td>
+          <td><p>12x QSFP+ FDR10 40G</p></td>
+          <td><p>1.3 Tbps</p>
+		      <p>1.5? Bpps</p></td>
+          <td><p>$6 652<sup><a href="#08030301">1</a></sup></p></td>
+        </tr><tr valign="top">
+          <td colspan="4"align="left"><p>
+		  <a id="08030301"> </a><sup>1</sup> <span class="term"><strong class="userinput">Стоимостные оценки</strong></span> приводятся по прайс- листам 
+		  рекомендованных производителями цен при <span class="emphasis"><em>не сопоставимых</em></span> 
+		  условиях и поэтому <span class="term"><strong class="userinput">не могут служить основанием для сравнения цен различных 
+		  производителей</strong></span> в пределах этой таблицы! <br />
+		  При наличии необходимости сопоставления цен различных производителей под конкретный проект 
+		  <a href="javascript:tocall()" onmouseover="this.href=mail" target="_blank">обращайтесь</a> к нашим специалистам!</p>
+		  <p>Сопоставлять в пределах таблицы можно <span class="term"><strong class="userinput">исключительно</strong></span> цены одного производителя!</p></td>
+        </tr></tbody></table>
+   </em></span>}</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: приведём таблицу оценки времён, необходимых для обмена данных объёмом в 4ТБ (условно говоря, 
+   выход из строя 6ТБ диска в системе с &quot;приличной&quot; загруженностью):
+        <table rules="all" width="600" style="text-align:center" id="add_fs_options"><a id="SwitchThroughput"> </a>
+        <caption>Оценка снизу времени обмена 4ТБ данных</caption><col width="60%"/><col width="40%"/><thead><tr valign="top">
+          <th>Скорость обмена</th>
+          <th>Оценка необходимого времени</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p>10GbE</p></td>
+          <td><p>55 минут</p></td>
+        </tr><tr valign="top">
+          <td><p>25GbE</p></td>
+          <td><p>22 минуты</p></td>
+        </tr><tr valign="top">
+          <td><p>40GbE</p></td>
+          <td><p>14 минут</p></td>
+        </tr><tr valign="top">
+          <td><p>56G IB</p></td>
+          <td><p>10 минут</p></td>
+        </tr><tr valign="top">
+          <td><p><a class="link" href="http://support.mdl.ru/ABC/PC_Buses.htm#PCIe-v3.x" target="_top">
+		  PCIe v.3</a> 8x lane</p></td>
+          <td><p>8+2/3 минут</p></td>
+        </tr><tr valign="top">
+          <td><p>100GbE/ IB</p></td>
+          <td><p>5.5 минут</p></td>
+        </tr><tr valign="top">
+          <td><p><a class="link" href="http://support.mdl.ru/ABC/PC_Buses.htm#PCIe-v3.x" target="_top">
+		  PCIe v.3</a> 16x lane</p></td>
+          <td><p>4+1/3 минуты</p></td>
+        </tr></tbody></table>
+   </em></span>}</p>
+   <p>{<span class="emphasis"><em><a id="ECatASIC"> </a>Прим. пер.: Следует иметь в виду, что устройства сетевого обмена 
+   имеют большой объем функционала, позволяющий сделать вашу жизнь легче. Это и объединение каналов в &quot;транки&quot;, 
+   и различные виды поддержки RDMA (например, <a class="link" href="http://ru.mellanox.com/page/products_dyn?product_family=79" 
+   target="_top">RDMA over Converged Ethernet</a>), а также, Mellanox <a class="link" 
+   href="http://onreader.mdl.ru/CephCookbook/content/UnderstandingErasureCodingOffload.html" target="_top">анонсировал</a>
+   аппаратную поддержку Erasure Coding в своих ASIC ConnectX-4. Следовательно в августе 2016 можно ждать новые драйверы Infiniband 
+   и Mellanox Ethernet с аппаратной поддержкой EC для Ceph, освобождающей от этой задачи ЦПУ узлов (<a class="link" 
+   href="http://onreader.mdl.ru/CephCookbook/content/UnderstandingErasureCodingOffload.html" target="_top">подробности</a>
+   по возможности асинхронной работы таких методик). Большой интерес также представляет инициатива <a class="link" 
+   href="http://25gethernet.org/" target="_top">25GbE</a>. Помимо снижения стоимости пропускной способности и повышения ее общедоступного 
+   нижнего порога для сетевой среды кластера Ceph (c 10GbE на 25GbE), она улучшает арифметику деления ядра сети: 100 делится на 25 без остатка!
+   Стоит отметить, что 25GbE уже - 31 марта 2016 - доступны к заказу! Повторим: они призваны заменить собой 10GbE. В качестве лёгкого 
+   отстутпления от темы: все мы пользуемся WiFi, следовательно и добравшееся своими 2.5/5GbE до стандарта Ethetrnet- сообщество радует нас!}</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080304"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Диск </span></h4>
+   </div></div></div>
+   <p>Производительность и экономичность для кластеров Ceph совместно сильно зависят от эффективного выбора носителей для хранения. 
+   Вам следует понимать вашу рабочую нагрузку и возможные требования перед выбором носителей хранения для вашего кластера Ceph. 
+   Ceph применяет носители хранения двумя способами: часть Ceph ведущая журналы и часть данных Ceph. Как объяснялось в предыдущих 
+   главах, каждая операция <span class="term"><code>write</code></span> в Ceph является в настоящее время двухшаговым процессом. 
+   Когда OSD получает запрос на запись объекта, он вначале записывает этот объект в журнальную часть OSD в его активном наборе и 
+   отправляет подтверждение <span class="term"><code>write</code></span> клиентам. Вскоре после этого журнальные данные 
+   синхронизируются с разделом данных. Следует знать, что репликации также являются важным фактором в процессе исполнения 
+   <span class="term"><code>write</code></span>. Коэффициент (factor) репликаций обычно является компромиссом между надёжностью, 
+   производительностью и совокупной стоимостью владения (TCO). В этом случае вся производительность кластера вращается вокруг 
+   разделов журнала и данных OSD.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080305"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Раздел журнала OSD Ceph </span></h4>
+   </div></div></div>
+   <p>Если рабочая нагрузка сосредоточена вокруг производительности, то рекомендуется применять для журналов SSD. При использовании SSD 
+   вы можете получить значительное улучшение за счёт уменьшения времени доступа и латентности <span class="term"><code>write</code></span>. 
+   Для использования SSD в качестве журнала мы создаём множество логических разделов на каждом физическом SSD так, что каждый логический 
+   раздел SSD (журнал) соответствует одному разделу OSD. В этом случае ваш раздел данных размещается на шпиндельном диске и имеет собственный 
+   журнал в более быстром разделе SSD. Следующая схема иллюстрирует такую конфигурацию:</p>
+      <div class="figure"><a id="Fig0804"> </a>
+       <p class="title"><strong>Рисунок 8.4. Применение одного SSD в качестве журнала множества разделов данных OSD</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0804.jpg" width="850" height="656"/><br />
+        <span></span>
+       </div></div>
+      </div><br class="figure-break"/>
+   <p>При подобном типе компоновки вам следует иметь в виду, что не следует перегружать SSD хранением множества журналов свыше их пределов. 
+   Обычно для большинства вариантов применения должно быть достаточно размера журнала от 10 до 20ГБ, если у вас SSD большего размера вы 
+   можете создавать устройства журнала большего размера; в этом случае не забывайте увеличивать максимальный и минимальный интервалы 
+   синхронизации сохранения файлов для OSD.</p>
+   <p>Двумя наиболее распространёнными типами энергонезависимых быстрых устройств хранения применяемыми в Ceph являются SATA или SAS SSD и 
+   PCIe  или NVMe SSD. Для получения хорошей производительности ваших SATA/ SAS SSD, ваше соотношение SSD к OSD должно быть 1 : 4, т.е. 
+   один SSD применяется совместно 4мя дисками данных OSD. При использовании вами флеш- устройств PCIe или NVMe, в зависимости от 
+   производительности, соотношение SSD к OSD может варьироваться от 1 : 12 до 1 : 18, т.е. одно флеш- устройство разделяется между дисками 
+   данных в количестве от 12 до 18.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Giant2HammerUpdate"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Приведённые здесь рекомендации соотношения SSD к OSD очень общие и в большинстве случаев хорошо работают. Однако я призываю вас 
+		 протестировать ваши SSD/PCIe именно на специфичных для вас нагрузок и окружениях для получения наилучшего соотношения.</p>
+		 </td></tr></table>
+       </div>
+   <p>Тёмной стороной применения одного SSD для нескольких журналов состоит в том, что если вы теряете ваш SSD, размещающий множество 
+   журналов, все те OSD, которые связанные с этим OSD выйдут из строя и вы можете утратить ваши данные. Однако вы можете преодолеть эту 
+   проблему применяя RAID 1 в для ведения журнала, что, однако, приведёт к повышению стоимости вашего хранилища. К тому же стоимость за 
+   гигабайт примерно в 10 раз выше по сравнению с HDD {<span class="emphasis"><em>Прим. пер.: спорное утверждение, см. приводимые 
+   <a class="link" href="Ch08.html#DriveCost" target="_top">ниже</a> справочные данные по состоянию на март 2016.</em></span>} 
+   Поэтому, если вы строите кластер с SSD, вы увеличиваете стоимость за Гигабайт для вашего кластера Ceph. Однако, если вы ищете 
+   пути значительного улучшения производительности вашего кластера Ceph, инвестиции в SSD для журналов будут достойны внимания.</p>
+   <p>Мы получили сведения о журналах SSD и понимании того вклада, который они вносят в улучшение вашей производительности 
+   <span class="term"><code>write</code></span>. Однако, если вы не беспокоитесь о значительном улучшении производительности, а стоимость 
+   за ТБ является для вас решающим фактором для вас, то вам следует рассмотреть настройку раздела данных журнала на том же самом 
+   дисковом устройстве. Это означает, что вы будете выделять на вашем большом шпиндельном диске несколько ГБ для журнала OSD и применять 
+   оставшееся пространство того же диска для данных OSD. Такой вид установки может оказаться не столь производительным как аналогичная 
+   установка на основе SSD журнала, однако совокупная стоимость за ТБ будет значительно ниже.</p>
+   <p></p>
+   <p></p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080306"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Раздел данных OSD Ceph </span></h4>
+   </div></div></div>
+   <p>OSD являются реальными рабочими лошадками, хранящими все ваши данные. В промышленной среде Вам следует применять для вашего кластера 
+   Ceph жёсткие диски класса предприятия, облака или архива. Обычно жесткие диски уровня настольных компьютеров не очень хорошо подходят 
+   для промышленного кластера Ceph. Причина состоит в том, что в кластере Ceph несколько сот вращающихся жёстких дисков установлены 
+   очень близко и комбинация вибраций от вращения может стать проблемой для жёстких дисков уровня настольных компьютеров. 
+   Это увеличивает скорость отказа диска и может ухудшать общую производительность. Жёсткие диски корпоративного уровня намеренно имеют 
+   многие другие конструктивные решения для обработки вибраций и при этом они сами по себе генерируют очень малые уровни вибрации. 
+   Кроме того, их среднее время безотказной работы (MTBF) значительно выше чем показатели жёстких дисков уровня настольных решений.</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: более дорогостоящие жёсткие диски имеют на управляющем контроллере несколько датчиков 
+   ускорений и схему управления обратной связью с системой позиционирования блока головок над считывающими дорожками, которые 
+   до определённой степени компенсируют внешние вибрации. Не следует также пренебрегать и прочими конструктивными особенностями
+   шасси при размещении ваших шпиндельных устройств, позволяющих снижать уровень вибраций. Однако вибрации - не единственный 
+   фактор, вносящий различия между шпиндельными дисками с низкой стоимостью и дисками, предназначенными для работы в режиме 24x7.
+   К таковым можно отнести качество применяемых подшипников, материалов корпуса, их уровня теплопроводности, устойчивости к 
+   перепадам температур и тем же вибрациям, применяемая элементная база и многие другие конструктивные решения, 
+   <a class="link" href="https://www.youtube.com/watch?v=tlGsIt9fZs8" target="_top">нагляднее...</a></em></span>}. </p>
+   <p>Другим подлежащим рассмотрению моментом для диска данных OSD Ceph является интерфейс, то есть SATA или SAS. Жёсткие 
+   диски NL-SAS имеют дублированные порты SAS 12Гб/с и они обычно более высоко производительны чем интерфейсы жёстких дисков SATA 6Гб/c 
+   с одиночным портом. Кроме того, дублированные порты SAS предоставляют отказоустойчивость и допускают одновременные чтение и запись.
+   Дополнительным фактором устройств SAS также является то, что они имеют более низкое значение невосстановимых ошибок чтения 
+   (<span class="term"><strong class="userinput">unrecoverable read errors</strong></span>, <span class="term"><strong 
+   class="userinput">URE</strong></span>) в сравнении с устройствами SATA. Чем ниже уровень URE, тем меньше ошибок очистки и операций 
+   по восстановлению групп размещения. {<span class="emphasis"><em>Прим. пер.: см. также <a class="link" 
+   href="http://www.etegro.ru/articles/sas-sata" target="_top">обзор ETegro SAS vs SATA</a>, для справки: значения URE 
+   для современных дисков составляют величины порядка 10<sup>-15</sup> - 10<sup>-16</sup>.</em></span>}</p>
+   <p>Плотность ваших узлов OSD также является важным фактором для производительности кластера, используемого пространства и совокупной 
+   стоимости владения. Обычно лучше иметь большее число меньших узлов чем несколько узлов с большой ёмкостью, но эта тема всегда открыта 
+   для обсуждений. Вам следует выбирать плотность вашего OSD узла таким образом, чтобы один узел должен быть меньше чем 10% общего 
+   размера вашего кластера.</p>
+   <p>Например, в кластере Ceph с размером 1ПБ вам следует избегать применения узлов OSD 4x 250ТБ, в которых каждый узел содержит 25% 
+   ёмкости кластера. Вместо этого вы можете располагать узлами OSD 13x 80ТБ, в которых размер каждого узла меньше 10% от ёмкости 
+   всего кластера. Однако это может увеличить вашу стоимость совокупного владения и может оказывать воздействие на прочие факторы 
+   планирования вашего кластера.</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: приведём таблицу топовых характеристик устройств хранения некоторых производителей, применяемых 
+   нами (или которые мы бы рады были применить в ваших решениях) для построения OSD в кластерах:
+        <table rules="all" width="600" style="text-align:center" id="DriveTable">
+        <caption>Топовые характеристики устройств хранения, март 2016</caption><col width="50%"/><col width="23%"/><col width="17%"/><col width="10%"/><thead><tr valign="top">
+          <th>Наименование серии<br />макс. ёмкость<br />осн. характеристики</th>
+          <th>Макс. скорость обмена МБ/с <br />чтение/ запись</th>
+          <th>Макс. IOPS<br />чтение/ запись</th>
+          <th>Латентность</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">HGST HUH7210</strong></span></p>
+		  <p>10ТБ</p>
+		  <p>256МБ/ 7200rpm/ 3.5&quot;</p></td>
+          <td><p>249</p></td>
+          <td><p>-</p>
+		      <p>-</p></td>
+          <td><p>4.16мс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Seagate ST8000NM</strong></span></p>
+		  <p>8ТБ</p>
+		  <p>256МБ/ 7200rpm/ 3.5&quot;</p></td>
+          <td><p>237</p></td>
+          <td><p>165</p>
+		      <p>380</p></td>
+          <td><p>4.16мс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">HGST HUC1018</strong></span></p>
+		  <p>1.8ТБ</p>
+		  <p>128МБ/ 10Krpm/ 2.5&quot;</p></td>
+          <td><p>247</p></td>
+          <td><p>-</p>
+		      <p>-</p></td>
+          <td><p>2.85мс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Seagate ST1800MM</strong></span></p>
+		  <p>1.8ТБ</p>
+		  <p>128МБ/ 10Krpm/ 2.5&quot;</p></td>
+          <td><p>241</p></td>
+          <td><p>-</p>
+		      <p>-</p></td>
+          <td><p>2.9мс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">HGST HUC1560</strong></span></p>
+		  <p>0.6ТБ</p>
+		  <p>128МБ/ 15Krpm/ 2.5&quot;</p></td>
+          <td><p>271</p></td>
+          <td><p>-</p>
+		      <p>-</p></td>
+          <td><p>&lt;2.0мс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Seagate ST600MP</strong></span></p>
+		  <p>0.6ТБ</p>
+		  <p>128МБ/ 15Krpm/ 2.5&quot;</p></td>
+          <td><p>233</p></td>
+          <td><p>-</p>
+		      <p>-</p></td>
+          <td><p>2.0мс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Seagate ST2000NT</strong></span></p>
+		  <p>2.0ТБ</p>
+		  <p>128МБ/ 7200rpm/ 2.5&quot;</p></td>
+          <td><p>136</p></td>
+          <td><p>-</p>
+		      <p>-</p></td>
+          <td><p>4.16мс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">HGST SN100</strong></span></p>
+		  <p>3.2ТБ</p>
+		  <p>NVMe/ PCIe SSD</p></td>
+          <td><p>3000/ 1600</p></td>
+          <td><p>743000</p>
+		      <p>140000</p></td>
+          <td><p>512мкс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">HGST FlashMaxII/III</strong></span></p>
+		  <p>4.8ТБ/ 2.2ТБ</p>
+		  <p>eMLC/ PCIe SSD</p></td>
+          <td><p>2200/ 1400</p></td>
+          <td><p>531000/ 269000</p>
+		      <p>59000/ 51000</p></td>
+          <td><p>19/22мкс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">HGST SSD800MH</strong></span></p>
+		  <p>0.8ТБ</p>
+		  <p>eMLC/ 2.5&quot;</p></td>
+          <td><p>1100/ 765</p></td>
+          <td><p>130000</p>
+		      <p>110000</p></td>
+          <td><p>-</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">Seagate ST1600FM</strong></span></p>
+		  <p>1.6ТБ</p>
+		  <p>eMLC/ 2.5&quot;</p></td>
+          <td><p>1900/ 625</p></td>
+          <td><p>200000</p>
+		      <p> 80000</p></td>
+          <td><p>115мкс</p></td>
+        </tr></thead><tbody><tr valign="top">
+          <td><p><span class="term"><strong class="userinput">бытовой SSD</strong></span></p>
+		  <p>.96ТБ</p>
+		  <p>MLC/ 2.5&quot;</p></td>
+          <td><p>560/ 455</p></td>
+          <td><p> 79000</p>
+		      <p> 75000</p></td>
+          <td><p>-</p></td>
+        </tr></tbody></table>
+   </em></span>}</p>
+   <p>{<a id="DriveCost"> </a><span class="emphasis"><em>Прим. пер.: по состоянию на март 2016г стоимость NL SATA/SAS дисков начинается от 50$/ТБ, 
+   общедоступные MLC диски могут предоставлять Терабайт за стоимость менее $500, для eMLC дисков стоимость Терабайта начинается от $2000.
+   Интересным представляется обсуждение проблемы необходимости eMLC (Enterprise Multi-level cell, многоуровневые ячейки памяти). Один 
+   из производителей бытовых SSD на основе MLC NAND, предоставил нам информацию о количестве гарантируемых им циклов перезаписи, на основании 
+   которой мы пришли к выводу, что исходя из пропускной способности этого устройства на запись нам потребуется 3 месяца для выполнения полной 
+   последовательной записи всего диска указанное число раз в режиме 24 x 7. В любом случае, мы предоставляем расширенную гарантию на замену 
+   SSD диска в случае его выхода из строя по причине израсходованием ресурса количества перезаписи в течение гарантийного срока. За 
+   подробностями <a href="javascript:tocall()" onmouseover="this.href=mail" target="_blank">обращайтесь</a> к нашим специалистам!</em></span>}</p>
+   <p>{<a id="NVMe"> </a><span class="emphasis"><em>Прим. пер.: Достаточно простой и внятный обзор NVMe, нового интерфейса для систем хранения, 
+   приводится в новой книге М.В.Лукаса и А.Джуда <strong><a class="link" href="http://onreader.mdl.ru/AdvancedZFS/content/Ch06.html#06" 
+   target="_top">ZFS для профессионалов</a></strong> (Mastery FreeBSD: Advanced ZFS). В частности, становятся понятными неудачи ранних тестирований NVMe:
+   см., например, <a class="link" href="http://www.ixbt.com/storage/ssd-p43-intel-nvme.shtml" target="_top">озор тестирования NVMe Андрея Кожемяко 
+   на iXBT</a>.</em></span></p> 
+   <p><span class="emphasis"><em>Действительно, <a class="link" href="https://ru.wikipedia.org/wiki/NVM_Express" target="_top">NVMe</a> представляет собой совершенно 
+   новый интерфейс, призванный заменить собой SAS/SATA/SCSI для безшпиндельных устройств хранения. Вот некоторые основные преимущества NVMe:</em></span></p> 
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="emphasis"><em>Он полностью отказывается от представления данных в виде <a class="link" href="https://en.wikipedia.org/wiki/Logical_block_addressing" 
+	 target="_top">головки-цилиндры-сектора</a>.</em></span></p>
+	 </li><li class="listitem">
+	 <p><span class="emphasis"><em>Вместо единственной очереди для <a class="link" href="https://ru.wikipedia.org/wiki/Advanced_Host_Controller_Interface" target="_top">AHCI</a>, 
+	 к тому же ограниченной 32-64 командами, NVMe поддерживает до 64k очередей по 64k команд в каждой! Это позволяет максимально загружать работой все 
+	 имеющиеся в накопителе ячейки памяти с макимально доступным уровнем параллелизма!</em></span></p>
+	 </li><li class="listitem">
+	 <p><span class="emphasis"><em>Он выделяет пространство имён, делая возможной раздельную работу с ним и относящимися к нему данными. В NVMe уровня предприятия заявлена 
+	 функциональность множественности разделяемых пространств имён, что предоставит дополнительные возможности роста 
+	 производительности!</em></span></p>
+	 </li>
+    </ul>
+    </div> 
+   <p><span class="emphasis"><em>Исходя из этого, становится понятным, что новые интерфейсы устройств требуют новых подходов для построения оптимальных режимов работы.
+   Прежде всего необходима грамотная организация достаточного числа (для организации загруженности NVMe устройства) очередей. А именно: предлагается 
+   создавать не менее одной очереди на чтения и одной очереди на запись для каждого доступного ядра ЦПУ. Следующий этап лежит в оптимозации размера 
+   блока. Для NVMe предначертано спецификацией применение блоков с максимально возможными размерами. Уже эти два мероприятия быстро дают выход на пики
+   производительности, как это демонстрируют М.В.Лукас и А.Джуд в своей новой книге, см. наш <strong><a class="link" 
+   href="http://onreader.mdl.ru/AdvancedZFS/content/Ch06.html#06" target="_top">перевод</a></strong>.</em></span>}</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: приведём таблицу оценки времён, необходимых для обмена данных объёмом в 4ТБ (условно говоря, 
+   выход из строя 6ТБ диска в системе с &quot;приличной&quot; загруженностью):</em></span></p>
+        <table rules="all" width="600" style="text-align:center" id="add_fs_options"><a id="DriveThroughput"> </a>
+        <caption>Оценка снизу времени обмена 4ТБ данных</caption><col width="60%"/><col width="40%"/><thead><tr valign="top">
+          <th>Скорость обмена</th>
+          <th>Оценка необходимого времени</th>
+        </tr></thead><tbody><tr valign="top">
+          <td><p>HDD 130МБ/с</p></td>
+          <td><p>9 часов</p></td>
+        </tr><tr valign="top">
+          <td><p>HDD 240МБ/с</p></td>
+          <td><p>5 часов</p></td>
+        </tr><tr valign="top">
+          <td><p>SSD 455МБ/с</p></td>
+          <td><p>2.5 часа</p></td>
+        </tr><tr valign="top">
+          <td><p>SATA 6G</p></td>
+          <td><p>1.5 часа</p></td>
+        </tr><tr valign="top">
+          <td><p>SAS 12G</p></td>
+          <td><p>45 минут</p></td>
+        </tr><tr valign="top">
+          <td><p>SSD 2200МБ/с</p></td>
+          <td><p>30 минут</p></td>
+        </tr><tr valign="top">
+          <td><p>NVMe 3000МБ/с</p></td>
+          <td><p>23 минуты</p></td>
+        </tr><tr valign="top">
+          <td><p><a class="link" href="http://support.mdl.ru/ABC/PC_Buses.htm#PCIe-v3.x" target="_top">
+		  PCIe v.3</a> 8x lane</p></td>
+          <td><p>8+2/3 минут</p></td>
+        </tr><tr valign="top">
+          <td><p><a class="link" href="http://support.mdl.ru/ABC/PC_Buses.htm#PCIe-v3.x" target="_top">
+		  PCIe v.3</a> 16x lane</p></td>
+          <td><p>4+1/3 минуты</p></td>
+        </tr></tbody></table>
+   <p><span class="emphasis"><em></em></span>}</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080307"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Операционная система </span></h4>
+   </div></div></div>
+   <p>Ceph является определяемой программным обеспечением системой, которая работает поверх операционной системы на основании Linux.
+   Ceph поддерживает большинство основных дистрибутивов Linux. На текущий момент допустимым выбором операционной системы для работы 
+   кластера Ceph являются RHEL, CentOS, Fedora, Debian, Ubuntu, OpenSuse и SLES. Что касается версии ядра Linux, рекомендуется чтобы вы 
+   выполняли равёртывание Ceph на последних редакциях ядра Linux. Мы также рекомендуем развёртывать её на редакциях с долговременной 
+   поддержкой (<span class="term"><strong class="userinput">LTS</strong></span>, <span class="term"><strong class="userinput">long-term 
+   support</strong></span>). На момент написания этой книги рекомендовались версии ядра Linux v3.16.3 или более поздние в качестве 
+   хорошей отправной точки. {<span class="emphasis"><em>Прим. пер.: на момент перевода рекомендуется применять ядро Linux 
+   v4.1.4 или более поздние.</em></span>} Хорошей идеей будет заглянуть на <a class="link" 
+   href="http://docs.ceph.com/docs/master/start/os-recommendations" target="_top">http://docs.ceph.com/docs/master/start/os-recommendations</a>.
+   Согласно документации, CentoS 7 и Ubuntu 14.04 являются дистрибутивами 1 уровня, для которого выполнены исчерпывающие функциональные, 
+   регрессивные и нарузочные испытания соответствия на постоянной основе и, несомненно, RHEL является наилучшим выбором, если вы 
+   применяете продукт enterprise Red Hat Ceph Storage.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080307"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Файловая система OSD </span></h4>
+   </div></div></div>
+   <p>Демон OSD Ceph работает поверх файловой системы, которой может быть XFS, EXT4 или даже Btrfs. Однако выбор правильной файловой 
+   системы является критическим моментом, поскольку демоны OSD основываются на стабильности и производительности лежащей в их основе
+   файловой системы. Помимо стабильности и производительности файловая система также предоставляет расширенные атрибуты 
+   (<span class="term"><strong class="userinput">XATTR</strong></span>, <span class="term"><strong class="userinput">extended 
+   attributes</strong></span>), преимуществами которых пользуются демоны OSD Ceph. XATTR предоставляют внутреннюю информацию о 
+   состоянии объекта, снимках, метаданны[, а также <a class="link" href="https://ru.wikipedia.org/wiki/ACL" target="_top">ACL</a>
+   вашему демону Ceph, который помогает в управлении данными.</p>
+   <p>Вот почему лежащая в основе файловая система должна предоставлять достаточную ёмкость для XATTR. Btrfs предоставляет значительно 
+   больше метаданных xattr, которые хранятся с файлом. XFS имеет относительно большой предел (64kB),с которым большинство приложений 
+   не столкнётся, однако ext4 слишком мал для применения. Если вы применяете файловую систему ext4 для вашего OSD Ceph, вы всегда 
+   должны добавлять <span class="term"><code>filestore xattr use omap = true</code></span> в последующие настройки вашего файла
+   <span class="term"><code>ceph.conf</code></span>. Выбор файловой системы чрезвычайно важен для промышленных рабочих нагрузок,
+   а в отношении Ceph данные файловые системы отличаютсядруг от друга следующим:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">XFS</strong></span>: Является надёжной, зрелой и очень стабильной файловой системой,
+	 которая рекомендуется для промышленного использования в кластерах Ceph. Тем не менее, XFS находится ниже при сравнении с Btrfs.
+	 XFS имеет некоторые проблемы с производительностью при масштабировании метаданных. Кроме того, XFS является файловой системой с 
+	 журналированием, то есть, когда клиент отправляет данные для записи в кластер Ceph, они вначале записываются в пространство журнала, 
+	 а уже потом в файловую систему XFS. Это в два раза увеличивает накладные расходы на запись и тем самым делает выполнение XFS 
+	 медленнее в сравнении с Btrfs, которая не применяет журналы. Однако, благодаря своей надёжности и стабильности XFS является 
+	 наиболее популярной и рекомендуемой файловой системой для реализаций Ceph.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Btrfs</strong></span>: OSD с файловой системой Btrfs в его основе предоставляет 
+	 наилучшую производительность в сравнении с OSD на основе файловых систем XFS и ext4. Одним из основных преимуществ применения Btrfs 
+	 состоит в её поддержке <a class="link" href="ttps://ru.wikipedia.org/wiki/Копирование_при_записи" target="_top">копирования при 
+	 записи</a> и снимков с поддержкой записи. При применении файловой системы Btrfs Ceph применяет параллельное ведение журналов, иными 
+	 словами: Ceph записывает данные в соответствующий журнал OSD и собственно данные OSD одновременно, что является существенным усилением 
+	 для производительности <span class="term"><code>write</code></span>. Она также поддерживает прозрачные сжатие и всеобъемлющие контрольные 
+	 суммы, а также она объединяет управление множеством устройств в файловой системе. Она также имеет привлекательный функционал FSCK в 
+	 реальном масштабе времени. Тем не менее, Btrfs в настоящее время не готова к промышленному применению, однако является хорошим 
+	 претендентом для тестового развёртывания.</p>
+	 <p></p>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Ext4</strong></span>: Четвёртая расширенная файловая система также является файловой 
+	 системой с журналированием, которая является готовой к промышленному применению для OSD Ceph. Однако она не так популярна как XFS. 
+	 С точки зрения производительности ext4 находится далеко от Btrfs.</p>
+	 </li>
+    </ul>
+    </div>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Giant2HammerUpdate"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Не путайтесь между ведением журналов Ceph и файловыми системами с журналированием (XFS, EXt4); они различаются. 
+		 Ceph выполняет своё журналирование при записи в файловую систему, а затем файловая система делает свой журнал при записи на 
+		 лежащие в её основе диски.</p>
+		 </td></tr></table>
+       </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0804"> </a>Рекомендации Ceph и настройка производительности</h3>
+   </div></div></div>
+   <p>В этом рецепте мы изучим некоторые параметры настройки для кластера Ceph. Такие параметры всего кластера опеределяются в вашем 
+   файле настроек кластера Ceph, следовательно, когда запускается какой-то демон Ceph, он будет соблюдать соответствующие настройки.
+   По умолчанию именем файла настроек является файл с именем <span class="term"><code>ceph.conf</code></span>, который размещён в каталоге 
+   <span class="term"><code>/etc/ceph</code></span>. Этот файл настроек имеет раздел глобальных установок, а также некоторые разделы для 
+   каждого типа служб. При запуске каждого типа служб он применяет заданные в разделе <span class="term"><code>[global]</code></span> 
+   настройки, а также специфичные для определённого демона разделы. Файл настроек Ceph имеет различные разделы, что отображено на 
+   следующем снимке экрана:</p>
+   	   <pre class="screen">
+	[global] 
+		fsid                     = {UUID} 
+		public network           = 192.168.0.0/24 
+		cluster network          = 192.168.0.0/24 
+		osd pool default pg num  = 128 
+	[mon] 
+	[mon.alpha] 
+		host                     = alpha 
+		mon addr                 = 192.168.0.10:6789 
+	[mds] 
+	[mds.alpha] 
+		host                     = alpha 
+	[osd] 
+		osd recovery max active    = 3 
+		osd max backfills          = 5 
+	[osd.0] 
+		host                       = delta 
+	[osd.1] 
+		host                       = epsilon 
+	[client] 
+		rbd cache                  = true 
+	[client. radosgw.gateway] 
+		host                       = ceph-radosgw 
+	   </pre>
+   <p>Теперь мы обсуждаем роль каждого раздела файла настроек.</p>
+    <div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput">Global section</strong></span>: Общий раздел файла настроек вашего кластера начинается 
+	 с ключевого слова <span class="term"><code>[global]</code></span>. Все определённые в этом разделе настройки применяются ко всем 
+	 демонам в данном кластере Ceph. Ниже приводятся параметры, определяемые в разделе <span class="term"><code>[global]</code></span>.</p>
+	   <pre class="screen">
+public network = 192.168.0.0/24
+	   </pre>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">раздел Monitor section</strong></span>: Определённые в разделе 
+	 <span class="term"><code>[mon]</code></span> файла настройки в разделе конфигураций применяются ко всем демонам монитора Ceph в 
+	 вашем кластере. Определённые в этом разделе параметры переопределяются параметрами, определёнными в разделе  
+	 <span class="term"><code>[global]</code></span>. Далее приводится пример параметров, обычно определяемых в вашем разделе
+	 <span class="term"><code>[mon]</code></span>.</p>
+	   <pre class="screen">
+mon initial members = ceph-mon1
+	   </pre>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Раздел OSD</strong></span>: Настройки, определяемые в разделе 
+	 <span class="term"><code>[osd]</code></span> применяются ко всем демонам OSD в вашем кластере OSD. Определяемые в этом разделе 
+	 настройки аналогичны установкам, перезаписывающим аналогичные настройки, определённые в разделе в разделе  
+	 <span class="term"><code>[global]</code></span>. Далее приводится пример установок в данном разделе:</p>
+	   <pre class="screen">
+osd mkfs type = xfs
+	   </pre>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Раздел MDS</strong></span>: Настройки, определяемые в разделе 
+	 <span class="term"><code>[mds]</code></span> применяются ко всем демонам MDS в вашем кластере Ceph. Определяемые 
+	 в этом разделе настройки переопределяют аналогичные настройки, определённые в разделе в разделе  
+	 <span class="term"><code>[global]</code></span>. Далее приводится пример установок в данном разделе:</p>
+	   <pre class="screen">
+mds cache size = 250000
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Раздел Client</strong></span>: Настройки, определяемые в разделе 
+	 <span class="term"><code>[client]</code></span> применяются ко всем вашим клиентам Ceph. Определяемые в этом разделе 
+	 настройки переопределяют аналогичные настройки, определённые в разделе в разделе  
+	 <span class="term"><code>[global]</code></span>. Далее приводится пример установок в данном разделе:</p>
+	   <pre class="screen">
+rbd cache size = 67108864
+	   </pre>
+	 </li>
+   </ul>
+   </div>
+   <p>В следующем рецепте мы изучим некоторые советы по тонкой настройке производительности вашего кластере Ceph. Настройка 
+   производительности является безбрежной темой требующей понимания Ceph а также других компонентов стека хранения. Не существует 
+   серебряной пули для настройки производительности. Тюнинг во многом зависит от лежащих в основе инфраструктуры и среды.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Глобальная настройка кластера </span></h4>
+   </div></div></div>
+   <p>Общие параметры должны быть определены в разделе <span class="term"><code>[global]</code></span> вашего файла настроек 
+   кластера Ceph:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><code>network</code></span>: вам рекомендуется применять две физически разделённые сетевые среды для 
+	 вашего кластера Ceph, которые называются соответственно общедоступной (public) и кластерной (cluster) сетевыми средами. 
+	 Ранее в этой главе мы уже обсуждали потребность в двух различных сетевых средах. Давайте теперь разберёмся как мы можем 
+	 определять их в настройках Ceph.</p>
+     <div class="itemizedlist">
+	 <ul class="itemizedlist" type="disc">
+	   <li class="listitem">
+	   <p>Общедоступная сетевая среда:	для определения общедоступной сетевой среды применяется такой синтаксис:
+	   <span class="term"><code>public network = {public network / netmask}</code></span>:</p>
+	   <pre class="screen">
+public network = 192.168.100.0/24
+	   </pre>
+	   </li><li class="listitem">
+	   <p>Сетевая среда кластера: для определения общедоступной сетевой среды применяется такой синтаксис:
+	   <span class="term"><code>cluster network = {cluster network / netmask}</code></span>:</p>
+	   <pre class="screen">
+cluster network = 192.168.1.0/24
+	   </pre>
+	   </li>
+     </ul>
+     </div>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>max open files</code></span>: Если этот параметр находится на месте и кластер Ceph запускается, он 
+	 устанавливает максимальное число дескрипторов открытых файлов на уровне ОС. Это предотвращает выход демонов OSD за установленные 
+	 пределы для дескрипторов файлов. Значением по умолчанию для этого параметра является <span class="term"><code>0</code></span> 
+	 {<span class="emphasis"><em>Прим. пер.: без ограничения</em></span>}; вы можете установить его в значение 64- битного целого:</p>
+	   <pre class="screen">
+max open files = 131072
+	   </pre>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>osd pool default min size</code></span>: это уровень репликаций при состоянии деградации. Он 
+	 устанавливает минимальное число реплик для объектов в пуле которые должны подтверждать операцию клиентов
+	 <span class="term"><code>write</code></span>. По умолчанию установлено значение <span class="term"><code>0</code></span> 
+	 {<span class="emphasis"><em>Прим. пер.: все</em></span>}:</p>
+	   <pre class="screen">
+osd pool default min size = 1
+	   </pre>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>osd pool default pg</code></span> и <span class="term"><code>osd pool default pgp</code></span>: 
+	 Убедитесь что ваш кластер реалистичное число групп размещения. Рекомендуемое значение групп размещения на OSD равно 100. Для 
+	 вычисления числа групп размещений применяйте следующую формулу: <span class="term"><code> (Total number of OSD * 
+	 100)/number of replicas</code></span>.</p>
+	 <p>Для варианта с 10 OSD при 3 репликах значение для PG должно быть равно <span class="term"><code>(10*100)/3 = 333</code></span>:</p>
+	   <pre class="screen">
+osd pool default pg num = 128
+osd pool default pgp num = 128
+	   </pre>
+	 <p>Как мы уже объясняли ранее, значения PG и PGP должны устанавливаться одинаковыми. Ваши значения PG и PGP очень сильно зависят от 
+	 размера кластера. Приведённые ранее настройки не должны повредить ваш кластер, однако вы можете пересмотреть эти значения перед 
+	 применением. Вам следует знать, что эти параметры не изменяют число PG и PGP для существующих пулов; они применяются при 
+	 создании нового пула без задания значений для PG и PGP.</p>
+	 </li><li class="listitem">
+	 <p><span class="term"><code>osd pool default min size</code></span>: Это значение уровня репликаций в деградировавшем состоянии, 
+	 которое должно быть установлено в значение ниже чем <span class="term"><code>osd pool default size</code></span>. Оно устанавливает 
+	 минимальное число реплик для объектов пула и тем самым сможет подтверждать операции <span class="term"><code>write</code></span>
+	 даже при деградации кластера. Если текущее значение минимального размера не соответствует установленному значению, Ceph не будет
+	 подтверждать <span class="term"><code>write</code></span> клиенту:</p>
+	   <pre class="screen">
+osd pool default min size = 1
+	   </pre>
+	 </li><li class="listitem">
+	 <p><span class="term"><code> osd pool default crush rule</code></span>: Набор правил CRUSH по умолчанию для применения при создании 
+	 пула:</p>
+	   <pre class="screen">
+osd pool default crush rule = 0
+	   </pre>
+	 </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Запрет ведения журналов в памяти</strong></span>: Каждая подсистема имеет уровень 
+	 ведения журналов для выдаваемых ею регистрационных записей, и они ведутся в оперативной памяти. Мы можем устанавливать различные 
+	 значения для каждой из этих подсистем устанавливая уровень файла журнала и уровень памяти для отладочного ведения журналов по 
+	 шкале от 1 до 20, где 1 это краткий (terse), а 20 - подробный (verbose). Первой установкой является уровень журнала, а второй - 
+	 уровень памяти. Вы можете разделять их прямым слешем (/): <span class="term"><code>debug_&lt;subsystem&gt; = 
+	 &ltlog-level&gt;/&ltmemory-level&gt;</code></span>.</p>
+	 <p>Установленные по умолчанию значения обычно приемлемы для вашего кластера, пока вы не замечаете, что уровень регистрируемых 
+	 в памяти записей журналов влияет на вашу производительность или потребление памяти. В этом случае вы можете попробовать запретить 
+	 ведение журналов в памяти. Для запрета установленных по умолчанию значений ведения журналов в памяти добавьте следующие 
+	 параметры:</p>
+	   <pre class="screen">
+debug_lockdep = 0/0
+debug_context = 0/0
+debug_crush = 0/0
+debug_buffer = 0/0
+debug_timer = 0/0
+debug_filer = 0/0
+debug_objecter = 0/0
+debug_rados = 0/0
+debug_rbd = 0/0
+debug_journaler = 0/0
+debug_objectcatcher = 0/0
+debug_client = 0/0
+debug_osd = 0/0
+debug_optracker = 0/0
+debug_objclass = 0/0
+debug_filestore = 0/0
+debug_journal = 0/0
+debug_ms = 0/0
+debug_monc = 0/0
+debug_tp = 0/0
+debug_auth = 0/0
+debug_finisher = 0/0
+debug_heartbeatmap = 0/0
+debug_perfcounter = 0/0
+debug_asok = 0/0
+debug_throttle = 0/0
+debug_mon = 0/0
+debug_paxos = 0/0
+debug_rgw = 0/0
+	   </pre>
+	 </li>
+   </ul>
+   </div>
+ 
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка монитора </span></h4>
+   </div></div></div>
+   <p>Настройка параметров монитора должна выполняться в разделе <span class="term"><code>[mon]</code></span> вашего файла настройки 
+   кластера Ceph:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>mon osd down out interval</code></span>: Определяет число секунд, которое Ceph ожидает прежде чем 
+	 пометить OSD Ceph как &quot;down&quot; и &quot;out&quot; если они не отвечают. Этот параметр понадобится когда ваши узлы OSD претерпят 
+	 аварию и перезагрузятся самостоятельно или после некоторого краткосрочного сбоя в сетевой среде. Вы не захотите чтобы ваш кластер приступал 
+	 к перебалансировке сразу при возникновении проблемы, а скорее подождёте несколько минут и посмотрите не исправится ли эта проблема:</p>
+	   <pre class="screen">
+mon_osd_down_out_interval = 600
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>mon allow pool delete</code></span>: Во избежание случайного удаления пула Ceph установите этот параметр в 
+	 значение <span class="term"><code>false</code></span>. Это может быть полезно если у вас много администраторов управляющих кластером Ceph 
+	 и вы не хотите принимать никакие риски для данных клиента:</p>
+	   <pre class="screen">
+mon_allow_pool_delete = false
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>mon osd min down reporters</code></span>: OSD демон Ceph может сообщать MON о своих одноранговых 
+	 OSD в случае их отключения; по умолчанию это значение равно <span class="term"><code>1</code></span>. При помощи этого параметра вы 
+	 можете изменять минимальное число демонов OSD Ceph необходимое для генерации отчёта об отключении OSD Ceph монитору Ceph. В большом 
+	 кластере рекомендуется иметь это значение выше установленного по умолчанию; значение <span class="term"><code>3</code></span> 
+	 должно быть приемлемым:</p>
+	   <pre class="screen">
+mon_osd_min_down_reporters = 3
+	   </pre>
+    </li>
+   </ul>
+   </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080403"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка OSD </span></h4>
+   </div></div></div>
+   <p>В этом рецепте мы дадим представление об общей настройке параметров OSD, которые должны определяться в разделе 
+   <span class="term"><code>[osd]</code></span> вашего файла настройки кластера Ceph:</p>
+   
+   <a id="08040301"> </a>
+   <p class="title"><strong>Общие установки OSD</strong></p>
+   <p>Следующие настройки позволяют демону OSD Ceph определять тип файловой системы, параметры монтирования, а также некоторые 
+   другие полезные установки:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>osd mkfs options xfs</code></span>: При создании OSD Ceph применит эти параметры xfs для создания своей 
+	 файловой системы OSD:</p>
+	   <pre class="screen">
+osd_mkfs_options_xfs = &quot;-f -i size=2048&quot;
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd mount options xfs</code></span>: Предоставляет параметры монтирования файловой системы xfs для OSD.
+	 Когда Ceph монтирует некое OSD, она будет использовать следующие параметры для монтирования файловой системы OSD:</p>
+	   <pre class="screen">
+osd_mount_options_xfs = &quot;rw,noatime,inode64,logbufs=8,logbsize=256k,delaylog,allocsize=4M&quot;
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd max write size</code></span>: Максимальный размер данных в мегабайтах, которые OSD может записывать 
+	 за раз:</p>
+	   <pre class="screen">
+osd_max_write_size = 256
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd client message size cap</code></span>: Наибольшее сообщение клиентских данных в байтах, допускаемое 
+	 в оперативной памяти:</p>
+	   <pre class="screen">
+osd_client_message_size_cap = 1073741824
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd map dedup</code></span>: Удалять дублирующиеся записи в карте OSD:</p>
+	   <pre class="screen">
+osd_map_dedup = true
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd op threads</code></span>: Число потоков для обслуживания работы демона OSD Ceph. Установка значения 
+	 в <span class="term"><code>0</code></span> запрещает его. Увеличение данного значения может увеличить скорость обработки запросов:</p>
+	   <pre class="screen">
+osd_op_threads = 16
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd disk threads</code></span>: Число потоков дисков которые применяются для выполнения фоновой работы 
+	 интенсивного дискового обмена такого как очистка (scrubbing) и подрезка снимка (snap trimming):</p>
+	   <pre class="screen">
+osd_disk_threads = 1
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd disk thread ioprio class</code></span>: Применяется совместно с 
+	 <span class="term"><code>osd_disk_thread_ioprio_priority</code></span>. Эта регулировка может изменять класс расписаний 
+	 вашего ввода/ вывода дискового потока и может работать только с планировщиками <a class="link" 
+	 href="https://www.opennet.ru/base/sys/linux_shedulers.txt.html" target="_top">CFQ</a>. Возможными значениями являются 
+	 <span class="term"><code>idle</code></span>, <span class="term"><code>be</code></span> или <span class="term"><code>rt</code></span>:</p>
+     <ul class="itemizedlist" type="circle">
+       <li class="listitem">
+	   <p><span class="term"><code>idle</code></span>: Ваши дисковые потоки будут иметь более низкий приоритет чем прочие потоки в ваших 
+	   OSD. Это полезно когда вы хотите замедлить свою очистку в некотором OSD, который занят обработкой клиентских запросов.</p>
+       </li><li class="listitem">
+	   <p><span class="term"><code>be</code></span>: Дисковые потоки имеют тот же приоритет, что и прочие потоки в этом OSD.</p>
+       </li><li class="listitem">
+	   <p><span class="term"><code>rt</code></span>: Дисковые потоки будут иметь больший приоритет чем все прочие потоки. Это полезно 
+	   когда очень нужна очистка и она может иметь приоритет за счёт работы клиента.</p>
+	   <pre class="screen">
+osd_disk_thread_ioprio_class = idle
+	   </pre>
+       </li>
+     </ul>
+     </div>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd disk thread ioprio priority</code></span>: Применяется совместно с 
+	 <span class="term"><code>osd_disk_thread_ioprio_class</code></span>. Эта регулировка может изменять приоритет вашего планировщика 
+	 ввода/ вывода дискового потока от <span class="term"><code>0</code></span> (наивысший) до 
+	 <span class="term"><code>7</code></span> (наинизший). Если все OSD на данном хосте находятся в классе 
+	 <span class="term"><code>idle</code></span> и соперничают за ввод/ вывод и не выполняют много операций, этот параметр может быть 
+	 применён для замедления приоритета потока диска одного OSD до <span class="term"><code>7</code></span>, таким образом, что другой 
+	 OSD с приоритетом <span class="term"><code>0</code></span> может выполнить очистку быстрее. Как и 
+	 <span class="term"><code>osd_disk_thread_ioprio_class</code></span>, это также работает только с планировщиком <a class="link" 
+	 href="https://www.opennet.ru/base/sys/linux_shedulers.txt.html" target="_top">CFQ</a> ядра Linux.</p>
+	   <pre class="screen">
+osd_disk_thread_ioprio_priority = 0
+	   </pre>
+     </li>
+   </ul>
+   </div>
+
+   <a id="08040302"> </a>
+   <p class="title"><strong>Установки журнала OSD </strong></p>
+   <p>Демоны OSD Ceph поддерживают следующие настройки журнала:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>osd journal size</code></span>: Значение Ceph этого параметра по умолчанию равно 
+	 <span class="term"><code>0</code></span>; вам следует применять параметр <span class="term"><code>osd_journal_size</code></span> 
+	 для установки размера журнала. Размер журнала должен быть по крайней мере удвоенным произведением ожидаемой скорости диска и 
+	 максимального интервала сохранения файлов. Если вы используете журналы SSD, обычно хорошо создавать журналы более 10ГБ и 
+	 увеличивать минимальный/ максимальный интервал синхронизации сохранения файлов:</p>
+	   <pre class="screen">
+osd_journal_size = 20480
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>journal max write bytes</code></span>: Максимальное число байт, которое журнал может записать за раз:</p>
+	   <pre class="screen">
+journal_max_write_bytes = 1073714824
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>journal max write entries</code></span>: Максимальное число элементов, которое журнал может записать за раз:</p>
+	   <pre class="screen">
+journal_max_write_entries = 10000
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>journal queue max ops</code></span>: Максимальное число разрешённых в очереди журнала операций в данное
+	 время:</p>
+	 :</p>
+	   <pre class="screen">
+journal_queue_max_ops = 50000
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>journal queue max bytes</code></span>: Максимальное число байт разрешённых в очереди журнала в данное
+	 время:</p>
+	 :</p>
+	   <pre class="screen">
+journal_queue_max_bytes = 10485760000
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>journal dio</code></span>: Разрешение операций прямого ввода/ вывода в журнал. Требует установления в 
+	 значение <span class="term"><code>true</code></span> параметра <span class="term"><code>journal block align</code></span>:</p>
+	   <pre class="screen">
+journal_dio = true
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>journal aio</code></span>: Разрешает применение libaio для асинхронной записи в журнал. Требует установления
+	 <span class="term"><code>journal dio</code></span> в значение <span class="term"><code>true</code></span>:</p>
+	   <pre class="screen">
+journal_aio = true
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>journal block align</code></span>: Блочно выравнивает операции <span class="term"><code>write</code></span>.
+	 Требуется для <span class="term"><code>dio</code></span> и <span class="term"><code>aio</code></span>.</p>
+     </li>
+   </ul>
+   </div>
+ 
+   <a id="08040303"> </a>
+   <p class="title"><strong>Установки сохранения файлов OSD </strong></p>
+   <p>Существует несколько установок сохранения файлов, которые могут быть настроены для ваших демонов OSD Ceph:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>filestore merge threshold</code></span>: Разрешает применение libaio для асинхронной записи в в ваш 
+	 журнал. Требует чтобы <span class="term"><code>journal dio</code></span>  был установлен в значение <span class="term"><code>true</code></span>:</p>
+	   <pre class="screen">
+filestore_merge_threshold = 40
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore split multiple</code></span>: Максимальное число файлов в подкаталоге перед расщеплением на 
+	 два дочерних каталога:</p>
+	   <pre class="screen">
+filestore_split_multiple = 8
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore op threads</code></span>: Число потоков операций файловой системы которые выполняются 
+	 одновременно:</p>
+	   <pre class="screen">
+filestore_op_threads = 32
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore xattr use omap</code></span>: Применяет карту объектов для XATTRS (расширенных атрибутов). 
+	 Требует установки в значение <span class="term"><code>true</code></span> для файловой системы <span class="term"><code>ext4</code></span>:</p>
+	   <pre class="screen">
+filestore_xattr_use_omap = true
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore sync interval</code></span>: Чтобы создать непротиворечивую точку фиксации, сохранение файлов 
+	 требует заморозить операции <span class="term"><code>write</code></span> и выполнить операцию <span class="term"><code>syncfs()</code></span>, 
+	 которая синхронизирует данные журнала с данными раздела и тем самым освободит этот журнал. Болеечастое выполнение операций 
+	 синхронизации уменьшает объём данных, сохраняемых в журнале. В этом случае журнал становится недоиспользованным. Настройка на менее 
+	 частые синхронизации позволяет файловой системе лучше объединять малые записи и мы можем получить улучшение производительности. 
+	 Следующие параметры определяют минимальный и максимальный периоды между двумя синхронизациями:</p>
+	   <pre class="screen">
+filestore_min_sync_interval = 10
+filestore_max_sync_interval = 15
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore queue max ops</code></span>: Максимальное число операций, которое сохранений файлов может принять 
+	 перед блокированием новых операций для их присоединения к очереди:</p>
+	   <pre class="screen">
+filestore_queue_max_ops = 2500
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore queue max bytes</code></span>: Максимальное число байт в одной операции:</p>
+	   <pre class="screen">
+filestore_queue_max_bytes = 10485760
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore queue committing max ops</code></span>: Максимальное число операций, которое может фиксировать 
+	 сохранение файлов:</p>
+	   <pre class="screen">
+filestore_queue_committing_max_ops = 5000
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>filestore queue committing max bytes</code></span>: Максимальное число байт, которое может фиксировать 
+	 сохранение файлов:</p>
+	   <pre class="screen">
+filestore_queue_committing_max_bytes = 10485760000
+	   </pre>
+     </li>
+   </ul>
+   </div>
+
+   <a id="08040304"> </a>
+   <p class="title"><strong>Установки восстановления OSD </strong></p>
+   <p>Эти установки должны применяться когда вам нужна производительность вместо восстанавливаемости или наоборот. Если ваш 
+   кластер Ceph испытывает проблемы с жизнеспособностью и находится в процессе восстановления, вы можете не получать его обычной 
+   производительности, поскольку OSD будут заняты восстановлением. Если вы всё же предпочитаете производительность над восстанавливаемостью, 
+   вы можете уменьшить приоритет восстановления для сохранения меньшей занятости OSD восстановлением. Вы также можете устанавливать эти 
+   значения если вы хотите более быстрого восстановления вашего кластера, помогая OSD выполнять восстановление быстрее.</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>osd recovery max active</code></span>: Число активных запросов восстановления на OSD на определённый 
+	 момент времени:</p>
+	   <pre class="screen">
+osd_recovery_max_active = 1
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd recovery max single start</code></span>: Применяется совместно с 
+	 <span class="term"><code>osd_recovery_max_active</code></span>. Чтобы понять механизм, предположим, что 
+	 <span class="term"><code>osd_recovery_max_single_start</code></span> установлено в значение <span class="term"><code>1</code></span> , а
+	 <span class="term"><code>osd_recovery_max_active</code></span> равно <span class="term"><code>3</code></span>. В данном случае это 
+	 означает, что OSD запустит максимально одну операцию восстановления за раз, в то время, когда активны в сумме три операции:</p>
+	   <pre class="screen">
+osd_recovery_max_single_start = 1
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd recovery op priority</code></span>: Установка приоритета для операции восстановления. Чем ниже 
+	 число,тем выше приоритет восстановления:</p>
+	   <pre class="screen">
+osd_recovery_op_priority = 50
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd recovery max chunk</code></span>: Максимальный размер порции восстановления данных в байтах:</p>
+	   <pre class="screen">
+osd_recovery_max_chunk = 1048576
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd recovery threads</code></span>: Число потоков, необходимое для восстановления данных:</p>
+	   <pre class="screen">
+osd_recovery_threads = 1
+	   </pre>
+     </li>
+   </ul>
+   </div>
+
+   <a id="08040305"> </a>
+   <p class="title"><strong>Установки заполнения OSD </strong></p>
+   <p>Настройки наполнения OSD позволяют устанавливать операции заполнения на более низкую приоритетность чем <span class="term"><code>read</code></span>
+   и <span class="term"><code>write</code></span>
+   .</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>osd max backfills</code></span>: Максимальное число заполнений разрешённое к или от одного OSD:</p>
+	   <pre class="screen">
+osd_max_backfills = 2
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd backfill scan min</code></span>: Минимальное число объектов на сканирование  заполнения:</p>
+	   <pre class="screen">
+osd_backfill_scan_min = 8
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd backfill scan max</code></span>: Максимальное число объектов на сканирование  заполнения:</p>
+	   <pre class="screen">
+osd_backfill_scan_max = 64
+	   </pre>
+     </li>
+   </ul>
+   </div>
+
+   <a id="08040306"> </a>
+   <p class="title"><strong>Установки очистки OSD </strong></p>
+   <p>Очистка OSD важна для поддержки целостности данных, однако она может уменьшать производительность. Вы можете выравнивать 
+   следующие установки для увеличения или уменьшения операций очистки:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>osd max scrubs</code></span>: Максимальное число одновременных операций очистки для одного демона 
+	 OSD Ceph:</p>
+	   <pre class="screen">
+osd_max_scrubs = 1
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd scrub sleep</code></span>: Время в секундах которое очистка выжидает между двумя последовательными
+	 чистками:</p>
+	   <pre class="screen">
+osd_scrub_sleep = .1
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd scrub chunk min</code></span>: Минимальное число фрагментов данных с которыми OSD должно выполнять:</p>
+	   <pre class="screen">
+osd_scrub_chunk_min = 1
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd scrub chunk max</code></span>: Максимальное число фрагментов данных с которыми OSD должно выполнять
+	 очистку:</p>
+	   <pre class="screen">
+osd_scrub_chunk_max = 5
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd deep scrub stride</code></span>: Размер <span class="term"><code>read</code></span> в байтах при 
+	 выполнении глубокой очистки:</p>
+	   <pre class="screen">
+osd_deep_scrub_stride = 1048576
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd scrub begin hour</code></span>: Самый ранний час, когда очистка может быть начата. Применяется совмесно с 
+	 <span class="term"><code>osd_scrub_end_hour</code></span> для определения временного окна очистки:</p>
+	   <pre class="screen">
+osd_scrub_begin_hour = 19
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>osd scrub end hour</code></span>: Самый поздний час, когда очистка может выполняться. Работает совмесно с 
+	 <span class="term"><code>osd_scrub_begin_hour</code></span> для определения временного окна очистки:</p>
+	   <pre class="screen">
+osd_scrub_end_hour = 7
+	   </pre>
+     </li>
+   </ul>
+   </div>
+
+   <a id="08040307"> </a>
+   <p class="title"><strong>Настройка клиента</strong></p>
+   <p>Параметры настройки клиента должны быть определены в разделе <span class="term"><code>[client]</code></span> вашего файла настроек Ceph.
+   Обычно этот раздел <span class="term"><code>[client]</code></span> также должен присутствовать в файле настроек Ceph, размещённом на узле 
+   клиента:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>rbd cache</code></span>: Разрешает кэширование для <span class="term"><strong class="userinput">RADOS Block 
+	 Device</strong></span> (<span class="term"><strong class="userinput">RBD</strong></span>):</p>
+	   <pre class="screen">
+rbd_cache = true
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>rbd cache writethrough until flush</code></span>: Запускается в режиме 
+	 <span class="term"><code>write-through</code></span> и переключается на <span class="term"><code>writeback</code></span> после 
+	 принятия первого запроса на сброс:</p>
+	   <pre class="screen">
+rbd_cache_writethrough_until_flush = true
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>rbd concurrent management ops</code></span>: Число одновременных операций управления которые могут 
+	 выполняться в <span class="term"><code>rbd</code></span>:</p>
+	   <pre class="screen">
+rbd_concurrent_management_ops = 10
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>rbd cache size</code></span>: Размер кэша <span class="term"><code>rbd</code></span> в байтах:</p>
+	   <pre class="screen">
+rbd_cache_size = 67108864 #64M
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>rbd cache max dirty</code></span>: Предел в байтах, при котором кэш должен переключаться на
+	 <span class="term"><code>writeback</code></span>. Должен быть меньше чем <span class="term"><code>rbd_cache_size</code></span>:</p>
+	   <pre class="screen">
+rbd_cache_max_dirty = 50331648 #48M
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>rbd cache target dirty</code></span>: Изменение получателя перед тем, как кэш начнёт записывать данные 
+	 в лежащее в основе хранилище:</p>
+	   <pre class="screen">
+rbd_cache_target_dirty = 33554432 #32M
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>rbd cache max dirty age</code></span>: Число секунд, которое изменённые данные  могут находиться в 
+	 кэше перед запуском <span class="term"><code>writeback</code></span>:</p>
+	   <pre class="screen">
+rbd_cache_max_dirty_age = 2
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>rbd default format</code></span>: Применяет второй формат <span class="term"><code>rbd</code></span>, 
+	 который поддерживается librbd и ядром Linux начиная с версии 3.11. Добавляет поддержку для клонирования и более просто расширяется, 
+	 допуская больше функциональности в будущем:</p>
+	   <pre class="screen">
+rbd_default_format = 2
+	   </pre>
+     </li>
+   </ul>
+   </div>
+
+   <a id="08040308"> </a>
+   <p class="title"><strong>Настройка операционной системы </strong></p>
+   <p>В предыдущих рецептах мы рассматривали параметры настройки для Ceph MON, OSD и клиентов. В данном рецепте мы рассмотрим 
+   ряд общих параметров настройки, которые могут быть применены к операционной системе.</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>kernel pid max</code></span>: Это параметр ядра Linux который отвечает за максимальное число потоков и 
+	 идентификаторов процессов. По умолчанию ядро Linux относительно небольшое значение <span class="term"><code>kernel.pid_max</code></span>.
+	 Вам следует настроить этот параметр на большее значение на узлах Ceph размещающих множество OSD, обычно, более 20 OSD. Эта установка 
+	 поможет породить множество потоков для более быстрого восстановления и перебалансировки. Для применения этого параметра выполните 
+	 следующую команду от имени пользователя root:</p>
+	   <pre class="screen">
+# echo 4194303 &gt; /proc/sys/kernel/pid_max
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>file max</code></span>: Максимальное число открытых файлов в системе Linux. Обычно неплохо иметь большее 
+	 значение этого параметра:</p>
+	   <pre class="screen">
+# echo 26234859 &gt; /proc/sys/fs/file-max
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Jumbo frames</strong></span>: Фреймы Ethernet с более чем 1500 байт полезной информации 
+	 <a class="link" href="https://ru.wikipedia.org/wiki/Maximum_transmission_unit" target="_top">MTU</a> называются фреймами Jumbo. 
+	 Разрешение таких фреймов во всех используемых Ceph и для кластера, и для клиентов интерфейсах сетевой среды должно улучшать пропускную 
+	 способность и общую производительность сети.</p>
+	 <p>Фреймы Jumbo должны быть разрешены на хосте а также стороне коммутатора сетевой среды, в противном случае несоответствие в размере MTU 
+	 приведёт к потере пакетов. Для разрешения фреймов jumbo в вашем интерфейсе <span class="term"><code>eth0</code></span> выполните 
+	 следующую команду:</p>
+	   <pre class="screen">
+# ifconfig eth0 mtu 9000
+	   </pre>
+     <p>Кроме того, вы должны сделать это для других интерфейсов, которые принимают участие в сетевой среде Ceph. Чтобы сделать эти 
+     замены постоянными, вам следует добавить эти настройки в файл конфигурации интерфейса.</p>
+     </li><li class="listitem">
+	 <p><span class="term"><code>Disk read_ahead</code></span>: Параметр <span class="term"><code>read_ahead</code></span> ускоряет 
+	 операцию дискового <span class="term"><code>read</code></span> предварительной выборкой данных и загрузкой их в оперативную память.
+	 Установка относительно более высокого значения <span class="term"><code>read_ahead</code></span> даёт преимущество клиентам, 
+	 выполняющим операции последовательного <span class="term"><code>read</code></span>.</p>
+	 <p>Давайте предположим, что диск <span class="term"><code>vda</code></span> является RBD, который смонтирован на узле клиента. 
+	 Воспользуйтесь следующей командой для проверки его значения <span class="term"><code>read_ahead</code></span>, которое является 
+	 установленным по умолчанию в большинстве случаев:</p>
+	   <pre class="screen">
+# cat /sys/block/vda/queue/read_ahead_kb
+	   </pre>
+	 <p>Чтобы установить <span class="term"><code>read_ahead</code></span> в большее значение, то есть 8МБ для RBD 
+	 <span class="term"><code>vda</code></span>, выполните следующую команду:</p>
+	   <pre class="screen">
+# echo &quot;8192&quot; &gt; /sys/block/vda/queue/read_ahead_kb
+	   </pre>
+	 <p>Настройка <span class="term"><code>read_ahead</code></span> применяется на клиентах Ceph которые используют смонтированные RBD. 
+	 Для получения повышения производительности <span class="term"><code>read</code></span> вы можете установить его на несколько МБ, 
+	 в зависимости от ваших аппаратных средств, причём на всех устройствах RBD.</p>
+     </li><li class="listitem">
+	 <p><span class="term"><strong class="userinput">Virtual memory</strong></span>: Из-за сильно загруженного профиля ввода/ вывода применение 
+	 подкачки может повлечь в целом к получению недоступности сервера. Для высоких рабочих нагрузок ввода/ выода рекомендуется более низкое 
+	 значение <span class="term"><code>swappiness</code></span>. Установите <span class="term"><code>vm.swappiness</code></span> в 
+	 ноль в <span class="term"><code>/etc/sysctl.conf</code></span> для предотвращения подобного:</p>
+	   <pre class="screen">
+echo quot;vm.swappiness=0&quot; &gt;&gt; /etc/sysctl.conf
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>min_free_kbytes</code></span>: Определяет минимальное число килобайт оставляемых свободными в файловой 
+	 системе. Вы можете сохранить от 1 до 3% общей системной памяти свободной применив <span class="term"><code>min_free_kbytes</code></span> 
+	 с помощью выполнения следующей команды:</p>
+	   <pre class="screen">
+# echo 262144 &gt; /proc/sys/vm/min_free_kbyt
+	   </pre>
+     </li><li class="listitem">
+	 <p><span class="term"><code>I/O Scheduler</code></span>: Linux предоставляет нам возможность <a class="link" 
+	 href="https://www.opennet.ru/base/sys/linux_shedulers.txt.html" target="_top">выбора планировщика ввода/ вывода</a> и он также может 
+	 быть изменён без перезагрузки. Он предоставляет три параметра для планировщиков ввода/ вывода, а именно:</p>
+
+     <div class="itemizedlist">
+     <ul class="itemizedlist" type="disc">
+       <li class="listitem">
+	   <p><span class="term"><strong class="userinput">Deadline</strong></span>: Планировщик ввода/ вывода Deadline заменяет CFQ как 
+	   применяемый по умолчанию в Red Hat Enterprise Linux 7 и его производных, а также в Ubuntu Trusty. Планировщик Deadline предпочитает 
+	   чтение перед записью посредством применения отдельных очередей ввода/ вывода для каждого. Этот планировщик удобен для большинства 
+	   вариантов применения, однако в особенности для тех, при которых операции <span class="term"><code>read</code></span> происходят 
+	   чаще операций <span class="term"><code>write</code></span>. Выстроенные в очередь запросы на ввод/ вывод сортируются в пакеты 
+	   <span class="term"><code>read</code></span> и <span class="term"><code>write</code></span> а затем планируются для выполнения в 
+	   порядке возрастания LBA. Пакеты <span class="term"><code>read</code></span> имеют преимущество перед пакетами
+	   <span class="term"><code>write</code></span> по умолчанию, поскольку приложения более вероятно блокируют ввод/ вывод
+	   <span class="term"><code>read</code></span>. Для рабочих нагрузок OSD Ceph планировщик ввода вывода Deadline выглядит многообещающим.</p>
+       </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput">CFQ</strong></span>: Планировщик полностью справедливых очередей (CFQ, 
+	   Completely Fair Queuing) был планировщиком по умолчанию в Red Hat Enterprise Linux (4, 5 и 6) и его производных. Планировщик по 
+	   умолчанию применяется только к устройствам, определяемым как диски SATA. Планировщик CFQ делит процессы натри различных класса: 
+	   реального времени (real time), наилучших усилий (best efforts) и незанятых (idle). Процессы в классе реального времени всегда 
+	   выполняются до процессов класса наилучших усилий, которые, в свою очередь, всегда выполняются до процессов класса незанятых. Это 
+	   означает, что процессы класса реального времени могут заморозить время ЦПУ и для процессов наилучших усилий, и для незанятых 
+	   процессов. По умолчанию процессы назначаются в класс наилучших усилий.</p>
+       </li><li class="listitem">
+	   <p><span class="term"><strong class="userinput">Noop</strong></span>: Планировщик Noop реализует алгоритм простейшего планирования 
+	   первый- пришёл- первый- выполнен (FIFO, first-in first-out). Запросы объединяются в общий блок уровня простым кэшем последнего 
+	   попадания. Он может быть наилучшим планировщиком для систем с ограниченными возможностями ЦПУ, использующими быстрые хранилища. Для 
+	   SSD планировщик ввода/ вывода Noop может уменьшить латентность ввода/ вывода и увеличить пропускную способность, а также исключить 
+	   затраты ЦПУ на переупорядочение запросов ввода/ вывода. Этот планировщик обычно хорошо работает с SSD, виртуальными машинами и даже с 
+	   платами NVMe. Таким образом, планировщик ввода/ вывода Noop может быть хорошим выбором для дисков SSD, применяемых для журналов SSD.</p>
+       </li>
+     </ul>
+    </div>
+	<p>Выполните следующую команду для определения планировщика ввода/ вывода дискового устройства <span class="term"><code>sda</code></span> 
+	по умолчанию. Планировщик по умолчанию должен быть заключён в []:</p>
+	   <pre class="screen">
+# cat /sys/block/sda/queue/scheduler
+	   </pre>
+	<p>Измените планировщика ввода/ вывода дискового устройства <span class="term"><code>sda</code></span> по умолчанию на Deadline:</p> 
+	   <pre class="screen">
+# echo deadline &gt; /sys/block/sda/queue/scheduler
+	   </pre>
+	<p>Измените планировщика ввода/ вывода дискового устройства <span class="term"><code>sda</code></span> по умолчанию на Noop:</p> 
+	   <pre class="screen">
+# echo noop &gt; /sys/block/sda/queue/scheduler
+	   </pre>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Giant2HammerUpdate"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Вы должны повторить эти команды для изменения планировщика по умолчанию либо на Deadline, либо на Noop наосновании ваших 
+		 требований для всех своих дисков. К тому же, чтобы сделать эти изменения постоянными, вам необходимо обновить начальный загрузчик 
+		 grub с требующимися параметрами подъёма.</p>
+		 </td></tr></table>
+       </div>
+
+     </li><li class="listitem">
+	 <p><span class="term"><code>I/O Scheduler queue</code></span>: Размер очереди по умолчанию установлен в значение 
+	 <span class="term"><code>128</code></span>. Очередь планировщика сортируется и записывается с целью оптимизации последовательного 
+	 ввода/ вывода и уменьшения времени позиционирования. Изменение глубины очереди до <span class="term"><code>1024</code></span> 
+	 может увеличить соотношение выполняемого дисками последовательного ввода/ вывода и улучшить общую пропускную способность.</p>
+	 <p>Для проверки глубины планирования блочного устройства <span class="term"><code>sda</code></span> воспользуйтесь следующей 
+	 командой:</p>
+	   <pre class="screen">
+# cat /sys/block/sda/queue/nr_requests
+	   </pre>
+	 <p>Для увеличения глубины планирования до <span class="term"><code>1024</code></span> примените:</p>
+	   <pre class="screen">
+# echo 1024 &gt; /sys/block/sda/queue/nr_requests
+	   </pre>
+     </li>
+   </ul>
+   </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0805"> </a>Удаляющее кодирование Ceph</h3>
+   </div></div></div>
+   <p>В Ceph механизмом защиты данных по умолчанию являются репликации. Он испытан и является одним из самых популярных методов 
+   защиты данных. Однако изнанкой репликаций является то, что она требует удвоения вашего объёма пространства хранения для 
+   предоставления избыточности. Например, если вы планируете построить решение хранения с 1ПБ используемой ёмкости с фактором 
+   репликаций равным трём, то вам понадобится 3ПБ сырой ёмкости хранения для 1ПБ используемой ёмкости, то есть, 200% или более. 
+   Таким образом, при механизме репликаций значительно возрастает стоимость за гигибайт системы хранения. Для небольшого кластера 
+   вы можете игнорировать накладные расходы репликаций, однако для больших сред они становятся значительными.</p>
+   <p>Начиная с редакции Ceph Firefly был введён другой метод защиты данных, называемый удаляющим кодированием (erasure coding). 
+   Этот метод защиты данных совершенно отличается от метода репликаций. Он гарантирует, защищённость данных разбиением каждого 
+   объекта на фрагменты меньшего размера, называемые порциями данных (data chunk), и в конце концов сохраняя все эти порции в 
+   различных зонах отказа (failure zone) кластера Ceph. Концепция удаляющего кодирования вращается вокруг уравнения 
+   <span class="emphasis"><em><code>n = k + m</code></em></span>. Что объясняется так:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>k</code></span>: Это число фрагментов, на который поделён оригинальный объект; также называется 
+	 порциями данных.</p>
+     </li><li class="listitem">
+	 <p><span class="term"><code>m</code></span>: Это дополнительный код, добавляемый к первоначальным порциям данных, для обеспечения 
+	 защиты данных; также называемые порциями кодирования Для более простого понимания, вы можете рассматривать их как уровень вашей 
+	 надёжности.</p>
+     </li><li class="listitem">
+	 <p><span class="term"><code>n</code></span>: Это общее число порций, создаваемое в процессе кодирования.</p>
+     </li>
+   </ul>
+   </div>
+   <p>{<a id="ReedSolomonTutorial"> </a><span class="emphasis"><em>Прим. пер.: Метод удаляющего кодирования основывается на 
+   методе Рида- Соломона, демонстрирующегося в видео 
+   <a class="link" href="https://www.youtube.com/watch?v=jgO09opx56o" target="_top">Примера удаляющего кодирования Рида- Соломна</a>.
+   Вкратце, в виде слайдшоу (один элемент данных является байтом): 
+       <div class="figure"><a id="Fig0805"> </a>
+       <p class="title"><strong>Рисунок 8.5. Рассмотрим последовательность данных, которую необходимо сохранить в 6 фрагментах</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0805.jpg" width="466" height="249"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0806"> </a>
+       <p class="title"><strong>Рисунок 8.6. Причём 4 порции будут хранить сами данные, а 2 некий код.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0806.jpg" width="468" height="181"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0807"> </a>
+       <p class="title"><strong>Рисунок 8.7. Теперь воспользуемся магией математики.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0807.jpg" width="441" height="222"/><br />
+        <span>Перемножим две матрицы: кодирующую и исходные данные для получения дополнительных кодированных данных</span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0808"> </a>
+       <p class="title"><strong>Рисунок 8.8. Заполняем пустовавшие порции.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0808.jpg" width="474" height="162"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0809"> </a>
+       <p class="title"><strong>Рисунок 8.9. Соответствие частей кодирующей и результирующей матриц.</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0809.jpg" width="443" height="195"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0810"> </a>
+       <p class="title"><strong>Рисунок 8.10. Вырезая среднюю часть мы получаем:</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0810.jpg" width="444" height="145"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0811"> </a>
+       <p class="title"><strong>Рисунок 8.11. Единичная матрица:</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0811.jpg" width="421" height="154"/><br />
+        <span>Вспоминаем матричную алгебру: розовая матрица является обратной для нашей кодирующей матрицы.</span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0812"> </a>
+       <p class="title"><strong>Рисунок 8.12. Умножим единичную матрицу на исходные данные:</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0812.jpg" width="450" height="116"/><br />
+        <span>Учитываем результат умножения Рисунка 8.10.</span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0813"> </a>
+       <p class="title"><strong>Рисунок 8.13. Выделим нужное нам:</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0813.jpg" width="461" height="276"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+       <div class="figure"><a id="Fig0814"> </a>
+       <p class="title"><strong>Рисунок 8.14. Вернёмся к нашим фрагментам:</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0814.jpg" width="462" height="252"/><br />
+        <span>и наложим на них нашу матричную алгебру. Утратив две средние порции мы всё ещё восстанавливаем исходные данные!
+		Можно проверить: это сохраняется при утрате ЛЮБЫХ двух порций.</span>
+       </div></div>
+       </div><br class="figure-break"/>
+  </em></span>}</p>
+   <p>Основываясь на приведённом ранее уравнении, каждый объект в пуле удаляющего кодирования будет сохраняться в виде 
+   <span class="term"><code>k + m</code></span> порций, причём каждая порция сохраняется в уникальном OSD с действующим набором. 
+   Таким образом, все ваши порции объекта распределяются по всему кластеру Ceph предоставляя более высокую степень надёжности. 
+   Теперь давайте обсудим некоторые полезные термины, относящиеся к удаляющему кодированию:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>Восстановление</code></span> (Recovery): На момент восстановления нампонадобятся любые
+	 <span class="term"><code>k</code></span> порций (chunk) из {имевшихся} <span class="term"><code>n</code></span> 
+	 для восстановления ваших данных.</p>
+     </li><li class="listitem">
+	 <p><span class="term"><code>Уровень отказоустойчивости</code></span> (Reliability level): При удаляющем кодировании Ceph 
+	 может вынести утрату до <span class="term"><code>m</code></span> порций.</p>
+     </li><li class="listitem">
+	 <p><span class="term"><code>Соотношение кодирования (r)</code></span> (Encoding Rate): Может быть определено 
+	 согласно формуле <span class="term"><code>r = k / n</code></span>, где r меньше 1.</p>
+     </li><li class="listitem">
+	 <p><span class="term"><code>Необходимый обёъм хранения</code></span> (Storage required): Может быть определено 
+	 согласно формуле <span class="term"><code>1 / r</code></span>.</p>
+     </li>
+   </ul>
+   </div>
+   <p>Для лучшего понимания этих терминов давайте рассмотрим пример. Пул Ceph создаётся с пятью OSD на основе правила 
+   <span class="emphasis"><em><code>erasure code (3, 2)</code></em></span>. Каждый сохраняемый в пуле объект буедет делиться на 
+   множество и кодировать порции в соответствии с формулой: <span class="emphasis"><em><code>n = k + m</code></em></span>.</p>
+   <p>Положим 5 = 3 + 2, тогда <span class="emphasis"><em><code>n = 5</code></em></span>, <span class="emphasis"><em><code>k = 3</code></em></span>, 
+   а <span class="emphasis"><em><code>m = 2</code></em></span>. Таким образом, каждый объект будет делиться на три порции данных и к 
+   нему будут добавляться две дополнительные порции удаляющего кодирования, делая в сумме пять порций, которые будут распределённо 
+   сохраняться в пяти OSD пула удаляющего кодирования кластера Ceph. При возникновении отказа для построения исходного файла нам 
+   нужно (<span class="emphasis"><em><code>k</code></em></span> порций), три фрагмента из пяти 
+   (<span class="emphasis"><em><code>n</code></em></span> порций) для восстановления. Таким образом, мы можем допустить 
+   отказ любых (<span class="emphasis"><em><code>m</code></em></span>) двух OSD, поскольку данные могут быть восстановлены с 
+   применением трёх OSD.</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code>Соотношение кодирования</code></span> (Encoding Rate, r) = 3 / 5 = 0.6 &lt; 1</p>
+     </li><li class="listitem">
+	 <p><span class="term"><code>Необходимый обёъм хранения</code></span> (Storage required) = 1 / r = 1 / 0.6 = 1.6 размеров 
+	 исходного файла.</p>
+     </li>
+   </ul>
+   </div>
+   <p>Давайте предположим, что существует файл размером 1ГБ. Для хранения этого файла в кластере Ceph в пуле удаляющего 
+   кодирования (3, 5) вам понадобится 1.6ТБ пространства хранения, причём он предоставит вам хранение файла устойчивое к отказам 
+   двух OSD.</p>
+   <p>В отличие от метода репликаций, при котором если файл хранится  в пуле с репликациями, то для предоставления устойчивости 
+   пула к отказу двух OSD, Ceph понадобится пул с размеров реплики 3, что в конечном итоге потребует 3ГБ пространства хранения для 
+   надёжного хранения файла размером в 1ГБ. Таким образом, мы можем уменьшить стоимость хранения приблизительно на 40 процентов 
+   с применением функциональности удаляющего кодирования Ceph при получении тойже отказоустойчивости, что и в случае репликаций.</p>
+   <p>Пулы удаляющего кодирования требуют меньшее пространство хранения по сравнению с пулами репликаций, однако, такое сбережение 
+   пространства хранения происходит за счёт стоимости производительности, поскольку процесс удаляющего кодирования подразделяет 
+   каждый объект на множество более мелких порций данных и некоторых вычисляемых порций перемешиваемых с этими порциями данных. 
+   В конечном итоге эти порции сохраняются в различных зонах отказа (failure zone) кластера Ceph. Весь этот механизм требует 
+   немного больше вычислительной мощности от узлов OSD. Более того, на момент восстановления декодирование порций данных также 
+   требует множества вычислений. Поэтому вы можете найти механизм хранения данных удаляющим кодированием несколько более 
+   медленным чем механизм репликаций. Удаляющее кодирование во многом зависит от вариантов использования и вы можете получить 
+   очень многого от удаляющего кодирования на основании требований вашего хранения данных.</p>
+   <p>{<span class="emphasis"><em>Прим. пер.: Ситуация с требованиями к ресурсам ЦПУ со стороны удаляющего кодирования стремительно 
+   меняется. Перечислим некоторые технологии решающие эту проблему:</em></span></p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><span class="term"><code><em>SHEC, Shingled Erasure Code</em></code></span> 
+	 <span class="emphasis"><em>(Черепичное удаляющее кодирование, см. 
+	 <a class="link" href="Ch08.html#SHEC" target="_top">обзор</a> 	  
+	 ниже , а также переводы 
+	 <a class="link" href="http://onreader.mdl.ru/Ceph/Planning/Blueprints/Hammer/SHEC.htm" target="_top">рабочих материалов</a> и 
+	 <a class="link" href="http://onreader.mdl.ru/Ceph/Planning/Blueprints/Hammer/SHEC.htm#Fujitsu" target="_top">статьи</a> авторов 
+	 метода) позволяет применять вычисления к частям сохраняемых объектов, что в разы снижает накладные расходы на вычисления
+	 при сохранении уровня эффективности использования пространства на тех же значениях, что и при оригинальном удаляющем 
+	 кодировании.</em></span></p>
+     </li><li class="listitem">
+	 <p><span class="term"><code><em>Lazy Means Smart</em></code></span> 
+	 <span class="emphasis"><em>(Интеллектуальные средства задержки, см. переводы 
+	 <a class="link" href="http://onreader.mdl.ru/Ceph/Planning/Blueprints/Hammer/lazy-recovery.htm" target="_top">рабочих материалов</a>) 
+	 позволяет снижать в разы нагрузку на пропускную способность сети и вычисления за счёт группирования дисковых операций.</em></span></p>
+     </li><li class="listitem">
+	 <p><span class="term"><code><em>Аппаратная поддержка EC в ConnectX-4</em></code></span> 
+	 <span class="emphasis"><em> анонсированная 02 февраля 2016 позволит практически полностью решить проблему загрузки ЦПУ
+	 удаляющим кодированием <a class="link" href="Ch08.html#ECatASIC" target="_top">подробнее ...</a></em></span></p>
+     </li>
+   </ul>
+   </div>
+   <p></em></span>}</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Плагин удаляющего кодирования </span></h4>
+   </div></div></div>
+   <p>Ceph предоставляет нам параметры выбора встраиваемого модуля (плагина) удаляющего кодирования при создании профиля вашего 
+   удаляющего кодирования. {<span class="emphasis"><em>Прим. пер.: вы легко можете создать свой собственный встраиваемый 
+   модуль.</em></span>} Можно создать множество профилей удаляющего кодирования, причём вкаждом случае можно использовать различные 
+   встраиваемые модули. Для удаляющего кодирования Ceph поддерживает следующие модули:</p>
+   <div class="itemizedlist">
+   <ul class="itemizedlist" type="disc">
+     <li class="listitem">
+	 <p><a id="Jerasure"> </a><span class="term"><strong class="userinput">Jerasure erasure code plugin</strong></span>: Встраиваемый модуль 
+	 Jerasure является наиболее общим и гибким. Он также является применяемым по умолчанию для пула удаляющего кодирования Ceph. 
+	 Встраиваемый модуль Jerasure инкапсулирует библиотеку Jerasure. Jerasure применяет 
+	 <a class="link" href="Ch08.html#ReedSolomonTutorial" target="_top">технику кода Рида Соломона</a>. Следующая схема 
+	 иллюстрирует <span class="term"><code>Jerasure Code (3, 2)</code></span>. Как уже объяснялось, вначале данные делятся на 
+	 три порции и добавляются две вычисляемые (coded) порции, а в конце концов они сохраняются в своей уникальной зоне отказа 
+	 (failure zone) вашего кластера Ceph:</p>
+       <div class="figure"><a id="Fig0815"> </a>
+       <p class="title"><strong>Рисунок 8.15. Jerasure erasure code:</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0815.jpg" width="548" height="574"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+	   <p>Применяя встраиваемый модуль Jerasure, при сохранении удаляюще кодированного объекта во множестве OSD, восстановление 
+	   из одного OSD требует чтения из всех остальных. Например, если Jerasure настроен с 
+	   <span class="emphasis"><em><code>k = 3</code></em></span> и <span class="emphasis"><em><code>m = 2</code></em></span>, 
+	   потеря одного OSD потребует чтения из пяти OSD для восстановления, что не очень эффективно в процессе регенерации.</p>
+     </li><li class="listitem">
+	 <p><a id="LRC"> </a><span class="term"><strong class="userinput">Locally repairable erasure code plugin</strong></span>: Поскольку 
+	 удаляющее кодирование Jerasure (<a class="link" href="Ch08.html#ReedSolomonTutorial" target="_top">Рида Соломона</a>) 
+	 было не эффективно для восстановления, оно было улучшено методом локальных вычислений, так что новый метод называется 
+	 <span class="term"><code>Locally repairable erasure code (LRC)</code></span>. Встраиваемый модуль локального восстанавливающего 
+	 удаляющего кодирования создаёт локально вычисляемые порции, которые способны восстанавливать применяя меньше OSD, что делает 
+	 его эффективным для восстановления.</p>
+	 <p>Для его лучшего понимания давайте предположим, что мы настроили LRC с <span class="emphasis"><em><code>k = 8</code></em></span>, 
+	 <span class="emphasis"><em><code>m = 4</code></em></span> и <span class="emphasis"><em><code>l = 4</code></em></span> (locality, 
+	 близость), он создаёт дополнительные вычисляемые порции для всех четырёх OSD. Когда утрачивается отдельное OSD, может быть 
+	 восстановлено только четыре OSD вместо одиннадцати, как это было в случае с Jerasure.</p>
+       <div class="figure"><a id="Fig0816"> </a>
+       <p class="title"><strong>Рисунок 8.16. LRC:</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0816.jpg" width="791" height="440"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+	 <p>Локальные восстанавливающие коды спроектированы для уменьшения вашей полосы пропускания при восстановлении в случае 
+	 утраты отдельного OSD. Как было показано выше, локально вычисляемая порция (L) генерируется длякаждых четырёх порций данных
+	 (K). Когда теряется K3, вместо восстановления всех [(K+M)-K3] порций, то есть 11 фрагментов, при использовании Локального 
+	 восстанавливающего кода будет достаточно провести восстановление из порций K1, K2, K4 и L1.</p>
+     </li><li class="listitem">
+	 <p><a id="SHEC"> </a><span class="term"><strong class="userinput">Shingled erasure code plugin</strong></span>: Локальные восстанавливающие коды 
+	 оптимизированы для одиночных отказов OSD. При множественных отказах OSD накладные расходы на восстановление при 
+	 LRC становятся больше, так как они не имеют глобальных вычислений (global parity, M) для восстановления. Давайте ещё раз 
+	 рассмотрим предыдущий сценарий и предположим, что утрачено множество порций данных, K3 и K4. Для восстановления потерянных 
+	 порций с применением LRC необходимо проводить восстановление из K1, K2, L1 (ваша локально вычисляемая порция) и M1 (ваша 
+	 глобально вычисляемая порция). Таким образом, LRC включает в себя накладные расходы с множеством отказов дисков.</p>
+	 <p>Для решения этой проблемы был предложен <span class="term"><strong class="userinput"><a class="link" 
+	 href="http://onreader.mdl.ru/Ceph/Planning/Blueprints/Hammer/SHEC.htm" target="_top">SHEC</a></strong></span>
+	 (<span class="term"><code>Shingled Erasure Code</code></span>). Встраиваемый модуль SHEC инкапсулирует множество библиотек 
+	 SHEC и позволяет Ceph восстанавливать данные более эффективно чем Jerasure и LRC. Цель SHEC состоит в эффективной обработке 
+	 множественных отказов дисков. Применяя этот метод, диапазон вычислений для локальных кодов был смещён и вычисляемые коды 
+	 перекрывают друг друга (как черепицы или дранки на крыше), предоставляя достаточную живучесть (durability).</p>
+	 <p>Давайте рассмотрим это на примере, <span class="emphasis"><em><code>SHEC (10,6,5)</code></em></span>, где 
+	 <span class="emphasis"><em><code>k = 10</code></em></span> (порции данных), 
+	 <span class="emphasis"><em><code>m = 6</code></em></span> (вычисляемые порции), а 
+	 <span class="emphasis"><em><code>l = 5</code></em></span> (диапазон вычислений, locality). В этом случае схема представления 
+	 SHEC выглядит следующим образом:</p>
+       <div class="figure"><a id="Fig0817"> </a>
+       <p class="title"><strong>Рисунок 8.17. SHEC (10,6,5)</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0817.jpg" width="652" height="346"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+	 <p>Эффективность восстановления является одной из самых выдающихся функциональностей SHEC. Он минимизирует количество чтений 
+	 данных с диска в процессе восстановления. Если утрачены порции K6 и K9, SHEEC воспользуется для восстановления вычисляемыми 
+	 (parity) порциями M3 и M4, а также порциями данных K5, K7,K8 и K10. Это показано на следующей схеме:</p>
+       <div class="figure"><a id="Fig0818"> </a>
+       <p class="title"><strong>Рисунок 8.18. Процесс восстановления SHEC</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0818.jpg" width="660" height="349"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+	 <p>При множественных отказах дисков, ожидается, что SHEC будет проводить восстановление более эффективно чем прочие методы. 
+	 Время восстановления SHEC было на 18.6% быстрее чем в случае применения кода Соломона при двух отказах дисков.
+	 {<span class="emphasis"><em>Прим. пер.: подробнее см. наш перевод <a class="link" 
+	 href="http://onreader.mdl.ru/Ceph/Planning/Blueprints/Hammer/SHEC.htm#Fujitsu" target="_top">статьи авторов метода</a></em></span>}</p>
+     </li><li class="listitem">
+	 <p><a id="ISA-I"> </a><span class="term"><strong class="userinput">ISA-I erasure code plugin</strong></span>: Встраиваемый модуль 
+	 <span class="term"><strong class="userinput">Intelligent Storage Acceleration</strong></span> 
+	 (<span class="term"><strong class="userinput">ISA</strong></span>, интеллектуального ускорения хранилищ) инкапсулирует 
+	 библиотеку ISA. ISA-I был оптимизирован для платформ Intel с применением специфичных для платформ Intel инструкций и, тем самым, 
+	 работает исключительно на архитектурах Intel. ISA может применяться водной из двух форм Рида Соломона, а именно, 
+	 <a class="link" href="https://ru.wikipedia.org/wiki/Определитель_Вандермонда" target="_top">Вандермонда</a> или 
+	 <a class="link" href="https://ru.wikipedia.org/wiki/Матрица_Коши_(линейная_алгебра)" target="_top">Коши</a>.</p>
+     </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0806"> </a>Создание пула с удаляющим кодированием</h3>
+   </div></div></div>
+   <p>Удаляющее кодирование реализуется посредством создания пула Ceph с типом <span class="term"><code>erasure</code></span>. Этот 
+   базируется на профиле удаляющего кодирования, который определяет характеристики удаляющего кодирования. Вначале мы создадим профиль 
+   удаляющего кодирования, а затем, на основании этого профиля, мы создадим пул удаляющего кодирования.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Приводимая в этом рецепте команда создаст профиль удаляющего кодирования с именем <span class="term"><code>EC-profile</code></span>,
+	  который будет иметь характеристики <span class="emphasis"><em><code>k = 3</code></em></span> и 
+	 <span class="emphasis"><em><code>m = 2</code></em></span>, которые являются числом порций данных и вычислений соответственно. Таким 
+	 образом, каждый сохраняемый в пуле объект будет делиться на 3 (<span class="emphasis"><em><code>k</code></em></span>) порции данных и 
+	 2 (<span class="emphasis"><em><code>m</code></em></span>) дополнительные добавляемые к ним кодируемые порции, создавая итого 5 
+	 (<span class="emphasis"><em><code>k + m</code></em></span>) порций. В конце концов эти 5 (<span class="emphasis"><em><code>k + 
+	 m</code></em></span>) порций распространяются по различным OSD зон отказа (failure zone).</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="circle">
+	 <li class="listitem">
+	 <p>Создайте профиль удаляющего кодирования:</p>
+	   <pre class="screen">
+# ceph osd erasure-code-profile set EC-profile rulesetfailure-domain=osd k=3 m=2
+	   </pre>
+	 </li><li class="listitem">
+	 <p>Отобразите список профилей:</p>
+	   <pre class="screen">
+# ceph osd erasure-code-profile ls
+	   </pre>
+	 </li><li class="listitem">
+	 <p>Получите содержимое профиля удаляющего кодирования:</p>
+	   <pre class="screen">
+# ceph osd erasure-code-profile get EC-profile
+
+	[root@ceph-node1 ~]# ceph osd erasure-code-profile set EC-profile rulesetfailure-domain=osd k=3 m=2 
+	[root@ceph-node1 ~]# ceph osd erasure-code-profile ls 
+	EC-profile 
+	default 
+	[root@ceph-node1 ~]# ceph osd erasure-code-profile get EC-profile 
+	directory=/usr/1ib64/ceph/erasure-code 
+	k=3 
+	m=2 
+	plugin=jerasure 
+	rulesetfailure-domain=osd 
+	technique=reed_sol_van 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </li>
+    </ul>
+    </div>
+	 </li><li class="listitem">
+      <p>Создайте пул типа <span class="term"><code>erasure</code></span>, который основан на созданном нами на 1 шаге профиле 
+	  удаляющего кодирования:</p>
+	   <pre class="screen">
+# ceph osd pool create EC-pool 16 16 erasure EC-profile
+	   </pre>
+	 <p>Проверьте состояние только что созданного пула; вы должны увидеть, что размер пула равен 5 (<span class="emphasis"><em><code>k 
+	 + m</code></em></span>), т.е. размер <span class="term"><code>erasure</code></span> 5. Следовательно, данные будут записываться 
+	 в 5 различных OSD:
+	   <pre class="screen">
+# ceph osd dump | grep -i EC-pool
+
+	[root@ceph-node1 ~]# ceph osd pool create EC-pool 16 16 erasure EC-profile 
+	pool 'EC-pool' created 
+	[root@ceph-node1 ~]# ceph osd dump | grep EC-pool 
+	pool 47 '<strong>EC-pool</strong>' erasure size 5 min_size 3 crush_ruleset 3 object_hash rjenkins pg_num 16 pgp_num 16 last_change 4504 flags hashpspool stripe_width 4128 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </p>
+	 </li><li class="listitem">
+      <p>Давайте добавим какие- нибудь данные в только что созданный пул Ceph. Для этого мы создадим фиктивный файл, 
+	  <span class="term"><code>hello.txt</code></span>, и добавим этот файл в пул <span class="term"><code>EC-pool</code></span>.</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# echo &quot;Hello Ceph&quot; &gt;&gt; hello.txt 
+	[root@ceph-node1 ~]# cat hello.txt 
+	Hello Ceph 
+	[root@ceph-node1 ~]# rados -p EC-pool ls 
+	[root@ceph-node1 ~]# rados -p EC-pool put objectl hello.txt 
+	[root@ceph-node1 ~]# rados -p EC-pool ls 
+	object1 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для проверки правильной работы пула удаляющего кодирования мы проконтролируем карту OSD для <span class="term"><code>EC-pool</code></span>
+	  и <span class="term"><code>object1</code></span>.</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph osd map EC-pool object1 
+	osdmap e4601 pool 'EC-pool' (47) object 'objectl' -&gt; pg 47.bac5debc (47.c) -&gt; up ([5,3,2,8,0], p5) acting ([5,3,2,8,0], p5) 
+	[root@ceph-node1 ~]# 
+	   </pre>
+      <p>Если вы изучите приведённый выше вывод, вы отметите, что <span class="term"><code>object1</code></span> сохранён в группе 
+	  размещения <span class="term"><code>47.c</code></span>, которая в свою очередь хранится в <span class="term"><code>EC-pool</code></span>.
+	  Вы также отметите, что группа размещения хранится в пяти OSD, а именно, в <span class="term"><code>osd.5</code></span>, 
+	  <span class="term"><code>osd.3</code></span>, <span class="term"><code>osd.2</code></span>, <span class="term"><code>osd.8</code></span>
+	  и <span class="term"><code>osd.0</code></span>. Если вы вернётесь к 1 шагу, вы вспомните, что мы создали наш профиль удаляющего 
+	  кодирования <span class="emphasis"><em><code>(3, 2)</code></em></span>. Это объясняет почему <span class="term"><code>object1</code></span>
+	  хранится в пяти OSD.</p>
+      <p>На данном этапе мы выполнили сборку пула удаляющего кодирования в кластере Ceph. Теперь мы намеренно попытаемся разрушить OSD
+	  чтобы увидеть как себя ведёт пул удаляющего кодирования когда недоступны OSD.</p>
+	 </li><li class="listitem">
+      <p>Теперь мы попытаемся сломать <span class="term"><code>osd.5</code></span> и <span class="term"><code>osd.3</code></span> 
+	  один за другим.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	     <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25"><a id="Giant2HammerUpdate"> </a>
+	     <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	     <p>Это необязательный шаг и вам не следует выполнять его в вашем промышленном кластере Ceph. Кроме того, номера OSD могут 
+		 отличаться в вашем кластере, если понадобится, замените их.</p>
+		 </td></tr></table>
+       </div>
+      <p>Сломаем <span class="term"><code>osd.5</code></span> и проверим карту OSD для <span class="term"><code>EC-pool</code></span>
+	  и <span class="term"><code>object1</code></span>. Вы должны отметить, что <span class="term"><code>osd.5</code></span> 
+	  заменён случайным числом, <span class="term"><code>2147483647</code></span>, что означает, что <span class="term"><code>osd.5</code></span>
+	  больше не доступен для этого пула:</p>
+	   <pre class="screen">
+# ssh ceph-node2 service ceph stop osd.5
+# ceph osd map EC-pool object1
+
+	[root@ceph-node1 ~]# ssh ceph-node2 service ceph stop osd.5 
+	=== osd.5 === 
+	Stopping Ceph osd.5 on ceph-node2...kill 23469...kill 23469...done 
+	[root@ceph-node1 ~]# ceph osd map EC-pool object1 
+	osdmap e4603 pool 'EC-pool' (47) object 'objectl' -&gt; pg 47.bac5debc (47.c) -&gt; up ([2147483647,3,2,8,0], p3) acting ([2147483647,3,2,8,0], p3) 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Аналогично сломаем ещё один OSD, а именно, <span class="term"><code>osd.3</code></span> и просмотрим карту OSD для  
+	  <span class="term"><code>EC-pool</code></span> и <span class="term"><code>object1</code></span>. Вы отметите, что как и в случае с 
+	  <span class="term"><code>osd.5</code></span>, <span class="term"><code>osd.3</code></span> также будет замещён тем же случайным 
+	  числом, <span class="term"><code>2147483647</code></span>, что означает, что <span class="term"><code>osd.3</code></span> 
+	  также больше не доступен для этого <span class="term"><code>EC-pool</code></span>:</p>
+	   <pre class="screen">
+# ssh ceph-node2 service ceph stop osd.3
+# ceph osd map EC-pool object1
+
+	[rootcdceph-node1 ~]# ssh ceph-node2 service ceph stop osd.3 
+	=== osd.3 ===
+	Stopping Ceph osd.3 on ceph-node2...kill 22954...kill 22954...done 
+	[root@ceph-node1 ~]# ceph osd map EC-pool object1 
+	osdmap e4605 pool 'EC-pool' (47) object 'objectl' -&gt; pg 47.bac5debc (47.c) -&gt; up ([2147483647,2147483647,2,8,0], p2) acting ([2147483647,214748 3647,2,8,0], p2) 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </li><li class="listitem">
+      <p>Теперь <span class="term"><code>EC-pool</code></span> работает на трёх OSD, что является требуемым минимумом для такой 
+	  сборки пула <span class="term"><code>erasure</code></span>. Как уже обсуждалось ранее, <span class="term"><code>EC-pool</code></span>
+	  потребует любые три порции для чтения данных. Теперь мы имеем оставшимися только три порции, а именно 
+	  <span class="term"><code>osd.2</code></span>, <span class="term"><code>osd.8</code></span> и
+	  <span class="term"><code>osd.0</code></span> и мы всё ещё имеем доступ к данным. Давайте проверим это прочитав наши данные:</p>
+	   <pre class="screen">
+# rados -p EC-pool ls
+# rados -p EC-pool get object1 /tmp/object1
+# cat /tmp/object1
+
+	[root@ceph-node1 ~]# rados -p EC-pool is object1 
+	[root@ceph-node1 ~]# rados -p EC-pool get object1 /tmp/object1 
+	[root@ceph-node1 ~]# cat /tmp/object1 
+	Hello Ceph 
+	[root@ceph-node1 ~]# 	
+	   </pre>
+	  <p>Функциональность удаляющего кодирования в основном пользуется преимуществами надёжной архитектуры Ceph. Когда Ceph обнаруживает 
+	  недоступность любой зоны отказа, он запускает свои базовые операции восстановления. Во время операции восстановления пулы 
+	  <span class="term"><code>erasure</code></span> перестраивают себя декодируя отказавшие порции на новые OSD, а после этого они 
+	  автоматически делают все порции доступными.</p>
+	 </li><li class="listitem">
+	  <p>В последних двух обсуждавшихся шагах мы намеренно разрушили <span class="term"><code>osd.5</code></span> и 
+	  <span class="term"><code>osd.3</code></span>. После всего этого Ceph запустит восстановление и регенерирует утраченные 
+	  порции на различные OSD. Когда операция восстановления завершится, нам следует проверить нашу карту OSD для 
+	  <span class="term"><code>EC-pool</code></span> и <span class="term"><code>object1</code></span>. Мы будем поражены увидев 
+	  свои новые идентификаторы OSD, например, <span class="term"><code>osd.7</code></span> и 
+	  <span class="term"><code>osd.4</code></span>. И, таким образом, пул <span class="term"><code>erasure</code></span> 
+	  становится жизнеспособным без административного вмешательства.</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph osd stat 
+	     osdmap e4645: 9 osds: 7 up, 7 in; 336 remapped pgs 
+	[root@ceph-node1 ~]# ceph osd map EC-pool object1 
+	osdmap e4645 pool 'EC-pool' (47) object 'objectl' -&gt; pg 47.bac5debc (47.c) -&gt; up ([7,4,2,8,0], p7) acting ([7,4,2,8,0], p7) 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0807"> </a>Многоуровневое кэширование Ceph</h3>
+   </div></div></div>
+   <p>Как и удаляющее кодирование, функциональность многоуровневого кэширования (cache tiering) также была введена в Ceph в редакции Firefly. 
+   Уровни кэша снабжают клиентов Ceph лучшей производительностью ввода/ вывода для подмножеств ваших данных, сохраняемых на уровне 
+   кэша. Многоуровневое кэширование создаёт пул поверх самых быстрых дисков, обычно SSD. Такой кэширующий пул должен быть размещён 
+   перед обычным пулом, с реплиукациями или удаляющим кодированием, таким образом, чтобы все операции клиентского ввода/ вывода вначале 
+   обрабатывались бы кэширующим пулом; позже эти данные сбрасываются в существующие пулы данных. Клиенты обладают высокой 
+   производительностью своего кэширующего пула, а их данные прозрачно записываются в обычные пулы. Следующая схема иллюстрирует 
+   многоуровненвое кэширование Ceph:</p>
+       <div class="figure"><a id="Fig0819"> </a>
+       <p class="title"><strong>Рисунок 8.19. Многоуровневое кэширование Ceph</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0819.jpg" width="417" height="369"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+   <p>Уровень кэша строится поверх дорогостоящих, самых быстрых SSD/ NVMe, таким образом он снабжает клиентов наилучшей 
+   производительностью ввода/ вывода. Уровень кэша имеет в основе уровень хранения, который выполнен на HDD с типом репликаций или 
+   удаляющего кодирования. Все запросы ввода/ вывода клиентов приходят на уровень кэширования и получают самый быстрый отклик вне 
+   зависимости будет это <span class="term"><code>read</code></span> или <span class="term"><code>write</code></span>; самый быстрый уровень 
+   кэша обслуживает ваш запрос клиента. На основе ваших политик, которые мы создали для уровня кэша, он сбрасывает все свои данные 
+   на лежащий в его основе уровень хранения, так что он может кэшировать новые запросы от клиентов. Вся миграция данных между уровнями 
+   кэша и хранения происходит автоматически и является прозрачной для клиентов. Агент многоуровневого кэширования обрабатывает миграцию 
+   данных между уровнем кэша и уровнем хранения. Администраторы имеют возможность настраивать то как такая миграция осуществляется. 
+   Существует два основных сценария.</p>
+   
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080701"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режим отложенной записи </span></h4>
+   </div></div></div>
+   <p>Когда многоуровневое кэширование настроено на режим <span class="term"><code>writeback</code></span> (отложенной записи), клиенты 
+   Ceph записывают свои данные в имеющийся пул уровня кэша, то есть, в самый быстрый пул и, следовательно, получают подтверждение 
+   моментально. Основываясь на политике сброса/ выселения, которую вы установили для вашего уровня кэша, данные мигрируют с уровня кэша 
+   на уровень хранения и в конечном счёте удаляются со своего уровня кэширования агентом многоуровневого кэширования. В процессе 
+   операции клиента <span class="term"><code>read</code></span> данные вначале пересылаются с уровня хранения на уровень кэширования 
+   агентом многоуровневого кэширования а затем предоставляются клиентам. Данные сохраняются в своём уровне кэширования пока они не 
+   становятся неактивыми или неиспользуемыми (cold). Уровень кэширования с режимом <span class="term"><code>writeback</code></span> 
+   идеален для изменяемых данных, таких как редактирование фото и видео, транзакционных данных и тому подобного. Режим 
+   <span class="term"><code>writeback</code></span> идеален для изменяемых данных.</p>
+   
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080702"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режим только для чтения </span></h4>
+   </div></div></div>
+   <p>Когда многоуровневое кэширование настроено в режиме <span class="term"><code>read-only</code></span>, оно работает только 
+   для клиентских операций <span class="term"><code>read</code></span>. Операции <span class="term"><code>write</code></span> не 
+   обслуживаются в этом режиме и они сохраняются на уровне хранения. Когда клиент выполняет операцию <span class="term"><code>read</code></span>, 
+   агент многоуровневого кэширования копирует запрашиваемые данные с уровня хранения на свой уровень кэширования. Основываясь 
+   на политике которую вы настроили для своего уровня кэширования, просроченные объекты удаляются с уровня кэширования. Такой подход 
+   идеален для множества клиентов с потребностями чтения больших объёмов аналогичных данных, например, содержимого социальных медиа.
+   Неизменяемые данные являются хорошими претендентами для уровня кэширования доступного только для чтения.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0808"> </a>Создание пула для многоуровневого кэширования</h3>
+   </div></div></div>
+   <p>Для получения наилучших результатов функциональности многоуровневого кэширования Ceph вамследует применять более быстрые диски, 
+   такие как SSD и делать быстрый кэширующий пул поверх медленного/ обычного пула выполненного на шпиндельных дисках. В 
+   <a class="link" href="Ch07.html#0711" target="_top">Главе 7. Ceph под колпаком</a> мы рассматривали процесс создания пулов на 
+   специфических OSD путём модификации карты CRUSH. Чтобы собрать уровень кэшав вашей среде вам вначале необходимо 
+   изменить вашу карту CRUSH и создать набор правил для своих дисков SSD. Поскольку мы уже обсуждали это ранее, мы воспользуемся 
+   тем же набором правил для SSD, который базируется на <span class="term"><code>osd.0</code></span>, 
+   <span class="term"><code>osd.3</code></span> и <span class="term"><code>osd.6</code></span>. Поскольку это тестовая сборка, нам 
+   не нужно иметь настоящие SSD, мы предположим, что OSD 0, 3 и 6 являются SSD и создадим пул кэша поверх них, как показано на 
+   следующей схеме:</p>
+       <div class="figure"><a id="Fig0820"> </a>
+       <p class="title"><strong>Рисунок 8.20. Построение многоуровневого кэширования</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0820.jpg" width="816" height="292"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+   <p>Давайте проверим нашу компоновку CRUSH применив команду <span class="term"><code>ceph osd crush rule ls</code></span>, как показано на 
+   следующем снимке экрана. У нас уже есть правила CRUSH SSD пула, которые мы создали в <a class="link" href="Ch07.html#0711" target="_top">Главе 
+   7. Ceph под колпаком</a>. Вы можете получить дополнительную информацию выполнив команду <span class="term"><code>ceph osd crush rule dump 
+   ssd-pool</code></span>:</p>
+	   <pre class="screen">
+	[root@ceph-node1 ~]# ceph osd crush rule ls 
+	[ 
+	    &quot;replicated_ruleset&quot;, 
+	    &quot;ssd-pool&quot;, 
+	    &quot;sata-pool&quot;, 
+	    &quot;EC-pool&quot; 
+	]
+	[rootgceph-node1 ~]# 
+	   </pre>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080801"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте новый пул с именем <span class="term"><code>cache-pool</code></span> и установите <span class="term"><code>crush_ruleset</code></span>
+	  в значение <span class="term"><code>1</code></span>, таким образом ваш новый пул будет создан на дисках SSD:</p>
+	   <pre class="screen">
+# ceph osd pool create cache-pool 16 16
+# ceph osd pool set cache-pool crush_ruleset 1
+
+	[root@ceph-node1 ~]# ceph osd pool create cache-pool 16 16 
+	pool 'cache-pool' created 
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool crush_ruleset 1 
+	set pool 48 crush_ruleset to 1 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Убедитесь что ваш пул создан правильно, что означает, что он всегда должен сохранять все свои объекты в 
+	  <span class="term"><code>osd.0</code></span>, <span class="term"><code>osd.3</code></span> и <span class="term"><code>osd.6</code></span>:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	   <p>Выведите содержимое списка <span class="term"><code>cache-pool</code></span>; так как это новый пул, он не должен иметь 
+	   содержимого:</p>
+	   <pre class="screen">
+# rados -p cache-pool ls
+	   </pre>
+	   </li><li class="listitem">
+	   <p>Добавьте временный объект в ваш <span class="term"><code>cache-pool</code></span>, чтобы проверить что он сохраняет объект в 
+	   правильных OSD:</p>
+	   <pre class="screen">
+# rados -p cache-pool put object1 /etc/hosts
+# rados -p cache-pool ls
+	   </pre>
+	   </li><li class="listitem">
+	   <p>Проверьте карту OSD в отношении <span class="term"><code>cache-pool</code></span> и <span class="term"><code>object1</code></span>; 
+	   он должен храниться в <span class="term"><code>osd.0</code></span>, <span class="term"><code>osd.3</code></span> и
+	  <span class="term"><code>osd.6</code></span>:
+	   </p>
+	   <pre class="screen">
+# ceph osd map cache-pool object1
+	   </pre>
+	   </li><li class="listitem">
+	   <p>Наконец, удалите объект:</p>
+	   <pre class="screen">
+# rados -p cache-pool rm object1
+
+	[root@ceph-node1 ~]# rados -p cache-pool ls 
+	[root@ceph-node1 ~]# rados -p cache-pool put object1 /etc/hosts 
+	[root@ceph-node1 ~]# rados -p cache-pool ls 
+	object1 
+	[root@ceph-node1 ~]# ceph osd map cache-pool object1 
+	osdmap e4767 pool 'cache-pool' (48) object 'objectl' -&gt; pg 48.bac5debc (48.c) -&gt; up ([3,6,0], p3) acting ([3,6,0], p3) 
+	[root@ceph-node1 ~]# rados -p cache-pool rm object1 
+	[root@ceph-node1 ~]# rados -p cache-pool is 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	   </li>
+      </ul>
+      </div>
+	 </li>
+   </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080802"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+   <div class="itemizedlist">
+    <ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	  <p>Также смотрите <a class="link" href="Ch08.html#0809" target="_top">Создание уровня кэша</a> в этой главе.</p>
+	 </li>
+    </ul>
+   </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0809"> </a>Создание уровня кэша</h3>
+   </div></div></div>
+   <p>В этом рецепте мы создадим пул, <span class="term"><code>cache-pool</code></span> 
+   <span class="term"><code>EC-pool</code></span>
+   </p>
+       <div class="figure"><a id="Fig0821"> </a>
+       <p class="title"><strong>Рисунок 8.21. Многоуровневое кэширование</strong></p>
+       <div class="figure-contents"><div class="mediaobject">
+        <img src="figures/Fig0821.jpg" width="828" height="427"/><br />
+        <span></span>
+       </div></div>
+       </div><br class="figure-break"/>
+   <p>
+   <span class="term"><code>writeback</code></span>
+   <span class="term"><code>EC-pool</code></span>
+   </p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="080901"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Создайте уровень кэша, который будет ассоциировать пулы хранения с пулами кэша. Синтаксис таков:
+	  <span class="term"><code>ceph osd tier add &lt;storage_pool&gt; &lt;cache_pool&gt;</code></span>:</p>
+	   <pre class="screen">
+# ceph osd tier add EC-pool cache-pool
+	   </pre>
+	  </li><li class="listitem">
+      <p>Установите режим кэширования либо как <span class="term"><code>writeback</code></span>, либо как 
+	  <span class="term"><code>read-only</code></span>. В нашей демонстрации мы применяем <span class="term"><code>writeback</code></span>, а 
+	  синтаксис такой: <span class="term"><code>ceph osd tier cachemode &lt;cache_pool&gt; writeback</code></span>:</p>
+	   <pre class="screen">
+# ceph osd tier cache-mode cache-pool writeback
+	   </pre>
+	  </li><li class="listitem">
+      <p>Чтобы направить все запросы клиентов из стандартного пула в пул кэша, установите перекрытие (overlay) пула с применением следующего 
+	  синтаксиса: <span class="term"><code>ceph osd tier set-overlay &lt;storage_pool&gt; &lt;cache_pool&gt;</code></span>:</p>
+	   <pre class="screen">
+# ceph osd tier set-overlay EC-pool cache-pool
+
+	[root@ceph-node1 ~]# ceph osd tier add EC-pool cache-pool 
+	pool 'cache-pool' is now (or already was) a tier of 'EC-pool' 
+	[root@ceph-node1 ~]# ceph osd tier cache-mode cache-pool writeback set cache-mode for pool 'cache-pool' to writeback 
+	[root@ceph-node1 ~]# ceph osd tier set-overlay EC-pool cache-pool 
+	overlay for 'EC-pool' is now (or already was) 'cache-pool' 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Проверяя подробности пула, вы заметите, что <span class="term"><code>EC-pool</code></span> имеет 
+	  <span class="term"><code>tier</code></span>, <span class="term"><code>read_tier</code></span> и <span class="term"><code>write_tier</code></span>
+	  установленные в значение <span class="term"><code>48</code></span>, что является идентификатором пула для вашего 
+	  <span class="term"><code>cache-pool</code></span>. Аналогично, для <span class="term"><code>cache-pool</code></span> установки будут:
+	  <span class="term"><code>tier_of</code></span> назначено на <span class="term"><code>47</code></span>, а 
+	  <span class="term"><code>cache_mode</code></span> установлен как <span class="term"><code>writeback</code></span>. Все эти 
+	  установки подразумевают, что пул кэша настроен правильно:</p>
+	   <pre class="screen">
+# ceph osd dump | egrep -i &quot;EC-pool|cache-pool&quot;
+
+	[root@ceph-node1 ~]# ceph osd dump | egrep &quot;EC-poollcache-pool&quot; 
+	pool 47 '<strong>EC-pool</strong>' erasure size 5 min_size 3 crush_ruleset 3 object_hash rjenkins pg_num 16 pgp_num 16 last_change 4770 lfor 4770 flags hashpspool tiers 48 read_tier 48 write_tier 48 stripe_width 4128 
+	pool 48 '<strong>cache-pool</strong>' replicated size 3 min_size 2 crush_ruleset 1 object_hash rjenkins pg_num 16 pgp_num 16 last_change 4770 flags hashpspool,incomplete clones tier of 47 cache node writeback stripe width 0 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0810"> </a>Настройка уровня кэша</h3>
+   </div></div></div>
+   <p>Уровень кэша имеет некоторые необязательные параметры настройки, которые определяют политику вашего уровня кэша. Такая политика 
+   уровня кэша требуется для сбрасывания данных с уровня кэша на уровень хранения в случае <span class="term"><code>writeback</code></span>
+   (отложенной записи). В случае с уровнем кэша только для чтения, она перемещает данные с уровня хранения на уровень кэша. В данном 
+   рецепте я пытаюсь продемонстрировать уровень кэша в режиме <span class="term"><code>writeback</code></span>. Здесь приводятся 
+   некоторые установки, которые вам следует настроить для вашей промышленной среды с отличными значениями на основании ваших требований:</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="081001"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Для промышленного развёртывания вам следует применять структуру данных 'bloom filters':
+	  <span class="term"><code>ceph osd tier add &lt;storage_pool&gt; &lt;cache_pool&gt;</code></span>:</p>
+	   <pre class="screen">
+# ceph osd pool set cache-pool hit_set_type bloom
+	   </pre>
+	  </li><li class="listitem">
+      <p><span class="term"><code>hit_set_count</code></span> определяет какой период времени в секундах должен охватывать каждый набор 
+	  попадания в кэш, а <span class="term"><code>hit_set_period</code></span> сколько таких наборов попаданий должно удерживаться:</p>
+	   <pre class="screen">
+# ceph osd pool set cache-pool hit_set_count 1
+# ceph osd pool set cache-pool hit_set_period 300
+	   </pre>
+	  </li><li class="listitem">
+      <p><span class="term"><code>target_max_bytes</code></span> является максимальным значением в байтах, после которого агент 
+	  многоуровневого кэширования начинает сбрасывать/ выселять объекты из пула кэша, а <span class="term"><code>target_max_objects</code></span> 
+	  определяет количество объектов, по достижению которых агент многоуровневого кэширования начинает сбрасывать/ выселять объекты из пула кэша:</p>
+	   <pre class="screen">
+# ceph osd pool set cache-pool target_max_bytes 1000000
+# ceph osd pool set cache-pool target_max_objects 10000
+
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool hit_set_type bloom 
+	set pool 48 hit_set_type to bloom 
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool hit_set_count 1 
+	set pool 48 hit_set_count to 1 
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool hit_set_period 300 
+	set pool 48 hit_set_period to 300 
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool targetmax_bytes 1000000 
+	set pool 48 targetmax_bytes to 1000000 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Разрешите <span class="term"><code>cache_min_flush_age</code></span> и <span class="term"><code>cache_min_evict_age</code></span>, 
+	  которые являются временем в секундах, которое агент многоуровневого кэширования принимает для сброса и выселения объектов из 
+	  уровня кэша вуровень хранения:</p>
+	   <pre class="screen">
+# ceph osd pool set cache-pool cache_min_flush_age 300
+# ceph osd pool set cache-pool cache_min_evict_age 300
+
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool target_max_objects 10000 
+	set pool 48 target_max_objects to 10000 
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool cache_min_flush_age 300 
+	set pool 48 cachemin_flush_age to 300 
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool cache_min_evict_age 300 
+	set pool 48 cache_min_evict_age to 300 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Разрешите <span class="term"><code>cache_target_dirty_ratio</code></span>, что является процентом пула кэша содержащего 
+	  модифицированные (dirty) объекты до того,как агент многоуровневого кэширования сбросит их на уровень хранения:
+	  :</p>
+	   <pre class="screen">
+# ceph osd pool set cache-pool cache_target_dirty_ratio .01
+	   </pre>
+	  </li><li class="listitem">
+      <p>Включите <span class="term"><code>cache_target_full_ratio</code></span>, что является процентом пула кэша, содержащего не 
+	  изменённые обекты до того,как агент многоуровневого кэширования сбросит их на уровень хранения:</p>
+	   <pre class="screen">
+# ceph osd pool set cache-pool cache_target_full_ratio .02
+	   </pre>
+	  <p>Когда вы выполните эти шаги, настройка многоуровневого кэширования должна завершится и вы можете начинать добавлять к 
+	  ней рабочую нагрузку:</p>
+	  </li><li class="listitem">
+      <p>Создайте временный файл размером 500МБ который будет использован для записи в ваш <span class="term"><code>EC-pool</code></span> и 
+	  который в конечном счёте будет записан в <span class="term"><code>cache-pool</code></span>:</p>
+	   <pre class="screen">
+# dd if=/dev/zero of=/tmp/file1 bs=1M count=500
+
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool cache_target_dirty_ratio .01 
+	set pool 48 cache_target_dirty_ratio to .01 
+	[root@ceph-node1 ~]# ceph osd pool set cache-pool cache_target_full_ratio .02 
+	set pool 48 cache_target_full_ratio to .02 
+	[root@ceph-node1 ~]# dd if=/dev/zero of=/tmp/file1 bs=1m count=500 
+	500+0 records in 
+	500+0 records out 
+	524288000 bytes (524 MB) copied, 5.81312 s, 90.2 MB/s 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	 </li>
+   </ol>
+   </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0811"> </a>Тестирование уровня кэша</h3>
+   </div></div></div>
+   <p>Так как наш уровень кэша готов, в процессе операций <span class="term"><code>write</code></span> клиенты будут видеть то, что 
+   всё записывается в их обычные пулы, но на самом деле это записывается вначале в пулы кэша, а уже потом на основании политики данных 
+   уровня кэширования оно сбрасывается на уровень хранения. Такая миграция данных прозрачна для клиента.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="081001"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>В предыдущем рецепте мы создали тестовый файл 500МБ с именем <span class="term"><code>/tmp/file1</code></span>; теперь мы 
+	  поместим этот файл в <span class="term"><code>EC-pool</code></span>:</p>
+	   <pre class="screen">
+# rados -p EC-pool put object1 /tmp/file1
+	   </pre>
+	  </li><li class="listitem">
+      <p>Поскольку <span class="term"><code>EC-pool</code></span> связан уровнями с <span class="term"><code>cache-pool</code></span>, 
+	  файл с именем <span class="term"><code>file1</code></span> не должен быть записан на своём первом шаге в 
+	  <span class="term"><code>EC-pool</code></span>, однако, он будет записан в наш <span class="term"><code>cache-pool</code></span>. 
+	  Для проверки этого выведите список каждого пула для получения имён объектов. Примените команду даты для отслеживания времени и 
+	  изменений:</p>
+	   <pre class="screen">
+# rados -p EC-pool ls
+# rados -p cache-pool ls
+# date
+
+	[root@ceph-node1 ~]# rados -p EC-pool put objectl /tmp/file1 
+	[root@ceph-node1 ~]# rados -p EC-pool ls 
+	[root@ceph-node1 ~]# rados -p cache-pool ls 
+	object1 
+	[root@ceph-node1 ~]# 
+	[root@ceph-node1 ~]# date 
+	Sun Sep 14 02:14:58 EEST 2014 
+	[root@ceph-node1 ~]# 
+	   </pre>
+	  </li><li class="listitem">
+      <p>Через 300 секунд (поскольку мы настроили <span class="term"><code>cache_min_evict_age</code></span> на значение 
+	  <span class="term"><code>300</code></span> секунд), агент многоуровневого кэширования проведёт миграцию 
+	  <span class="term"><code>object1</code></span> из <span class="term"><code>cache-pool</code></span> в наш 
+	  <span class="term"><code>EC-pool</code></span> и <span class="term"><code>object1</code></span> будет удалён из 
+	  <span class="term"><code>cache-pool</code></span>:</p>
+	   <pre class="screen">
+# rados -p EC-pool ls
+# rados -p cache-pool ls
+# date
+
+	[root@ceph-node1 ~]# date 
+	Sun Sep 14 02:27:41 EEST 2014 
+	[root@ceph-node1 ~]# rados -p EC-pool ls 
+	object1 
+	[root@ceph-node1 ~]# rados -p cache-pool ls 
+	[root@ceph-node1 ~]# 
+	   </pre>
+      <p>Если вы пристальнее вглядитесь вшаги 2 и 3, вы отметите, что данные мигрировали из <span class="term"><code>cache-pool</code></span>
+	  в <span class="term"><code>EC-pool</code></span> после определённого промежутка времени, причём это абсолютно прозрачно для 
+	  наших пользователей.</p>
+	 </li>
+   </ol>
+   </div>
+  </div>
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

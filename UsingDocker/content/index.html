@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Docker, Ambassadors, cAdvisor, SELinux, etcd, ECS, EC2 Container Service, Mesos, CFS, btrfs, DAC, Flocker, Fleet, Jenkins, Kubernetes, Marathon, Giant Swarm, Flannel, СoreOS, Triton, GKE, Google Container Engine, ELK, GELF, IPAM, Kibana, KeyWhiz, Kitematic, LSM, LXC, MCS, MLS, Calico, Raft algorithm, Rancher, Redis, Amazon RDS, SkyDNS, Swarm, Eureka, Weave, WeaveDNS, ZooKeeper, VFS, ZFS">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Использование Docker</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="FreeBSDMasteryZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Контейнеры Docker предлагают более простые, быстрые и надежные методы для разработки, распространения и запуска программного обеспечения, чем это было ранее. С этим практическим руководством вы узнаете почему так важны  контейнеры, что вы получите приняв Docker, и как сделать их частью вашего процесса разработки. Идеально подходит для разработчиков, инженеров по эксплуатации и системных администраторов, особенно тех, кто стремится охватить подход - Книга захватит вас начиная с основ Docker и контейнеров вплоть до запуска десятков контейнеров в системе с мульти-хостингом с сетевой средой и планированием. Ядро книги проведет вас через этапы, необходимые для разработки, тестирования и развертывания веб-приложений при помощи Docker."/>
+<link rel="home" href="index.html" title="Использование Docker"/>
+<link rel="next" href="Ch00.html" title="Глава 1. Введение"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-using-docker";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/UsingDocker/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Использование Docker';
+PrevRef = 'Ix01.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+<div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="FreeBSDMasteryZFS"/>Использование Docker</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Адриан Муат</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2016 Adrian Mouat</p>
+  <p>Первая публикация на английском языке: декабрь 2015</p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a>Авторские права</h3>
+ </div></div></div>
+ <p align="center"></p>
+ <p></p>
+</div>
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preface"> </a>Введение</h3>
+ </div></div></div>
+ <p align="center"></p>
+ <p></p>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Who">
+    </a>Кто должен читать эту книгу?</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Why">
+    </a>Зачем я написал эту книгу?</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Navigating">
+    </a>Навигация по этой книге</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Conventions">
+    </a>Используемые в этой книге соглашения</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Examples">
+    </a>Использование примеров кода</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Safari">
+    </a>Safari<sup>&reg;</sup> Books Online</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Contact">
+    </a>Наши контакты</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Acknowledgments">
+    </a>Благодарности</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Autors">
+    </a>Об авторах</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+</div>
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Who">Кто должен читать эту книгу?</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Why">Зачем я написал эту книгу?</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Navigating">Навигация по этой книге</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Conventions">Используемые в этой книге соглашения</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Examples">Использование примеров кода</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Safari">Safari<sup>&reg;</sup> Books Online</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Contact">Наши контакты</a></span></dt>
+	<dt><span class="section"><a href="index.html#Acknowledgments">Благодарности</a></span></dt>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+  </dl></dd>
+ </dl>
+ <dl>
+ <dt><span class="chapter"><a href="Ch01.html">Часть 1. Предпосылки и основы</a></span></dt>
+  <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Что и почему контейнеров</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch01.html#01.1">Контейнеры против виртуальных машин</a></span></dt>
+	 <dt><span class="section"><a href="Ch01.html#01.2">Docker и контейнеры</a></span></dt>
+	 <dt><span class="section"><a href="Ch01.html#01.3">Docker: история</a></span></dt>
+	 <dt><span class="section"><a href="Ch01.html#01.4">Плагины и сантехника</a></span></dt>
+	 <dt><span class="section"><a href="Ch01.html#01.5">Linux 64-бита</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch02.html">2. Установка</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch02.html#02.1">Установка Docker в Linux</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch02.html#02.1.1">Выполнение SELinux в разрешающем режиме</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#02.1.2">Выполнение без sudo</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02.2">Установка Docker на Mac OS или Windows</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#02.3">Быстрая проверка</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch03.html">3. Первые шаги</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch03.html#03.1">Запуск вашего первого образа</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#03.2">Основные команды</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#03.3">Построение образов из Dockerfile</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#03.4">Работа с реестрами</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch03.html#03.4.1">Частные репозитории</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch03.html#03.5">Применение официального образа Redis</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#03.6">Заключение</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch04.html">4. Основы Docker</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch04.html#04.1">Архитектура Docker</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.1.1">Технологии, лежащие в основе</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.1.2">Окружающие технологии</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.1.3">Docker хостинг</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.2">Как выполняется построение образов</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.2.1">Контекст сборки</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.2">Уровни образа</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.3">Кэширование</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.4">Базовые образы</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.2.5">Инструкции Dockerfile</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.3">Соединение контейнеров с миром</a></span></dt>
+	 <dt><span class="section"><a href="Ch04.html#04.4">Связывание контейнеров</a></span></dt>
+	 <dt><span class="section"><a href="Ch04.html#04.5">Управление данными томами и контейнерами данных</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.5.1">Совместное использование данных</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.5.2">Контейнеры данных</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.5.3">Удаление томов</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.6">Общие команды Docker</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#04.6.1">Команда run</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.2">Управление контейнерами</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.3">Информация Docker</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.4">Информация контейнера</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.5">Обращение с образами</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#04.6.6">Использование реестра</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04.7">Заключение</a></span></dt>
+   </dl></dd>
+  </dl>
+  <dt><span class="chapter"><a href="Ch05.html">Часть 2. Жизненный цикл программного обеспечения с применением Docker</a></span></dt>
+  <dl>
+   <dt><span class="chapter"><a href="Ch05.html">5. Применение Docker при разработке</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch05.html#05.1">Скажем &quot;Hello World!&quot;</a></span></dt>
+	 <dt><span class="section"><a href="Ch05.html#05.2">Автоматизация при помощи Compose</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch05.html#05.2.1">Рабочий поток Compose</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch05.html#05.3">Заключение</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch06.html">6. Создание простого веб- приложения</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch06.html#06.1">Создание основной веб- страницы</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.2">Использование преимуществ существующих образов</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.3">Добавьте некое кэширование</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.4">Микрослужбы</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#06.5">Заключение</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch07.html">7. Распространение образов</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch07.html#07.1">Именование образа и репозитория</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.2">Хаб Docker</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.3">Автоматизированное построение</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.4">Частное распространение</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#07.4.1">Работа вашего собственного реестра</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#07.4.2">Коммерческая регистрация</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07.5">Уменьшение размера образа</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.6">Происхождение образа</a></span></dt>
+	 <dt><span class="section"><a href="Ch07.html#07.7">Заключение</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch08.html">8. Непрерывные интеграция и тестирование с Docker</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch08.html#08.1">Добавление блоков тестирования в Identidock</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.2">Создание контейнеров Jenkins</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch08.html#08.2.1">Переключающие построения</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.3">Активная доставка образов</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch08.html#08.3.1">Осознанная маркировка</a></span></dt>
+	  <dt><span class="section"><a href="Ch08.html#08.3.2">Постановка и производство</a></span></dt>
+	  <dt><span class="section"><a href="Ch08.html#08.3.3">Разрастание образов</a></span></dt>
+	  <dt><span class="section"><a href="Ch08.html#08.3.4">Применение Docker для снабжения подчиненными Jenkins</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.4">Резервирование Jenkins</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.5">CI решения хостинга</a></span></dt>
+	 <dt><span class="section"><a href="Ch08.html#08.6">Тестирование и микрослужбы</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch08.html#08.6.1">Тестирование в производстве</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#08.7">Заключение</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch09.html">9. Развертывание контейнеров</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch09.html#09.1">Предоставление ресурсов посредством машин Docker</a></span></dt>
+	 <dt><span class="section"><a href="Ch09.html#09.2">Применение прокси</a></span></dt>
+	 <dt><span class="section"><a href="Ch09.html#09.3">Опции выполнения</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch09.html#09.3.1">Сценарии оболочки</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.3.2">Применение системы управления процессами (или systemd для управления всем)</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.3.3">Использование средств управления настройкой</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch09.html#09.4">Настройка хоста</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch09.html#09.4.1">Выбор операционной системы</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.4.2">Выбор устройства хранения</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch09.html#09.5">Специальные опции хостинга</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch09.html#09.5.1">Triton</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.5.2">Google Container Engine</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.5.3">Amazon EC2 Container Service</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.5.4">Giant Swarm</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch09.html#09.6">Данные постоянного хранения и серийные контейнеры</a></span></dt>
+	 <dt><span class="section"><a href="Ch09.html#09.7">Совместное использование секретной информации</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch09.html#09.7.1">Хранение секретов в образах</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.7.2">Передача секретной информации через окружение</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.7.3">Передача секретной информации в томах</a></span></dt>
+	  <dt><span class="section"><a href="Ch09.html#09.7.4">Применение хранения ключ- значение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch09.html#09.8">Сетевая среда</a></span></dt>
+	 <dt><span class="section"><a href="Ch09.html#09.9">Производственные реестры</a></span></dt>
+	 <dt><span class="section"><a href="Ch09.html#09.10">Непрерывные разработка/ доставка</a></span></dt>
+	 <dt><span class="section"><a href="Ch09.html#09.11">Заключение</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch10.html">10. Регистрация и мониторинг</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch10.html#10.1">Регистрация</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch10.html#10.1.1">Ведение журналов Docker по умолчанию</a></span></dt>
+	  <dt><span class="section"><a href="Ch10.html#10.1.2">Агрегирование журналов</a></span></dt>
+	  <dt><span class="section"><a href="Ch10.html#10.1.3">Регистрация при помощи ELK</a></span></dt>
+	  <dt><span class="section"><a href="Ch10.html#10.1.4">Ведение журналов Docker посредством syslog</a></span></dt>
+	  <dt><span class="section"><a href="Ch10.html#10.1.5">Захват регистрационных записей из файла</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#10.2">Мониторинг и оповещение</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch10.html#10.2.1">Мониторинг инструментами Docker</a></span></dt>
+	  <dt><span class="section"><a href="Ch10.html#10.2.2">cAdvisor</a></span></dt>
+	  <dt><span class="section"><a href="Ch10.html#10.2.3">Кластерные решения</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#10.3">Коммерческие решения мониторинга и регистрации</a></span></dt>
+	 <dt><span class="section"><a href="Ch10.html#10.4">Заключение</a></span></dt>
+   </dl></dd>
+  </dl>
+  <dt><span class="chapter"><a href="Ch11.html">Часть 3. Инструменты и технологии</a></span></dt>
+  <dl>
+   <dt><span class="chapter"><a href="Ch11.html">11. Обнаружение сетевой среды и служб</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch11.html#11.1">Представители</a></span></dt>
+	 <dt><span class="section"><a href="Ch11.html#11.2">Обнаружение служб</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch11.html#11.2.1">etcd</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.2.2">SkyDNS</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.2.3">Consul</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.2.4">Регистрация</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.2.5">Другие решения</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#11.3">Сетевые опции</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch11.html#11.3.1">Мост</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.3.2">Хост</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.3.3">Контейнер</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.3.4">Ничего</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#11.4">Новая сетевая среда Docker</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch11.html#11.4.1">Типы сетей и подключаемые модули</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#11.5">Сетевые решения</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch11.html#11.5.1">Overlay</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.5.2">Weave</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.5.3">Flannel</a></span></dt>
+	  <dt><span class="section"><a href="Ch11.html#11.5.4">Проект Calico</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#11.6">Заключение</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch12.html">12. Оркестровка, кластеризация и управление</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch12.html#12.1">Инструменты кластеризации и оркестровки</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch12.html#12.1.1">Swarm</a></span></dt>
+	  <dt><span class="section"><a href="Ch12.html#12.1.2">Fleet</a></span></dt>
+	  <dt><span class="section"><a href="Ch12.html#12.1.3">Kubernetes</a></span></dt>
+	  <dt><span class="section"><a href="Ch12.html#12.1.4">Mesos и Marathon</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch12.html#12.2">Платформы управления контейнерами</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch12.html#12.2.1">Rancher</a></span></dt>
+	  <dt><span class="section"><a href="Ch12.html#12.2.2">Clocker</a></span></dt>
+	  <dt><span class="section"><a href="Ch12.html#12.2.3">Tutum</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch12.html#12.3">Заключение</a></span></dt>
+   </dl></dd>
+
+   <dt><span class="chapter"><a href="Ch13.html">13. Безопасность и ограничения контейнеров</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch13.html#13.1">Вещи, о которых стоит беспокоиться</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.2">Эшелонированная оборона</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.2.1">Наименьший уровень привилегий</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.3">Обеспечение безопасности Identidock</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.4">Разделение контейнеров по хостам</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.5">Применение обновлений</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.5.1">Избегайте неподдерживаемых драйверов</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.6">Происхождение образов</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.6.1">Docker Digests</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.6.2">Docker Content Trust</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.6.3">Воспроизводимые и надёжные Dockerfile</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.7">Советы по безопасности</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.7.1">Устанавливайте пользователя</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.2">Ограничивайте сетевую среду контейнера</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.3">Удаляйте двоичные файлы Setuid/Setgid</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.4">Ограничивайте память</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.5">Ограничивайте ЦПУ</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.6">Ограничивайте перезапуски</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.7">Ограничивайте файловые системы</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.8">Ограничивайте возможности</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.7.9">Применяйте пределы ресурсов (ulimit)</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.8">Работайте с устоявшимся ядром</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.9">Модули безопасности Linux</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch13.html#13.9.1">SELinux</a></span></dt>
+	  <dt><span class="section"><a href="Ch13.html#13.9.2">AppArmor</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#13.10">Аудит</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.11">Реакция на инциденты</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.12">Грядущая функциональность</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#13.13">Заключение</a></span></dt>
+   </dl></dd>
+
+   <dt><span class="chapter"><a href="Ix01.html">Указатель</a></span></dt>
+  </dl>
+ </dl>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

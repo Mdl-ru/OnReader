@@ -1,0 +1,1123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 8. Наблюдение за вашим кластером Ceph - Изучаем Ceph</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="LearningCeph"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Изучаем Ceph"/>
+<link rel="up" href="index.html" title="Изучаем Ceph"/>
+<link rel="prev" href="Ch07.html" title="Глава 7. Эксплуатация и обслуживание Ceph"/>
+<link rel="next" href="Ch09.html" title="Глава 9. Включение Ceph в состав OpenStack"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-openstack-operations-guide";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/LearningCeph/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 8. Наблюдение за вашим кластером Ceph';
+PrevRef = 'Ch07.html';
+UpRef = 'index.html';
+NextRef = 'Ch09.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 8. Наблюдение за вашим кластером Ceph</h1>
+  </div></div></div>
+   <p>Наблюдение за кластером Ceph является одноой из главнейших обязанностей администрирования хранилища Ceph. Мониторинг играет 
+   важную роль при устранении неполадок кластера и избавлении от проблем когда кластер находится в опасном состоянии.</p>
+   <p>В данной главе мы рассмотрим следующие темы:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	  <p>Наблюдение за кластером Ceph</p>
+	 </li>
+	<li class="listitem">
+	 <p>Мониторинг MON (мониторов) и MDS (серверов метаданных)</p>
+	</li>
+	<li class="listitem">
+	 <p>Мониторинг OSD (устройств хранения объектов) и PG (групп размещения)</p>
+	</li>
+	<li class="listitem">
+	 <p>Инструментальные панели для Ceph с открытым исходным кодом, такие как Kraken, ceph-dash и Calamari</p>
+	</li>
+   </ul>
+   </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_cluster">Наблюдение за кластером Ceph</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#Checking_health">Проверка работоспособности кластера</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#Watching_events">Отслеживание событий в кластере</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#utilization_statistics">Статистики использования кластера</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#cluster_status">Проверка состояния кластере</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#authentication_keys">Ключи аутентификации кластера</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_MON">Наблюдение за Ceph MON</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#MON_status">Состояние MON</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#MON_quorum_status">Состояние кворума MON</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_OSD">Наблюдение за Ceph OSD</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#OSD_tree_view">Просмотр дерева OSD</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#OSD_statistics">Статистика OSD</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#Checking_CRUSH_map">Проверка соответствий CRUSH</a></span></dt>
+        <dt><span class="section"><a href="Ch08.html#Monitoring_PG">Наблюдение за группами размещения</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_MDS">Наблюдение за MDS</a></span></dt>
+	<dt><span class="section"><a href="Ch08.html#Monitoring_by_dashboards">Наблюдение за Ceph с использованием инструментальной панели на основе открытого кода</a></span></dt>
+	  <dd><dl>
+        <dt><span class="section"><a href="Ch08.html#Kraken">Kraken</a></span></dt>
+        <dd><dl>
+          <dt><span class="section"><a href="Ch08.html#Deploying_Kraken">Развертывание Kraken</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch08.html#ceph-dash_tool">Инструментарий ceph-dash</a></span></dt>
+        <dd><dl>
+          <dt><span class="section"><a href="Ch08.html#Deploying_ceph-dash">Развертывание ceph-dash</a></span></dt>
+        </dl></dd>
+        <dt><span class="section"><a href="Ch08.html#Calamari">Calamari</a></span></dt>
+      </dl></dd>
+	<dt><span class="section"><a href="Ch08.html#Summary">Заключение</a></span></dt>
+	</dl>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Monitoring_cluster"> </a>Наблюдение за кластером Ceph</h3>
+   </div></div></div>
+   <p>Мониторинг является одной из наиболее важных функций для администратора системы хранения. К наблюдению за системой, как правило, 
+   приступают после проектирования кластера, его развертывания и внедрения служб. Вам, как администратору системы хранения, будет 
+   необходимо держать глаз на вашем кластере хранения Ceph и делать выводы о том, что происходит на данный момент. Регулярный и 
+   дисциплинированный контроль держит вас в курсе с вашим здоровьем кластера. Воспользовавшись уведомлениями мониторинга вы получите 
+   немного больше времени для принятия необходимых мер перед отключением услуги. Наблюдение за кластером Ceph является повседневной 
+   задачей, которая включает в себя мониторинг MON, OSD, MDS и PG, сохранению служб обеспечения таких как RBD, radosgw и CephFS, 
+   а также клиентов Ceph. Ceph поставляется с богатым набором встроенных средств командной строки и API для отслеживания этих 
+   компонентов. В дополнение к этому существуют проекты с открытым исходным кодом, которые изначально разработаны для 
+   наблюдения за кластерами Ceph с применением инструментальных панелей единой проекции с графическим интерфейсом.</p>
+   <p>Мониторинг имеет более широкую сферу применения, которая не должна быть ограничена уровнем программного обеспечения Ceph. 
+   Он должен быть распространен на всю лежащую в его основе инфраструктуру, включающую аппаратные средства, сетевую среду и другие 
+   сопутствующие системы, формирующие ваш кластер Ceph. Как правило, производители таких аппаратных средств предоставляют богатый 
+   интерфейс наблюдения, который может входить в стоимость или продаваться дополнительно. Мы рекомендуем использовать такие 
+   инструменты для мониторинга системы на уровне инфраструктуры. Помните, что чем более стабильна ваша базовая инфраструктура, 
+   тем лучшие результаты вы можете получить от вашего кластера Ceph. Теперь мы сосредоточимся на инструментарии Ceph для 
+   мониторинга, а также на некоторых других проектах для наблюдения на основе открытого кода. Ceph поставляется с богатым 
+   инструментарием CLI для мониторинга кластера и устранения неисправностей. Для наблюдения за вашим кластером вы можете 
+   использовать инструментарий <span class="term"><code>сeph</code></span>.</p>
+
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Checking_health"> </a>Проверка работоспособности кластера</h4>
+      </div></div></div>
+      <p>Чтобы проверить работоспособность кластера, воспользуйтесь командой <span class="term"><code>сeph</code></span> с 
+	  последующим параметром команды <span class="term"><code>health</code></span>.</p>
+	    <pre class="screen">
+# ceph health</pre>
+      <p>Результаты вывода этой команды будут разделены на отдельные секции, отделяемые точкой с запятой:</p>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph health
+HEALTH_WARN 64 pgs degraded; 1408 pgs stuck unclean; recovery 1/5744 objects degraded (0.017%)
+[root@ceph-node1 ~]#</pre>
+      <p>Первый раздел вывода сигнализирует, что ваш кластер находится в состоянии предостережения, 
+	  <span class="term"><code>HEALTH_WARN</code></span>, поскольку 64 
+	  <span class="term"><span class="emphasis"><em>группы размещения</em></span></span>  
+	  (<span class="term"><span class="emphasis"><em>PG</em></span></span>) деградировали. Второй раздел показывает, 
+	  что 1408 PG не являются чистыми, а третий 
+	  раздел вывода показывает, что кластер в процессе восстановления одного из 5744 объектов и кластер деградировал на 0.017 
+	  процента. Если кластер находится в робочеспособном состоянии, вы получите вывод <span class="term"><code>HEALTH_OK</code></span>.</p>
+      <p>Чтобы узнать подробности о состоянии работоспособности вашего кластера Ceph, воспользуйтесь командой 
+	  <span class="term"><code>ceph health detail</code></span>; эта команда обо всех группах размещения, которые являются 
+	  неактивными и замусоренными, т.е. все PG, которые не являются чистыми и согласованными, а также деградировали будут перечислены 
+	  здесь со всеми деталями. Приводимый ниже снимок экрана демонстрирует детали работоспособности 
+	  <span class="term"><code>сeph</code></span>.</p>
+	    <pre class="screen">
+[root@ceph-node2 ceph]# ceph health detail
+HEALTH_ERR 61 pgs degraded; 6 pgs inconsistent; 1312 pgs stuck unclean; recovery 3/5746 objects degraded (0.052%); 8 scrub errors
+pg 9.76 is stuck unclean since forever, current state active+remapped, last acting [7,3,2]
+pg 8.77 is stuck unclean since forever, current state active+remapped, last acting [4,6.8]
+pg 7.78 is stuck unclean for 788849.714074, current state active+remapped, last acting [6,5,1]
+pg 6.79 is stuck unclean since forever, current state active+remapped, last acting [4,7,8]
+pg 5.7a is stuck unclean since forever, current state active+remapped, last acting [7,4,2]
+pg 4.7b is stuck unclean since forever, current state active+remapped, last acting [7,3,1]
+pg 11.74 is stuck unclean for 788413.925336, current state active+remapped, last acting [4,7,8]
+pg 10.75 is stuck unclean for 788412.797947, current state active+remapped, last acting [7,3,0]</pre>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Watching_events"> </a>Отслеживание событий в кластере</h4>
+      </div></div></div>
+      <p>Вы можете наблюдать за событиями кластера с помощью команды <span class="term"><code>сeph</code></span> с параметром 
+	  <span class="term"><code>-w</code></span>. Эта команда отобразит все события кластера, включая 
+	  <span class="term"><code>INF</code></span> (информационные), <span class="term"><code>WARN</code></span> (предостерегающие) 
+	  и <span class="term"><code>ERR</code></span> (ошибочные)</p> в режиме реального времени. Эта команда производит непрерывный 
+	  вывод происходящих в настоящий момент изменения кластера; вы можете воспользоваться <span class="term"><code>Ctrl-C</code></span> 
+	  для возврата в оболочку:
+	    <pre class="screen">
+# ceph -w</pre>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph -w
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_OK
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,
+ceph-node3=192.168.57.103:6789/0}, election epoch 904, quorum 0,1,2 ceph-node1,ceph-node2,cep
+h-node3
+     mdsmap e55: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e664: 9 osds: 9 up, 9 in
+      pgmap v3528: 1472 pgs, 13 pools, 1352 kB data, 2650 objects
+            525 MB used, 82319 MB / 82844 MB avail
+                1472 active+clean
+2014-07-19 19:04:44.384956 mon.0 [INF] osd.0 192.168.57.101:6810/3280 failed (511 reports fro
+m 3 peers after 1025.991577 >= grace 1023.635244)
+2014-07-19 19:04:53.531842 mon.0 [INF] osdmap e665: 9 osds: 8 up, 9 in
+2014-07-19 19:04:53.638975 mon.0 [INF] pgmap v3529: 1536 pgs: 64 creating, 176 stale+active+c
+lean, 1296 active+clean; 1352 kB data, 525 MB used, 82319 MB / 82844 MB avail
+2014-07-19 19:04:54.531821 mon.0 [INF] osdmap e666: 9 osds: 8 up, 9 in
+2014-07-19 19:04:54.688132 mon.0 [INF] pgmap v3530: 1536 pgs: 64 creating, 176 stale+active+c
+lean, 2 peering, 1294 active+clean; 1352 kB data, 525 MB used, 82319 MB / 82844 MB avail
+2014-07-19 19:04:58.619026 mon.0 [INF] pgmap v3531: 1536 pgs: 53 creating, 148 stale+active+c
+lean, 21 active+degraded, 56 peering, 1258 active+clean; 1352 kB data, 523 MB used, 82321 mb
+/ 82844 mb avail; 79/5266 objects degraded (1.500%)
+2014-07-19 19:04:59.958947 mon.0 [INF] pgmap v3532: 1536 pgs: 5 inactive, 70 degraded, 28 cre
+ating, 3 active, 111 active+degraded, 333 peering, 986 active+clean; 1352 kB data, 524 MB use
+d, 82319 mb / 82844 MB avail; 260/4716 objects degraded (5.513%)</pre>
+      <p>Существуют и другие параметры, которые могут быть использованы с командой <span class="term"><code>сeph</code></span> для 
+	  получения различных видов детализации событий:</p>
+  	   <div class="itemizedlist">
+	   <ul class="itemizedlist" type="disc">
+	    <li class="listitem">
+	     <p><span class="term"><code>--watch-debug</code></span>: Используется для отслеживания событий отладки</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>--watch-info</code></span>: Используется для отслеживания информационных событий</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>--watch-sec</code></span>: Используется для отслеживания событий безопасности</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>--watch-warn</code></span>: Используется для отслеживания предостерегающих событий</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>--watch-error</code></span>: Используется для отслеживания ошибочных событий</p>
+	    </li>
+       </ul>
+       </div>
+      </div>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="utilization_statistics"> </a>Статистики использования кластера</h4>
+      </div></div></div>
+      <p>Чтобы узнать статистику использования пространства кластера, воспользуйтесь командой <span class="term"><code>сeph</code></span> 
+	  с параметром <span class="term"><code>df</code></span>. Эта команда покажет общий размер кластера, размер доступного 
+	  пространства, размер используемого пространства и их процентные выражения. Она также выведет информацию о пулах, такую как 
+	  имя пула, идентификатор (ID), использование, а также число объектов в каждом пуле:</p>
+	    <pre class="screen">
+# ceph df</pre>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph df
+GLOBAL:
+    SIZE       AVAIL      RAW USED    %RAW USED
+    82844M     82349M     495M        0.60
+POOLS:
+    NAME                   ID     USED      %USED      OBJECTS
+    data                   0      0         0          0
+    metadata               1      5052      0          20
+    rbd                    2      1344k     0          2568
+    .rgw                   3      1040      0          6
+    .rgw.root              4      822       0          3
+    .rgw. control          5      0         0          8
+    .rgw.gc                6      0         0          32
+    .users.uid             7      787       0          3
+    .users.email           8      8         0          1
+    .users                 9      20        0          2
+    .rgw.buckets.index     10     0         0          5
+    .rgw. buckets          11     365       0          1
+    .users, swift          12     8         0          1
+[root@ceph-node1 ~]#</pre>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="cluster_status"> </a>Проверка состояния кластере</h4>
+      </div></div></div>
+      <p>Проверка состояния кластера является наиболее распространенной и частой операцией при наблюдении за кластером Ceph. Вы можете 
+	  проверить состояние вашего кластера, используя команду <span class="term"><code>сeph</code></span> с параметром 
+	  <span class="term"><code>status</code></span>. Вместо подкоманды <span class="term"><code>status</code></span>, вы также можете 
+	  использовать в качестве параметра более короткую версию, <span class="term"><code>-s</code></span>:</p>
+	    <pre class="screen">
+# ceph status</pre>
+      <p>В качестве альтернативы вы можете использовать:</p>
+	    <pre class="screen">
+# ceph -s</pre>
+      <p>Следующий снимок экрана демонстрирует состояние нашего кластера:</p>
+	    <pre class="screen">
+[root@ceph-node1 -]# ceph -s
+    cluster 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+     health HEALTH_OK
+     monmap e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0
+,ceph-node3=192.168.57.103:6789/0}, election epoch 908, quorum 0,1,2 ceph-node1,ceph-node2,c
+eph-node3
+     mdsmap e57: 1/1/1 up {0=ceph-node2=up:active}
+     osdmap e671: 9 osds: 9 up, 9 in
+      pgmap v3553: 1536 pgs, 13 pools, 1352 kB data, 2650 objects
+            495 MB used, 82349 MB / 82844 MB avail
+                1536 active+clean
+[root@ceph-node1 ~]#</pre>
+      <p>Команда выводит дамп с большим объемом полезной информации о вашем кластере Ceph. Ниже даются поямнения:</p>
+  	   <div class="itemizedlist">
+	   <ul class="itemizedlist" type="disc">
+	    <li class="listitem">
+	     <p><span class="term"><code>cluster</code></span>: Предоставляет уникальный идентификатор кластера Ceph.</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>health</code></span>: Демонстрирует работоспособность кластера.</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>monmap</code></span>: Предоставляет версией эпохи, информацию, выбор версии эпохи и 
+		 состояние кворума карты монитора.</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>mdsmap</code></span>: Предоставляет версию эпохи и состояние карты сервера метаданных.</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>osdmap</code></span>: Предоставляет версию эпохи и состояние карты устройства хранения объектов.</p>
+	    </li>
+	    <li class="listitem">
+	     <p><span class="term"><code>pgmap</code></span>: Предоставляет версию эпохи карты групп размещения, общее число групп 
+		 размещения, количество пулов, а также общее число объектов. Она также отображает информацию об использовании кластера, 
+		 включающую в себя размер используемого пространства, размер свободного пространства, а также общий размер. Наконец, 
+		 отображает состояние PG.</p>
+	    </li>
+       </ul>
+       </div>
+      <p>Чтобы просматривать состояние кластера в режиме реального времени вы можете воспользоваться командой 
+	  <span class="term"><code>ceph status</code></span> совместно с командой  Unix 
+	  <span class="term"><code>watch</code></span> для получения непрерывного вывода.</p>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="authentication_keys"> </a>Ключи аутентификации кластера</h4>
+      </div></div></div>
+      <p>Ceph работает со строгой системой аутентификации на основе ключей. Все компоненты кластера взаимодействуют друг с другом 
+	  когда они осуществляют систему аутентификации на основе ключей. Вам, как администратору Ceph, возможно придется проверить спсики 
+	  ключей, управляемые кластером. Вы можете воспользоваться командой <span class="term"><code>ceph</code></span> с подкомандой 
+	  <span class="term"><code>auth list</code></span> для получения списка всех ключей.</p>
+	    <pre class="screen">
+# ceph auth list</pre>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+       <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+       <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+       <p>Чтобы получить дополнительную информацию о действиях команды вы можете использовать в качестве подпараметра 
+	   <span class="term"><code>help</code></span>, например, <span class="term"><code># ceph auth --help</code></span>. 
+	   Используйте команду как это предписано с параметром <span class="term"><code>help</code></span>.</p></td></tr></table>
+      </div>
+     </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Monitoring_MON"> </a>Наблюдение за Ceph MON</h3>
+   </div></div></div>
+   <p>Как правило, кластер Ceph равертывается с более чем одним экземпляром MON для увеличения надежности и доступности. Поскольку 
+   существует большое количество мониторов, они должны достигать кворума, чтобы кластер работал надлежащим образом. Регулярный мониторинг 
+   MON имеет первостепенное значение.</p>
+   
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MON_status"> </a>Состояние MON</h4>
+      </div></div></div>
+      <p>Чтобы отобразить состояние кластера MON и карту MON, воспользуйтесь командой <span class="term"><code>ceph</code></span> с 
+	  одним из подпараметром <span class="term"><code>mon stat</code></span> или <span class="term"><code>mon dump</code></span>:</p>
+	    <pre class="screen"><code>
+# ceph mon stat
+# ceph mon dump</code></pre>
+      <p>Следующий рисунок отображает вывод этих команд:</p>
+	    <pre class="screen"><code>
+[root@ceph-node1 -]# ceph mon stat
+e3: 3 mons at {ceph-node1=192.168.57.101:6789/0,ceph-node2=192.168.57.102:6789/0,ceph-node3
+=192.168.57.103:6789/0}, election epoch 912, quorum 0,1,2 ceph-node1,ceph-node2,ceph-node3
+[root@ceph-node1 ~]#
+[root@ceph-node1 -]# ceph mon dump
+dumped monmap epoch 3
+epoch 3
+fsid 07a92ca3-347e-43db-87ee-e0a0a9f89e97
+last_changed 2014-06-04 21:07:47.147923
+created 2014-06-02 00:51:00.765090
+0: 192.168.57.101:6789/0 mon.ceph-node1
+1: 192.168.57.102:6789/0 mon.ceph-node2
+2: 192.168.57.103:6789/0 mon.ceph-node3
+[root@ceph-node1 ~]#</code></pre>
+     </div>
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="MON_quorum_status"> </a>Состояние кворума MON</h4>
+      </div></div></div>
+      <p>Для поддержания кворума мониторов Ceph кластер должен всегда иметь более 51 процента из доступных в кластере Ceph мониторв. 
+	  Проверка состояния кворума очень полезна во время поиска неисправностей мониторов. Вы можете проверить состояние кворума с 
+	  помощью команды <span class="term"><code>ceph</code></span> и ее подкоманды <span class="term"><code>quorum_status</code></span>:</p>
+	    <pre class="screen">
+# ceph quorum_status</pre>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph quorum_status
+
+{ &quot;election_epoch&quot;: 914,
+  &quot;quorum&quot;: [
+         0,
+         1,
+         2],
+  &quot;quorum_names&quot;: [
+         &quot;ceph-node1&quot;,
+         &quot;ceph-node2&quot;,
+         &quot;ceph-node3&quot;],
+  &quot;quorum_leader_name&quot;: &quot;ceph-node1&quot;,
+  &quot;monmap&quot;: { &quot;epoch&quot;: 3,
+      &quot;fsid&quot;: &quot;07a92ca3-347e-43db-87ee-e0a0a9f89e97&quot;,
+      &quot;modified&quot;: &quot;2014-06-04 21:07:47.147923&quot;,
+      &quot;created&quot;: &quot;2014-06-02 00:51:00.765090&quot;,
+      &quot;mons&quot;: [
+             { &quot;rank&quot;: 0,
+               &quot;name&quot;: &quot;ceph-node1&quot;,
+               &quot;addr&quot;: &quot;192.168.57.101:6789\/0&quot;},
+             { &quot;rank&quot;: 1,
+               &quot;name&quot;: &quot;ceph-node2&quot;,
+               &quot;addr&quot;: &quot;192.168.57.102:6789\/0&quot;},
+             { &quot;rank&quot;: 2,
+               &quot;name&quot;: &quot;ceph-node3&quot;,
+               &quot;addr&quot;: &quot;192.168.57.103:6789\/0&quot;}]}}
+[root@ceph-node1 ~]#</pre>
+      <p>Состояние кворума отображает <span class="term"><code>election_epoch</code></span>, которая является номером версии выбора, 
+	  а также <span class="term"><code>quorum_leader_name</code></span>, который обозначает имя хоста, являющегося лидером кворума (ведущим). 
+	  Оно также отображает эпоху карты MON, идентификатор кластера и дату создания кластера. Каждый монитор кластера выровнен в 
+	  соответствии со своим рангом. Для выполнения операции ввода/вывода клиенты вначале соединяются с ведущим монитором кластера, 
+	  если ведущий монитор недоступен, клиент соединяется со следующим по рангу монитором.</p>
+     </div>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Monitoring_OSD"> </a>Наблюдение за Ceph OSD</h3>
+   </div></div></div>
+   <p>Устройства хранения объектов (OSD) в кластере Ceph являются рабочими лошадками; они выполняют всю работу нижнего уровня и 
+   осуществляют хранение данных пользователя. Наблюдение за OSD является важнейшей задачей и требует много внимания, поскольку существует 
+   большое число OSD для наблюдения и заботы о них. Чем больше ваш кластер, тем больше OSD будет у вас, а, следовательно, требуется 
+   более строгий контроль. Обычно в кластере Ceph содержится много дисков, следовательно шансы получения отказов OSD достаточно высоки 
+   Теперь мы сосредоточимся на командах Ceph для наблюдения за OSD.</p>
+   
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="OSD_tree_view"> </a>Просмотр дерева OSD</h4>
+      </div></div></div>
+      <p>Представление дерева OSD чрезвычайно полезно для просмотра состояний подобных <span class="term"><code>IN</code></span> или 
+	  <span class="term"><code>OUT</code></span>, а также <span class="term"><code>UP</code></span> или 
+	  <span class="term"><code>DOWN</code></span>. Представление дерева OSD отображает каждый узел со всеми его OSD, а также их 
+	  расположением в карте CRUSH. Вы можете проверить представление OSD, воспользовавшись следующей командой:</p>
+	    <pre class="screen">
+# ceph osd tree</pre>
+      <p>Она выдаст следующий вывод:</p>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph osd tree
+# id    weight  type name       up/down reweight
+-1      0.08995 root default
+-2      0.02998         host ceph-node1
+0       0.009995                        osd.0   up     1
+1       0.009995                        osd.1   up     1
+2       0.009995                        osd.2   up     1
+-3      0.02998         host ceph-node2
+3       0.009995                        osd.3   up     1
+5       0.009995                        osd.5   up     1
+4       0.009995                        osd.4   up     1
+-4      0.02998         host ceph-node3
+6       0.009995                        osd.6   up     1
+7       0.009995                        osd.7   up     1
+8       0.009995                        osd.8   up     1
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]#</pre>
+      <p>Эта команда отображает различную полезную информацию об OSD Ceph, такую как вес, состояние <span class="term"><code>UP</code></span> 
+	  /<span class="term"><code>DOWN</code></span>, а также состояние <span class="term"><code>IN</code></span> 
+	  /<span class="term"><code>OUT</code></span>. Листинг вывода прекрасно отформатирован в соответствии с вашей картой Ceph CRUSH. 
+	  Если вы осуществляете поддержку большого кластера, такой формат даст вам преимущество локализации ваших OSD и 
+	  содержащих их серверов в длинном списке.</p>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="OSD_statistics"> </a>Статистика OSD</h4>
+      </div></div></div>
+      <p>Чтобы проверить статистику OSD воспользуйтесь <span class="term"><code># ceph osd stat</code></span>; эта команда поможет 
+	  вам получить эпоху карты OSD, общее число OSD, а также их состояния <span class="term"><code>IN</code></span> и 
+	  <span class="term"><code>UP</code></span>.</p>
+      <p>Для получения детализированной информации о кластере Ceph и OSD выполните следующую команду:</p>
+	    <pre class="screen">
+# ceph osd dump</pre>
+      <p>Это очень полезная команда, которая выдаст эпохи карт OSD, подробности о пулах, содержащие идентификатор пула, 
+	  имя пула, а также тип пула, который является реплицируемым (replicated) или удаляемым (erasure), набор правил 
+	  CRUSH и группы размещения.</p>
+      <p>Данная команда также отобразит такую информацию, как идентификатор OSD, состояние. вес чистый интервал эпох для каждого 
+	  OSD. Эта информация чрезвычайно полезна при наблюдении за кластером и поиском неисправностей.</p>
+      <p>Чтобы получить черный список клиентов воспользуйтесь следующей командой:</p>
+	    <pre class="screen">
+# ceph osd blacklist ls</pre>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Checking_CRUSH_map"> </a>Проверка соответствий CRUSH</h4>
+      </div></div></div>
+      <p>Мы можем запросить карту CRUSH непосредственно из команды <span class="term"><code>ceph osd</code></span>. Утилита 
+	  командной строки катры CRUSH может сохранить много времени системному администратору, производящему просмотр и редактирование 
+	  карты CRUSH вручную.</p>
+      <p>Для просмотра карты CRUSH выполните следующую команду:</p>
+	    <pre class="screen">
+# ceph osd crush dump</pre>
+      <p>Для просмотра правил карты CRUSH выполните:</p>
+	    <pre class="screen">
+# ceph osd crush rule list</pre>
+      <p>Для подробного просмотра правил CRUSH выполните:</p>
+	    <pre class="screen"><code>
+# ceph osd crush rule dump &lt;crush_rule_name&gt;</code></pre>
+	    <pre class="screen"><code>
+[root@ceph-node1 /]# ceph osd crush rule list
+[
+    &quot;data&quot;,
+    &quot;metadata&quot;,
+    &quot;rbd&quot;]
+[root@ceph-node1 /]#
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# ceph osd crush rule dump data
+{ &quot;rule_id&quot;: 0,
+  &quot;rule_name&quot;: &quot;data&quot;,
+  &quot;ruleset&quot;: 0,
+  &quot;type&quot;: 1,
+  &quot;min_size&quot;: 1,
+  &quot;max_size&quot;: 10,
+  &quot;steps&quot;: [
+         { &quot;op&quot;: &quot;take&quot;,
+           &quot;item&quot;: -1,
+           &quot;item_name&quot;: &quot;default&quot;},
+         { &quot;op&quot;: &quot;chooseleaf_firstn&quot;,
+           &quot;num&quot;: 0,
+           &quot;type&quot;: &quot;host&quot;},
+         { &quot;op&quot;: &quot;emit&quot;}]}
+[root@ceph-node1 /]#</code></pre>
+      <p>Если вы осуществляете эксплуатацию большого кластера Ceph с несколькими сотнями OSD, иногда достаточно трудно найти 
+	  местоположение определенного OSD в карте CRUSH. Это также сложно выполнить, если ваша карта CRUSH содержит множественную 
+	  иерархию сегментов. Вы можете использовать <span class="term"><code>ceph osd find</code></span> для поиска OSD и его 
+	  местоположения в карте CRUSH:</p>
+	    <pre class="screen">
+# ceph osd find &lt;Numeric_OSD_ID&gt;
+# ceph osd find 1</pre>
+	    <pre class="screen">
+[root@ceph-node1 /]# ceph osd find 1
+{ &quot;osd&quot;: 1,
+  &quot;ip&quot;: &quot;192.168.57.101:6805\/2583&quot;,
+&quot;crush_location&quot;: { &quot;host&quot;: &quot;ceph-node1&quot;,
+&quot;root&quot;: &quot;default&quot;}}[root@ceph-node1 /]#
+[root@ceph-node1 /]#
+[root@ceph-node1 /]# ceph osd find 2
+{ &quot;osd&quot;: 2,
+  &quot;ip&quot;: &quot;192.168.57.101:6800\/2311&quot;,
+&quot;crush_location&quot;: { &quot;host&quot;: &quot;ceph-node1&quot;,
+&quot;root&quot;: &quot;default&quot;}}[root@ceph-node1 /]#
+[root@ceph-node1 /]#</pre>
+     </div>
+	 
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Monitoring_PG"> </a>Наблюдение за группами размещения</h4>
+      </div></div></div>
+      <p>Устройства хранения объектов (OSD) хранят группы размещения, а группы размещения, в свою очередь, содержат объекты. 
+	  Общая работоспособность кластера в основном зависит от групп размещения. Кластер будет оставаться в состоянии 
+	  <span class="term"><code>HEALTH_OK</code></span> только если все группы размещения имеют состояние 
+	  <span class="term"><code>active + clean</code></span>. Если ваш кластер Ceph выходит из рабочеспособного состояния, существует 
+	  вероятность, что группы размещения не являются <span class="term"><code>active + clean</code></span>. Группы размещения могут 
+	  демонстрировать множество состояний:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="disc">
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Peering</em></span></span>:
+		При пиринге (равноправном информационном обмене) группы размещения OSD, которые находятся в действующем наборе, сохраняют 
+		реплики этих групп размещения, приходят к соглашению о состоянии объекта и его метаданных в PG. После того, как пиринг 
+		завершен, OSD, которые хранят PG договариваются об их текущем состоянии.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Active</em></span></span>:
+		После завершения выполнения пиринга Ceph делает данную PG активной. При активном состоянии данные PG доступны в ее 
+		первичной PG, а также в ее репликах для операций ввода/ вывода.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Clean</em></span></span>:
+		В чистом состоянии первичное и вторичные OSD успешно размещены, никакие PG не перемещаются со своего правильного 
+		местоположения, а также все объекты реплицированы необходимое количество раз.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Degraded</em></span></span>:
+		Если OSD отключается (down), Ceph изменяет состояние всех своих PG, которые назначены на это OSD как деградировавшие. 
+		После того, как OSD переходит в <span class="term"><code>UP</code></span>, оно должно выполнить пиринг вновь чтобы сделать 
+		деградировавшие PG чистыми. Если OSD остается отключенным и прошло более 300 секунд, Ceph восстанавливает все испытавшие 
+		деградацию PG из их реплик для поддержания необходимого числа реплик. Клиенты могут выполнять операции ввода/ вывода 
+		даже после того, как PG находятся в состоянии деградации. Может существовать еще одна причина по которой  группа размещения 
+		может стать деградировавшей; а именно, когда один или более объектов внутри PG становятся недоступными. Ceph предполагает, 
+		что объекты должны быть внутри данной PG, однако они в реальности не доступны. В этом случае Ceph помечает PG как 
+		деградировавшую и пытается восстановить PG из ее реплик.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Recovering</em></span></span>:
+		Когда OSD выключается (down). содержимое его групп размещения отстает от содержимого его реплик на других OSD. Как только 
+		OSD возвращается в рабочее состояние (<span class="term"><code>UP</code></span>), Ceph инициализирует операцию 
+		восстановления на данной PG для приведения ее в соответствие с реплицированными PG в других OSD.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Backfiling</em></span></span>:
+		Как только новое OSD добавлено в кластер, Ceph пытается выполнить балансировку данных перемещая некоторые PG с других 
+		OSD на это новое OSD; этот процесс называется заливкой (backfiling). После выполнения заливки для этих групп размещения, 
+		OSD может участвовать в клиентском вводе/ выводе. Ceph выполняет заливку гладко в фоновом режиме и гарантирует отсутствие 
+		перегрузки данного кластера.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Remapped</em></span></span>:
+		Каждый раз, когда возникают изменения в PG действующего набора, происходит миграция со старого действующего набора OSD на 
+		новый действующий набор OSD. Такая операция может занять некоторое время, причем продолжительность зависит от размера данных, 
+		которые должны быть перенесены на новое OSD. В течение этого времени старое первичное OSD и старая действующая группа 
+		обслуживают запросы клиентов. Как только операция по перемещению данных завершена, Ceph начинает использовать новое первичное OSD 
+		из действующей группы.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Stale</em></span></span>:
+		Ceph выдает свои статистические данные монитору Ceph каждые 0.5 секунды; может оказаться, что если первичное OSD группы размещения 
+		действующего набора отказывает в выдаче своих статистических данных своим мониторам, или если другие OSD сообщают об 
+		отключении (down) своего первичного OSD, монитор будет рассматривать эту PG как утратившую силу (stale).</p>
+	   </li>
+      </ul>
+      </div>
+	  
+      <p>Вы можете наблюдать за группой размещения с применением описываемых здесь команд. Ниже приводится команда для получения 
+	  состояния группы размещения:</p>
+	    <pre class="screen">
+# ceph pg stat</pre>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph pg stat
+
+v4430: 1536 pgs: 1536 active+clean; 1352 kB data, 518 MB used, 82326 MB / 82844 MB avail
+[root@ceph-node1 ~]#</pre>
+      <p>Вывод команды <span class="term"><code>pg stat</code></span> отображает много информации в специфическом формате:</p>
+	    <pre class="screen"><code>
+vNNNN: X pgs: Y active+clean; R bytes data, U MB used, F GB / T GB avail</code></pre>
+      <p>Значения переменных здесь:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="disc">
+	   <li class="listitem">
+	    <p><span class="term"><code>vNNNN</code></span>:
+		Это номер версии карты PG</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><code>X</code></span>:
+		Это общее число групп размещения</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><code>Y</code></span>:
+		Это значение устанавливает число PG с их состояниями</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><code>R</code></span>:
+		Это значение задает объем сохраненных первичных данных</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><code>U</code></span>:
+		Это значение описывает объем реально сохраненных данных после репликации</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><code>F</code></span>:
+		Это размер оставшегося свободного пространства</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><code>T</code></span>:
+		Это общая емкость</p>
+	   </li>
+      </ul>
+      </div>
+      <p>Чтобы получить список групп размещения выполните:</p>
+	    <pre class="screen">
+# ceph pg dump</pre>
+      <p>Эта команда создаст много важной информации, такой как версия карты PG, идентификатор PG, состояние PG, а также действующий 
+	  первичный набор по отношению к группе размещения. Вывод этой команды может быть огромным в зависимости от общего числа PG в 
+	  вашем кластере.</p>
+      <p>Чтобы опросить определенную PG для получения подробной информации, выполните следующую команду, которая имеет синтаксис 
+	   <span class="term"><code>ceph pg &lt;PG_ID&gt; query</code></span></p>
+	    <pre class="screen">
+# ceph pg 2.7d query</pre>
+      <p>Чтобы получить список удерживаемых (stuck) групп размещения, мвыполните следующую команду, имеющую синтаксис 
+	   <span class="term"><code>pg dump_stuck &lt; unclean | Inactive | stale &gt;</code></span></p>
+	    <pre class="screen">
+# ceph pg dump_stuck unclean</pre>
+     </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Monitoring_MDS"> </a>Наблюдение за MDS</h3>
+   </div></div></div>
+   <p>Серверы метаданных используются только для CephFS, которая на момент написания данного руководства не была готова к 
+   промышленному применению. Сервер метаданных имеет различные состояния, например <span class="term"><code>UP</code></span>, 
+   <span class="term"><code>DOWN</code></span>, <span class="term"><code>ACTIVE</code></span> и 
+   <span class="term"><code>INACTIVE</code></span>. При выполнении мониторинга MDS вы должны убедиться, что состояние MDS 
+   <span class="term"><code>UP</code></span> и <span class="term"><code>ACTIVE</code></span>. Следующие команды помогут вам 
+   получить информацию относительно Ceph MDS.</p>
+   <p>Для проверки состояния MDS выполните:</p>
+	    <pre class="screen">
+# ceph mds stat</pre>
+   <p>Для отображения подробностей сервера метаданных выполните:</p>
+	    <pre class="screen">
+# ceph mds dump</pre>
+   <p>Вывод показан на следующем снимке экрана:</p>
+	    <pre class="screen">
+[root@ceph-node1 ~]# ceph mds stat
+e85: 1/1/1 up {0=ceph-node2=up:active}
+[root@ceph-node1 ~]#
+[root@ceph-node1 ~]# ceph mds dump
+dumped mdsmap epoch 85
+epoch   85
+flags   0
+created 2014-06-02 01:05:20.199702
+modified        2014-08-08 17:18:40.563408
+tableserver     0
+root    0
+session_timeout 60
+session_autoclose       300
+max_file_size   1099511627776
+last_failure    0
+last_failure_osd_epoch  794
+compat compat={},rocompat={},incompat={l=base v0.20,2=client writeable ranges,3=default file layo
+uts on dirs,4=dir inode in separate object,5=mds uses versioned encoding,6=dirfrag is stored in om
+ap}
+max_mds 1
+in      0
+up      {0=15699}
+failed
+stopped
+data_pools      0
+metadata_pool   1
+inline_data     disabled
+15699:  192.168.57.102:6800/2046 'ceph-node2'  mds.0.13 up:active seq 4252
+[root@ceph-node1 ~]#</pre>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Monitoring_by_dashboards"> </a>Наблюдение за Ceph с использованием инструментальной панели на основе открытого кода</h3>
+   </div></div></div>
+   <p>Администратор системы хранения Ceph будет выполнять большую часть работы по наблюдению за кластером с помощью CLI через 
+   команды, предоставляемые интерфейсом Ceph. Ceph также обеспечивает богатый интерфейс для API администратора, который может быть 
+   использован естественным путем для мониторинга всего кластера Ceph. Существует несколько проектов с открытым исходным кодом, 
+   которые пользуются REST API администратора и предоставляют результаты мониторинга в инструментальной панели с графическим 
+   интерфейсом, где вы можете быстро просмотреть весь ваш кластер. Сейчас мы сделаем обзор таких проектов с открытым исходным 
+   кодом и процедур их установки.</p>
+   
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Kraken"> </a>Kraken</h4>
+      </div></div></div>
+      <p>Kraken является инструментальной панелью с открытым исходным кодом, написанной на Python, предназначенной для сбора 
+	  статистики и наблюдения за кластером Ceph, изначально разрабатываемой Дональдом Талтоном и присоединившимся позднее 
+	  Дэвидом Мору Симардом.</p>
+      <p>Дональд является владельцем ИТ консалтинговой команды Merrymack. Он является квалифицированным инженером с более чем 
+	  20- летним опытом, а также он работал в таких компаниях как Apollo Group, Wells Fargo, PayPal и Cisco. Во время своего 
+	  пребывания в PayPal и Cisco он сосредоточился в основном на OpenStack и Ceph. В то время, пока он работал в Cisco, он дал 
+	  старт разработке Kraken. К счастью, Дональд также является техническим рецензентом данного руководства.</p>
+      <p>Дэвид Симард начал свою карьеру в 2006 году, когда он учился в колледже; он начал работу в веб- хостинговой компании iWeb 
+	  в качестве временного работника во время своих летних каникул; позже, когда его работа переросла в штатную должность, он 
+	  не имел никакого другого выбора, кроме как оставить учебу и продолжить работу над удивительным проектом в iWeb. Пршло уже 8 
+	  лет, с тех пор, как он начал работать с iWeb как специалист по ИТ- архитектуре. Он работает с облачной системой хранения, 
+	  вычислениями в облаках и в других интересных областях.</p>
+      <p>Существует несколько ключевых причин, лежащих в основе развития Kraken. Первое, это то, что когда он был задуман, 
+	  коммерческим пользователям Inktank был доступен только инструмент Ceph Calamari. Дональд полагает, что необходимо иметь хорошую 
+	  приборную панель с открытым исходным кодом для наблюдения за кластером Ceph и его компонентами из одного окна; это приведет к лучшей 
+	  управляемости и ускорит принятие Ceph в целом. Он принял это как вызов и запустил разработку Kraken. Дональд принял решение 
+	  использовать ceph-rest-api для получения необходимых данных кластера для наблюдения за ним и создания отчетов. Для сведения 
+	  всех этих данных в удобный формат приборной панели, Дональд также воспользовался некоторыми другими инструментами, такими как 
+	  Python, Django, humanize и python-cephclient.</p>
+      <p>Дорожная карта для Kraken была разбита на ряд этапов. В настоящее время Kraken находится у первого верстового столба, который 
+	  состоит из следующего набора свойств:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="disc">
+	   <li class="listitem">
+	    <p>Использование данных кластера</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Состояние монитора (MON)</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Состояние устройства хранения объектов (OSD)</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Состояние групп размещения (PG)</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Лучший пользовательский интерфейс</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Поддержка для множества мониторов</p>
+	   </li>
+      </ul>
+      </div>      
+	  <p>Следующий этап разработки Kraken будет включать оперативные изменения для OSD, настройку карты CRUSH в интерактивном режиме, 
+	  аутентификацию пользователей Ceph, работу с пулами, управление блочными устройствами, а также метрики системы, такие как 
+	  использование CPU и оперативной памяти. Вы можете отслеживать дорожную карту Kraken на стрнице GitHub по адресу 
+	  <a class="xref" href="https://github.com/krakendash/krakendash"
+	  title="Kraken roadmap">https://github.com/krakendash/krakendash</a> или файл readme Kraken. Kraken является продуктом с 
+	  полностью открытым исходным кодом и следует лицензированию BSD. Разработчики, которые хотят внести вклад в Kraken могут отправить 
+	  заявку Дональду и могут связаться с ним по <a class="xref" href="mailto:don@merrymack.com" title="Donald Talton">don@merrymack.com</a></p>
+      <p>Строительные блоки Kraken из различных проектов с открытым исходным кодом, таких как:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="disc">
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Python 2.7 или последующие версии</em></span></span>:
+		Требуется для библиотек подобных множествам (collections).</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>ceph-rest-api</em></span></span>:
+		Содержится в бинарных файлах Ceph.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>Django 1.6.2 или последующие версии</em></span></span>:
+		Это основной каркас для Kraken.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>humanize 0.5 или последующие версии</em></span></span>:
+		Необходим для преобразования отображений свободных от данных.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>python-cephclient 0.1.0.4 или последующие версии</em></span></span>:
+		В настоящее время используется Kraken, это обертка для ceph-rest-api. В первых версиях Kraken ceph-rest-api использовался 
+		непосредственно, без каких бы то ни было оберток. Именно Дэвид предписал обертывать ceph-rest-api, поскольку это предоставляет 
+		возможности использовать в будущем множество кластеров.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>djangorestframework 2.3.12 или последующие версии</em></span></span>:
+		Используется для некоторых пользовательских добавлений API, которые могут остаться или исчезнуть в дальнейшем в Kraken.</p>
+	   </li>
+	   <li class="listitem">
+	    <p><span class="term"><span class="emphasis"><em>django-fiter 0.7 или последующие версии</em></span></span>:
+		Требуется для Django.</p>
+	   </li>
+      </ul>
+      </div>      
+     </div>
+        <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Deploying_Kraken"> </a>Развертывание Kraken</h5>
+        </div></div></div>
+        <p>В данном разделе мы узнаем как развернуть Kraken для наблюдения за вашим кластером Ceph.
+		Это небольшое приложение которому нужны незначительные системные ресурсы. В данной реализации мы воспользуемся машиной 
+		<span class="term"><code>ceph-node1</code></span>; вы можете использовать любой узел кластера который имеет доступ к 
+		кластеру Ceph. Следуйте следующим шагам из списка:</p>
+	    <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+          <p>Установите подчиненные приложения для Kraken, такие как python-pip, screen и браузер Firefox, используя приводимую 
+		  ниже команду. Если у вас уже установлен другой браузер, можете пропустить шаг с установкой пакета Firefox. Python-pip 
+		  это средство управления пакетами, используемое для установки пакетов Python, которые понадобятся для установки 
+		  подчиненных приложений. Kraken использует отдельные оконные сеансы для начала необходимых для инструментальной панели 
+		  подпроцессов; эти экраны будут поддерживаться пакетом screen:</p>
+	      <pre class="screen">
+# yum install python-pip screen firefox</pre>
+        </li><li class="listitem">
+          <p>Установите необходимые для разработки библиотеки:</p>
+	      <pre class="screen">
+# yum install gcc python-devel libxml2-devel.x86_64 libxsltdevel.x86_64</pre>
+        </li><li class="listitem">
+          <p>Создайте каталог для Kraken:</p>
+	      <pre class="screen">
+# mkdir /kraken</pre>
+        </li><li class="listitem">
+          <p>Клонируйте репозиторий Kraken из GitHub:</p>
+        </li><li class="listitem">
+	      <pre class="screen">
+# git clone https://github.com/krakendash/krakendash</pre>
+          <p>Используйте средство управления пакетами Python для установки необходимых пакетов Kraken. таких, как 
+		  Django, python-cephclient, djangorestframework, markdown и humanize:</p>
+	      <pre class="screen">
+# cd krakendash
+# pip install -r requirements.txt</pre>
+        </li><li class="listitem">
+          <p>Когда эти пакеты будут установлены, выполните <span class="term"><code>api.sh</code></span> и 
+		  <span class="term"><code>django.sh</code></span>, которые запустят, соответственно, инструментальные панели 
+		  ceph-rest-api и django python. Данные сценарии также выполнятся в независимых экранных окружениях; вы можете использовать 
+		  экранные команды для управления этими сеансами. Нажмите <span class="term"><code>Ctrl + D</code></span> чтобы отключить 
+		  сеанс экрана и перевести его в фоновый режим:</p>
+	      <pre class="screen">
+# cp ../krakendash/contrib/*.sh .
+# ./api.sh
+# ./django.sh</pre>
+        </li><li class="listitem">
+          <p>Вы можете проверить сеансы экранов воспользовавшись командой <span class="term"><code>ps</code></span> и повторно 
+		  подключить сеанс экрана с использованием команды <span class="term"><code>-r</code></span>:</p>
+	      <pre class="screen">
+# ps -ef | grep -i screen</pre>
+          <p>Вывод показан на следующем экранном снимке:</p>
+	      <pre class="screen">
+[root@ceph-client1 kraken]# ll
+total 12
+-rwxr-xr-x. 1 root root  100 Aug 8 04:46 api.sh
+-rwxr-xr-x. 1 root root   93 Aug 8 04:46 django.sh
+drwxr-xr-x. 7 root root 4096 Aug 8 04:4S krakendash
+[root@ceph-client1 kraken]#
+[root@ceph-client1 kraken]#
+[root@ceph-client1 kraken]# ./api.sh
+[detached from 30167.api]
+[rootflceph-clientl kraken]# ./django.sh
+[detached from 30203.django]
+[root@ceph-client1 kraken]#
+[root@ceph-client1 kraken]# ps  -ef | grep -i screen
+root     30167     1  0  05:44  ?       00:00:00  SCREEN -s api sudo ceph-rest-api -c /etc/ceph/ceph.conf —-cluster ceph -i admin
+root     30203     1  0  05:45  ?       00:00:00  SCREEN -s django sudo python krakendash/manage.py runserver 0.0.0.0:8000
+root     30209  6858  0  05:45  pts/0   00:00:00  grep —color=auto -i screen
+[root@ceph-client1 kraken]#</pre>
+        </li><li class="listitem">
+          <p>Наконец, когда <span class="term"><code>api.sh</code></span> и <span class="term"><code>django.sh</code></span>
+		  запущены, откройте ваш веб браузер и наберите в строке навигации <span class="term"><code>http://localhost:8000/</code></span>; 
+		  вы должны будете увидеть состояние вашего кластера Ceph в инструментальной панели Kraken:</p>
+          <div class="informalfigure"><div class="mediaobject">
+           <img src="figures/Fig0814.jpg"/></div><br />
+          </div>
+        </li>
+        </ol>
+        </div>
+		
+       </div>
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ceph-dash_tool"> </a>Инструментарий ceph-dash</h4>
+      </div></div></div>
+      <p>ceph-dash является другой свободной инструментальной панелью/ API мониторинга с открытым исходным кодом для кластера 
+	  Ceph, которая была разработана Кристианом Эйхельманом, который работает на полную ставку в 1&amp;1 Internet AG, Германия 
+	  в качестве главного разработчика программного обеспечения. Кристиан начал разработку этого проекта в то время, когда 
+	  существовало очень мало инструментальных панелей с открытым исходным кодом доступных для Ceph. Более того, другие 
+	  доступные на то время инструментальные панели имели сложную архитектуру и не работали надлежащим образом с большими 
+	  кластерами. Следовательно, Кристиан сосредоточился на разработке простой инструментальной панели на основе REST API, 
+	  которая позволяет кластеру осуществлять наблюдение через простые вызовы REST, которые должны хорошо работать в 
+	  больших кластерах Ceph.</p>
+      <p>Инструментарий ceph-dash был разработан на основе подхода не усложняй (keep-it-simple) для предоставления полного 
+	  представления о состоянии работоспособности кластера Ceph через RESTful JSON API, а также графического интерфейса веб. 
+	  Это приложение с низкими требованиями к ресурсам, которое не имеет зависимостей с ceph-rest-api. Это чистое приложение 
+	  Python wsgi, которое общается с кластером исключительно через librados. В настоящее время ceph-dash обеспечивает ясный 
+	  и простой графический веб- интерфейс, который способен предоставлять следующую информацию о кластере Ceph:</p>
+  	  <div class="itemizedlist">
+	  <ul class="itemizedlist" type="disc">
+	   <li class="listitem">
+	    <p>Общее состояние кластера с подробным описанием проблем</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Поддержка многих мониторов и состояния каждого монитора</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Ссотояние OSD (устройств хранения объектов) с количеством OSD в IN, OUT и нерабочем состояниях</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Графическая визуализация емкости хранилища</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Текущая пропускная способность, содержащая число записей в секунду, чтений в секунду и операций в секунду</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Графическая визуализация состояния групп размещения</p>
+	   </li>
+	   <li class="listitem">
+	    <p>Состояние восстановления кластера</p>
+	   </li>
+      </ul>
+      </div>
+      <p>В продолжение всего этого, ceph-dash также предоставляет конечную точку REST, которая генерирует всю информацию о 
+	  кластере в формате JSON, которая в дальнейшем может использоваться различными созидательными способами. Поскольку ceph-dash 
+	  является проектом с открытым исходным кодом, любой может внести свой вклад, послав запрос Кристиану через 
+	  <a class="xref" href="https://github.com/Crapworks/ceph-dash"
+	  title="ceph-dash">https://github.com/Crapworks/ceph-dash</a></p>
+      <p>Если вы используете ceph-dash для целей тестирования/ разработки, вы можете выполнять его независимо. Для целей 
+	  промышленного применения строго рекомендуется развертывать приложение на wsgi совместимом веб- сервере (Apache, nginx и 
+	  тому подобных). Инструментарий ceph-dash использует микрокаркас Flask и компоновки (binding) ceph-python для 
+	  непосредственной связи с кластером Ceph. Доступ к кластеру через ceph-dash является полностью организованным в режиме 
+	  только для чтения и не требует никаких разрешений на запись. Инструментарий ceph-dash использует команду 
+	  <span class="term"><code>ceph status</code></span> с применением класса Python <span class="term"><code>Rados</code></span>.
+	  Возвращаемый вывод JSON затем делается доступным либо через REST API, либо через графический веб- интерфейс, который 
+	  обновляется каждые 5 секунд.</p>
+     </div>
+	 
+        <div class="section">
+        <div xmlns="" class="titlepage"><div><div>
+         <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Deploying_ceph-dash"> </a>Развертывание ceph-dash</h5>
+        </div></div></div>
+        <p>В данном разделе мы ознакомимся с тем, как развернуть ceph-dash для кластера Ceph. Выполните следующие шаги:</p>
+	    <div class="orderedlist">
+        <ol class="orderedlist" type="1"><li class="listitem">
+          <p>Инструментарий ceph-dash должен быть установлен на машине, которая имеет доступ к кластеру Ceph. Поскольку он 
+		  не требователен к ресурсам, ему может быть назначена любая из машин мониторов.</p>
+        </li><li class="listitem">
+          <p>Создайте каталог для ceph-dash и клонируйте его репозиторий с GitHub:</p>
+	      <pre class="screen">
+# mkdir /ceph-dash
+# git clone https://github.com/Crapworks/ceph-dash.git</pre>
+        </li><li class="listitem">
+          <p>Установите python-pip:</p>
+	      <pre class="screen">
+# yum install python-pip</pre>
+        </li><li class="listitem">
+          <p>Установите пакет Jinja2:</p>
+	      <pre class="screen">
+# easy_install Jinja2</pre>
+        </li><li class="listitem">
+          <p>Когда установка завершена, вам хорошо было бы запустить графический интерфейс ceph-dash. Для запуска ceph-dash выполните:</p>
+	      <pre class="screen">
+# ./ceph-dash.py</pre>
+          <p>Вывод отображен на следующем снимке экрана:</p>
+	      <pre class="screen">
+[root@ceph-node1 ceph-dash]# ./ceph-dash.py
+  * Running on http://0.0.0.0:5000/
+127.0. 0.1 - - [08/Aug/2014 13:15:52] &quot;GET / HTTP/1.1&quot; 200 -
+127.0. 0.1 - - [08/Aug/2014 13:15:55] &quot;GET / HTTP/1.1&quot; 200 -
+127.0. 0.1 - - [08/Aug/2014 13:15:55] &quot;GET /static/css/bootstrap.min.slate.css HTTP/1.1&quot; 304 -
+127.0. 0.1 - - [08/Aug/2014 13:15:55] &quot;GET /static/js/jquery-2.0.3.min.js HTTP/1.1&quot; 304 -
+127.0. 0.1 - - [08/Aug/2014 13:15:55] &quot;GET /static/js/bootstrap.min.js HTTP/1.1&quot; 304 -
+127.0. 0.1 - - [08/Aug/2014 13:15:55] &quot;GET /static/js/globalize.min.js HTTP/1.1&quot; 304 -
+127.0. 0.1 - - [08/Aug/2014 13:15:55] &quot;GET /static/js/dx.chartjs.js HTTP/1.1&quot; 304 -
+127.0. 0.1 - - [08/Aug/2014 13:15:55] &quot;GET /static/js/ceph.dash.js HTTP/1.1&quot; 304 -
+127.0. 0.1 - - [08/Aug/2014 13:15:56] &quot;GET / HTTP/1.1&quot; 200 -</pre>
+        </li><li class="listitem">
+          <p>Откройте ваш веб браузер, наберите <span class="term"><code>http://localhost:5000/</code></span> и запустите 
+		  мониторинг вашего кластера с применением ceph-dash:</p>
+          <div class="informalfigure"><div class="mediaobject">
+           <img src="figures/Fig0816.jpg"/></div><br />
+          </div>
+        </li>
+        </ol>
+        </div>
+       </div>
+	   
+     <div class="section">
+      <div xmlns="" class="titlepage"><div><div>
+       <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Calamari"> </a>Calamari</h4>
+      </div></div></div>
+      <p>Calamari является платформой управления Ceph, привлекательной инструментальной панелью для наблюдения и управления вашим 
+	  кластером Ceph. Она изначально разрабатывалась Inktank как проприетарное программное обеспечение, которое поставлялось 
+	  совместно с продуктом Inktank Ceph Enterprise для их пользователей. Сразу после приобретения  Inktank компанией Red Hat, 
+	  данная платформа была объявлена Red Hat продуктом с открытым кодом 30 мая 2014. Calamari имеет несколько больший набор 
+	  функциональности, а его дорожная карта весьма впечатляет. Calamari имеет две части, причем каждая имеет свой собственный 
+	  репозиторий.</p>
+      <p><span class="term"><span class="emphasis"><em>Fronted</em></span></span> является основанным на браузере графическим 
+	  интерфейсом пользователя, который в основном реализован на JavaScript. Часть fronted выполняет REST API Calamari и 
+	  построена с использованием модульного подхода, следовательно каждый компонент fronted может быть обновлен или может 
+	  подвергаться эксплуатации независимо. Calamari fronted является продуктом соткрытым исходным кодом в соответствии с 
+	  лицензией MIT. Вы можете найти его репозиторий по адресу <a class="xref" 
+	  href="https://github.com/ceph/calamari-clients" title="calamari-clients">https://github.com/ceph/calamari-clients</a></p>
+      <p><span class="term"><span class="emphasis"><em>Сервер Calamari</em></span></span> (Calamari backend) является 
+	  центральной частью платформы и написана на Python. Он также использует другие компоненты, такие как SaltStack, ZeroRPC, 
+	  graphite, djangorestframework, Django и gevent и предоставляет новый REST API для интеграции с Ceph и другими системами. 
+	  Calamari был заново переделан в этой новой версии, в которой он использует новый Calamari REST API для взаимодействия с 
+	  кластером Ceph. Предыдущая версия использовала Ceph REST API, который имеет немного больше ограничений для этих целей. 
+	  Сервер Calamari был переведен в ранг продукта с открытым исходным кодом с лицензией LGPL2+; вы можете найти репозиторий
+	  по адресу <a class="xref" href="https://github.com/ceph/calamari" title="calamari">https://github.com/ceph/calamari</a></p>
+      <p>Calamari имеет хорошую документацию доступную на <a class="xref" href="http://calamari.readthedocs.org" 
+	  title="calamari.readthedocs.org">http://calamari.readthedocs.org</a>. Если вы работатете с Calamari, являетесь 
+	  разработчиком Calamari, или являетесь разработчиком, использующим Calamari REST API, эта документация будет хорошим 
+	  источником информации для вашего старта с Calamari. Как и Ceph, Calamari также имеет обратную связь; вы можете принять 
+	  участие в Calamari на IRC <a class="xref" href="irc://irc.oftc.net/ceph" title="irc.oftc.net/ceph">irc://irc.oftc.net/ceph</a>,
+	  зарегистрировавшись через список рассылки <a class="xref" href="mailto:ceph-calamari@ceph.com" 
+	  title="ceph-calamari@ceph.com">ceph-calamari@ceph.com</a> или отправив запрос на учетную запись Calamari GitHub по адресу
+	  <a class="xref" href="https://github.com/ceph/calamari" title="calamari">https://github.com/ceph/calamari</a> и 
+	  <a class="xref" href="https://github.com/ceph/calamari-clients" title="calamari-clients">https://github.com/ceph/calamari-clients</a>.</p>
+      <p>Если вы хотите установить Calamari и вам интересно посмотреть как это выглядит, можете следовать моему блогу о 
+	  Calamari с пошаговой установкой по адресу <a class="xref" href="http://karan-mj.blogspot.fi/2014/09/ceph-calamari-survival-guide.html" 
+	  title="ceph-calamari-survival-guide">http://karan-mj.blogspot.fi/2014/09/ceph-calamari-survival-guide.html</a></p>
+     </div>
+  </div>
+  
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Summary"> </a>Заключение</h3>
+   </div></div></div>
+   <p>В этой главе мы рассмотрели вопросы мониторинга Ceph, включающие наблюдение за кластером и различными компонентами 
+   кластера Ceph, такими как MON (мониторы), OSD (устройства хранения объектов) и MDS (сервер метаданных). Мы также узнали 
+   о наблюдении за группами размещения, в том числе об их различных состояниях. Состояния групп размещения очень динамичны и 
+   требует интерактивного наблюдения. Большинство изменений, которые испытывает кластер Ceph, происходят в их группах размещения. 
+   В этой главе также рассмотрены некоторые проекты инструментальных панелей графического интерфейса с открытым исходным кодом 
+   для мониторинга, такие как Kraken и ceph-dash. Эти проекты являются самостоятельными от сообщества Ceph, управляемыми и 
+   создаваемыми индивидуальными усилиями, но они имеют открытый исходным код, так что вы можете внести свой вклад в эти проекты. 
+   Мы также сделали обзор Calamari, который является службой управления и мониторинга для Ceph и недавно перешел в 
+   ряд продуктов с открытым исходным кодом от компании Red Hat (Inktank). В следующей главе мы узнаем о том, как Ceph расширяет 
+   свои преимущества для облачных платформ, таких как OpenStack. Мы также сосредоточимся на интеграции Ceph с OpenStack.</p>
+  </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

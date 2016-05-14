@@ -1,0 +1,541 @@
+<html>
+<head>
+   <link rel="icon" href="/i/MdlLogo.gif" type="image/gif">
+   <title>Глава 13. Ведение журналов и мониторинг. Руководство по эксплуатации OpenStack.</title>
+   <meta name="Keywords" content="OpenStack, Cloud computing, Swift, RESTful, Object Storage, Ceph, CORS, CNAME lookup, Domain remap, Health check, Rate limiting, Bulk delete, Container qoutas, account qoutas, TempURL, Static Web, Form post, recon, Swift origin server, Bulk archive auto-extraction">
+   <meta name="Description" content="Глава 13. Ведение журналов и мониторинг. Руководство по эксплуатации OpenStack.">
+   <meta name="Robots" content="INDEX, FOLLOW">
+   <meta name="Author" content="Module-Projects,Ltd">
+   <meta name="Copyright" content="Copyright 1998..2014 Module-Projects,Ltd">
+   <meta http-equiv="Pragma" content="no-cache">
+<script language="javascript" src="/css/v.0/mdlcss.js"></script>
+<style type="text/css" media="screen, print">@import url("i/global-20140610.css");</style>
+<script language="javascript" src="http://www.mdl.ru/usd.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/js/common.js"></script>
+	<script language="javascript" src="http://www.mdl.ru/Solutions/ABC.js"></script>
+</head>
+<body>
+
+<table class="bg_White" width="1024" align="center" valign="top" border="0" cellpadding="0" cellspacing="0"><tbody>
+<tr>
+<td>
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody>
+<tr>
+<td width="150" valign="top" align="center"><img src="http://www.mdl.ru/RMC9.jpg" border=0 /></td>
+<td width="724" valign="bottom" align="center">
+<a class="item-t" href="http://www.mdl.ru"><img src="http://www.mdl.ru/i/MdlBigLogo.gif" border="0"></a><br/>
+<a class="item-t" href="http://www.mdl.ru">С 1991 года на компьютерном рынке России</a>
+</td>
+<td align="center" valign="bottom">
+<a class="item-t" href="javascript:tocall()" onmouseover="this.href=mail"><img src="http://www.mdl.ru/i/9563499.gif" border="0" alt="e-mail" /><br/><br/>т.: 676 0965, 676 0396<br/>Москва, Сосинская ул. 43, <br/>м. Волгоградский проспект</a>
+</td>
+</tr>
+<tr>
+<td class="big_16y" colspan="3" align="center"><a href="index.htm">Руководство по эксплуатации OpenStack</a></td>
+</tr>
+<tr><td colspan="2">
+
+
+<h2 align="right">ГЛАВА 13</h2>
+<hr />
+<h1 id="Chapter_13" align="right">Ведение журналов и мониторинг</h1>
+
+<em>Пользуйтесь переводом <strong>существенно переработанной и дополенной <a href="http://onreader.mdl.ru/openstack-ops/content/logging_monitoring.html">2й редакции</a></strong> (12-дек-2014),<br />
+находящейся теперь и в режиме <a href="http://docs.openstack.org/openstack-ops/content/logging_monitoring.html">постоянно обновляемой документации</a> <br />
+(последняя пока доступна только на англ.яз.).</em><br />
+<p></p>
+
+<p>Поскольку OpenStack состоит из очень большого количества служб, существует много файлов журналов.
+ Цель данного раздела заключается в том, чтобы помочь вам в поиске журналов и работе с ними, 
+ а также в других способах отслеживания состояния вашего проекта.</p>
+
+<h2 id="Ch1301">Где находятся журналы?</h2>
+<p>В Ubuntu большинство служб использует соглашение о том, чтобы записывать свои файлы журналов в подкаталоги <code>/var/log directory</code>.</p>
+
+<h3 id="Ch130101">Контроллер облака</h3>
+<p><table width="50%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td width="50%"><strong>Служба</strong><br />&nbsp;</td>
+ <td width="50%"><strong>Местоположение журнала</strong><br />&nbsp;</td>
+</tr><tr><td>
+nova-*</td><td>
+ /var/log/nova
+</tr><tr><td>
+glance-*</td><td>
+ /var/log/glance
+</tr><tr><td>
+cinder-*</td><td>
+ /var/log/cinder
+</tr><tr><td>
+keystone</td><td>
+ /var/log/keystone
+</tr><tr><td>
+horizon</td><td>
+ /var/log/apache2/
+</tr><tr><td>
+различные (Swift, dnsmasq)</td><td>
+ /var/log/syslog
+</tr></tbody></table></p>
+
+<h3 id="Ch130102">Вычислительные узлы</h3>
+<p><code>
+libvirt: /var/log/libvirt/libvirtd.log<br />
+</code></p>
+<p>Консоль (загрузки сообщений) для экземпляров виртуальных машин: <code>/var/lib/nova/instances/instance-&lt;instance id&gt;/console.log</code></p>
+
+<h3 id="Ch130103">Узлы блочных хранилищ</h3>
+<p><code>
+cinder: /var/log/cinder/cinder-volume.log<br />
+</code></p>
+
+<h2 id="Ch1302">Как читать журналы</h2>
+<p>Службы OpenStack используют стандартные уровни ведения журналов по мере повышения степени важности: 
+DEBUG, INFO, AUDIT, WARNING, ERROR, CRITICAL и TRACE.
+ Таким образом, сообщения появляются в журналах только если они более &quot;серьезные&quot;, 
+ чем определенный уровень журнала, причем  DEBUG позволяет протоколировать все возникающие сообщения.
+ Например, TRACE регистрируется только если программное обеспечение имеет стек трассировки, в то время как INFO 
+ регистрируется для каждого сообщения, включая те, которые предназначены только для информирования.</p>
+<p>Чтобы запретить уровень ведения журналов DEBUG, отредактируйте <code>/etc/nova/nova.conf</code>:
+<br /><code>
+debug=false<br />
+</code></p>
+<p>Keystone обрабатывается немного по-другому.
+  Чтобы изменить уровень ведения журнала, отредактируйте файл <code>/etc/keystone/logging.conf</code> и найдите разделы 
+  <code>logger_root</code> и <code>handler_file</code>.</p>
+<p>Регистрация для Horizon настроена в <code>/etc/openstack_dashboard/local_settings.py</code>.
+  Поскольку Horizon является веб-приложением Django, он следует рамочным соглашениям 
+  <span class="red-heading">Django Logging</span> 
+  (<a href="https://docs.djangoproject.com/en/dev/topics/logging/">https://docs.djangoproject.com/en/dev/topics/logging/</a>).</p>
+<p>Первый шаг при поиске источника ошибки обычно начинается с просмотра сообщений в журналах CRITICAL, TRACE или ERROR в конце файла журнала.</p>
+<p>Пример сообщения журнала CRITICAL с непосредственно за ним следующими соответствующими TRACE (отслеживание Phyton):
+<br /><code>
+2013-02-25 21:05:51 17409 CRITICAL cinder [-] Bad or unexpected response from the storage volume backend API: volume group cinder-volumes doesn't exist<br />
+2013-02-25 21:05:51 17409 TRACE cinder Traceback (most recent call last):<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/bin/cinder-volume&quot;, line 48, in &lt;module&gt;<br />
+2013-02-25 21:05:51 17409 TRACE cinder service.wait()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/cinder/service.py&quot;, line 422, in wait<br />
+2013-02-25 21:05:51 17409 TRACE cinder _launcher.wait()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/cinder/service.py&quot;, line 127, in wait<br />
+2013-02-25 21:05:51 17409 TRACE cinder service.wait()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/eventlet/greenthread.py&quot;, line 166, in wait<br />
+2013-02-25 21:05:51 17409 TRACE cinder return self._exit_event.wait()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/eventlet/event.py&quot;, line 116, in wait<br />
+2013-02-25 21:05:51 17409 TRACE cinder return hubs.get_hub().switch()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/eventlet/hubs/hub.py&quot;, line 177, in switch<br />
+2013-02-25 21:05:51 17409 TRACE cinder return self.greenlet.switch()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/eventlet/greenthread.py&quot;, line 192, in main<br />
+2013-02-25 21:05:51 17409 TRACE cinder result = function(*args, **kwargs)<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/cinder/service.py&quot;, line 88, in run_server<br />
+2013-02-25 21:05:51 17409 TRACE cinder server.start()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/cinder/service.py&quot;, line 159, in start<br />
+2013-02-25 21:05:51 17409 TRACE cinder self.manager.init_host()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/cinder/volume/manager.py&quot;, line 95, <br />
+ in init_host<br />
+2013-02-25 21:05:51 17409 TRACE cinder self.driver.check_for_setup_error()<br />
+2013-02-25 21:05:51 17409 TRACE cinder File &quot;/usr/lib/python2.7/dist-packages/cinder/volume/driver.py&quot;, line 116, <br />
+ in check_for_setup_error<br />
+2013-02-25 21:05:51 17409 TRACE cinder raise exception.VolumeBackendAPIException(data=exception_message)<br />
+2013-02-25 21:05:51 17409 TRACE cinder VolumeBackendAPIException: Bad or unexpected response from the storage volume <br />
+ backend API: volume group cinder-volumes doesn't exist<br />
+2013-02-25 21:05:51 17409 TRACE cinder<br />
+</code></p>
+<p>В данном примере cinder-volumes не смогли стартовать и была проведена трассировка стека, 
+так как их сервер томов не смог установить том системы хранения - 
+вероятно потому, что том LVM, который предполагается в конфигурации не существует.</p>
+<p>Пример журнала ошибок:
+<br /><code>
+2013-02-25 20:26:33 6619 ERROR nova.openstack.common.rpc.common [-] AMQP server on localhost:5672 is unreachable:<br />
+ [Errno 111] ECONNREFUSED. Trying again in 23 seconds.<br />
+</code></p>
+<p>В данной ошибке служба nova не смогла подключиться к серверу RabbitMQ, 
+поскольку получила сообщение об ошибке отказа в соединении.</p>
+
+<h2 id="Ch1303">Трассировка запросов экземпляра</h2>
+<p>Когда экземпляр отказывает работать должным образом, вам обычно приходится отслеживать активность, связанную с этим экземпляром в лог-файлах различных служб 
+<code>nova-*</code>, причем и в контроллере облака, и в вычислительных узлах.</p>
+<p>Обычный способ заключается в отслеживании UUID, связанного с экземпляром в журналах служб.</p>
+<p>Рассмотрим следующий пример:
+<br /><code>
+ubuntu@initial:~$ nova list<br />
++--------------------------------+--------+--------+--------------------------+<br />
+| ID &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Name &nbsp; | Status | Networks &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++--------------------------------+--------+--------+--------------------------+<br />
+| fafed8-4a46-413b-b113-f1959ffe | cirros | ACTIVE | novanetwork=192.168.100.3|<br />
++--------------------------------+--------+--------+--------------------------+<br />
+</code></p>
+<p>Здесь <code>faf7ded8-4a46-413b-b113-f19590746ffe</code> - ID, связанный с экземпляром.
+ Если вы выполните поиск этой строки в контроллере облака в файлах <code>/var/log/nova-*.log</code>, она обнаружится в 
+ <code>nova-api.log</code> и в <code>nova-scheduler.log</code>.
+ Если вы выполните поиск этой строки в вычислительных узлах в <code>/var/log/nova-*.log</code>, она обнаружится в 
+ <code>novanetwork.log</code> и в <code>nova-compute.log</code>.
+ Если не возникло сообщений об ошибках ERROR или CRITICAL, самая последняя выведенная запись журнала 
+ может обеспечит подсказку о том, что пошло не так.</p>
+
+<h2 id="Ch1304">Добавление настраиваемых пользователем операторов ведения журналов</h2>
+<p>Если в существующих журналах не достаточно информации, возможно вам потребуется добавить свои собственные операторы для служб 
+<code>nova-*services</code>.</p>
+<p>Исходные файлы расположены в <code>/usr/lib/python2.7/dist-packages/nova</code></p>
+<p>Чтобы добавить операторы ведения журналов, в верней части файла должна присутствовать следующая строка.
+ Для большинства файлов она уже присутствует на своем месте.
+ <br /><code>
+from nova.openstack.common import log as logging<br />
+LOG = logging.getLogger(__name__)<br />
+</code></p>
+<p>Чтобы добавить оператор ведения журналов DEBUG, вы должны выполнить:
+<br /><code>
+LOG.debug(&quot;This is a custom debugging statement&quot;)<br />
+</code></p>
+<p>Вы могли заметить, что все существующие сообщения в журналах имеют предшествующий символ подчеркивания и заключены в круглые скобки, например:
+<br /><code>
+LOG.debug(_(&quot;Logging statement appears here&quot;))<br />
+</code></p>
+<p>Это используется для поддержки перевода сообщений ведения журналов на различные языки, используя библиотеку интернационализации 
+<span class="red-heading">gettext</span> (<a href="http://docs.python.org/2/library/gettext.html">http://docs.python.org/2/library/gettext.html</a>).
+  Вам не нужно делать это для ваших собственных сообщений пользовательских журналов.
+  Однако, если вы хотите внести свой вклад в код проекта OpenStack, который включает операторы протоколирования, 
+  вы должны окружить ваши сообщения журнала подчеркиванием и круглыми скобками.</p>
+
+<h2 id="Ch1305">Интерфейс веб- управления RabbitMQ или rabbitmqctl</h2>
+<p>За исключением отказов в соединениях, файлы журналов RabbitMQ, как правило, бесполезны для отладки проблем, связанных с OpenStack.
+ Вместо этого, мы рекомендуем вам использовать интерфейс веб управления RabbitMQ.
+ Включите его в контроллере облака:<br /><code>
+# /usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management<br />
+# service rabbitmq-server restart<br />
+</code></p>
+<p>Веб- управляемый интерфейс RabbitMQ доступен в вашем контроллере облака по ссылке http://localhost:55672.</p>
+<p><img src="i/Tip.jpg" alt="Tip" />Ubuntu 12.04 устанавливает версию RabbitMQ 2.7.1, которая использует порт 55672.
+  RabbitMQ версии 3.0 и выше использует порт 15672.
+  Вы можете проверить, с какой версия RabbitMQ вы работаете на локальном компьютере Ubuntu, выполнив:
+<br /><code>
+$ dpkg -s rabbitmq-server | grep &quot;Version:&quot;
+Version: 2.7.1-0ubuntu4<br />
+</code></p>
+<p>Альтернативой разрешению интерфейса веб- управления RabbitMQ является использование команд <em>rabbitmqctl</em>.
+ Например, <em>rabbitmqctl list_queues| grep cinder</em> отобразит все оставшиеся в очереди сообщения.
+ Если они существуют, то это возможный признак того, что службы cinder не соединились должным образом с RabbitMQ и, 
+ возможно, должны быть запущены повторно.</p>
+<p>Элементы для наблюдения за RabbitMQ включают ряд элементов в каждой из очередей и статистики времени обработки для сервера.</p>
+
+<h2 id="Ch1306">Централизованно управляемые журналы</h2>
+<p>Поскольку, скорее всего, ваше облако состоит из большого количества серверов, вы должны проверить журналы на каждом из 
+этих серверов для создания целостной картины из отдельных событий.
+ Лучшим решением является пересылка всех журналов со всех серверов в центральное местоположение, чтобы все они были доступны из одной области.</p>
+<p>Ubuntu использует в качестве службы ведения журналов по умолчанию rsyslog.
+ Поскольку она сама по себе в состоянии отправлять записи на удаленно расположенные журналы, у вас не будет необходимости 
+ устанавливать никакие дополнительные службы для поддержки этой функции, просто измените файл конфигурации.
+ При этом, рассмотрите возможность работы вашей системы ведения журналов в сети управления или с помощью защищенного VPN во избежание их перехвата.</p>
+
+<h3 id="Ch130601">Настройка клиента rsyslog</h3>
+<p>Для начала настройте все компоненты OpenStack на ведение системных журналов дополнительно к их стандартному месторасположению файлов журналов.
+ Также настройте каждый компонент для регистрации в различных системных журналах.
+ Это сделает более простым разделение журналов по индивидуальным компонентам на центральном сервере.
+<br /><code>
+<strong>nova.conf</strong>:<br />
+ &nbsp; use_syslog=True<br />
+ &nbsp; syslog_log_facility=LOG_LOCAL0<br />
+<strong>glance-api.confand glance-registry.conf</strong>:<br />
+ &nbsp; use_syslog=True<br />
+ &nbsp; syslog_log_facility=LOG_LOCAL1<br />
+<strong>cinder.conf</strong>:<br />
+ &nbsp; use_syslog=True<br />
+ &nbsp; syslog_log_facility=LOG_LOCAL2<br />
+<strong>keystone.conf</strong>:<br />
+ &nbsp; use_syslog=True<br />
+ &nbsp; syslog_log_facility=LOG_LOCAL3<br />
+<strong>Swift</strong><br />
+</code>
+По умолчанию Swift делает записи в syslog.
+</p>
+<p>Затем создайте <code>/etc/rsyslog.d/client.conf</code> с помощью следующей строки:
+<br /><code>
+*.* @192.168.1.10<br />
+</code></p>
+<p>Это дает указание отсылать все записи в журналы на перечисленные IP.
+ В данном примере IP указывает на контроллер облака.</p>
+
+
+<h3 id="Ch130602">Настройка сервера rsyslog</h3>
+<p>Назначьте сервер для централизованного ведения журналов.
+ Лучше всего выбрать сервер, который будет посвящен исключительно этой задаче.
+ Создайте файл <code>/etc/rsyslog.d/server.conf</code> со следующим содержимым:
+<br /><code>
+# Enable UDP<br /> 
+$ModLoad imudp <br />
+# Listen on 192.168.1.10 only <br />
+$UDPServerAddress 192.168.1.10<br />
+# Port 514 <br />
+$UDPServerRun 514 <br />
+<br />
+# Create logging templates for nova <br />
+$template NovaFile,&quot;/var/log/rsyslog/%HOSTNAME%/nova.log&quot; <br />
+$template NovaAll,&quot;/var/log/rsyslog/nova.log&quot; <br />
+# Log everything else to syslog.log <br />
+<br />
+<br />
+$template DynFile,&quot;/var/log/rsyslog/%HOSTNAME%/syslog.log&quot; <br />
+*.* ?DynFile <br />
+<br />
+# Log various openstack components to their own individual file <br />
+local0.* ?NovaFile <br />
+local0.* ?NovaAll <br />
+&amp;~<br />
+</code></p>
+<p>Приведенный выше пример конфигурации обрабатывает только службу nova.
+  Первоначально он настраивает rsyslog на работу в качестве сервера, который обслуживает порт 514.
+  Далее, он создает ряд шаблонов для записи в журнал.
+  Шаблоны записей в журнал управляют местоположением, в котором хранятся получаемые журналы.
+  При использовании приведенного выше примера, журнал nova из c01.example.com размещается в следующих местах:<ul>
+ <li><code>/var/log/rsyslog/c01.example.com/nova.log</code>
+ <li><code>/var/log/rsyslog/nova.log</code></ul></p>
+<p>Также полезно журналы из c02.example.com разместить по адресам:<ul>
+ <li><code>/var/log/rsyslog/c02.example.com/nova.log</code>
+ <li><code>/var/log/rsyslog/nova.log</code></ul></p>
+<p>Таким образом вы имеете индивидуальный файл журнала для каждого вычислительного узла и агрегированный журнал, 
+который содержит записи журналов для всех узлов.</p>
+
+<h2 id="Ch1307">StackTach</h2>
+<p>StackTach является инструментом, созданным Rackspace для сбора и представления уведомлений, отправляемых nova.
+  Уведомления, по существу, те же записи в журнал, однако могут быть гораздо более детальными.
+  Хороший обзор уведомлений можно найти в <span class="red-heading">System Usage Data</span> 
+  (<a href="https://wiki.openstack.org/wiki/SystemUsageData">https://wiki.openstack.org/wiki/SystemUsageData</a>).</p>
+
+<p>Чтобы разрешить nova отправлять уведомления, добавьте следующие строки в <code>nova.conf</code>:
+<br /><code>
+notification_topics=monitor 
+notification_driver=nova.openstack.common.notifier.rabbit_notifier<br />
+</code></p>
+<p>Раз уж <code>nova</code> отправляет уведомления, установите и настройте StackTach.
+  Поскольку StackTach является относительно новым продуктом и постоянно меняется, инструкции по установке будут быстро устаревать.
+  Пожалуйста, обращайтесь к ресурсу <span class="red-heading">StackTach GitHub repo</span> 
+  (<a href="https://github.com/rackerlabs/stacktach"> https://github.com/rackerlabs/ stacktach </a>) 
+  для получения инструкций и демонстрационных видео.</p>
+
+<h2 id="Ch1308">Мониторинг</h2>
+<p>Существует два типа мониторинга: наблюдение за проблемами и отслеживание тенденций использования.
+  Первый гарантирует, что все службы работают, создавая функциональное облако.
+  Последний содержит мониторинг использования ресурсов в течение продолжительного времени для того, 
+  чтобы принимать обоснованные решения о потенциально узких местах и обновлениях.</p>
+
+<h3 id="Ch130801">Мониторинг процессов</h3>
+<p>Основной вид оповещающего мониторинга является простой проверкой и удостоверения в том, что требуемый процесс запущен.
+  Например, убедитесь, что в контроллере облака запущена служба <code>nova-api</code>:
+<br /><code>
+[ root@cloud ~ ] # ps aux | grep nova-api<br />
+nova 12786 0.0 0.0 37952 1312 ? Ss Feb11 0:00 su -s /bin/sh -c exec nova-api --config-file=/etc/nova/nova.conf nova<br />
+nova 12787 0.0 0.1 135764 57400 ? S Feb11 0:01 /usr/bin/python /usr/bin/novaapi --config-file=/etc/nova/nova.conf<br />
+nova 12792 0.0 0.0 96052 22856 ? S Feb11 0:01 /usr/bin/python /usr/bin/nova-api  --config-file=/etc/nova/nova.conf<br />
+nova 12793 0.0 0.3 290688 115516 ? S Feb11 1:23 /usr/bin/python /usr/bin/novaapi --config-file=/etc/nova/nova.conf<br />
+nova 12794 0.0 0.2 248636 77068 ? S Feb11 0:04 /usr/bin/python /usr/bin/novaapi --config-file=/etc/nova/nova.conf<br />
+root 24121 0.0 0.0 11688 912 pts/5 S+ 13:07 0:00 grep nova-api<br />
+</code></p>
+<p>Вы можете создавать автоматизированные предупреждения о критических процессах с помощью Nagios и NRPE.
+  Например, для того, чтобы убедиться, что процесс <code>nova-compute</code> запущен на вычислительных узлах, 
+  создайте на вашем сервере Nagios оповещение, которое выглядит примерно таким образом:
+<br /><code>
+define service { <br />
+&nbsp; &nbsp; host_name c01.example.com <br />
+&nbsp; &nbsp; check_command check_nrpe_1arg!check_nova-compute <br />
+&nbsp; &nbsp; use generic-service <br />
+&nbsp; &nbsp; notification_period 24x7 <br />
+&nbsp; &nbsp; contact_groups sysadmins <br />
+&nbsp; &nbsp; service_description nova-compute <br />
+}<br />
+</code></p>
+<p>Затем на фактическом вычислительном узле создайте следующую конфигурацию NRPE:
+<br /><code>
+command[check_nova-compute]=/usr/lib/nagios/plugins/check_procs -c 1: -a novacompute<br />
+</code></p>
+<p>Nagios проверяет, что по крайней мере одна служба <code>nova-compute</code> работает в настоящее время.</p>
+
+<h3 id="Ch130802">Оповещение о ресурсах</h3>
+<p>Оповещения о ресурсах предоставляют уведомления когда один или несколько ресурсов достигают критически низкого уровня.
+  Хотя пороги мониторинга должны быть настроены для вашей конкретной среды OpenStack, 
+  мониторинг использования ресурсов вообще не является особенным для OpenStack - 
+  любой обобщенный тип оповещения будет прекрасно работать.</p>
+<p>Некоторые из ресурсов, которые вы захотите контролировать, включают:<ul>
+ <li>Использование дисков
+ <li>Загруженность серверов
+ <li>Использование памяти
+ <li>Сетевой ввод/ вывод
+ <li>Доступные виртуальные ЦПУ</ul></p>
+<p>Например, для мониторинга дисковой емкости на вычислительном узле с использованием Nagios, 
+добавьте следующие строки в ваши настройки Nagios:<br /><code>
+define service {<br /> 
+&nbsp; &nbsp; host_name c01.example.com<br /> 
+&nbsp; &nbsp; check_command check_nrpe!check_all_disks!20% 10% <br />
+&nbsp; &nbsp; use generic-service <br />
+&nbsp; &nbsp; contact_groups sysadmins <br />
+&nbsp; &nbsp; service_description Disk <br />
+}<br />
+</code></p>
+<p>На вычислительном узле добавьте следующие строки в вашу конфигурацию NRPE:
+<br /><code>
+command[check_all_disks]=/usr/lib/nagios/plugins/check_disk -w $ARG1$ -c $ARG2$  -e<br />
+</code></p>
+<p>Nagios выдает уведомление предостережения (WARNING) когда любой диск в вычислительном узле заполняется на 80% 
+и критично (CRITICAL) при заполнении на 90%.</p>
+
+<h3 id="Ch130803">Специфичные для OpenStack ресурсы</h3>
+<p>Такие ресурсы как память, диск и процессор являются общими для всех серверов (даже для не OpenStack серверов) и имеют важное значение для общего состояния работоспособности сервера.
+  Когда имеешь дело конкретно с OpenStack, эти ресурсы важны по другой причине: достаточной обеспеченности доступной для запуска экземпляров.
+  Существует несколько способов, которыми вы можете увидеть использование ресурсов OpenStack.</p>
+<p>Первый обеспечивается командой <code>nova</code>:
+<br /><code>
+# nova usage-list<br />
+</code></p>
+<p>Эта команда выводит список того, как много запущено экземпляров владельцев и некоторую первичную статистику использования комбинированных экземпляров.
+  Эта команда полезна для быстрого обзора вашего облака, но в действительности не снабжает вас большим количеством деталей.</p>
+<p>Далее, база данных <code>nova</code> содержит три таблицы, которые хранят информацию об использовании.</p>
+<p>Таблицы <code>nova.quotas</code> и <code>nova.quota_usages</code> хранят информацию о квотах.
+ Если квоты владельца (tenant) отличаются от значений, установленных для квот по умолчанию, тогда их квоты сохраняются в таблице <code>nova.quotas</code>.
+ Например:
+<br /><code>
+mysql&gt; select project_id, resource, hard_limit from quotas; <br />
++----------------------------------+-----------------------------+------------+<br />
+| project_id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | resource &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | hard_limit |<br />
++----------------------------------+-----------------------------+------------+<br />
+| 628df59f091142399e0689a2696f5baa | metadata_items &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | 128 &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| 628df59f091142399e0689a2696f5baa | injected_file_content_bytes | 10240 &nbsp; &nbsp; &nbsp;|<br />
+| 628df59f091142399e0689a2696f5baa | injected_files &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | 5 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|<br />
+| 628df59f091142399e0689a2696f5baa | gigabytes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1000 &nbsp; &nbsp; &nbsp; |<br />
+| 628df59f091142399e0689a2696f5baa | ram &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 51200 &nbsp; &nbsp; &nbsp;|<br />
+| 628df59f091142399e0689a2696f5baa | floating_ips &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| 628df59f091142399e0689a2696f5baa | instances &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| 628df59f091142399e0689a2696f5baa | volumes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp; &nbsp; &nbsp; |<br />
+| 628df59f091142399e0689a2696f5baa | cores &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 20 &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++----------------------------------+-----------------------------+------------+ <br />
+</code></p>
+<p>Таблица <code>nova.quota_usages</code> хранит данные отслеживания того, как много ресурсов использует владелец в настоящее время:
+ <br /><code>
+mysql&gt; select project_id, resource, in_use from quota_usages where project_id like '628%';<br />
++----------------------------------+--------------+--------+ <br />
+| project_id &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | resource &nbsp; &nbsp; | in_use | <br />
++----------------------------------+--------------+--------+ <br />
+| 628df59f091142399e0689a2696f5baa | instances &nbsp; &nbsp;| 1 &nbsp; &nbsp; &nbsp;|<br />
+| 628df59f091142399e0689a2696f5baa | ram &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; | 512 &nbsp; &nbsp;| <br />
+| 628df59f091142399e0689a2696f5baa | cores &nbsp;&nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp; &nbsp;| <br />
+| 628df59f091142399e0689a2696f5baa | floating_ips | 1 &nbsp; &nbsp; &nbsp;| <br />
+| 628df59f091142399e0689a2696f5baa | volumes &nbsp; &nbsp; &nbsp;| 2 &nbsp; &nbsp; &nbsp;| <br />
+| 628df59f091142399e0689a2696f5baa | gigabytes &nbsp; &nbsp;| 12 &nbsp; &nbsp; | <br />
+| 628df59f091142399e0689a2696f5baa | images &nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp; &nbsp;| <br />
++----------------------------------+--------------+--------+<br />
+</code></p>
+<p>Объединив используемые с квотой владельца ресурсы, вы можете выяснить процент использования.
+  Например, если этот владелец использует 1 плавающий IP из 10, то он использует 10% от своих квот плавающих IP.
+  Вы можете применить эту процедуру и развернуть ее в форматированный отчет:
+<br /><code>
++-----------------------------------+------------+------------+---------------+<br />
+| some_tenant &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-----------------------------------+------------+------------+---------------+<br />
+| Resource &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Used &nbsp; &nbsp; &nbsp; | Limit &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |<br />
++-----------------------------------+------------+------------+---------------+<br />
+| cores &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 20 &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 5 % |<br />
+| floating_ips &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1 &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | 10 &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 10 % |<br />
+| gigabytes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 12 &nbsp; &nbsp; &nbsp; &nbsp; | 1000 &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1 % |<br />
+| images &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 25 % |<br />
+| injected_file_content_bytes &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 10240 &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| injected_file_path_bytes &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 255 &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| injected_files &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 5 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| instances &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 1 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 10 &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 10 % |<br />
+| key_pairs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 100 &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| metadata_items &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 128 &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| ram &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 512 &nbsp; &nbsp; &nbsp; &nbsp;| 51200 &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 1 % |<br />
+| reservation_expire &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 86400 &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| security_group_rules &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 20 &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| security_groups &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 0 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 10 &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 0 % |<br />
+| volumes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| 10 &nbsp; &nbsp; &nbsp; &nbsp; |&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 20 % |<br />
++-----------------------------------+------------+------------+---------------+<br />
+</code></p>
+<p>Приведенный выше отчет был сформирован с использованием пользовательского сценария, который может быть найден на GitHub 
+(<a href="https://github.com/cybera/novac/blob/dev/libexec/novac-quota-report">https://github.com/cybera/novac/blob/dev/libexec/novac-quota-report</a>)</p>
+<p><img src="i/Tip.jpg" alt="Tip" />Этот сценарий является специфичным для конкретной установки OpenStack и должен быть изменен, 
+чтобы соответствовать вашей среде.
+ Тем не менее, логика должна быть легко понятна.</p>
+
+<h3 id="Ch130804">Интеллектуальные оповещения</h3>
+<p>Интеллектуальные оповещения можно рассматривать как одну из форм непрерывной интеграции для работы.
+ Например, вы можете легко проверить что Glance запущен и работает, удостоверившись, что процессы glance-api и glance-registry запущены, 
+ или убедившись, что glance-api отвечает по порту 9292.</p>
+<p>Но как вы можете определить, что образы были успешно загружены службой образов?
+  Может оказаться, что диск, на который служба образов сохраняет образы заполнен или сервер S3 выключен.
+  Естественно, вы можете проверить это, выполнив быструю загрузку образа:
+<br /><code>
+#!/bin/bash <br />
+# <br />
+# assumes that reasonable credentials have been stored at<br />
+# /root/auth <br />
+<br />
+. /root/openrc <br />
+wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img <br />
+glance image-create --name='cirros image' --is-public=true --containerformat=bare --disk-format=qcow2 &lt; cirros-0.3.0-x86_64-disk.img<br />
+</code></p>
+<p>Выполняя этот сценарий и прокручивая его в оповещениях для вашей системы мониторинга (например, в Nagios), 
+вы теперь получаете автоматизированный способ проверки работоспособности загрузки образов в каталог образов.</p>
+<p><img src="i/Tip.jpg" alt="Tip" />Вы должны удалять образ после каждой проверки.
+ Еще лучше, проверять: можно ли успешно удалить изображение из службы образов.</p>
+<p>Интеллектуальные оповещения отнимают значительно больше времени для планирования и реализации по сравнению 
+с другими описанными в этой главе предупреждениями.
+  Хорошей структурой реализации интеллектуального оповещения является:<ul>
+ <li>Анализ общих действий в вашем облаке
+ <li>Создание способов автоматической проверки этих действий
+ <li>Свертывание этих тестов в систему предупреждений</ul></p>
+<p>Некоторые другие примеры интеллектуального оповещения включают в себя:<ul>
+ <li>Могут ли экземпляры быть запущены и уничтожены?
+ <li>Можно ли создавать пользователей?
+ <li>Могут ли сохраняться и удаляться объекты?
+ <li>Можно ли создавать и уничтожать тома?</ul></p>
+
+<h3 id="Ch130805">Анализ тенденций</h3>
+<p>Анализ тенденций может вам дать большее представление о том, как ваш облако работает каждый день.
+  Например того, что напряженный день был просто редким явлением, или того, что вы должны начать добавление новых вычислительных узлов.</p>
+<p>Анализ тенденций имеет несколько иной подход, чем оповещения.
+ В то время, как оповещения интересуются двузначным результатом (удастся ли проверка или нет), анализ тенденций записывает текущее состояние 
+ в определенный момент времени.
+ Как только необходимое количество временных отметок было записано, вы можете увидеть, как значение изменяется с течением времени.</p>
+<p>Все упоминавшиеся ранее типы оповещения также могут быть использованы для представления анализа тенденций.
+  Некоторые другие примеры анализа тенденций включают:<ul>
+ <li>Число экземпляров в каждом вычислительном узле
+ <li>Типы используемых особенностей
+ <li>Количество используемых томов
+ <li>Почасовое количество запросов к хранилищам объектов
+ <li>Почасовое количество nova-api запросов
+ <li>Статистика ввода/ вывода из ваших служб хранения</ul></p>
+<p>В качестве примера: запись использования <code>nova-api</code> может позволить вам отслеживать необходимость расширения контроллера облака.
+ Оставляя под наблюдением запросы <code>nova-api</code>, вы можете определить, требуется ли вам порождать больше процессов 
+ <code>nova-api</code> или же зайти дальше и запустить совершенно новый сервер <code>nova-api</code>.
+ Чтобы получить приблизительное число запросов, просмотрите стандартные сообщения INFO в <code>/var/log/nova/nova-api.log</code>:
+<br /><code>
+# grep INFO /var/log/nova/nova-api.log | wc<br />
+</code></p>
+<p>Вы можете получить дополнительную статистику, просмотрев количество успешных запросов:
+<br /><code>
+# grep &quot; 200 &quot; /var/log/nova/nova-api.log | wc<br />
+</code></p>
+<p>Периодически выполняя эту команду и регистрируя результат, вы можете создать отчет анализа тенденции во времени, 
+который показывает: растет ли, уменьшатся ли или поддерживается в устойчивом состоянии использование вашего <code>nova-api</code>.</p>
+<p>Такой инструмент, как collectd, может быть использован для хранения подобной информации.
+  Поскольку collectd выходит за рамки данной книги, хорошей отправной точкой будет использование collectd для хранения результатов 
+  в виде типа данных счетчика (COUNTER).
+  Более подробную информацию можно найти в документации collectd 
+  (<a href="https://collectd.org/wiki/index.php/Data_source">https://collectd.org/wiki/index.php/Data_source</a>).</p>
+
+<table width="100%" border="0" cellpadding="2" cellspacing=0 class="bg_White"><tbody><tr>
+ <td align="left"><a href="Ch12ru.htm">Глава 12</a></td>
+ <td align="center"><a href="index.htm">Оглавление</a></td>
+ <td align="right"><a href="Ch14ru.htm">Глава 14</a></td>
+</tr><tr><td colspan="3" style="border-bottom: thin solid;">&nbsp;</tr>
+<tr><td colspan="2" valign="top">Перевод: Copyright ©&nbsp;2014 &nbsp;<img src="/i/mdl-reg.jpg" widht="35" height="12" style="border-style: none;">.<br>
+All rights reserved.<br />
+Ссылки обязательны (Refs and links obligatory).</td>
+<td valign="top" align="right"><em><a href="http://www.mdl.ru">http://www.mdl.ru</a></em></td></tr>
+</tbody></table>
+
+
+<td align="right" valign="top">
+<script language="javascript">
+WriteABC('GPFS');
+//--></script>
+</tr>
+</tbody></table>
+</tbody></table>
+</body>
+</html>

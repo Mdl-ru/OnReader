@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Настройка системы хранения - Книга рецептов Proxmox</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="ProxmoxCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="up" href="index.html" title="Книга рецептов Proxmox"/>
+<link rel="prev" href="Ch05.html" title="Глава 5. Настройка межсетевого экрана"/>
+<link rel="next" href="Ch07.html" title="Глава 7. Резервное копирование и восстановление"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Настройка системы хранения';
+PrevRef = 'Ch05.html';
+UpRef = 'index.html';
+NextRef = 'Ch07.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 6. Настройка системы хранения</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>В данной главе мы собираемся рассмотреть как в Proxmox VE настраиваются системы хранения. 
+  Мы охватим следующие разделы в данной главе:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Настройку основного хранилища</p>
+	 </li>
+	<li class="listitem">
+	 <p>Установку хранилища FreeNAS</p>
+	 </li>
+	<li class="listitem">
+	 <p>Соединение с хранилищем iSCSI</p>
+	 </li>
+	<li class="listitem">
+	 <p>Соединение с хранилищем LVM</p>
+	 </li>
+	<li class="listitem">
+	 <p>Соединение с хранилищем NFS</p>
+	 </li>
+	<li class="listitem">
+	 <p>Соединение с хранилищем Ceph RBD</p>
+	 </li>
+	<li class="listitem">
+	 <p>Соединение с хранилищем ZFS</p>
+	 </li>
+	<li class="listitem">
+	 <p>Соединение с хранилищем GlusterFS</p>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch06.html">6. Настройка системы хранения</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch06.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#Basic">Настройка основного хранилища</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#FreeNAS">Установка хранилища FreeNAS</a></span></dt>
+    <dt><span class="section"><a href="Ch06.html#iSCSI">Соединение с хранилищем iSCSI</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#LVM">Соединение с хранилищем LVM</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#NFS">Соединение с хранилищем NFS</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#CephRBD">Соединение с хранилищем Ceph RBD</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#ZFS">Соединение с хранилищем ZFS</a></span></dt>
+	<dt><span class="section"><a href="Ch06.html#GlusterFS">Соединение с хранилищем GlusterFS</a></span></dt>
+	</dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+   </div></div></div>
+   <p>Хранилище является местом, где размещаются образы виртуальных дисков виртуальных машин. Существует множество различных 
+   типов систем хранения со многими различными свойствами, производительностью и способами применения. Вне зависимости от 
+   того является ли хранилище локальным с непосредственно подключенными к нему дисками или совместно используемым хранилищем 
+   с сотнями дисков, основным предназначением хранилища является размещения образов виртуальных дисков, шаблонов, 
+   резервных копий и тому подобного. Proxmox поддерживает различные типы хранилищ,такие как NFS, Ceph, GlusterFS и ZFS.
+   Различные типы хранилищ могут хранить различные типы данных.</p>
+   <p>Например, локальное хранилище может хранить любые типы данных, такие как образы дисков, шаблоны ISO/ контейнеров,
+   файлы резервных копий и тому подобное. Хранилище Ceph, с другой стороны, может размещать только образы дисков формата 
+   <span class="term"><code>.raw</code></span>. Для предоставления правильного типа хранения для правильного применения 
+   жизненно важно иметь правильное понимание различных типов хранилищ. Предоставление полных сведений о каждой системе 
+   хранения выходит за рамки данной книги, но мы рассмотрим как подсоединять их к Proxmox и сопровождать систему хранения 
+   для виртуальных машин.</p>
+   <p>Системы хранения могут быть настроены в двух основных категориях:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Локальные хранилища</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Совместно используемые хранилища</p>
+	 </li>
+   </ul>
+   </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Локальные хранилища </span></h4>
+   </div></div></div>
+   <p>Любое хранилище которое размещается в самом узле с применением напрямую подключаемых дисков называется локальным 
+   хранилищем. Этот тип хранилища не имеет избыточности помимо предоставляемой RAID контроллером который управляет массивом.
+   Если узел отказывает сам по себе, хранилище становится полностью недоступным. Миграция виртуальных машин в живую невозможна 
+   когда виртуальные машины сохраняются на локальных хранилищах поскольку в процессе миграции виртуальный диск данной 
+   виртуальной машины должен целиком копироваться на другой узел.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Виртуальные машины могут осуществлять миграцию в реальном времени когда существует несколько узлов Proxmox в 
+	   кластере и виртуальные диски сохраняются на совместно используемом хранилище доступном для всех узлов в кластере.</p></td></tr></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Совместно используемые хранилища </span></h4>
+   </div></div></div>
+   <p>Совместно используемое хранилище является системой хранения, доступной всем узлам в кластере поверх сетевой среды в
+   неком виде. В виртуальной среде с общим хранилищем реальный виртуальный диск виртуальной машины может храниться в общем хранилище, 
+   в то время как виртуальная машина на самом деле работает на другом узле  хоста Proxmox. С применением совместно используемого 
+   хранилища становится возможной миграция виртуальных машин в реальном времени без выключения машин. Множество узлов Proxmox 
+   может совместно использовать одно общее хранилище, а виртуальные машины могут перемещаться повсеместно, поскольку виртуальный диск 
+   хранится на различных совместно используемых хранилищах. Как правило, несколько выделенных узлов применяются для настройки совместно 
+   используемого хранилища со своими собственными ресурсами отдельно от совместного хранения источников узлов Proxmox, которые могут быть 
+   использованы для размещения виртуальных машин.</p>
+   <p>В последних выпусках Proxmox добавил некоторые новые подключаемые хранилища, которые позволяют пользователям получать преимущества
+   некоторых больших систем хранения и интегрировать их со средой Proxmox. Большинство настроек систем хранения может быть выполнено 
+   с применением графического интерфейса Proxmox.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Хранилище Ceph </span></h4>
+   </div></div></div>
+   <p>Ceph является распределенной системой хранения, которая предоставляет блочные устройства хранения объектов RADOS 
+   (<span class="term"><strong class="userinput"><code>RBD, RADOS Block Device</code></strong></span> 
+   {<span class="emphasis"><em>Прим. пер.: <a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch03.html#RADOS" target="_top">Безотказное автономное 
+   распределенное хранилище объектов</a>, Reliable Autonomic Distributed Object Store</em></span>}, 
+   файловую систему Ceph {<span class="emphasis"><em><a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch03.html#filesystem" 
+   target="_top"><span class="term"><strong class="userinput"><code>CephFS</code></strong></span></a>  в переводе книги &quot;Изучаем Ceph&quot; Карана Сингха</em></span>} и 
+   <a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch03.html#block_storage" target="_top">хранилище 
+   объектов Ceph</a>. Ceph построена с учетом потребностей в очень высоких уровнях надежности, масштабируемости и производительности. 
+   Кластер Ceph может быть расширен до масштабов данных в несколько Петабайт без ущерба для целостности данных и может быть настроен с 
+   применением общедоступного оборудования. Все записываемые в хранилище данные получают репликации по всему кластеру Ceph. Ceph с 
+   самого начала разрабатывался исходя из потребностей больших данных. В отличие от других типов хранилищ, чем больше становится 
+   кластер Ceph, тем выше его производительность. Тем не менее, он также может быть использован для резервирования данных с 
+   такой же легкостью в небольших средах. Низкая производительность может быть смягчена с применением SSD для хранения журналов Ceph.
+   Обратитесь к подразделу <a class="link" href="#Ceph_OSD_Journal" target="_top">журналов OSD</a> в данном разделе для информации о журналах.
+   {<span class="emphasis"><em>Прим. пер.: <a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch03.html#OSD_journal" 
+   target="_top">Журнал OSD Ceph</a> в переводе книги &quot;Изучаем Ceph&quot; Карана Сингха</em></span>}</p>
+   <p>Встроенные средства самовосстановления Ceph обеспечивают беспрецедентную устойчивость при отсутствии единой точки отказа. В кластере 
+   Ceph со многими узлами хранилище может переносить не только отказ жесткого диска, но и выход из строя всего узла без потери данных. В
+   настоящее время Proxmox поддерживает только блочные устройства RBD.</p>
+   <p>Ceph включает ряд компонентов имеющих решающее значение для вашего понимания того, как настраивать и эксплуатировать хранилище.
+   Следующие компоненты это то, и чего состоит Ceph:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Демон монитора (MON)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Демон хранения объектов (OSD)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Журнал OSD</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Сервер метаданных (MSD)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Карта Управляемых масштабируемым хешированием репликаций (CRUSH map, Controlled Replication Under Scalable Hashing map)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Группы размещения (PG, Placement Group)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Пулы (Pool)</p>
+	 </li>
+   </ul>
+   </div>
+
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_MON"> </a>MON</h5>
+    </div></div></div>
+	<p>Демоны монитора формируют кворум распределенного кластера Ceph. Должно присутствовать как минимум три настроенных 
+	демона монитора на различных узлах для каждого кластера. Демоны монитора также могут быть настроены как виртуальные 
+	машины вместо применения физических узлов. Мониторы требуют очень мало ресурсов для функционирования, следовательно 
+	выделяемые ресурсы могут быть очень незначительными. Монитор может быть установлен через графический интерфейс Proxmox 
+	после начального создания кластера.</p>
+	
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_OSD"> </a>OSD</h5>
+    </div></div></div>
+	<p>Демоны хранения объектов <span class="term"><strong class="userinput"><code>OSD, Object Storage Daemons</code></strong></span> 
+	отвечают за хранение и извлечение действительных данных кластера. Обычно одно физическое устройство подобное жесткому диску,
+	или твердотельному диску настраивается как отдельный OSD. Хотя несколько различных OSD может быть настроено на одном 
+	физическом диске, это не рекомендуется делать совсем ни для каких промышленных применений. Каждый OSD требует устройство журнала,
+	где вначале записываются данные, которые позже переносятся на реальный OSD. Сохраняя данные в журналах на 
+	высокопроизводительных SSD мы можем значительно увеличивать производительность ввода/ вывода Ceph.</p>
+	<p>Благодаря архитектуре Ceph, чем больше и больше OSD добавляется в кластер, тем больше возрастает производительность ввода/ 
+	вывода. Журнал OSD работает очень хорош на малых кластерах при примерно восьми OSD на узел. OSD могут быть установлены с 
+	помощью графического интерфейса Proxmox после начального создания MON.</p>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_OSD_Journal"> </a>OSD Journal</h5>
+    </div></div></div>
+	<p>Каждый фрагмент данных предназначенный для OSD Ceph вначале записывается в журнал. Журнал позволяет демонам OSD записывать 
+	меньшие фрагменты, позволяя реальным дискам фиксировать запись, которая требует больше времени. Проще говоря, все данные 
+	будут записаны в журналы, а затем журнальная файловая система отправляет данные на фактический диск для постоянной записи. 
+	Так, если журнал хранится на диске с высокой производительностью, например SSD, входящие данные будут записаны с гораздо более 
+	высокой скоростью, в то время как за сценой более медленные диски SATA могут фиксировать запись с более медленной скоростью. 
+	Журналы на SSD могут на самом деле улучшать производительность кластера Ceph, особенно, если кластер небольшой, всего с 
+	несколькими терабайтами данных.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Следует также отметить, что если происходит отказ журнала, это приведет к выходу из строя всех OSD, которые обслуживает
+	   данное устройство журнала. В некоторых средах может быть необходимо помещать два устройства SSD для зеркального RAID 
+	   и уже его применять для журнала В больших средах с более чем 12 OSD на узел производительность может быть на самом 
+	   деле получена путем размещения журнала на том же диске OSD вместо применения SSD для ведения журнала.</p></td></tr></table>
+     </div>
+
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_MDS"> </a>MDS</h5>
+    </div></div></div>
+	<p>Демон сервера метаданных <span class="term"><strong class="userinput"><code>MDS, Metadata Server</code></strong></span>
+	отвечает за предоставление файловой системы Ceph (CephFS) в распределенной системе хранения Ceph. MDS может настраиваться 
+	на отдельных узлах или сосуществовать с уже существующими узлами монитора или виртуальными машинами. Хотя CephFS прошла 
+	долгий путь, она по прежнему не в полной мере рекомендуется к применению в промышленной среде. Стоит упомянуть, что 
+	многие виртуальные среды активно работают с MDS без каких- либо проблем. В настоящее время не рекомендуется настраивать 
+	более двух MDS в одном кластере Ceph. В настоящее время CephFS не поддерживается подключаемым модулем хранения Proxmox.
+	Однако она может быть настроена как монтируемая локально с последующим соединением через хранилище 
+	<span class="term"><strong class="userinput"><code>Directory</code></strong></span>. MDS не может быть установлен 
+	через графический интерфейс Proxmox, по крайней мере, в версии 3.4.</p>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_CRUSH_map"> </a>CRUSH map</h5>
+    </div></div></div>
+	<p>Карта Управляемых масштабируемым хешированием репликаций (CRUSH map) является сердцем распределенной системы хранения 
+	Ceph. Алгоритм для сохранения и извлечения пользовательских данных в кластерах Ceph планируется в карте CRUSH. CRUSH 
+	делает возможным прямой доступ клиента к OSD. Это устраняет единую точку отказа и любые физические ограничения 
+	масштабирования, поскольку не существует централизованных серверов или контроллеров для управления операциями чтения и записи 
+	хранимых данных. Во всех кластерах Ceph CRUSH поддерживает карту всех MON и OSD. CRUSH определяет как данные должны быть
+	разбиты и реплицированы среди OSD распределяя их среди локальных узлов или даже среди удаленно расположенных узлов.</p>
+	<p>Карта CRUSH по умолчанию создается на только что установленный кластер Ceph. Она может дополнительно настраиваться 
+	дальше на основе потребностей пользователей. Для небольших кластеров Ceph эта карта должна работать просто прекрасно. 
+	Однако, когда Ceph развертывается для очень больших данных, эту карту необходимо настраивать дополнительно. Настроенная 
+	карта позволит лучше управлять массивными кластерами Ceph.</p>
+	<p>Для успешной работы с кластерами Ceph любых размеров обязательно ясное понимание карты CRUSH.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения дополнительных подробностей по карте CRUSH Ceph посетите 
+	   <a class="link" href="http://ceph.com/docs/master/rados/operations/crush-map/" 
+	   target="_top">http://ceph.com/docs/master/rados/operations/crush-map/ и
+	   <a class="link" href="http://cephnotes.ksperis.com/blog/2015/02/02/crushmap-example-of-a-hierarchical-cluster-map" 
+	   target="_top">http://cephnotes.ksperis.com/blog/2015/02/02/crushmap-example-of-a-hierarchical-cluster-map</a>.
+       {<span class="emphasis"><em>Прим. пер.: или раздел <a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch04.html#CRUSH" 
+       target="_top">CRUSH</a> в переводе книги &quot;Изучаем Ceph&quot; Карана Сингха</em></span>}.</p>
+	   <p>В Proxmox VE 3.4 мы не можем настраивать под требования пользователя карту CRUSH с применением графического 
+	   интерфейса Proxmox. Она может только просматриваться в GUI, а ее изменение осуществляется через CLI.</p></td></tr></table>
+     </div>
+
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_PG"> </a>PG</h5>
+    </div></div></div>
+	<p>В хранилище  Ceph объекты данных собираются в группы определяемые с помощью алгоритмов CRUSH. Они называются группами 
+	размещения (PG, Placement Group), поскольку CRUSH помещает эти группы в различные OSD в зависимости от установленного в карте 
+	CRUSH уровня репликации и количества OSD и узлов. Отслеживая группы объектов вместо самих объектов можно сохранять огромное 
+	количество аппаратных ресурсов. Было бы невозможно отслеживать миллионы отдельных объектов в кластере. Следующая диаграмма 
+	показывает как объекты объединяются в группы и, как PG связаны к OSD:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0601.jpg"/> </div><br />
+    </div>
+	<p>Для балансировки доступных аппаратных ресурсов необходимо назначать правильное число групп размещения. Число групп 
+	размещения должно меняться в зависимости от число OSD в кластере. Следующая таблица предлагаемых групп размещений выполнена
+	разработчиками Ceph:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="50%"/><col width="50%"/><thead><tr valign="top">
+          <th>Число OSD</th>
+          <th>Число PG</th>
+        </tr></thead><tr valign="top">
+          <td><p>Меньше 5 OSD</p></td>
+          <td><p>128</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>От 5 до 10 OSD</p></td>
+          <td><p>512</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>От 10 до 50 OSD</p></td>
+          <td><p>4096</p></td>
+        </tr></tbody></table>
+	<p>Выбор соответствующего числа групп размещения является критичным, поскольку каждая группа размещения будет потреблять 
+	ресурсы узла. Слишком многогрупп размещения для неверного число OSD в действительности приведет к избыточному использованию 
+	ресурсов узла OSD, в то время как очень маленькое число назначенных групп размещения в большом кластере поставит данные в 
+	состояние риска. Эмпирическое правило заключается вначале с наименьшим возможным числом групп размещения с последующим их 
+	увеличением по мере роста числа OSD.</p>	
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения дополнительных подробностей по группам размещения посетите 
+	   <a class="link" href="http://ceph.com/docs/master/rados/operations/placement-groups/" 
+	   target="_top">http://ceph.com/docs/master/rados/operations/placement-groups/</a>.
+       {<span class="emphasis"><em>Прим. пер.: или раздел <a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch04.html#PG" 
+       target="_top">Группы размещения</a> в переводе книги &quot;Изучаем Ceph&quot; Карана Сингха</em></span>}.</p></td></tr></table>
+     </div>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Ceph_Pools"> </a>Pools</h5>
+    </div></div></div>
+	<p>Пулы Ceph аналогичны разделам жесткого диска. Мы можем создать множество пулов в кластере Ceph для разделения хранимых данных.
+	Например, пул с названием <span class="term"><code>accounting</code></span> может хранить данные всего подразделения бухгалтерского 
+	учета, а другой пул может хранить данные о персонале компании. При создании пула необходимо назначение числа групп размещения.
+	При начальной настройке Ceph создаются три пула по умолчанию. Это <span class="term"><code>data</code></span>,
+	<span class="term"><code>metadata</code></span> и <span class="term"><code>rbd</code></span>. Удаление пула 
+	навсегда удалит все хранимые объекты.</p>
+	<p>{<span class="emphasis"><em>Прим. пер.: пулы также применяются при создании разных уровней хранения, например, для разделения
+	оперативных и замороженных данных см. <a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch10.html#cache_tiering" 
+    target="_top">Многоуровневое кэширование Ceph</a> в переводе книги &quot;Изучаем Ceph&quot; Карана Сингха.
+	Помимо создания избыточности за счет репликаций, в Ceph реализованы методы кодирования затиранием (erasure coding) - аналог 
+	построения RAID массивов, более экономичный относительно используемых объемов дисков по сравнению с реплицированием данных. 
+	Метод создания избыточности (репликации или кодирование) задается при создании пула и не может быть изменен.
+	Подробнее о создании избыточных данных кодированием в <a class="link" href="http://onreader.mdl.ru/LearningCeph/content/Ch10.html#erasure_coding" 
+    target="_top">Кодирование затирания Ceph</a> в переводе книги &quot;Изучаем Ceph&quot; Карана Сингха.
+	В последнее время появляется все больше методов, позволяющих еще больше увеличивать эффективность использования дискового 
+	пространства и времени восстановления данных, например -  <a class="link" href="http://onreader.mdl.ru/Ceph/Planning/Blueprints/Hammer/SHEC.htm" 
+    target="_top">Драночный код затирания, SHEC</a>, <a class="link" href="http://onreader.mdl.ru/Ceph/Planning/Blueprints/Hammer/lazy-recovery.htm" 
+    target="_top">Интеллектуальные отложенные средства</a></em></span>}.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения дополнительных подробностей по Ceph и его компонентам посетите 
+	   <a class="link" href="http://ceph.com/docs/master/" 
+	   target="_top">http://ceph.com/docs/master/</a>.
+       {<span class="emphasis"><em>Прим. пер.: или с  переводом книги &quot;<a class="link" href="http://onreader.mdl.ru/LearningCeph/content/index.html" 
+       target="_top">Изучаем Ceph</a>&quot; Карана Сингха</em></span>}.</p></td></tr></table>
+     </div>
+	<p>Следующий рисунок демонстрирует основы кластера <span class="emphasis"><em>Proxmox+Ceph</em></span></p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0602.jpg"/> </div><br />
+    </div>
+   <p>Предыдущий рисунок показывает узлы Proxmox, три узла монитора, три узла OSD и два узла MDS составляющие кластер <span class="emphasis"><em>Proxmox+Ceph</em></span>.
+   Заметим, что Ceph располагается в сети, которая отличается от общедоступной сети. В зависимости от установки числа репликаций 
+   все приходящие данные объектов должны записываться более одного раза. Это вызывает высокую потребность в пропускной способности.
+   {<span class="emphasis"><em>Прим. пер.: еще большую нагрузку создают автоматическая балансировка, сохраняющая примерно 
+   равным процент заполнения всех OSD в кластере Ceph, и восстановление копий в случае выхода из строя некоего оборудования</em></span>}. 
+   Выделяя Ceph в отдельную сетевую среду мы будем уверены, что сеть Ceph может полностью использовать всю полосу пропускания.</p>
+   <p>В более продвинутых кластерах третья сеть создается исключительно между узлами Ceph для репликаций кластера, тем самым
+   еще больше улучшая производительность. В Proxmox VE 3.4. один и тот же узел может использоваться и для Proxmox, и для Ceph. 
+   Это предоставляет больший способ управляемости всеми узлами из одного графического интерфейса Proxmox. Не рекомендуется размещать 
+   виртуальные машины Proxmox на узле который также настроен как Ceph. Во время повседневных операций узлы Ceph не потребляют больших 
+   объемов ресурсов подобных процессорам или памяти. Однако, когда Ceph переходит в режим балансировки вследствие отказа узла OSD  
+   возникают большие объемы реплицируемых данных, что требует больших объемов ресурсов. Если ресурсы совместно используются 
+   виртуальными машинами и Ceph, производительность значительно ухудшится.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Хранилище RBD Ceph может принимать только файлы образов виртуальных дисков <span class="term"><code>.raw</code></span>.</p></td></tr></table>
+     </div>
+   <p>Ceph сам по себе не приходит с графическим интерфейсом для управления, поэтому наличие возможности управлять узлами Ceph
+   с применением графического интерфейса Proxmox делает административные задачи более простыми. Ознакомьтесь с подразделом 
+   <a class="link" href="#CephRBD_MonitoringCeph" target="_top">Отслеживание хранилища Ceph</a> в разделе 
+   <span class="emphasis"><em>Как это сделать...</em></span> рецепта <a class="link" href="#CephRBD" target="_top">Соединение 
+   с хранилищем Ceph RBD</a> далее в этой главе для ознакомления с тем, как установить больше графических интерфейсов доступных
+   только для чтения для наблюдения за кластерами Ceph.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Basic"> </a>Настройка основного хранилища</h3>
+   </div></div></div>
+   <p>Вы можете настроить хранилище в кластере Proxmox как с применением GUI, так и с помощью CLI. Ознакомьтесь с рецептом 
+   <a class="link" href="Ch02.html#datacenter_menus" target="_top">Доступ к меню центра данных</a> в
+   <a class="link" href="Ch02.html" target="_top">Главе 2. Знакомство с графическим интерфейсом Proxmox</a> для 
+   информации о параметрах графического интерфейса хранилища. Настройка хранилища сохраняется в файле 
+   <span class="term"><code>/etc/pve/storage.cfg</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Вы можете изменить этот файл непосредственно чтобы добавить хранилища через графический интерфейс Proxmox, а настройки
+   сохранятся автоматически. Следующий снимок экрана является файлом настроек хранилищ в том виде, как он возникает после 
+   чистой установки Proxmox:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0603.jpg"/> </div><br />
+    </div>
+   <p>Настройка хранилищ обычно имеет следующий многострочный формат:</p>
+	   <pre class="screen">
+&lt;type of storage&gt; : &lt;storage_id&gt;
+         &lt;path_to_storage&gt;
+         &lt;enable/disable share&gt;
+         content types
+         maxfiles &lt;numeric value of maximum backups to keep&gt;
+	   </pre>
+   <p>На основании данной настройки существует локальное хранилище подключенное к кластеру Proxmox, причем все файлы будут 
+   сохраняться в каталоге <span class="term"><code>/var/lib/vz</code></span>. Данное хранилище может хранить типы содержания, 
+   включающие образы дисков, ISO, шаблоны контейнеров и файлы резервных копий. Хранилище будет хранить максимум три последних 
+   файла резервных копии. Следующий снимок экрана показывает хранилище из графического интерфейса Proxmox:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0604.jpg"/> </div><br />
+    </div>
+   <p>Изменение настройки хранилища не требует перезагрузки и вступает в действие немедленно.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="FreeNAS"> </a>Установка хранилища FreeNAS</h3>
+   </div></div></div>
+   <p>FreeNAS является одной из наиболее популярных свободно распространяемой системой хранения которая проста в установке и
+   сопровождении. Она предоставляет общие протоколы хранения, такие как iSCSI, NFS, CIFS, AFP и тому подобные. Применяя готовое 
+   к использованию общедоступное оборудование любой может настроить полностью функциональную систему хранения за несколько минут.
+   Существует платная версия FreeNAS, которая поставляется с предустановленной системой хранения, продаваемой iXsystems под названием 
+   TrueNAS, посетите <a class="link" href="http://www.ixsystems.com/truenas/" target="_top">http://www.ixsystems.com/truenas/</a>.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для целей настоящей книги мы будем использовать FreeNAS, поскольку она очень проста в установке для начинающих 
+	   и имеет целый ряд свойств хранения которые не требуют очень больших вложений. Один простой узел FreeNAS может обеспечивать
+	   разнообразные опции хранения для вашего тестирования. Вы можете применить любое другое хранилище по своему 
+	   выбору чтобы попробовать различные подключаемые хранилища доступные в Proxmox.</p></td></tr></table>
+     </div>
+   <p>Существует несколько других жизнеспособных выборов помимо FreeNAS, которые также дают очень неплохие совместно 
+   используемые хранилища без дополнительной стоимости:.</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="70%"/><thead><tr valign="top">
+          <th>Система хранения</th>
+          <th>Ссылка</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Nexenta</code></strong></span></p></td>
+          <td><p><a class="link" href="http://www.nexenta.com/" target="_top">http://www.nexenta.com/</a></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>NAS4Free</code></strong></span></p></td>
+          <td><p><a class="link" href="http://www.nexenta.com/" target="_top">http://www.nas4free.org/</a></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>napp-it</code></strong></span></p></td>
+          <td><p><a class="link" href="http://www.nexenta.com/" target="_top">http://www.napp-it.org/</a></p></td>
+        </tr></tbody></table>
+   <p>Следующий экранный снимок показывает графический интерфейс FreeNAS после обычной установки:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0605.jpg"/> </div><br />
+    </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Для целей данной главы вам нужно установить систему хранения способную создавать хранилища на основе iSCSI, LVM и NFS, поскольку 
+   они могут быть присоединены к кластерам Proxmox. Если у вас уже есть такая установка системы хранения, пропустите, пожалуйста, 
+   данный раздел. Для целей обучения FreeNAS может быть установлена как виртуальная машина в кластере Proxmox. Загрузите 
+   последний ISO файл FreeNAS c <a class="link" href="http://www.freenas.org/download-freenas-release.html" 
+   target="_top">http://www.freenas.org/download-freenas-release.html</a></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Если вы устанавливаете FreeNAS на физическом узле, применяйте следующие шаги:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Подготовьте CD с образом ISO FreeNAS.</p>
+	 </li><li class="listitem">
+       <p>Вставьте USB флеш-диск c, по крайней мере, 8ГБ в USB порт.</p>
+	 </li><li class="listitem">
+       <p>Загрузите узел с диска ISO.</p>
+	 </li><li class="listitem">
+       <p>После приглашения выберите USB диск как диск установки.</p>
+	 </li><li class="listitem">
+       <p>Следуйте установке согласно графическому интерфейсу и перезагрузитесь после завершения.</p>
+	 </li><li class="listitem">
+       <p>Настройте сеть в соответствии с вашими настройками IP после перезагрузки.</p>
+	 </li><li class="listitem">
+       <p>Осуществите доступ к графическому интерфейсу FreeNAS из веб- просмотрщик применив IP из предыдущего пункта.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Если вы устанавливаете FreeNAS на виртуальной машине, применяйте следующие шаги:=</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Загрузите образ ISO FreeNAS в хранилище Proxmox.</p>
+	 </li><li class="listitem">
+       <p>Создайте виртуальную машину с 8ГБ виртуальным диском и одним или более дисками необходимого размера.</p>
+	 </li><li class="listitem">
+       <p>Стартуйте виртуальную машину из образа ISO.</p>
+	 </li><li class="listitem">
+       <p>После приглашения выберите 8ГБ виртуальный диск как установочный диск.</p>
+	 </li><li class="listitem">
+       <p>Следуйте установке согласно графическому интерфейсу и перезагрузитесь после завершения.</p>
+	 </li><li class="listitem">
+       <p>Настройте сеть в соответствии с вашими настройками IP после перезагрузки.</p>
+	 </li><li class="listitem">
+       <p>Осуществите доступ к графическому интерфейсу FreeNAS из веб- просмотрщик применив IP из предыдущего пункта.</p>
+	 </li>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Все подробности о том как настраивать различные типы хранилищ в FreeNAS выходят за рамки данной книги. Официальная документация 
+   FreeNAS по адресу <a class="link" href="http://doc.freenas.org/9.3/freenas.html" 
+   target="_top">http://doc.freenas.org/9.3/freenas.html</a> поможет создать совместно используемые iSCSI и NFS, которые 
+   будут использоваться позже в этой главе.</p>
+   <p>Если у вас есть различные системы хранения, такие как iSCSI и NFS, вы можете использовать их для практических разделов 
+   данной главы. Если вы не знакомы ни с какими системами хранения и только начинаете работать в мире разделяемых систем хранения 
+   и виртуализации, тогда FreeNAS может стать хорошей отправной точкой.</p>
+	 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+        <p>Хорошей идеей будет потратить некоторое время на FreeNAS перед погружением в Proxmox.</p></td></tr></table>
+      </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="iSCSI"> </a>Соединение с хранилищем iSCSI</h3>
+   </div></div></div>
+   <p><span class="term"><strong class="userinput"><code>Internet Small Computer System Interface (iSCSI)</code></strong></span> 
+   основывается на протоколе интернет {IP}, который позволяет передавать команды SCSI поверх стандартной сети на основе IP.
+   iSCSI устройства могут быть установлены локально или на огромных расстояниях для предоставления вариантов хранения. Для клиента 
+   подключенное iSCSI устройство представляется просто как физически подключенное дисковое устройство.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для дополнительной информации по iSCSI посетите <a class="link" href="http://en.wikipedia.org/wiki/ISCSI" 
+	   target="_top">http://en.wikipedia.org/wiki/ISCSI</a> {<span class="emphasis"><em>Прим. пер.: или 
+	   <a class="link" href="http://ru.wikipedia.org/wiki/iSCSI" 
+	   target="_top">http://ru.wikipedia.org/wiki/iSCSI</a></em></span>}.</p></td></tr></table>
+     </div>
+   <p>В данном разделе мы собираемся рассмотреть как подключать iSCSI хранилище к кластеру Proxmox.</p>
+  </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Мы собираемся настроить хранилище с применением графического интерфейса Proxmox. Зарегистрируйтесь в графическом интерфейсе 
+   вкачестве пользователя root илю любого другого пользователя с правами root. В Proxmox iSCSI главным образом применяется для установки
+   поддержки хранилищ <span class="term"><strong class="userinput"><code>Logical Volume Manager (LVM)</code></strong></span>.
+   Следовательно, перед тем как мы сможем настроить хранилище LVM, должны быть настроены некоторые адресаты (targets) iSCSI на которых 
+   расположится LVM. Если вы этого еще не сделали, создайте адресат iSCSI с именем <span class="term"><code>pmx-iscsi</code></span> или
+   любым другим в совместно используемой системе хранения, например в FreeNAS.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>В графическом интерфейсе кликните по <span class="term"><strong class="userinput"><code>Datacenter</code></strong></span>
+	  в левом окне навигации.</p></li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Storage</code></strong></span> в меню с закладками.</p>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> чтобы открыть ниспадающее меню 
+	  как показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0606.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code> iSCSI</code></strong></span> чтобы открыть блок 
+	  диалога.</p></li><li class="listitem">
+      <p>Заполните необходимую информациею отображенную в следующей таблице. Вводимые значения могут отличаться для
+	  вашего окружения.</p>
+        <table rules="all" width="700" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="18%"/><col width="35%"/><col width="47%"/><thead><tr valign="top">
+          <th>Элемент</th>
+          <th>Вид информации</th>
+          <th>Вводимое значение</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ID</code></strong></span></p></td>
+          <td><p>Имя хранилища.</p></td>
+          <td><p><span class="term"><code>pmx-iscsi</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Portal</code></strong></span></p></td>
+          <td><p>IP узла совместно используемого хранилища.</p></td>
+          <td><p><span class="term"><code>172.16.0.74</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Target</code></strong></span></p></td>
+          <td><p>Адресат iSCSI настроенный на совместно используемом узле.</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>iqn.2015-05.com.domain.ctl:iscsi-tgt</code></strong></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Прямое применение LUN</code></strong></span></p></td>
+          <td><p>Разрешение/ запрет прямого применения LUN. Параметр должен быть установлен на запрет. Разрешение может 
+		  привести к потере данных.</p></td>
+          <td><p>Установите disable.</p></td>
+        </tr></tbody></table>
+	  <p>Следующий экранный снимок показывает блок диалога хранилища iSCSI с уже введенной информацией:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0607.jpg"/> </div><br />
+      </div>
+	  </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> для подключения хранилища.</p>
+	  <p>Следующий экранный снимок показывает хранилище iSCSI после его возникновения в графическом интерфейсе Proxmox:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0608.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Следующий снимок экрана показывает файл конфигурации с добавленными настройками хранилища iSCSI. Мы также можем сделать 
+   изменения путем прямого редактирования файла:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0609.jpg"/> </div><br />
+    </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Отметим, что хранилище iSCSI не готово к применению само по себе. Оно просто представляется как блочное устройство или 
+   виртуальный пустой диск. Никакие файлы не могут быть сохранены в подключенном хранилище iSCSI. Оно может быть использовано только
+   для создания LVM хранилища с применением адресатов iSCSI в качестве базовых устройств.</p>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="LVM"> </a>Соединение с хранилищем LVM</h3>
+   </div></div></div>
+   <p>LVM хранилище предоставляет очень высокий уровень гибкости поскольку логические тома могут легко создаваться и перемещаться 
+   между физическими хранилищами подключенными к узлу. В LVM хранилище мы можем сохранять только образы виртуальных дисков 
+   <span class="term"><code>.raw</code></span>. В LVM хранилище невозможно сохранять шаблоны или контейнеры OpenVZ.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>LVM может быть сконфигурирован с применением как локально подключенного дискового хранилища, так и iSCSI подключаемого 
+   устройства с различных узлов. Локально подключаемый LVM должен настраиваться с применением CLI. В версии ProxmoxVE 3.4 невозможно
+   настраивать локально подключаемый LVM через графический интерфейс.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Отметим, что по умолчанию установка Proxmox создает хранилище LVM на диске локальной операционной системы для
+	   хранения самого Proxmox.</p></td></tr></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Следующие разделы покажут как добавлять хранилище LVM с локальными устройствами и создавать LVM с совместно используемыми 
+   хранилищами в качестве основы.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h5 xmlns="http://www.w3.org/1999/xhtml" class="title">Добавление хранилища LVM с локальными устройствами</h5>
+   </div></div></div>
+   <p>Следующие шаги показывают как добавить LVM хранилище с локальными устройствами:</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Совет</th></tr><tr><td align="left" valign="top">
+	   <p>Будьте уверены что устройства не имеют никаких разделов или файловых систем на них, поскольку они будут безвозвратно 
+	   удалены.</p></td></tr></table>
+     </div>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Зарегистрируйтесь в консоли через SSH на узле Proxmox.</p>
+	  </li><li class="listitem">
+       <p>Создайте физический том на локально подключаемом устройстве:
+	   <pre class="screen">
+# pvcreate /dev/sda(id)
+	   </pre></p>
+	  </li><li class="listitem">
+       <p>Создайте группу тома с именем <span class="term"><code>pmx-lvmvg</code></span> или любым другим удобным вам именем:
+	   <pre class="screen">
+# vgcreate pmx-lvmvg /dev/sda(id)
+	   </pre></p>
+	  </li><li class="listitem">
+       <p>Зарегистрируйтесь в графическом интерфейсе Proxmox и перейдите в меню с закладками 
+	   <span class="term"><strong class="userinput"><code>Storage</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните <span class="term"><strong class="userinput"><code>Add</code></strong></span> и выберите 
+	   <span class="term"><strong class="userinput"><code>LVM</code></strong></span> в ниспадающем меню.</p>
+	  </li><li class="listitem">
+       <p>Введите <span class="term"><code>pmx-lvm</code></span> в качестве имени хранилища.</p>
+	  </li><li class="listitem">
+       <p>Выберите <span class="term"><strong class="userinput"><code>Existing volume groups</code></strong></span> из
+	   ниспадающего меню <span class="term"><strong class="userinput"><code>Base Storage </code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Введите <span class="term"><code>pmx-lvmvg</code></span> в текстовом блоке
+	   <span class="term"><strong class="userinput"><code>Volume group</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните на блоки пометок (checkbox) <span class="term"><strong class="userinput"><code>Enable</code></strong></span> и 
+	   <span class="term"><strong class="userinput"><code>Shared</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> чтобы создать хранилище LVM.</p>
+	  </li>
+	  </ol>
+    </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h5 xmlns="http://www.w3.org/1999/xhtml" class="title">Создание LVM с совместно используемыми хранилищами в основе</h5>
+   </div></div></div>
+   <p>Теперь мы собираемся рассмотреть как создать LVM с совместно используемым хранилищем в основе. Следующие шаги 
+   показывают как добавить хранилище LVM на сетевых iSCSI устройствах через графический интерфейс:</p>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Зарегистрируйтесь через графический интерфейс Proxmox и перейдите в меню с закладками 
+	   <span class="term"><strong class="userinput"><code>Storage</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните <span class="term"><strong class="userinput"><code>Add</code></strong></span> и выберите 
+	   <span class="term"><strong class="userinput"><code>LVM</code></strong></span> в ниспадающем меню.</p>
+	  </li><li class="listitem">
+       <p>Введите <span class="term"><code>pmx-lvm</code></span> в качестве имени хранилища.</p>
+	  </li><li class="listitem">
+       <p>Выберите <span class="term"><code>pmx-iscsi</code></span> в ниспадающем меню 
+	   <span class="term"><strong class="userinput"><code>Base Storage</code></strong></span>. Это ровно тот же адресат, 
+	   который мы подключали в рецепте <a class="link" href="#iSCSI" target="_top">Соединение с хранилищем iSCSI</a>.</p>
+	  </li><li class="listitem">
+       <p>Введите <span class="term"><code>pmx-lvmvg</code></span> в текстовом блоке 
+	   <span class="term"><strong class="userinput"><code>Volume group</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните на блоки пометок (checkbox) <span class="term"><strong class="userinput"><code>Enable</code></strong></span> и 
+	   <span class="term"><strong class="userinput"><code>Shared</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> чтобы создать хранилище LVM.</p>
+	  </li>
+	  </ol>
+    </div>
+	<p>Следующий снимок экрана показывает блок диалога {добавления} хранилища LVM для LVM хранилищ на основе iSCSI:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0610.jpg"/> </div><br />
+    </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Вот содержание файла настройки хранилища в <span class="term"><code>/etc/pve/storage.cfg</code></span> после добавления хранилища LVM:</p>
+	   <pre class="screen">
+lvm: pmx-lvm
+   vgname pmx-lvmvg
+   shared
+   content images
+       </pre></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>LVM широко применяются во всех видах сетевых сред и является главным локальным хранилищем операционной системы. Если вы не 
+   знакомы с LVM, вам стоит научиться управлять им, поскольку это также может быть использовано в виртуальных машинах на основе 
+   Linux. Почти все основные дистрибутивы, в том числе Proxmox, используют LVM во время установки в качестве основного раздела 
+   устройства операционной системы. Для лучшего понимания как делать хранилище LVM посетите <a class="link" 
+   href="https://www.howtoforge.com/linux_lvm" target="_top">https://www.howtoforge.com/linux_lvm</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="NFS"> </a>Соединение с хранилищем NFS</h3>
+   </div></div></div>
+   <p>Изначально разработанная Sun Microsystems, <span class="term"><strong class="userinput"><code>Network File System 
+   (NFS)</code></strong></span> вероятно на сегодняшний день является одним из наиболее популярных протоколов совместно используемых 
+   протоколов. В настоящее время в версии 4 совместное использование NFS допускает все типы файлов Proxmox, такие как образы дисков, 
+   шаблоны ISO, контейнеры OpenVZи тому подобные. Почти все виртуальные или физические сетевые среды по всему миру реализуют 
+   некоторые виды хранилищ NFS.</p>
+   <p>В данном разделе мы собираемся рассмотреть как соединять разделяемые NFS с кластером Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Чтобы подключится к разделяемому NFS, разделяемый ресурс должен быть вначале создан в совместно используемой системе хранения.
+   Следуйте документации используемой вами системы хранения для создания разделяемого ресурса NFS. Для нашего примера мы создадим 
+   разделяемый ресурс с именем <span class="term"><code>pmx-nfs</code></span> в совместно используемом хранилище FreeNAS.</p>
+   <p>На сегодня существует четыре версии NFS. Несоответствие версий между серверами NFS и клиентскими узлами может вызвать проблемы 
+   с подключением. По умолчанию Proxmox применяет клиент NFS версии 3. Если вы не уверены какая версия используется для ресурса NFS, 
+   мы можем запустить следующую команду на узле Proxmox для вывода версии NFS:</p>
+	   <pre class="screen">
+#mount –v | grep &lt;mounted_nfs_share_path&gt;
+	   </pre>
+   <p>В нашем примере узла мы увидим следующий результат после выполнения команды, который показывает что Proxmox использует 
+   версию 3, поскольку <span class="term"><code>vers=3</code></span>, а сервер NFS тоже использует версию 3, так как
+   <span class="term"><code>mountvers=3</code></span>:</p>
+	   <pre class="screen">
+root@pmx1:~# mount –v | grep /mnt/pve/pmx-nfs
+172.16.0.74:/mnt/pmx-nfs on /mnt/pve/pmx-nfs type nfs (rw,realatime,vers=3,proto=tcp,sec=sys,mountaddr=172.16.0.74,mountvers=3,mountproto=udp,local_lock=none_
+	   </pre>
+   <p>Если сервер NFS расположен за межсетевым экраном, мы должны открыть некоторые порты чтобы получить доступ к разделяемому 
+   ресурсу NFS. Существует два порта которые обычно используются сервером NFS:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Порт 110 TCP/UDP</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Порт 2049 TCP/UDP</p>
+	 </li>
+   </ul>
+   </div>
+   <p>NFS хранилище может быть подключено к кластеру Proxmox с применением графического интерфейса Proxmox или прямым 
+   редактированием файла настройки хранилища Proxmox в <span class="term"><code>/etc/pve/storage.cfg</code></span>. Если 
+   вам нужно изменить номер версии NFS используемого Proxmox, мы можем отредактировать этот файл настройки.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе как root или другой пользователь с административными правами.</p>
+	 </li><li class="listitem">
+      <p>Выберите NFS из подключаемого модуля хранилища. Добавьте ниспадающее меню чтобы открыть блок диалога создания хранилища NFS.</p>
+	 </li><li class="listitem">
+      <p>Введите необходимую информацию как показано в следующей таблице:</p>
+        <table rules="all" width="700" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="18%"/><col width="35%"/><col width="47%"/><thead><tr valign="top">
+          <th>Элемент</th>
+          <th>Вид информации</th>
+          <th>Пример значения</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ID</code></strong></span></p></td>
+          <td><p>Имя хранилища.</p></td>
+          <td><p><span class="term"><code>pmx-nfs</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Server</code></strong></span></p></td>
+          <td><p>IP узла совместно используемого узла хранилища.</p></td>
+          <td><p><span class="term"><code>172.16.0.74</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Export</code></strong></span></p></td>
+          <td><p>Выберите доступный разделяемый ресурс NFS в ниспадающем меню.</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>pmx-nfs</code></strong></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Content</code></strong></span></p></td>
+          <td><p>Выберите тип сохраняемого содержимого.</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Disk Image, ISO image</code></strong></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Nodes</code></strong></span></p></td>
+          <td><p>Выберите узлы Proxmox которые могут использовать данное хранилище.</p></td>
+          <td><p>All</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Enable</code></strong></span></p></td>
+          <td><p>Блок флага для включения/ запрета хранилища.</p></td>
+          <td><p>Checked</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Max Backups</code></strong></span></p></td>
+          <td><p>Максимальное численное значение сохраняемых файлов резервных копий. Более старые файлы резервных копий автоматически
+		  удаляются.</p></td>
+          <td><p><span class="term"><code>3</code></span></p></td>
+        </tr></tbody></table>
+	 </li><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> чтобы добавить хранилище NFS.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Следующий экранный снимок показывает диалоговый блок хранилища NFS с введенными необходимыми значениями:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0611.jpg"/> </div><br />
+    </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Если нам необходимо изменить версию NFS в Proxmox, мы должны будем отредактировать раздел разделяемого ресурса NFS в фале 
+   конфигурации хранилища. Просто измените значения необходимого параметра, как это показано в следующем коде:</p>
+	   <pre class="screen">
+nfs: pmx-nfs
+   path/mnt/pve/pmx-nfs
+   server 172.16.0.74
+   export /mnt/pmx-nfs
+   options vers=3    //change to 4 for version 4
+   content images, iso
+   maxfiles 2
+ </pre>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CephRBD"> </a>Соединение с хранилищем Ceph RBD</h3>
+   </div></div></div>
+   <p>В данном разделе мы собираемся рассмотреть настройку блочного хранилища Ceph в кластере Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Начальная настройка Ceph в кластере Proxmox должна быть выполнена через интерфейс командной строки. После установки Ceph 
+   начальная настройка и создание мониторов для всех других задач может быть выполнена через графический интерфейс Proxmox.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Сейчас мы рассмотрим как настраивать блочное хранилище Ceph в Proxmox.</p>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CephRBD_Install"> </a>Установка Ceph на Proxmox</h5>
+    </div></div></div>
+    <p>По умолчанию Ceph не устанавливается. Перед настройкой узлов Proxmox для целей Ceph, необходимо установить Ceph и с помощью 
+	интерфейса командной строки должна быть создана начальная настройка.</p>
+    <p>Следующие шаги должны быть выполнены на всех узлах Proxmox которые будут частью кластера Proxmox:</p>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Зарегистрируйтесь на каждом узле через SSH или консоль.</p>
+	  </li><li class="listitem">
+       <p>Настройте второй сетевой интерфейс для создания отдельной сети Ceph с другой подсетью.</p>
+	  </li><li class="listitem">
+       <p>Перезагрузите узлы для инициализации сетевых настроек.</p>
+	  </li><li class="listitem">
+       <p>Воспользовавшись следующей командой установите пакт Ceph на каждом узле:</p>
+	   <pre class="screen">
+# pveceph install –version giant
+	   </pre>
+	   <p>{<span class="emphasis"><em>Прим. пер.: в настоящее время последняя версия Hammer</em></span>}</p>
+	  </li>
+	  </ol>
+    </div>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CephRBD_InitConfig"> </a>Инициализация настройка Ceph</h5>
+    </div></div></div>
+    <p>Перед применением Ceph мы должны создать файл начальной настройки Ceph на узле <span class="emphasis"><em>Proxmox+Ceph</em></span>.</p>
+    <p>Следующие шаги необходимо выполнить только на одном узле Proxmox который будет частью нашего кластера Ceph:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь на узле с применением SSH или консоли.</p>
+	 </li><li class="listitem">
+      <p>Выполните следующую команду для создания начальной настройки Ceph:</p>
+	   <pre class="screen">
+# pveceph init –network &lt;ceph_subnet&gt;/CIDR
+	   </pre>
+	 </li><li class="listitem">
+      <p>Выполните следующую команду для создания первого монитора:</p>
+	   <pre class="screen">
+# pveceph createmon
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CephRBD_GUIConfiguring"> </a>Настройка Ceph с применением 
+	  графического интерфейса Proxmox</h5>
+    </div></div></div>
+    <p>После начальной настройки Ceph и создания первого монитора мы можем продолжить дальнейшую настройку с применением 
+	графического интерфейса Proxmox или просто выполняя команду создания монитора Ceph на других узлах.</p>
+    <p>Следующие шаги показывают как создавать мониторы и OSD Ceph из графического интерфейса Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox как root илидругой пользователь с правами администратора.</p>
+	 </li><li class="listitem">
+      <p>Выберите узел с уже созданным на предыдущем шаге начальным монитором и затем кликните на 
+	  <span class="term"><strong class="userinput"><code>Ceph</code></strong></span> из меню с закладками. Следующий экранный 
+	  снимок показывает кластер Ceph в том виде как он появился после начальной настройки Ceph:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0612.jpg"/> </div><br />
+      </div>
+	  <p>Поскольку никакие OSD пока ещене созданы, это будет нормальным для нового кластера Ceph показывать остановленные
+	  группы размещения и неясные ошибки.</p>
+	 </li><li class="listitem">
+      <p>Кликните на кнопку <span class="term"><strong class="userinput"><code>Disks</code></strong></span> меню с закладками под
+	  <span class="term"><strong class="userinput"><code>Ceph</code></strong></span> чтобы отобразить подсоединенные к узлу 
+	  диски, как показано на следующем снимке экрана:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0613.jpg"/> </div><br />
+    </div>
+	 </li><li class="listitem">
+      <p>Выберите доступный подключенный диск, затем кликните на кнопку 
+	  <span class="term"><strong class="userinput"><code>Create: OSD</code></strong></span> для открытия диалогового блока OSD, 
+	  как показано на следующем снимке экрана:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0614.jpg"/> </div><br />
+    </div>
+	 </li><li class="listitem">
+      <p>Кликните на ниспадающее меню <span class="term"><strong class="userinput"><code>Journal Disk</code></strong></span> 
+	  чтобы выбрать другое устройство или расположить журнал на том же самом OSD оставив его таким по умолчанию.</p>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Create</code></strong></span> для завершения создания OSD.</p>
+	 </li><li class="listitem">
+      <p>По необходимости создайте дополнительные OSD в узлах Ceph.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Следующий экранный снимок показывает узел Proxmox с тремя настроенными OSD:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0615.jpg"/> </div><br />
+    </div>
+   <p>По умолчанию Proxmox создает OSD с разделом <span class="term"><code>ext3</code></span>. Однако иногда может быть 
+   необходимо создавать OSD с различными типами разделов согласно требований или для улучшения производительности. Введите 
+   команду следующего формата с применением CLI для создания OSD с другим типом раздела:</p>
+	   <pre class="screen">
+# pveceph createosd –fstype ext4 /dev/sdX
+	   </pre>
+	<p>Следующие шаги показывают как создавать мониторы в графическом интерфейсе Proxmox:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Кликните на <span class="term"><strong class="userinput"><code>Monitor</code></strong></span> в меню с закладками
+	  под элементом <span class="term"><strong class="userinput"><code>Ceph</code></strong></span>. Следующий экранный снимок
+	  показывает состояние <span class="term"><strong class="userinput"><code>Monitor</code></strong></span> с начальным 
+	  монитором Ceph, который мы создали ранее в данной главе:</p> 
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0616.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Кликните <span class="term"><strong class="userinput"><code>Create</code></strong></span> для открытия диалогового блока 
+	  <span class="term"><strong class="userinput"><code>Monitor</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Выберите узел Proxmox из ниспадающего меню.</p>
+	 </li><li class="listitem">
+      <p>Кликните кнопку <span class="term"><strong class="userinput"><code>Create</code></strong></span> для 
+	  запуска процесса создания монитора.</p>
+	 </li><li class="listitem">
+      <p>Создайте в сумме три монитора Ceph для получения кворума Ceph.</p>
+	 </li>
+	 </ol>
+   </div>
+	<p>Следующий экранный снимок показывает состояние Ceph с тремя мониторами и добавленными OSD:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0617.jpg"/> </div><br />
+    </div>
+	<p>Заметим, что даже с тремя добавленными OSD группы размещения будут подвисшими и с ошибками. Это происходит потому, что
+	по умолчанию Ceph CRUSH установлен на две реплики. Более того, мы создали OSD только на одном узле. Для успешной репликации
+	нам необходимо добавить немного больше OSD на втором узле так, чтобы данные могли бы реплицироваться дважды. Повторите описанные 
+	ранее шаги для создания трех дополнительных OSD на втором узле. После создания еще трех OSD состояние Ceph должно выглядеть
+	как на следующем экране:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0618.jpg"/> </div><br />
+    </div>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CephRBD_Managingpools"> </a>Управление пулами Ceph</h5>
+    </div></div></div>
+    <p>В графическом интерфейсе Proxmox возможно выполнять основные задачи подобные созданию или удалению пулов Ceph. Кроме 
+	этого мы можем увидеть проверку списка, состояния, числа групп размещения и использования пулов Ceph.</p>
+    <p>Следующие шаги показывают как проверять, создавать и удалять пулы Ceph с помощью графического интерфейса Proxmox:</p>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Кликните меню с закладками <span class="term"><strong class="userinput"><code>Pools</code></strong></span> под
+	   <span class="term"><strong class="userinput"><code>Ceph</code></strong></span> в графическом интерфейсе Proxmox.
+	   Следующий экранный снимок показывает состояние пула по умолчанию <span class="term"><code>rbd</code></span>, 
+	   который имеет 1 реплику, 256 PG и 0% использования:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0619.jpg"/> </div><br />
+       </div>
+	  </li><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Create</code></strong></span> для открытия
+	   диалогового блока создания.</p>
+	  </li><li class="listitem">
+       <p>Заполните необходимую информацию, такую как имя пула, размер реплики и число групп размещения. Пока карта CRUSH не была 
+	   полностью настроена набор правил должен быть оставлен взначении по умолчанию <span class="term"><code>0</code></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните <span class="term"><strong class="userinput"><code>OK</code></strong></span> для создания пула.</p>
+	  </li><li class="listitem">
+       <p>Чтобы удалить пул выберите пул и кликните на <span class="term"><strong class="userinput"><code>Remove</code></strong></span>.
+	   Запомните, что после удаления пула Ceph все хранимые в нам данные будут безвозвратно удалены.</p> 
+	  </li>
+	  </ol>
+    </div>
+	<p>Чтобы увеличить число групп размещения, выполните следующую команду в интерфейсе командной строки:</p>
+	   <pre class="screen">
+#ceph osd pool set &lt;pool_name&gt; pg_num &lt;value&gt;
+#ceph osd pool set &lt;pool_name&gt; pgp_num &lt;value&gt;
+	   </pre>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Существует возможность только увеличивать значение групп размещения. Будучи увеличенным, значение групп размещения 
+	   никогда не может быть уменьшено.</p></td></tr></table>
+     </div>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CephRBD_ConnectingRBD"> </a>Присоединение RBD к Proxmox</h5>
+    </div></div></div>
+    <p>После того как кластер Ceph полностью настроен мы можем выполнить присоединение его к кластеру Proxmox.</p>
+    <p>В процессе создания файла настройки Ceph также создает кольцо с ключами аутентификации в пути каталога
+	<span class="term"><code>/etc/ceph/ceph.client.admin.keyring</code></span>.</p>
+    <p>Это кольцо с ключами должно быть скопировано и переименовано для отображения имени ID хранилища, которое 
+	должно быть создано в Proxmox Выполните следующие команды для создания каталога и копирования кольца ключей:.</p>
+	   <pre class="screen">
+# mkdir /etc/pve/priv/ceph
+# cd /etc/ceph/
+# cp ceph.client.admin.keyring /etc/pve/priv/ceph/&lt;storage&gt;.keyring
+	   </pre>
+    <p>Для нашего хранилища мы присвоили ему имя <span class="term"><code>rbd.keyring</code></span>. 
+	После копирования кольца с ключами мы можем подключить хранилище Ceph RBD к Proxmox с применением графического 
+	интерфейса:</p>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Datacenter</code></strong></span>, затем на
+	   <span class="term"><strong class="userinput"><code>Storage</code></strong></span> в меню с закладками.</p>
+	  </li><li class="listitem">
+       <p>Кликните на ниспадающее меню <span class="term"><strong class="userinput"><code>Add</code></strong></span> и 
+	   выберите подключаемое хранилище <span class="term"><strong class="userinput"><code>RBD</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Введите информацию описанную в следующей таблице:</p>
+        <table rules="all" width="700" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="18%"/><col width="35%"/><col width="47%"/><thead><tr valign="top">
+          <th>Элемент</th>
+          <th>Вид информации</th>
+          <th>Введенное значения</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ID</code></strong></span></p></td>
+          <td><p>Имя хранилища.</p></td>
+          <td><p><span class="term"><code>rbd</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Pool</code></strong></span></p></td>
+          <td><p>Имя пула Ceph.</p></td>
+          <td><p><span class="term"><code>rbd</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Monitor Host</code></strong></span></p></td>
+          <td><p>IP адрес и номер порта монитора Ceph. Мы можем ввести множество хостов для избыточности.</p></td>
+          <td><p><span class="term"><code>172.16.0.71:6789;<br />172.16.0.72:6789;<br />172.16.0.73:6789;</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>User name</code></strong></span></p></td>
+          <td><p>Администратор Ceph по умолчанию.</p></td>
+          <td><p><span class="term"><code>Admin</code></strong></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Nodes</code></strong></span></p></td>
+          <td><p>Узлы Proxmox которые могут использовать данное хранилище.</p></td>
+          <td><p>All</p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Enable</code></strong></span></p></td>
+          <td><p>Блок флага для включения/ запрета хранилища.</p></td>
+          <td><p>Checked</p></td>
+        </tr></tbody></table>
+	  </li><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> для подключения хранилища RBD.
+	   Следующий снимок экрана показывает хранилище RBD в <span class="term"><strong class="userinput"><code>Summary</code></strong></span>:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0621.jpg"/> </div><br />
+       </div>
+	  </li>
+	  </ol>
+    </div>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="CephRBD_MonitoringCeph"> </a>Отслеживание хранилища Ceph</h5>
+    </div></div></div>
+    <p>Поставка Ceph сама по себе не приходит ни с каким графическим интерфейсом для управления или мониторинга кластером. Мы 
+	можем просматривать состояние кластера и выполнять различные связанные с Ceph задачи с применением Proxmox GUI. Существует 
+	ряд пакетов программного обеспечения сторонних разработчиков, которые делают возможным графический интерфейс для Ceph, 
+	чтобы управлять и наблюдать за кластером. Некоторые программы предоставляют возможности управления, в то время как другие 
+	обеспечивают функции мониторинга Ceph, доступные только на чтение. Ceph Dash является таким программным обеспечением, 
+	которое обеспечивает привлекательный графический интерфейс для мониторинга всего кластера Ceph только для чтения без 
+	входа в графический интерфейс Proxmox. Ceph Dash свободно доступен через GitHub. Существуют и другие супертяжелые панели 
+	графического интерфейса Ceph, такие как Kraken, Calamari и прочие. В этом разделе мы собираемся только рассмотреть то, 
+	как настроить графический интерфейс мониторинга Ceph Dash.</p>
+    <p>Следующие шаги могут использоваться для загрузки и запуска Ceph Dash для наблюдения за кластером Ceph с применением любого 
+    веб- просмотрщика:</p>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Зарегистрируйтесь на любом узле Proxmox, который также является монитором Ceph.</p>
+	  </li><li class="listitem">
+       <p>Выполните следующие команды для загрузки и запуска приборной панели:</p>
+	   <pre class="screen">
+# mkdir /home/tools
+# apt-get install git
+# git clone https://github.com/Crapworks/ceph-dash
+# cd /home/tools/ceph-dash
+# ./ceph_dash.py
+	   </pre>
+	  </li><li class="listitem">
+       <p>Ceph Dash теперь запущен на прослушивание порта <span class="term"><code>5000</code></span> нашего узла. Если узел 
+	   находится за межсетевым экраном, откройте порт <span class="term"><code>5000</code></span> или любой другой порт с 
+	   переадресацией в межсетевом экране.</p>
+	  </li><li class="listitem">
+       <p>Откройте браузер и введите <span class="term"><code>&lt;node&gt;5000</code></span> чтобы открыть приборную панель.
+	   Следующий экранный снимок показывает приборную панель кластера Ceph, которуюмы создали:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0620.jpg"/> </div><br />
+       </div>
+	  </li>
+	  </ol>
+    </div>
+   <p>Мы также можем наблюдать за состоянием кластера Ceph через интерфейс командной строки с применением следующих 
+   команд:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Чтобы проверить состояние Ceph:</p>
+	   <pre class="screen">
+# ceph –s
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для просмотра различных узлов OSD:</p>
+	   <pre class="screen">
+# ceph osd tree
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для отображения журналов Ceph в реальном времени:</p>
+	   <pre class="screen">
+# ceph –w
+	   </pre>
+	 </li><li class="listitem">
+      <p>Для изменения числа реплик в пуле:</p>
+	   <pre class="screen">
+# rados lspools
+	   </pre>
+	 </li><li class="listitem">
+      <p>Ceph.</p>
+	   <pre class="screen">
+# ceph osd pool set size &lt;value&gt;
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+   <p>Кроме предшествующих команд существует еще много команд CLI для управления Ceph и выполнения расширенных задач. Официальная 
+   документация Ceph имеет огромное количество информации и руководств как-делать с командами CLI для их выполнения. Документация 
+   может быть найдена в <a class="link" href="http://ceph.com/docs/master/" target="_top">http://ceph.com/docs/master/</a>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>На данный момент мы имеем успешно интегрированный кластер Ceph c кластером Proxmox, который составляет шесть OSD, три MON 
+   и три узла. При просмотре страницы Ceph <span class="term"><strong class="userinput"><code>Status</code></strong></span> мы 
+   можем увидеть что существует 256 групп размещения в нашем кластере, а общее пространство хранения кластера составляет 1.47ТБ. 
+   Состояние кластера будет иметь состояние групп размещения <span class="emphasis"><em>active+clean</em></span>. Основываясь 
+   на природе проблемы, группы размещения могут иметь различные состояния, такие как <span class="emphasis"><em>active+unclean</em></span>, 
+   <span class="emphasis"><em>inactive+degraded</em></span>, <span class="emphasis"><em>active+stale</em></span> и тому подобные.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для подробного изучения всех состояний посетите <a class="link" href="http://ceph.com/docs/master/rados/operations/pg-states/" 
+	   target="_top">http://ceph.com/docs/master/rados/operations/pg-states/</a>
+	   .</p></td></tr></table>
+     </div>
+   <p>Настроив второй сетевой интерфейс, мы можем отделить сеть Ceph от основной сети.</p>
+   <p>Команда <span class="term"><code>#pveceph init</code></span> создает файл настройки в каталоге
+   <span class="term"><code>/etc/pve/ceph.conf</code></span>. Файл конфигурации только что настроенного Ceph выглядит аналогично
+   следующему экранному снимку:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0622.jpg"/> </div><br />
+    </div>
+   <p>Поскольку файл настройки <span class="term"><code>/etc/pve/ceph.conf</code></span> сохраняется в <span class="term"><code>pmxcfs</code></span>,
+   любые изменения сделанные в нем немедленно реплицируются на все узлы Proxmox в нашем кластере.</p>
+   <p>В Proxmox 3.4 Ceph RBD может сохранять только формат образов <span class="term"><code>.raw</code></span>. Никакие шаблоны, 
+   контейнеры или файлы резервного копирования не могут быть сохранены в блочном устройстве RBD.</p>
+   <p>Вот содержание файла настройки хранилища после добавления нашего хранилища Ceph RBD:</p>
+	   <pre class="screen">
+rbd: rbd
+   monhost 172.16.0.71:6789;172.16.0.72:6789;172.16.0.73:6789
+   pool rbd
+   content images
+   username admin
+       </pre>
+   <p>Если ситуация диктует изменение IP адреса любого узла, то мы можем просто изменять это содержание в нашем фале настройки 
+   изменяя вручную IP адреса узлов мониторов Ceph.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Также смотрите</span></h4>
+   </div></div></div>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Для подробного изучения Ceph посетите <a class="link" href="http://ceph.com/docs/master/" 
+	 target="_top">http://ceph.com/docs/master/</a> для получения официальной документации Ceph.</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Также посетите <a class="link" href="https://indico.cern.ch/event/214784/session/6/contribution/68/material/slides/0.pdf" 
+	 target="_top">https://indico.cern.ch/event/214784/session/6/contribution/68/material/slides/0.pdf</a> для поиска 
+	 примеров использования Ceph в CERN для хранения массивных данных, создаваемых Большим адронным коллайдером
+	 (<span class="term"><strong class="userinput"><code>LHC, Large Hadron Collider</code></strong></span>).</p>
+	 </li>
+	 <li class="listitem">
+	 <p>{<span class="emphasis"><em>Прим. пер.: или ознакомьтесь с  переводом книги 
+	 &quot;<a class="link" href="http://onreader.mdl.ru/LearningCeph/content/index.html" 
+     target="_top">Изучаем Ceph</a>&quot; Карана Сингха</em></span>}.</p>
+	 </li>
+   </ul>
+   </div>
+   
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS"> </a>Соединение с хранилищем ZFS</h3>
+   </div></div></div>
+   <p>Изначально разрабатывавшееся Sun Microsystems, хранилище ZFS является комбинацией файловой системы и LVM, предоставляющее 
+   хранилище большой емкости с важными характеристиками, такими как защита данных, компрессия данных, самовосстановление и 
+   моментальные снимки. ZFS имеет встроенный определяемый программным программным обеспечением RAID, который делает необязательным применение аппаратно реализованного RAID. Дисковый массив с ZFS RAID может мигрировать на абсолютно другой узел без перестроения всего массива.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения подробностей по ZFS посетите <a class="link" href="http://en.wikipedia.org/wiki/ZFS" 
+	   target="_top">http://en.wikipedia.org/wiki/ZFS</a> {<span class="emphasis"><em>Прим. пер.: русскоязычная страница 
+	   <a class="link" href="http://ru.wikipedia.org/wiki/ZFS" target="_top">http://ru.wikipedia.org/wiki/ZFS</a></em></span>} 
+	   .</p></td></tr></table>
+     </div>
+   <p>В Proxmox VE 3.4 подключаемый модуль хранилища ZFS уже включен, что улучшает использование ZFS естественным путем 
+   в узлах кластера Proxmox Пул ZFS поддерживает следующие типы RAID:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="70%"/><thead><tr valign="top">
+          <th>Тип RAID</th>
+          <th>Необходимый минимум</th>
+        </tr></thead><tr valign="top">
+          <td><p>Пул RAID-0</p></td>
+          <td><p>1 диск</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>Пул RAID-1</p></td>
+          <td><p>2 диска</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>Пул RAID-10</p></td>
+          <td><p>4 диска</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>Пул RAIDZ-1</p></td>
+          <td><p>3 диска</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>Пул RAIDZ-2</p></td>
+          <td><p>4 диска</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>{Пул RAIDZ-3}</p></td>
+          <td><p>{5 дисков<br /><a class="link" href="http://docs.oracle.com/cd/E19253-01/819-5461/givdn/index.html" 
+		  target="_top">Triple Parity RAIDZ (raidz3)</a>}</p></td>
+        </tr></tbody></table>
+   <p>В хранилище ZFS мы можем хранить только образы виртуальных дисков в формате <span class="term"><code>.raw</code></span>.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Для определения хранилища ZFS использует пулы. Пулы могут создаваться в Proxmox VE 3.4 только с помощью интерфейса 
+   командной строки. После создания пулов они могут быть соединены с Proxmox с применением графического интерфейса Proxmox.
+   Следующая таблица показывает какая строка применяется для различных уровней RAID ZFS:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="30%"/><col width="70%"/><thead><tr valign="top">
+          <th>Тип RAID</th>
+          <th>Применяемая строка</th>
+        </tr></thead><tr valign="top">
+          <td><p>RAID-0</p></td>
+          <td><p>никакой строки</p></td>
+        </tr></thead><tr valign="top">
+          <td><p>RAID-1</p></td>
+          <td><p><span class="term"><code>mirror</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p>RAID-10</p></td>
+          <td><p><p><span class="term"><code>mirror</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p>RAIDZ-1</p></td>
+          <td><p><p><span class="term"><code>raidz1</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p>RAIDZ-2</p></td>
+          <td><p><span class="term"><code>raidz2</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p>{RAIDZ-3}</p></td>
+          <td><p>{<span class="term"><code>raidz3</code></span>}</p></td>
+        </tr></tbody></table>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>для нашего примера мы собираемся создать RAID1 пул с зеркалироанием с именем <span class="term"><code>zfspool1</code></span>
+   и соединить его с Proxmox. Следующая программа применяется для создания пула ZFS:</p>
+	   <pre class="screen">
+# zpool create –f &lt;pool_name&gt; &lt;raid_type&gt; &lt;dev1_name&gt; &lt;dev2_name&gt; ...
+	   </pre>
+   <p>В двух следующих разделах мы обсудим две вещи:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Создание пула ZFS и подсоединение его к кластеру Proxmox</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Совместное использование хранилища ZFS между узлами Proxmox</p>
+	 </li>
+   </ul>
+   </div>
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Creating"> </a>Создание пула ZFS и подсоединение его к кластеру Proxmox</h5>
+    </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в консоли узла Proxmox с достаточным числом подключенных дисков.</p>
+	 </li><li class="listitem">
+      <p>Создайте пул ZFS с применением следующего формата команды:</p>
+	   <pre class="screen">
+# zpool create –f zfspool1 mirror /dev/&lt;id&gt; /dev/&lt;id&gt;
+	   </pre>
+	 </li><li class="listitem">
+      <p>Проверьте создание пула воспользовавшись следующей командой:</p>
+	   <pre class="screen">
+# zpool list
+	   </pre>
+	 </li><li class="listitem">
+      <p>Успешно создание пула ZFS отобразит следующий список пулов:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0623.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+    </div>
+    <p>Команда приводимого ниже формата подключит пул ZFS к кластеру Proxmox через CLI:</p>
+    <pre class="screen">
+# pvesm add &lt;storage_ID&gt; -type &lt;storage_type&gt; -pool &lt;pool_name&gt;
+    </pre>
+    <p>Для нашего примера мы собираемся подключить пул ZFS с именем <span class="term"><code>zfspool1</code></span> воспользовавшись
+	командой:</p>
+    <pre class="screen">
+# pvesm add zfs –type zfspool –pool zfspool1
+    </pre>
+    <p>Команда подключения пула ZFS к кластеру Proxmox должна выполняться на узле, на котором создан пул ZFS.</p>
+	
+    <div xmlns="" class="titlepage"><div><div>
+      <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ZFS_Sharing"> </a>Совместное использование хранилища ZFS между узлами Proxmox</h5>
+    </div></div></div>
+    <p>Пул ZFS будет работать только локально на том узле, где он создан. Другие узлы в кластере Proxmox не смогут разделять 
+	это хранилище. Монтируя пул ZFS локально и создавая разделяемый ресурс NFS мы делаем возможным совместное использование 
+	пула в узлах Proxmox.</p>
+    <p>Процесс монтирования и создания разделяемого ресурса необходимо выполнять только через интерфейс командной строки. 
+	Из графического интерфейса Proxmox мы можем только подключать разделяемый ресурс NFS с обеспечивающим его пулом ZFS:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>По умолчанию пул ZFS автоматически монтируется в корневой путь <span class="term"><code>/&lt;pool_name&gt;</code></span>.
+	  Нам необходимо создать каталог, в котором мы собираемся смонтировать пул повторно:</p>
+    <pre class="screen">
+# mkdir /mnt/zfs
+    </pre>
+	 </li><li class="listitem">
+      <p>Мы можем перемонтировать пул во вновь созданном каталоге с использованием следующей команды:</p>
+    <pre class="screen">
+# zfs set mountpoint=/mnt/zfs zfspool1
+    </pre>
+	 </li><li class="listitem">
+      <p>Установите NFS сервер с применением следующей команды на узле Proxmox, если он еще не установлен:</p>
+    <pre class="screen">
+# apt-get install nfs-kernel-server
+    </pre>
+	 </li><li class="listitem">
+      <p>Введите следующую строку в <span class="term"><code>/etc/exports</code></span>:</p>
+    <pre class="screen">
+/mnt/zfs/ 172.16.0.71/24(rw,nohide,async,no_root_squash)
+    </pre>
+	 </li><li class="listitem">
+      <p>Запустите службу NFS с применением следующей команды:</p>
+    <pre class="screen">
+# service nfs-kernel-server start
+    </pre>
+	 </li><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox и повторите шаги из рецепта 
+	  <a class="link" href="#NFS" target="_top">Соединение с хранилищем NFS</a>, приведенного ранее в данной главе для соединения нового
+	  разделяемого ресурса с Proxmox.</p>
+	 </li>
+	 </ol>
+   </div>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Объединяя пул ZFS с разделяемым ресурсом NFS, мы можем создать совместно используемое хранилище с полным набором функциональности ZFS,
+   таким образом, создавая гибкое совместно используемое хранилище для применения со всеми узлами Proxmox в вашем кластере. Применяя такую
+   технику мы можем создать резервную копию узла хранения, которой также можно будет управлять через графический интерфейс Proxmox. Таким
+   образом, в случае перегруженности узла, мы также можем осуществить миграцию виртуальной машины временно резервируя узлы.</p>
+   <p>Вот содержимое файла настройки хранилища после добавления системы хранения ZFS:</p>
+    <pre class="screen">
+zfspool: zfs
+   pool zfspool1
+   content images
+    </pre>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="GlusterFS"> </a>Соединение с хранилищем GlusterFS</h3>
+   </div></div></div>
+   <p>В отличие от других систем хранения, GlusterFS {<span class="emphasis"><em>Прим. пер.: как и CephFS</em></span>} является 
+   распределенной файловой системой, которая способна масштабироваться до нескольких Петабайт и обслуживать тысячи клиентов. Эта файловая 
+   система не требует никаких серверов метаданных, таким образом не существует никакой единой точки отказа. GlusterFS делает 
+   возможным создание кластеров хранения с высокой доступностью с применением общедоступных аппаратных средств, тем самым 
+   уменьшая стоимость и привязку к производителю. В Proxmox VE 3.4 существует собственный подключаемый модуль хранилища для 
+   подключения GlusterFS к кластерам Proxmox.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Чтобы узнать болше о GlusterFS ознакомьтесь с официальной документацией 
+	   <a class="link" href="http://gluster.readthedocs.org/en/latest/Administrator%20Guide/GlusterFS%20Introduction/" 
+	   target="_top">http://gluster.readthedocs.org/en/latest/Administrator%20Guide/GlusterFS%20Introduction/</a>.</em></span>} 
+	   .</p></td></tr></table>
+     </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление... </span></h4>
+   </div></div></div>
+   <p>В отличие от ZFS, Proxmox не имеет предустановленных пакетов для GlusterFS. Можно установить пакеты GlusterFS на тот же узел Proxmox
+   или установить отдельный узел только для целей GlusterFS В отличие от Ceph, установка GlusterFS не встроена полностью в Proxmox с 
+   пользовательскими командами. Все подробности по установке GlusterFS выходят за рамки предмета данной книги.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для инструкций о том как установить кластер GlusterFS, посетите 
+	   <a class="link" href="http://gluster.readthedocs.org/en/latest/Quick-Start-Guide/Quickstart/" 
+	   target="_top">http://gluster.readthedocs.org/en/latest/Quick-Start-Guide/Quickstart/</a>.</p></td></tr></table>
+     </div>
+   <p>Следуя официальному руководству, создайте два узла Gluster в режиме репликаций. В конце установки GlusterFS создайте том Gluster
+   с именем <span class="term"><code>gfsvol1or</code></span> или любым другим удобным для вас с тем, чтобы использовать его для 
+   соединения с кластером Proxmox в следующем разделе.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Следующие шаги присоединят пул GlusterFS к Proxmox с применением графического интерфейса:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox.</p>
+	 </li><li class="listitem">
+      <p>Перейдите в меню с закладками <span class="term"><strong class="userinput"><code>Storage</code></strong></span> и кликните
+	  на ниспадающее меню <span class="term"><strong class="userinput"><code>Add</code></strong></span> для выбора подключаемого модуля
+	  <span class="term"><strong class="userinput"><code>GlusterFS</code></strong></span>.</p>
+	 </li><li class="listitem">
+	  <p>Следующая таблица отображает типы необходимой информации и используемые в нашем примере значения для подключения GlusterFS:</p>
+        <table rules="all" width="500" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="18%"/><col width="45%"/><col width="37%"/><thead><tr valign="top">
+          <th>Элемент</th>
+          <th>Описание</th>
+          <th>Вводимое значение</th>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>ID</code></strong></span></p></td>
+          <td><p>Новое имя хранилища</p></td>
+          <td><p><span class="term"><code>gluster</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Server</code></strong></span></p></td>
+          <td><p>IP адрес первого узла Gluster</p></td>
+          <td><p><span class="term"><code>172.16.0.72</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Second Server</code></strong></span></p></td>
+          <td><p>IP адрес второго узла Gluster</p></td>
+          <td><p><span class="term"><code>172.16.0.73</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Volume name</code></strong></span></p></td>
+          <td><p>Ниспадающее меню для выбора доступных томов в узле Gluster</p></td>
+          <td><p><span class="term"><code>gfsvol11</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Content</code></strong></span></p></td>
+          <td><p>Выбор типа хранимых файлов</p></td>
+          <td><p><span class="term"><strong class="userinput"><code>Disk image</code></strong></span>, 
+		  <span class="term"><strong class="userinput"><code>ISO image</code></strong></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Nodes</code></strong></span></p></td>
+          <td><p>Выбор узлов, которые могут осуществлять доступ к хранилищу</p></td>
+          <td><p><span class="term"><code>All</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Enable</code></strong></span></p></td>
+          <td><p>Разрешение или запрет хранилища</p></td>
+          <td><p><span class="term"><code>Enabled</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p><span class="term"><strong class="userinput"><code>Max Backups</code></strong></span></p></td>
+          <td><p>Максимальное число последних резервных копий, которое может храниться. Более старые резервные копии будут удаляться 
+		  автоматически в процессе резервирования.</p></td>
+          <td><p><span class="term"><code>2</code></span></p></td>
+        </tr></tbody></table>
+	 </li><li class="listitem">
+      <p>Кликните на кнопку <span class="term"><strong class="userinput"><code>Add</code></strong></span> для присоединения хранилища.</p>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Вот содержание файла настройки хранилища после добавления системы хранения Gluster:</p>
+    <pre class="screen">
+glusterfs: gluster
+   volume gfsvol1
+   path /mnt/pve/gluster
+   content images
+   server 172.16.0.72
+   server 172.16.0.73
+   maxfiles 2
+    </pre>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

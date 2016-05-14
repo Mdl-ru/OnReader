@@ -1,0 +1,1101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 6. Профессиональное оборудование - Мастерство FreeBSD: ZFS для профессионалов</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="AdvancedZFS"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="up" href="index.html" title="Мастерство FreeBSD: ZFS для профессионалов"/>
+<link rel="prev" href="Ch05.html" title="Глава 5. Тома ZFS"/>
+<link rel="next" href="Ch07.html" title="Глава 7. Кэширование"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "advanced-zfs";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/FreeBSDMasteryZFS/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 6. Профессиональное оборудование';
+PrevRef = 'Ch05.html';
+UpRef = 'index.html';
+NextRef = 'Ch07.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 6. Профессиональное оборудование</h1>
+  </div></div></div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+   <dt><span class="chapter"><a href="Ch06.html">6. Профессиональное оборудование</a></span></dt>
+   <dd><dl>
+     <dt><span class="chapter"><a href="Ch06.html#01">Службы полок SCSI</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0101">Опрос ваших полок</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0102">Путь полки</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0103">Поддержание сигнальной индикации</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#02">Управление HBA</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0201">Подробности адаптера</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0202">Отображение полок</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#03">sas2ircu</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0301">Просмотр аппаратных средств</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0302">Подсветка местоположения с помощью sas2ircu</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#04">Множество путей SAS</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0401">Зачем нужна множественность путей?</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0402">Режимы множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0403">Идентификация дисков</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0404">Настройка множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0405">Узлы устройств множества путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0406">Ручная настройка множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0407">Просмотр множественности путей</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0408">Изменение режима множественности путей</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#05">SSD</a></span></dt>
+     <dt><span class="chapter"><a href="Ch06.html#06">NVMe</a></span></dt>
+     <dd><dl>
+       <dt><span class="chapter"><a href="Ch06.html#0601">Просмотр устройств NVMe</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0602">Производительность NVMe</a></span></dt>
+       <dt><span class="chapter"><a href="Ch06.html#0603">Поставщики NVMe GEOM и загрузка</a></span></dt>
+     </dl></dd>
+     <dt><span class="chapter"><a href="Ch06.html#07">zfsd</a></span></dt>
+   </dl></dd>
+   </dl>
+  </div>
+   <p>Обычный сервер может содержать только определённое число дисковых устройств. По мере роста вашего 
+   хранилища вы, в конечном итоге, столкнётесь в необходимости более производительного оборудования по сравнению 
+   с тем, которое вы находите в своей обычной домашней машине. Данная глава предоставит достаточную основу для 
+   гарантии того, что вы будете знать что пытается продать вам ваш поставщик систем хранения и как применять 
+   эту дополнительную функциональность.</p>
+
+   <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>Службы полок SCSI</h3>
+   </div></div></div>
+   <p>Самым распространённый способ добавления объёма хранения состоит в подключении коробок специально 
+   разработанных для хранения дисков. Наиболее распространённым вариантом является SCSI полка (enclosure, иногда 
+   называемая backplane, объединительной платой) {<span class="emphasis"><em>Прим. пер.: в качестве примеров 
+   внешних полок см. <a class="link" href="http://www.mdl.ru/Solutions/Put.htm?Nme=MdlStorage#RE460e" 
+   target="_top">MDL RE460e</a>, <a class="link" href="http://www.mdl.ru/Solutions/Put.htm?Nme=MdlStorage#HGST4U60" 
+   target="_top">HGST 4U60 G1</a>, на этой же странице вы можете найти примеры базовых модулей с 
+   backplane</em></span>}. Подключение полки SCSI к хосту осуществляется платой дискового контроллера.</p>
+   <p>Полка SCSI содержит в себе разнообразные виды оборудования и принадлежностей. Часто вы можете увидеть 
+   размножители порта SAS или SCSI, позволяющие вам подключать более четырёх устройств к каждому порту на вашем 
+   дисковом контроллере. Вероятно вы увидите дисковые отсеки или корзинки, скорее всего с горячей заменой. 
+   Полка имеет вентиляторы, температурные датчики, блоки питания и многое другое. Полка даже может иметь 
+   свой собственный ЦПУ, работающий под управлением встроенной операционной системы, намеренно разработанной 
+   для овладения всеми этими функциями. Отказавшие вентиляторы и источники питания могут разрушить ваше 
+   хранилище.</p>
+   <p>Полка SCSI имеет протоколы для взаимодействия с операционными системами сервера. Служба полки SCSI 
+   (<a class="link" href="https://en.wikipedia.org/wiki/SES-2_Enclosure_Management" target="_top">SES</a>, 
+   SCSI Enclosure Services) является современным протоколом для мониторинга и управления подсистемой 
+   хранения вашего сервера {<span class="emphasis"><em>Прим. пер.: см. вариант применения <a class="link" 
+   href="http://www.etegro.ru/articles/ses-js300g3" target="_top">Работа с протоколом SES на примере полки 
+   Fastor JS300 G3</a>, ETegro</em></span>}. Она выступает в роли преемника протокола <a class="link" 
+   href="http://www.intel.com/content/www/us/en/servers/ipmi/scsi-accessed-enclosures.html" 
+   target="_top">SAF-TE</a> (SCSI Accessed Fault-Tolerant Enclosure), применявшегося в более раннем оборудовании.</p>
+   <p>Обычно SES интегрирован в объединительную плату (backplane) отсеков горячего резервирования дисков или 
+   в расширитель (Expander) SAS. SES предоставляет стандартный способ наблюдения и локализации ваших 
+   дисковых устройств, а также может применяться для мониторинга вентиляторов, световых индикаторов и прочих 
+   устройств.</p>
+   <p>FreeBSD поддерживает SES посредством драйвера <span class="term"><code>ses(4)</code></span>. FreeBSD 
+   10.3 внедрила <span class="term"><code>sesutil(8)</code></span>, позволяющий вам опрашивать и управлять 
+   устройствами <span class="term"><code>ses(4)</code></span> в вашей системе.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Опрос ваших полок </span></h4>
+   </div></div></div>
+   <p><span class="term"><code>Sesutil(8)</code></span> имеет в наличии множество функций. Начните с 
+   <span class="term"><code>sesutil map</code></span>, которая отобразит все ваши устройства во всех 
+   ваших полках.</p>
+	   <pre class="screen"><code>
+# sesutil map
+ses0:
+ Enclosure Name: LSI SAS2X36 0e12
+ Enclosure ID: 500304801786b87f
+ 	   </code></pre>
+   <p>Первым элементом для полки (enclosure) является имя устройства полки (<span class="term"><code>ses0</code></span>). 
+   Если у вас имеется множество контроллеров, перезагрузка может изменять узел устройства, поэтому не полагайтесь 
+   на идентификацию определённой полки. Имя полки основывается на модели оборудования, однако идентификатор полки 
+   является уникальным для этого определённой части аппаратных средств.</p>
+   <p>Каждая наблюдаемая и управляемая часть оборудования в полке является <span class="emphasis"><em>элементом</em></span>.
+   Каждому элементу назначается некий номер. Номера элементов не изменяются при перезагрузке. Вот первый элемент 
+   одного из массивов Джуда:</p>
+	   <pre class="screen"><code>
+Element 0, Type: Array Device Slot
+ Status: Unsupported (0x00 0x00 0x00 0x00)
+ Description: Drive Slots
+ 	   </code></pre>
+   <p><span class="term"><code>Element 0</code></span> имеет тип <span class="emphasis"><em>Array Device Slot</em></span> и 
+   описание <span class="emphasis"><em>Drive Slots</em></span>. Это родительский элемент для всех последующих 
+   индивидуальных разъёмов индивидуальных устройств.</p>
+	   <pre class="screen"><code>
+Element 1, Type: Array Device Slot
+ Status: OK (0x01 0x00 0x00 0x00)
+ Description: Slot 01
+ Device Names: da0,pass4
+Element 2, Type: Array Device Slot
+ Status: OK (0x01 0x00 0x00 0x00)
+ Description: Slot 02
+ Device Names: da1,pass5
+ 	   </code></pre>
+   <p>Это пара реальных дисковых устройств. Вы видите имена устройств FreeBSD и физическое местоположение 
+   этих устройств. Предполагается, что ваша полка имеет номера разъёмов нанесённые на них нестираемо - 
+   что является предпочтительным, а не на удаляемых картриджах дисков. Когда FreeBSD скулит, что диск 
+   <span class="term"><code>da1</code></span> погиб, вы можете сообщить своему техническому персоналу 
+   на площадке, что нужно обращаться напрямую к <span class="term"><code>Slot 02</code></span>.</p>
+   <p>После дисковых отсеков следует остальное оборудование.</p>
+	   <pre class="screen"><code>
+Element 26, Type: Temperature Sensors
+ Status: OK (0x01 0x00 0x39 0x00)
+ Description: Temperature
+ Extra status:
+ - Temperature: 37 C
+ 	   </code></pre>
+   <p>Это большое количество слов для отражения, что первый термометр сообщает что температура полки является 
+   температурой тела согласно учебника.</p>
+	   <pre class="screen"><code>
+Element 28, Type: Cooling
+ Status: OK (0x01 0x01 0xfe 0x21)
+ Description: Fan1
+ Extra status:
+ - Speed: 5100 rpm
+ 	   </code></pre>
+   <p>Охлаждающим элементом, по всей видимсоти, является вентилятор, хотя возможно, кто-то делает сейчас SCSI 
+   полки с суперохлаждением. Скорость вентилятора позволяет судить о том, что вентилятор пока работает. 
+   Однако, вы можете захотеть убедитьтся в этом вручную, посмотрев в руководстве где точно располагается 
+   <span class="term"><code>Fan1</code></span>.</p>
+	   <pre class="screen"><code>
+Element 34, Type: Voltage Sensor
+ Status: OK (0x01 0x00 0x01 0xf6)
+ Description: 5V
+ Extra status:
+ - Voltage: 5.02 V
+ 	   </code></pre>
+   <p>Датчики напряжения перечисляют ожидаемое напряжение каждого датчика в качестве <span 
+   class="emphasis"><em>Description</em></span>, а затем предоставляют актуальное напряжение в качестве 
+   дополнительного состояния.</p>
+   <p>Расширители SAS вносят некоторую дополнительную сложность. Вы увидите записи для расширителей SAS, 
+   а затем все свои компоненты в пределах этого расширителя. Существует очень маленькая вероятность, что 
+   с расширителем может что-то произойти, однако некоторые компоненты на самом деле сообщают о своём 
+   состоянии.</p>
+	   <pre class="screen"><code>
+Element 41, Type: SAS Expander
+ Status: Unsupported (0x00 0x00 0x00 0x00)
+ Description: SAS Expanders
+Element 42, Type: SAS Expander
+ Status: OK (0x01 0x00 0x00 0x00)
+ Description: Primary Expander
+Element 44, Type: SAS Connector
+ Status: OK (0x01 0x11 0xff 0x00)
+ Description: Upstream Connector (Primary)
+Element 45, Type: SAS Connector
+ Status: OK (0x01 0x11 0xff 0x00)
+ Description: Downstream Connector 1 (Primary)
+Element 46, Type: SAS Connector
+ Status: OK (0x01 0x11 0xff 0x00)
+ Description: Downstream Connector 2 (Primary)
+ 	   </code></pre>
+   <p>Отображаются даже индивидуальные соединители</p>
+	   <pre class="screen"><code>
+Element 47, Type: SAS Connector
+ Status: OK (0x01 0x20 0x00 0x00)
+ Description: Drive Connector 00
+ 	   </code></pre>
+   <p>Это гораздо больше подробностей, чем требуется большинству из нас. Однако проверка состояния ваших 
+   расширителей SAS и контроллеров перед запуском заменённых жёстких дисков при её выполнении может уберечь 
+   вас от множества мучений.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0102"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Путь полки </span></h4>
+   </div></div></div>
+   <p>Вы можете определять метоположение дисков в полке по тому как они подключены. Чтобы достичь 
+   определённого диска, операционная система должна дойти до заданной полки, а затем до определённого 
+   отсека в этой полке. FreeBSD автоматически создаёт каталоги узла устройства на основе данного пути. Это 
+   делает возможным системному администратору идентифицировать лежащие в основе определённые части 
+   оборудования. Такие пути устройств являются последовательностью пар ключ- значение, разделяемых 
+   символом <span class="term"><code>@</code></span>. Например, полка 500304801786b87d
+   отображается для нас как <span class="term"><code>enc@500304801786b87d</code></span>. Каждый путь имеет 
+   четыре компоненты: заданную полку, тип устройства, конкретный разъём и описание конкретного элемента, 
+   создавая путь аналогичный приводимому ниже:</p>
+	   <pre class="screen"><code>
+/dev/enc@n500304801786b87d/type@0/slot@a/elmdesc@Slot_10/
+ 	   </code></pre>
+   <p>Данный узел устройства представляет полку 500304801786b87d. Ведущая <span class="emphasis"><em>N</em></span>
+   перед идентификатором полки отображает факт, что это идентификатор Network Addressing Authority (NAA), 
+   который, впрочем, является рудиментарным, поскольку всё здесь является идентификатором NAA. 
+   Шестнадцатеричное число является адресом SAS вашего Addressed Logical Unit. Как это число определяется, 
+   зависит от производителя.</p>
+   <p><span class="emphasis"><em>type</em></span> является числовым типом устройства. Диски являются 
+   единственными устройствами, которые в настоящее время поддерживает это драйвер, однако последующие 
+   версии FreeBSD огут добавить поддержку для других устройств.</p>
+   <p><span class="emphasis"><em>slot</em></span> (разъём) является отсеком данного диска. Разъёмы 
+   нумеруются шестнадцатерично: <span class="emphasis"><em>slot a</em></span> равен 10, 
+   <span class="emphasis"><em>b</em></span> 11, и так далее. <span class="emphasis"><em>slot 10</em></span>
+   на самом деле является 16.</p>
+   <p>Последним компонентом является <span class="emphasis"><em>element description</em></span> (описание 
+   элемента), которое появляется когда вы выполняете <span class="term"><code>sesutil map</code></span>.</p>
+   <p>Этот каталог содержит символьные ссылки на все узлы устройств связанные с данным разъёмом. Он даже 
+   имеет помеченные подкаталоги. (Вы управляете помеченными дисками, не так ли?)</p>
+	   <pre class="screen"><code>
+#ls -l /dev/enc@n500304801786b87d/type@0/slot@a/elmdesc@Slot_10/
+total 1
+lrwxr-xr-x  1 root  wheel   15 Oct  5 23:27 da9@ -&gt; ../../../../da9
+dr-xr-xr-x  2 root  wheel  512 Oct  5 23:27 gpt/
+lrwxr-xr-x  1 root  wheel   18 Oct  5 23:27 pass13@ -&gt; ../../../../pass13
+ 	   </code></pre>
+   <p>Если разъём 15 в вашей полке издаёт необычный жужжащий звук, вы можете перейти к узлу устройства 
+   на основе полки и идентифицировать, какой поставщик там размещается (все системные администраторы точно
+   оценивают знание того, какой уровень тревоги соответствует каждому данному событию).</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0103"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Поддержание сигнальной индикации </span></h4>
+   </div></div></div>
+   <p>Работающему на вашем оборудовании персоналу необходима вся помощь которую они только могут получить.
+   Подобные новера разёмов, скорее всего, печатаются в виде шести пунктов и видны только когда вы вынимаете 
+   устройство из отсека. А замена аварийного привода всегда происходит когда сотруник на площадке едва 
+   понимает происходящее.</p>
+   <p>Отсеки полки имеют определённую световую сигнализацию местоположения для обеспечения вашим удалённым 
+   рукам дополнительных ключей. Активируйте световую индикацию отсека при помощи <span 
+   class="term"><code>sesutil locate</code></span>. В приводимом примере мы активируем световую индикацию 
+   в отсеке, размещающем устройство <span class="term"><code>da2</code></span>.</p>
+	   <pre class="screen"><code>
+# sesutil locate da2 on
+ 	   </code></pre>
+   <p>Световой индткатор, в зависимости от производителя, либо загорится, либо начнёт моргать. Если световой 
+   индикатор загорится, команда <span class="term"><code>sesutil map</code></span> отобразит это.</p>
+	   <pre class="screen"><code>
+# sesutil map
+…
+Element 3, Type: Array Device Slot
+ Status: OK (0x01 0x00 0x02 0x00)
+ Description: Slot 03
+ Device Names: da2,pass6
+ Extra status:
+ - LED=locate
+ 	   </code></pre>
+   <p>Вам может понадобиться активация световой индикации в отсеке и без диска - скажем, показать персоналу 
+   куда установить новый жёсткий диск. Воспользуйтесь узлом устройства SES и номером необходимого элемента 
+   вместо узла устройства. Часто, но не всегда, номер разёма тот же что и номер элемента. Будьте аккуратны.</p>
+   <p>Вот мы активируем световую индикацию местоположения 3 элемента в полке 
+   <span class="term"><code><em>/dev/ses0</em></code></span>.</p>
+	   <pre class="screen"><code>
+# sesutil locate -u /dev/ses0 3 on
+ 	   </code></pre>
+   <p>Чтобы выключить световую индикацию, выполните ту же команду, но при этом замените <span class="emphasis"><em>on</em></span>
+   на ... подождите минутку, на что? ..., а <span class="emphasis"><em>off</em></span>.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>Управление HBA</h3>
+   </div></div></div>
+   <p>FreeBSD содержит некоторый инструментарий для управления не RAID контроллерами жёстких дисков, обычно 
+   называемых <span class="emphasis"><em>host bus adapters</em></span>, или HBA. Для более ранних 
+   контроллеров, а, скорее всего, вы больше ничем и не сможете воспользоваться, вы найдёте 
+   <span class="term"><code>mfiutil(8)</code></span> и <span class="term"><code>mptutil(8)</code></span>. 
+   FreeBSD 10.3 добавил программы <span class="term"><code>mprutil(8)</code></span> и 
+   <span class="term"><code>mpsutil(8)</code></span>. Причём, <span class="term"><code>mprutil(8)</code></span> 
+   применяетс для HBA LSI Fusion-MPS 3, а <span class="term"><code>mpsutil(8)</code></span> для 
+   HBA LSI Fusion-MPS 2. (Поскольку Avago купил LSI, вы также можете увидеть эти платы с торговой маркой 
+   Avago.)</p>
+   <p>Обе прогаммы ведут себя идентично, поэтому мы проведём демонстрацию с <span class="term"><code>mpsutil(8)</code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0201"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Подробности адаптера </span></h4>
+   </div></div></div>
+   <p>Для начала определим подключённые в вашей системе адаптеры.</p>
+	   <pre class="screen"><code>
+# mpsutil show adapters
+Device Name  Chip Name   Board Name  Firmware
+/dev/mps0    LSISAS2308              13000000
+/dev/mps1    LSISAS2308              13000000
+ 	   </code></pre>
+   <p>Теперь просмотрим все ваши подключённые устройства. По умолчанию оба инструмента осуществляют 
+   доступ к первому узлу устройства, либо к <span class="term"><code><em>/dev/mps0</em></code></span>, 
+   либо к <span class="term"><code><em>/dev/mpr0</em></code></span>. Доступ к прочим устройствам HBA 
+   осуществляется посредством флага <span class="term"><code><em>-u</em></code></span> и номера 
+   устройства.</p>
+	   <pre class="screen"><code>
+# mpsutil show devices
+B___T        SAS Address Handle Parent Device      Speed Enc  Slot Wdt
+        500304801786b87f 0009   0001   SMP Target  6.0   0002 00   4
+00  08  5000cca2325ddda9 000a   0009   SAS Target  6.0   0002 00   1
+00  09  5000cca23257419d 000b   0009   SAS Target  6.0   0002 01   1
+00  10  5000cca2325db3bd 000c   0009   SAS Target  6.0   0002 02   1
+00  11  5000cca2325e028d 000d   0009   SAS Target  6.0   0002 03   1
+…
+ 	   </code></pre>
+   <p>Здесь каждая строка является неким устройством, которое отвечает на команды SCSI. Большая их часть 
+   является жёсткими дисками. Всё что находится на шине SCSI является таргетом, включая жёсткий диск. 
+   Реальное погружение в это требует понимания SAS и SCSI, но мы можем тщательно подобрать информацию и 
+   без глубоких знаний.</p>
+   <p>Первые две колонки отображают адреса устройств в стиле SCSI. Третья предоставляет адрес SAS 
+   устройства. Во многом по аналогии с адаптерами Ethernet, каждое устройство SAS имеет уникальный 
+   физический адрес.</p>
+   <p>Колонка <span class="emphasis"><em>Handle</em></span> (дескриптор) отображает имя данного устройства, 
+   в то время как колонка <span class="emphasis"><em>Parent</em></span> (родитель) показывает устройство, 
+   к которому данное устройство подключено. Взглянем на нашу первую строку. Она имеет дескриптор 0009. 
+   Вторая строка имеет дескриптор 000a, однако его родителем является 0009. Устройство из второй строки 
+   подключено к устройству из первой строки.</p>
+   <p>Колонка <span class="emphasis"><em>Device</em></span> показывает какой тип у устройства. &quot;SAS
+   Target&quot; является причудливым способом сказать &quot;жёсткий диск SAS&quot;. Таргет SMP (Serial
+   Attached Management Protocol) является коммутатором SCSI или расширителем.</p>
+   <p>Колонка <span class="emphasis"><em>Speed</em></span> отображает скорость соединения в гигабитах в 
+   секунду.</p>
+   <p>Колонка <span class="emphasis"><em>Enc</em></span> отображает полку (enclosure), в то время как 
+   <span class="emphasis"><em>Slot</em></span> показывает разъём или отсет утройства. Наконец, 
+   <span class="emphasis"><em>Wdt</em></span> отображает максимальное число соединений портов для этого 
+   устройства.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0202"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Отображение полок </span></h4>
+   </div></div></div>
+   <p>Примените команду <span class="term"><code>show enclosures</code></span> для просмотра подключённых к HBA 
+   полок. В нашем случае мы перечисляем полки, подключённые к <span class="term"><code><em>/dev/mps1</em></code></span>.</p>
+	   <pre class="screen"><code>
+# mpsutil -u 1 show enclosures
+Slots Logical ID     SEPHandle  EncHandle Type
+  08  500605b009d018c0          0001      Direct Attached SGPIO
+  25  500304801786b87f  0022    0002      External SES-2
+  13  5003048001f7ab3f  0030    0003      External SES-2
+ 	   </code></pre>
+   <p>Вы увидите общее число разъёмов в полке, дескрипторы устройств (если они есть) и тип полки.</p>
+   <p><span class="emphasis"><em>Logical ID</em></span> является адресом SAS. Вы можете приводить его в 
+   соответствие с адресами SAS отображаемыми <span class="term"><code>sesutil(8)</code></span> или 
+   другими командами.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>sas2ircu</h3>
+   </div></div></div>
+   <p>Если вы применяет более ранние версии FreeBSD, которые не имеют в наличии 
+   <span class="term"><code>mpsutil</code></span> или вам требуется функциональность, которая не 
+   предоставляется, LSI/Avago предоставляет свой собственный, проприетарный, инструмент, 
+   <span class="term"><code>sas2ircu(8)</code></span>.  Большая часть недостающих функций 
+   <span class="term"><code>mpsutil(8)</code></span> содержит встроенные в контроллер программно 
+   определяемый RAID (Вы не пытаетесь применять програмно определяемый RAID в основе ZFS, не так ли?
+   Не валите с ног старину Джуда этим!). Также <span class="term"><code>sas2ircu(8)</code></span> 
+   делает возможным предоставление вам такой информации как версия встроенного ПО HBA. Он доступен 
+   как портированная версия FreeBSD, <span class="term"><code>sysutils/sas2ircu</code></span>.</p>
+   <p>Программа <span class="term"><code>sas2ircu(8)</code></span> ожидает на входе по крайней мере 
+   двух аргументов: номер контроллера (узел устройства) и команду. Даже если у вас только один контроллер, 
+   вы должны опредеять номер этого контроллера.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр аппаратных средств </span></h4>
+   </div></div></div>
+   <p>Для просмотра подключенного к HBA оборудования воспользуйтесь командой отображения. В нашем случае 
+   мы ищем устройства подключённые к контроллеру 0, к <span class="term"><code><em>/dev/mps0</em></code></span> 
+   или к <span class="term"><code><em>/dev/mpr0</em></code></span>.</p>
+	   <pre class="screen"><code>
+# sas2ircu 0 display
+ 	   </code></pre>
+   <p>Вы получите ворох информации об авторских правах, а также полезные замечания навроде такого:</p>
+	   <pre class="screen"><code>
+Read configuration has been initiated for controller 0
+ 	   </code></pre>
+   <p>Или, &quot;I’m going to do as you asked now.&quot;</p>
+	   <pre class="screen"><code>
+----------------------------------
+Controller information
+----------------------------------
+  Controller type      : SAS2308_2
+  BIOS version         : 7.37.00.00
+  Firmware version     : 19.00.00.00
+  Channel description  : 1 Serial Attached SCSI
+…
+ 	   </code></pre>
+   <p>Информация о версиях BIOS и встроенного ПО являются полезными если у вас возникли проблемы или вам 
+   необходимо воспользоваться технической поддержкой производителя. После того, как всё это уйдёт в прошлое, 
+   мы получаем информацию о рально подключенном оборудовании. Каждый жёсткий диск получает запись 
+   подобную следующей:</p>
+	   <pre class="screen"><code>
+Physical device information
+--------------------------------------------------
+Initiator at ID #0
+
+Device is a Hard disk
+  Enclosure #                : 1
+  Slot #                     : 0
+  SAS Address                : 4433221-1-0300-0000
+  State                      : Ready (RDY)
+  Size (in MB)/(in sectors)  : 4769307/9767541167
+  Manufacturer               : ATA
+  Model Number               : TOSHIBA MD04ACA5
+  Firmware Revision          : FP2A
+  Serial No                  : 55FGK5SUFS9A
+  GUID                       : N/A
+  Protocol                   : SATA
+  Drive Type                 : SATA_HDD
+  …
+ 	   </code></pre>
+   <p>Вы видите серийные номера, тип подключённых устройств, готово устройство к применению или нет, размер и 
+   тому подобное.</p>
+   <p>Когда вы обойдёте все ваши жёсткие диски, он выплеснет подробности о самой полке.</p>
+	   <pre class="screen"><code>
+---------------------------------
+Enclosure information
+---------------------------------
+  Enclosure#  : 1
+  Logical ID  : 500605b0:09cfc820
+  Numslots    : 8
+  StartSlot   : 0
+---------------------------------
+ 	   </code></pre>
+   <p>Это не совсем всё о вашей полке - здесь нет информации о том, какой диск отвечает за этот запах 
+   горелого - но это предоставляет указания.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Подсветка местоположения с помощью sas2ircu </span></h4>
+   </div></div></div>
+   <p>Чтобы включить или выключить LED на определённом отсеке диска, вам потребуются номер контроллера, номер 
+   полки, а также номер самого разъёма. Давайт получим всё это через команду отображения.</p>
+	   <pre class="screen"><code>
+# sas2ircu &lt;controller #&gt; locate &lt;enclosure#:slot#&gt; on
+ 	   </code></pre>
+   <p>Допустим, что мы хотим активировать LED на устройстве 8 в полке, рассмотренной в предыдущем разделе. 
+   Мы применяли контроллер 0, или <span class="term"><code><em>/dev/mps0</em></code></span>. Команда 
+   отображения показывает все номера устройств полки и номер разъёма. Устройство 8 в разъёме 7 - 
+   помните, нумерация разъёмов часто начинается с нуля. Таким образом, чтобы заморгал LED для 
+   устройства 8 (см. выше) на <span class="term"><code><em>/dev/mps0</em></code></span>, вам 
+   нужно выполнить.</p>
+	   <pre class="screen"><code>
+# sas2ircu 0 locate 1:7 on
+ 	   </code></pre>
+   <p>Когда закончите, выключите его снова.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04"> </a>Множество путей SAS</h3>
+   </div></div></div>
+   <p>Системам с требованиями высокой доступности и большим числом дисков может требоваться множественность 
+   путей SAS (<span class="emphasis"><em>SAS Multipath</em></span>). Цель множественности путей состоит в 
+   предоставлении более одного пути от ЦПУ к каждому диску. Доолнительные пути могут применяться для 
+   балансировки нагрузки или отказоустойчивости. Обычно множественность путей подразумевает присоединение 
+   двух или более контроллеров к объединяющей плате (backplane) или полке хранения содержащим диски.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Зачем нужна множественность путей? </span></h4>
+   </div></div></div>
+   <p>Когда каждый диск может быть достигнут через любой из контроллеров, отказ одного контроллера или 
+   кабеля не прервёт обслуживание. Кроме того, это может сделать доступным для вас применение объединённой 
+   пропускной способности всех имеющихся контроллеров.</p>
+   <p>Данная концепция может даже быть расширена для предоставления полной высокой доступности (High 
+   Availability). Если у вас в наличии заполненная дисками полка JBOD, присоедините один из двух имеющихся SAS 
+   портов к своему первому серверу, а другой ко второму серверу. Теперь обе машины имеют доступ ко всем дискам.
+   Воспользуйтесь чем- то навроде <a class="link" href="https://ru.wikipedia.org/wiki/CARP" 
+   target="_top">CARP</a>, одного из большого числа демонов тактовых импульсов (heartbeat) или какой- 
+   либо службой высокой доступности на основе кворума чтобы сделать возможным совметное применение этими 
+   двумя серверами IP адреса.</p>
+   <p>Имея две машины подключённые ко всем данным, вы можете достичь великолепной отказоустойчивости служб
+   на этих машинах. Это позволит вам выполнять откладываемое вами обновление не выключая файловый сервер.</p>
+   <p>Примените дополнительные меры предосторожности для обеспечения того, что обе системы не попытаются 
+   одновременно монтировать те же диски. Это именно то, почему команда <span class="term"><code>zpool 
+   import</code></span> проверяет идентификатор хоста и отказывает в импорте пулов, которые выглядят так, 
+   будто они используются другой системой.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Режимы множественности путей </span></h4>
+   </div></div></div>
+   <p>Множественность путей предлагаеи интересную задачу. Если каждый из дисков имеет два или более путей 
+   назад к ЦПУ, операционная система опрашивает каждый индивидуальный диск множество раз, по разу через 
+   каждый контроллер. Теперь моя система с 36 дисками внезапно превращается  в имеющую 72 диска.</p>
+   <p>Модуль множества путей GEOM, <span class="term"><code>gmultipath(8)</code></span>, обрабатывает эти 
+   множественные пути и предоставляет единое логическое устройство хранения вашей операционной системе. 
+   <span class="term"><code>Gmultipath(8)</code></span> автоматически выбирает лучший путь для достижения 
+   диска и, таким образом, верхние уровни хранения не должны заботиться об этом.</p> 
+   <p>Множественность путей GEOM в настоящее время поддерживает три режима работы: активно/пассивный, 
+   активно/активный и активно/читающий.</p>
+   <p><span class="emphasis"><em>Active/passive</em></span> (активно/пассивный) в определённый момент времени 
+   использует только один путь. Если путь отказывает, система повторяет эту команду по следующему пути. 
+   Определяйте активно/пассивный метод при помощи <span class="term"><code>-P</code></span>.</p>
+   <p><span class="emphasis"><em>Active/active</em></span> (активно/активный) режим применяет все пути одновременно 
+   для увеличения доступной пропускной способности. Применение всех имеющихся путей иногда может в 
+   действительности наносить урон производительности. Активно/активный режим не имеет возможности определить 
+   что произойдёт в файловой системе или на прикладном уровне; он просто распыляет инструкции по различным 
+   контроллерам. Команды, которые зависят друг от друга могут быть вынуждены ожидать ответа от другого 
+   контроллера, прежде чем они могут быть выполнены. Определяйте активно/активный режим при помощи 
+   <span class="term"><code>-A</code></span>.</p>
+   <p><span class="emphasis"><em>Active/read</em></span> (активно/читающий) режим использует все пути для 
+   чтения, однако выполняет все записи только через первичный путь. Такой гибридный подход разрещает 
+   некоторые проблемы записи которые могут возникнуть при применении активно/активного режима. Данный режим 
+   может быть полезен для насыщения SSD предоставляя болшую пропускную способность контроллера. Для обычного 
+   шпиндельного диска производительность при произвольных операциях ввода/ выода в действительности может 
+   ухудшиться в сравнении с активно/пассивным. Определяйте активно/читающий при помощи <span 
+   class="term"><code>-R</code></span>.</p>
+   <p>Четвёртый метод, <span class="emphasis"><em>logical block</em></span> (логических блоков) исследуется, 
+   но пока ещё не доступен. Режим логических блоков разбивает диск на части определённого размера и всегда 
+   применяет один и тот же путь для доступа к одной области. Это позволяет избегать дублирования кэша в 
+   контроллерах, так как одна и та же область диска никогда не будет доступна обоим контроллерам. Это также 
+   разрешит проблему порядка записи и, как ожидается, предоставит лучшую производительность чем 
+   активно/активный рехим.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0403"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Идентификация дисков </span></h4>
+   </div></div></div>
+   <p>Раздражающей частью настройки множественности путей является определение того, какие узлы устройств 
+   (<span class="term"><code><em>/dev/daX</em></code></span>) представляют различные представления одного 
+   и того же оборудования. Вы должны решить эту проблему перед тем как вы добавите какие- либо метки к 
+   своим дискам. Один из способов решения этого состоит в применении <span 
+   class="term"><code>camcontrol(8)</code></span> на устройствах SAS для получения их серийных номеров.</p>
+	   <pre class="screen"><code>
+# camcontrol inquiry da7 -S
+1EHNLWRC
+# camcontrol inquiry da43 -S
+1EHNLWRC
+ 	   </code></pre>
+   <p>Соберите перечень устройств и их серийных номеров и определите соответствия.</p>
+   <p>В качестве альтернативы, вы можете применить <span class="term"><code>sesutil(8)</code></span> для 
+   пометки номеров разъёмов. Для примера мы воспользуемся системой Джуда с множественными путями. Она имеет 
+   две полки: у передней 24 разъёма, а у задней 12. У сервера имеются два дисковых контроллера.</p>
+   <p>Первый порт первого контроллера подключен к передней полке и имеет имя 
+   <span class="term"><code><em>/dev/ses0</em></code></span>. Второй порт подключён к задней полке и становится
+   <span class="term"><code><em>/dev/ses1</em></code></span>.</p>
+   <p>Первый порт второго контроллера подключён к передней полке и имеет назначение 
+   <span class="term"><code><em>/dev/ses2</em></code></span>. Второй порт второго контроллера подключён ко 
+   второму порту задней полки и становится <span class="term"><code><em>/dev/ses3</em></code></span>.</p>
+   <p>У вас имеются две полки. Устройства FreeBSD <span class="term"><code><em>/dev/ses0</em></code></span> и
+   <span class="term"><code><em>/dev/ses2</em></code></span> вдвоём направляют к передней полке, а 
+   <span class="term"><code><em>/dev/ses1</em></code></span> и 
+   <span class="term"><code><em>/dev/ses3</em></code></span> оба направляют к задней. Ниже я просматриваю 
+   элемент 8 переднего массива с обеих перспектив.</p>
+	   <pre class="screen"><code>
+# sesutil map -u /dev/ses0
+…
+Element 8, Type: Array Device Slot
+  Status: OK (0x01 0x00 0x00 0x00)
+  Description: Slot 08
+  Device Names: da7,pass11
+# sesutil map -u /dev/ses2
+…
+Element 8, Type: Array Device Slot
+  Status: OK (0x01 0x00 0x00 0x00)
+  Description: Slot 08
+  Device Names: da43,pass49
+ 	   </code></pre>
+   <p>Это один и тот же диск. Он имеет множество узлов устройств. Диски <span class="term"><code><em>da7</em></code></span>
+   и <span class="term"><code><em>da43</em></code></span> являются одним и тем же оборудованием.</p>
+   <p>Всякий раз при настройке множественности путей делайте пометки и рисуйте диаграммы. В будущем Вы скажете 
+   спасибо за хорошие пометки. (Если ваши пометки будут скудными или вовсе будут отсутствовать, то в Будущем Вы 
+   будете проклинать себя, день, когда вы появились на свет и всех своих домашних животных. У вас недостаточно 
+   людей уже вас ненавидящих?)</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0404"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Настройка множественности путей </span></h4>
+   </div></div></div>
+   <p>Для работы <span class="term"><code>gmultipath(8)</code></span> необходим модуль ядра. Сделайте 
+   доступной загрузку с точкой входа <span class="term"><code><em>/boot/loader.conf</em></code></span>.</p>
+	   <pre class="screen"><code>
+geom_multipath_load=&quot;YES&quot;
+ 	   </code></pre>
+   <p>Модули множественности путей GEOM имеют два режима настройки: ручной и автоматический. Настоятельно 
+   рекомендуется применение атоматичекого. Он прописывает метку в самый последний сектор каждого диска, затем читает 
+   эту метку через каждый путь для определения какие узлы устройств являются просто дополнительными 
+   путями к тому же самому диску. Применяйте <span class="term"><code>gmultipath label</code></span> для 
+   автоматической настройки множественности путей.</p>
+   <p>Мы рекомендуем применять <span class="term"><code>sesutil(8)</code></span> для получения списка узлов 
+   дисковых устройств подключённых к одной из ваших полок. Затем воспользуйтесь 
+   <span class="term"><code>camcontrol(8)</code></span> для получения серийных номеров каждого из этих устройств. 
+   Совместите имя полки (<span class="emphasis"><em>f</em></span>, front, для передней) и номер разъёма с серийным 
+   номером диска для создания метки этого диска.</p>
+	   <pre class="screen"><code>
+# gmultipath label f01-1EHNM9MC /dev/da0
+ 	   </code></pre>
+   <p>Вы выполните это по разу для каждого устройства в вашей полке применяя соотвествующий номер разъёма и 
+   серийный номер для создания уникальных меток на каждом диске.</p>
+	   <pre class="screen"><code>
+# gmultipath label f08-1EHNLWRC /dev/da7
+ 	   </code></pre>
+   <p>Если метка существует, <span class="term"><code>gmultipath(8)</code></span> найдёт эту метку когда он 
+   будет пробовать другие диски. Когда он обнаружит диск с меткой gmultipath 
+   <span class="term"><code>f01-1EHNM9MC</code></span>, он скажет: &quot;Ага! это всё тот же диск 
+   <span class="term"><code><em>/dev/da0</em></code></span>&quot; и приступит к работе.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0405"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Узлы устройств множества путей </span></h4>
+   </div></div></div>
+   <p>Теперь, когда вы пометили <span class="term"><code><em>/dev/da0</em></code></span> и
+   <span class="term"><code><em>/dev/da37</em></code></span> одим и тем же устройством, не применяйте эти узлы 
+   устройств. Эти узлы устройств представляют доступ к данному диску через один из путей. Вместо этого используйте 
+   узел устройства с множеством путей. Модуль ядра <span class="term"><code>gmultipath(8)</code></span> в 
+   действительности пердотвращает ваш доступ к этим устройствам по раздельности.</p>
+   <p>В <span class="term"><code><em>/dev/multipath</em></code></span> появились узлы устройств с множеством 
+   путей. Каждый диск поименован после того как вы назначили его метку. Постройте свой собственный массив ZFS 
+   поверх этих меток и вы получите доступ к данным дискам даже когда вы отключите один кабель.</p>
+   <p>Если вы реально, на самом деле, очень- очень хотите осуществлять доступ к узлам множественных устройств 
+   дисков с множеством путей, установитье значение <span class="term"><code>sysctl 
+   kern.geom.multipath.exclusive</code></span> в <span class="term"><code><em>0</em></code></span>.
+   Но мы вам говорим не делать это. (Мы советуем вам не делать это не для вашего собственного блага, и не просто
+   чтобы мы потом могли сказать &quot;мы предупреждали вас&quot;.)</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0406"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Ручная настройка множественности путей </span></h4>
+   </div></div></div>
+   <p>Может быть вам нравится делать вещи не самым простым способом. Если в вашем распоряжении есть под рукой 
+   карта того, какие узлы устройств представляют одни и те же физические устройства, вы можете воспользоваться 
+   этой картой для создания узлов с множеством путей вручную. Сопоставьте одну метку двум дисковым устройствам.
+   Здесь мы создадим устройство с множеством путей, <span class="term"><code>multi1</code></span> при 
+   помощи узлов устройств <span class="term"><code><em>/dev/da0</em></code></span> и
+   <span class="term"><code><em>/dev/da37</em></code></span>.</p>
+	   <pre class="screen"><code>
+# gmultipath create multi1 /dev/da7 /dev/da43
+ 	   </code></pre>
+   <p>Чтобы уничтожить созданное вручную устройство с множеством путей воспользуйтесь 
+   <span class="term"><code>gmultipath destroy</code></span> и соответствующим именем метки.</p>
+	   <pre class="screen"><code>
+# gmultipath destroy multi1
+ 	   </code></pre>
+   <p>Однако мы действительно рекомендуем автоматическую настройку. А также последующую маркировку дисков их 
+   местоположением и серийным номером.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0407"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр множественности путей </span></h4>
+   </div></div></div>
+   <p>После перезагрузки стек GEOM FreeBSD опробует все диски, распознает метки и сгруппирует нужные диски 
+   вместе. Просмотрите как они выявились при помощи <span class="term"><code>gmultipath status</code></span>.</p>
+	   <pre class="screen"><code>
+# gmultipath status
+                  Name   Status  Components
+multipath/f00-1EHNM9MC  OPTIMAL  da0 (ACTIVE)
+                                 da36 (PASSIVE)
+multipath/f01-1EHJZMBC  OPTIMAL  da1 (ACTIVE)
+                                 da37 (PASSIVE)
+…
+multipath/f07-1EHNLWRC  OPTIMAL  da7 (ACTIVE)
+                                 da43 (PASSIVE)
+ 	   </code></pre>
+   <p>После каждого пути вы увидите замечание, отображающее является ли каждый узел устройства активным или 
+   пассивным.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0408"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Изменение режима множественности путей </span></h4>
+   </div></div></div>
+   <p>Мы обсуждали различные режимы с множеством путей и их влияние на производительность ранее. Когда вы 
+   помечаете диски, значение <span class="term"><code>gmultipath</code></span> по умолчанию установлено в 
+   активный/ пассивный (<span class="term"><code>-P</code></span>). Вы можете добавить 
+   <span class="term"><code>-A</code></span> для переключения в активный/ активный, или 
+   <span class="term"><code>-R</code></span> для включения активный/ чтение.</p>
+   <p>Вы также можете применять эти флаги для изменения режима существующего устройства с множеством путей.
+   Воспользуйтесь <span class="term"><code>gmultipath configure</code></span>, флагом нужного вам режима и 
+   меткой изменяемого устройства gmultipath. Вот, например, мы включаем диск помеченный 
+   <span class="term"><code>f07-1EHNLWRC</code></span> в режим активный/ чтение.</p>
+	   <pre class="screen"><code>
+# gmultipath configure -R f07-1EHNLWRC
+ 	   </code></pre>
+   <p>Это работает?</p>
+	   <pre class="screen"><code>
+# gmultipath status
+…
+multipath/f07-1EHNLWRC OPTIMAL da7 (ACTIVE)
+                               da43 (READ)
+ 	   </code></pre>
+   <p>В настройках активный/ пассивный и активный/ чтение вы можете также применять команду 
+   <span class="term"><code>rotate</code></span> чтобы переключать то, какое из устройств является 
+   активным.</p>
+	   <pre class="screen"><code>
+# gmultipath rotate f07-1EHNLWRC
+# gmultipath status
+…
+multipath/f07-1EHNLWRC OPTIMAL da7 (READ)
+                               da43 (ACTIVE)
+ 	   </code></pre>
+   <p>Теперь даже ваши SSD могут меняться местами. Пользуйтесь!</p>
+   <p>Поговорим об SSD...</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05"> </a>SSD</h3>
+   </div></div></div>
+   <p>Твердотельные диски, или <span class="emphasis"><em>SSD</em></span> (Solid state disks), существенно 
+   отличаются от обычных шпиндельных устройств и требуют совсем другой настройки по сравнению с 
+   традиционными дисками. Впрочем, это даже не диски.</p>
+   <p>Чтобы шпиндельный жёсткий диск прочитал два сектора, которые расположены в различных местах на этом 
+   диске, читающие головки должны позиционироваться в правильном местоположении, затем дождаться пока 
+   вращающаяся пластина повернётся в правильное положение, прочитает сектор, затем изменит позиционирование
+   на второй сектор, вновь дождётся пока пластина займёт верное смещение и затем прочитает второй сектор. 
+   Такое ожидание называется временем позиционирования (<span class="emphasis"><em>seek 
+   time</em></span>).</p>
+   <p>SSD не имеет перемещающихся частей. Когда вы читаете данные из двух различных частей этого 
+   устройства, оно имеет нулевое время позиционирования. Большинство SSD получают относительно высокие 
+   скорости чтения и записи благодаря тому, что они читают и пишут во множество ячеек одновременно. Чтобы 
+   сохранять занятыми множество ячеек памяти, операционная система должна поддерживать устройство 
+   очередью выполняемых работ.</p>
+   <p>Для обычного шпиндельного диска наличие &quot;глубокой&quot; очереди это плохо. Это означает, что 
+   возрастает промежуток времени между тем когда данные запрошены и когда они записаны или возвращены, 
+   так как они должны ожидать завершения ожидающей в очереди работы. При наличии меньшей глубины очереди, 
+   наиболее важные элементы работ могут прийти в начало очереди первыми, отсекая в начале очереди менее 
+   важные работы, которые будут упорно дожидаться в линии. (Почти также ловко, как Лукас рассекает 
+   очередь в киоск с мороженным). Для получения наивысшей производительности SSD, однако, глубина 
+   очереди должна быть достаточно высокой, чтобы гарантировать что все ячейки будут загружены работой. 
+   Вы не сможете получить достойных хвастовства значений производительности в коробке без прекрасной 
+   заполненой очереди.</p>
+   <p>Для получения наиболее высоких значений IOPS для устройств, подобных SSD, глубина настраиваемой очереди 
+   VDEV ZFS требует увеличения. Это поможет сохранить достаточно работы в такой очереди для предотвращения 
+   простоев в подобном устройстве. За подробностями отсылаем вас к разделу <a class="link" 
+   href="Ch08.html#07" target="_top">Очереди ввода/вывода</a> Главы 8.</p>
+   <p>В отличие от шпиндельного диска, который имеет сектора которые расположены в фиксированных местах 
+   на пластине диска, SSD являются массивом неподвижных элементов флеш- памяти. SSD использует 
+   <a class="link" href="https://flashdba.com/2014/09/17/understanding-flash-the-flash-translation-layer/" 
+   target="_top">FTL</a> (Flash Translation Layer, печально, не быстрее чем легче -Faster Than Light- движок) 
+   для соответствия эмуляции местоположений на диске определённым ячейкам, содержащим хранимые данные. Хотя 
+   для SSD не требуется наличие адресации логических блоков (<a class="link" href="" target="_top">Logical Block 
+   Addresses</a>) применяемой шпиндельными дисками, FTL предоставляет эти LBA.
+   {<span class="emphasis"><em>Прим. пер.: см. <a class="link" 
+   href="http://web.archive.org/web/20140719185353/http://staff.ustc.edu.cn/~jpq/paper/flash/2006-Intel%20TR-Understanding%20the%20flash%20translation%20layer%20%28FTL%29%20specification.pdf" 
+   target="_top">Understanding the FTL Specification</a>, Intel, Dec. 1998</em></span>} 
+   LBA в SSD порождает даже ещё меньше связи с реальностью, чем у них есть её для шпиндельных дисков.</p>
+   <p>Поскольку элементы флеш-памяти подвержены износу {<span class="emphasis"><em>Прим. пер.: имеют 
+   ограниченный ресурс перезаписей</em></span>}, почти все SSD содержат больше памяти чем они предъявляют 
+   на коробке. Устройства распределяют данные по элементам чтобы изнашивать их более равномерно. 
+   Когда занято всё пространство, работает сборщик мусора. Сборщик мусора находит ячейки, на которые больше 
+   нет ссылок или для которых ОС применил команду <a class="link" href="https://ru.wikipedia.org/wiki/TRIM" 
+   target="_top">TRIM</a> (SATA) или <a class="link" 
+   href="http://lists.freebsd.org/pipermail/freebsd-current/2011-December/030714.html" target="_top">UNMAP</a> 
+   (SCSI) для пометки неиспользуемыми, и очищает их для дальнейшего применения.</p>
+   <p>Когда вы добавляете SSD или другие устройства, которые поддерживают TRIM в пул ZFS, FreeBSD TRIM 
+   весь раздел или всё устройство по умолчанию с тем, чтобы оно стартовало в известном состоянии. 
+   Это может вызвать задержки в десятки минут или даже часов перед тем, как устройство станет доступным. 
+   Если у вас новое устройство, или вы не хотите выполнять на нём TRIM когда вы добавляете его в свой 
+   пул, перед добавлением такого устройства в свой пул установите значение 
+   <span class="term"><code>sysctl vfs.zfs.vdev.trim_on_init</code></span> в 
+   <span class="term"><code><em>0</em></code></span>.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="06"> </a>NVMe</h3>
+   </div></div></div>
+   <p><a class="link" href="https://ru.wikipedia.org/wiki/NVM_Express" target="_top">Non-Volatile 
+   Memory Express</a>, или <span class="emphasis"><em>NVMe</em></span> является новой технологией, 
+   разработанной для дальнейшего увеличения скорости твердотельных хранилищ. Она применяется как для 
+   флеш- дисков, так и для энергонезависимой памяти, например, <a class="link" 
+   href="https://ru.wikipedia.org/wiki/Память_с_изменением_фазового_состояния" target="_top">3D Xpoint</a>
+   Intel {<span class="emphasis"><em>Прим. пер.: и Micron</em></span>}. NVMe сама по себе является 
+   спецификацией физического интерфейса, альтернативного SATA или SCSI/SAS. Вы можете увидеть кабели 
+   и адаптеры NVMe, которые подключаются через шину PCI-e.</p>
+   <p>Самой медленной, наиболее сложной и наиболее расположенной к ошибкам частью SSD является FTL. 
+   Притворяться быть настолько глупым, чтобы соответствовать эре шпнидельных дисков 1980х это очень 
+   тяжёлая работа. NVMe улучшают производительность тех же самых аппаратных средств, отбрасывая эти 
+   неуклюжие притворства, принимая вместо этого более соответствующие флеш- памяти протоколы.</p>
+   <p>Одним из самых больших отличий между устройствами NVMe и SSD состоит в том, что устройства 
+   NVMe имеют множество очередей, причём обычно одну очередь для чтения и одну очередь для записи 
+   из расчёта на имеющиеся ЦПУ. Вместо того, чтобы пытаться сохранять одну очередь заполненной 
+   достаточной работой для занятия множества элементов флеш- памяти, NVMe имеет множество очередей.
+   Очереди NVMe могут сораняться относительно неглубокими, позволяя более приоритетным задачам 
+   оттеснять прочую работу. Распределение нагрузки между ЦПУ помогает гарантировать даже болшую 
+   производительность.</p>
+   <p>В то время как большинство HDD и SSD взаимодействуют с <a class="link" 
+   href="https://ru.wikipedia.org/wiki/Advanced_Host_Controller_Interface" target="_top">AHCI</a>, 
+   который имеет единственную очередь команд, причём до 64 команд на устройство, интерфейс NVMe 
+   допускает 65 636 очередей, причём по 65 536 команд в каждой. Интерфейс NVMe таким образом, 
+   требует меньше блокировок при том, что предлагает гораздо больший параллелизм и, тем самым, 
+   производительность.</p>
+   <p>Драйвер FreeBSD <span class="term"><code>nvme(4)</code></span> впервые появился в FreeBSD 9.2.
+   Во многом по аналогии с узлом устройства жёсткого диска, вы можете ожидать, что ваше первое 
+   устройство <span class="term"><code>nvme(4)</code></span> будет 
+   <span class="term"><code><em>/dev/nvme0</em></code></span>, <span class="term"><code><em>/dev/nvme1</em></code></span> 
+   и так далее.</p>
+   <p>Устройства NVMe естественным образом поддерживают пространства имён (<span 
+   class="emphasis"><em>namespaces</em></span>), позволяя им подразделяться на логичекие устройства, похоже, 
+   но по- другому в сравнении с разделами. <span class="term"><code>nvme(4)</code></span> применяет символы 
+   <span class="emphasis"><em>ns</em></span> для идентификации пространств имён в своём узле устройства. 
+   В отличие от почти всего имеющегося в вычислительной технике, спецификация NVM Express начинает 
+   нумерацию пространств имён с 1 вместо 0. Таким образом, вы получаете узлы устройств наподобие 
+   <span class="term"><code><em>/dev/nvme0ns1</em></code></span>, 
+   <span class="term"><code><em>/dev/nvme0ns2</em></code></span> и так далее.</p>
+   <p>Только некоторые новые устройства NVMe уровня предприятия (Enterprise) поддерживают управление 
+   своими пространствами имён. Большинство имеющихся в настоящее время устройств имеют единое пространство 
+   имён, охватывающее всё устройство.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0601"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Просмотр устройств NVMe </span></h4>
+   </div></div></div>
+   <p>Для управления устройствами NVMe воспользуйтесь <span class="term"><code>nvmecontrol(8)</code></span>.
+   Начните с идентификации всего подключенного к вашей системе оборудования NVMe при помощи 
+   <span class="term"><code>nvmecontrol devlist</code></span>.</p>
+   	   <pre class="screen"><code>
+# nvmecontrol devlist
+ nvme0: INTEL SSDPEDMD800G4
+  nvme0ns1 (763097MB)
+ 	   </code></pre>
+   <p>У данного хоста в наличии одно NVMe с единым пространством имён.</p>
+   <p>Для изучения специфичной информации об устройстве воспользуйтесь командой 
+   <span class="term"><code>nvmecontrol identify</code></span>.</p>
+   	   <pre class="screen"><code>
+# nvmecontrol identify nvme0
+Controller Capabilities/Features
+================================
+Vendor ID:                8086
+Subsystem Vendor ID:      8086
+Serial Number:            CVFT4030004A800CGN
+Model Number:             INTEL SSDPEDMD800G4
+Firmware Version:         8DV10151
+…
+ 	   </code></pre>
+   <p>Это продолжается совсем недолго, определяя всю функциональность данной поддержки NVMe (или не 
+   совсем).</p>
+   <p>Команда <span class="term"><code>identify</code></span> также работает с пространствами имён.</p>
+   	   <pre class="screen"><code>
+# nvmecontrol identify nvme0ns1
+Size (in LBAs):            1562824368 (1490M)
+Capacity (in LBAs):        1562824368 (1490M)
+Utilization (in LBAs):     1562824368 (1490M)
+Thin Provisioning:         Not Supported
+Number of LBA Formats:     7
+Current LBA Format:        LBA Format #00
+LBA Format #00: Data Size:   512 Metadata Size:   0
+LBA Format #01: Data Size:   512 Metadata Size:   8
+LBA Format #02: Data Size:   512 Metadata Size:  16
+LBA Format #03: Data Size:  4096 Metadata Size:   0
+LBA Format #04: Data Size:  4096 Metadata Size:   8
+LBA Format #05: Data Size:  4096 Metadata Size:  64
+LBA Format #06: Data Size:  4096 Metadata Size: 128
+ 	   </code></pre>
+   <p>Формат LBA позволяет вам определить размер сектора, включая необязательное дополнительное 
+   пространство для кодирования или метаданные. FreeBSD пока не позволяет вам, однако, переформатировать 
+   такое устройство с различными размерами сектора.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0602"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Производительность NVMe </span></h4>
+   </div></div></div>
+   <p>Утилита <span class="term"><code>nvmecontrol(8)</code></span> также содержит инструментарий 
+   тестирования производительности, а именно <span class="term"><code>nvmecontrol perftest</code></span>.
+   Хотя вы можете захотеть протестировать производительность диска, она способна продемонстрировать 
+   преимущества множества рабочих очередей.</p>
+   <p>Здесь мы применяем тест производительности для измерения скорости чтения с увеличивающимся числом 
+   потоков, причём по каждые 30 секунд. Каджый тест применяет увеличивающиеся размеры болшого блока. 
+   Последняя колонка показывает реальную пропускную способность для каждого значения числа потоков, 
+   в мегабайтах в секунду.</p>
+   <p>Начнём тестирование с 512- байтных блоков.</p>
+   	   <pre class="screen"><code>
+# for threads in 1 2 4 8 16 32 64; do nvmecontrol perftest \
+        -n $threads -o read -s 512 -t 30 nvme0ns1;done
+Threads:   1 Size:  512  READ Time:  30 IO/s:  215377 MB/s: 105
+Threads:   2 Size:  512  READ Time:  30 IO/s:  309203 MB/s: 150
+Threads:   4 Size:  512  READ Time:  30 IO/s:  509559 MB/s: 248
+Threads:   8 Size:  512  READ Time:  30 IO/s:  534976 MB/s: 261
+Threads:  16 Size:  512  READ Time:  30 IO/s:  535131 MB/s: 261
+Threads:  32 Size:  512  READ Time:  30 IO/s:  534682 MB/s: 261
+Threads:  64 Size:  512  READ Time:  30 IO/s:  533701 MB/s: 260
+ 	   </code></pre>
+   <p>При одном потоке мы можем читать 105МБ/с. При восьми и более мы выходим на 260МБ/с. Возможно, 
+   это максимум пропускной способности с данным размером блока для этого устройства.</p>
+   <p>Вот подобный тест с применением 4096-байтового (4кБ) чтения.</p>
+   	   <pre class="screen"><code>
+# for threads in 1 2 4 8 16 32 64; do nvmecontrol perftest \
+       -n $threads -o read -s 4096 -t 30 nvme0ns1;done
+Threads:  1 Size:   4096  READ Time:  30 IO/s:  171261 MB/s:  668
+Threads:  2 Size:   4096  READ Time:  30 IO/s:  308112 MB/s: 1203
+Threads:  4 Size:   4096  READ Time:  30 IO/s:  424894 MB/s: 1659
+Threads:  8 Size:   4096  READ Time:  30 IO/s:  521704 MB/s: 2037
+Threads: 16 Size:   4096  READ Time:  30 IO/s:  543984 MB/s: 2124
+Threads: 32 Size:   4096  READ Time:  30 IO/s:  543376 MB/s: 2122
+Threads: 64 Size:   4096  READ Time:  30 IO/s:  542464 MB/s: 2119
+ 	   </code></pre>
+   <p>Даже с одним потоком мы рассеиваем возможности производительности с 512-байтовыми блоками. 
+   Восемь потоков могут выполнять почти 2 000МБ/с, при 16 и более потоках мы получаем почти 2 120МБ/c. 
+   При слегка большем тестировании вы можете вывести, что где-то в районе 9 или 10 потоков с данным 
+   размером блока достигается максимум производительности.</p>
+   <p>Теперь забудем об этих начальных смертельных размерах блока и перепрыгнем сразу к 128кБ блокам.</p>
+   	   <pre class="screen"><code>
+Threads:  1 Size: 131072  READ Time:  30 IO/s:  21770 MB/s: 2721
+Threads:  2 Size: 131072  READ Time:  30 IO/s:  25780 MB/s: 3222
+Threads:  4 Size: 131072  READ Time:  30 IO/s:  25780 MB/s: 3222
+Threads:  8 Size: 131072  READ Time:  30 IO/s:  25758 MB/s: 3219
+Threads: 16 Size: 131072  READ Time:  30 IO/s:  25706 MB/s: 3213
+Threads: 32 Size: 131072  READ Time:  30 IO/s:  25718 MB/s: 3214
+Threads: 64 Size: 131072  READ Time:  30 IO/s:  25710 MB/s: 3213
+ 	   </code></pre>
+   <p>Уже два потока достигают максимальной пропускной способности с такими большими блоками.</p>
+   <p>Всего лишь 3200МБ/с может не послышаться быстрым - это 3.2ГБ/с. Однако SATA измеряет 
+   производительность в битах, не в байтах. Даже если вы освободитесь от накладных расходов, 6Gbps 
+   SATA3 в максимуме выдают примерно 550МБ/с.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0603"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Поставщики NVMe GEOM и загрузка </span></h4>
+   </div></div></div>
+   <p>Так как устройство NVMe имеет пространство имён, в игру вступает драйвер 
+   <span class="term"><code>nvmecontrol(8)</code></span>. Это устройство, которое в действительности является 
+   поставщиком (provider) <a class="link" href="https://en.wikipedia.org/wiki/GEOM" target="_top">GEOM</a>
+   и может применяться для хранения данных в ZFS. Вы можете наблюдать узлы устройств типа 
+   <span class="term"><code><em>/dev/nvd0</em></code></span>, <span class="term"><code><em>/dev/nvd1</em></code></span> 
+   и так далее.</p>
+   </p>
+   <p>Если вы планируете использовать устрйоство NVMe в качестве загрузочного диска вы должны создать 
+   раздел загрузочного устройства <span class="term"><code><em>/dev/nvd</em></code></span>, возможно при 
+   помощи GPT. Если вы не загружаетесь с этого устройства, вы можете пропустить таблицу разделов и 
+   записывать свою файловую систему напрямую на узел устройства.</p>
+   <p>Обычные модули BIOS и CSM (модули совместимости BIOS, Compatibility Support Module) понимают только 
+   традиционные диски и вещи, которые лгут, чтобы выглядеть как диски. Вся суть устройств NVMe состоит в 
+   том, что они отказываются врать и не эмулируют традиционные жёстки е диски.</p>
+   <p>Загрузка с устройства NVMe требует <a class="link" 
+   href="http://onreader.mdl.ru/HowLinuxWorks2/content/Ch05.html#05.8.2" target="_top">загрузки через UEFI</a>.
+   FreeBSD получил возможность загружать root-onZFS через EFI в FreeBSD 10.3.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="07"> </a>zfsd</h3>
+   </div></div></div>
+   <p>FreeBSD 11.0, ожидаемая к выпуску в июле 2016, включит в себя первую версию 
+   <span class="term"><code>zfsd(8)</code></span>. Этот демон, специфичный для FreeBSD, предоставит некоторую
+   функциональность, обеспечиваемую <a class="link" href="https://ru.wikipedia.org/wiki/Service_Management_Facility" 
+   target="_top">средствами управления служб</a> Solaris (SMF, Service Management Facility).
+   <span class="term"><code>Zfsd(8)</code></span> получает извещения об отказах, которые ядро само по себе 
+   не может обработать и разрешает их.</p>
+   <p>Этот демон прослушивает события <span class="term"><code>devctl(4)</code></span>, таке как ошибки 
+   ввода/ вывода или подключения диска и события удаления, затем отвечает на них активирую и деактивируя 
+   горячие резервы или включая или выключая индивидуальные устройства в своём пуле.</p>
+   <p>Для <span class="term"><code>zfsd(8)</code></span> не нужна никакая настройка. Он принимает свои решения 
+   на основании настроек вашего пула. В первой версии <span class="term"><code>zfsd</code></span> будет 
+   иметь какой-то эффект только свойство <span class="term"><strong class="userinput">autoreplace</strong></span>.</p>
+   <p>Если поступает уведомление об удалении диска, который является участником VDEV, 
+   <span class="term"><code>zfsd</code></span> немедленно активирует горячий резерв в данном пуле и запускает
+   восстановление (resilvering).</p>
+   <p>При появлении нового устройства GEOM, <span class="term"><code>zfsd</code></span> вначале проверяет 
+   на наличие метки ZFS. Если диск имеет метку, которая индицирует, что оно было первоначально участником 
+   пула, оно повторно подключается. По завершению восстановления, все горячие резервы, которые временно 
+   применялись для замещения этого устройства, деактивируются и возвращаются в список доступной замены.</p>
+   <p>Если вновь появившееся устройство не имеет метки ZFS, но его физический путь соответствует утраченному 
+   участнику VDEV, а пул имеет установленное свойство пула <span class="term"><strong 
+   class="userinput">autoreplace</strong></span>, тогда новое устрйство применяется для замены утраченного. 
+   В новых версиях FreeBSD физический путь может быть пустым (blank) или может быть путём SES, например, 
+   <span class="term"><code><em>dev/enc@n500304801786b87d/type@0/slot@1/elmdesc@Slot_01/gpt/f01-1EHJZMBC</em></code></span>.</p>
+   <p>Когда восстановление (resilvering) завершится, <span class="term"><code>zfsd</code></span> деактивирует 
+   все горячие резервы, которые временно замещали такое устройство. Деактивированные устройства возвращаются 
+   в списко доступного резерва.</p>
+   <p>Если VDEV деградирует или отказывает, <span class="term"><code>zfsd</code></span> попытается 
+   разрешить эту проблему активируя горячий резерв.</p>
+   <p>Если конкретное устройство генерирует более 50 ошибок ввода/ вывода или контрольных сумм на протяжении 
+   периода в 60 секунд, <span class="term"><code>zfsd</code></span> помечает это устройство деградировавшим и 
+   активирует горячий резерв. ZFS продолжает применять деградировавшее устройство до тех пор, пока не 
+   восстановится (resilver) данный пул. Когда пул завершит восстановление, <span class="term"><code>zfsd</code></span>
+   удалит отказавшее устройство из пула.</p>
+   <p>Если в пул добавляется новый горячий резерв, или осуществляется возврат, <span class="term"><code>zfsd</code></span>
+   активирует запас, если он нужен, для замены другого устройства.</p>
+   <p>Когда операция восстановления (resilver) выполнена, <span class="term"><code>zfsd</code></span> пытается 
+   деактивировать все горячие резервы, в которых больше нет необходимости, следовательно они доступны для замены 
+   при последующих отказах в случае их возникновения.</p>
+   <p><span class="term"><code>Zfsd(8)</code></span> также прослушивает &quot;изменение физического пути&quot;,
+   чтобы быть в курсе при установке пути к вновь появившемуся диску. Это может случиться слегка позже, чем 
+   произошло само событие вставк таого диска. Когда физический путь обновлён, а свойство пула <span 
+   class="term"><strong class="userinput">autoreplace</strong></span> при этом установлено, 
+   <span class="term"><code>zfsd</code></span> попытается выполнить замену любого отказавшего диска с тем же 
+   самым физическим путём.</p>
+   <p>Когда вы переставите отказавший диск, а подсистема CAN заметит, что новый диск находится в том же самом 
+   разъёме, причём с тем же самым путём, <span class="term"><code>zfsd</code></span> автоматически 
+   инициирует операцию <span class="term"><code>replace</code></span> и восстановит пул назад в рабочеспособное 
+   (health) сосояние.</p>
+   <p>Перемещение диска из одного разъёма в другой работает в точности как удаление диска и подключение его 
+   обратно. Ядро помечает отсутствующий диск как удалённый. Когда вы вставляете диск назад, ядро позиционирует 
+   метку ZFS на этом диске, определяет к какому пулу он относится и автоматически реактивирует его при помощи
+   <span class="term"><code>zpool online</code></span>. Метаданные пула поучают обновления сэтим физическим 
+   путём.</p>
+   <p>Теперь мы немного поговорим о том, как применять профессиональное оборудование, давайте расмотрим 
+   преимущества применения различных кэшей ZFS.</p>
+  </div>
+   
+   
+ </div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>

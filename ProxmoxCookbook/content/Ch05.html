@@ -1,0 +1,951 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<title>Глава 5. Настройка межсетевого экрана - Книга рецептов Proxmox</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="ProxmoxCookbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<link rel="home" href="index.html" title="Построение кластеров высокой доступности Linux для профи."/>
+<link rel="up" href="index.html" title="Построение кластеров высокой доступности Linux для профи."/>
+<link rel="prev" href="Ch04.html" title="Глава 4. Настройка сети"/>
+<link rel="next" href="Ch06.html" title="Глава 6. Настройка системы хранения"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "proxmox-cookbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/ProxmoxCookbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script><script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Глава 5. Настройка межсетевого экрана';
+PrevRef = 'Ch04.html';
+UpRef = 'index.html';
+NextRef = 'Ch06.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+ <div class="part">
+  <div xmlns="" class="titlepage"><div><div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+   Глава 5. Настройка межсетевого экрана</h1>
+  </div></div></div>
+  <div class="partintro"><div xmlns=""/>
+  <p>Мы охватим следующие разделы в данной главе:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Настройку межсетевого экрана кластера</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку межсетевого экрана хоста</p>
+	 </li>
+	<li class="listitem">
+	 <p>Настройку межсетевого экрана виртуальной машины</p>
+	 </li>
+	<li class="listitem">
+	 <p>Интегрирование Suricata IPS</p>
+	 </li>
+	<li class="listitem">
+	 <p>Используемые обычно команды CLI межсетевого экрана</p>
+	 </li>
+	<li class="listitem">
+	 <p>Ведение журналов межсетевого экрана</p>
+	 </li>
+   </ul>
+   </div>
+  </div>
+
+  <div class="toc"><p><strong>Содержание</strong></p>
+   <dl>
+	<dt><span class="chapter"><a href="Ch05.html">5. Настройка межсетевого экрана</a></span></dt>
+	<dd><dl>
+	<dt><span class="section"><a href="Ch05.html#Introduction">Введение</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#cluster_firewall">Настройка межсетевого экрана кластера</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#host_firewall">Настройка межсетевого экрана хоста</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#VM_firewall">Настройка межсетевого экрана виртуальной машины</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#Suricata IPS">Интегрирование Suricata IPS</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#firewall_CLI">Используемые обычно команды CLI межсетевого экрана</a></span></dt>
+	<dt><span class="section"><a href="Ch05.html#Logging">Ведение журналов межсетевого экрана</a></span></dt>
+	</dl></dd>
+    </dl>
+  </div>
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Introduction"> </a>Введение</h3>
+   </div></div></div>
+   <p>Возможности межсетевого экрана в Proxmox VE обеспечивают исключительное средство усиления безопасности в пределах виртуальной среды. 
+   Межсетевой экран строится на основе твердо установившейся технологии сетевой фильтрации 
+   (<span class="term"><span class="emphasis"><em>netfilter</em></span></span>) на основе Linux. Сетевая фильтрация основывается на 
+   инфраструктуре фильтрации пакетов, в которой сетевые пакеты данных допускаются или отвергаются на основании множества установленных 
+   правил. Все правила определяются в табличных структурах в <span class="term"><span class="emphasis"><em>iptables</em></span></span>.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения дополнительных сведений о сетевой фильтрации посетите <a class="link" href="http://www.netfilter.org/" 
+	   target="_top">http://www.netfilter.org/</a>.
+	   {<span class="emphasis"><em>Прим. пер.: <a class="link" href="https://ru.wikipedia.org/wiki/Firewall" 
+	   target="_top">https://ru.wikipedia.org/wiki/Межсетевой_экран</a></em></span>}</p></td></tr></table>
+     </div>
+   <p>Свойством межсетевого экрана в Proxmox также является отслеживание состояния в брандмауэре. Межсетевой экран с отслеживанием состояния не 
+   только фильтрует пакеты, но также постоянно поддерживает отслеживание состояние активных соединений, таких как протоколы TCP или UDP. Он также 
+   известен возможностью динамической фильтрации пакетов, которая проверяет соответствие правилам брандмауэра в характере активных соединений, 
+   обеспечивая лучшую защиту, чем простая фильтрация пакетов.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Для получения дополнительных сведений о межсетевых экранах с отслеживанием состояния посетите <a class="link" 
+	   href="https://en.wikipedia.org/wiki/Stateful_firewall" target="_top">https://en.wikipedia.org/wiki/Stateful_firewall</a>.
+	   {<span class="emphasis"><em>Прим. пер.: <a class="link" href="https://ru.wikipedia.org/wiki/Stateful_Packet_Inspection" 
+	   target="_top">https://ru.wikipedia.org/wiki/Stateful_Packet_Inspection</a></em></span>}.</p></td></tr></table>
+     </div>
+   <p>Межсетевой экран Proxmox работает распределенным образом, причем основные настройки расположены в файловой системе кластера 
+   Proxmox, в то время как правила в iptables хранятся индивидуально в узлах Proxmox. Это обеспечивает изоляцию между виртуальными 
+   машинами, тем самым предоставляя большую пропускную способность чем в случае с централизованными параметрами межсетевого экрана.</p>
+   <p>Межсетевой экран Proxmox может быть настроен как посредством графического интерфейса Proxmox, так и через интерфейс командной 
+   строки. Графический интерфейс Proxmox предоставляет очень простую, дружественную пользователю среду для управления настройками 
+   брандмауэра.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Отметим, что хотя межсетевой экран Proxmox и обеспечивает исключительную защиту, вы должны иметь физический межсетевой 
+	   экран для всей сети. Такой брандмауэр также называется межсетевым экраном контура (<span class="term"><span 
+	   class="emphasis"><em>edge firewall</em></span></span>), поскольку он располагается в основной входной точке интернета.
+	   Интернет- соединение не должно напрямую соединяться с узлами Proxmox. Виртуальный межсетевой экран не должен применяться в 
+	   качестве замены физического межсетевого экрана.</p></td></tr></table>
+     </div>
+   <p>В Proxmox мы можем установить межсетевой экран для всего уровня кластера, для уровней определенных узлов, а также для каждой виртуальной 
+   машины. Меню межсетевого экрана доступно для центра данных, узла, а также для зависимых от виртуальных машин закладок меню. 
+   Зарегистрируйтесь в графическом интерфейсе Proxmox, затем выберите в левой колонке навигации элемент, например, 
+   <span class="term"><span class="emphasis"><em>Datacenter</em></span></span>, узел Proxmox или виртуальную машину, для отображения меню с закладками.
+   Следующий экранный снимок показывает меню <span class="term"><span class="emphasis"><em>Firewall</em></span></span> для
+   <span class="term"><span class="emphasis"><em>Datacenter</em></span></span>:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0501.jpg"/> </div><br />
+    </div>
+   <p>Для настройки межсетевого экрана в интерфейсе командной строки существуют некоторые файлы настроек подлежащие редактированию.
+   Вот местоположения для файлов настроек межсетевого экрана для установок брандмауэра центра данных, узла и виртуальных машин:</p>
+        <table rules="all" width="800" style="text-align:center" id="add_fs_options">
+        <caption></caption><col width="40%"/><col width="60%"/><thead><tr valign="top">
+          <th>Файлы настроек</th>
+          <th>Местоположение</th>
+        </tr></thead><tr valign="top">
+          <td><p>Относящиеся к <span class="term"><strong class="userinput"><code>Datacenter</code></strong></span> или 
+		  <span class="term"><strong class="userinput"><code>cluster</code></strong></span></p></td>
+          <td><p><span class="term"><code>/var/lib/vz</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p>Относящиеся к <span class="term"><strong class="userinput"><code>Node</code></strong></span></p></td>
+          <td><p><span class="term"><code>/etc/pve/nodes/&lt;node_name&gt;/host.fw</code></span></p></td>
+        </tr></thead><tr valign="top">
+          <td><p>Относящиеся к <span class="term"><strong class="userinput"><code>VM</code></strong></span></p></td>
+          <td><p><span class="term"><code>/etc/pve/firewall/&lt;vmid&gt;.fw</code></span></p></td>
+        </tr></tbody></table>
+   <p>Вот компоненты, из которых состоит межсетевой экран Proxmox:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Zones (Зоны)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Security groups (Группы безопасности)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>IPSets (Наборы IP)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Rules (Правила)</p>
+	 <ul class="itemizedlist" type="circle">
+	   <li class="listitem">
+	   <p>Directions (Направления)</p>
+	   </li>
+	   <li class="listitem">
+	   <p>Actions (Действия)</p>
+	   </li>
+     </ul>
+	 </li>
+	 <li class="listitem">
+	 <p>Macros (Макроопределения)</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Protocols (Протоколы)</p>
+	 </li>
+   </ul>
+   </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Зоны </span></h4>
+   </div></div></div>
+   <p>В межсетевом экране Proxmox существуют две логические зоны, которые группируют все правила брандмауэра для всего входящего и 
+   исходящего обмена. Вот эти две зоны:.</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>Host</em></span></span>: Правила в этой зоне определяют трафик в узел кластера Proxmox 
+	 и из него</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><span class="emphasis"><em>VM</em></span></span>: Правила в этой зоне определяют трафик в виртуальную машину {контейнер} 
+	 KVM и OpenVZ {<span class="emphasis"><em>Прим. пер.: для Proxmox VE v.4x LXC</em></span>} кластера Proxmox и из него</p>
+	 </li>
+   </ul>
+   </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Группы безопасности </span></h4>
+   </div></div></div>
+   <p>Группа безопасности позволяет объединять несколько правил межсетевого экрана вместе в отдельные правила и делать их применяемыми к 
+   любому узлу или виртуальной машине. Например, мы можем создать группу безопасности с именем <span class="term"><code>webserver</code></span> и
+   создать некоторые правила для открытия всех TCP портов стандартных веб- серверов, таких как <span class="term"><code>80, 443, 21, 22,</code></span>
+   и тому подобные. Затем мы можем применить отдельную группу <span class="term"><code>webserver</code></span> к любому узлу или виртуальной 
+   машине вместо создания индивидуальных правил. Приводимый ниже снимок экрана показывает созданную для 
+   <span class="term"><code>webserver</code></span> группу безопасности для открытия портов протоколов 
+   <span class="term"><strong class="userinput"><code>HTTP</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>HTTPS</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>SSH</code></strong></span> и
+   <span class="term"><strong class="userinput"><code>FTP</code></strong></span>:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0502.jpg"/> </div><br />
+    </div>
+   <p>Аналогично может быть создана другая группа безопасности с портами, например, IMAP/SMTP, для почтовых серверов. Группа безопасности 
+   делает идентичные создания правил для множества узлов или виртуальных машин более простым.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Наборы IP </span></h4>
+   </div></div></div>
+   <p>В межсетевом экране можно применять правила брандмауэра к определенным IP адресам. Если одно и то же правило применяется ко многим IP 
+   адресам, IPSet позволяет группировать IP адреса таким образом, что это одно правило может быть создано для всех IP адресов {набора}. Во многом 
+   схоже с <span class="term"><strong class="userinput"><code>Security Group</code></strong></span>, 
+   <span class="term"><strong class="userinput"><code>IPSet</code></strong></span> позволяет группировать множество IP адресов для создания 
+   отдельного правила межсетевого экрана. При помощи <span class="term"><strong class="userinput"><code>IPSet</code></strong></span> мы можем 
+   создавать наборы черных списков и белых списков для разрешения и запрета сетевого трафика.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Правила </span></h4>
+   </div></div></div>
+   <p>Правила являются сердцевиной настройки межсетевого экрана. Благодаря правилам мы можем определять поток обмена и тип трафика который мы 
+   разрешаем или отвергаем. Существует только два направления (directions) в которых может протекать обмен:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>In</code></strong></span>: Относится ко входящему трафику от внешних источников</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>Out</code></strong></span>: Относится к исходящему из узла, кластера или виртуальной 
+	 машины Proxmox трафику</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Существует три типа действий, которые могут делать правила межсетевого экрана:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>ACCEPT</code></strong></span>: делает возможными пакеты обмена</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>REJECT</code></strong></span>: пакеты трафика принимаются, а затем отсылаются назад 
+	 отправителю</p>
+	 </li>
+	 <li class="listitem">
+	 <p><span class="term"><strong class="userinput"><code>DROP</code></strong></span>: пакеты принимаются и затем молча пропускаются без отсылок 
+	 каких- либо подтверждений их отправителю</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Обычное правило выглядит следующим образом, как в файле настройки межсетевого экрана взятом из <span class="term"><code>/etc/pve/firewall/100.fw</code></span> 
+   для виртуальной машины <span class="term"><code>100</code></span>:</p>
+	   <pre class="screen">
+[RULES]
+IN ACCEPT –p tcp –dport 80
+	   </pre>
+   <p>Это правило разрешает порт <span class="term"><code>80</code></span> и сетевой обмен на основе протокола <span class="term"><code>TCP</code></span>.
+   Следующий экранный снимок показывает правила в графическом интерфейсе Proxmox:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0503.jpg"/> </div><br />
+    </div>
+   <p>Иногда правила межсетевого экрана могут вступать в конфликт друг с другом из-за неверной настройки. Имейте в виду, что в таких случаях 
+   любые правила, указанные первыми всегда имеют приоритет над более поздними правилами. Например, существует правило приема пакетов в порт 
+   <span class="term"><code>21</code></span>, но есть еще одно правило отбрасывать все пакеты,приходящие в порт 
+   <span class="term"><code>21</code></span>. В таком случае, брандмауэр будет всегда принимать данные в порт 
+   <span class="term"><code>21</code></span>, так как это правило является первым. Примите во внимание подобные случаи.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Макроопределения </span></h4>
+   </div></div></div>
+   <p>Межсетевой экран Proxmox предоставляет различные предопределенные настройки портов для большинства известных служб, таких как
+   <span class="term"><strong class="userinput"><code>BGP</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>SSH</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>Telnet</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>MySQL</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>NTP</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>OpenVPN</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>SMTP</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>Squid</code></strong></span> и других, чтобы назвать только несколько.
+   Следующий экранный снимок показывает меню <span class="term"><strong class="userinput"><code>Macro</code></strong></span> в блоке диалога 
+   настройки правил <span class="term"><strong class="userinput"><code>Firewall</code></strong></span>:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0504.jpg"/> </div><br />
+    </div>
+   <p>Макроопределения предоставляют быстрый способ создания правил межсетевого экрана при использовании портов служб по умолчанию. Например, 
+   если вы применяете пользовательский номер порта <span class="term"><code>2202</code></span> для службы SSH, то макроопределение, задаваемое 
+   по умолчанию не будет работать, поскольку оно будет создавать правила для порта SSH по умолчанию <span class="term"><code>22</code></span>.
+   Выбранное макроопределение не даст возможности ввода пользовательских номеров порта. В Proxmox VE 3.4 мы не можем создавать пользовательские 
+   макроопределения для применения в межсетевом экране Proxmox.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Протоколы </span></h4>
+   </div></div></div>
+   <p>Межсетевой экран Proxmox разрешает правила на основе различных сетевых протоколов, таких как TCP, UDP, ICMP, EGP и так далее. В зависимости от 
+   требований приложения необходимы различные выборы протокола. Например, если мы хотим разрешить ping для сервера, то протокол 
+   <span class="term"><strong class="userinput"><code>icmp</code></strong></span> должен быть выбран вместо 
+   <span class="term"><strong class="userinput"><code>tcp</code></strong></span>. Следующий снимок экрана показывает блок диалога правил 
+   <span class="term"><strong class="userinput"><code>Firewall</code></strong></span> с ниспадающим меню 
+   <span class="term"><strong class="userinput"><code>Protocol</code></strong></span>:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0505.jpg"/> </div><br />
+    </div>
+   <p>Хотя добавление брандмауэра Proxmox является стабильным и очень приемлемым вариантом для межсетевого экрана, он не должен быть использован 
+   в качестве единственного брандмауэра для всей сети. Просто не существует замены для физического узла межсетевого экрана, отделенного от 
+   остальной части сети, которая расположена в главной точке входа приходящего общественного подключения в Интернет. Это также является предметом 
+   дискуссий, может ли виртуализированный брандмауэр занять место отдельного физического межсетевого экрана. Виртуализированной брандмауэр, 
+   расположенный в том же кластере дает более широкую площадь атаки, чем одиночный физический межсетевой экран. Стоимость дорогих межсетевых 
+   экранов могут быть смягчены с помощью брандмауэра с открытым исходным кодом, например, 
+   <span class="term"><strong class="userinput"><code>pfSense</code></strong></span>, которые также может быть настроен как бесплатный межсетевой 
+   экран кластера.</p>
+  </div>
+   
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="cluster_firewall"> </a>Настройка межсетевого экрана кластера</h3>
+   </div></div></div>
+   <p>Характерные для кластера параметры межсетевого экрана воздействуют на все узлы и виртуальные машины в кластере. Существует 
+   несколько задач, которые должны выполняться из меню <span class="term"><strong class="userinput"><code>Datacenter | Firewall</code></strong></span>.</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Разрешение межсетевого экрана  кластера</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Управление группами безопасности</p>
+	 </li>
+	 <li class="listitem">
+	 <p>Управление наборами IP</p>
+	 </li>
+   </ul>
+   </div>
+   <p>Другие параметры межсетевого экрана, такие как <span class="term"><strong class="userinput"><code>Rules</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>Alias</code></strong></span> могут быть настроены из параметра 
+   <span class="term"><strong class="userinput"><code>Firewall</code></strong></span> хоста или виртуальной машины, поскольку они не воздействуют 
+   на общую работу межсетевого экрана кластера.</p>
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Разрешение межсетевого экрана кластера </span></h4>
+    </div></div></div>
+    <p>Чтобы иметь в наличии работающий межсетевой экран Proxmox, вначале необходимо включить его на уровне кластера.</p>
+    <div xmlns="" class="titlepage"><div><div>
+     <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h5>
+    </div></div></div>
+    <p>Зарегистрируйтесь в графическом интерфейсе Proxmox в качестве root или любого другого с полномочиями администратора, а затем выберите из левой
+	панели навигации <span class="term"><strong class="userinput"><code>Datacenter</code></strong></span>.</p>
+
+    <div xmlns="" class="titlepage"><div><div>
+     <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h5>
+    </div></div></div>
+    <p>Следующие шаги применяются для разрешения межсетевого экрана на весь кластер через графический интерфйес:</p>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Firewall</code></strong></span> из меню с закладками
+	   <span class="term"><strong class="userinput"><code>Datacenter</code></strong></span> для открытия параметров межсетевого экрана. 
+	   Следующий экранный снимок отображает состояние межсетевого экрана для новой установки Proxmox:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0506.jpg"/> </div><br />
+       </div>
+       <p>В настоящее время межсетевой экран запрещен. <span class="term"><strong class="userinput"><code>Input Policy</code></strong></span>
+	   установлена на <span class="term"><strong class="userinput"><code>DROP</code></strong></span> всего входящего трафика, а
+	   <span class="term"><strong class="userinput"><code>Output Policy</code></strong></span> на
+	   <span class="term"><strong class="userinput"><code>ACCEPT</code></strong></span> всего исходящего обмена. Чтобы иметь полную строгую
+	   изоляцию кластера, <span class="term"><strong class="userinput"><code>Input Policy</code></strong></span> должна быть оставлена в 
+	   политике <span class="term"><strong class="userinput"><code>DROP</code></strong></span> до включения межсетевого экрана.</p>
+       <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+		<table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+		<img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+		<p>Имейте в виду, что если не создано ни одного правила межсетевого экрана для разрешения обмена графического интерфейса Proxmox через
+		порт <span class="term"><code>8006</code></span> до включения межсетевого экрана кластера, то графический интерфейс станет недоступным 
+		после включения брандмауэра. В этом случае для разрешения доступа к графическому интерфейсу Proxmox правило может быть создано 
+		с использованием интерфейса командной строки.</p></td></tr></table>
+       </div>
+	  </li><li class="listitem">
+       <p>Чтобы изменить политику или разрешить/ запретить межсетевой экран, выберите элемент строки, а затем кликните на 
+	   <span class="term"><strong class="userinput"><code>Edit</code></strong></span> для открытия блока диалога. После внесения изменений 
+	   кликните на <span class="term"><strong class="userinput"><code>OK</code></strong></span> в блоке диалога как показано ниже на снимке экрана:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0507.jpg"/> </div><br />
+       </div>
+	  </li>
+	  </ol>
+    </div>
+    <p>Следующие шаги требуются для разрешения через графический интерфейс межсетевого экрана на весь кластер. Они также полезны когда 
+	межсетевой экран разрешен с входной политикой <span class="term"><strong class="userinput"><code>DROP</code></strong></span> при 
+	не созданных правилах приема управляющего трафика для HTTP или SSH:</p>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Зарегистрируйтесь через SSH или напрямую через консоль одного из узлов Proxmox если порт SSH блокирован.</p>
+	  </li><li class="listitem">
+       <p>Откройте редактором файл настроек межсетевого экрана в <span class="term"><code>/etc/pve/firewall/cluster.fw</code></span>
+	   .</p>
+	  </li><li class="listitem">
+       <p>Измените политику на <span class="term"><strong class="userinput"><code>ACCEPT</code></strong></span> всего трафика 
+	   следующим образом:</p>
+	   <pre class="screen">
+       [OPTIONS]
+       enable: 1
+       policy_in: ACCEPT
+	   </pre>
+	  </li><li class="listitem">
+       <p>Для сохранения политики сбрасывания всего обмена за исключением требуемого, внесите следующие изменения. В нашем примере мы 
+	   отвергаем любой трафик за исключением SSH и графического интерфейса Proxmox:</p>
+	   <pre class="screen">
+       [OPTIONS]
+       enable: 1
+       policy_in: DROP
+	   
+       [RULES]
+       IN ACCEPT –p tcp –dport 22
+       IN ACCEPT –p tcp –dport 8006
+	   </pre>
+	  </li><li class="listitem">
+       <p>Сохраните настройки и покиньте текстовый редактор. Не требуется никакая перезагрузка</p>
+	  </li>
+	  </ol>
+    </div>
+
+    <div xmlns="" class="titlepage"><div><div>
+     <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h5>
+    </div></div></div>
+    <p>Все правила и политики, настроенные для межсетевого экрана ответственного за центр данных применяются ко всем узлам в нашем кластере. 
+	Правила, которые применяются ко всем узлам, такие как доступ к графическому интерфейсу через порт <span class="term"><code>8006</code></span>
+	или SSH доступ через порт <span class="term"><code>22</code></span> могут настраиваться один раз в конфигурации межсетевого экрана для всего 
+	кластера. Это сохраняет время в сравнении с созданием правил для каждого узла.</p>
+   </div>
+   
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Managing_SG"> </a>Управление группами безопасности </span></h4>
+    </div></div></div>
+    <p>Группы безопасности делают возможной группировку множеств правил в отдельное правило.</p>
+    <div xmlns="" class="titlepage"><div><div>
+     <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h5>
+    </div></div></div>
+    <p>Зарегистрируйтесь в графическом интерфейсе Proxmox в качестве root или с любыми другими административными полномочиями, затем выберите меню с 
+	закладками <span class="term"><strong class="userinput"><code>Datacenter | Firewall</code></strong></span>. Группы безопасности могут создаваться 
+	и управляться только в меню <span class="term"><strong class="userinput"><code>Firewall</code></strong></span>. Группы могут применяться к
+	хостам или виртуальным машинам в их собственных меню <span class="term"><strong class="userinput"><code>Firewall</code></strong></span>.
+	Следующий снимок экрана показывает меню <span class="term"><strong class="userinput"><code>Security Group</code></strong></span> без 
+	созданных групп:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0508.jpg"/> </div><br />
+    </div>
+
+    <div xmlns="" class="titlepage"><div><div>
+     <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h5>
+    </div></div></div>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Create</code></strong></span> для открытия блока диалога 
+	   <span class="term"><strong class="userinput"><code>Security Group</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Введите имя группы и описание, как показано на следующем экранном снимке, а затем кликните на 
+	   <span class="term"><strong class="userinput"><code>Create</code></strong></span>:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0509.jpg"/> </div><br />
+       </div>
+	   <p>Выберите только что созданное имя группы, а затем кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span>
+	   из меню <span class="term"><strong class="userinput"><code>Rules:</code></strong></span> с правой стороны экрана. Это откроет блок диалога 
+	   для создания правил межсетевого экрана.</p>
+       <p>Следующий снимок экрана показывает блок диалога с введенной информацией, позволяющей обмен HTTP через порт 
+	   <span class="term"><code>80</code></span>:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0510.jpg"/> </div><br />
+       </div>
+	   <p>Поскольку правила будут применяться к различным серверам с различными IP адресами, мы не вводим никаких IP адресов отправителей и 
+	   получателей.</p>
+	  </li><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> после ввода всей необходимой информации 
+	   для создания правила.</p>
+	  </li><li class="listitem">
+       <p>Следуйте той же процедуре для создания других правил в той же группе.</p>
+       <p>Следующий экранный снимок показывает правила, созданные для разрешения HTTP, HTTPS, SSH и Ping для группы безопасности 
+	   <span class="term"><code>webserver</code></span>:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0511.jpg"/> </div><br />
+       </div>
+	  </li>
+	  </ol>
+    </div>
+   </div>
+
+   <div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Управление наборами IP </span></h4>
+    </div></div></div>
+    <p>Наборы IP (IPSets) делают возможной группировку множества адресов IP или IP диапазонов. Это полезно когда правила межсетевого 
+	экрана должны применяться к определенным IP адресам.</p>
+    <div xmlns="" class="titlepage"><div><div>
+     <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h5>
+    </div></div></div>
+    <p>Зарегистрируйтесь в графическом интерфейсе Proxmox в качестве root или с любыми другими административными полномочиями, затем выберите меню с 
+	закладками <span class="term"><strong class="userinput"><code>Datacenter | Firewall</code></strong></span>. Кликните на 
+	<span class="term"><strong class="userinput"><code>IPSet</code></strong></span> внизу меню с закладками в окне межсетевого экрана.</p>
+    <p>Все созданные в меню межсетевого экрана центра данных наборы IP доступны для всех узлов и виртуальных машин в нашем кластере. Набор IP 
+	созданный для виртуальной машины доступен только для виртуальной машины, для которой он создавался. Если вы хотите создать набор IP, который 
+	можно будет выбирать для любого хоста или любой виртуальной машины в нашем кластере, создайте его зайдя в меню 
+	<span class="term"><strong class="userinput"><code>Datacenter | Firewall | IPSet</code></strong></span>.</p>
+
+    <div xmlns="" class="titlepage"><div><div>
+     <h5 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h5>
+    </div></div></div>
+    <div class="orderedlist">
+      <ol class="orderedlist" type="1"><li class="listitem">
+       <p>Перейдите в <span class="term"><strong class="userinput"><code>IPSet | Create</code></strong></span>  для открытия блока диалога. Этот 
+	   блок диалога создает только имя и описание набора IP. В нашем примере мы создаем набор IP для определения черного списка IP, как это 
+	   отражено на следующем снимке экрана:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0512.jpg"/> </div><br />
+       </div>
+	  </li><li class="listitem">
+       <p>Выберите только что созданный набор IP и после этого кликните на 
+	   <span class="term"><strong class="userinput"><code>IP/CIDR</code></strong></span>. Кликните на ниспадающее меню 
+	   <span class="term"><strong class="userinput"><code>IP/CIDR</code></strong></span>  для добавления адреса IP или диапазона. Например, мы помещаем в 
+	   черный список вымышленный диапазон, <span class="term"><code>24.123.123.0/24</code></span>, как это отражено в следующем снимке экрана:</p>
+       <div class="informalfigure"><div class="mediaobject">
+         <img src="figures/Fig0513.jpg"/> </div><br />
+       </div>
+	  </li><li class="listitem">
+       <p>Для изменения имени набора или адресов IP в наборе, выберите необходимую строку и кликните на 
+	   <span class="term"><strong class="userinput"><code>Edit</code></strong></span>.</p>
+	  </li><li class="listitem">
+       <p>Кликните на <span class="term"><strong class="userinput"><code>Remove</code></strong></span> если элемент выбран для удаления набора.</p>
+	  </li>
+	  </ol>
+    </div>
+   </div>
+  </div>
+
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="host_firewall"> </a>Настройка межсетевого экрана хоста</h3>
+   </div></div></div>
+   <p>Данная настройка межсетевого экрана влияет только на узел Proxmox или на хост, на которых она выполняется.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>В графическом интерфейсе Proxmox выберите узел и кликните на <span class="term"><strong class="userinput"><code>Firewall</code></strong></span>
+   в меню с закладками. Меню межсетевого экрана для хостов имеет три дополнительных меню с названиями
+   <span class="term"><strong class="userinput"><code>Rules</code></strong></span>,
+   <span class="term"><strong class="userinput"><code>Options</code></strong></span> и
+   <span class="term"><strong class="userinput"><code>Log</code></strong></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Для разрешения межсетевого экрана для определенного хоста перейдите к 
+      <span class="term"><strong class="userinput"><code>Node | Firewall | Options</code></strong></span>. Появятся параметры для только что 
+	  установленного Proxmox как это показано на следующем снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0514.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Для разрешения или запрета межсетевого экрана выберите <span class="term"><strong class="userinput"><code>Enable Firewall</code></strong></span>,
+	  затем кликните на <span class="term"><strong class="userinput"><code>Edit</code></strong></span>.</p>
+	 </li><li class="listitem">
+	  <p>Аналогично, для изменения параметров в любой строке, выберите элемент и кликните на <span class="term"><strong class="userinput"><code>Edit</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Чтобы создать правило для межсетевого экрана особенного для хоста выберите закладку 
+      <span class="term"><strong class="userinput"><code>Rule</code></strong></span>, а затем кликните на 
+      <span class="term"><strong class="userinput"><code>Add</code></strong></span> для открытия блока диалога.</p>
+	 </li><li class="listitem">
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Имейте в виду, что эти правила будут применены к определенному узлу на котором они создаются.</p>
+	   <p>Отсылаем вас к разделу <a class="link" href="#Managing_SG" target="_top">Управление группами безопасности</a>
+	   в рецепте <a class="link" href="#cluster_firewall" target="_top">Настройка межсетевого экрана кластера</a> ранее в этой главе 
+	   для ознакомления с блоком диалога создания правила.</p></td></tr></table>
+     </div>
+      <p>Чтобы применить уже созданные с применением <span class="term"><strong class="userinput"><code>Security Group</code></strong></span>
+	  правила кликните на <span class="term"><strong class="userinput"><code>Insert: Security Group</code></strong></span> для открытия блока диалога, 
+	  как это показано ниже на снимке экрана:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0515.jpg"/> </div><br />
+      </div>
+      <p>В нашем примере у нас есть выбранная <span class="term"><strong class="userinput"><code>Security Group</code></strong></span> 
+	  с именем <span class="term">webserver<code></code></span>, которая была создана в данной главе ранее.</p>
+	 </li><li class="listitem">
+      <p>Оставьте <span class="term"><strong class="userinput"><code>Interface</code></strong></span> пустым для применения этого правила ко всем 
+	  интерфейсам данного узла.</p>
+	 </li><li class="listitem">
+      <p>Кликните на кнопку- флажок <span class="term"><strong class="userinput"><code>Enable</code></strong></span> для активации данного правила
+	  или ее не отмеченной для активации позже.</p>
+	 </li><li class="listitem">
+      <p>Наконец, кликните на <span class="term"><strong class="userinput"><code>Add</code></strong></span> для создания правила. Служба межсетевого 
+	  экрана не будет перезапущена для активации изменения правила.</p>
+      <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	    <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	    <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	    <p>Мы можем выполнить те же самые изменения через командную строку добавив в <span class="term"><code>/etc/pve/nodes/pmx1/host.fw</code></span>
+		следующую строку:</p>
+	   <pre class="screen">
+[RULES]
+GROUP webserver # Default Web Server Ports
+	   </pre>
+		</td></tr></table>
+      </div>	  
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Не существует никакой политики настройки ввода/ вывода межсетевых экранов, предназначенных для хостов. Она следует политикам настроек
+   межсетевого экрана предназначенного для центра данных в <span class="term"><code>/etc/pve/firewall/cluster.fw</code></span>. Однако, в настройке 
+   межсетевого экрана предназначенного для хоста полезно переписать правила из брандмауэра центра данных. Не существует пределов на число правил 
+   межсетевого экрана хоста.</p>
+   <p>Существуют блоки параметров <span class="term"><strong class="userinput"><code>Source</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>Destination</code></strong></span> в блоке диалога создания правил которые необходимо уточнять в 
+   дальнейшем, поскольку они имеют жизненно важное значение для правильной настройки межсетевого экрана. Ниспадающие меню 
+   <span class="term"><strong class="userinput"><code>Source</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>Destination</code></strong></span> применяются ко всему IP адресу или диапазону, в то время как
+   <span class="term"><strong class="userinput"><code>Source port</code></strong></span> и 
+   <span class="term"><strong class="userinput"><code>Dest. port</code></strong></span> применяются только к перечисленным номерам портов. Например, 
+   если мы хотим разрешить обмен только по порту <span class="term"><code>80</code></span> для статического IP адреса 
+   <span class="term"><code>192.168.1.10</code></span>, тогда настройка будет выглядеть как на следующем снимке экрана:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0516.jpg"/> </div><br />
+    </div>
+   <p>Когда <span class="term"><strong class="userinput"><code>Direction</code></strong></span> установлен как 
+   <span class="term"><strong class="userinput"><code>in</code></strong></span>, получателем будет узел Proxmox а источником будет внешний трафик.
+   Когда <span class="term"><strong class="userinput"><code>Direction</code></strong></span> установлен как
+   <span class="term"><strong class="userinput"><code>out</code></strong></span>, узел Proxmox становится источником , а получателем будет внешняя 
+   сеть. Чтобы прояснить ситуацию, давайте рассмотрим другой пример. По его сценарию мы хотим, чтобы узел Proxmxox с IP адресом
+   <span class="term"><code>172.16.0.71</code></span> не разрешал никакого другого исходящего трафика, отличного от HTTP. Ниже приведен экранный 
+   снимок настроек для такого сценария:</p>
+    <div class="informalfigure"><div class="mediaobject">
+      <img src="figures/Fig0517.jpg"/> </div><br />
+    </div>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="VM_firewall"> </a>Настройка межсетевого экрана виртуальной машины</h3>
+   </div></div></div>
+   <p>Эта настройка выполняется на уровне виртуальной машины, причем она влияет только на саму виртуальную машину, и не влияет ни на какие другие 
+   виртуальные машины в данном кластере.</p>
+  </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Параметры настройки межсетевого экрана предназначенного для виртуальной машины аналогичны с параметрами для брандмауэров для кластеров 
+   и хостов. Зарегистрируйтесь в графическом интерфейсе Proxmox и выберите настройку межсетевого экрана виртуальной машины. В меню с закладками 
+   кликните на <span class="term"><strong class="userinput"><code>Firewall</code></strong></span> для отображения настроек.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Меню для виртуальных машин аналогично меню для хостов и кластера:.</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Чтобы разрешить межсетевой экран перейдите в <span class="term"><strong class="userinput"><code>Firewall | Options</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Чтобы создать правила межсетевого экрана перейдите в <span class="term"><strong class="userinput"><code>Firewall | Rules</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Чтобы создать или выбрать уже созданные наборы IP перейдите в <span class="term"><strong class="userinput"><code>Firewall 
+	  | IPSet</code></strong></span>.</p>
+	 </li><li class="listitem">
+      <p>Чтобы создать псевдонимы IP перейдите в <span class="term"><strong class="userinput"><code>Firewall | Alias</code></strong></span>.</p>
+	 </li>
+	 </ol>
+   </div>
+   <p>Отсылаем вас к рецепту <a class="link" href="#cluster_firewall" target="_top">Настройка межсетевого экрана кластера</a> и к рецепту 
+   <a class="link" href="#host_firewall" target="_top">Настройка межсетевого экрана хоста</a> ранее в данной главе за подробностями о 
+   блоках диалога. Чтобы изменить правила через интерфейс командной строки необходимо отредактировать настройки межсетевого экрана 
+   виртуальной машины <span class="term"><code>/etc/pve/firewall/&lt;vm_id&gt;.fw</code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Как уже упоминалось ранее, правила, созданные в параметрах межсетевого экрана виртуальной машины оказывают воздействие только на саму 
+   виртуальную машину. Правила могут быть созданы в рабочей области или выбраны из группы безопасности и созданы в настройке межсетевого 
+   экрана центра данных.</p>
+   <p>Все наборы IP или псевдонимы, создаваемые в настройке межсетевого экрана виртуальной машины можно выбирать в той же виртуальной машине.
+   В качестве практического правила политики ввода/ вывода для межсетевого экрана виртуальной машины должны быть установлены в 
+   <span class="term"><strong class="userinput"><code>Drop</code></strong></span>, чтобы все операции виртуальной машины со всеми портами 
+   были закрыты. Затем добавляйте правила брандмауэра по мере необходимости. Это гарантирует, что будут разрешены только необходимые порты 
+   или обмен.</p>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Suricata IPS"> </a>Интегрирование Suricata IPS</h3>
+   </div></div></div>
+   <p>В межсетевой экран Proxmox можно интегрировать систему предотвращения вторжений 
+   (<span class="term"><strong class="userinput"><code>IPS, Intrusion Prevention System</code></strong></span>) Suricata. Suricata 
+   является исключительным механизмом высокопроизводительной IPS и мониторинга безопасности сети. Suricata является многопотоковой IPS, 
+   которая допускает балансировку нагрузки на всех доступных процессорах системы, на которой работает Suricata.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="0" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Замечание</th></tr><tr><td align="left" valign="top">
+	   <p>Посетите, пожалуйста, официальный сайт Suricata для получения дополнительной информации: 
+	   <a class="link" href="http://suricata-ids.org" target="_top">http://suricata-ids.org</a>.</p></td></tr></table>
+     </div>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Suricata должна устанавливаться и настраиваться только с применением интерфейса командной строки. Зарегистрируйтесь на узле Proxmox через 
+   SSH или консоль. Это необходимо сделать индивидуально на всех узлах Proxmox, которым требуется данная функциональность.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Перед установкой Suricata убедитесь, что узел Proxmox имеет последние обновления, применив следующие команды:</p>
+	   <pre class="screen">
+# apt-get update
+# apt-get dist-upgrade
+	   </pre>
+	 </li><li class="listitem">
+      <p>Установите Suricata при помощи следующей команды:</p>
+	   <pre class="screen">
+# apt-get install suricata
+	   </pre>
+	 </li><li class="listitem">
+      <p>Сделайте доступной Suricata для виртуальной машины открыв настройку межсетевого экрана виртуальной машины в
+	  <span class="term"><code>/etc/pve/firewall/&lt;vm_id&gt;</code></span> и добавив следующие элементы:</p>
+	   <pre class="screen">
+[OPTIONS]
+ips: 1
+ips_queues: 0
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Когда Suricata разрешена, все входящие пакеты направляются в нее только после того, как Proxmox начинает принимать пакеты. Все игнорируемые 
+   или отвергаемые пакеты не направляются в систему предотвращения внедрений Suricata. Поскольку Suricata является многопоточной, она может 
+   достигать огромной производительности без предоставления неудобств обширными наборами правил в крупных окружениях с огромным трафиком.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="firewall_CLI"> </a>Используемые обычно команды CLI межсетевого экрана</h3>
+   </div></div></div>
+   <p>Хотя почти все настройки межсетевого экрана могут быть выполнены с применением графического интерфейса Proxmox, иногда может оказаться 
+   полезным осуществлять некоторые задачи из командной строки. В данном разделе мы собираемся рассмотреть некоторые команды, которые могут 
+   быть использованы для управления межсетевым экраном.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Зарегистрируйтесь в Proxmox через SSH или напрямую через консоль в качестве root или с любыми другими полномочиями администратора.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Приведем некоторые команды CLI для управления межсетевым экраном Proxmox VE:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Запуск службы межсетевого экрана:</p>
+	   <pre class="screen">
+# pve-firewall start
+	   </pre>
+	 </li><li class="listitem">
+      <p>Останов службы межсетевого экрана:</p>
+	   <pre class="screen">
+# pve-firewall stop
+	   </pre>
+	 </li><li class="listitem">
+      <p>Проверка состояния службы межсетевого экрана:</p>
+	   <pre class="screen">
+# pve-firewall status
+	   </pre>
+	 </li><li class="listitem">
+      <p>Просмотр созданных правил <span class="term"><code>iptables</code></span>:</p>
+	   <pre class="screen">
+# iptables-save
+	   </pre>
+	 </li><li class="listitem">
+      <p>Изменение  межсетевого экрана хоста:</p>
+	   <pre class="screen">
+# nano /etc/pve/firewall/cluster.fw
+	   </pre>
+	 </li><li class="listitem">
+      <p>Изменение  межсетевого экрана виртуальной машины:</p>
+	   <pre class="screen">
+# nano /etc/pve/nodes/&lt;node_name&gt;/host.fw
+	   </pre>
+	 </li><li class="listitem">
+      <p>.</p>
+	   <pre class="screen">
+# nano /etc/pve/firewall/&lt;vm_id&gt;.fw
+	   </pre>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Есть кое-что еще...</span></h4>
+   </div></div></div>
+   <p>Официальный вики по межсетевым экранам Proxmox находится по адресу:
+   <a class="link" href="https://pve.proxmox.com/wiki/Proxmox_VE_Firewall" target="_top">https://pve.proxmox.com/wiki/Proxmox_VE_Firewall</a>.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Logging"> </a>Ведение журналов межсетевого экрана</h3>
+   </div></div></div>
+   <p>В данном рецепте мы рассмотрим как разрешать регистрацию в журнал для межсетевого экрана Proxmox и как отображать зарегистрированные записи.</p>
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Приготовление </span></h4>
+   </div></div></div>
+   <p>Ведение журнала для межсетевого экрана Proxmox позволяет просматривать активность при обмене данных как в сторону кластеров, узлов и 
+   виртуальных машин, так и от них. Точное определение источника и получателя обмена- очень полезный инструмент, не только для межсетевого экрана 
+   Proxmox, но и для любого другого брандмауэра, а также проверка того, что правила работают в соответствии с ожиданиями. В Proxmoxв зависимости 
+   от требований мы можем установить различные уровни протоколирования. Параметр журнала доступен только для межсетевого экрана хоста и 
+   виртуальной машины. Не существует возможностей протоколирования межсетевых экранов центра данных или всего кластера. Регистрация уровня 
+   хоста будет отображать все виды деятельности всех виртуальных машин в хосте. Протоколирование для виртуальной машины отображает только 
+   активность для конкретной виртуальной машины. Журнал помогает нам видеть не только отклонения запросов, но также и обмен, который 
+   был разрешен для определения нарушителя.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это сделать...</span></h4>
+   </div></div></div>
+   <p>Следующие шаги применяются для разрешения протоколирования для межсетевого экрана узла или хоста, а также для виртуальной машины.
+   Ведение журнала может быть разрешено через графический интерфейс:</p>
+   <div class="orderedlist">
+     <ol class="orderedlist" type="1"><li class="listitem">
+      <p>Зарегистрируйтесь в графическом интерфейсе Proxmox и выберите узел или виртуальную машину.</p>
+	 </li><li class="listitem">
+      <p>Кликните на меню с закладками <span class="term"><strong class="userinput"><code>Options</code></strong></span> под 
+	  функциональностью <span class="term"><strong class="userinput"><code>Firewall</code></strong></span>. По умолчанию протоколирование
+	  запрещено и для функционирования межсетевоого экрана хоста, и для брандмауэра виртуальной машины. Следующий снимок экрана отображает
+	  страницу <span class="term"><strong class="userinput"><code>Options</code></strong></span> под 
+	  <span class="term"><strong class="userinput"><code>Firewall</code></strong></span> для контейнера <span class="term"><code>103</code></span>
+	  в нашем примере кластера:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0518.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выберите элемент <span class="term"><code>log_level_in</code></span>для регистрации входящего и 
+	  <span class="term"><code>log_level_out</code></span> для исходящего обмена, а затем кликните на 
+	  <span class="term"><strong class="userinput"><code>Edit</code></strong></span>. Это действие откроет блок диалога, как это отображено ниже 
+	  на снимке экрана, для изменения уровней вариантов ведения протокола:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0519.jpg"/> </div><br />
+      </div>
+	 </li><li class="listitem">
+      <p>Выберите уровень и кликните <span class="term"><strong class="userinput"><code>OK</code></strong></span> для принятия данного изменения.
+	  Внашем примере мы выбрали уровень <span class="term"><strong class="userinput"><code>info</code></strong></span> и для входящего, 
+	  и для исходящего трафика.</p>
+	 </li><li class="listitem">
+      <p>Кликните на меню с закладками <span class="term"><strong class="userinput"><code>Log</code></strong></span> под
+	  <span class="term"><strong class="userinput"><code>Firewall</code></strong></span> для просмотра журналов для нашего узла или 
+	  виртуальной машины. Следующий экранный снимок отображает протокол межсетевого уровня для контейнера <span class="term"><code>103</code></span>
+	  в нашем примере кластера:</p>
+      <div class="informalfigure"><div class="mediaobject">
+        <img src="figures/Fig0520.jpg"/> </div><br />
+      </div>
+	 </li>
+	 </ol>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Как это работает...</span></h4>
+   </div></div></div>
+   <p>Уровни ведения журнала отличаются только подробностью протоколирования. Это означает, что в зависимости от выбранного уровня он будет
+   отображать больше или меньше деятельности межсетевого экрана. В нашем примере мы выбрали уровень ведения журнала 
+   <span class="term"><strong class="userinput"><code>info</code></strong></span>. Это будет отображать всю активность межсетевого экрана.
+   Тем не менее, если мы выберем <span class="term"><strong class="userinput"><code>err</code></strong></span>, то журнал будет отображать 
+   только сообщения об ошибках и ничего более.</p>
+   <p>Имейте ввиду, что при выборе протоколирования <span class="term"><strong class="userinput"><code>info</code></strong></span> и для
+   входящих, и для исходящих соединений, будет регистрироваться все. Это будет создавать многие сотни записей журнала за очень короткие 
+   промежутки времени в зависимости от того, с каким числом активных соединений к узлу или виртуальной машине и от них, будет иметь дело 
+   межсетевой экран. Кроме уровня <span class="term"><strong class="userinput"><code>nolog</code></strong></span> все другие уровни ведения 
+   журнала будут регистрировать отбрасываемую активность.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Смотрите также...</span></h4>
+   </div></div></div>
+   <p>Для получения дополнительной информации по регистрации в журнал для межсетевых экранов на основе IP таблиц посетите
+   <a class="link" href="http://gr8idea.info/os/tutorials/security/iptables5.html" 
+   target="_top">http://gr8idea.info/os/tutorials/security/iptables5.html</a>.</p>
+  </div>
+
+</div>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar);//-->
+</script>
+
+</body></html>
