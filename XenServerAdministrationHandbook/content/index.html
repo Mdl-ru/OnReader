@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common" xmlns:ng="http://docbook.org/docbook-ng" xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="Keywords" content="Xen, XenServer, XenCenter, XAPI, Citrix, Cuda, Grid, Nvidia, pGPU, squeezed, xenstored, xenconsoled, stunnel, xensource, xhad, xenopsd, xcp-rrdd, xcp-networkd, SM, perfmon, mpathalert, snapwatchd">
+<link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+<link type="text/css" rel="stylesheet" href="styles/shCoreDefault.css"/>
+<script type="text/javascript" src="scripts/shCore.js"><!----></script>
+<script type="text/javascript">
+               SyntaxHighlighter.config.space = ' ';
+               SyntaxHighlighter.all();
+</script>
+<title>Руководство системного администратора XenServer</title>
+<meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1"/>
+<meta name="mavenGroupId" content="www.mdl.ru"/>
+<meta name="mavenArtifactId" content="XenServerAdministrationHandbook"/>
+<meta name="mavenVersionId" content="1.0.0"/>
+<meta name="description" content="Насущенное рекомендациями, это руководство предоставляет необходимую вам ценную информацию для оптимизации и управления платформой виртуализации с открытым исходным кодом XenServer. Вне зависимости от того, выполняете ли вы самую современную установку нескольких блейд- лезвий или множества глобальных центров обработки данных, эта книга сосредоточивает на наиболее критичных проблемах, с которыми вы скорее всего столкнётесь при проектировании развёртывания XenServer и поможет обрабатывать вам ежедневные задачи правления.  Тим Маккей и Дж. К. Бенедикт из CitrixSystems, компании, которая управляет XenServer, показывают вам как проектировать развёртывание на лучших практических примерах, черновиках развёртывания и руководствах по установке. Вторая часть этой книги кратко характеризует простые в реализации рецепты для ежедневного управления, например, правами, стратегиями резервного копирования, а также сопровождением оборудования."/>
+<link rel="home" href="index.html" title="Руководство системного администратора XenServer"/>
+<link rel="next" href="Ch00.html" title="Глава 1. Введение"/>
+<meta name="git-sha" content=""/>
+<meta name="buildTime" content=""/>
+<script type="text/javascript">
+            //The id for tree cookie
+            var treeCookieId = "treeview-xenserver-administration-handbook";
+            var language = "en";
+            var w = new Object();
+            //Localization
+            txt_filesfound = 'Results';
+            txt_enter_at_least_1_char = "You must enter at least one character.";
+            txt_browser_not_supported = "Please enable JavaScript.";
+            txt_please_wait = "Please wait. Search in progress...";
+            txt_results_for = "Results for: ";
+</script>
+<style type="text/css">
+            input {
+            margin-bottom: 5px;
+            margin-top: 2px;
+            }
+
+            .folder {
+            display: block;
+            height: 22px;
+            padding-left: 20px;
+            background: transparent url(../common/jquery/treeview/images/folder.gif) 0 0px no-repeat;
+            }
+            
+</style>
+<link rel="shortcut icon" href="../MdlLogo.gif" type="image/gif"/>
+<link rel="stylesheet" type="text/css" href="../common/css/positioning.css"/>
+<link rel="stylesheet" type="text/css" href="../common/css/custom.css"/>
+<link rel="canonical" href="http://onreader.mdl.ru/XenServerAdministrationHandbook/content/index.html"/>
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" href="../common/css/ie.css"/>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../common/jquery/theme-redmond/jquery-ui-1.8.2.custom.css"/>
+<link rel="stylesheet" type="text/css" href="../common/jquery/treeview/jquery.treeview.css"/>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery-ui-1.8.2.custom.min.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/jquery.cookie.js"><!----></script>
+<script type="text/javascript" src="../common/jquery/treeview/jquery.treeview.min.js"><!----></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.min.css"/>
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js">
+<!--jQuery plugin for glossary popups. --></script>
+<script type="text/javascript" src="search/htmlFileList.js"><!----></script>
+<script type="text/javascript" src="search/htmlFileInfoList.js"><!----></script>
+<script type="text/javascript" src="search/nwSearchFnt.js"><!----></script>
+<script type="text/javascript" src="search/stemmers/en_stemmer.js">
+<!--//make this scalable to other languages as well.--></script>
+<script type="text/javascript" src="search/index-1.js"><!----></script>
+<script type="text/javascript" src="search/index-2.js"><!----></script>
+<script type="text/javascript" src="search/index-3.js"><!----></script>
+<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-17511903-1']);
+	    
+	    _gaq.push(['_setDomainName', '.openstack.org']);	        
+</script>
+<script type="text/javascript" src="../common/ga.js"><!----></script>
+<script language="javascript" src="/js/common.js"></script>
+<link rel="stylesheet" href="../common/css/googlecode.css">
+<script src="../common/highlight.pack.js"></script>
+</head>
+<body>
+<!----><script type="text/javascript"><!--
+hljs.initHighlightingOnLoad();
+HeaderName = 'Руководство системного администратора XenServer';
+PrevRef = 'Ix01.html';
+UpRef = 'index.html';
+NextRef = 'Ch01.html';//-->
+</script>
+<!----><script type="text/javascript" src="HeaderAndToolbar.js">
+</script><script type="text/javascript"><!--
+document.write(HeaderAndToolbar); //-->
+</script>
+<div id="content">
+<div class="book">
+<div xmlns="" class="titlepage">
+ <div>
+ <div><h1 xmlns="http://www.w3.org/1999/xhtml" class="title">
+  <a id="FreeBSDMasteryZFS"/>Руководство системного администратора XenServer</h1>
+ </div>
+ <div>
+  <div xmlns="http://www.w3.org/1999/xhtml" class="author"><h3 class="author"><span class="firstname"/> <span class="surname"/></h3>
+   <div class="affiliation"><span class="orgname">Тим Маккей и Дж.К. Бенедикт</span>
+   </div>
+  </div>
+ </div>
+<div class="section">
+    <div xmlns="" class="titlepage"><div><div>
+     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a> </h3>
+    </div></div></div>
+   <p xmlns="http://www.w3.org/1999/xhtml" class="copyright">Copyright © 2016 Tim Mackey and J.K. Benedict</p>
+  <p>Первая публикация на английском языке: март 2016</p>
+</div>
+
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Copyright"> </a>Авторские права</h3>
+ </div></div></div>
+ <p align="center"></p>
+ <p></p>
+</div>
+<div class="section">
+ <div xmlns="" class="titlepage"><div><div>
+  <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="Preface"> </a>Введение</h3>
+ </div></div></div>
+ <p align="center"></p>
+ <p></p>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="How">
+    </a>Как построена эта книга?</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Who">
+    </a>Для кого написана эта книга?</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="AboutUs">
+    </a>О нас</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Conventions">
+    </a>Используемые в этой книге соглашения</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Examples">
+    </a>Использование примеров кода</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Safari">
+    </a>Safari<sup>&reg;</sup> Books Online</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Contact">
+    </a>Наши контакты</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Acknowledgments">
+    </a>Благодарности</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ <div class="section">
+  <div xmlns="" class="titlepage"><div><div>
+   <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;"><a id="Authors">
+    </a>Об авторах</span></h4>
+  </div></div></div>
+  <p align="center"></p>
+  <p></p>
+ </div>
+ </div>
+</div>
+
+<div class="toc"><p><strong><a id="ToC"> </a>Содержание</strong></p>
+ <dl>
+  <dt><span class="preface"><a href="index.html">Вводные материалы</a></span></dt>
+  <dd><dl>
+	<dt><span class="section"><a href="index.html#Copyright">Авторские права</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#How">Как построена эта книга?</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Who">Для кого написана эта книга?</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#AboutUs">О нас</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Conventions">Используемые в этой книге соглашения</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Examples">Использование примеров кода</a></span></dt>
+    <dt><span class="chapter"><a href="index.html#Safari">Safari<sup>&reg;</sup> Books Online</a></span></dt>
+	<dt><span class="section"><a href="index.html#Contact">Наши контакты</a></span></dt>
+	<dt><span class="section"><a href="index.html#Acknowledgments">Благодарности</a></span></dt>
+	<dt><span class="section"><a href="index.html#Authors">Об авторах</a></span></dt>
+	<dt><span class="section"><a href="index.html#ToC">Оглавление</a></span></dt>
+  </dl></dd>
+ </dl>
+ <dl>
+ <dt><span class="chapter"><a href="Ch01.html">Часть 1. Разработка успешного развёртывания XenServer</a></span></dt>
+  <dl>
+   <dt><span class="chapter"><a href="Ch01.html">1. Что такое XenServer?</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch01.html#01">Гипервизор Xen</a></span></dt>
+	 <dt><span class="section"><a href="Ch01.html#02">Инструментарий для виртуализации Xen</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch02.html">2. Архитектура ядра и критически важные компоненты</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch02.html#01">XenServer это не Linux, но dom0 это он</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch02.html#0101">Архитектура интерфейса</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#02">XenCenter: графический инструмент управления Xen</a></span></dt>
+	 <dt><span class="section"><a href="Ch02.html#03">Процессы ядра</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch02.html#0301">XAPI</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0302">xhad</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0303">xenopsd</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0304">xcp-rdd</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0305">xcp-networkd</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0306">SM</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0307">perfmon</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0308">mpathalert</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0309">snapwatchd</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0310">stunnel</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0311">xenconsoled</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0312">xenstored</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0313">squeezed</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#04">Критически важные файлы настройки</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch02.html#0401">/boot/extlinux.conf</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0402">/etc/hosts</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0403">/etc/hostname</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0404">/etc/multipath.conf</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0405">/etc/resolv.conf</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0406">/etc/iscsi/initiatorname.iscsi</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0407">/etc/xensource/</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch02.html#05">Взаимосвязь объектов XenServer</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch02.html#0501">Объекты сетевой среды</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0502">Объекты GPU</a></span></dt>
+	  <dt><span class="section"><a href="Ch02.html#0503">Объекты хранения</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch03.html">3. Установка XenServer</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch03.html#01">Установка вручную</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#02">Автоматизированная установка</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#03">Загрузка с SAN</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#04">Дополнительные пакеты</a></span></dt>
+	 <dt><span class="section"><a href="Ch03.html#05">Диски драйвера стороннего производителя</a></span></dt>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch04.html">4. Влияющие на установку допущения архитектуры</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch04.html#01">Хосты в пуле в сопоставлении с одиночными</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#0101">Мастер пула в сравнении с участником</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0102">Совместимость процессора в пределах пула</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0103">Изменение размеров пула</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0104">Изменение ресурсов пула</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0105">Когда создавать новый пул</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#02">Определение принципов управления</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#0201">Инструменты снабжения</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0202">Администрирование множеством XenCenter</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#03">Совместимость аппаратных средств</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#0301">Требования хоста</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0302">Обновления BIOS, встроенного ПО  драйвера</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#04">Сопоставление совместно используемого и локального хранилища</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#0401">Модель предоставления хранилища</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#05">IOPS системы хранения</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#0501">Подтверждение локального хранилища</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#06">Управление памятью</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#0601">Концепции выделенной памяти</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0602">Управление динамической памятью ВМ</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch04.html#07">Планирование отказов инфраструктуры</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch04.html#0701">Защита от отказов хоста</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0702">Предотвращение агрессивного ограждения</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0703">Планирование ёмкости на период отказа</a></span></dt>
+	  <dt><span class="section"><a href="Ch04.html#0704">Исключение единой точки отказа</a></span></dt>
+	 </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch05.html">5. Проект развёртывания</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch05.html#01">Начните с хранилища</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch05.html#0101">Сопоставление локального и совместно используемого хранений</a></span></dt>
+	  <dt><span class="section"><a href="Ch05.html#0102">Сравнение NFS и iSCSI</a></span></dt>
+	  <dt><span class="section"><a href="Ch05.html#0103">Fibre Channel и HBA</a></span></dt>
+	  <dt><span class="section"><a href="Ch05.html#0104">Настройка с множеством путей</a></span></dt>
+	 </dl></dd>
+	 <dt><span class="section"><a href="Ch05.html#02">Определение топологий сетевой среды</a></span></dt>
+     <dd><dl>
+	  <dt><span class="section"><a href="Ch05.html#0201">Связывание и LACP</a></span></dt>
+	  <dt><span class="section"><a href="Ch05.html#0202">Кадры Jumbo</a></span></dt>
+	 </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch06.html">6. Понимание гостевой ВМ</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch06.html#01">Гости HVM</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#02">Гости PV</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#03">Microsoft Windows в XenServer</a></span></dt>
+	 <dt><span class="section"><a href="Ch06.html#04">Сравнение HVM и Linux PV</a></span></dt>
+   </dl></dd>
+  </dl>
+  <dt><span class="chapter"><a href="Ch05.html">Часть 2. Рецепты управления</a></span></dt>
+  <dl>
+   <dt><span class="chapter"><a href="Ch07.html">7. Рецепты установки</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch07.html#01">Установка вручную</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#0101">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0102">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0103">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#02">Создание загружаемого USB</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#0201">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0202">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0203">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#03">Автоматизированная установка</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#0301">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0302">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0303">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#04">Загрузка с SAN</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#0401">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0402">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0403">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#05">Установка дополнительных пакетов</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#0501">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0502">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0503">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#06">Диски с драйверами</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#0601">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0602">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0603">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch07.html#07">Встраивание драйверов и дополнительные пакеты</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch07.html#0701">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0702">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch07.html#0703">Обсуждение</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch08.html">8. Планирование обновлений</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch08.html#01">Обновления безопасности</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch08.html#0101">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0102">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0103">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#02">Изучение новых горячих исправлений и обновлений</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch08.html#0201">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0202">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0203">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#03">Определение наличия горячих исправлений</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch08.html#0301">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0302">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0303">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch08.html#04">Применение обновлений к XenServer</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch08.html#0401">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0402">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch08.html#0403">Обсуждение</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch09.html">9. Управление ведением журналов</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch09.html#01">Настройка журналов</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch09.html#0101">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0102">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0103">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch09.html#02">Циклическое ведение журналов</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch09.html#0201">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0202">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0203">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch09.html#03">Объединение журналов</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch09.html#0301">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0302">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0303">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch09.html#04">Регулирование скорости SNMP ACK</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch09.html#0401">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0402">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch09.html#0403">Обсуждение</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch10.html">10. Стратегии резервного копирования</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch10.html#01">Резервное копирование dom0</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch10.html#0101">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0102">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0103">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#02">Резервное копирование пула и базы данных XAPI</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch10.html#0201">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0202">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0203">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#03">Резервное копирование ВМ</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch10.html#0301">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0302">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0303">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#04">Резервное копирование и восстановление метаданных</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch10.html#0401">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0402">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0403">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch10.html#05">Перемещаемые репозитории хранения</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch10.html#0501">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0502">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch10.html#0503">Обсуждение</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch11.html">11. Управление пользователями</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch11.html#01">Разрешение аутентификации на основе ролей</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch11.html#0101">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0102">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0103">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#02">Настройка пользователей</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch11.html#0201">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0202">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0203">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#03">Удаление пользователей</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch11.html#0301">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0302">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0303">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#04">Запрет внешней аутентификации</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch11.html#0401">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0402">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0403">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch11.html#05">Восстановление пароля привилегированного пользователя (root)</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch11.html#0501">Задача 1</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0502">Решение 1</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0503">Обсуждение 1</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0504">Задача 2</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0505">Решение 2</a></span></dt>
+	   <dt><span class="section"><a href="Ch11.html#0506">Обсуждение 2</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+   <dt><span class="chapter"><a href="Ch12.html">12. Сертификаты SSL</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch12.html#01">Применение коммерческих сертификатов</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch12.html#0101">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch12.html#0102">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch12.html#0103">Обсуждение</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch12.html#02">Создание сертификата с собственной подписью</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch12.html#0201">Задача</a></span></dt>
+	   <dt><span class="section"><a href="Ch12.html#0202">Решение</a></span></dt>
+	   <dt><span class="section"><a href="Ch12.html#0203">Обсуждение</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+
+   <dt><span class="chapter"><a href="Ch13.html">13. Сопровождение аппаратных средств</a></span></dt>
+   <dd><dl>
+	 <dt><span class="section"><a href="Ch13.html#01">Обновление, поддержка и аппаратные средства</a></span></dt>
+	 <dt><span class="section"><a href="Ch13.html#02">Система хранения</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch13.html#0201">Добавление локального хранилища</a></span></dt>
+	   <dt><span class="section"><a href="Ch13.html#0202">Хранилище USB для резервной копии</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#03">Сетевая среда</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch13.html#0301">Замена сетевой карты</a></span></dt>
+     </dl></dd>
+	 <dt><span class="section"><a href="Ch13.html#04">Хосты</a></span></dt>
+     <dd><dl>
+	   <dt><span class="section"><a href="Ch13.html#0401">Добавление нового хоста в пул</a></span></dt>
+	   <dt><span class="section"><a href="Ch13.html#0402">Восстановление с отказавшего хоста при включённой HA</a></span></dt>
+     </dl></dd>
+   </dl></dd>
+
+   <dt><span class="chapter"><a href="Ix01.html">Указатель</a></span></dt>
+  </dl>
+ </dl>
+
+<!----><script type="text/javascript" src="FooterAndSidebar.js">
+</script><script type="text/javascript"><!--</div id="content"> is inside next code
+document.write(FooterAndSidebar); //-->
+</script>
+
+</body></html>

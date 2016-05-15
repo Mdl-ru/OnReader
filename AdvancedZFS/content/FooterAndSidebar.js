@@ -40,7 +40,7 @@ FooterAndSidebar= ''+
 '	<ul><li tabindex="2"><span class="file"><a href="index.html#Acknowledgments">Благодарности<sup>{-}</sup></a></span></li>'+
 '	<li tabindex="2"><span class="file"><a href="index.html#ToC">Оглавление</a></span></li></ul></li>'+
 ''+
-'	<li tabindex="2"><span class="file"><a href="Ch00.html">0. Введение<sup>{-}</sup></a></span>'+
+'	<li tabindex="2"><span class="file"><a href="Ch00.html">0. Введение</a></span>'+
 '	<ul><li tabindex="2"><span class="file"><a href="Ch00.html#01">Предварительные требования</a></span></li>'+
 '	<li tabindex="2"><span class="file"><a href="Ch00.html#02">Практический опыт ZFS</a></span>'+
 '	<ul><li tabindex="2"><span class="file"><a href="Ch00.html#0201">Управление пространством</a></span></li>'+
