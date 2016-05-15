@@ -41,7 +41,7 @@ FooterAndSidebar= ''+
 '	<li tabindex="2"><span class="file"><a href="Ch01.html">Часть 1. Разработка успешного развёртывания XenServer</a></span>'+
 '	<ul>'+
 ''+
-'	<li tabindex="2"><span class="file"><a href="Ch01.html">1. Что такое XenServer?<sup>{-}</sup></a></a></span>'+
+'	<li tabindex="2"><span class="file"><a href="Ch01.html">1. Что такое XenServer?</a></a></span>'+
 '	<ul><li tabindex="2"><span class="file"><a href="Ch01.html#01">Гипервизор Xen</a></span></li>'+
 '	<li tabindex="2"><span class="file"><a href="Ch01.html#02">Инструментарий для виртуализации Xen</a></span></li></ul></li>'+
 ''+
