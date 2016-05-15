@@ -145,6 +145,369 @@ document.write(HeaderAndToolbar); //-->
    <div xmlns="" class="titlepage"><div><div>
     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="01"> </a>XenServer это не Linux, но dom0 это он</h3>
    </div></div></div>
+   <p>Легко возникает ошибочное мнение, что XenServer является Linux, так как из установки с доступом к пространству 
+   привилегированного пользователя всё выглядит, ощущается и обустраивается во многом похоже на стандартное 
+   окружение Linux. Применяется начальный загрузчик <span class="term"><strong class="userinput"><code>extlinux</code></strong></span>, 
+   а установщик применяет схожий диалог для интерактивной настройки и пост- установки. Администратор завершает тем, 
+   что регистрируется в операционной системе Linux как привилегированный пользователь с именем 
+   <span class="term"><strong class="userinput"><code>root</code></strong></span>.</p>
+   <p>Пост- установка, когда уже запущен гипервизор Xen, конкретизируется привилегированной ВМ, называемой 
+   управляющим доменом, или обычно имеющим обозначение <span class="term"><strong class="userinput">dom0</strong></span>.
+   Этот управляющий домен является ВМ Linux со специально настроенным ядром и модифицированном CentOS на основе 
+   очень маленького отпечатка. С точки зрения администратора, <span class="term"><strong class="userinput">dom0</strong></span> 
+   может рассматриваться как реальная ВМ с очень высокими привилегиями, которая ответственна за операции ядра 
+   в рамках виртуализации на основе Xen.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="1" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Домен управления и dom0</th></tr><tr><td align="left" valign="top">
+	   <p>На протяжении всей этой книги, ссылка на самый привилегированный уровень программного обеспечения, который 
+	   содействует виртуализации ВМ будет называться либо управляющим доменом (control domen), либо 
+	   <span class="term"><strong class="userinput">dom0</strong></span>. Хотя оба понятия технически верны для описания 
+	   послезагрузочной среды которую вы будете администрировать, более важно установить, что оба этих термина являются 
+	   идентификаторами, применяемыми взаимозаменяемо в решении виртуализации XenServer.</p></td></tr></table>
+     </div>
+   <p>Если вы знакомы с системами на основе Linux, выполняющими решения виртуализации с открытым исходным кодом, 
+   например, CentOS с установленным KVM, вашим первым инстинктом вероятно может быть зарегистрироваться: 
+   попытаться настроить установку XenServer изнутри управляющего домена. Вы также можете ожидать, что XenServer 
+   автоматически примет любые выполненные вами с элементами ядра изменения настройки в любом стиле Linux, например, 
+   системы хранения и сетевой среды. А для тех, кто в прошлом работал с VMware vSphere, такая среда Linux может 
+   показаться аналогичной служебной консоли.</p>
+   <p>Момент, который мы отмечаем здесь, состоит в том, что XenServer не является Linux -ом, в то время как 
+   <span class="term"><strong class="userinput">dom0</strong></span> именно им и является, не требует экспертных 
+   знаний Linux. Время от времени внутри <span class="term"><strong class="userinput">dom0</strong></span> 
+   будут требоваться изменения в файлах настройки Linux, и мы хотим вас предостеречь от превращения вашей 
+   жизни администратора в более сложную, чем она того действительно требует. Ваш управляющий домен для 
+   XenServer имеет очень богатый интерфейс командной строки; и, там где изменения могут потребоваться, 
+   они будут обсуждаться в этой книге.</p>
+   <p>Те, кто знаком с Linux, могут столкнуться с ситуацией, при которой, по всей видимости, оказывается, что 
+   отсутствуют команды и пакеты. Если вы, например, попытаетесь выполнить <span class="term"><code>yum 
+   update</code></span>, вы быстро обнаружите, что репозиторий <span class="term"><code>yum</code></span> 
+   указывает в пустое место. Может показаться заманчивым указать утилите управления пакетом 
+   <span class="term"><code>yum</code></span> на восходящий поток репозитория програмного обеспечения 
+   CentOS или EPEL (Extra Packages for Enterprise Linux).</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Почему 
+	  запрещён yum</th></tr><tr><td align="left" valign="top">
+      <p>Управляющий домен XenServer тщательно настроен для соответствия платформе виртуализации и, как результат, 
+	  установка пакетов в явном виде не предусмотрена разработкой и не сертифицирована для XenServer, поскольку 
+	  может вывести из равновесия или уменьшить масштабируемость и производительность хоста XenServer. Когда при 
+	  обновлении или установке изменений в случае отсутствия влияния на работу хоста, следует ожидать, что любые 
+	  пакеты сторонней организации или дополнения не смогут сломать или полностью удалить, а изменения в настройках 
+	  файлов XenServer не могут быть выполнены неявно без вашего участия.</p></td></tr></table>
+     </div>
+   <p>Теперь, когда все эти предупреждения сделаны, перечислим совершенно безопасные для среды XenServer 
+   операции Linux:</p>
+   <div class="defedlist">
+   <dt><span class="emphasis"><em>Применение любой команды <span class="term"><code>xe</code></span></em></span></dt>
+   <dd><dl>
+	Если команда выполняется как часть сценария, убедитесь, что вы сделали резервную копию этого сценария, так как 
+	обновление XenServer может переписать или удалить его. На протяжении этой книги мы будем предоставлять инструкции 
+	на основе команд <span class="term"><code>xe</code></span>.</dl></dd>
+   <dt><span class="emphasis"><em>Интерактивное выполнение любой команды Linux, которая опрашивает информацию 
+   о вашей системе Linux</span></dt>
+   <dd><dl>
+	Важно отметить, что некоторые команды могут иметь более богатяе эквиваленты XenServer. Исключительным 
+	примером является <span class="term"><code>top</code></span>. Хотя эта утилита и доступна как часть 
+	пользовательского пространства в XenServer, предоставляемая ею информация относится к процессам Linux 
+	выполняющимся в <span class="term"><strong class="userinput">dom0</strong></span>; никакой статистики 
+	для виртуальной машины или физического хоста. Утилита <span class="term"><code>xentop</code></span> 
+	является эквивалентом XenServer, который предоставляет более богатую информацию по работающим в системе 
+	пользователям ВМ, причём также выполняется в <span class="term"><strong class="userinput">dom0</strong></span>.
+	В тексте книги вы найдёте ссылки на расширенные команды, которые вы, как администратор, найдёте 
+	решающими специфические задачи.</dl></dd>
+   <dt><span class="emphasis"><em>Прямое изменение файлов настройки, которые XenServer отслеживает 
+   в явном виде</em></span></dt>
+   <dd><dl>
+	Точным примером такого файла настройки является <span class="term"><code><em>/etc/multipath.conf</em></code></span>.
+	Так как <span class="term"><strong class="userinput">dom0</strong></span> является дистрибутивом CentOS, 
+	он также содержит поддержку для большинства подобных устройств, которые были бы эквивалентов в системе 
+	CentOS. Если вы хотите соединить устройство хранения iSCSI множеством путей, вы, скорее всего, захотите 
+	изменить <span class="term"><code><em>/etc/multipath.conf</em></code></span> и добавить аппаратно- 
+	специфическую информацию о настройке. {<span class="emphasis"><em>Прим. пер.: в качестве примера 
+	см. раздел <a class="link" href="http://onreader.mdl.ru/AdvancedZFS/content/Ch06.html#04" 
+	target="_top">Множество путей SAS</a></em></span> нашего перевода книги ZFS для профессионалов.}</dl></dd>
+   </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0101"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Архитектура интерфейса </span></h4>
+   </div></div></div>
+   <p>Первой виртуальной машиной является<span class="term"><strong class="userinput">dom0</strong></span> и, 
+   как уже обсуждалось, <span class="term"><strong class="userinput">dom0</strong></span> является привилегированным 
+   доиеном. Непривилегированные домены называются <span class="term"><strong class="userinput">domU</strong></span>, 
+   или, более просто &quot;гостевые ВМ&quot; или даже &quot;ВМ&quot;. Все домены управляются гипервизором, 
+   который предоставляет интерфейс вычислительным службам. Для ВМ, конечно, нужно нечто большее чем просто 
+   вычисления, поэтому <span class="term"><strong class="userinput">dom0</strong></span> предоставляет доступ к 
+   оборудованию через драйверы устройств Linux. Драйверы устройств затем взаимодействуют с процессом XenServer, 
+   тем самым предоставляя интерфейс виртуального устройства с применением модели разделённого драйвера (split-driver). 
+   Такой интерфейс называется моделью разделённого драйвера (split-driver) потому, что одна часть подобного 
+   драйвера существует в пределах <span class="term"><strong class="userinput">dom0</strong></span> (backend, 
+   серверная часть), в то время как оставшаяся часть драйвера существует на госте (frontend, пользовательский 
+   интерфейс).</p>
+   <p>Модель устройства поддерживается процессом, содержащим проект Quick Emulator (QEMU). Так как гости 
+   HVM и PVHM (обсуждаемые в <a class="link" href="Ch06.html" target="_top">Главе 6</a>) не содержат 
+   драйверов пара- виртуализации (PV), QEMU и QEMU-dm эмулируют аспекты компонентов оборудования, подобные 
+   BIOS, в дополнение к предоставлению доступу в сетевой среде и системе хранения.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="1" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">QEMU</th></tr><tr><td align="left" valign="top">
+	   <p>Дополнительную информацию, относящуюся к проекту QEMU вы можете найти на сайте
+	   <a class="link" href="http://wiki.qemu.org" target="_top">http://wiki.qemu.org</a>.</p></td></tr></table>
+     </div>
+   <p>Наконец, связывает всё вместе стек инструментов (toolstack), который для XenServer также происходит из 
+   проекта Xen и называется XAPI.</p>
+	<div class="figure"><a id="Fig0201"> </a>
+	 <p class="title"><strong>Рисунок 2-1 Основные компоненты всех установок XenServer</strong></p>
+	 <div class="figure-contents"><div class="mediaobject">
+	 <img src="figures/Fig0201.jpg" width="793" height="588"/><br />
+	 <span></span>
+	 </div></div>
+	</div><br class="figure-break"/>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="02"> </a>XenCenter: графический инструмент управления Xen</h3>
+   </div></div></div>
+   <p>Когда хост XenServer установлен, он может управляться непосредственно через доступ безопасной оболочки 
+   (SSH, Secure SHell) к интерфейсу командной строки (CLI). Кроме того, XenServer может также управляться с 
+   применением XenCenter, графического интерфейса на базе Windows для визуализации и видеотерминального доступа 
+   к одному или более хостов (<a class="link" href="Ch02.html#Fig0202" target="_top">Рисунок 2-2</a>).</p>
+	<div class="figure"><a id="Fig0202"> </a>
+	 <p class="title"><strong>Рисунок 2-2 Управление XenServer через командную строку или графически</strong></p>
+	 <div class="figure-contents"><div class="mediaobject">
+	 <img src="figures/Fig0202.jpg" width="792" height="208"/><br />
+	 <span></span>
+	 </div></div>
+	</div><br class="figure-break"/>
+   <p>XenCenter предоставляет богатый пользовательский опыт для управления множеством хостов XenServer, 
+   пулами ресурсов, а также инфраструктурой виртуальных машин связанных с ними. В то время как прочие инструменты 
+   с открытым исходным кодом и выпускаемые на коммерческой основе существуют для управления XenServer, XenCenter
+   специально разрабатывается параллельно с каждой редакцией XenServer. XenCenter принимает пользовательские 
+   полномочия и затем взаимодействует с XenServer применяя XenAPI.</p>
+   <p>XenCenter разрабатывается обратно совместимым с наследуемыми версиями XenServer, что означает, что 
+   практический опыт всегда используется в самых последних доступных XenCenter. Если вам необходима 
+   определённая версия XenCenter, которая поставляется с программным обеспечением XenServer установленым 
+   на данном хосте, вы можете получить её открыв веб- браузер и введя IP адрес вашего хоста XenServer.</p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="03"> </a>Процессы ядра</h3>
+   </div></div></div>
+   <p>Процессы ядра XenServer являются тем, что отличает XenServer от прочих дистрибутивов на основе Xen, или 
+   от прочих возможно существующих реализаций <span class="term"><strong class="userinput">dom0</strong></span>.
+   Каждый из последующих процессов либо реализует ключевую функцию XenServer, ответственную за его масштабируемость, 
+   или является критически важным для его безопасности.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0301"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">XAPI </span></h4>
+   </div></div></div>
+   <p>XAPI является интерфейсом инструментального стека ядра и раскрывает API управления Xen. Он отвечает за 
+   координацию всей работы по всему окружению XenServer и взаимодействует напрямую с большинством критичных 
+   компонентов.</p>
+   <p>XAPI также отвечает на запросы HTTP по порту 80 для предоставления доступа к выгрузке установщика 
+   XenCenter.</p>
+   <p>Относящиеся к XAPI данные журнала могут быть найдены либо в <span class="term"><code><em>/var/log/xensource.log</em></code></span>, 
+   либо в <span class="term"><code><em>/var/log/audit.log</em></code></span>. Эти журналы в особенности существенны, 
+   когда инструменты администрирования, такие как XenCenter, применяют XAPI для управления инфраструктурой 
+   XenServer.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="1" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Документация XAPI</th></tr><tr><td align="left" valign="top">
+	   <p>XAPI и его API, а также API управления Xen документированы на сайте
+	   <a class="link" href="http://xapi-project.github.io/" target="_top">http://xapi-project.github.io/</a>.</p></td></tr></table>
+     </div>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0302"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">xhads </span></h4>
+   </div></div></div>
+   <p><span class="term"><strong class="userinput"><code>xhad</code></strong></span> является демоном высокой 
+   доступности (HA, High Availability) XenServer. Он автоматически запускается если хост XenServer находится в 
+   пуле, в котором включена высокая доступность (HA). Этот процесс отвечает за всю активность задающих тактов 
+   (heartbeat) и обмен информацией задающих тактов с прочими серверами- участниками для определения того, 
+   какой из хостов определённо отказал согласно отказу таймера сторожевого устройства (watchdog) и последующему 
+   ограждению (fencing) хоста. {<span class="emphasis"><em>Прим. пер.: подробнее об ограждении 
+   см. в наших переводах статьи <a class="link" href="http://onreader.mdl.ru/ProxmoxCookbook/content/Fencing.html" 
+   target="_top">pve.proxmox.com/wiki/Fencing</a> и <a class="link" 
+   href="http://onreader.mdl.ru/ProLinuxHAClustering/content/Ch05.html" target="_top">Главы 5</a> 
+    Построение кластеров высокой доступности Linux для профи. Сандер ван Вуг, Apress, 2014</em></span>}.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Высокая 
+	  доступность</th></tr><tr><td align="left" valign="top">
+      <p>Настоятельно рекомендуется чтобы развёртывание XenServer, применяющее HA, имело по крайней мере 
+	  три хоста XenServer в пределах настроек пула. Хотя и возможно разрешить HA с двумя хостами, приоритеность 
+	  задающих тактов будет определяться на основе единственного идентификатора хоста XenServer.</p></td></tr></table>
+     </div>
+   <p>Поскольку XAPI является критическим компонентом работы, <span class="term"><strong class="userinput"><code>xhad</code></strong></span> 
+   выполняется как сторожевое устройство (watchdog) XAPI при включённом HA. Если выясняется, что XAPI отказал, 
+   <span class="term"><strong class="userinput"><code>xhad</code></strong></span> перезапустит его. HA всегда 
+   должен настраиваться командами XAPI, а получающиеся в результате настройки сохраняются на каждом хосте в 
+   <span class="term"><code><em>/etc/xensource/xhad.conf</em></code></span>.</p>
+   <p>Существенные для <span class="term"><strong class="userinput"><code>xhad</code></strong></span> данные 
+   журнала могут быть найдены в <span class="term"><code><em>/var/log/xha.log</em></code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0303"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">xenopsd </span></h4>
+   </div></div></div>
+   <p>Демон операций Xen, <span class="term"><strong class="userinput"><code>xenopsd</code></strong></span> 
+   (Xen Operations daemon), ответственен за управление жизнедеятельностью гостевой ВМ при предоставлении 
+   разделения между процессами управления (XAPI) и виртуализации (Xen). Как только гостевая ВМ создаётся или 
+   запускается, порождается процесс <span class="term"><strong class="userinput"><code>xenopsd</code></strong></span>: 
+   он отвечает за управление задачами нижнего уровня для этой гостевой ВМ, такие как манипуляция ресурсами и сбор 
+   статистики использования ресурса для <span class="term"><strong class="userinput">dom0</strong></span>.</p>
+   <p>Существенные для <span class="term"><strong class="userinput"><code>xenopsd</code></strong></span> данные 
+   журнала могут быть найдены в <span class="term"><code><em>/var/log/xensource.log</em></code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0304"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">xcp-rdd </span></h4>
+   </div></div></div>
+   <p><span class="term"><strong class="userinput"><code>xcp-rrdd</code></strong></span> является демоном, 
+   который разработан для приёма и подстановки данных карусельным (round-robin) образом, которые хранятся в 
+   циклической (round-robin) базе данных. Этот демон получает метрики от 
+   <span class="term"><strong class="userinput"><code>xenopsd</code></strong></span> в зависимости от используемого 
+   гостевой ВМ ресурса. Примерами подобных статистик являются дисковые IOPS, загрузка ЦПУ, а также использование 
+   сетевых ресурсов. Когда применяется технология NVIDIA GRID GPU или сквозного пропуска (pass-through) vGPU, 
+   также собираются метрики и для этих рабочих нагрузок. Данная информация в последствии распространяется назад 
+   к администратору - по запросу, например, из XenCenter - для просмотра как текущей производительности так и 
+   исторических данных о ней для гостевых ВМ.</p>
+   <p>Существенные для <span class="term"><strong class="userinput"><code>xcp-rrdd</code></strong></span> данные 
+   могут быть найдены в обоих журналах <span class="term"><code><em>/var/log/xcp-rrdd-plugins.log</em></code></span> 
+   и <span class="term"><code><em>/var/log/xensource.log</em></code></span>.</p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0305"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">xcp-networkd </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0306"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">SM </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0307"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">perfmon </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0308"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">mpathalert </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0309"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">snapwatchd </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0310"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">stunnel </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0311"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">xenconsoled </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0312"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">xenstored </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0313"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">squeezed </span></h4>
+   </div></div></div>
+   <p></p>
+
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04"> </a>Критически важные файлы настройки</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0401"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/boot/extlinux.conf </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0402"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/hosts </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0403"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/hostname </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0404"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/multipath.conf </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0405"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/resolv.conf </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0406"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/iscsi/initiatorname.iscsi </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0407"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/xensource/ </span></h4>
+   </div></div></div>
+   <p></p>
+  </div>
+
+  <div class="section">
+   <div xmlns="" class="titlepage"><div><div>
+    <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05"> </a>Взаимосвязь объектов XenServer</h3>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0501"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Объекты сетевой среды </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0502"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Объекты GPU </span></h4>
+   </div></div></div>
+   <p></p>
+
+   <div xmlns="" class="titlepage"><div><div>
+    <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0503"> </a>
+	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Объекты хранения </span></h4>
+   </div></div></div>
    <p></p>
   </div>
 
