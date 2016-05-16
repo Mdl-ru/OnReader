@@ -546,19 +546,203 @@ document.write(HeaderAndToolbar); //-->
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0501"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Объекты сетевой среды </span></h4>
    </div></div></div>
-   <p></p>
+   <p>Исходя из проекции архитектуры, развёртывание XenServer состоит из трёх типов сетевой среды: обмена 
+   основного управления, хранения и ВМ. По умолчанию сетевая среда во всех установках XenServer автоматически 
+   назначается на первый доступный сетевой интерфейс и этот сетевой интерфейс становится сетевой средой 
+   основного управления. Хотя все дополнительные сетевые интерфейсы могут применяться для систем хранения или 
+   ВМ, а также могут агрегироваться для избыточности и потенциального повышения пропускной способности, 
+   сетевая среда основного управления (primary-management network) является ключевой так как она отвечает за:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Предоставление доступа администратору через инструменты аутентификации, такие как XenCenter</p>
+	 </li><li class="listitem">
+	 <p>Осуществляет поддержку коммуникационных связей между хостами XenServer в пуле</p>
+	 </li><li class="listitem">
+	 <p>Договаривается о миграция ВМ в реальном времени</p>
+	 </li><li class="listitem">
+	 <p>Раскрывает XAPI для стороннего инструментария</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Понимание взаимосвязей между сетевыми объектами XenServer является критически важным для 
+   соответствующего определения сетевой топологии при развёртывании XenServer.</p>
+	 <div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+        <table border="0" summary="Совет"><tr><td rowspan="2" align="center" valign="top" width="25">
+        <img alt="[Совет]" src="../common/images/admon/tip.png"/></td><th align="left">Планирование для множества пулов</th></tr><tr><td align="left" valign="top">
+        <p>Хотя мы в этой книге сосредоточены на разработке и управлении единственным пулом XenServer, если 
+		ваши потребности навязывают вам множество пулов, вам следует учесть это в своём проекте. Это в частности 
+		верно для инфраструктуры, которая может совместно использоваться пулами, например, сетевая среда и системы 
+		хранения. Подробности по этим предметам вы можете найти в <a class="link" href="Ch05.html" 
+		target="_top">Главе 5</a>.</p></td></tr></table>
+      </div>
 
-   <div xmlns="" class="titlepage"><div><div>
+   	 <a id="050101"> </a>
+	 <p class="title"><strong>pif</strong></p>
+	 <p>Объект <span class="term"><strong class="userinput"><code>pif</code></strong></span> обозначает 
+	 физическое сетевое оборудование, наблюдаемое в рамках 
+	 <span class="term"><strong class="userinput">dom0</strong></span>. Так как <span class="term"><strong class="userinput">dom0</strong></span>
+	 основывается на CentOS, сетевая среда по умолчанию будет помечена как &quot;eth0&quot; и будет назначена на 
+	 IP адрес хоста XenServer. Все дополнительные сетевые среды будут представлены в виде &quot;ethX&quot;, однако 
+	 только физические интерфейсы с ролями &quot;управления&quot; или &quot;хранения&quot; будут иметь назначенные 
+	 IP адреса. Перечень физических сетевых интерфейсов может быть получен в командной строке, как это показано в 
+	 <a class="link" href="Ch02.html#Example0213" target="_top">Примере 2-9</a>.</p>
+	 <div class="example"><a id="Example0209"> </a>
+	 <p class="title"><em>Пример 2-9. Какие интерфейсы настроены на хосте</em></p>
+	   <pre class="screen"><code>
+# xe pif-list params=all
+ 	   </code></pre>
+     </div>
+
+   	 <a id="050102"> </a>
+	 <p class="title"><strong>Сетевая среда</strong></p>
+	 <p></p>
+	 <div class="example"><a id="Example0210"> </a>
+	 <p class="title"><em>Пример 2-10. Какие сетевые среды настроены для хоста</em></p>
+	   <pre class="screen"><code>
+# xe network-list params=all
+ 	   </code></pre>
+     </div>
+	 <p></p>
+
+   	 <a id="050103"> </a>
+	 <p class="title"><strong>vif</strong></p>
+	 <p></p>
+	 <p></p>
+	 <div class="example"><a id="Example0211"> </a>
+	 <p class="title"><em>Пример 2-11. Текущая настройка сетевой среды настроены для всех ВМ в пуле</em></p>
+	   <pre class="screen"><code>
+# xe vif-list params=all
+ 	   </code></pre>
+     </div>
+
+   	 <a id="050103"> </a>
+	 <p class="title"><strong>Связывание</strong></p>
+	 <p></p>
+	 <div class="example"><a id="Example0212"> </a>
+	 <p class="title"><em>Пример 2-12. Определение текущей настройки связывания</em></p>
+	   <pre class="screen"><code>
+# xe bond-list params=all
+ 	   </code></pre>
+     </div>
+	 <p></p>
+
+
+	 <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0502"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Объекты GPU </span></h4>
    </div></div></div>
-   <p></p>
+   <p>XenServer поддерживает использование графических карт с ВМ. Физическая графическая плата может быть 
+   напрямую назначена ВМ; а для определённых чипов NVIDIA и Intel, физическая карта также может быть 
+   виртуализирована (использоваться как виртуальное устройство). Это позволяет совместно использовать 
+   через виртуальные GPU возможности одной карты.</p>
 
-   <div xmlns="" class="titlepage"><div><div>
+   	 <a id="050201"> </a>
+	 <p class="title"><strong>pGPU</strong></p>
+     <p>Физическое графическое процессорное устройство (pGPU, physical graphical processor unit), 
+	 является объектом, который представляет собой физическую видео карту, или механизм графики, 
+	 которая установлена на материнской плате или является устройством PCI в физическом хосте. 
+	 <a class="link" href="Ch02.html#Example0213" target="_top">Пример 2-13</a> отображает команду получения 
+	 списка всех pGPU установленных в хосте, а также образец вывода результатов после выполнения этой команды.</p>
+     <p>Одним из примеров pGPU является набор микросхем VGA на материнской плате, которая используется 
+	 <span class="term"><strong class="userinput">dom0</strong></span> и его консолью. 
+	 <a class="link" href="Ch02.html#Example0214" target="_top">Пример 2-14</a> отображает команду, применяемую для 
+	 поиска используемого по умолчанию <span class="term"><strong class="userinput">dom0</strong></span>
+	 GPU. Если есть только выделенный графический адаптер или ваш хост имеет лишь ЦПУ со встроенными 
+	 возможностями GPU, тогда ваш первичный pGPU определённый при загрузке является единственным устройством, 
+	 которое XenServer может использовать либо в режиме проброса (pass-through), при котором всё GPU назначается ВМ, 
+	 или в режиме виртуальной графики, при котором некая часть вашего GPU назначается различным ВМ.</p>
+	 <div class="example"><a id="Example0213"> </a>
+	 <p class="title"><em>Пример 2-13. Определение физического GPU установленного для хоста. Результат 
+	 показывает наличие NVIDIA Quadro</em></p>
+	   <pre class="screen"><code>
+# xe pgpu-list
+uuid ( RO)              : 47d8c17d-3ea0-8a76-c58a-cb1d4300a5ec
+       vendor-name ( RO): NVIDIA Corporation
+       device-name ( RO): G98 [Quadro NVS 295]
+    gpu-group-uuid ( RW): 1ac5d1f6-d581-1b14-55f1-54ef6a1954b4
+ 	   </code></pre>
+     </div>
+	 <div class="example"><a id="Example0214"> </a>
+	 <p class="title"><em>Пример 2-14. Определение GPU используемого dom0 по умолчанию</em></p>
+	   <pre class="screen"><code>
+# lspci | grep &quot;VGA&quot;
+ 	   </code></pre>
+     </div>
+
+   	 <a id="050202"> </a>
+	 <p class="title"><strong>gpu-group</strong></p>
+     <p>Группа GPU это просто коллекция графических механизмов, которые содержатся в пределах отдельной 
+	 физической графической карты. Если данная графическая карта способна подразделять свои ресурсы на 
+	 множество объектов GPU, тогда группа GPU будет содержать ссылку на каждый объект, как это показано 
+	 в <a class="link" href="Ch02.html#Example0215" target="_top">Примере 2-15</a>.</p>
+	 <div class="example"><a id="Example0215"> </a>
+	 <p class="title"><em>Пример 2-15. Перечень ресурсов GPU, связанных с физическим графическим адаптером</em></p>
+	   <pre class="screen"><code>
+# xe gpu-group-list
+ 	   </code></pre>
+     </div>
+
+   	 <a id="050203"> </a>
+	 <p class="title"><strong>vgpu</strong></p>
+     <p><span class="term"><strong class="userinput"><code>vgpu</code></strong></span> представляет 
+	 виртуальный графический адаптер определяемый данной графической картой. Команда 
+	 <span class="term"><strong class="userinput"><code>vgpu-type-list</code></strong></span>, показанная в 
+	 <a class="link" href="Ch02.html#Example0216" target="_top">Примере 2-16</a>, возвращает три возможных 
+	 vGPU опции для вашего данного хоста.</p>
+	 <div class="example"><a id="Example0216"> </a>
+	 <p class="title"><em>Пример 2-16. Просмотр типов GPU в пределах хоста XenServer</em></p>
+	   <pre class="screen"><code>
+# xe vgpu-type-list
+uuid ( RO)            : ad32125b-e5b6-2894-9d16-1809f032c5bb
+     vendor-name ( RO): NVIDIA Corporation
+      model-name ( RO): GRID K100
+framebuffer-size ( RO): 268435456
+
+uuid ( RO)            : ee22b661-4aa0-e6e6-5876-e316c3ea09fe
+     vendor-name ( RO): NVIDIA Corporation
+      model-name ( RO): GRID K140Q
+framebuffer-size ( RO): 1006632960
+
+uuid ( RO)            : 2025cc3e-c869-ef44-2757-a1994cc77c8e
+     vendor-name ( RO):
+      model-name ( RO): passthrough
+framebuffer-size ( RO): 0
+ 	   </code></pre>
+     </div>
+
+  <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0503"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">Объекты хранения </span></h4>
    </div></div></div>
-   <p></p>
+   <p>Исходя из проекции архитектуры, система хранения состоит из двух концепций, представляемых четырьмя различными 
+   объектами. Каждый из них уникальным образом определяется и сопровождается в пределах базы данных XAPI и это:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Репозитории хранения (SR, Storage repositories) являются физическими устройствами, которые содержат 
+	 виртуальные диски, связываемые с ВМ.</p>
+	 </li><li class="listitem">
+	 <p>Физические блочные устройства (PBD, Physical block devices) отображают физический сервер запоминающих 
+	 устройств для хранения репозитория.</p>
+	 </li><li class="listitem">
+	 <p>Интерфейсы виртуального диска (VDI, Virtual disk interfaces) являются виртуальными жёсткими дисками, 
+	 которые усиливают API управления хранением: сохраняя скрытым тип диска для ВМ, однако соответственным образом 
+	 обрабатывая транзакции своим гипервизором.</p>
+	 </li><li class="listitem">
+	 <p>Виртуальные блочные диски (VBD, Virtual block disks) отображают VDI на виртуальные машины.</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Взаимосвязи между этими четырьмя объектами отображены на <a class="link" href="Ch02.html#Fig0204" 
+   target="_top">Рисункt 2-4</a>.</p>
+	<div class="figure"><a id="Fig0204"> </a>
+	 <p class="title"><strong>Рисунок 2-4 Как хранилища XenServer взаимодействуют друг с другом</strong></p>
+	 <div class="figure-contents"><div class="mediaobject">
+	 <img src="figures/Fig0204.jpg" width="792" height="498"/><br />
+	 <span></span>
+	 </div></div>
+	</div><br class="figure-break"/></p>
   </div>
 
 </div>
