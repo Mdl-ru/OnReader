@@ -45,7 +45,7 @@ FooterAndSidebar= ''+
 '	<ul><li tabindex="2"><span class="file"><a href="Ch01.html#01">Гипервизор Xen</a></span></li>'+
 '	<li tabindex="2"><span class="file"><a href="Ch01.html#02">Инструментарий для виртуализации Xen</a></span></li></ul></li>'+
 ''+
-'	<li tabindex="2"><span class="file"><a href="Ch02.html">2. Архитектура ядра и критически важные компоненты<sup>{-}</sup></a></a></span>'+
+'	<li tabindex="2"><span class="file"><a href="Ch02.html">2. Архитектура ядра и критически важные компоненты</a></span>'+
 '	<ul><li tabindex="2"><span class="file"><a href="Ch02.html#01">XenServer это не Linux, но dom0 это он</a></span>'+
 '	<ul><li tabindex="2"><span class="file"><a href="Ch02.html#0101">Архитектура интерфейса</a></span></li></ul></li>'+
 '	<li tabindex="2"><span class="file"><a href="Ch02.html#02">XenCenter: графический инструмент управления Xen</a></span></li>'+

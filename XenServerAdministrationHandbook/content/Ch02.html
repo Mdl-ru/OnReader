@@ -491,56 +491,456 @@ document.write(HeaderAndToolbar); //-->
    <div xmlns="" class="titlepage"><div><div>
     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="04"> </a>Критически важные файлы настройки</h3>
    </div></div></div>
-   <p></p>
+   <p>В процессе запуска <span class="term"><strong class="userinput">dom0</strong></span> использует сценарии 
+   init и XAPI для подтверждения своей настройки. Это гарантирует, что XenServer может вернуться к известному 
+   правильному состоянию настройки с последующим после выхода из строя хоста, например, после перезагрузки или 
+   восстановления из- за потери электропитания. Если файлы настроек Linux изменялись администратором вручную, 
+   для XAPI не будет необычным переписаать эти изменения данными из своей базы данных настроек.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Изменение 
+	  критически важных файлов настройки</th></tr><tr><td align="left" valign="top">
+      <p>В данном разделе книги файлы и каталоги приводятся исключительно для целей администрирования. Если не 
+	  предписано иное, не модифицируйте и не изменяйте эти каталоги и/ или их содержимое.</p></td></tr></table>
+     </div>
+   <p>В случае отказа при грубой проверке настроек на здравый смысл, для обеспечения безопасного режима 
+   <span class="term"><strong class="userinput">dom0</strong></span> загрузится в режим обслуживания 
+   (maintenance), а ВМ не будут запущены. Если это произойдёт, потребуется административное вмешательство для 
+   разрешения проблемы и приведения хоста назад в рабочее состояние. Такой режим гарантирует рабочеспособную 
+   систему и проверяет целостность физического хоста, данных виртуальной машины и связанного хранилища.</p>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0401"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/boot/extlinux.conf </span></h4>
    </div></div></div>
-   <p></p>
+   <p>XenServer 6.5 применяет в качестве начального загрузчика <span class="term"><strong class="userinput"><code>extlinux</code></strong></span>: 
+   производную проекта Syslinux, специально ориентированную на загрузку ядер, хранимых в файловых системах 
+   на основе EXT. <a class="link" href="Ch02.html#Example0201" target="_top">Пример 2-1</a> отображает настройку 
+   по умолчанию загрузки такого ядра.</p>
+   <p>Такой файл настройки предоставляет инструкции на основе соглашения о метках, согласно которому настройка 
+   ядра должна быть загружена с дополнительными параметрами после включения электропитания физического 
+   оборудования. Метка по умолчанию (или определение ядра) применяемое для загрузки XenServer всегда снабжается 
+   флажком под меткой <span class="term"><strong class="userinput"><code>xe</code></strong></span>.</p>
+	 <div class="example"><a id="Example0201"> </a>
+	 <p class="title"><em>Пример 2-1. Пример настройки загрузки ядра XenServer по умолчанию</em></p>
+	   <pre class="screen"><code>
+label xe
+   # XenServer
+   kernel mboot.c32
+   append /boot/xen.gz mem=1024G dom0_max_vcpus=2
+   dom0_mem=2048M,max:2048M watchdog_timeout=300
+   lowmem_emergency_pool=1M crashkernel=64M@32M
+   cpuid_mask_xsave_eax=0 console=vga vga=mode-0x0311
+   --- /boot/vmlinuz-2.6-xen root=LABEL=rootenhlwylk ro
+   xencons=hvc console=hvc0 console=tty0 quiet vga=785 splash
+   --- /boot/initrd-2.6-xen.img
+ 	   </code></pre>
+     </div>
+   <p>Дополнительно также предлагаются настройки ядра для доступа последовательной консоли, или 
+   <span class="term"><strong class="userinput"><code>xe</code></strong></span>, а также безопасное ядро, или 
+   <span class="term"><strong class="userinput"><code>safe</code></strong></span>, показанные в 
+   <a class="link" href="Ch02.html#Example0202" target="_top">Пример 2-2</a>. Доступ к ним может быть выполнен 
+   при выполнении последовательности начальной загрузки посредством входа в 
+   <span class="term"><strong class="userinput"><code>menu.c32</code></strong></span> при получении приглашения 
+   на ввод <span class="term"><strong class="userinput"><code>boot: prompt</code></strong></span>.</p>
+	 <div class="example"><a id="Example0202"> </a>
+	 <p class="title"><em>Пример 2-2. Ядра для замены</em></p>
+	   <pre class="screen"><code>
+label xe-serial
+   # XenServer (Serial)
+   kernel mboot.c32
+   append /boot/xen.gz com1=115200,8n1 console=com1,vga
+   mem=1024G dom0_max_vcpus=2 dom0_mem=2048M,max:2048M
+   watchdog_timeout=300 lowmem_emergency_pool=1M
+   crashkernel=64M@32M cpuid_mask_xsave_eax=0 ---
+   /boot/vmlinuz-2.6-xen root=LABEL=root-enhlwylk ro
+   console=tty0 xencons=hvc console=hvc0 ---
+   /boot/initrd-2.6-xen.img
+
+label safe
+   # XenServer in Safe Mode
+   kernel mboot.c32
+   append /boot/xen.gz nosmp noreboot noirqbalance acpi=off
+   noapic mem=1024G dom0_max_vcpus=2 dom0_mem=2048M,max:2048M
+   com1=115200,8n1 console=com1,vga ---
+   /boot/vmlinuz-2.6-xen nousb root=LABEL=root-enhlwylk ro
+   console=tty0 xencons=hvc console=hvc0 ---
+   /boot/initrd-2.6-xen.img
+ 	   </code></pre>
+     </div>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="1" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Изменения Dundee</th></tr><tr><td align="left" valign="top">
+	   <p>Предварительный выпуск XenServer Dundee применяет в качестве загрузчика GRUB2.</p></td></tr></table>
+     </div>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0402"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/hosts </span></h4>
    </div></div></div>
-   <p></p>
+   <p>Файл <span class="term"><code><em>hosts</em></code></span> заполняется специальным образом таким образом, 
+   что определённый процесс <span class="term"><strong class="userinput">dom0</strong></span> мог разрешить любую 
+   из следующих записей в пределах файла <span class="term"><code><em>hosts</em></code></span>:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>localhost</p>
+	 </li><li class="listitem">
+	 <p>localhost.localdomain</p>
+	 </li><li class="listitem">
+	 <p>127.0.0.1</p>
+	 </li>
+    </ul>
+    </div>
+   <p>Приводимая ниже команда позволяет вам просмотр содержимого файла <span class="term"><code><em>hosts</em></code></span>:</p>
+	   <pre class="screen"><code>
+# cat /etc/hosts
+127.0.0.1 localhost localhost.localdomain
+ 	   </code></pre>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0403"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/hostname </span></h4>
    </div></div></div>
-   <p></p>
+   <p>Файл <span class="term"><code><em>hostname</em></code></span> содержит индивидуальное имя для данного хоста, 
+   которое определяется в процессе установки. Этот файл существенен только для управляющего домена пока он не 
+   записан в рамках инфраструктуры DNS (Domain Name Service).</p>
+   <p>В качестве примера <span class="term"><strong class="userinput"><code>hostname</code></strong></span> 
+   может быть <span class="term"><code>xenified01</code></span> и храниться в 
+   <span class="term"><code><em>/etc/hostname</em></code></span>:</p>
+ 	   <pre class="screen"><code>
+# cat /etc/hostname
+xenified01
+ 	   </code></pre>
+  <p>Однако, в XenCenter этот хост получает дружественное имя, например, <span class="term"><code>XENHOST1</code></span>
+  для целей визуализации, как показано на <a class="link" href="Ch02.html#Fig0203" target="_top">Рисунке 2-3</a>.</p>
+	<div class="figure"><a id="Fig0203"> </a>
+	 <p class="title"><strong>Рисунок 2-3 Имя хоста может оставаться тем же самым при отображении дружественного 
+	 имени в пределах XenCenter</strong></p>
+	 <div class="figure-contents"><div class="mediaobject">
+	 <img src="figures/Fig0203.jpg" width="560" height="187"/><br />
+	 <span></span>
+	 </div></div>
+	</div><br class="figure-break"/>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0404"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/multipath.conf </span></h4>
    </div></div></div>
-   <p></p>
+   <p>Многие устройства хранения предлагают для хоста подобного XenServer возможность усиления множеством путей 
+   или каналов ввода/ вывода для целей хранения. XenServer поддерживает настройки хранения которые применяют 
+   множество путей. такая поддержка предоставляется средством отображения множества путей устройств 
+   (DM-MP, device mapper multipathing), а информация о настройке сохраняется в <span class="term"><code><em>/etc/multipath.conf</em></code></span>. 
+   Файл <span class="term"><code><em>/etc/multipath.conf</em></code></span> по умолчанию охватывает широкий 
+   диапазон современных устройств хранения, гарантируя, что XenServer хост может применять для хранилища 
+   избыточность, отказоустойчивость, а также агрегацию для поддержки решений хранения.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Не 
+	  изменяйте multipath.conf не имея руководства</th></tr><tr><td align="left" valign="top">
+      <p>Хотя <span class="term"><strong class="userinput">dom0</strong></span> может выглядеть как 
+	  стандартный дистрибутив CentOS, изменение <span class="term"><code><em>/etc/multipath.conf</em></code></span>
+	  в соответствии с примерами Linux, найденными в интернете, может легко неблагоприятно воздействовать на 
+	  стабильность и производительность системы. Всегда изменяйте <span class="term"><code><em>/etc/multipath.conf</em></code></span>
+	  под руководством технической поддержки Citrix или своего производителя аппаратных средств.</p></td></tr></table>
+     </div>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0405"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/resolv.conf </span></h4>
    </div></div></div>
-   <p></p>
+   <p>Файл <span class="term"><code><em>resolve.conf</em></code></span> содержит записи DNS для XenServer, котрые 
+   были определены в процессе установки (обсуждается в <a class="link" href="Ch03.html" target="_top">Главе 3</a>), 
+   а также изменяться в XenCenter или командой XAPI. Хотя этот файл может быть изменён вручную в случае устранения 
+   проблемы с разрешением имени, при перезагрузке настройка XAPI перезапишет любые выполненные в этом файле 
+   изменения с целью поддержки верных установок сервера DNS, настроенных через XenCenter или при помощи 
+   инструмента командной строки <span class="term"><code>xe</code></span>.</p>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0406"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/iscsi/initiatorname.iscsi </span></h4>
    </div></div></div>
-   <p></p>
+   <p>Для содействия соединению использующих технологию на основе iSCSI хранилищ установлен Open-iSCSI. В 
+   процессе установки вырабатывается уникальный iSCSI Qualified Name (IQN) для каждого хоста XenServer, и 
+   сохраняется, в каждом хосте XenServer, в <span class="term"><code><em>/etc/iscsi/initiatorname.iscsi</em></code></span>.</p>
+   <p>Когда администратор пытается ограничить функциональность хранилища iSCSI для определённого хоста, 
+   его IQN может быть определён в хосте XenServer как это показано в <a class="link" href="Ch02.html#Example0203" 
+   target="_top">Примере 2-3</a>.</p>
+	 <div class="example"><a id="Example0203"> </a>
+	 <p class="title"><em>Пример 2-3. Определение IQN XenServer -а</em></p>
+	   <pre class="screen"><code>
+# cat /etc/iscsi/initiatorname.iscsi
+InitiatorName=iqn.1994-05.com.redhat:dc785c10706
+ 	   </code></pre>
+     </div>
+   <p>Вывод предоставляет IQN и может он затем быть добавлен в белый список инициатора на устройстве хранения. 
+   Если выполнена переустановка XenServer, это значение будет изменено и все хосты iSCSI потребуют обновления 
+   своих белых списков на новое, вырабатываемое случайным образом, IQN.</p>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0407"> </a>
 	<span  style="color:#FEFEFE; background-color:#888888; padding:0.5em;">/etc/xensource/ </span></h4>
    </div></div></div>
-   <p></p>
+   <p>По линии стандартных соглашений Linux многие файлы &quot;настроек&quot; связаны с Xen, XenServer и прочими 
+   процессами ядра XAPI хранимыми здесь. Большая часть этих файлов вырабатывается при установке, обновляясь из 
+   инструментов на основе Xen, а также в некоторых случаях создаваемых когда администратор XenServer делает 
+   доступной определённую функциональность.</p>
+
+   	 <a id="040701"> </a>
+	 <p class="title"><strong>boot_time_cpus</strong></p>
+     <p>Заполняется при каждой загрузке и содержит иформацию, относящуюся к сокетам физического хоста и числу 
+	 ядер в сокете. Для пользователей Linux это может показаться аналогичным сбросу <span class="term"><code>cpuinfo</code></span>, 
+	 который может быть обнаружен в <span class="term"><code><em>/proc/</em></code></span> выполняющейся 
+	 файловой системы. <a class="link" href="Ch02.html#Example0204" target="_top">Примере 2-4</a> отображает 
+	 команду для просмотра содержимого файла <span class="term"><code><em>boot_time_cpus</em></code></span>. Эта 
+	 информация не только сохраняется в этом файле, но также известна <span class="term"><strong class="userinput">dom0</strong></span>. 
+	 И наоборот, база данных XAPI обновляется этой информацией и распространяется в одноранговой сети в которой 
+	 данный хост является участником пула XenServer.</p>
+	 <div class="example"><a id="Example0204"> </a>
+	 <p class="title"><em>Пример 2-4. Просмотр boot_time_cpus</em></p>
+	   <pre class="screen"><code>
+# cat /etc/xensource/boot_time_cpus
+ 	   </code></pre>
+     <p>Чтобы сравнить точность этого файла относительно <span class="term"><code><em>/proc/</em></code></span> 
+	 в файловой системе на основе Linux для <span class="term"><strong class="userinput">dom0</strong></span> 
+	 (заполняемого при выполнении), исполните команду приведённую в <a class="link" href="Ch02.html#Example0205" 
+	 target="_top">Примере 2-5</a>.</p>
+	 <div class="example"><a id="Example0205"> </a>
+	 <p class="title"><em>Пример 2-5. Проверка информации для ЦПУ и её точности</em></p>
+	   <pre class="screen"><code>
+# diff /etc/xensource/boot_time_cpus /proc/cpuinfo
+ 	   </code></pre>
+     <p>В обычном случае вывод должен отсутствовать или, что то же самое, нет разницы между 
+	 <span class="term"><code><em>/proc/cpuinfo</em></code></span>  и 
+	 <span class="term"><code><em>/etc/xensource/boot_time_cpus</em></code></span>. Поскольку приводимое 
+	 вырабатывается <span class="term"><strong class="userinput">dom0</strong></span> после загрузки хоста и 
+	 начала выполнения ядром Xen своего процесса загрузки, любая разница между этими файлами будет определять 
+	 существенное нарушение настройки.</p>
+
+   	 <a id="040702"> </a>
+	 <p class="title"><strong>/etc/xensource/bugtool/</strong></p>
+     <p>Каталог <span class="term"><code><em>bugtool</em></code></span> имеет несколько подкаталогов и файлов 
+	 XML, которые определяют сферу, атрибуты и пределы для вывода данных относящихся к встроенному 
+	 инструментарию XenServer определения ошибок. Эти файлы определяют инструментам максимальный размер 
+	 вывода и прочие критерии необходимые для дампа ядра при его крахе (или отчётов о состоянии сервера) для 
+	 доступа, продвижения и хранения данных, необходимых при условиях возникновения ошибок.</p>
+
+   	 <a id="040703"> </a>
+	 <p class="title"><strong>/etc/xensource/db.conf</strong></p>
+     <p>Этот файл совместно со слегка более длинной версией с именем 
+	 <span class="term"><code><em>db.conf.rio</em></code></span> описывает следующую информацию настройки 
+	 базы данных XenServer:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Где найти базу данных XAPI</p>
+	 </li><li class="listitem">
+	 <p>Формат, необходимый для применения, при чтении этой базы данных</p>
+	 </li><li class="listitem">
+	 <p>Вменяемая информация относящаяся к использованию сеанса и обоснованности</p>
+	 </li>
+    </ul>
+    </div>
+
+   	 <a id="040704"> </a>
+	 <p class="title"><strong>/etc/xensource/installed-repos/</strong></p>
+     <p>Каталог <span class="term"><code><em>installed-repos</em></code></span> содержит подкаталоги, которые, 
+	 либо из новой установки, или из обновления, отображают список применявшихся при установке репозиториев для 
+	 этого хоста. Если установлены дополнительные пакеты, они также будут отображены в 
+	 <span class="term"><code><em>installed-repos</em></code></span>; а в процессе обновления вы будете 
+	 уведомлены о присутствии такого дополнительного пакета. Это гарантирует то, что если установка зависит от 
+	 определённого дополнительного пакета в процессе установки администратор сможет проверить и получить 
+	 соответствующую замену.</p>
+
+   	 <a id="040705"> </a>
+	 <p class="title"><strong>/etc/xensource/master.d/</strong></p>
+     <p>Этот каталог может содержать один или более сценариев уровня инициализации, которые применяются в 
+	 процессе инициализации хоста. Кроме того, предоставляется пример сценария уровня инициализации, что 
+	 является хорошей справочной информацией для администратора, иллюстрирующей поток активности уровня 
+	 выполнения, последовательности инициализации и вызова ресурсов. Этот пример сценария должен иметь 
+	 имя <span class="term"><code><em>01-example</em></code></span>, однако, если он отсутствует в вашей 
+	 системе, это нормально.</p>
+     <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+	   <table border="1" summary="Замечание"><tr><td rowspan="2" align="center" valign="top" width="25">
+	   <img alt="[Замечание]" src="../common/images/admon/note.png"/></td><th align="left">Изменения Dundee</th></tr><tr><td align="left" valign="top">
+	   <p>XenServer Dundee имеет домен управления на базе CentOS 7. CentOS 7 имеет изменённую модель 
+	   <span class="term"><code>systemd</code></span> для инициализации. эта модель отличается в основном тем, как 
+	   выполняются сценарии уровня инициализации. Если у вас установлены агенты управления или пользовательские 
+	   сценарии, пожалуйста, проверьте их, они могут не работать в среде <span class="term"><code>systemd</code></span>, 
+	   поскольку они были сделаны ранее.</p></td></tr></table>
+     </div>
+
+   	 <a id="040706"> </a>
+	 <p class="title"><strong>/etc/xensource/network.conf</strong></p>
+     <p>Файл <span class="term"><code><em>network.conf</em></code></span> описывает для администратора какой 
+	 тип сетевой среды коммутации применяется хостом XenServer. <a class="link" href="Ch02.html#Example0206" 
+	 target="_top">Пример 2-6</a> показывает команду для просмотра этого файла. Существует два 
+	 синтаксических параметра: <span class="term"><strong class="userinput"><code>bridge</code></strong></span> 
+	 или <span class="term"><strong class="userinput"><code>openvswitch</code></strong></span>.
+	 <span class="term"><strong class="userinput"><code>bridge</code></strong></span> соответствует 
+	 наследуемому из Linux мосту сетевой среды, в то время как 
+	 <span class="term"><strong class="userinput"><code>openvswitch</code></strong></span> соответствует 
+	 Open Virtual Switch или <span class="term"><strong class="userinput"><code>ovs</code></strong></span>.
+	 Сетевой средой по умолчанию является <span class="term"><strong class="userinput"><code>ovs</code></strong></span>, 
+	 применяемая для всех установок начиная с XenServer 6.0, однако, если обновляется более ранняя система, 
+	 то всё ещё  на месте может оказаться мост Linux. Важно отметить, что новая сетевая функциональность 
+	 будет разрабатываться только для <span class="term"><strong class="userinput"><code>ovs</code></strong></span>, 
+	 в то время, как в некоторый момент мост Linux может быть отправлен в оставку.</p>
+	 <div class="example"><a id="Example0206"> </a>
+	 <p class="title"><em>Пример 2-6. Просмотр network.conf</em></p>
+	   <pre class="screen"><code>
+# cat /etc/xensource/network.conf
+ 	   </code></pre>
+     <p>Вывод будет либо состоянием &quot;bridge&quot;, либо &quot;openvswitch&quot;, но это мощная часть 
+	 информации, которую необходимо иметь - в особенности при диагностике проблем пула XenServer с виртуальной 
+	 сетевой средой коммутации или если есть вопросы к &quot;лежащей в основе сетевой среде&quot;. Более того,
+	 существуют некоторые сторонние продукты Citrix, которые могут потребовать чтобы эта виртуальная сетевая 
+	 среда коммутации была того или другого типа. Если вы определили, что некоторый хост требует необходимости 
+	 переключения виртуальной сетевой среды коммутации, обеспечьте останов всех гостевых машин (или миграцию 
+	 на другой хост XenServer) и выполните команду, приведённую в <a class="link" href="Ch02.html#Example0207" 
+	 target="_top">Примере 2-7</a>.</p>
+	 <div class="example"><a id="Example0207"> </a>
+	 <p class="title"><em>Пример 2-7. Изменение основы сетевой среды</em></p>
+	   <pre class="screen"><code>
+# xe-switch-network-backend {bridge | openvswitch}
+ 	   </code></pre>
+     <p>Хост должен быть перегружен, а после перезагрузки будет выполнять сетевые операции предписанным 
+	 образом.</p>
+
+   	 <a id="040707"> </a>
+	 <p class="title"><strong>/etc/xensource/pool.conf</strong></p>
+     <p>Другой ключевой файл для поиска неисправностей, <span class="term"><code><em>pool.conf</em></code></span>
+	 применяется в случае, когда хост является изолированным сервером, главой пула (master, инваче: основным, 
+	 primary), или ведомым (slave, участником пула, предоставляющим отчёты главному XenServer). Этот файл 
+	 может иметь два значения: <span class="emphasis"><em>master</em></span> или 
+	 <span class="emphasis"><em>slave</em></span>.</p>
+     <p>Применяя команду <span class="term"><code>cat</code></span>, как проиллюстрировано в 
+	 <a class="link" href="Ch02.html#Example0208" target="_top">Примере 2-8</a>, можно определить из 
+	 содержимого <span class="term"><code><em>pool.conf</em></code></span> полагает ли хост XenServer себя 
+	 участником <span class="emphasis"><em>master</em></span> или <span class="emphasis"><em>slave</em></span>.</p>
+	 <div class="example"><a id="Example0208"> </a>
+	 <p class="title"><em>Пример 2-8. Определение роли хоста</em></p>
+	   <pre class="screen"><code>
+# cat /etc/xensource/pool.conf
+ 	   </code></pre>
+     <p>Если результат команды <span class="emphasis"><em>master</em></span>, то хост играет роль главы пула. Если 
+	 результат команды содержит слово <span class="emphasis"><em>slave</em></span>, хост является сервером участником, 
+	 а также предоставляется IP адрес главы (master) пула. При работе в качестве стандартного хоста XenServer 
+	 (т.е. когда он не является совсем частью пула), обособленный хост будет полагать, что он выполняет роль 
+	 <span class="emphasis"><em>master</em></span>.</p>
+     <p>Этот файл следует изменять вручную только в случае серъёзных разрушений, причём только под руководством 
+	 команды поддержки XenServer. Примеры подобных разрушений включают:</p>
+  	<div class="itemizedlist">
+	<ul class="itemizedlist" type="disc">
+	 <li class="listitem">
+	 <p>Разрешена высокая доступность (HA) в случае, когда она должна быть отключена, например, в случае 
+	 обслуживания</p>
+	 </li><li class="listitem">
+	 <p>Проблемы во взаимодействии в сетевой среде межу участниками пула</p>
+	 </li><li class="listitem">
+	 <p>Выход за пределы памяти <span class="term"><strong class="userinput">dom0</strong></span></p>
+	 </li><li class="listitem">
+	 <p>Возбуждаемые латентностью при выборе нового главы (master) пула</p>
+	 </li><li class="listitem">
+	 <p>Доступная целиком только для чтения корневая файловая система</p>
+	 </li><li class="listitem">
+	 <p>Устаревший или доступный только для чтения файл PID</p>
+	 </li>
+    </ul>
+    </div>
+
+   	 <a id="040708"> </a>
+	 <p class="title"><strong>/etc/xensource/ptoken</strong></p>
+     <p>Файл <span class="term"><code><em>ptoken</em></code></span> применяется для безопасности, наряду с 
+	 SSL, в пулах XenServer для дополнительной безопасности во взаимодействиях участников пула.</p>
+
+   	 <a id="040709"> </a>
+	 <p class="title"><strong>/etc/xensource/scripts/</strong></p>
+     <p>Каталог <span class="term"><code><em>scripts</em></code></span> содержит один или более сценариев уровня 
+	 инициализации, во многом аналогично каталогу <span class="term"><code><em>master.d</em></code></span>.</p>
+
+   	 <a id="040710"> </a>
+	 <p class="title"><strong>/etc/xensouce/xapi-ssl.conf</strong></p>
+     <p>XenAPI выставляется через порт 433, однако необходима соответствующая аутентификация для выполнения API 
+	 или запроса к нему. В добавление к аутентификации необходим обмен сертификатом личного (private) ключа 
+	 для подтверждения источнику защищать дальнейшее взаимодействие к- и от- XenServer через шифрование на 
+	 основе SSL. Именно здесь принимает участие <span class="term"><code><em>xapi-ssl.conf</em></code></span>, 
+	 так как он диктует шифр, метод шифрования и место хранения уникального сертификата XenServer.</p>
+
+   	 <a id="040711"> </a>
+	 <p class="title"><strong>/etc/xensouce/xapi-ssl.pem</strong></p>
+     <p><span class="term"><code><em>xapi-ssl.pem</em></code></span> является личным (private) ключом, который 
+	 вырабатывается при установке <span class="term"><code><em>/etc/init.d/xapissl</em></code></span>, ссылющимся 
+	 на <span class="term"><code><em>xapi-ssl.conf</em></code></span> для производства уникального файла PEM 
+	 (Privacy-Enhanced Mail) хоста XenServer. Этот файл является тем, что наряду с двухфакторной аутентификацией, 
+	 осуществляет обмен между хостами XenServer, инструментами администрирования XenServer и т.п., чтобы обеспечить 
+	 обратную и прямую безопасную связь с уникальным определённым хостом XenServer.</p>
+     <p>Замена файла <span class="term"><code><em>xapi-ssl.pem</em></code></span> на подписываемый самостоятельно или 
+	 подписанный сертификат обсуждается в <a class="link" href="Ch12.html" target="_top">Главе 12</a>.</p>
+
+   	 <a id="040712"> </a>
+	 <p class="title"><strong>/etc/ntp.conf</strong></p>
+     <p>В нашей практике это вероятно наиболее важный из всех файлов настройки, который системный администратор 
+	 может свободно изменять в любое время. Однако это также связано с тем, что любое решение для виртуализации 
+	 должно обеспечивать синхронизацию всех гостевых ВМ. Файл настройки протокола сетевого времени (Network Time 
+	 Protocol) - используемый <span class="term"><code>ntpd</code></span> - никогда не должен ссылаться на 
+	 виртуальную машину, а всегда обязан ссылаться на локальную, физическую машину, причём число записей не 
+	 должно быть более четырёх.</p>
+     <p>Хотя любое решение виртуализации будет предпринимать все возможные меры по выравниванию дрейфа времени, 
+	 если часы аппаратных средств испытывают сильное отставание/ убегание по времени, это может влиять 
+	 на расписания, а также в конечном итоге приводить к отключению гостевых ВМ. Жизненно важно настроить 
+	 <span class="term"><code><em>/etc/ntp.conf</em></code></span> должным образом, в соответствии с зоной 
+	 времени с тем, чтобы хост мог соответствующим образом обновлять гостевые ВМ и их внутренние часы. 
+	 Дополнительно, если хосты XenServer составляют пул, дрейф по времени между хостами должен быть сведён 
+	 к минимуму, а установки NTP должны быть идентичными у всех участников пула.</p>
+
+   	 <a id="040713"> </a>
+	 <p class="title"><strong>/var/xapi/</strong></p>
+     <p>Данный каталог содержит полную базу данных XAPI, которая является ссылкой на используемое 
+	 оборудование в рамках обособленной установки XenServer или при установке в пуле.</p>
+	 <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+      <table border="0" summary="Предостережение"><tr><td rowspan="2" align="center" valign="top" width="25">
+      <img alt="[Предостережение]" src="../common/images/admon/warning.png"/></td><th align="left">Информация 
+	  состояния системы</th></tr><tr><td align="left" valign="top">
+      <p>В пределах каталога <span class="term"><code><em>/var/xapi/</em></code></span> файлы содержат 
+	  информацию состояния и никогда не должны исправляться вручную ни при каких обстоятельствах. В случае 
+	  изменения может понижаться производительность виртуализации, так как база данных XAPI основывается 
+	  на совместных оборудовании, объектах и зависимостях для виртуализации гостевых ВМ.</p></td></tr></table>
+     </div>
+
+   	 <a id="040714"> </a>
+	 <p class="title"><strong>/var/patch/ и /var/patch/applied/</strong></p>
+     <p>Эти два каталога - <span class="term"><code><em>/var/patch/</em></code></span> и 
+	 <span class="term"><code><em>/var/patch/applied/</em></code></span> - чрезвычайно важны, потому что 
+	 на пару они содержат отпечатки горячих исправлений, заплаток и прочих метаданных поддержки, которые 
+	 являются существенными для XAPI. Вне зависимости от того, есть ли у вас работающий обособленно или 
+	 в пуле XenServer, XAPI должен иметь средство, гарантирующее что приводимая ниже последовательность 
+	 успешно выполняется:</p>
+   <div class="orderedlist">
+   <ol class="orderedlist" type="1"><li class="listitem">
+     <p>Исправления применены к работающему обособленно хосту.</p>
+	 </li><li class="listitem">
+     <p>Исправления применены ко всем работающем в пуле хостам.</p>
+	 </li><li class="listitem">
+     <p>Выполнены все действия, необходимые после внесения изменений такие как, например, 
+	 перезагрузка.</p>
+	 </li>
+   </ol>
+   </div>
+     <p>Теперь, когда оба каталога содержат файлы с уникальными именами файлов на базе UUID, стоит отметить, что 
+	 более важным каталогом является <span class="term"><code><em>/var/patch/applied/</em></code></span>, потому 
+	 что, как это следует из его названия, он содержит минимальный набор изменений, которые должны применяться 
+	 к хосту.</p>
+     <p>Этот каталог - <span class="term"><code><em>/var/patch/applied/</em></code></span> - никогда не 
+	 следует удалять, так как он используется XAPI для проверки того, нуждаются ли члены пула в их применении, 
+	 существуют ли новые горячие изменения, доступные для вашего хоста XenServer и тому подобного. Таким образом, 
+	 удаление этих файлов может привести к некорректному отслеживанию хостом необходимых ему изменений.</p>
   </div>
 
   <div class="section">
    <div xmlns="" class="titlepage"><div><div>
     <h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="05"> </a>Взаимосвязь объектов XenServer</h3>
    </div></div></div>
-   <p></p>
 
    <div xmlns="" class="titlepage"><div><div>
     <h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="0501"> </a>
@@ -586,7 +986,7 @@ document.write(HeaderAndToolbar); //-->
 	 IP адрес хоста XenServer. Все дополнительные сетевые среды будут представлены в виде &quot;ethX&quot;, однако 
 	 только физические интерфейсы с ролями &quot;управления&quot; или &quot;хранения&quot; будут иметь назначенные 
 	 IP адреса. Перечень физических сетевых интерфейсов может быть получен в командной строке, как это показано в 
-	 <a class="link" href="Ch02.html#Example0213" target="_top">Примере 2-9</a>.</p>
+	 <a class="link" href="Ch02.html#Example0209" target="_top">Примере 2-9</a>.</p>
 	 <div class="example"><a id="Example0209"> </a>
 	 <p class="title"><em>Пример 2-9. Какие интерфейсы настроены на хосте</em></p>
 	   <pre class="screen"><code>
@@ -596,19 +996,43 @@ document.write(HeaderAndToolbar); //-->
 
    	 <a id="050102"> </a>
 	 <p class="title"><strong>Сетевая среда</strong></p>
-	 <p></p>
+	 <p>Поскольку XenServer обычно размещает много виртуальных машин, которые необходимо соединять с сетевой средой, 
+	 создаётся виртуальная система коммутации. Каждая система коммутации объединяет мостами все хосты в пуле 
+	 ресурсов XenServer и реализуется с применением Open Virtual Switch, или <span class="term"><strong 
+	 class="userinput"><code>ovs</code></strong></span>. {<span class="emphasis"><em>Прим. пер.: подробнее см. раздел  
+	 <a class="link" href="http://onreader.mdl.ru/LearningDockerNetworking/content/Ch03.html#0303" target="_top">Open 
+	 vSwitch</a> в нашем переводе книги Изучение построения сетей Docker, Радждип Дуа, Вайбхав Кохли, Сантош Кумар Кондури, 
+	 Packt Pub., февраль 2016.</em></span>} Число содержащихся в среде XenServer виртуальных коммутаторов будет 
+	 изменяться и может быть очень динамичным. Перечень всех сетевых сред может быть получен в командной строке, как 
+	 это отображено в <a class="link" href="Ch02.html#Example0210" target="_top">Примере 2-10</a>.</p>
 	 <div class="example"><a id="Example0210"> </a>
 	 <p class="title"><em>Пример 2-10. Какие сетевые среды настроены для хоста</em></p>
 	   <pre class="screen"><code>
 # xe network-list params=all
  	   </code></pre>
      </div>
-	 <p></p>
+	 <p>Логическое соединение между <span class="term"><strong class="userinput"><code>network</code></strong></span> 
+	 и <span class="term"><strong class="userinput"><code>pif</code></strong></span> устанавливается в поле 
+	 <span class="term"><strong class="userinput"><code>PIF-uuids</code></strong></span>.</p>
 
    	 <a id="050103"> </a>
 	 <p class="title"><strong>vif</strong></p>
-	 <p></p>
-	 <p></p>
+	 <p>Каждая ВМ в среде XenServer обычно имеет по крайней мере один подключённый к ней виртуальный NIC. 
+	 Все такие виртуальные NIC называются <span class="term"><strong class="userinput"><code>vif</code></strong></span> 
+	 и подключаются к сетевой среде коммутации. Всем <span class="term"><strong class="userinput"><code>vif</code></strong></span> 
+	 XenServer -ом назначаются MAC адреса. Часто сетевые администраторы ищут имеющие идентификатор производителя 
+	 MAC виртуальные NIC, чтобы впоследствии фильтровать их. Поскольку XenSerer был разработан для обработки 
+	 количества ВМ, идентификатор производителя универсально администрируемого MAC адреса будет искуственно 
+	 ограничивать предел построения виртуальных сетей, поэтому XenServer применяет локальное 
+	 администрирование ВМ во избежание потенциальных противоречий MAC адресов.</p>
+	 <p>Получаемый <span class="term"><strong class="userinput"><code>vif</code></strong></span> IP адрес 
+	 устанавливается гостем и взаимодействует с XenServer через интерфейс в инструментах XenServer. Поскольку 
+	 сетевая среда коммутации реализует виртуальный коммутатор, каждый <span class="term"><strong class="userinput"><code>vif</code></strong></span> 
+	 подключается к <span class="term"><strong class="userinput"><code>network</code></strong></span>, которая в 
+	 конечном итоге подключается к <span class="term"><strong class="userinput"><code>pif</code></strong></span> 
+	 представляющему физический NIC который затем подключается к физическому коммутатору. Перечень виртуальных 
+	 сетевых интерфейсов может быть найден с применением командной строки, показанной в 
+	 <a class="link" href="Ch02.html#Example0211" target="_top">Примере 2-11</a>.</p>
 	 <div class="example"><a id="Example0211"> </a>
 	 <p class="title"><em>Пример 2-11. Текущая настройка сетевой среды настроены для всех ВМ в пуле</em></p>
 	   <pre class="screen"><code>
@@ -618,14 +1042,22 @@ document.write(HeaderAndToolbar); //-->
 
    	 <a id="050103"> </a>
 	 <p class="title"><strong>Связывание</strong></p>
-	 <p></p>
+	 <p>В качестве необязательного действия, администраторы могут настраивать отказоустойчивые элементы, называемые 
+	 &quot;bond&quot;. Связывание (bonding) NIC, также называемое объединением в группы (&quot;teaming&quot;), 
+	 является методом, с помощью которого два или более NIC объединяются для создания некоего логического NIC. 
+	 Дополнительные сведения о связывании можно почерпнуть в разделе <a class="link" href="Ch05.html#02" 
+	 target="_top">Определение топологий сетевой среды</a>. Список всех сгруппированных сетевых сред может быть 
+	 определён с помощью командной строки показанной в <a class="link" href="Ch02.html#Example0212" 
+	 target="_top">Примере 2-12</a></p>
 	 <div class="example"><a id="Example0212"> </a>
 	 <p class="title"><em>Пример 2-12. Определение текущей настройки связывания</em></p>
 	   <pre class="screen"><code>
 # xe bond-list params=all
  	   </code></pre>
      </div>
-	 <p></p>
+	 <p>Если определено группирование, все элементы настройки &quot;master&quot;, &quot;slaves&quot; и 
+	 &quot;primary-slave&quot; ссылаются на объект <span class="term"><strong 
+	 class="userinput"><code>pif</code></strong></span>.</p>
 
 
 	 <div xmlns="" class="titlepage"><div><div>
@@ -735,7 +1167,7 @@ framebuffer-size ( RO): 0
     </ul>
     </div>
    <p>Взаимосвязи между этими четырьмя объектами отображены на <a class="link" href="Ch02.html#Fig0204" 
-   target="_top">Рисункt 2-4</a>.</p>
+   target="_top">Рисунке 2-4</a>.</p>
 	<div class="figure"><a id="Fig0204"> </a>
 	 <p class="title"><strong>Рисунок 2-4 Как хранилища XenServer взаимодействуют друг с другом</strong></p>
 	 <div class="figure-contents"><div class="mediaobject">

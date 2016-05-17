@@ -2,7 +2,7 @@ HeaderAndToolbar=  ''+
 '<div id="header">'+
 '	<a onclick="_gaq.push([\'_trackEvent\', \'Header\', \'logo\', \'click\', 1]);" align="middle" target="_blank" href="http://www.mdl.ru">'+
 '	<img src="/i/mdl-reg.jpg" style="position: relative; border-style: none; top: 18%;" alt="Перевод Mdl&reg;" width="40" height="14" align="middle"/></a>'+
-'	<a onclick="_gaq.push([\'_trackEvent\', \'Header\', \'logo\', \'click\', 1]);" target="_blank" href="http://shop.oreilly.com/product/0636920035671.do">'+
+'	<a onclick="_gaq.push([\'_trackEvent\', \'Header\', \'logo\', \'click\', 1]);" target="_blank" href="http://shop.oreilly.com/product/0636920043737.do">'+
 '	<img src="../OReilly-logo.jpg" alt="no strach press" width="102" height="26"/></a>'+
 ''+
 '	<h1>'+HeaderName+'</h1>'+
@@ -19,10 +19,10 @@ HeaderAndToolbar=  ''+
 '<div id="toolbar" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">'+
 '	<div id="toolbar-left">'+
 '		<p class="breadcrumbs"><a href="http://www.mdl.ru/Solutions/Put.htm?Nme=OpenStack">Руководства по облакам</a>'+
-'		<a href="http://onreader.mdl.ru/openstack-ops/content/index.html">Руководство по эксплуатации OpenStack</a>'+
+'		<a href="http://onreader.mdl.ru/AdvancedZFS/content/Ch03.html">ZFS для профессионалов</a>'+
 '		(<a onclick="_gaq.push([\'_trackEvent\', \'Header\', \'pdfDownload\', \'click\', 1]);" alt="Загрузите pdf OpenStack Operations Guide (англ.яз.)" class="pdficon" href="/openstack-ops/openstack-ops-manual.pdf">'+
 '		<img src="../common/images/pdf.png"/></a>) &nbsp; '+
-'		<a href="http://shop.oreilly.com/product/0636920035671.do">Купить оригинал</a></p>'+
+'		<a href="http://shop.oreilly.com/product/0636920043737.do">Купить оригинал</a></p>'+
 '		<div id="gplusone">'+
 '			<a id="AskMdl1" href="javascript:tocall()" onmouseover="this.href=mail" target="_blank" title="Вопросы? Обсудите их на mdl.ru">'+
 '			<i class="icon-question"><!----></i></a>  '+
